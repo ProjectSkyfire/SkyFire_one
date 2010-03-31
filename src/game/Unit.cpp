@@ -296,7 +296,7 @@ void Unit::Update( uint32 p_time )
         {
             // m_CombatTimer set at aura start and it will be freeze until aura removing
             if (m_CombatTimer <= p_time)
-                CombatStop();
+                ClearInCombat();
             else
                 m_CombatTimer -= p_time;
         }
@@ -5131,6 +5131,10 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
 					if(procSpell && procSpell->Id==1680)
 						return false;
 
+					// Cleave
+					if(procSpell && procSpell->Id==25231)
+						return false;
+
                     target = SelectNearbyTarget();
                     if(!target)
                         return false;
@@ -9035,7 +9039,7 @@ void Unit::SetInCombatState(bool PvP, Unit* enemy)
         return;
 
     if(PvP)
-        m_CombatTimer = 6000;
+        m_CombatTimer = 5900;
 
     //if(isInCombat())
     //    return;
