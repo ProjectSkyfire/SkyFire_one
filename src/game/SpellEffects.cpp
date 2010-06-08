@@ -1457,24 +1457,22 @@ void Spell::EffectDummy(uint32 i)
                         return;
 
                     // all poison enchantments is temporary
-                    uint32 enchant_id = item->GetEnchantmentId(TEMP_ENCHANTMENT_SLOT);
-                    if (!enchant_id)
-                        return;
-
-                    SpellItemEnchantmentEntry const *pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
-                    if (!pEnchant)
-                        return;
-
-                    for (int s=0;s<3;s++)
+                    if (uint32 enchant_id = item->GetEnchantmentId(TEMP_ENCHANTMENT_SLOT))
                     {
-                        if (pEnchant->type[s]!=ITEM_ENCHANTMENT_TYPE_COMBAT_SPELL)
-                            continue;
+                        if (SpellItemEnchantmentEntry const *pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id))
+                        {
+                            for (int s=0;s<3;s++)
+                            {
+                                if (pEnchant->type[s]!=ITEM_ENCHANTMENT_TYPE_COMBAT_SPELL)
+                                    continue;
 
-                        SpellEntry const* combatEntry = sSpellStore.LookupEntry(pEnchant->spellid[s]);
-                        if (!combatEntry || combatEntry->Dispel != DISPEL_POISON)
-                            continue;
+                                SpellEntry const* combatEntry = sSpellStore.LookupEntry(pEnchant->spellid[s]);
+                                if (!combatEntry || combatEntry->Dispel != DISPEL_POISON)
+                                    continue;
 
-                        m_caster->CastSpell(unitTarget, combatEntry, true, item);
+                                m_caster->CastSpell(unitTarget, combatEntry, true, item);
+                            }
+                        }
                     }
 
                     m_caster->CastSpell(unitTarget, 5940, true);
@@ -1681,6 +1679,15 @@ void Spell::EffectDummy(uint32 i)
             }
             break;
         case SPELLFAMILY_SHAMAN:
+            
+            // Flametongue Totem Proc
+            if (m_spellInfo->SpellFamilyFlags & 0x400000000)
+            {
+                bp = m_caster->GetAttackTime(BASE_ATTACK) * (m_spellInfo->EffectBasePoints[0]+1) / 100000;
+                spell_id = 16368;
+                break;
+            }
+
             //Shaman Rockbiter Weapon
             if (m_spellInfo->SpellFamilyFlags == 0x400000)
             {
@@ -6442,7 +6449,7 @@ void Spell::EffectStealBeneficialBuff(uint32 i)
         if (aur && (1<<aur->GetSpellProto()->Dispel) & dispelMask)
         {
             // Need check for passive? this
-            if (aur->IsPositive() && !aur->IsPassive())
+            if (aur->IsPositive() && !aur->IsPassive() && !(aur->GetSpellProto()->AttributesEx4 & SPELL_ATTR_EX4_NOT_STEALABLE))
                 steal_list.push_back(aur);
         }
     }
@@ -6455,7 +6462,7 @@ void Spell::EffectStealBeneficialBuff(uint32 i)
         for (int32 count=0; count < damage && list_size > 0; ++count)
         {
             // Random select buff for dispel
-          Aura *aur = steal_list[m_caster->GetMap()->urand(0, list_size-1)];
+            Aura *aur = steal_list[m_caster->GetMap()->urand(0, list_size-1)];
             // Not use chance for steal
             // TODO possible need do it
             success_list.push_back(std::pair<uint32,uint64>(aur->GetId(),aur->GetCasterGUID()));

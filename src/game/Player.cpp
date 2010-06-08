@@ -2661,7 +2661,7 @@ void Player::AddNewMailDeliverTime(time_t deliver_time)
     }
 }
 
-bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading, uint16 slot_id, bool disabled)
+bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading, bool disabled)
 {
     SpellEntry const *spellInfo = sSpellStore.LookupEntry(spell_id);
     if (!spellInfo)
@@ -2779,7 +2779,7 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
         else if (uint32 prev_spell = spellmgr.GetPrevSpellInChain(spell_id))
         {
             if (loading)                                     // at spells loading, no output, but allow save
-                addSpell(prev_spell,active,true,loading,SPELL_WITHOUT_SLOT_ID,disabled);
+                addSpell(prev_spell,active,true,loading,disabled);
             else                                            // at normal learning
                 learnSpell(prev_spell);
         }
@@ -2837,23 +2837,6 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
             }
         }
 
-        uint16 tmpslot=slot_id;
-
-        if (tmpslot == SPELL_WITHOUT_SLOT_ID)
-        {
-            uint16 maxid = 0;
-            PlayerSpellMap::iterator itr;
-            for (itr = m_spells.begin(); itr != m_spells.end(); ++itr)
-            {
-                if (itr->second->state == PLAYERSPELL_REMOVED)
-                    continue;
-                if (itr->second->slotId > maxid)
-                    maxid = itr->second->slotId;
-            }
-            tmpslot = maxid + 1;
-        }
-
-        newspell->slotId = tmpslot;
         m_spells[spell_id] = newspell;
 
         // return false if spell disabled
@@ -4948,7 +4931,7 @@ void Player::UpdateWeaponSkill (WeaponAttackType attType)
 {
     // no skill gain in pvp
     Unit *pVictim = getVictim();
-    if (pVictim && pVictim->GetTypeId() == TYPEID_PLAYER)
+    if (pVictim && pVictim->isCharmedOwnedByPlayerOrPlayer())
         return;
 
     if (IsInFeralForm())
@@ -14541,7 +14524,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder )
             Relocate(nodeEntry->x, nodeEntry->y, nodeEntry->z,0.0f);
             SaveRecallPosition();                           // save as recall also to prevent recall and fall from sky
         }
-        m_taxi.ClearTaxiDestinations();
+        CleanupAfterTaxiFlight();
     }
     else if (uint32 node_id = m_taxi.GetTaxiSource())
     {
@@ -15245,7 +15228,7 @@ void Player::_LoadSpells(QueryResult_AutoPtr result)
         delete itr->second;
     m_spells.clear();
 
-    //QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT spell,slot,active FROM character_spell WHERE guid = '%u'",GetGUIDLow());
+    //QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT spell,active,disabled FROM character_spell WHERE guid = '%u'",GetGUIDLow());
 
     if (result)
     {
@@ -15253,7 +15236,7 @@ void Player::_LoadSpells(QueryResult_AutoPtr result)
         {
             Field *fields = result->Fetch();
 
-            addSpell(fields[0].GetUInt16(), fields[2].GetBool(), false, true, fields[1].GetUInt16(), fields[3].GetBool());
+            addSpell(fields[0].GetUInt16(), fields[1].GetBool(), false, true, fields[2].GetBool());
         }
         while (result->NextRow());
     }
@@ -16123,7 +16106,7 @@ void Player::_SaveSpells()
         if (itr->second->state == PLAYERSPELL_REMOVED || itr->second->state == PLAYERSPELL_CHANGED)
             CharacterDatabase.PExecute("DELETE FROM character_spell WHERE guid = '%u' and spell = '%u'", GetGUIDLow(), itr->first);
         if (itr->second->state == PLAYERSPELL_NEW || itr->second->state == PLAYERSPELL_CHANGED)
-            CharacterDatabase.PExecute("INSERT INTO character_spell (guid,spell,slot,active,disabled) VALUES ('%u', '%u', '%u','%u','%u')", GetGUIDLow(), itr->first, itr->second->slotId,itr->second->active ? 1 : 0,itr->second->disabled ? 1 : 0);
+            CharacterDatabase.PExecute("INSERT INTO character_spell (guid,spell,active,disabled) VALUES ('%u', '%u', '%u', '%u')", GetGUIDLow(), itr->first, itr->second->active ? 1 : 0,itr->second->disabled ? 1 : 0);
 
         if (itr->second->state == PLAYERSPELL_REMOVED)
             _removeSpell(itr->first);
@@ -17132,6 +17115,14 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
         return false;
     }
 
+    if (GetSession()->isLogingOut() || isInCombat() || hasUnitState(UNIT_STAT_STUNNED) || hasUnitState(UNIT_STAT_ROOT))
+    {
+        WorldPacket data(SMSG_ACTIVATETAXIREPLY, 4);
+        data << uint32(ERR_TAXIPLAYERBUSY);
+        GetSession()->SendPacket(&data);
+        return false;
+    }
+
     if (m_ShapeShiftFormSpellId && m_form != FORM_BATTLESTANCE && m_form != FORM_BERSERKERSTANCE && m_form != FORM_DEFENSIVESTANCE && m_form != FORM_SHADOW )
     {
         WorldPacket data(SMSG_ACTIVATETAXIREPLY, 4);
@@ -17181,7 +17172,7 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
     TradeCancel(true);
 
     // clean not finished taxi path if any
-    m_taxi.ClearTaxiDestinations();
+    CleanupAfterTaxiFlight();
 
     // 0 element current node
     m_taxi.AddTaxiDestination(sourcenode);
@@ -17202,7 +17193,7 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
 
         if (!path)
         {
-            m_taxi.ClearTaxiDestinations();
+            CleanupAfterTaxiFlight();
             return false;
         }
 
@@ -17224,7 +17215,7 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
         WorldPacket data(SMSG_ACTIVATETAXIREPLY, 4);
         data << uint32(ERR_TAXIUNSPECIFIEDSERVERERROR);
         GetSession()->SendPacket(&data);
-        m_taxi.ClearTaxiDestinations();
+        CleanupAfterTaxiFlight();
         return false;
     }
 
@@ -17240,7 +17231,7 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
         WorldPacket data(SMSG_ACTIVATETAXIREPLY, 4);
         data << uint32(ERR_TAXINOTENOUGHMONEY);
         GetSession()->SendPacket(&data);
-        m_taxi.ClearTaxiDestinations();
+        CleanupAfterTaxiFlight();
         return false;
     }
 
@@ -17259,6 +17250,14 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
     GetSession()->SendDoFlight(mount_id, sourcepath);
 
     return true;
+}
+
+void Player::CleanupAfterTaxiFlight()
+{
+    m_taxi.ClearTaxiDestinations();        // not destinations, clear source node
+    Unmount();
+    RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_TAXI_FLIGHT);
+    getHostilRefManager().setOnlineOfflineState(true);
 }
 
 void Player::ProhibitSpellSchool(SpellSchoolMask idSchoolMask, uint32 unTimeMs )
@@ -18831,7 +18830,7 @@ void Player::SummonIfPossible(bool agree)
     if (isInFlight())
     {
         GetMotionMaster()->MovementExpired();
-        m_taxi.ClearTaxiDestinations();
+        CleanupAfterTaxiFlight();
     }
 
     // drop flag at summon
@@ -19674,7 +19673,7 @@ void Player::AddGlobalCooldown(SpellEntry const *spellInfo, Spell const *spell)
 
     uint32 cdTime = spellInfo->StartRecoveryTime;
 
-    if (!(spellInfo->Attributes & (SPELL_ATTR_UNK4|SPELL_ATTR_UNK5)) )
+    if (!(spellInfo->Attributes & (SPELL_ATTR_UNK4|SPELL_ATTR_TRADESPELL)) )
         cdTime *= GetFloatValue(UNIT_MOD_CAST_SPEED);
     else if (spell->IsRangedSpell() && !spell->IsAutoRepeat())
         cdTime *= m_modAttackSpeedPct[RANGED_ATTACK];

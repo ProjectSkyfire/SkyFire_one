@@ -1916,9 +1916,12 @@ void Unit::CalcAbsorbResist(Unit *pVictim,SpellSchoolMask schoolMask, DamageEffe
         if (Player *modOwner = GetSpellModOwner())
             modOwner->ApplySpellMod((*i)->GetId(), SPELLMOD_MULTIPLE_VALUE, manaMultiplier);
 
-        int32 maxAbsorb = int32(pVictim->GetPower(POWER_MANA) / manaMultiplier);
-        if (currentAbsorb > maxAbsorb)
-            currentAbsorb = maxAbsorb;
+        if(manaMultiplier)
+        {
+            int32 maxAbsorb = int32(pVictim->GetPower(POWER_MANA) / manaMultiplier);
+            if (currentAbsorb > maxAbsorb)
+                currentAbsorb = maxAbsorb;
+        }
 
         *p_absorbAmount -= currentAbsorb;
         if (*p_absorbAmount <= 0)
@@ -3199,7 +3202,7 @@ uint32 Unit::GetDefenseSkillValue(Unit const* target) const
 
 float Unit::GetUnitDodgeChance() const
 {
-    if (hasUnitState(UNIT_STAT_STUNNED))
+    if (hasUnitState(UNIT_STAT_LOST_CONTROL))
         return 0.0f;
     if (GetTypeId() == TYPEID_PLAYER )
         return GetFloatValue(PLAYER_DODGE_PERCENTAGE);
@@ -3218,7 +3221,7 @@ float Unit::GetUnitDodgeChance() const
 
 float Unit::GetUnitParryChance() const
 {
-    if (IsNonMeleeSpellCasted(false) || hasUnitState(UNIT_STAT_STUNNED))
+    if (IsNonMeleeSpellCasted(false) || hasUnitState(UNIT_STAT_LOST_CONTROL))
         return 0.0f;
 
     float chance = 0.0f;
@@ -3351,7 +3354,7 @@ uint32 Unit::GetWeaponSkillValue (WeaponAttackType attType, Unit const* target) 
         uint32  skill = item ? item->GetSkill() : SKILL_UNARMED;
 
         // in PvP use full skill instead current skill value
-        value = (target && target->GetTypeId() == TYPEID_PLAYER)
+        value = (target && target->isCharmedOwnedByPlayerOrPlayer())
             ? ToPlayer()->GetMaxSkillValue(skill)
             : ToPlayer()->GetSkillValue(skill);
         // Modify value from ratings
@@ -5510,6 +5513,12 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                             return false;
                     }
 
+                    AuraList const &DoT = pVictim->GetAurasByType(SPELL_AURA_PERIODIC_DAMAGE);
+                    for (AuraList::const_iterator itr = DoT.begin(); itr != DoT.end(); ++itr)
+                        if ((*itr)->GetId() == 12654 && (*itr)->GetCaster() == this)
+                            if ((*itr)->GetBasePoints() > 0)
+                                basepoints0 += int((*itr)->GetBasePoints()/((*itr)->GetTickNumber() + 1));
+
                     triggered_spell_id = 12654;
                     break;
                 }
@@ -6172,9 +6181,6 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
             // Earth Shield
             if (dummySpell->SpellFamilyFlags==0x40000000000LL)
             {
-                if (GetTypeId() != TYPEID_PLAYER)
-                    return false;
-
                 // heal
                 basepoints0 = triggeredByAura->GetModifier()->m_amount;
                 target = this;
@@ -9055,6 +9061,12 @@ void Unit::SetInCombatState(bool PvP, Unit* enemy)
     bool creatureNotInCombat = GetTypeId()==TYPEID_UNIT && !HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
 
     SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
+
+    if(m_currentSpells[CURRENT_GENERIC_SPELL] && m_currentSpells[CURRENT_GENERIC_SPELL]->getState() != SPELL_STATE_FINISHED)
+    {
+        if(m_currentSpells[CURRENT_GENERIC_SPELL]->m_spellInfo->Attributes & SPELL_ATTR_CANT_USED_IN_COMBAT)
+            InterruptSpell(CURRENT_GENERIC_SPELL);
+    }
 
     if (GetTypeId() != TYPEID_PLAYER && GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
         ToCreature()->SetHomePosition(GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
