@@ -34,11 +34,10 @@
 #include "Group.h"
 #include "Guild.h"
 #include "World.h"
-#include "MapManager.h"
 #include "ObjectAccessor.h"
 #include "BattleGroundMgr.h"
 #include "OutdoorPvPMgr.h"
-#include "Language.h"                                       // for CMSG_CANCEL_MOUNT_AURA handler
+#include "MapManager.h"
 #include "Chat.h"
 #include "SocialMgr.h"
 
@@ -53,7 +52,7 @@ _logoutTime(0), m_inQueue(false), m_playerLoading(false), m_playerLogout(false),
     {
         m_Address = sock->GetRemoteAddress ();
         sock->AddReference ();
-        loginDatabase.PExecute("UPDATE account SET active_realm_id = %d WHERE id = '%u'", realmID, GetAccountId());
+        LoginDatabase.PExecute("UPDATE account SET active_realm_id = %d WHERE id = '%u'", realmID, GetAccountId());
     }
 }
 
@@ -76,7 +75,7 @@ WorldSession::~WorldSession()
     WorldPacket* packet;
     while (_recvQueue.next(packet))
         delete packet;
-    loginDatabase.PExecute("UPDATE account SET active_realm_id = 0 WHERE id = '%u'", GetAccountId());
+    LoginDatabase.PExecute("UPDATE account SET active_realm_id = 0 WHERE id = '%u'", GetAccountId());
     CharacterDatabase.PExecute("UPDATE characters SET online = 0 WHERE account = %u;", GetAccountId());
 }
 

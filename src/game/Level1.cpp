@@ -485,7 +485,7 @@ bool ChatHandler::HandleGMTicketAssignToCommand(const char* args)
     }
     uint64 tarGUID = objmgr.GetPlayerGUIDByName(targm.c_str());
     uint64 accid = objmgr.GetPlayerAccountIdByGUID(tarGUID);
-    QueryResult_AutoPtr result = loginDatabase.PQuery("SELECT gmlevel FROM account WHERE id = '%u'", accid);
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT gmlevel FROM account WHERE id = '%u'", accid);
     if (!tarGUID|| !result || result->Fetch()->GetUInt32() < SEC_MODERATOR)
     {
         SendSysMessage(LANG_COMMAND_TICKETASSIGNERROR_A);
@@ -831,7 +831,7 @@ bool ChatHandler::HandleNamegoCommand(const char* args)
         if (target->isInFlight())
         {
             target->GetMotionMaster()->MovementExpired();
-            target->m_taxi.ClearTaxiDestinations();
+            target->CleanupAfterTaxiFlight();
         }
         // save only in non-flight case
         else
@@ -960,7 +960,7 @@ bool ChatHandler::HandleGonameCommand(const char* args)
         if (_player->isInFlight())
         {
             _player->GetMotionMaster()->MovementExpired();
-            _player->m_taxi.ClearTaxiDestinations();
+            _player->CleanupAfterTaxiFlight();
         }
         // save only in non-flight case
         else
@@ -989,7 +989,7 @@ bool ChatHandler::HandleGonameCommand(const char* args)
             if (_player->isInFlight())
             {
                 _player->GetMotionMaster()->MovementExpired();
-                _player->m_taxi.ClearTaxiDestinations();
+                _player->CleanupAfterTaxiFlight();
             }
             // save only in non-flight case
             else
@@ -2096,7 +2096,7 @@ bool ChatHandler::HandleTeleCommand(const char * args)
     if (_player->isInFlight())
     {
         _player->GetMotionMaster()->MovementExpired();
-        _player->m_taxi.ClearTaxiDestinations();
+        _player->CleanupAfterTaxiFlight();
     }
     // save only in non-flight case
     else
@@ -2648,13 +2648,13 @@ bool ChatHandler::HandleGoXYCommand(const char* args)
     if (_player->isInFlight())
     {
         _player->GetMotionMaster()->MovementExpired();
-        _player->m_taxi.ClearTaxiDestinations();
+        _player->CleanupAfterTaxiFlight();
     }
     // save only in non-flight case
     else
         _player->SaveRecallPosition();
 
-    Map const *map = MapManager::Instance().GetBaseMap(mapid);
+    Map const *map = MapManager::Instance().CreateBaseMap(mapid);
     float z = std::max(map->GetHeight(x, y, MAX_HEIGHT), map->GetWaterLevel(x, y));
 
     _player->TeleportTo(mapid, x, y, z, _player->GetOrientation());
@@ -2698,7 +2698,7 @@ bool ChatHandler::HandleGoXYZCommand(const char* args)
     if (_player->isInFlight())
     {
         _player->GetMotionMaster()->MovementExpired();
-        _player->m_taxi.ClearTaxiDestinations();
+        _player->CleanupAfterTaxiFlight();
     }
     // save only in non-flight case
     else
@@ -2742,7 +2742,7 @@ bool ChatHandler::HandleGoZoneXYCommand(const char* args)
     // update to parent zone if exist (client map show only zones without parents)
     AreaTableEntry const* zoneEntry = areaEntry->zone ? GetAreaEntryByAreaID(areaEntry->zone) : areaEntry;
 
-    Map const *map = MapManager::Instance().GetBaseMap(zoneEntry->mapid);
+    Map const *map = MapManager::Instance().CreateBaseMap(zoneEntry->mapid);
 
     if (map->Instanceable())
     {
@@ -2764,7 +2764,7 @@ bool ChatHandler::HandleGoZoneXYCommand(const char* args)
     if (_player->isInFlight())
     {
         _player->GetMotionMaster()->MovementExpired();
-        _player->m_taxi.ClearTaxiDestinations();
+        _player->CleanupAfterTaxiFlight();
     }
     // save only in non-flight case
     else
@@ -2811,13 +2811,13 @@ bool ChatHandler::HandleGoGridCommand(const char* args)
     if (_player->isInFlight())
     {
         _player->GetMotionMaster()->MovementExpired();
-        _player->m_taxi.ClearTaxiDestinations();
+        _player->CleanupAfterTaxiFlight();
     }
     // save only in non-flight case
     else
         _player->SaveRecallPosition();
 
-    Map const *map = MapManager::Instance().GetBaseMap(mapid);
+    Map const *map = MapManager::Instance().CreateBaseMap(mapid);
     float z = std::max(map->GetHeight(x, y, MAX_HEIGHT), map->GetWaterLevel(x, y));
     _player->TeleportTo(mapid, x, y, z, _player->GetOrientation());
 

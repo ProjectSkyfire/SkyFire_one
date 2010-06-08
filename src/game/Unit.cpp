@@ -3351,7 +3351,7 @@ uint32 Unit::GetWeaponSkillValue (WeaponAttackType attType, Unit const* target) 
         uint32  skill = item ? item->GetSkill() : SKILL_UNARMED;
 
         // in PvP use full skill instead current skill value
-        value = (target && target->GetTypeId() == TYPEID_PLAYER)
+        value = (target && target->isCharmedOwnedByPlayerOrPlayer())
             ? ToPlayer()->GetMaxSkillValue(skill)
             : ToPlayer()->GetSkillValue(skill);
         // Modify value from ratings
@@ -3654,12 +3654,12 @@ bool Unit::isInAccessiblePlaceFor(Creature const* c) const
 
 bool Unit::IsInWater() const
 {
-    return MapManager::Instance().GetBaseMap(GetMapId())->IsInWater(GetPositionX(),GetPositionY(), GetPositionZ());
+    return GetBaseMap()->IsInWater(GetPositionX(),GetPositionY(), GetPositionZ());
 }
 
 bool Unit::IsUnderWater() const
 {
-    return MapManager::Instance().GetBaseMap(GetMapId())->IsUnderWater(GetPositionX(),GetPositionY(),GetPositionZ());
+    return GetBaseMap()->IsUnderWater(GetPositionX(),GetPositionY(),GetPositionZ());
 }
 
 void Unit::DeMorph()
@@ -5510,6 +5510,12 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
                             return false;
                     }
 
+                    AuraList const &DoT = pVictim->GetAurasByType(SPELL_AURA_PERIODIC_DAMAGE);
+                    for (AuraList::const_iterator itr = DoT.begin(); itr != DoT.end(); ++itr)
+                        if ((*itr)->GetId() == 12654 && (*itr)->GetCaster() == this)
+                            if ((*itr)->GetBasePoints() > 0)
+                                basepoints0 += int((*itr)->GetBasePoints()/((*itr)->GetTickNumber() + 1));
+
                     triggered_spell_id = 12654;
                     break;
                 }
@@ -6172,9 +6178,6 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
             // Earth Shield
             if (dummySpell->SpellFamilyFlags==0x40000000000LL)
             {
-                if (GetTypeId() != TYPEID_PLAYER)
-                    return false;
-
                 // heal
                 basepoints0 = triggeredByAura->GetModifier()->m_amount;
                 target = this;
