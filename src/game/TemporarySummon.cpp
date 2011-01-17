@@ -20,20 +20,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "TemporarySummon.h"
-#include "WorldPacket.h"
-#include "MapManager.h"
 #include "Log.h"
 #include "ObjectAccessor.h"
 #include "CreatureAI.h"
+#include "ObjectMgr.h"
+#include "TemporarySummon.h"
 
-TemporarySummon::TemporarySummon(uint64 summoner) :
-Creature(), m_type(TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN), m_timer(0), m_lifetime(0), m_summoner(summoner)
+TempSummon::TempSummon(SummonPropertiesEntry const *properties, Unit *owner) :
+Creature(), m_type(TEMPSUMMON_MANUAL_DESPAWN), m_timer(0), m_lifetime(0)
+, m_Properties(properties)
 {
+    m_summonerGUID = owner ? owner->GetGUID() : 0;
+    m_summonMask |= SUMMON_MASK_SUMMON;
 }
 
-void TemporarySummon::Update(uint32 diff)
+Unit* TempSummon::GetSummoner() const
 {
+    return m_summonerGUID ? ObjectAccessor::GetUnit(*this, m_summonerGUID) : NULL;
+}
+
+void TempSummon::Update(uint32 diff)
+{
+    Creature::Update(diff);
+
     if (m_deathState == DEAD)
     {
         UnSummon();
@@ -157,31 +166,191 @@ void TemporarySummon::Update(uint32 diff)
             sLog.outError("Temporary summoned creature (entry: %u) has unknown type %u. ",GetEntry(),m_type);
             break;
     }
-
-    Creature::Update(diff);
 }
 
-void TemporarySummon::Summon(TempSummonType type, uint32 lifetime)
+void TempSummon::InitStats(uint32 duration)
 {
-    m_type = type;
-    m_timer = lifetime;
-    m_lifetime = lifetime;
+    ASSERT(!isPet());
 
-    GetMap()->Add(ToCreature());
-}
+    m_timer = duration;
+    m_lifetime = duration;
 
-void TemporarySummon::UnSummon()
-{
-    AddObjectToRemoveList();
+    if (m_type == TEMPSUMMON_MANUAL_DESPAWN)
+        m_type = (duration == 0) ? TEMPSUMMON_DEAD_DESPAWN : TEMPSUMMON_TIMED_DESPAWN;
 
-    Unit* sum = m_summoner ? ObjectAccessor::GetUnit(*this, m_summoner) : NULL;
-    if (sum  && sum->GetTypeId() == TYPEID_UNIT && sum->ToCreature()->IsAIEnabled)
+    AIM_Initialize();
+
+    if (!m_Properties)
+        return;
+
+    if (uint32 slot = m_Properties->Slot)
     {
-        sum->ToCreature()->AI()->SummonedCreatureDespawn(this);
+        if (Unit *owner = GetSummoner())
+        {
+            if (owner->m_SummonSlot[slot] && owner->m_SummonSlot[slot] != GetGUID())
+            {
+                Creature *oldSummon = GetMap()->GetCreature(owner->m_SummonSlot[slot]);
+                if (oldSummon && oldSummon->isSummon())
+                    ((TempSummon*)oldSummon)->UnSummon();
+            }
+            owner->m_SummonSlot[slot] = GetGUID();
+        }
+    }
+
+    if (m_Properties->Faction)
+        setFaction(m_Properties->Faction);
+}
+
+void TempSummon::InitSummon()
+{
+    Unit* owner = GetSummoner();
+    if (owner)
+    {
+        if (owner->GetTypeId() == TYPEID_UNIT && owner->ToCreature()->IsAIEnabled)
+            owner->ToCreature()->AI()->JustSummoned(this);
+
+        if (GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_TRIGGER && m_spells[0])
+        {
+            setFaction(owner->getFaction());
+            SetLevel(owner->getLevel());
+            CastSpell(this, m_spells[0], false, 0, 0, m_summonerGUID);
+        }
     }
 }
 
-void TemporarySummon::SaveToDB()
+void TempSummon::SetTempSummonType(TempSummonType type)
 {
+    m_type = type;
+}
+
+void TempSummon::UnSummon()
+{
+    if (isPet())
+    {
+        ((Pet*)this)->Remove(PET_SAVE_NOT_IN_SLOT);
+        ASSERT(!IsInWorld());
+        return;
+    }
+
+    Unit* owner = GetSummoner();
+    if (owner && owner->GetTypeId() == TYPEID_UNIT && owner->ToCreature()->IsAIEnabled)
+        owner->ToCreature()->AI()->SummonedCreatureDespawn(this);
+
+    AddObjectToRemoveList();
+}
+
+void TempSummon::RemoveFromWorld()
+{
+    if (!IsInWorld())
+        return;
+
+    if (m_Properties)
+        if (uint32 slot = m_Properties->Slot)
+            if (Unit* owner = GetSummoner())
+                if (owner->m_SummonSlot[slot] == GetGUID())
+                    owner->m_SummonSlot[slot] = 0;
+
+    //if (GetOwnerGUID())
+    //    sLog.outError("Unit %u has owner guid when removed from world", GetEntry());
+
+    Creature::RemoveFromWorld();
+}
+
+void TempSummon::SaveToDB()
+{
+}
+
+Minion::Minion(SummonPropertiesEntry const *properties, Unit *owner) : TempSummon(properties, owner)
+, m_owner(owner)
+{
+    ASSERT(m_owner);
+    m_summonMask |= SUMMON_MASK_MINION;
+}
+
+void Minion::InitStats(uint32 duration)
+{
+    TempSummon::InitStats(duration);
+
+    SetReactState(REACT_PASSIVE);
+
+    SetCreatorGUID(m_owner->GetGUID());
+    setFaction(m_owner->getFaction());
+
+    m_owner->SetMinion(this, true);
+}
+
+void Minion::RemoveFromWorld()
+{
+    if (!IsInWorld())
+        return;
+
+    m_owner->SetMinion(this, false);
+    TempSummon::RemoveFromWorld();
+}
+
+Guardian::Guardian(SummonPropertiesEntry const *properties, Unit *owner) : Minion(properties, owner)
+, m_bonusdamage(0)
+{
+    m_summonMask |= SUMMON_MASK_GUARDIAN;
+    InitCharmInfo();
+}
+
+void Guardian::InitStats(uint32 duration)
+{
+    Minion::InitStats(duration);
+
+    InitStatsForLevel(m_owner->getLevel());
+
+    if (m_owner->GetTypeId() == TYPEID_PLAYER)
+        m_charmInfo->InitCharmCreateSpells();
+
+    SetReactState(REACT_AGGRESSIVE);
+}
+
+void Guardian::InitSummon()
+{
+    TempSummon::InitSummon();
+
+    if (m_owner->GetTypeId() == TYPEID_PLAYER
+        && m_owner->GetMinionGUID() == GetGUID()
+        && !m_owner->GetCharmGUID())
+        m_owner->ToPlayer()->CharmSpellInitialize();
+}
+
+Puppet::Puppet(SummonPropertiesEntry const *properties, Unit *owner) : Minion(properties, owner)
+{
+    ASSERT(owner->GetTypeId() == TYPEID_PLAYER);
+    m_owner = owner->ToPlayer();
+    m_summonMask |= SUMMON_MASK_PUPPET;
+}
+
+void Puppet::InitStats(uint32 duration)
+{
+    Minion::InitStats(duration);
+    SetLevel(m_owner->getLevel());
+    SetReactState(REACT_PASSIVE);
+}
+
+void Puppet::InitSummon()
+{
+    Minion::InitSummon();
+    SetCharmedBy(m_owner, CHARM_TYPE_POSSESS);
+}
+
+void Puppet::Update(uint32 time)
+{
+    Minion::Update(time);
+    //check if caster is channelling?
+    if (IsInWorld() && !isAlive())
+        UnSummon();
+}
+
+void Puppet::RemoveFromWorld()
+{
+    if (!IsInWorld())
+        return;
+
+    RemoveCharmedBy(NULL);
+    Minion::RemoveFromWorld();
 }
 

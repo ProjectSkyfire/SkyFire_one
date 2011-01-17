@@ -24,17 +24,14 @@
 #define OREGONCORE_PET_H
 
 #include "ObjectGuid.h"
-#include "Creature.h"
 #include "Unit.h"
+#include "TemporarySummon.h"
 
 enum PetType
 {
     SUMMON_PET              = 0,
     HUNTER_PET              = 1,
-    GUARDIAN_PET            = 2,
-    MINI_PET                = 3,
-    POSSESSED_PET           = 4,
-    MAX_PET_TYPE            = 5
+    MAX_PET_TYPE            = 4
 };
 
 extern char const* petTypeSuffix[MAX_PET_TYPE];
@@ -131,10 +128,10 @@ extern const uint32 LevelStartLoyalty[6];
 
 #define OWNER_MAX_DISTANCE 100
 
-class Pet : public Creature
+class Pet : public Guardian
 {
     public:
-        explicit Pet(PetType type = MAX_PET_TYPE);
+        explicit Pet(Player *owner, PetType type = MAX_PET_TYPE);
         virtual ~Pet();
 
         void AddToWorld();
@@ -176,14 +173,10 @@ class Pet : public Creature
         void SetLoyaltyLevel(LoyaltyLevel level);
         void GivePetXP(uint32 xp);
         void GivePetLevel(uint32 level);
-        bool InitStatsForLevel(uint32 level);
         void InitPetAuras(const uint32 Entry);
         bool HaveInDiet(ItemPrototype const* item) const;
         uint32 GetCurrentFoodBenefitLevel(uint32 itemlevel);
         void SetDuration(int32 dur) { m_duration = dur; }
-
-        int32 GetBonusDamage() { return m_bonusdamage; }
-        void SetBonusDamage(int32 damage) { m_bonusdamage = damage; }
 
         bool UpdateStats(Stats stat);
         bool UpdateAllStats();
@@ -241,14 +234,16 @@ class Pet : public Creature
         DeclinedName const* GetDeclinedNames() const { return m_declinedname; }
 
         bool    m_removed;                                  // prevent overwrite pet state in DB at next Pet::Update if pet already removed(saved)
+
+        Player *GetOwner() { return m_owner; }
     protected:
+        Player *m_owner;
         uint32  m_regenTimer;
         uint32  m_happinessTimer;
         uint32  m_loyaltyTimer;
         PetType m_petType;
         int32   m_duration;                                 // time until unsummon (used mostly for summoned guardians and not used for controlled pets)
         int32   m_loyaltyPoints;
-        int32   m_bonusdamage;
         uint64  m_auraUpdateMask;
 
         DeclinedName *m_declinedname;

@@ -339,7 +339,6 @@ class WorldSession
         void HandleMoveWorldportAckOpcode();                // for server-side calls
 
         void HandleMovementOpcodes(WorldPacket& recvPacket);
-        void HandlePossessedMovement(WorldPacket& recv_data, MovementInfo& movementInfo);
         void HandleSetActiveMoverOpcode(WorldPacket &recv_data);
         void HandleMoveNotActiveMoverOpcode(WorldPacket &recv_data);
         void HandleMoveTimeSkippedOpcode(WorldPacket &recv_data);
@@ -555,6 +554,7 @@ class WorldSession
 
         //Pet
         void HandlePetAction(WorldPacket & recv_data);
+        void HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid, uint16 flag, uint64 guid2);
         void HandlePetNameQuery(WorldPacket & recv_data);
         void HandlePetSetAction(WorldPacket & recv_data);
         void HandlePetAbandon(WorldPacket & recv_data);

@@ -274,15 +274,11 @@ class Spell
         void EffectProficiency(uint32 i);
         void EffectApplyAreaAura(uint32 i);
         void EffectSummonType(uint32 i);
-        void EffectSummon(uint32 i);
         void EffectLearnSpell(uint32 i);
         void EffectDispel(uint32 i);
         void EffectDualWield(uint32 i);
         void EffectPickPocket(uint32 i);
         void EffectAddFarsight(uint32 i);
-        void EffectSummonPossessed(uint32 i);
-        void EffectSummonWild(uint32 i);
-        void EffectSummonGuardian(uint32 i);
         void EffectHealMechanical(uint32 i);
         void EffectTeleUnitsFaceCaster(uint32 i);
         void EffectLearnSkill(uint32 i);
@@ -308,7 +304,6 @@ class Spell
         void EffectStuck(uint32 i);
         void EffectSummonPlayer(uint32 i);
         void EffectActivateObject(uint32 i);
-        void EffectSummonTotem(uint32 i);
         void EffectEnchantHeldItem(uint32 i);
         void EffectSummonObject(uint32 i);
         void EffectResurrect(uint32 i);
@@ -341,7 +336,6 @@ class Spell
         void EffectAddExtraAttacks(uint32 i);
         void EffectSpiritHeal(uint32 i);
         void EffectSkinPlayerCorpse(uint32 i);
-        void EffectSummonDemon(uint32 i);
         void EffectStealBeneficialBuff(uint32 i);
         void EffectUnlearnSpecialization(uint32 i);
         void EffectHealPct(uint32 i);
@@ -588,6 +582,9 @@ class Spell
         void SpellDamageSchoolDmg(uint32 i);
         void SpellDamageWeaponDmg(uint32 i);
         void SpellDamageHeal(uint32 i);
+
+        void GetSummonPosition(uint32 i, Position &pos, float radius = 0.0f, uint32 count = 0);
+        void SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const *properties);
         // -------------------------------------------
 
         //List For Triggered Spells
@@ -662,7 +659,7 @@ namespace Oregon
 
                         Unit* check = i_caster->GetCharmerOrOwnerOrSelf();
 
-                        if (check->GetTypeId() == TYPEID_PLAYER)
+                        if (check->IsControlledByPlayer())
                         {
                             if (check->IsFriendlyTo(itr->getSource()))
                                 continue;

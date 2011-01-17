@@ -510,7 +510,7 @@ void Spell::FillTargetMap()
                     AddUnitTarget(m_caster, i);
                     break;
                 case SPELL_EFFECT_LEARN_PET_SPELL:
-                    if (Pet* pet = m_caster->GetPet())
+                    if (Guardian* pet = m_caster->GetGuardianPet())
                         AddUnitTarget(pet, i);
                     break;
                 /*case SPELL_EFFECT_ENCHANT_ITEM:
@@ -1511,7 +1511,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
                         AddUnitTarget(owner, i);
                     break;
                 case TARGET_UNIT_PET:
-                    if (Pet* pet = m_caster->GetPet())
+                    if (Guardian* pet = m_caster->GetGuardianPet())
                         AddUnitTarget(pet, i);
                     break;
                 case TARGET_UNIT_PARTY_CASTER:
@@ -3286,13 +3286,8 @@ void Spell::HandleEffects(Unit *pUnitTarget,Item *pItemTarget,GameObject *pGOTar
     gameObjTarget = pGOTarget;
 
     uint8 eff = m_spellInfo->Effect[i];
-    uint32 mechanic = m_spellInfo->EffectMechanic[i];
 
     DEBUG_LOG("Spell: Effect : %u", eff);
-
-    //Simply return. Do not display "immune" in red text on client
-    if (unitTarget && unitTarget->IsImmunedToSpellEffect(eff, mechanic))
-        return;
 
     //we do not need DamageMultiplier here.
     damage = CalculateDamage(i, NULL);
@@ -3422,7 +3417,7 @@ uint8 Spell::CanCast(bool strict)
         {
             if (m_spellInfo->EffectImplicitTargetA[j] == TARGET_UNIT_PET)
             {
-                target = m_caster->GetPet();
+                target = m_caster->GetGuardianPet();
                 if (!target)
                 {
                     if (m_triggeredByAuraSpell)              // not report pet not existence for triggered spells
@@ -3717,10 +3712,13 @@ uint8 Spell::CanCast(bool strict)
             }
             case SPELL_EFFECT_LEARN_SPELL:
             {
+                if (m_caster->GetTypeId() != TYPEID_PLAYER)
+                    return SPELL_FAILED_BAD_TARGETS;
+
                 if (m_spellInfo->EffectImplicitTargetA[i] != TARGET_UNIT_PET)
                     break;
 
-                Pet* pet = m_caster->GetPet();
+                Pet* pet = m_caster->ToPlayer()->GetPet();
 
                 if (!pet)
                     return SPELL_FAILED_NO_PET;
@@ -3743,8 +3741,10 @@ uint8 Spell::CanCast(bool strict)
             }
             case SPELL_EFFECT_LEARN_PET_SPELL:
             {
-                Pet* pet = m_caster->GetPet();
+                if (m_caster->GetTypeId() != TYPEID_PLAYER)
+                    return SPELL_FAILED_BAD_TARGETS;
 
+                Pet* pet = m_caster->ToPlayer()->GetPet();
                 if (!pet)
                     return SPELL_FAILED_NO_PET;
 
@@ -3769,7 +3769,7 @@ uint8 Spell::CanCast(bool strict)
                 if (m_caster->GetTypeId() != TYPEID_PLAYER || !m_targets.getItemTarget())
                     return SPELL_FAILED_BAD_TARGETS;
 
-                Pet* pet = m_caster->GetPet();
+                Pet* pet = m_caster->ToPlayer()->GetPet();
 
                 if (!pet)
                     return SPELL_FAILED_NO_PET;
@@ -3972,7 +3972,7 @@ uint8 Spell::CanCast(bool strict)
             }
             case SPELL_EFFECT_SUMMON_DEAD_PET:
             {
-                Creature *pet = m_caster->GetPet();
+                Creature *pet = m_caster->GetGuardianPet();
                 if (!pet)
                     return SPELL_FAILED_NO_PET;
 
@@ -3986,21 +3986,18 @@ uint8 Spell::CanCast(bool strict)
             // These won't show up in m_caster->GetPetGUID()
             case SPELL_EFFECT_SUMMON:
             {
-                switch(m_spellInfo->EffectMiscValueB[i])
+                SummonPropertiesEntry const *SummonProperties = sSummonPropertiesStore.LookupEntry(m_spellInfo->EffectMiscValueB[i]);
+                if (!SummonProperties)
+                    break;
+                switch(SummonProperties->Category)
                 {
-                    case SUMMON_TYPE_POSESSED:
-                    case SUMMON_TYPE_POSESSED2:
-                    case SUMMON_TYPE_POSESSED3:
-                    case SUMMON_TYPE_DEMON:
-                    case SUMMON_TYPE_SUMMON:
-                    {
+                    case SUMMON_CATEGORY_PET:
                         if (m_caster->GetPetGUID())
                             return SPELL_FAILED_ALREADY_HAVE_SUMMON;
-
+                    case SUMMON_CATEGORY_PUPPET:
                         if (m_caster->GetCharmGUID())
                             return SPELL_FAILED_ALREADY_HAVE_CHARM;
                         break;
-                    }
                 }
                 break;
             }
@@ -4022,13 +4019,11 @@ uint8 Spell::CanCast(bool strict)
             {
                 if (m_caster->GetPetGUID())                  //let warlock do a replacement summon
                 {
-
-                    Pet* pet = m_caster->ToPlayer()->GetPet();
-
                     if (m_caster->GetTypeId() == TYPEID_PLAYER && m_caster->getClass() == CLASS_WARLOCK)
                     {
                         if (strict)                         //starting cast, trigger pet stun (cast by pet so it doesn't attack player)
-                            pet->CastSpell(pet, 32752, true, NULL, NULL, pet->GetGUID());
+                            if (Pet* pet = m_caster->ToPlayer()->GetPet())
+                                pet->CastSpell(pet, 32752, true, NULL, NULL, pet->GetGUID());
                     }
                     else
                         return SPELL_FAILED_ALREADY_HAVE_SUMMON;

@@ -46,6 +46,7 @@
 #include "GridNotifiersImpl.h"
 
 #include "TemporarySummon.h"
+#include "Totem.h"
 #include "OutdoorPvPMgr.h"
 
 uint32 GuidHigh2TypeId(uint32 guid_hi)
@@ -1621,35 +1622,74 @@ void WorldObject::AddObjectToRemoveList()
     map->AddObjectToRemoveList(this);
 }
 
-Creature* WorldObject::SummonCreature(uint32 id, const Position &pos, TempSummonType spwtype,uint32 despwtime)
+TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropertiesEntry const *properties, uint32 duration, Unit *summoner)
 {
-    TemporarySummon* pCreature = new TemporarySummon(GetGUID());
+    uint32 mask = SUMMON_MASK_SUMMON;
+    if (properties)
+    {
+        switch(properties->Category)
+        {
+            case SUMMON_CATEGORY_PET:       mask = SUMMON_MASK_GUARDIAN;  break;
+            case SUMMON_CATEGORY_PUPPET:    mask = SUMMON_MASK_PUPPET;    break;
+            default:
+                switch(properties->Type)
+                {
+                    case SUMMON_TYPE_MINION:
+                    case SUMMON_TYPE_GUARDIAN:
+                        mask = SUMMON_MASK_GUARDIAN;  break;
+                    case SUMMON_TYPE_TOTEM:
+                        mask = SUMMON_MASK_TOTEM;     break;
+                    case SUMMON_TYPE_MINIPET:
+                        mask = SUMMON_MASK_MINION;    break;
+                    default:
+                        break;
+                }
+                break;
+        }
+    }
 
     uint32 team = 0;
-    if (GetTypeId() == TYPEID_PLAYER)
-        team = ToPlayer()->GetTeam();
+    if (summoner && summoner->GetTypeId() == TYPEID_PLAYER)
+        team = summoner->ToPlayer()->GetTeam();
 
-    if (!pCreature->Create(objmgr.GenerateLowGuid(HIGHGUID_UNIT), GetMap(), id, team, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation()))
+    TempSummon *summon = NULL;
+    switch(mask)
     {
-        delete pCreature;
+        case SUMMON_MASK_SUMMON:    summon = new TempSummon (properties, summoner);  break;
+        case SUMMON_MASK_GUARDIAN:  summon = new Guardian   (properties, summoner);  break;
+        case SUMMON_MASK_PUPPET:    summon = new Puppet     (properties, summoner);  break;
+        case SUMMON_MASK_TOTEM:     summon = new Totem      (properties, summoner);  break;
+        case SUMMON_MASK_MINION:    summon = new Minion     (properties, summoner);  break;
+        default:    return NULL;
+    }
+
+    if (!summon->Create(objmgr.GenerateLowGuid(HIGHGUID_UNIT), this, entry, team, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation()))
+    {
+        delete summon;
         return NULL;
     }
 
-    pCreature->SetHomePosition(pos);
-    pCreature->Summon(spwtype, despwtime);
+    summon->InitStats(duration);
+    Add(summon->ToCreature());
+    summon->InitSummon();
 
-    if (GetTypeId() == TYPEID_UNIT && ToCreature()->IsAIEnabled)
-        ToCreature()->AI()->JustSummoned(pCreature);
+    return summon;
+}
 
-    if (pCreature->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_TRIGGER && pCreature->m_spells[0])
+TempSummon* WorldObject::SummonCreature(uint32 entry, const Position &pos, TempSummonType spwtype, uint32 duration)
+{
+    if (Map *map = FindMap())
     {
-        if (GetTypeId() == TYPEID_UNIT || GetTypeId() == TYPEID_PLAYER)
-            pCreature->setFaction(((Unit*)this)->getFaction());
-        pCreature->CastSpell(pCreature, pCreature->m_spells[0], false, 0, 0, GetGUID());
+        if (TempSummon *summon = map->SummonCreature(entry, pos, NULL, duration, isType(TYPEMASK_UNIT) ? (Unit*)this : NULL))
+        {
+            summon->SetHomePosition(pos);
+            summon->SetTempSummonType(spwtype);
+
+            return summon;
+        }
     }
 
-    //return the creature therewith the summoner has access to it
-    return pCreature;
+    return NULL;
 }
 
 void WorldObject::SetZoneScript()
@@ -1665,7 +1705,7 @@ void WorldObject::SetZoneScript()
 
 Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetType petType, uint32 duration)
 {
-    Pet* pet = new Pet(petType);
+    Pet* pet = new Pet(this, petType);
 
     if (petType == SUMMON_PET && pet->LoadPetFromDB(this, entry))
     {
@@ -1712,36 +1752,37 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
         return NULL;
     }
 
-    pet->SetOwnerGUID(GetGUID());
     pet->SetCreatorGUID(GetGUID());
     pet->SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, getFaction());
 
     // this enables pet details window (Shift+P)
     pet->GetCharmInfo()->SetPetNumber(pet_number, false);
 
-    map->Add(pet->ToCreature());
-
     pet->setPowerType(POWER_MANA);
     pet->SetUInt32Value(UNIT_NPC_FLAGS , 0);
     pet->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
     pet->InitStatsForLevel(getLevel());
 
+    SetMinion(pet, true);
+
     switch(petType)
     {
-        case GUARDIAN_PET:
-        case POSSESSED_PET:
-            pet->SetUInt32Value(UNIT_FIELD_FLAGS,0);
-            AddGuardian(pet);
-            break;
         case SUMMON_PET:
             pet->SetUInt32Value(UNIT_FIELD_BYTES_0, 2048);
             pet->SetUInt32Value(UNIT_FIELD_PETEXPERIENCE, 0);
             pet->SetUInt32Value(UNIT_FIELD_PETNEXTLEVELEXP, 1000);
             pet->SetHealth(pet->GetMaxHealth());
             pet->SetPower(POWER_MANA, pet->GetMaxPower(POWER_MANA));
+            break;
+    }
+
+    map->Add(pet->ToCreature());
+
+    switch(petType)
+    {
+        case SUMMON_PET:
             pet->InitPetCreateSpells();
             pet->SavePetToDB(PET_SAVE_AS_CURRENT);
-            SetPet(pet);
             PetSpellInitialize();
             break;
     }

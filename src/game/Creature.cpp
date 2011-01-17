@@ -151,10 +151,10 @@ Creature::Creature() :
 Unit(),
 lootForPickPocketed(false), lootForBody(false), m_lootMoney(0), m_lootRecipient(0),
 m_deathTimer(0), m_respawnTime(0), m_respawnDelay(25), m_corpseDelay(60), m_respawnradius(0.0f),
-m_emoteState(0), m_isPet(false), m_isTotem(false), m_reactState(REACT_AGGRESSIVE),
+m_emoteState(0), m_reactState(REACT_AGGRESSIVE),
 m_regenTimer(2000), m_defaultMovementType(IDLE_MOTION_TYPE), m_equipmentId(0), m_AlreadyCallAssistance(false),
 m_regenHealth(true), m_AI_locked(false), m_isDeadByDefault(false),
-m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL),m_creatureInfo(NULL), m_DBTableGuid(0), m_formation(NULL), m_PlayerDamageReq(0)
+m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL),m_creatureInfo(NULL), m_DBTableGuid(0), m_formation(NULL), m_PlayerDamageReq(0), m_summonMask(SUMMON_MASK_NONE)
 , m_AlreadySearchedAssistance(false)
 , m_creatureData(NULL)
 {
@@ -621,9 +621,10 @@ bool Creature::AIM_Initialize(CreatureAI* ai)
         return false;
     }
 
-    delete i_AI;
+    UnitAI *oldAI = i_AI;
     i_motionMaster.Initialize();
     i_AI = ai ? ai : FactorySelector::selectAI(this);
+    delete oldAI;
     IsAIEnabled = true;
     i_AI->InitializeAI();
     return true;
@@ -1434,12 +1435,12 @@ bool Creature::IsImmunedToSpell(SpellEntry const* spellInfo, bool useCharges)
     return Unit::IsImmunedToSpell(spellInfo, useCharges);
 }
 
-bool Creature::IsImmunedToSpellEffect(uint32 effect, uint32 mechanic) const
+bool Creature::IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const
 {
-    if (GetCreatureInfo()->MechanicImmuneMask & (1 << (mechanic-1)))
+    if (GetCreatureInfo()->MechanicImmuneMask & (1 << (spellInfo->EffectMechanic[index] - 1)))
         return true;
 
-    return Unit::IsImmunedToSpellEffect(effect, mechanic);
+    return Unit::IsImmunedToSpellEffect(spellInfo, index);
 }
 
 SpellEntry const *Creature::reachWithSpellAttack(Unit *pVictim)

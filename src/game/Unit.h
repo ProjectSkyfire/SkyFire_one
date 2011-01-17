@@ -238,6 +238,8 @@ enum UnitRename
 };
 
 #define CREATURE_MAX_SPELLS     4
+#define MAX_SPELL_CHARM         4
+#define MAX_SPELL_POSSESS       8
 
 enum Swing
 {
@@ -299,6 +301,8 @@ class Pet;
 class Path;
 class PetAura;
 class UnitAI;
+class Minion;
+class Guardian;
 
 struct SpellImmune
 {
@@ -851,6 +855,16 @@ enum CharmType
     CHARM_TYPE_POSSESS,
 };
 
+enum ActionBarIndex
+{
+    ACTION_BAR_INDEX_START = 0,
+    ACTION_BAR_INDEX_PET_SPELL_START = 3,
+    ACTION_BAR_INDEX_PET_SPELL_END = 7,
+    ACTION_BAR_INDEX_END = 10,
+};
+
+#define MAX_UNIT_ACTION_BAR_INDEX (ACTION_BAR_INDEX_END-ACTION_BAR_INDEX_START)
+
 struct CharmInfo
 {
     public:
@@ -922,7 +936,12 @@ enum ReactiveType
 };
 
 #define MAX_REACTIVE 6
-#define MAX_TOTEM 4
+#define SUMMON_SLOT_PET     0
+#define SUMMON_SLOT_TOTEM   1
+#define MAX_TOTEM_SLOT      5
+#define SUMMON_SLOT_MINIPET 5
+#define SUMMON_SLOT_QUEST   6
+#define MAX_SUMMON_SLOT     7
 
 // delay time next attack to prevent client attack animation problems
 #define ATTACK_DISPLAY_DELAY 200
@@ -934,6 +953,7 @@ class Unit : public WorldObject
 {
     public:
         typedef std::set<Unit*> AttackerSet;
+        typedef std::set<Unit*> ControlList;
         typedef std::pair<uint32, uint8> spellEffectPair;
         typedef std::multimap< spellEffectPair, Aura*> AuraMap;
         typedef std::list<Aura *> AuraList;
@@ -1236,14 +1256,17 @@ class Unit : public WorldObject
         virtual void setDeathState(DeathState s);           // overwrited in Creature/Player/Pet
 
         uint64 GetOwnerGUID() const { return  GetUInt64Value(UNIT_FIELD_SUMMONEDBY); }
-        void SetOwnerGUID(uint64 owner) { SetUInt64Value(UNIT_FIELD_SUMMONEDBY, owner); }
         uint64 GetCreatorGUID() const { return GetUInt64Value(UNIT_FIELD_CREATEDBY); }
         void SetCreatorGUID(uint64 creator) { SetUInt64Value(UNIT_FIELD_CREATEDBY, creator); }
-        uint64 GetPetGUID() const { return  GetUInt64Value(UNIT_FIELD_SUMMON); }
+        uint64 GetMinionGUID() const { return GetUInt64Value(UNIT_FIELD_SUMMON); }
+        void SetMinionGUID(uint64 guid) { SetUInt64Value(UNIT_FIELD_SUMMON, guid); }
         uint64 GetCharmerGUID() const { return GetUInt64Value(UNIT_FIELD_CHARMEDBY); }
         void SetCharmerGUID(uint64 owner) { SetUInt64Value(UNIT_FIELD_CHARMEDBY, owner); }
         uint64 GetCharmGUID() const { return  GetUInt64Value(UNIT_FIELD_CHARM); }
+        void SetPetGUID(uint64 guid) { m_SummonSlot[SUMMON_SLOT_PET] = guid; }
+        uint64 GetPetGUID() const { return m_SummonSlot[SUMMON_SLOT_PET]; }
 
+        bool IsControlledByPlayer() const { return m_ControlledByPlayer; }
         uint64 GetCharmerOrOwnerGUID() const { return GetCharmerGUID() ? GetCharmerGUID() : GetOwnerGUID(); }
         uint64 GetCharmerOrOwnerOrOwnGUID() const
         {
@@ -1256,7 +1279,8 @@ class Unit : public WorldObject
         Player* GetSpellModOwner() const;
 
         Unit* GetOwner() const;
-        Pet* GetPet() const;
+        Guardian *GetGuardianPet() const;
+        Minion *GetFirstMinion() const;
         Unit* GetCharmer() const;
         Unit* GetCharm() const;
         Unit* GetCharmerOrOwner() const { return GetCharmerGUID() ? GetCharmer() : GetOwner(); }
@@ -1269,12 +1293,14 @@ class Unit : public WorldObject
         }
         Player* GetCharmerOrOwnerPlayerOrPlayerItself() const;
 
-        void SetPet(Pet* pet);
-        void SetCharm(Unit* pet);
+        void SetMinion(Minion *minion, bool apply);
+        void RemoveAllMinionsByEntry(uint32 entry);
+        void SetCharm(Unit* target, bool apply);
         void SetCharmedBy(Unit* charmer, CharmType type);
         void RemoveCharmedBy(Unit* charmer);
         void RestoreFaction();
 
+        ControlList m_Controlled;
         Unit* GetFirstControlled() const;
         void RemoveAllControlled();
 
@@ -1379,7 +1405,7 @@ class Unit : public WorldObject
         int32 GetCurrentSpellCastTime(uint32 spell_id) const;
 
         uint32 m_addDmgOnce;
-        uint64 m_TotemSlot[MAX_TOTEM];
+        uint64 m_SummonSlot[MAX_SUMMON_SLOT];
         uint64 m_ObjectSlot[4];
         uint32 m_detectInvisibilityMask;
         uint32 m_invisibilityMask;
@@ -1534,7 +1560,7 @@ class Unit : public WorldObject
         virtual bool IsImmunedToSpell(SpellEntry const* spellInfo, bool useCharges = false);
                                                             // redefined in Creature
         bool IsImmunedToDamage(SpellSchoolMask meleeSchoolMask, bool useCharges = false);
-        virtual bool IsImmunedToSpellEffect(uint32 effect, uint32 mechanic) const;
+        virtual bool IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const;
                                                             // redefined in Creature
 
         uint32 CalcArmorReducedDamage(Unit* pVictim, const uint32 damage);
@@ -1625,6 +1651,8 @@ class Unit : public WorldObject
         void SetFlying(bool apply);
 
         bool IsAIEnabled, NeedChangeAI;
+
+        bool m_ControlledByPlayer;
     protected:
         explicit Unit ();
 
