@@ -169,9 +169,9 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
 
     const char *mapName = entry->name[player->GetSession()->GetSessionDbcLocale()];
 
-    if (entry->IsDungeon())
+    if (entry->map_type == MAP_INSTANCE || entry->map_type == MAP_RAID)
     {
-        if (entry->IsRaid())
+        if (entry->map_type == MAP_RAID)
         {
             // GMs can avoid raid limitations
             if (!player->isGameMaster() && !sWorld.getConfig(CONFIG_INSTANCE_IGNORE_RAID))
