@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysys_priv.h"
 #include <my_dir.h> /* for stat */
@@ -28,7 +28,6 @@ struct utimbuf {
   time_t modtime;
 };
 #endif
-
 
 /*
   int my_copy(const char *from, const char *to, myf MyFlags)
@@ -77,15 +76,15 @@ int my_copy(const char *from, const char *to, myf MyFlags)
     create_flag= (MyFlags & MY_DONT_OVERWRITE_FILE) ? O_EXCL : O_TRUNC;
 
     if ((to_file=  my_create(to,(int) stat_buff.st_mode,
-			     O_WRONLY | create_flag | O_BINARY | O_SHARE,
-			     MyFlags)) < 0)
+                 O_WRONLY | create_flag | O_BINARY | O_SHARE,
+                 MyFlags)) < 0)
       goto err;
 
     while ((Count=my_read(from_file, buff, sizeof(buff), MyFlags)) != 0)
     {
-	if (Count == (uint) -1 ||
-	    my_write(to_file,buff,Count,MYF(MyFlags | MY_NABP)))
-	goto err;
+    if (Count == (uint) -1 ||
+        my_write(to_file,buff,Count,MYF(MyFlags | MY_NABP)))
+    goto err;
     }
 
     /* sync the destination file */
@@ -101,7 +100,7 @@ int my_copy(const char *from, const char *to, myf MyFlags)
     /* Copy modes if possible */
 
     if (MyFlags & MY_HOLD_ORIGINAL_MODES && !new_file_stat)
-	DBUG_RETURN(0);			/* File copyed but not stat */
+    DBUG_RETURN(0);			/* File copyed but not stat */
     /* Copy modes */
     if (chmod(to, stat_buff.st_mode & 07777))
     {

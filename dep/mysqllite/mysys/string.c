@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /*
   Code for handling strings with can grow dynamicly.
@@ -23,7 +23,7 @@
 #include <m_string.h>
 
 my_bool init_dynamic_string(DYNAMIC_STRING *str, const char *init_str,
-			    size_t init_alloc, size_t alloc_increment)
+                size_t init_alloc, size_t alloc_increment)
 {
   size_t length;
   DBUG_ENTER("init_dynamic_string");
@@ -45,7 +45,6 @@ my_bool init_dynamic_string(DYNAMIC_STRING *str, const char *init_str,
   str->alloc_increment=alloc_increment;
   DBUG_RETURN(FALSE);
 }
-
 
 my_bool dynstr_set(DYNAMIC_STRING *str, const char *init_str)
 {
@@ -71,7 +70,6 @@ my_bool dynstr_set(DYNAMIC_STRING *str, const char *init_str)
   DBUG_RETURN(FALSE);
 }
 
-
 my_bool dynstr_realloc(DYNAMIC_STRING *str, size_t additional_size)
 {
   DBUG_ENTER("dynstr_realloc");
@@ -80,22 +78,20 @@ my_bool dynstr_realloc(DYNAMIC_STRING *str, size_t additional_size)
   if (str->length + additional_size > str->max_length)
   {
     str->max_length=((str->length + additional_size+str->alloc_increment-1)/
-		     str->alloc_increment)*str->alloc_increment;
+             str->alloc_increment)*str->alloc_increment;
     if (!(str->str=(char*) my_realloc(str->str,str->max_length,MYF(MY_WME))))
       DBUG_RETURN(TRUE);
   }
   DBUG_RETURN(FALSE);
 }
 
-
 my_bool dynstr_append(DYNAMIC_STRING *str, const char *append)
 {
   return dynstr_append_mem(str,append,(uint) strlen(append));
 }
 
-
 my_bool dynstr_append_mem(DYNAMIC_STRING *str, const char *append,
-			  size_t length)
+              size_t length)
 {
   char *new_ptr;
   if (str->length+length >= str->max_length)
@@ -114,7 +110,6 @@ my_bool dynstr_append_mem(DYNAMIC_STRING *str, const char *append,
   return FALSE;
 }
 
-
 my_bool dynstr_trunc(DYNAMIC_STRING *str, size_t n)
 {
   str->length-=n;
@@ -125,7 +120,7 @@ my_bool dynstr_trunc(DYNAMIC_STRING *str, size_t n)
 /*
   Concatenates any number of strings, escapes any OS quote in the result then
   surround the whole affair in another set of quotes which is finally appended
-  to specified DYNAMIC_STRING.  This function is especially useful when 
+  to specified DYNAMIC_STRING.  This function is especially useful when
   building strings to be executed with the system() function.
 
   @param str Dynamic String which will have addtional strings appended.
@@ -173,7 +168,6 @@ my_bool dynstr_append_os_quoted(DYNAMIC_STRING *str, const char *append, ...)
 
   return ret;
 }
-
 
 void dynstr_free(DYNAMIC_STRING *str)
 {

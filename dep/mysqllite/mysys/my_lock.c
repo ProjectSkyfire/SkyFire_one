@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2003 MySQL AB, 2008-2009 Sun Microsystems, Inc
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysys_priv.h"
 #include "mysys_err.h"
@@ -97,7 +97,7 @@ static int win_lock(File fd, int locktype, my_off_t start, my_off_t length,
       DBUG_RETURN(0);
     goto error;
   }
-  
+
   dwFlags|= LOCKFILE_FAIL_IMMEDIATELY;
   timeout_millis= timeout_sec * 1000;
   /* Try lock in a loop, until the lock is acquired or timeout happens */
@@ -124,10 +124,8 @@ error:
 }
 #endif
 
-
-
-/* 
-  Lock a part of a file 
+/*
+  Lock a part of a file
 
   RETURN VALUE
     0   Success
@@ -136,7 +134,7 @@ error:
 */
 
 int my_lock(File fd, int locktype, my_off_t start, my_off_t length,
-	    myf MyFlags)
+        myf MyFlags)
 {
 #ifdef HAVE_FCNTL
   int value;
@@ -145,7 +143,7 @@ int my_lock(File fd, int locktype, my_off_t start, my_off_t length,
 
   DBUG_ENTER("my_lock");
   DBUG_PRINT("my",("fd: %d  Op: %d  start: %ld  Length: %ld  MyFlags: %d",
-		   fd,locktype,(long) start,(long) length,MyFlags));
+           fd,locktype,(long) start,(long) length,MyFlags));
   if (my_disable_locking)
     DBUG_RETURN(0);
 
@@ -173,19 +171,19 @@ int my_lock(File fd, int locktype, my_off_t start, my_off_t length,
     if (MyFlags & MY_DONT_WAIT)
     {
       if (fcntl(fd,F_SETLK,&lock) != -1)	/* Check if we can lock */
-	DBUG_RETURN(0);			/* Ok, file locked */
+    DBUG_RETURN(0);			/* Ok, file locked */
       DBUG_PRINT("info",("Was locked, trying with alarm"));
       ALARM_INIT;
       while ((value=fcntl(fd,F_SETLKW,&lock)) && ! ALARM_TEST &&
-	     errno == EINTR)
+         errno == EINTR)
       {			/* Setup again so we don`t miss it */
-	ALARM_REINIT;
+    ALARM_REINIT;
       }
       ALARM_END;
       if (value != -1)
-	DBUG_RETURN(0);
+    DBUG_RETURN(0);
       if (errno == EINTR)
-	errno=EAGAIN;
+    errno=EAGAIN;
     }
     else if (fcntl(fd,F_SETLKW,&lock) != -1) /* Wait until a lock */
       DBUG_RETURN(0);

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /* my_setwd() and my_getwd() works with intern_filenames !! */
 
@@ -85,7 +85,6 @@ int my_getwd(char * buf, size_t size, myf MyFlags)
   DBUG_RETURN(0);
 } /* my_getwd */
 
-
 /* Set new working directory */
 
 int my_setwd(const char *dir, myf MyFlags)
@@ -112,9 +111,9 @@ int my_setwd(const char *dir, myf MyFlags)
       pos= strmake(&curr_dir[0],start,(size_t) FN_REFLEN-1);
       if (pos[-1] != FN_LIBCHAR)
       {
-	length=(uint) (pos-(char*) curr_dir);
-	curr_dir[length]=FN_LIBCHAR;		/* must end with '/' */
-	curr_dir[length+1]='\0';
+    length=(uint) (pos-(char*) curr_dir);
+    curr_dir[length]=FN_LIBCHAR;		/* must end with '/' */
+    curr_dir[length+1]='\0';
       }
     }
     else
@@ -123,10 +122,8 @@ int my_setwd(const char *dir, myf MyFlags)
   DBUG_RETURN(res);
 } /* my_setwd */
 
-
-
-	/* Test if hard pathname */
-	/* Returns 1 if dirname is a hard path */
+    /* Test if hard pathname */
+    /* Returns 1 if dirname is a hard path */
 
 int test_if_hard_path(register const char *dir_name)
 {
@@ -140,7 +137,6 @@ int test_if_hard_path(register const char *dir_name)
   return FALSE;
 #endif
 } /* test_if_hard_path */
-
 
 /*
   Test if a name contains an (absolute or relative) path.
@@ -156,7 +152,7 @@ int test_if_hard_path(register const char *dir_name)
 
 my_bool has_path(const char *name)
 {
-  return test(strchr(name, FN_LIBCHAR)) 
+  return test(strchr(name, FN_LIBCHAR))
 #if FN_LIBCHAR != '/'
     || test(strchr(name,'/'))
 #endif

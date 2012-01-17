@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 MySQL AB
+/* Copyright (c) 2003, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /*
   Handling of multiple key caches
@@ -50,7 +50,6 @@ typedef struct st_safe_hash_entry
   struct st_safe_hash_entry *next, **prev;
 } SAFE_HASH_ENTRY;
 
-
 typedef struct st_safe_hash_with_default
 {
   rw_lock_t mutex;
@@ -58,7 +57,6 @@ typedef struct st_safe_hash_with_default
   uchar *default_value;
   SAFE_HASH_ENTRY *root;
 } SAFE_HASH;
-
 
 /*
   Free a SAFE_HASH_ENTRY
@@ -73,7 +71,6 @@ static void safe_hash_entry_free(SAFE_HASH_ENTRY *entry)
   DBUG_VOID_RETURN;
 }
 
-
 /* Get key and length for a SAFE_HASH_ENTRY */
 
 static uchar *safe_hash_entry_get(SAFE_HASH_ENTRY *entry, size_t *length,
@@ -82,7 +79,6 @@ static uchar *safe_hash_entry_get(SAFE_HASH_ENTRY *entry, size_t *length,
   *length=entry->length;
   return (uchar*) entry->key;
 }
-
 
 /*
   Init a SAFE_HASH object
@@ -103,7 +99,7 @@ static uchar *safe_hash_entry_get(SAFE_HASH_ENTRY *entry, size_t *length,
 */
 
 static my_bool safe_hash_init(SAFE_HASH *hash, uint elements,
-			      uchar *default_value)
+                  uchar *default_value)
 {
   DBUG_ENTER("safe_hash");
   if (my_hash_init(&hash->hash, &my_charset_bin, elements,
@@ -118,7 +114,6 @@ static my_bool safe_hash_init(SAFE_HASH *hash, uint elements,
   hash->root= 0;
   DBUG_RETURN(0);
 }
-
 
 /*
   Free a SAFE_HASH object
@@ -160,7 +155,6 @@ static uchar *safe_hash_search(SAFE_HASH *hash, const uchar *key, uint length)
   DBUG_RETURN(result);
 }
 
-
 /*
   Associate a key with some data
 
@@ -182,7 +176,7 @@ static uchar *safe_hash_search(SAFE_HASH *hash, const uchar *key, uint length)
 */
 
 static my_bool safe_hash_set(SAFE_HASH *hash, const uchar *key, uint length,
-			     uchar *data)
+                 uchar *data)
 {
   SAFE_HASH_ENTRY *entry;
   my_bool error= 0;
@@ -215,7 +209,7 @@ static my_bool safe_hash_set(SAFE_HASH *hash, const uchar *key, uint length,
   else
   {
     if (!(entry= (SAFE_HASH_ENTRY *) my_malloc(sizeof(*entry) + length,
-					       MYF(MY_WME))))
+                           MYF(MY_WME))))
     {
       error= 1;
       goto end;
@@ -242,7 +236,6 @@ end:
   rw_unlock(&hash->mutex);
   DBUG_RETURN(error);
 }
-
 
 /*
   Change all entres with one data value to another data value
@@ -275,17 +268,16 @@ static void safe_hash_change(SAFE_HASH *hash, uchar *old_data, uchar *new_data)
       {
         if ((*entry->prev= entry->next))
           entry->next->prev= entry->prev;
-	my_hash_delete(&hash->hash, (uchar*) entry);
+    my_hash_delete(&hash->hash, (uchar*) entry);
       }
       else
-	entry->data= new_data;
+    entry->data= new_data;
     }
   }
 
   rw_unlock(&hash->mutex);
   DBUG_VOID_RETURN;
 }
-
 
 /*****************************************************************************
   Functions to handle the key cache objects
@@ -294,12 +286,10 @@ static void safe_hash_change(SAFE_HASH *hash, uchar *old_data, uchar *new_data)
 /* Variable to store all key cache objects */
 static SAFE_HASH key_cache_hash;
 
-
 my_bool multi_keycache_init(void)
 {
   return safe_hash_init(&key_cache_hash, 16, (uchar*) dflt_key_cache);
 }
-
 
 void multi_keycache_free(void)
 {
@@ -330,10 +320,8 @@ KEY_CACHE *multi_key_cache_search(uchar *key, uint length)
   return (KEY_CACHE*) safe_hash_search(&key_cache_hash, key, length);
 }
 
-
 /*
   Assosiate a key cache with a key
-
 
   SYONOPSIS
     multi_key_cache_set()
@@ -346,16 +334,14 @@ KEY_CACHE *multi_key_cache_search(uchar *key, uint length)
     entry
 */
 
-
 my_bool multi_key_cache_set(const uchar *key, uint length,
-			    KEY_CACHE *key_cache)
+                KEY_CACHE *key_cache)
 {
   return safe_hash_set(&key_cache_hash, key, length, (uchar*) key_cache);
 }
 
-
 void multi_key_cache_change(KEY_CACHE *old_data,
-			    KEY_CACHE *new_data)
+                KEY_CACHE *new_data)
 {
   safe_hash_change(&key_cache_hash, (uchar*) old_data, (uchar*) new_data);
 }

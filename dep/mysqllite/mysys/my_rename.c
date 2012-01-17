@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysys_priv.h"
 #include <my_dir.h>
@@ -19,7 +19,7 @@
 #include "m_string.h"
 #undef my_rename
 
-	/* On unix rename deletes to file if it exists */
+    /* On unix rename deletes to file if it exists */
 
 int my_rename(const char *from, const char *to, myf MyFlags)
 {
@@ -37,7 +37,7 @@ int my_rename(const char *from, const char *to, myf MyFlags)
       my_errno=EEXIST;
       error= -1;
       if (MyFlags & MY_FAE+MY_WME)
-	my_error(EE_LINK, MYF(ME_BELL+ME_WAITTANG),from,to,my_errno);
+    my_error(EE_LINK, MYF(ME_BELL+ME_WAITTANG),from,to,my_errno);
       DBUG_RETURN(error);
     }
     my_errno=save_errno;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysys_priv.h"
 #include <m_string.h>
@@ -24,15 +24,17 @@
 */
 
 char * fn_format(char * to, const char *name, const char *dir,
-		    const char *extension, uint flag)
+            const char *extension, uint flag)
 {
   char dev[FN_REFLEN], buff[FN_REFLEN], *pos, *startpos;
   const char *ext;
   reg1 size_t length;
   size_t dev_length;
   DBUG_ENTER("fn_format");
+  DBUG_ASSERT(name != NULL);
+  DBUG_ASSERT(extension != NULL);
   DBUG_PRINT("enter",("name: %s  dir: %s  extension: %s  flag: %d",
-		       name,dir,extension,flag));
+               name,dir,extension,flag));
 
   /* Copy and skip directory */
   name+=(length=dirname_part(dev, (startpos=(char *) name), &dev_length));
@@ -101,7 +103,7 @@ char * fn_format(char * to, const char *name, const char *dir,
   */
   if (flag & MY_RETURN_REAL_PATH)
     (void) my_realpath(to, to, MYF(flag & MY_RESOLVE_SYMLINKS ?
-				   MY_RESOLVE_LINK: 0));
+                   MY_RESOLVE_LINK: 0));
   else if (flag & MY_RESOLVE_SYMLINKS)
   {
     strmov(buff,to);
@@ -109,7 +111,6 @@ char * fn_format(char * to, const char *name, const char *dir,
   }
   DBUG_RETURN(to);
 } /* fn_format */
-
 
 /*
   strlength(const string str)
@@ -131,8 +132,8 @@ size_t strlength(const char *str)
       while (*++pos && *pos != ' ') {};
       if (!*pos)
       {
-	found=pos;			/* String ends here */
-	break;
+    found=pos;			/* String ends here */
+    break;
       }
     }
     found=pos;

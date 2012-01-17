@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2003 MySQL AB, 2008-2009 Sun Microsystems, Inc
+/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysys_priv.h"
 #include "my_static.h"
@@ -37,8 +37,6 @@ static my_bool win32_init_tcp_ip();
 #define SCALE_USEC      10000
 
 my_bool my_init_done= 0;
-/** True if @c my_basic_init() has been called. */
-my_bool my_basic_init_done= 0;
 uint	mysys_usage_id= 0;              /* Incremented for each my_init() */
 ulong   my_thread_stack_size= 65536;
 
@@ -48,8 +46,8 @@ static ulong atoi_octal(const char *str)
   while (*str && my_isspace(&my_charset_latin1, *str))
     str++;
   str2int(str,
-	  (*str == '0' ? 8 : 10),       /* Octalt or decimalt */
-	  0, INT_MAX, &tmp);
+      (*str == '0' ? 8 : 10),       /* Octalt or decimalt */
+      0, INT_MAX, &tmp);
   return (ulong) tmp;
 }
 
@@ -57,22 +55,20 @@ MYSQL_FILE *mysql_stdin= NULL;
 static MYSQL_FILE instrumented_stdin;
 
 /**
-  Perform a limited initialisation of mysys.
-  This initialisation is sufficient to:
-  - allocate memory,
-  - read configuration files,
-  - parse command lines arguments.
-  To complete the mysys initialisation,
-  call my_init().
-  @return 0 on success
-*/
-my_bool my_basic_init(void)
-{
-  char * str;
+  Initialize my_sys functions, resources and variables
 
-  if (my_basic_init_done)
+  @return Initialization result
+    @retval 0 Success
+    @retval 1 Error. Couldn't initialize environment
+*/
+my_bool my_init(void)
+{
+  char *str;
+
+  if (my_init_done)
     return 0;
-  my_basic_init_done= 1;
+
+  my_init_done= 1;
 
   mysys_usage_id++;
   my_umask= 0660;                       /* Default umask for new files */
@@ -105,40 +101,10 @@ my_bool my_basic_init(void)
 #if defined(HAVE_PTHREAD_INIT)
   pthread_init();			/* Must be called before DBUG_ENTER */
 #endif
-  if (my_thread_basic_global_init())
-    return 1;
 
   /* $HOME is needed early to parse configuration files located in ~/ */
   if ((home_dir= getenv("HOME")) != 0)
     home_dir= intern_filename(home_dir_buff, home_dir);
-
-  return 0;
-}
-
-
-/*
-  Init my_sys functions and my_sys variabels
-
-  SYNOPSIS
-    my_init()
-
-  RETURN
-    0  ok
-    1  Couldn't initialize environment
-*/
-
-my_bool my_init(void)
-{
-  if (my_init_done)
-    return 0;
-
-  my_init_done= 1;
-
-  if (my_basic_init())
-    return 1;
-
-  if (my_thread_global_init())
-    return 1;
 
   {
     DBUG_ENTER("my_init");
@@ -152,8 +118,7 @@ my_bool my_init(void)
   }
 } /* my_init */
 
-
-	/* End my_sys */
+    /* End my_sys */
 
 void my_end(int infoflag)
 {
@@ -212,15 +177,15 @@ Maximum resident set size %ld, Integral resident set size %ld\n\
 Non-physical pagefaults %ld, Physical pagefaults %ld, Swaps %ld\n\
 Blocks in %ld out %ld, Messages in %ld out %ld, Signals %ld\n\
 Voluntary context switches %ld, Involuntary context switches %ld\n",
-	      (rus.ru_utime.tv_sec * SCALE_SEC +
-	       rus.ru_utime.tv_usec / SCALE_USEC) / 100.0,
-	      (rus.ru_stime.tv_sec * SCALE_SEC +
-	       rus.ru_stime.tv_usec / SCALE_USEC) / 100.0,
-	      rus.ru_maxrss, rus.ru_idrss,
-	      rus.ru_minflt, rus.ru_majflt,
-	      rus.ru_nswap, rus.ru_inblock, rus.ru_oublock,
-	      rus.ru_msgsnd, rus.ru_msgrcv, rus.ru_nsignals,
-	      rus.ru_nvcsw, rus.ru_nivcsw);
+          (rus.ru_utime.tv_sec * SCALE_SEC +
+           rus.ru_utime.tv_usec / SCALE_USEC) / 100.0,
+          (rus.ru_stime.tv_sec * SCALE_SEC +
+           rus.ru_stime.tv_usec / SCALE_USEC) / 100.0,
+          rus.ru_maxrss, rus.ru_idrss,
+          rus.ru_minflt, rus.ru_majflt,
+          rus.ru_nswap, rus.ru_inblock, rus.ru_oublock,
+          rus.ru_msgsnd, rus.ru_msgrcv, rus.ru_nsignals,
+          rus.ru_nvcsw, rus.ru_nivcsw);
 #endif
 #if defined(__WIN__) && defined(_MSC_VER)
    _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_FILE );
@@ -256,16 +221,13 @@ Voluntary context switches %ld, Involuntary context switches %ld\n",
 #endif /* __WIN__ */
 
   my_init_done=0;
-  my_basic_init_done= 0;
 } /* my_end */
-
 
 #ifdef __WIN__
 
-
 /*
   my_parameter_handler
-  
+
   Invalid parameter handler we will use instead of the one "baked"
   into the CRT for MSC v8.  This one just prints out what invalid
   parameter was encountered.  By providing this routine, routines like
@@ -277,9 +239,8 @@ void my_parameter_handler(const wchar_t * expression, const wchar_t * function,
                           uintptr_t pReserved)
 {
   DBUG_PRINT("my",("Expression: %s  function: %s  file: %s, line: %d",
-		   expression, function, file, line));
+           expression, function, file, line));
 }
-
 
 #ifdef __MSVC_RUNTIME_CHECKS
 #include <rtcapi.h>
@@ -336,7 +297,6 @@ static void win_init_time(void)
   }
 }
 
-
 /*
   Open HKEY_LOCAL_MACHINE\SOFTWARE\MySQL and set any strings found
   there as environment variables
@@ -391,7 +351,6 @@ static void win_init_registry(void)
   }
 }
 
-
 static void my_win_init(void)
 {
   DBUG_ENTER("my_win_init");
@@ -426,7 +385,6 @@ static void my_win_init(void)
   DBUG_VOID_RETURN;
 }
 
-
 /*------------------------------------------------------------------
   Name: CheckForTcpip| Desc: checks if tcpip has been installed on system
   According to Microsoft Developers documentation the first registry
@@ -442,21 +400,20 @@ static my_bool win32_have_tcpip(void)
 {
   HKEY hTcpipRegKey;
   if (RegOpenKeyEx ( HKEY_LOCAL_MACHINE, TCPIPKEY, 0, KEY_READ,
-		      &hTcpipRegKey) != ERROR_SUCCESS)
+              &hTcpipRegKey) != ERROR_SUCCESS)
   {
     if (RegOpenKeyEx ( HKEY_LOCAL_MACHINE, WINSOCK2KEY, 0, KEY_READ,
-		      &hTcpipRegKey) != ERROR_SUCCESS)
+              &hTcpipRegKey) != ERROR_SUCCESS)
     {
       if (RegOpenKeyEx ( HKEY_LOCAL_MACHINE, WINSOCKKEY, 0, KEY_READ,
-			 &hTcpipRegKey) != ERROR_SUCCESS)
-	if (!getenv("HAVE_TCPIP") || have_tcpip)	/* Provide a workaround */
-	  return (FALSE);
+             &hTcpipRegKey) != ERROR_SUCCESS)
+    if (!getenv("HAVE_TCPIP") || have_tcpip)	/* Provide a workaround */
+      return (FALSE);
     }
   }
   RegCloseKey ( hTcpipRegKey);
   return (TRUE);
 }
-
 
 static my_bool win32_init_tcp_ip()
 {
@@ -464,27 +421,27 @@ static my_bool win32_init_tcp_ip()
   {
     WORD wVersionRequested = MAKEWORD( 2, 2 );
     WSADATA wsaData;
- 	/* Be a good citizen: maybe another lib has already initialised
- 		sockets, so dont clobber them unless necessary */
+    /* Be a good citizen: maybe another lib has already initialised
+        sockets, so dont clobber them unless necessary */
     if (WSAStartup( wVersionRequested, &wsaData ))
     {
       /* Load failed, maybe because of previously loaded
-	 incompatible version; try again */
+     incompatible version; try again */
       WSACleanup( );
       if (!WSAStartup( wVersionRequested, &wsaData ))
-	have_tcpip=1;
+    have_tcpip=1;
     }
     else
     {
       if (wsaData.wVersion != wVersionRequested)
       {
-	/* Version is no good, try again */
-	WSACleanup( );
-	if (!WSAStartup( wVersionRequested, &wsaData ))
-	  have_tcpip=1;
+    /* Version is no good, try again */
+    WSACleanup( );
+    if (!WSAStartup( wVersionRequested, &wsaData ))
+      have_tcpip=1;
       }
       else
-	have_tcpip=1;
+    have_tcpip=1;
     }
   }
   return(0);
@@ -501,16 +458,12 @@ PSI_mutex_key key_my_file_info_mutex;
 PSI_mutex_key key_LOCK_localtime_r;
 #endif /* !defined(HAVE_LOCALTIME_R) || !defined(HAVE_GMTIME_R) */
 
-#ifndef HAVE_GETHOSTBYNAME_R
-PSI_mutex_key key_LOCK_gethostbyname_r;
-#endif /* HAVE_GETHOSTBYNAME_R */
-
 PSI_mutex_key key_BITMAP_mutex, key_IO_CACHE_append_buffer_lock,
   key_IO_CACHE_SHARE_mutex, key_KEY_CACHE_cache_lock, key_LOCK_alarm,
   key_my_thread_var_mutex, key_THR_LOCK_charset, key_THR_LOCK_heap,
   key_THR_LOCK_isam, key_THR_LOCK_lock, key_THR_LOCK_malloc,
   key_THR_LOCK_mutex, key_THR_LOCK_myisam, key_THR_LOCK_net,
-  key_THR_LOCK_open, key_THR_LOCK_threads, key_THR_LOCK_time,
+  key_THR_LOCK_open, key_THR_LOCK_threads,
   key_TMPDIR_mutex, key_THR_LOCK_myisam_mmap;
 
 static PSI_mutex_info all_mysys_mutexes[]=
@@ -521,9 +474,6 @@ static PSI_mutex_info all_mysys_mutexes[]=
 #if !defined(HAVE_LOCALTIME_R) || !defined(HAVE_GMTIME_R)
   { &key_LOCK_localtime_r, "LOCK_localtime_r", PSI_FLAG_GLOBAL},
 #endif /* !defined(HAVE_LOCALTIME_R) || !defined(HAVE_GMTIME_R) */
-#ifndef HAVE_GETHOSTBYNAME_R
-  { &key_LOCK_gethostbyname_r, "LOCK_gethostbyname_r", PSI_FLAG_GLOBAL},
-#endif /* HAVE_GETHOSTBYNAME_R */
   { &key_BITMAP_mutex, "BITMAP::mutex", 0},
   { &key_IO_CACHE_append_buffer_lock, "IO_CACHE::append_buffer_lock", 0},
   { &key_IO_CACHE_SHARE_mutex, "IO_CACHE::SHARE_mutex", 0},
@@ -540,7 +490,6 @@ static PSI_mutex_info all_mysys_mutexes[]=
   { &key_THR_LOCK_net, "THR_LOCK_net", PSI_FLAG_GLOBAL},
   { &key_THR_LOCK_open, "THR_LOCK_open", PSI_FLAG_GLOBAL},
   { &key_THR_LOCK_threads, "THR_LOCK_threads", PSI_FLAG_GLOBAL},
-  { &key_THR_LOCK_time, "THR_LOCK_time", PSI_FLAG_GLOBAL},
   { &key_TMPDIR_mutex, "TMPDIR_mutex", PSI_FLAG_GLOBAL},
   { &key_THR_LOCK_myisam_mmap, "THR_LOCK_myisam_mmap", PSI_FLAG_GLOBAL}
 };
@@ -604,4 +553,3 @@ void my_init_mysys_psi_keys()
   PSI_server->register_file(category, all_mysys_files, count);
 }
 #endif /* HAVE_PSI_INTERFACE */
-

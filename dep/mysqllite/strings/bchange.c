@@ -1,4 +1,5 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2001, 2006, 2007 MySQL AB
+   Use is subject to license terms.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /*  File   : bchange.c
     Author : Michael widenius
@@ -27,7 +28,7 @@
 #include "m_string.h"
 
 void bchange(register uchar *dst, size_t old_length, register const uchar *src,
-	     size_t new_length, size_t tot_length)
+         size_t new_length, size_t tot_length)
 {
   size_t rest=tot_length-old_length;
   if (old_length < new_length)

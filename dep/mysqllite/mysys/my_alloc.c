@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /* Routines to handle mallocing of results which will be freed the same time */
 
@@ -20,7 +20,6 @@
 #include <m_string.h>
 #undef EXTRA_DEBUG
 #define EXTRA_DEBUG
-
 
 /*
   Initialize memory root
@@ -44,7 +43,7 @@
 */
 
 void init_alloc_root(MEM_ROOT *mem_root, size_t block_size,
-		     size_t pre_alloc_size __attribute__((unused)))
+             size_t pre_alloc_size __attribute__((unused)))
 {
   DBUG_ENTER("init_alloc_root");
   DBUG_PRINT("enter",("root: 0x%lx", (long) mem_root));
@@ -60,8 +59,8 @@ void init_alloc_root(MEM_ROOT *mem_root, size_t block_size,
   if (pre_alloc_size)
   {
     if ((mem_root->free= mem_root->pre_alloc=
-	 (USED_MEM*) my_malloc(pre_alloc_size+ ALIGN_SIZE(sizeof(USED_MEM)),
-			       MYF(0))))
+     (USED_MEM*) my_malloc(pre_alloc_size+ ALIGN_SIZE(sizeof(USED_MEM)),
+                   MYF(0))))
     {
       mem_root->free->size= pre_alloc_size+ALIGN_SIZE(sizeof(USED_MEM));
       mem_root->free->left= pre_alloc_size;
@@ -71,7 +70,6 @@ void init_alloc_root(MEM_ROOT *mem_root, size_t block_size,
 #endif
   DBUG_VOID_RETURN;
 }
-
 
 /*
   SYNOPSIS
@@ -128,10 +126,10 @@ void reset_root_defaults(MEM_ROOT *mem_root, size_t block_size,
       /* Allocate new prealloc block and add it to the end of free list */
       if ((mem= (USED_MEM *) my_malloc(size, MYF(0))))
       {
-        mem->size= size; 
+        mem->size= size;
         mem->left= pre_alloc_size;
         mem->next= *prev;
-        *prev= mem_root->pre_alloc= mem; 
+        *prev= mem_root->pre_alloc= mem;
       }
       else
       {
@@ -143,7 +141,6 @@ void reset_root_defaults(MEM_ROOT *mem_root, size_t block_size,
 #endif
     mem_root->pre_alloc= 0;
 }
-
 
 void *alloc_root(MEM_ROOT *mem_root, size_t length)
 {
@@ -196,8 +193,8 @@ void *alloc_root(MEM_ROOT *mem_root, size_t length)
   if ((*(prev= &mem_root->free)) != NULL)
   {
     if ((*prev)->left < length &&
-	mem_root->first_block_usage++ >= ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP &&
-	(*prev)->left < ALLOC_MAX_BLOCK_TO_DROP)
+    mem_root->first_block_usage++ >= ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP &&
+    (*prev)->left < ALLOC_MAX_BLOCK_TO_DROP)
     {
       next= *prev;
       *prev= next->next;			/* Remove block from list */
@@ -217,7 +214,7 @@ void *alloc_root(MEM_ROOT *mem_root, size_t length)
     if (!(next = (USED_MEM*) my_malloc(get_size,MYF(MY_WME | ME_FATALERROR))))
     {
       if (mem_root->error_handler)
-	(*mem_root->error_handler)();
+    (*mem_root->error_handler)();
       DBUG_RETURN((void*) 0);                      /* purecov: inspected */
     }
     mem_root->block_num++;
@@ -240,7 +237,6 @@ void *alloc_root(MEM_ROOT *mem_root, size_t length)
   DBUG_RETURN((void*) point);
 #endif
 }
-
 
 /*
   Allocate many pointers at the same time.
@@ -324,7 +320,6 @@ static inline void mark_blocks_free(MEM_ROOT* root)
   root->first_block_usage= 0;
 }
 
-
 /*
   Deallocate everything used by alloc_root or just move
   used blocks to free list if called with MY_USED_TO_FREE
@@ -336,7 +331,7 @@ static inline void mark_blocks_free(MEM_ROOT* root)
 
         MY_MARK_BLOCKS_FREED	Don't free blocks, just mark them free
         MY_KEEP_PREALLOC	If this is not set, then free also the
-        		        preallocated block
+                        preallocated block
 
   NOTES
     One can call this function either with root block initialised with
@@ -408,12 +403,10 @@ void set_prealloc_root(MEM_ROOT *root, char *ptr)
   }
 }
 
-
 char *strdup_root(MEM_ROOT *root, const char *str)
 {
   return strmake_root(root, str, strlen(str));
 }
-
 
 char *strmake_root(MEM_ROOT *root, const char *str, size_t len)
 {
@@ -425,7 +418,6 @@ char *strmake_root(MEM_ROOT *root, const char *str, size_t len)
   }
   return pos;
 }
-
 
 void *memdup_root(MEM_ROOT *root, const void *str, size_t len)
 {

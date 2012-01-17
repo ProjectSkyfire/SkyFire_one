@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2001, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include <my_global.h>
 #include <my_stacktrace.h>
@@ -158,7 +158,7 @@ void my_safe_print_str(const char* val, int max_len)
 /* Use Solaris' symbolic stack trace routine. */
 #include <ucontext.h>
 
-void my_print_stacktrace(uchar* stack_bottom __attribute__((unused)), 
+void my_print_stacktrace(uchar* stack_bottom __attribute__((unused)),
                          ulong thread_stack __attribute__((unused)))
 {
   if (printstack(fileno(stderr)) == -1)
@@ -296,21 +296,20 @@ void my_print_stacktrace(uchar* stack_bottom, ulong thread_stack)
 #endif
   LINT_INIT(fp);
 
-
 #ifdef __i386__
   __asm __volatile__ ("movl %%ebp,%0"
-		      :"=r"(fp)
-		      :"r"(fp));
+              :"=r"(fp)
+              :"r"(fp));
 #endif
 #ifdef __x86_64__
   __asm __volatile__ ("movq %%rbp,%0"
-		      :"=r"(fp)
-		      :"r"(fp));
+              :"=r"(fp)
+              :"r"(fp));
 #endif
-#if defined(__alpha__) && defined(__GNUC__) 
+#if defined(__alpha__) && defined(__GNUC__)
   __asm __volatile__ ("mov $30,%0"
-		      :"=r"(fp)
-		      :"r"(fp));
+              :"=r"(fp)
+              :"r"(fp));
 #endif
   if (!fp)
   {
@@ -324,7 +323,7 @@ void my_print_stacktrace(uchar* stack_bottom, ulong thread_stack)
     ulong tmp= min(0x10000,thread_stack);
     /* Assume that the stack starts at the previous even 65K */
     stack_bottom= (uchar*) (((ulong) &fp + tmp) &
-			  ~(ulong) 0xFFFF);
+              ~(ulong) 0xFFFF);
     fprintf(stderr, "Cannot determine thread, fp=%p, backtrace may not be correct.\n", fp);
   }
   if (fp > (uchar**) stack_bottom ||
@@ -332,7 +331,7 @@ void my_print_stacktrace(uchar* stack_bottom, ulong thread_stack)
   {
     fprintf(stderr, "Bogus stack limit or frame pointer,\
  fp=%p, stack_bottom=%p, thread_stack=%ld, aborting backtrace.\n",
-	    fp, stack_bottom, thread_stack);
+        fp, stack_bottom, thread_stack);
     return;
   }
 
@@ -343,8 +342,8 @@ void my_print_stacktrace(uchar* stack_bottom, ulong thread_stack)
  terminate abruptly\n");
   /* On Alpha, we need to get pc */
   __asm __volatile__ ("bsr %0, do_next; do_next: "
-		      :"=r"(pc)
-		      :"r"(pc));
+              :"=r"(pc)
+              :"r"(pc));
 #endif  /* __alpha__ */
 
   /* We are 1 frame above signal frame with NPTL and 2 frames above with LT */
@@ -355,7 +354,7 @@ void my_print_stacktrace(uchar* stack_bottom, ulong thread_stack)
 #if defined(__i386__) || defined(__x86_64__)
     uchar** new_fp = (uchar**)*fp;
     fprintf(stderr, "%p\n", frame_count == sigreturn_frame_count ?
-	    *(fp + SIGRETURN_FRAME_OFFSET) : *(fp + 1));
+        *(fp + SIGRETURN_FRAME_OFFSET) : *(fp + 1));
 #endif /* defined(__386__)  || defined(__x86_64__) */
 
 #if defined(__alpha__) && defined(__GNUC__)
@@ -369,12 +368,12 @@ void my_print_stacktrace(uchar* stack_bottom, ulong thread_stack)
     {
       pc = find_prev_pc(pc, fp);
       if (pc)
-	fprintf(stderr, "%p\n", pc);
+    fprintf(stderr, "%p\n", pc);
       else
       {
-	fprintf(stderr, "Not smart enough to deal with the rest\
+    fprintf(stderr, "Not smart enough to deal with the rest\
  of this stack\n");
-	goto end;
+    goto end;
       }
     }
     else
@@ -444,7 +443,6 @@ void my_init_stacktrace()
 {
 }
 
-
 void my_set_exception_pointers(EXCEPTION_POINTERS *ep)
 {
   exception_ptrs = ep;
@@ -453,7 +451,7 @@ void my_set_exception_pointers(EXCEPTION_POINTERS *ep)
 /*
   Appends directory to symbol path.
 */
-static void add_to_symbol_path(char *path, size_t path_buffer_size, 
+static void add_to_symbol_path(char *path, size_t path_buffer_size,
   char *dir, size_t dir_buffer_size)
 {
   strcat_s(dir, dir_buffer_size, ";");
@@ -470,8 +468,8 @@ static void add_to_symbol_path(char *path, size_t path_buffer_size,
   variable _NT_SYMBOL_PATH is set, it's value appended to the symbol search path
 */
 static void get_symbol_path(char *path, size_t size)
-{ 
-  HANDLE hSnap; 
+{
+  HANDLE hSnap;
   char *envvar;
   char *p;
 #ifndef DBUG_OFF
@@ -481,14 +479,14 @@ static void get_symbol_path(char *path, size_t size)
   path[0]= '\0';
 
 #ifndef DBUG_OFF
-  /* 
-    Add "debug" subdirectory of the application directory, sometimes PDB will 
+  /*
+    Add "debug" subdirectory of the application directory, sometimes PDB will
     placed here by installation.
   */
   GetModuleFileName(NULL, pdb_debug_dir, MAX_PATH);
   p= strrchr(pdb_debug_dir, '\\');
   if(p)
-  { 
+  {
     *p= 0;
     strcat_s(pdb_debug_dir, sizeof(pdb_debug_dir), "\\debug;");
     add_to_symbol_path(path, size, pdb_debug_dir, sizeof(pdb_debug_dir));
@@ -527,7 +525,6 @@ static void get_symbol_path(char *path, size_t size)
     CloseHandle(hSnap);
   }
 
-  
   /* Add _NT_SYMBOL_PATH, if present. */
   envvar= getenv("_NT_SYMBOL_PATH");
   if(envvar)
@@ -586,7 +583,7 @@ void my_print_stacktrace(uchar* unused1, ulong unused2)
   package.sym.SizeOfStruct= sizeof(package.sym);
   package.sym.MaxNameLength= sizeof(package.name);
 
-  /*Walk the stack, output useful information*/ 
+  /*Walk the stack, output useful information*/
   for(i= 0; i< STACKWALK_MAX_FRAMES;i++)
   {
     DWORD64 function_offset= 0;
@@ -647,7 +644,6 @@ void my_print_stacktrace(uchar* unused1, ulong unused2)
   fflush(stderr);
 }
 
-
 /*
   Write dump. The dump is created in current directory,
   file name is constructed from executable name plus
@@ -699,16 +695,15 @@ void my_write_core(int unused)
   fflush(stderr);
 }
 
-
 void my_safe_print_str(const char *val, int len)
 {
   __try
   {
-    fprintf(stderr,"=%.*s\n", len, val);
+    fprintf(stderr, "%.*s\n", len, val);
   }
   __except(EXCEPTION_EXECUTE_HANDLER)
   {
-    fprintf(stderr,"is an invalid string pointer\n");
+    fprintf(stderr, "is an invalid string pointer\n");
   }
 }
 #endif /*__WIN__*/

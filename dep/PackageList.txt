@@ -2,7 +2,7 @@ TrinityCore uses (parts of or in whole) the following opensource software :
 
 ACE (ADAPTIVE Communication Environment)
   http://www.cs.wustl.edu/~schmidt/ACE.html
-  Version: 5.8.3
+  Version: 6.0.0
 
 bzip2 (a freely available, patent free, high-quality data compressor)
   http://www.bzip.org/
@@ -26,7 +26,7 @@ MersenneTwister (a very fast random number generator)
 
 MySQL (the world's most popular open source database software)
   http://www.mysql.com/
-  Version: 5.5.9 (GA)
+  Version: 5.5.15 (GA)
 
 SFMT (SIMD-oriented Fast Mersenne Twister)
   Based on http://agner.org/random/

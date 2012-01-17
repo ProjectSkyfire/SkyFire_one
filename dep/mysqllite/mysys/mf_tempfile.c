@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysys_priv.h"
 #include <m_string.h>
@@ -21,8 +21,6 @@
 #ifdef HAVE_PATHS_H
 #include <paths.h>
 #endif
-
-
 
 /*
   @brief
@@ -55,8 +53,8 @@
 */
 
 File create_temp_file(char *to, const char *dir, const char *prefix,
-		      int mode __attribute__((unused)),
-		      myf MyFlags __attribute__((unused)))
+              int mode __attribute__((unused)),
+              myf MyFlags __attribute__((unused)))
 {
   File file= -1;
 #ifdef __WIN__
@@ -69,13 +67,13 @@ File create_temp_file(char *to, const char *dir, const char *prefix,
 
    /*
      Use GetTempPath to determine path for temporary files.
-     This is because the documentation for GetTempFileName 
+     This is because the documentation for GetTempFileName
      has the following to say about this parameter:
      "If this parameter is NULL, the function fails."
    */
    if (!dir)
    {
-     if(GetTempPath(sizeof(path_buf), path_buf) > 0) 
+     if(GetTempPath(sizeof(path_buf), path_buf) > 0)
        dir = path_buf;
    }
    /*
@@ -107,9 +105,9 @@ File create_temp_file(char *to, const char *dir, const char *prefix,
     File org_file;
 
     pfx_len= (uint) (strmov(strnmov(prefix_buff,
-				    prefix ? prefix : "tmp.",
-				    sizeof(prefix_buff)-7),"XXXXXX") -
-		     prefix_buff);
+                    prefix ? prefix : "tmp.",
+                    sizeof(prefix_buff)-7),"XXXXXX") -
+             prefix_buff);
     if (!dir && ! (dir =getenv("TMPDIR")))
       dir=P_tmpdir;
     if (strlen(dir)+ pfx_len > FN_REFLEN-2)
@@ -122,7 +120,7 @@ File create_temp_file(char *to, const char *dir, const char *prefix,
     if (mode & O_TEMPORARY)
       (void) my_delete(to, MYF(MY_WME | ME_NOINPUT));
     file=my_register_filename(org_file, to, FILE_BY_MKSTEMP,
-			      EE_CANTCREATEFILE, MyFlags);
+                  EE_CANTCREATEFILE, MyFlags);
     /* If we didn't manage to register the name, remove the temp file */
     if (org_file >= 0 && file < 0)
     {
@@ -156,10 +154,9 @@ File create_temp_file(char *to, const char *dir, const char *prefix,
       strmake(to,res,FN_REFLEN-1);
       (*free)(res);
       file=my_create(to,0,
-		     (int) (O_RDWR | O_BINARY | O_TRUNC | O_EXCL | O_NOFOLLOW |
-			    O_TEMPORARY | O_SHORT_LIVED),
-		     MYF(MY_WME));
-
+             (int) (O_RDWR | O_BINARY | O_TRUNC | O_EXCL | O_NOFOLLOW |
+                O_TEMPORARY | O_SHORT_LIVED),
+             MYF(MY_WME));
     }
     else
     {

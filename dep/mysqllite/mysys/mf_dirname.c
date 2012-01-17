@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,12 +11,12 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysys_priv.h"
 #include <m_string.h>
 
-	/* Functions definied in this file */
+    /* Functions definied in this file */
 
 size_t dirname_length(const char *name)
 {
@@ -46,7 +46,6 @@ size_t dirname_length(const char *name)
   return (size_t) (gpos+1-(char*) name);
 }
 
-
 /*
   Gives directory part of filename. Directory ends with '/'
 
@@ -71,15 +70,14 @@ size_t dirname_part(char *to, const char *name, size_t *to_res_length)
   DBUG_RETURN(length);
 } /* dirname */
 
-
 /*
   Convert directory name to use under this system
 
   SYNPOSIS
     convert_dirname()
     to				Store result here. Must be at least of size
-    				min(FN_REFLEN, strlen(from) + 1) to make room
-    				for adding FN_LIBCHAR at the end.
+                    min(FN_REFLEN, strlen(from) + 1) to make room
+                    for adding FN_LIBCHAR at the end.
     from			Original filename. May be == to
     from_end			Pointer at end of filename (normally end \0)
 
@@ -118,7 +116,7 @@ char *convert_dirname(char *to, const char *from, const char *from_end)
     for (; from != from_end && *from ; from++)
     {
       if (*from == '/')
-	*to++= FN_LIBCHAR;
+    *to++= FN_LIBCHAR;
       else
       {
 #ifdef BACKSLASH_MBTAIL

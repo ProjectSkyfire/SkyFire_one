@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB, 2008-2009 Sun Microsystems, Inc
+/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /*
   More functions to be used with IO_CACHE files
@@ -66,7 +66,6 @@ my_b_copy_to_file(IO_CACHE *cache, FILE *file)
   DBUG_RETURN(0);
 }
 
-
 my_off_t my_b_append_tell(IO_CACHE* info)
 {
   /*
@@ -83,7 +82,7 @@ my_off_t my_b_append_tell(IO_CACHE* info)
     Prevent optimizer from putting res in a register when debugging
     we need this to be able to see the value of res when the assert fails
   */
-  dbug_volatile my_off_t res; 
+  dbug_volatile my_off_t res;
 
   /*
     We need to lock the append buffer mutex to keep flush_io_cache()
@@ -106,10 +105,10 @@ my_off_t my_b_append_tell(IO_CACHE* info)
       Save the value of my_tell in res so we can see it when studying coredump
     */
     DBUG_ASSERT(info->end_of_file - (info->append_read_pos-info->write_buffer)
-		== (res=my_tell(info->file,MYF(0))));
+        == (res=my_tell(info->file,MYF(0))));
     my_seek(info->file,save_pos,MY_SEEK_SET,MYF(0));
   }
-#endif  
+#endif
   res = info->end_of_file + (info->write_pos-info->append_read_pos);
   mysql_mutex_unlock(&info->append_buffer_lock);
   return res;
@@ -164,7 +163,7 @@ void my_b_seek(IO_CACHE *info,my_off_t pos)
   {
     /* If write is in current buffer, reuse it */
     if ((ulonglong) offset <
-	(ulonglong) (info->write_end - info->write_buffer))
+    (ulonglong) (info->write_end - info->write_buffer))
     {
       info->write_pos = info->write_buffer + offset;
       DBUG_VOID_RETURN;
@@ -172,13 +171,12 @@ void my_b_seek(IO_CACHE *info,my_off_t pos)
     (void) flush_io_cache(info);
     /* Correct buffer end so that we write in increments of IO_SIZE */
     info->write_end=(info->write_buffer+info->buffer_length-
-		     (pos & (IO_SIZE-1)));
+             (pos & (IO_SIZE-1)));
   }
   info->pos_in_file=pos;
   info->seek_not_done=1;
   DBUG_VOID_RETURN;
 }
-
 
 /*
   Fill buffer of the cache.
@@ -192,17 +190,16 @@ void my_b_seek(IO_CACHE *info,my_off_t pos)
   #  Number of characters
 */
 
-
 size_t my_b_fill(IO_CACHE *info)
 {
   my_off_t pos_in_file=(info->pos_in_file+
-			(size_t) (info->read_end - info->buffer));
+            (size_t) (info->read_end - info->buffer));
   size_t diff_length, length, max_length;
 
   if (info->seek_not_done)
   {					/* File touched, do seek */
     if (my_seek(info->file,pos_in_file,MY_SEEK_SET,MYF(0)) ==
-	MY_FILEPOS_ERROR)
+    MY_FILEPOS_ERROR)
     {
       info->error= 0;
       return 0;
@@ -231,7 +228,6 @@ size_t my_b_fill(IO_CACHE *info)
   return length;
 }
 
-
 /*
   Read a string ended by '\n' into a buffer of 'max_length' size.
   Returns number of characters read, 0 on error.
@@ -259,9 +255,9 @@ size_t my_b_gets(IO_CACHE *info, char *to, size_t max_length)
     {
       if ((*to++ = *pos++) == '\n')
       {
-	info->read_pos=pos;
-	*to='\0';
-	return (size_t) (to-start);
+    info->read_pos=pos;
+    *to='\0';
+    return (size_t) (to-start);
       }
     }
     if (!(max_length-=length))
@@ -276,7 +272,6 @@ size_t my_b_gets(IO_CACHE *info, char *to, size_t max_length)
   }
 }
 
-
 my_off_t my_b_filelength(IO_CACHE *info)
 {
   if (info->type == WRITE_CACHE)
@@ -285,7 +280,6 @@ my_off_t my_b_filelength(IO_CACHE *info)
   info->seek_not_done= 1;
   return my_seek(info->file, 0L, MY_SEEK_END, MYF(0));
 }
-
 
 /*
   Simple printf version.  Supports '%s', '%d', '%u', "%ld" and "%lu"
@@ -302,7 +296,6 @@ size_t my_b_printf(IO_CACHE *info, const char* fmt, ...)
   va_end(args);
   return result;
 }
-
 
 size_t my_b_vprintf(IO_CACHE *info, const char* fmt, va_list args)
 {
@@ -325,7 +318,7 @@ size_t my_b_vprintf(IO_CACHE *info, const char* fmt, va_list args)
     /* Copy everything until '%' or end of string */
     const char *start=fmt;
     size_t length;
-    
+
     for (; (*fmt != '\0') && (*fmt != '%'); fmt++) ;
 
     length= (size_t) (fmt - start);
@@ -336,9 +329,9 @@ size_t my_b_vprintf(IO_CACHE *info, const char* fmt, va_list args)
     if (*fmt == '\0')				/* End of format */
       return out_length;
 
-    /* 
+    /*
       By this point, *fmt must be a percent;  Keep track of this location and
-      skip over the percent character. 
+      skip over the percent character.
     */
     DBUG_ASSERT(*fmt == '%');
     backtrack= fmt;
@@ -353,7 +346,7 @@ size_t my_b_vprintf(IO_CACHE *info, const char* fmt, va_list args)
 process_flags:
     switch (*fmt)
     {
-      case '-': 
+      case '-':
         minimum_width_sign= -1; fmt++; goto process_flags;
       case '0':
         is_zero_padded= TRUE; fmt++; goto process_flags;
@@ -402,7 +395,7 @@ process_flags:
       /* TODO: implement precision */
       out_length+= length2;
       if (my_b_write(info, (uchar*) par, length2))
-	goto err;
+    goto err;
     }
     else if (*fmt == 'b')                       /* Sized buffer parameter, only precision makes sense */
     {
@@ -419,15 +412,15 @@ process_flags:
 
       iarg = va_arg(args, int);
       if (*fmt == 'd')
-	length2= (size_t) (int10_to_str((long) iarg,buff, -10) - buff);
+    length2= (size_t) (int10_to_str((long) iarg,buff, -10) - buff);
       else
         length2= (uint) (int10_to_str((long) (uint) iarg,buff,10)- buff);
 
       /* minimum width padding */
-      if (minimum_width > length2) 
+      if (minimum_width > length2)
       {
         char *buffz;
-                    
+
         buffz= my_alloca(minimum_width - length2);
         if (is_zero_padded)
           memset(buffz, '0', minimum_width - length2);
@@ -439,7 +432,7 @@ process_flags:
 
       out_length+= length2;
       if (my_b_write(info, (uchar*) buff, length2))
-	goto err;
+    goto err;
     }
     else if ((*fmt == 'l' && fmt[1] == 'd') || fmt[1] == 'u')
       /* long parameter */
@@ -450,12 +443,12 @@ process_flags:
 
       iarg = va_arg(args, long);
       if (*++fmt == 'd')
-	length2= (size_t) (int10_to_str(iarg,buff, -10) - buff);
+    length2= (size_t) (int10_to_str(iarg,buff, -10) - buff);
       else
-	length2= (size_t) (int10_to_str(iarg,buff,10)- buff);
+    length2= (size_t) (int10_to_str(iarg,buff,10)- buff);
       out_length+= length2;
       if (my_b_write(info, (uchar*) buff, length2))
-	goto err;
+    goto err;
     }
     else
     {

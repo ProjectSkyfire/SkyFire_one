@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /* This file is for cp932 charaset (Windows Japanese),
    and created based on ctype-sjis.c file  */
@@ -21,7 +21,6 @@
 #include "m_ctype.h"
 
 #ifdef HAVE_CHARSET_cp932
-
 
 /*
  * This comment is parsed by configure to create ctype.c,
@@ -181,9 +180,8 @@ static uchar sort_order_cp932[]=
 #define iscp932tail(c) ((0x40<=(c) && (c)<=0x7e) || \
                        (0x80<=(c) && (c)<=0xfc))
 
-
 static uint ismbchar_cp932(CHARSET_INFO *cs __attribute__((unused)),
-			 const char* p, const char *e)
+             const char* p, const char *e)
 {
   return (iscp932head((uchar) *p) && (e-p)>1 && iscp932tail((uchar)p[1]) ? 2: 0);
 }
@@ -193,9 +191,7 @@ static uint mbcharlen_cp932(CHARSET_INFO *cs __attribute__((unused)),uint c)
   return (iscp932head((uchar) c) ? 2 : 1);
 }
 
-
 #define cp932code(c,d)	((((uint) (uchar)(c)) << 8) | (uint) (uchar) (d))
-
 
 static MY_UNICASE_INFO c81[256]=
 {
@@ -211,7 +207,7 @@ static MY_UNICASE_INFO c81[256]=
   /* 8130-813F */
   {0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},
   {0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},
-  
+
   {0x8140,0x8140,0x3000}, /* 8140-814F */
   {0x8141,0x8141,0x3001},
   {0x8142,0x8142,0x3002},
@@ -405,7 +401,6 @@ static MY_UNICASE_INFO c81[256]=
   {0,0,0},
   {0,0,0},
 };
-
 
 static MY_UNICASE_INFO c82[256]=
 {
@@ -613,7 +608,6 @@ static MY_UNICASE_INFO c82[256]=
   {0x82FC,0x82FC,0x003F},
   {0,0,0}
 };
-
 
 static MY_UNICASE_INFO c83[256]=
 {
@@ -824,7 +818,6 @@ static MY_UNICASE_INFO c83[256]=
   {0,0,0}
 };
 
-
 static MY_UNICASE_INFO c84[256]=
 {
   /* 8400-840F */
@@ -1033,7 +1026,6 @@ static MY_UNICASE_INFO c84[256]=
   {0,0,0},
   {0,0,0}
 };
-
 
 static MY_UNICASE_INFO c87[256]=
 {
@@ -1244,7 +1236,6 @@ static MY_UNICASE_INFO c87[256]=
   {0,0,0}
 };
 
-
 static MY_UNICASE_INFO cEE[256]=
 {
   /* EE00-EE0F */
@@ -1276,7 +1267,7 @@ static MY_UNICASE_INFO cEE[256]=
   {0xEE4D,0xEE4D,0x7429},
   {0xEE4E,0xEE4E,0x742E},
   {0xEE4F,0xEE4F,0x7462},
-  
+
   {0xEE50,0xEE50,0x7489}, /* EE50 */
   {0xEE51,0xEE51,0x749F},
   {0xEE52,0xEE52,0x7501},
@@ -1454,7 +1445,6 @@ static MY_UNICASE_INFO cEE[256]=
   {0,0,0},
   {0,0,0}
 };
-
 
 static MY_UNICASE_INFO cFA[256]=
 {
@@ -1665,7 +1655,6 @@ static MY_UNICASE_INFO cFA[256]=
   {0,0,0}
 };
 
-
 static MY_UNICASE_INFO *my_caseinfo_cp932[256]=
 {
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, /* 0 */
@@ -1702,10 +1691,9 @@ static MY_UNICASE_INFO *my_caseinfo_cp932[256]=
   NULL, NULL, cFA,  NULL, NULL, NULL, NULL, NULL
 };
 
-
 static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
-				      const uchar **a_res, size_t a_length,
-				      const uchar **b_res, size_t b_length)
+                      const uchar **a_res, size_t a_length,
+                      const uchar **b_res, size_t b_length)
 {
   const uchar *a= *a_res, *b= *b_res;
   const uchar *a_end= a + a_length;
@@ -1713,18 +1701,18 @@ static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
   while (a < a_end && b < b_end)
   {
     if (ismbchar_cp932(cs,(char*) a, (char*) a_end) &&
-	ismbchar_cp932(cs,(char*) b, (char*) b_end))
+    ismbchar_cp932(cs,(char*) b, (char*) b_end))
     {
       uint a_char= cp932code(*a, *(a+1));
       uint b_char= cp932code(*b, *(b+1));
       if (a_char != b_char)
-	return a_char - b_char;
+    return a_char - b_char;
       a += 2;
       b += 2;
     } else
     {
       if (sort_order_cp932[(uchar)*a] != sort_order_cp932[(uchar)*b])
-	return sort_order_cp932[(uchar)*a] - sort_order_cp932[(uchar)*b];
+    return sort_order_cp932[(uchar)*a] - sort_order_cp932[(uchar)*b];
       a++;
       b++;
     }
@@ -1734,10 +1722,9 @@ static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
   return 0;
 }
 
-
 static int my_strnncoll_cp932(CHARSET_INFO *cs __attribute__((unused)),
-			      const uchar *a, size_t a_length, 
-			      const uchar *b, size_t b_length,
+                  const uchar *a, size_t a_length,
+                  const uchar *b, size_t b_length,
                               my_bool b_is_prefix)
 {
   int res= my_strnncoll_cp932_internal(cs, &a, a_length, &b, b_length);
@@ -1746,9 +1733,8 @@ static int my_strnncoll_cp932(CHARSET_INFO *cs __attribute__((unused)),
   return res ? res : (int) (a_length - b_length);
 }
 
-
 static int my_strnncollsp_cp932(CHARSET_INFO *cs __attribute__((unused)),
-                                const uchar *a, size_t a_length, 
+                                const uchar *a, size_t a_length,
                                 const uchar *b, size_t b_length,
                                 my_bool diff_if_only_endspace_difference
                                 __attribute__((unused)))
@@ -1781,13 +1767,11 @@ static int my_strnncollsp_cp932(CHARSET_INFO *cs __attribute__((unused)),
     for (; a < a_end ; a++)
     {
       if (*a != (uchar) ' ')
-	return (*a < (uchar) ' ') ? -swap : swap;
+    return (*a < (uchar) ' ') ? -swap : swap;
     }
   }
   return res;
 }
-
-
 
 static size_t my_strnxfrm_cp932(CHARSET_INFO *cs __attribute__((unused)),
                                 uchar *dest, size_t len,
@@ -1801,7 +1785,7 @@ static size_t my_strnxfrm_cp932(CHARSET_INFO *cs __attribute__((unused)),
     {
       *dest++ = *src++;
       if (dest < d_end && src < s_end)
-	*dest++ = *src++;
+    *dest++ = *src++;
     }
     else
       *dest++ = sort_order_cp932[(uchar)*src++];
@@ -1810,7 +1794,6 @@ static size_t my_strnxfrm_cp932(CHARSET_INFO *cs __attribute__((unused)),
     bfill(dest, len - srclen, ' ');
   return len;
 }
-
 
 static uint16 cp932_to_unicode[65536]=
 {
@@ -18200,7 +18183,6 @@ static uint16 cp932_to_unicode[65536]=
       0x0000,      0x0000,      0x0000,      0x0000,
 };
 
-
 static uint16 unicode_to_cp932[65536]=
 {
       0x0000,      0x0001,      0x0002,      0x0003, /* 0000 */
@@ -34589,17 +34571,15 @@ static uint16 unicode_to_cp932[65536]=
       0x0000,      0x0000,      0x0000,      0x0000,
 };
 
-
 /*
   CP932 encoding components:
-  
+
   [00..7F]                        = ASCII [U+0000..U+007F]
   [A1..DF]                        = JIS-X-0201 Katakana [U+FF61..U+FF9F]
   [81..9F,E0..FC][40..7E,80..FC]  = JIS-X-0208 (MS version)
-  
+
   [80,A0,FD,FE,FF]                = Invalid leading byte
 */
-
 
 /**
   Scans a CP932 character from the input string
@@ -34618,7 +34598,7 @@ static uint16 unicode_to_cp932[65536]=
 
 static int
 my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
-	       my_wc_t *pwc, const uchar *s, const uchar *e){
+           my_wc_t *pwc, const uchar *s, const uchar *e){
   int hi;
 
   if (s >= e)
@@ -34647,7 +34627,6 @@ my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
   return 2;
 }
 
-
 /**
   Puts the given Unicode character into a CP932 string.
 
@@ -34662,7 +34641,7 @@ my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
 */
 static int
 my_wc_mb_cp932(CHARSET_INFO *cs __attribute__((unused)),
-	       my_wc_t wc, uchar *s, uchar *e)
+           my_wc_t wc, uchar *s, uchar *e)
 {
   int code;
 
@@ -34698,8 +34677,6 @@ my_wc_mb_cp932(CHARSET_INFO *cs __attribute__((unused)),
   return 2;
 }
 
-
-
 static
 size_t my_numcells_cp932(CHARSET_INFO *cs __attribute__((unused)),
                       const char *str, const char *str_end)
@@ -34707,7 +34684,7 @@ size_t my_numcells_cp932(CHARSET_INFO *cs __attribute__((unused)),
   size_t clen= 0;
   const uchar *b= (const uchar *) str;
   const uchar *e= (const uchar *) str_end;
-  
+
   for (clen= 0; b < e; )
   {
     if (*b >= 0xA1 && *b <= 0xDF)
@@ -34773,7 +34750,6 @@ size_t my_well_formed_len_cp932(CHARSET_INFO *cs __attribute__((unused)),
   return (size_t) (b - b0);
 }
 
-
 static MY_COLLATION_HANDLER my_collation_ci_handler =
 {
   NULL,			/* init */
@@ -34788,7 +34764,6 @@ static MY_COLLATION_HANDLER my_collation_ci_handler =
   my_hash_sort_simple,
   my_propagate_simple
 };
-
 
 static MY_CHARSET_HANDLER my_charset_handler=
 {
@@ -34820,7 +34795,6 @@ static MY_CHARSET_HANDLER my_charset_handler=
   my_strntoull10rnd_8bit,
   my_scan_8bit
 };
-
 
 CHARSET_INFO my_charset_cp932_japanese_ci=
 {

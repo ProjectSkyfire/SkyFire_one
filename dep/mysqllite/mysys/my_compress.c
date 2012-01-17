@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 /* Written by Sinisa Milivojevic <sinisa@mysql.com> */
 
@@ -56,7 +56,6 @@ my_bool my_compress(uchar *packet, size_t *len, size_t *complen)
   DBUG_RETURN(0);
 }
 
-
 uchar *my_compress_alloc(const uchar *packet, size_t *len, size_t *complen)
 {
   uchar *compbuf;
@@ -89,7 +88,6 @@ uchar *my_compress_alloc(const uchar *packet, size_t *len, size_t *complen)
   return compbuf;
 }
 
-
 /*
   Uncompress packet
 
@@ -98,7 +96,7 @@ uchar *my_compress_alloc(const uchar *packet, size_t *len, size_t *complen)
      packet	Compressed data. This is is replaced with the orignal data.
      len	Length of compressed data
      complen	Length of the packet buffer (must be enough for the original
-	        data)
+            data)
 
    RETURN
      1   error
@@ -145,7 +143,6 @@ my_bool my_uncompress(uchar *packet, size_t len, size_t *complen)
 */
 
 #define BLOB_HEADER 12
-
 
 /*
   packfrm is a method used to compress the frm file for storage in a
@@ -206,7 +203,6 @@ int packfrm(uchar *data, size_t len,
                       (long) *pack_data, (ulong) *pack_len));
 err:
   DBUG_RETURN(error);
-
 }
 
 /*
