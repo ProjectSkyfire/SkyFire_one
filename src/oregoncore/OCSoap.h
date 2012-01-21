@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -30,7 +30,6 @@
 
 #include <ace/Semaphore.h>
 #include <ace/Task.h>
-
 
 class OCSoapRunnable: public ACE_Based::Runnable
 {
@@ -75,14 +74,12 @@ class SOAPWorkingThread : public ACE_Task<ACE_MT_SYNCH>
         void process_message (ACE_Message_Block *mb);
 };
 
-
 class SOAPCommand
 {
     public:
         SOAPCommand():
             pendingCommands(0, USYNC_THREAD, "pendingCommands")
         {
-
         }
         ~SOAPCommand()
         {

@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -377,7 +377,6 @@ public:
 
         if (Event_onWait && Event_Timer <= diff)
         {
-
             Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
             if (!pPlayer || (pPlayer && pPlayer->GetQuestStatus(10965) == QUEST_STATUS_NONE))
             {
@@ -516,7 +515,6 @@ public:
                     Event_onWait = false;
                     break;
             }
-
         } else if (Event_onWait) Event_Timer -= diff;
     }
 
@@ -612,7 +610,6 @@ enum TheNightmareManifests
     NPC_NIGHTMARE_PHANTASMS_COUNT        = 15,
     NPC_MOONGLADE_WARDENS_COUNT          = 10,
     NPC_PRIESTESS_OF_THE_MOON_COUNT      = 7,
-
 
     SPELL_C0NJURE_DREAM_RIFT             = 25813,
     SPELL_STARFIRE                       = 21668,

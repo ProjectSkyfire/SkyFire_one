@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -1743,7 +1743,6 @@ bool ChatHandler::HandleSubNameCommand(const char* /*args*/)
 
     if (strlen((char*)args)>75)
     {
-
         PSendSysMessage(LANG_TOO_LONG_SUBNAME, strlen((char*)args)-75);
         return true;
     }
@@ -1920,7 +1919,6 @@ bool ChatHandler::HandleKickPlayerCommand(const char *args)
         {
             if (sWorld.getConfig(CONFIG_SHOW_KICK_IN_WORLD) == 1)
             {
-
                 sWorld.SendWorldText(LANG_COMMAND_KICKMESSAGE, name.c_str(), kicker.c_str(), reason.c_str());
             }
             else
@@ -2843,7 +2841,6 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
                     pCreature->DeleteFromDB();
                     pCreature->AddObjectToRemoveList();
                 }
-
             }
             while (result2->NextRow());
 
@@ -3622,7 +3619,6 @@ bool ChatHandler::HandleLearnAllRecipesCommand(const char* args)
 
 bool ChatHandler::HandleLookupPlayerIpCommand(const char* args)
 {
-
     if (!*args)
         return false;
 
@@ -3658,7 +3654,6 @@ bool ChatHandler::HandleLookupPlayerAccountCommand(const char* args)
 
 bool ChatHandler::HandleLookupPlayerEmailCommand(const char* args)
 {
-
     if (!*args)
         return false;
 
@@ -3705,7 +3700,6 @@ bool ChatHandler::LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 li
 
                 PSendSysMessage(LANG_LOOKUP_PLAYER_CHARACTER,name.c_str(),guid);
                 ++i;
-
             } while (chars->NextRow() && (limit == -1 || i < limit));
         }
     } while (result->NextRow());
@@ -4008,7 +4002,7 @@ bool ChatHandler::HandleNpcAddFormationCommand(const char* args)
         return false;
 
     uint32 leaderGUID = (uint32) atoi(ldrGUID);
-        
+
     char* cmt = strtok(NULL, "");
     char* commentText = "";
 
@@ -4038,9 +4032,9 @@ bool ChatHandler::HandleNpcAddFormationCommand(const char* args)
     Player *chr = m_session->GetPlayer();
 
     memberGUID = pCreature->GetDBTableGUIDLow();
-    follow_dist = sqrtf(pow(chr->GetPositionX() - pCreature->GetPositionX(),int(2))+pow(chr->GetPositionY()-pCreature->GetPositionY(),int(2))); 
+    follow_dist = sqrtf(pow(chr->GetPositionX() - pCreature->GetPositionX(),int(2))+pow(chr->GetPositionY()-pCreature->GetPositionY(),int(2)));
     follow_angle = (pCreature->GetAngle(chr) - chr->GetOrientation()) * 180 / M_PI;
-        
+
     if (follow_angle < 0)
         follow_angle = follow_angle + 360;
 
@@ -4077,12 +4071,12 @@ bool ChatHandler::HandleNpcAddFormationCommand(const char* args)
            PSendSysMessage("You should set the Leader for this Formation first.");
            return false;
        }
-      
+
        //Must be executed direct, not asyncron
        WorldDatabase.DirectPExecute("INSERT INTO creature_formations (leaderGUID, formationAI, comment) VALUES (%u, %u, %s)", leaderGUID, formationAI, commentText);
 
        QueryResult_AutoPtr result_newFormationId = WorldDatabase.Query("SELECT MAX(formationId) FROM creature_formations");
-        
+
        formationId = result_newFormationId->Fetch()->GetInt32();
 
        FormationInfo *formation_info;
@@ -4099,19 +4093,19 @@ bool ChatHandler::HandleNpcAddFormationCommand(const char* args)
    }
 
    FormationData *formation_data;
-   
+
    formation_data                        = new FormationData;
    formation_data->formationId           = formationId;
-   formation_data->follow_dist           = follow_dist; 
-   formation_data->follow_angle          = follow_angle; 
-   
+   formation_data->follow_dist           = follow_dist;
+   formation_data->follow_angle          = follow_angle;
+
    if (memberGUID == leaderGUID) {
-       formation_data->follow_dist       = 0; 
-       formation_data->follow_angle      = 0; 
+       formation_data->follow_dist       = 0;
+       formation_data->follow_angle      = 0;
     }
 
     CreatureFormationDataMap[memberGUID] = formation_data;
-    pCreature->SearchFormation();    
+    pCreature->SearchFormation();
 
     return true;
 }
@@ -4120,14 +4114,14 @@ bool ChatHandler::HandleNpcAddGroupCommand(const char* args)
 {
     if (!*args)
         return false;
-    
+
     char* ldrGUID = strtok((char*)args, " ");
 
     if (!ldrGUID)
         return false;
 
     uint32 leaderGUID = (uint32) atoi(ldrGUID);
-    
+
     char* cmt = strtok(NULL, "");
     char* commentText = "";
 
@@ -4192,7 +4186,7 @@ bool ChatHandler::HandleNpcAddGroupCommand(const char* args)
         WorldDatabase.DirectPExecute("INSERT INTO creature_groups (leaderGUID, groupType, comment) VALUES (%u, %u, %s)", leaderGUID, groupType, commentText);
 
         QueryResult_AutoPtr result_newGroupId = WorldDatabase.Query("SELECT MAX(groupId) FROM creature_groups");
-        
+
         groupId = result_newGroupId->Fetch()->GetInt32();
 
         GroupInfo *group_member;
@@ -4209,7 +4203,7 @@ bool ChatHandler::HandleNpcAddGroupCommand(const char* args)
     }
 
     CreatureGroupDataMap[memberGUID] = groupId;
-    pCreature->SearchGroup();  
+    pCreature->SearchGroup();
 
     return true;
  }
@@ -4455,7 +4449,6 @@ bool ChatHandler::HandleTitlesSetMaskCommand(const char* args)
 
 bool ChatHandler::HandleCharacterTitlesCommand(const char* args)
 {
-
     Player * target = getSelectedPlayer();
     if (!target)
     {

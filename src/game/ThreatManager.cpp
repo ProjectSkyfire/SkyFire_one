@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -143,7 +143,6 @@ void HostileReference::updateOnlineStatus()
         }
         else
             accessible = true;
-
     }
     setAccessibleState(accessible);
     setOnlineOfflineState(online);

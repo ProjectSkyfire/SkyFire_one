@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -125,7 +125,7 @@ Unit* UnitAI::SelectTarget(SelectAggroTarget targetType, uint32 position, float 
     for (std::list<HostileReference*>::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
         if (SelectTargetHelper(me, (*itr)->getTarget(), playerOnly, dist, aura))
             targetList.push_back((*itr)->getTarget());
- 
+
     if (position >= targetList.size())
         return NULL;
 
@@ -178,7 +178,7 @@ void UnitAI::SelectTargetList(std::list<Unit*> &targetList, uint32 num, SelectAg
     {
         targetList.sort(TargetDistanceOrder(me));
     }
- 
+
     if (targetType == SELECT_TARGET_FARTHEST || targetType == SELECT_TARGET_BOTTOMAGGRO)
         targetList.reverse();
 

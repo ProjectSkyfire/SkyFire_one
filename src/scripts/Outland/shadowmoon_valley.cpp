@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -1346,7 +1346,6 @@ struct npc_lord_illidan_stormrageAI : public Scripted_NoMovementAI
 
             if (Creature* pSpawn = me->SummonCreature(WavesInfo[m_uiWaveCount].uiCreatureId, fLocX, fLocY, fLocZ, fOrient, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 15000))
             {
-
                 if (m_uiWaveCount)                          // only in first wave
                     continue;
 
@@ -1703,7 +1702,7 @@ struct npc_jovaanAI : public ScriptedAI
         Creature* pWarbringer = me->FindNearestCreature(NPC_WARBRINGER, 25);
         GameObject* pInfernal = me->FindNearestGameObject(GO_INFERNAL, 8);
         GameObject* pInfernalTrap = me->FindNearestGameObject(GO_INFERNAL_TRAP, 8);
-              
+
         switch (uiSteps)
         {
             case 1:pInfernal->SetRespawnTime(61);

@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -615,7 +615,6 @@ struct npc_maghar_captiveAI : public npc_escortAI
         pSummoned->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
         pSummoned->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
         pSummoned->AI()->AttackStart(me);
-
     }
 
     void SpellHitTarget(Unit* /*pTarget*/, const SpellEntry* pSpell)
@@ -666,7 +665,6 @@ struct npc_maghar_captiveAI : public npc_escortAI
     }
 };
 
-
 CreatureAI* GetAI_npc_maghar_captive(Creature* pCreature)
 {
     return new npc_maghar_captiveAI(pCreature);
@@ -692,7 +690,6 @@ bool QuestAccept_npc_maghar_captive(Player* pPlayer, Creature* pCreature, const 
     }
     return true;
 }
-
 
 /*######
 ## npc_creditmarker_visist_with_ancestors
@@ -741,7 +738,6 @@ CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature* pCreature)
 
 struct mob_sparrowhawkAI : public ScriptedAI
 {
-
     mob_sparrowhawkAI(Creature *c) : ScriptedAI(c) {}
 
     uint32 Check_Timer;
@@ -1116,7 +1112,7 @@ struct npc_corki1AI : public npc_escortAI
                 case 0:
                     DoScriptText(SAY_KORKI2, me);
                     break;
-                case 1: 
+                case 1:
                     DoScriptText(SAY_KORKI3, me);
                     break;
                 case 2:
@@ -1172,7 +1168,7 @@ struct npc_corki2AI : public npc_escortAI
 
     uint64 uiPlayerGUID;
 
-    void Reset() 
+    void Reset()
     {
         uiPlayerGUID = 0;
     }
@@ -1192,13 +1188,13 @@ struct npc_corki2AI : public npc_escortAI
     void MoveInLineOfSight(Unit* pWho)
     {
         if (pWho->GetTypeId() == TYPEID_PLAYER && ((Player *)pWho)->GetReputationRank(978) >= REP_FRIENDLY && me->IsWithinDistInMap(((Player *)pWho), 20))
-        {	
+        {
             if (uiPlayerGUID == pWho->GetGUID())
             {
                 return;
             }
             else uiPlayerGUID = 0;
-          
+
             switch (urand(0,4))
             {
                 case 0:
@@ -1239,7 +1235,7 @@ bool GOHello_corkis_prison2(Player* pPlayer, GameObject* pGo)
             ((npc_corki2AI*)pCor2->AI())->Start(false, false, pPlayer->GetGUID());
         }
     }
-    return false;	
+    return false;
 };
 
 /*#####
@@ -1258,7 +1254,7 @@ struct npc_corki3AI : public npc_escortAI
 
     uint64 uiPlayerGUID;
 
-    void Reset() 
+    void Reset()
     {
         uiPlayerGUID = 0;
     }
@@ -1278,29 +1274,29 @@ struct npc_corki3AI : public npc_escortAI
     void MoveInLineOfSight(Unit* pWho)
     {
         if (pWho->GetTypeId() == TYPEID_PLAYER && ((Player *)pWho)->GetReputationRank(978) >= REP_FRIENDLY && me->IsWithinDistInMap(((Player *)pWho), 20))
-        { 
+        {
             if (uiPlayerGUID == pWho->GetGUID())
             {
                 return;
             }
             else uiPlayerGUID = 0;
-          
+
             switch (urand(0,4))
             {
                 case 0:
                     DoScriptText(SAY_KORKI2, me);
                     break;
-                case 1: 
+                case 1:
                     DoScriptText(SAY_KORKI3, me);
                     break;
                 case 2:
-                    DoScriptText(SAY_KORKI4, me); 
+                    DoScriptText(SAY_KORKI4, me);
                     break;
-                case 3: 
-                    DoScriptText(SAY_KORKI5, me); 
+                case 3:
+                    DoScriptText(SAY_KORKI5, me);
                     break;
-                case 4: 
-                    DoScriptText(SAY_KORKI6, me); 
+                case 4:
+                    DoScriptText(SAY_KORKI6, me);
                     break;
             }
 
@@ -1325,7 +1321,7 @@ bool GOHello_corkis_prison3(Player* pPlayer, GameObject* pGo)
             ((npc_corki3AI*)pCor3->AI())->Start(false, false, pPlayer->GetGUID());
         }
     }
-    return false;	
+    return false;
 };
 
 /*#####
@@ -1451,7 +1447,6 @@ struct npc_kurenai_captiveAI : public npc_escortAI
         else m_uiFrostShockTimer -= uiDiff;
     }
 };
-
 
 CreatureAI* GetAI_npc_kurenai_captive(Creature* pCreature)
 {

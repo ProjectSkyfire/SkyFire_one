@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -2329,7 +2329,6 @@ void Player::GiveXP(uint32 xp, Unit* victim)
                 xp = uint32(xp*(1.0f + 5.0f / 100.0f));
         }
 
-
     // XP resting bonus for kill
     uint32 rested_bonus_xp = victim ? GetXPRestBonus(xp) : 0;
 
@@ -3163,7 +3162,6 @@ void Player::removeSpell(uint32 spell_id, bool disabled)
                 SetSkill(prevSkill->skill,skill_value,skill_max_value);
             }
         }
-
     }
     else
     {
@@ -3600,7 +3598,6 @@ void Player::BuildCreateUpdateBlockForPlayer(UpdateData *data, Player *target) c
 
     if (target == this)
     {
-
         for (int i = INVENTORY_SLOT_BAG_START; i < BANK_SLOT_BAG_END; i++)
         {
             if (m_items[i] == NULL)
@@ -3959,7 +3956,6 @@ void Player::DeleteOldCharacters(uint32 keepDays)
         }
         while(resultChars->NextRow());
     }
-
 }
 
 void Player::SetMovement(PlayerMovementType pType)
@@ -4496,7 +4492,6 @@ void Player::CleanupChannels()
         ch->Leave(GetGUID(), false);                        // not send to client, not remove from player's channel list
         if (ChannelMgr* cMgr = channelMgr(GetTeam()))
             cMgr->LeftChannel(ch->GetName());               // deleted channel if empty
-
     }
     DEBUG_LOG("Player: channels cleaned up!");
 }
@@ -7262,7 +7257,6 @@ void Player::UpdateEquipSpellsAtFormChange()
 }
 void Player::CastItemCombatSpell(Unit *target, WeaponAttackType attType, uint32 procVictim, uint32 procEx, SpellEntry const *spellInfo)
 {
-
     if (spellInfo && ((spellInfo->Attributes & SPELL_ATTR_STOP_ATTACK_TARGET) ||
       (spellInfo->DmgClass == SPELL_DAMAGE_CLASS_MAGIC || spellInfo->DmgClass == SPELL_DAMAGE_CLASS_NONE)))
         return;
@@ -7622,7 +7616,6 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
 {
      if (uint64 lguid = GetLootGUID())
          m_session->DoLootRelease(lguid);
-
 
     Loot    *loot = 0;
     PermissionTypes permission = ALL_PERMISSION;
@@ -14502,10 +14495,8 @@ void Player::_LoadArenaTeamInfo(QueryResult_AutoPtr result)
         SetArenaTeamInfoField(arenaSlot, ARENA_TEAM_GAMES_SEASON, played_season);
         SetArenaTeamInfoField(arenaSlot, ARENA_TEAM_WINS_SEASON, 0);
         SetArenaTeamInfoField(arenaSlot, ARENA_TEAM_PERSONAL_RATING, personal_rating);
-
     } while (result->NextRow());
 }
-
 
 void Player::_LoadBGData(QueryResult_AutoPtr result)
 {
@@ -15031,7 +15022,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     // cleanup aura list explicitly before skill load where some spells can be applied
     RemoveAllAuras();
 
-    // load skills must be called here 
+    // load skills must be called here
     _LoadSkills(holder->GetResult(PLAYER_LOGIN_QUERY_LOADSKILLS));
 
     // make sure the unit is considered out of combat for proper loading
@@ -17668,7 +17659,6 @@ void Player::RemovePetitionsAndSigns(uint64 guid, uint32 type)
             Player* owner = objmgr.GetPlayer(ownerguid);
             if (owner)
                 owner->GetSession()->SendPetitionQueryOpcode(petitionguid);
-
         } while (result->NextRow());
 
         if (type == 10)

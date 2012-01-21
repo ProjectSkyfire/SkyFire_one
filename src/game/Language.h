@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -731,7 +731,6 @@ enum OregonStrings
     LANG_CHARACTER_DELETED_SKIP_NAME    = 1021,
     LANG_CHARACTER_DELETED_LIST_LINE_CHAT = 1022,
     // Room for more level 4              1023-1099 not used
-
 
     // Level 3 (continue)
     LANG_ACCOUNT_SETADDON               = 1100,

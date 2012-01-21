@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -180,7 +180,7 @@ struct instance_blood_furnace : public ScriptedInstance
                         DoNextBroggokEventPhase();
                     }
                 }
-                else 
+                else
                 {
                     HandleGameObject(Brog1GUID, true);
                 }
@@ -215,7 +215,6 @@ struct instance_blood_furnace : public ScriptedInstance
                             }
                         }
                     }
-           
                 }
                 if (data == DONE)
                 {
@@ -317,7 +316,6 @@ struct instance_blood_furnace : public ScriptedInstance
             if (!BroggokEvent[BroggokEventPhase].IsCellOpened)
                 DoUseDoorOrButton(BroggokEvent[BroggokEventPhase].CellGuid);
                 BroggokEvent[BroggokEventPhase].IsCellOpened = true;
-			
 
             for(std::set<uint64>::const_iterator itr = BroggokEvent[BroggokEventPhase].SortedOrcGuids.begin(); itr != BroggokEvent[BroggokEventPhase].SortedOrcGuids.end(); ++itr)
             {

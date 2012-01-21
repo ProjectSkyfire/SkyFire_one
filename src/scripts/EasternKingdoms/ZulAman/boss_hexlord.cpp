@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -474,7 +474,6 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
 struct boss_thurgAI : public boss_hexlord_addAI
 {
-
     boss_thurgAI(Creature *c) : boss_hexlord_addAI(c) {}
 
     uint32 bloodlust_timer;
@@ -659,7 +658,6 @@ struct boss_lord_raadanAI : public boss_hexlord_addAI
         thunderclap_timer = 13000;
 
         boss_hexlord_addAI::Reset();
-
     }
     void UpdateAI(const uint32 diff)
     {
@@ -768,7 +766,6 @@ struct boss_fenstalkerAI : public boss_hexlord_addAI
     {
         volatileinf_timer = 15000;
         boss_hexlord_addAI::Reset();
-
     }
     void UpdateAI(const uint32 diff)
     {
@@ -802,7 +799,6 @@ struct boss_koraggAI : public boss_hexlord_addAI
         coldstare_timer = 15000;
         mightyblow_timer = 10000;
         boss_hexlord_addAI::Reset();
-
     }
     void UpdateAI(const uint32 diff)
     {

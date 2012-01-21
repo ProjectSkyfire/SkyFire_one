@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -501,7 +501,6 @@ struct boss_kaelthasAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-
         if (pInstance && Phase)
         {
             if (pInstance->GetData(DATA_KAELTHASEVENT) == IN_PROGRESS && me->getThreatManager().getThreatList().empty())
@@ -815,7 +814,6 @@ struct boss_kaelthasAI : public ScriptedAI
                         if (me->getThreatManager().getThreatList().size() >= 2)
                         for (uint32 i = 0; i < 3; i++)
                         {
-
                             Unit *pTarget =SelectTarget(SELECT_TARGET_RANDOM, 1, 70, true);
                             if (!pTarget) pTarget = me->getVictim();
                             debug_log("OSCR: Kael'Thas mind control not supported.");
@@ -906,7 +904,6 @@ struct boss_kaelthasAI : public ScriptedAI
                 //Phase 5
                 if (Phase == 6)
                 {
-
                     //GravityLapse_Timer
                     if (GravityLapse_Timer <= diff)
                     {
@@ -1425,7 +1422,6 @@ struct mob_phoenix_tkAI : public ScriptedAI
         }
     }
 
-
     void Reset()
     {
         me->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);//birds can fly! :)
@@ -1438,7 +1434,6 @@ struct mob_phoenix_tkAI : public ScriptedAI
 
     void DamageTaken(Unit* pKiller, uint32 &damage)
     {
-
     }
 
     void UpdateAI(const uint32 diff)

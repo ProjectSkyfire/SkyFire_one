@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -661,7 +661,6 @@ void AuctionHouseBot::addNewAuctionBuyerBotBid(Player *AHBplayer, AHBConfig *con
         // Check whether we do normal bid, or buyout
         if ((bidprice < auction->buyout) || (auction->buyout == 0))
         {
-
             if (auction->bidder > 0)
             {
                 if (auction->bidder == AHBplayer->GetGUIDLow())
@@ -849,7 +848,6 @@ void AuctionHouseBot::Initialize()
             {
                 Field* fields = results->Fetch();
                 npcItems.push_back(fields[0].GetUInt32());
-
             } while (results->NextRow());
         }
         else
@@ -874,7 +872,6 @@ void AuctionHouseBot::Initialize()
             {
                 Field* fields = results->Fetch();
                 lootItems.push_back(fields[0].GetUInt32());
-
             } while (results->NextRow());
         }
         else

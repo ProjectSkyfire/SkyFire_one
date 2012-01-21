@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -43,7 +43,6 @@ BattleGroundBE::BattleGroundBE()
 
 BattleGroundBE::~BattleGroundBE()
 {
-
 }
 
 void BattleGroundBE::Update(time_t diff)
@@ -152,7 +151,6 @@ void BattleGroundBE::FillInitialWorldStates(WorldPacket &data)
 
 void BattleGroundBE::ResetBGSubclass()
 {
-
 }
 
 bool BattleGroundBE::SetupBattleGround()
@@ -181,7 +179,6 @@ void BattleGroundBE::UpdatePlayerScore(Player* Source, uint32 type, uint32 value
 
     //there is nothing special in this score
     BattleGround::UpdatePlayerScore(Source,type,value);
-
 }
 
 /*

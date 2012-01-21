@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -95,7 +95,6 @@ void WaypointStore::Load()
             waypoint_map[id] = path_data;
 
         last_id = id;
-
     } while (result->NextRow()) ;
 
     sLog.outString();
@@ -142,7 +141,6 @@ void WaypointStore::UpdatePath(uint32 id)
         wp->event_chance = fields[7].GetUInt8();
 
         path_data->push_back(wp);
-
     }
     while (result->NextRow());
 

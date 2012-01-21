@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -444,7 +444,7 @@ bool GOUse_go_thunderspike(Player *player, GameObject* _GO)
 
             return false;
         }
-        
+
         Position dest;
         //player->GetValidPointInAngle(dest, 5.0f, frand(0.0f, 2*M_PI), true);
         player->GetPosition(&dest);
@@ -490,7 +490,7 @@ void AddSC_blades_edge_mountains()
     newscript->Name = "npc_ogre_brute";
     newscript->GetAI = &GetAI_npc_ogre_brute;
     newscript->RegisterSelf();
-    
+
     newscript = new Script;
     newscript->Name = "go_thunderspike";
     newscript->pGOHello = &GOUse_go_thunderspike;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -58,7 +58,6 @@ Guild::Guild()
 
 Guild::~Guild()
 {
-
 }
 
 bool Guild::Create(Player* leader, std::string gname)
@@ -388,7 +387,6 @@ bool Guild::LoadMembersFromDB(QueryResult_AutoPtr guildMembersResult)
         }
 
         members[GUID_LOPART(guid)]      = newmember;
-
     } while (guildMembersResult->NextRow());
 
     if (members.empty())
@@ -916,7 +914,6 @@ void Guild::LoadGuildEventLogFromDB()
         NewEvent.TimeStamp = fields[5].GetUInt64();
         // Add entry to map
         m_GuildEventlog.push_front(NewEvent);
-
     } while (result->NextRow());
 
     // Check lists size in case to many event entries in db
@@ -1531,7 +1528,6 @@ bool Guild::LoadBankRightsFromDB(QueryResult_AutoPtr guildBankTabRightsResult)
         uint16 SlotPerDay  = fields[4].GetUInt16();
 
         SetBankRightsAndSlots(rankId, TabId, right, SlotPerDay, false);
-
     } while (guildBankTabRightsResult->NextRow());
 
     return true;
@@ -1576,7 +1572,6 @@ void Guild::LoadGuildBankEventLogFromDB()
             m_GuildBankEventLog_Money.push_front(NewEvent);
         else
             m_GuildBankEventLog_Item[TabId].push_front(NewEvent);
-
     }while (result->NextRow());
 
     // Check lists size in case to many event entries in db for a tab or for money

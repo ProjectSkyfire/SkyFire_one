@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -48,7 +48,6 @@ EndContentData */
 
 enum eManaforge
 {
-
     EMOTE_START             = -1000211,
     EMOTE_60                = -1000212,
     EMOTE_30                = -1000213,
@@ -381,11 +380,9 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
 {
     npc_commander_dawnforgeAI(Creature *c) : ScriptedAI(c) { Reset (); }
 
-
     uint64 playerGUID;
     uint64 ardonisGUID;
     uint64 pathaleonGUID;
-
 
     uint32 Phase;
     uint32 PhaseSubphase;
@@ -736,7 +733,6 @@ bool QuestAccept_npc_professor_dabiri(Player *player, Creature *creature, Quest 
 
 struct mob_phase_hunterAI : public ScriptedAI
 {
-
     mob_phase_hunterAI(Creature *c) : ScriptedAI(c) {}
 
     bool Weak;
@@ -853,7 +849,6 @@ CreatureAI* GetAI_mob_phase_hunter(Creature* pCreature)
 
 struct npc_bessyAI : public npc_escortAI
 {
-
     npc_bessyAI(Creature *c) : npc_escortAI(c) {}
 
     void JustDied(Unit* killer)
@@ -904,7 +899,6 @@ struct npc_bessyAI : public npc_escortAI
     {
         me->RestoreFaction();
     }
-
 };
 
 bool QuestAccept_npc_bessy(Player* pPlayer, Creature* pCreature, Quest const* quest)
@@ -1036,7 +1030,7 @@ struct npc_zeppitAI : public ScriptedAI
     uint32 uiCheckTimer;
     uint64 uiWarpGUID;
 
-    void Reset() 
+    void Reset()
     {
         uiCheckTimer = 8000;
         uiWarpGUID = 0;
@@ -1084,16 +1078,16 @@ struct npc_dr_boomAI : public ScriptedAI
     std::vector<uint64> targetGUID;
 
     uint32 SummonTimer;
- 
+
     void Reset()
     {
         SummonTimer = 1500;
- 
+
         std::list<Creature*> targets;
         me->GetCreatureListWithEntryInGrid(targets, BOOM_BOT_TARGET, 30.0f);
- 
+
         targetGUID.clear();
- 
+
         for (std::list<Creature*>::iterator it = targets.begin(); it != targets.end(); it++)
             targetGUID.push_back((*it)->GetGUID());
     }
@@ -1110,27 +1104,26 @@ struct npc_dr_boomAI : public ScriptedAI
                         bot->GetMotionMaster()->MovePoint(0, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ());
                 }
             }
- 
+
             SummonTimer = 1500;
         }
         else SummonTimer -= uiDiff;
 
         if (!UpdateVictim())
             return;
- 
+
         if (!me->IsWithinDistInMap(me->getVictim(), 30.0f))
         {
             EnterEvadeMode();
             return;
         }
- 
+
         if (me->isAttackReady() && me->IsWithinDistInMap(me->getVictim(), 13.0f))
         {
             DoCast(me->getVictim(), THROW_DYNAMITE, true);
             me->resetAttackTimer();
         }
     }
-
 };
 
 CreatureAI* GetAI_npc_dr_boom(Creature* pCreature)
@@ -1142,7 +1135,7 @@ CreatureAI* GetAI_npc_dr_boom(Creature* pCreature)
 ## npc_boom_bot
 ######*/
 
-#define    SPELL_BOOM    35132                         
+#define    SPELL_BOOM    35132
 
 struct npc_boom_botAI : public ScriptedAI
 {
@@ -1158,31 +1151,31 @@ struct npc_boom_botAI : public ScriptedAI
         BoomTimer = 800;
         me->SetUnitMovementFlags(MOVEFLAG_WALK_MODE);
     }
- 
+
     void AttackedBy(Unit* pWho) {}
     void AttackStart(Unit* pWho) {}
- 
+
     void MovementInform(uint32 type, uint32 id)
     {
         if (type != POINT_MOTION_TYPE)
             return;
- 
+
         DoCast(SPELL_BOOM);
         Boom = true;
     }
- 
+
     void MoveInLineOfSight(Unit *pWho)
     {
         if (!pWho->isCharmedOwnedByPlayerOrPlayer())
             return;
- 
+
         if (me->IsWithinDistInMap(pWho, 4.0f, false))
         {
             DoCast(SPELL_BOOM);
             Boom = true;
         }
     }
- 
+
     void UpdateAI(const uint32 uiDiff)
     {
         if (Boom)
@@ -1283,7 +1276,7 @@ struct npc_drijyaAI : public npc_escortAI
         if (pSummoned->GetEntry() == NPC_IMP)
         {
             if (Player* pPlayer = GetPlayerForEscort())
-                pSummoned->AI()->AttackStart(pPlayer); 
+                pSummoned->AI()->AttackStart(pPlayer);
         }
         if (pSummoned->GetEntry() == NPC_TROOPER)
         {
@@ -1369,7 +1362,7 @@ struct npc_drijyaAI : public npc_escortAI
 
         if (SummonImp)
         {
-            if (StartSpawnTimer <= uiDiff) 
+            if (StartSpawnTimer <= uiDiff)
             {
                 if (SpawnTimer <= uiDiff)
                 {

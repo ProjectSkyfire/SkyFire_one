@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -140,13 +140,12 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (guidResult)
     {
-        do 
+        do
         {
             Field *fields = guidResult->Fetch();
             uint32 guid = fields[0].GetUInt32();
 
             guidSet.insert(guid);
-
         } while (guidResult->NextRow());
     }
 
@@ -163,7 +162,7 @@ void CreatureFormationManager::LoadCreatureFormations()
     {
         fields = result_data->Fetch();
         bar.step();
-        
+
         //Load formation member data
         uint32 formationId = fields[0].GetUInt32();
         uint32 leaderGUID = fields[1].GetUInt32();
@@ -171,7 +170,7 @@ void CreatureFormationManager::LoadCreatureFormations()
 
         formation_info                        = new FormationInfo;
         formation_info->leaderGUID            = leaderGUID;
-        formation_info->formationAI           = formationAI; 
+        formation_info->formationAI           = formationAI;
 
         // check data correctness
         if (guidSet.find(formation_info->leaderGUID) == guidSet.end())
@@ -184,10 +183,8 @@ void CreatureFormationManager::LoadCreatureFormations()
         CreatureFormationMap[formationId] = formation_info;
 
         sLog.outDebug("CreatureFormation::LoadCreatureFormations: Load Formation %u with Leader %u and formationAI %u.", formationId, leaderGUID, formationAI);
-
     }
     while (result_data->NextRow()) ;
-
 
     //Loading member...
     FormationData *formation_data;
@@ -196,7 +193,7 @@ void CreatureFormationManager::LoadCreatureFormations()
     {
         fields = result_member->Fetch();
         bar.step();
-        
+
         //Load formation member data
         uint32 formationId = fields[0].GetUInt32();
         uint32 memberGUID = fields[1].GetUInt32();
@@ -205,8 +202,8 @@ void CreatureFormationManager::LoadCreatureFormations()
 
         formation_data                        = new FormationData;
         formation_data->formationId           = formationId;
-        formation_data->follow_dist           = follow_dist; 
-        formation_data->follow_angle          = follow_angle; 
+        formation_data->follow_dist           = follow_dist;
+        formation_data->follow_angle          = follow_angle;
 
         // check data correctness
         if (guidSet.find(memberGUID) == guidSet.end())
@@ -218,7 +215,6 @@ void CreatureFormationManager::LoadCreatureFormations()
         CreatureFormationDataMap[memberGUID] = formation_data;
 
         sLog.outDebug("CreatureFormation::LoadCreatureFormations: Load Member %u for Formation with formationId %u.", memberGUID, formation_data->formationId);
-
     }
     while (result_member->NextRow()) ;
 
@@ -236,7 +232,7 @@ void CreatureFormation::AddMember(Creature *member)
     uint32 memberGUID = member->GetDBTableGUIDLow();
 
     sLog.outDebug("CreatureFormation::AddMember: Adding unit GUID: %u to formation.", memberGUID);
-    
+
     Formation *formation;
     formation = new Formation;
 
@@ -253,9 +249,9 @@ void CreatureFormation::AddMember(Creature *member)
         formation->follow_dist = CreatureFormationDataMap.find(memberGUID)->second->follow_dist;
         formation->follow_angle = CreatureFormationDataMap.find(memberGUID)->second->follow_angle;
     }
-    
-    formation->formationAI = CreatureFormationMap.find(m_formationID)->second->formationAI; 
-    formation->leaderGUID = CreatureFormationMap.find(m_formationID)->second->leaderGUID; 
+
+    formation->formationAI = CreatureFormationMap.find(m_formationID)->second->formationAI;
+    formation->leaderGUID = CreatureFormationMap.find(m_formationID)->second->leaderGUID;
 
     m_members[member] = formation;
     member->SetFormation(this);
@@ -268,7 +264,7 @@ void CreatureFormation::RemoveMember(Creature *member)
 
     if (m_leader == member)
         m_leader = NULL;
-    
+
     m_members.erase(member);
     member->SetFormation(NULL);
 }

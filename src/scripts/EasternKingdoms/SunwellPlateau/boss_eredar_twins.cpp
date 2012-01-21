@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -16,7 +16,7 @@
   * You should have received a copy of the GNU General Public License along
   * with this program. If not, see <http://www.gnu.org/licenses/>.
   */
-  
+
 /* ScriptData
 SDName: Boss_Eredar_Twins
 SD%Complete: 100
@@ -432,7 +432,6 @@ struct boss_alythessAI : public Scripted_NoMovementAI
 
         if (who->isTargetableForAttack() && who->isInAccessiblePlaceFor(me) && me->IsHostileTo(who))
         {
-
             float attackRadius = me->GetAttackDistance(who);
             if (me->IsWithinDistInMap(who, attackRadius) && me->GetDistanceZ(who) <= CREATURE_Z_ATTACK_RANGE && me->IsWithinLOSInMap(who))
             {
@@ -473,7 +472,6 @@ struct boss_alythessAI : public Scripted_NoMovementAI
     {
         switch(spell->Id)
         {
-
         case SPELL_BLAZE:
             pTarget->CastSpell(pTarget, SPELL_BLAZE_SUMMON, true);
         case SPELL_CONFLAGRATION:
@@ -691,7 +689,6 @@ struct mob_shadow_imageAI : public ScriptedAI
     {
         switch(spell->Id)
         {
-
         case SPELL_SHADOW_FURY:
         case SPELL_DARK_STRIKE:
             if (!pTarget->HasAura(SPELL_DARK_FLAME, 0))

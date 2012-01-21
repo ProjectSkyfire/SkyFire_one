@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -149,7 +149,6 @@ ChatCommand * ChatHandler::getCommandTable()
 
         { NULL,             0,                  false, NULL,                                           "", NULL }
     };
-
 
     static ChatCommand banCommandTable[] =
     {
@@ -380,7 +379,6 @@ ChatCommand * ChatHandler::getCommandTable()
         { "tp",             SEC_GAMEMASTER,     false, &ChatHandler::HandlePetTpCommand,               "", NULL },
         { NULL,             0,                  false, NULL,                                           "", NULL }
     };
-
 
     static ChatCommand groupCommandTable[] =
     {

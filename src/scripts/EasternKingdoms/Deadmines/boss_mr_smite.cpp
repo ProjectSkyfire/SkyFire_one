@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+ * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -195,7 +195,6 @@ struct boss_mr_smiteAI : public ScriptedAI
         uiTimer = 500;
         uiPhase = 3;
     }
-
 };
 CreatureAI* GetAI_boss_mr_smite(Creature* pCreature)
 {

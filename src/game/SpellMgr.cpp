@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -955,7 +955,6 @@ void SpellMgr::LoadSpellTargetPositions()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT id, target_map, target_position_x, target_position_y, target_position_z, target_orientation FROM spell_target_position");
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -1020,7 +1019,6 @@ void SpellMgr::LoadSpellTargetPositions()
 
         mSpellTargetPositions[Spell_ID] = st;
         ++count;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -1037,7 +1035,6 @@ void SpellMgr::LoadSpellAffects()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, effectId, SpellFamilyMask FROM spell_affect");
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -1424,7 +1421,6 @@ void SpellMgr::LoadSpellElixirs()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, mask FROM spell_elixir");
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -1482,7 +1478,6 @@ void SpellMgr::LoadSpellEnchantProcData()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, customChance, PPMChance, procEx FROM spell_enchant_proc_data");
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -2247,7 +2242,6 @@ void SpellMgr::LoadSpellPetAuras()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT spell, pet, aura FROM spell_pet_auras");
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -240,7 +240,7 @@ void Creature::SearchGroup()
         return;
 
     CreatureGroupDataType::iterator grpdata = CreatureGroupDataMap.find(lowguid);
-    if (grpdata != CreatureGroupDataMap.end()) 
+    if (grpdata != CreatureGroupDataMap.end())
         group_mgr.AddCreatureToGroup(grpdata->second, this);
 }
 
@@ -435,7 +435,6 @@ bool Creature::UpdateEntry(uint32 Entry, uint32 team, const CreatureData *data)
     }
     else
         SetModifierValue(UNIT_MOD_RESISTANCE_ARCANE, BASE_VALUE, float(cInfo->resistance6));
-
 
     SetCanModifyStats(true);
     UpdateAllStats();
@@ -1692,7 +1691,6 @@ void Creature::DoFleeToGetAssistance()
         else
             GetMotionMaster()->MoveSeekAssistance(pCreature->GetPositionX(), pCreature->GetPositionY(), pCreature->GetPositionZ());
     }
-
 }
 
 Unit* Creature::SelectNearestTarget(float dist) const
@@ -1890,7 +1888,7 @@ bool Creature::LoadCreaturesAddon(bool reload)
     if (cainfo->path_id != 0)
         m_path_id = cainfo->path_id;
 
-    if (cainfo->isActive) 
+    if (cainfo->isActive)
         setActive(true);
 
     if (cainfo->auras)

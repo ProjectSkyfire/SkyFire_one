@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -142,7 +142,6 @@ int ns1__executeCommand(soap* soap, char* command, char** result)
     else
         return soap_sender_fault(soap, printBuffer, printBuffer);
 }
-
 
 void SOAPCommand::commandFinished(void* soapconnection, bool success)
 {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -459,12 +459,10 @@ void npc_escortAI::Start(bool bIsActiveAttacker, bool bRun, uint64 uiPlayerGUID,
 
     if (!ScriptWP) // sd2 never adds wp in script, but tc does
     {
-
     if (!WaypointList.empty())
         WaypointList.clear();
 
     FillPointMovementListForCreature();
-
     }
 
     if (WaypointList.empty())

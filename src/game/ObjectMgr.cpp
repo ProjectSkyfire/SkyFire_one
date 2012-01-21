@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -935,7 +935,6 @@ void ObjectMgr::LoadCreatureLinkedRespawn()
 
         if (CheckCreatureLinkedRespawn(guid,linkedGuid))
             mCreatureLinkedRespawnMap[guid] = linkedGuid;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -1084,7 +1083,6 @@ void ObjectMgr::LoadCreatures()
             AddCreatureToGrid(guid, &data);
 
         ++count;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -1286,7 +1284,6 @@ void ObjectMgr::LoadGameobjects()
         int16 gameEvent     = fields[15].GetInt16();
         int16 PoolId        = fields[16].GetInt16();
 
-
         if (data.rotation2 < -1.0f || data.rotation2 > 1.0f)
         {
             sLog.outErrorDb("Table `gameobject` have gameobject (GUID: %u Entry: %u) with invalid rotation2 (%f) value, skip",guid,data.id,data.rotation2);
@@ -1308,7 +1305,6 @@ void ObjectMgr::LoadGameobjects()
         if (gameEvent == 0 && PoolId == 0)                      // if not this is to be managed by GameEvent System or Pool system
             AddGameobjectToGrid(guid, &data);
         ++count;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -2147,7 +2143,6 @@ void ObjectMgr::LoadPlayerInfo()
 
     // Load playercreate spells
     {
-
         QueryResult_AutoPtr result = QueryResult_AutoPtr(NULL);
         if (sWorld.getConfig(CONFIG_START_ALL_SPELLS))
             result = WorldDatabase.Query("SELECT race, class, Spell, Active FROM playercreateinfo_spell_custom");
@@ -2569,7 +2564,6 @@ void ObjectMgr::LoadGuilds()
 
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -2623,7 +2617,6 @@ void ObjectMgr::LoadGuilds()
         newGuild->LoadGuildBankEventLogFromDB();
         newGuild->LoadGuildBankFromDB();
         AddGuild(newGuild);
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -2642,7 +2635,6 @@ void ObjectMgr::LoadArenaTeams()
 
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -3403,7 +3395,6 @@ void ObjectMgr::LoadQuests()
                     qinfo->GetQuestId(),qinfo->RewSpell,qinfo->RewSpell);
                 qinfo->RewSpell = 0;                        // no spell reward will display for this quest
             }
-
         }
 
         if (qinfo->RewSpellCast)
@@ -3423,7 +3414,6 @@ void ObjectMgr::LoadQuests()
                     qinfo->GetQuestId(),qinfo->RewSpellCast,qinfo->RewSpellCast);
                 qinfo->RewSpellCast = 0;                    // no spell will be casted on player
             }
-
         }
 
         if (qinfo->RewMailTemplateId)
@@ -4194,7 +4184,6 @@ void ObjectMgr::LoadItemTexts()
         mItemTexts[ fields[0].GetUInt32() ] = fields[1].GetCppString();
 
         ++count;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -4288,7 +4277,6 @@ void ObjectMgr::LoadPageTextLocales()
                 data.Text[idx] = str;
             }
         }
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -4417,7 +4405,6 @@ void ObjectMgr::LoadGossipText()
         }
 
         AddGossipText(pGText);
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -4638,7 +4625,6 @@ void ObjectMgr::LoadQuestAreaTriggers()
         }
 
         mQuestAreaTriggerMap[trigger_ID] = quest_ID;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -5131,7 +5117,6 @@ void ObjectMgr::LoadAreaTriggerTeleports()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT id, access_id, target_map, target_position_x, target_position_y, target_position_z, target_orientation FROM areatrigger_teleport");
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -5183,7 +5168,6 @@ void ObjectMgr::LoadAreaTriggerTeleports()
         }
 
         mAreaTriggers[Trigger_ID] = at;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -5200,7 +5184,6 @@ void ObjectMgr::LoadAccessRequirements()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT id, level_min, level_max, item, item2, heroic_key, heroic_key2, quest_done, quest_failed_text, heroic_quest_done, heroic_quest_failed_text FROM access_requirement");
     if (!result)
     {
-
         barGoLink bar(1);
 
         bar.step();
@@ -5294,7 +5277,6 @@ void ObjectMgr::LoadAccessRequirements()
         }
 
         mAccessRequirements[requiremt_ID] = ar;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -5573,7 +5555,6 @@ void ObjectMgr::LoadGameObjectLocales()
                 }
             }
         }
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -6453,7 +6434,6 @@ void ObjectMgr::LoadBattleMastersEntry()
         uint32 bgTypeId  = fields[1].GetUInt32();
 
         mBattleMastersMap[entry] = bgTypeId;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -7213,7 +7193,6 @@ void ObjectMgr::LoadTrainerSpell()
         if (!pTrainerSpell->reqlevel)
             pTrainerSpell->reqlevel = spellinfo->spellLevel;
 
-
         TrainerSpellData& data = m_mCacheTrainerSpellMap[entry];
 
         if (SpellMgr::IsProfessionSpell(spell))
@@ -7221,7 +7200,6 @@ void ObjectMgr::LoadTrainerSpell()
 
         data.spellList.push_back(pTrainerSpell);
         ++count;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -7270,7 +7248,6 @@ void ObjectMgr::LoadVendors()
 
         vList.AddItem(item_id,maxcount,incrtime,ExtendedCost);
         ++count;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -7279,7 +7256,6 @@ void ObjectMgr::LoadVendors()
 
 void ObjectMgr::LoadNpcTextId()
 {
-
     m_mCacheNpcTextIdMap.clear();
 
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT npc_guid, textid FROM npc_gossip");
@@ -7320,7 +7296,6 @@ void ObjectMgr::LoadNpcTextId()
 
         m_mCacheNpcTextIdMap[guid] = textid ;
         ++count;
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -7513,7 +7488,6 @@ void ObjectMgr::LoadGossipMenuItems()
         m_mGossipMenuItemsMap.insert(GossipMenuItemsMap::value_type(gMenuItem.menu_id, gMenuItem));
 
         ++count;
-
     }
     while(result->NextRow());
 
@@ -7769,7 +7743,6 @@ Quest const* GetQuestTemplateStore(uint32 entry)
 
 void ObjectMgr::LoadTransportEvents()
 {
-
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, waypoint_id, event_id FROM transport_events");
 
     if (!result)

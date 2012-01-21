@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -375,7 +375,7 @@ bool AuthSocket::_HandleLogonChallenge()
         // Get the account details from the account table
         // No SQL injection (escaped user name)
 
-        result = 
+        result =
             LoginDatabase.PQuery("SELECT a.sha_pass_hash,a.id,a.locked,a.last_ip,aa.gmlevel,a.v,a.s "
                                  "FROM account a "
                                  "LEFT JOIN account_access aa "

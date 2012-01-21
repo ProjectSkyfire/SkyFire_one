@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -165,7 +165,6 @@ class OPvPCapturePointEP : public OPvPCapturePoint
         void UnsummonSupportUnits();
 
         void UnsummonFlightMaster();
-
 
         uint32 EP_TOWER_EVENT_TEAM[EP_TOWER_NUM];
 

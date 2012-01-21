@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -64,7 +64,6 @@ CreatureEventAI::CreatureEventAI(Creature *c) : CreatureAI(c)
         std::vector<CreatureEventAI_Event>::const_iterator i;
         for (i = (*CreatureEvents).second.begin(); i != (*CreatureEvents).second.end(); ++i)
         {
-
             //Debug check
             #ifndef OREGON_DEBUG
             if ((*i).event_flags & EFLAG_DEBUG_ONLY)
@@ -512,7 +511,6 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                                 me->GetMotionMaster()->MoveChase(me->getVictim(), AttackDistance, AttackAngle);
                             }
                         }
-
                     }
                     else
                     {
@@ -522,7 +520,6 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
 
                         caster->CastSpell(target, action.cast.spellId, (action.cast.castFlags & CAST_TRIGGERED));
                     }
-
                 }
                 else
                     sLog.outErrorDb("CreatureEventAI: event %d creature %d attempt to cast spell that doesn't exist %d", EventId, me->GetEntry(), action.cast.spellId);
@@ -753,7 +750,6 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
         case ACTION_T_UPDATE_TEMPLATE:
             if (me->GetEntry() == action.update_template.creatureId)
             {
-
                 sLog.outErrorDb("CreatureEventAI: Event %d ACTION_T_UPDATE_TEMPLATE call with param1 == current entry. Creature %d", EventId, me->GetEntry());
                 return;
             }
@@ -763,7 +759,6 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
         case ACTION_T_DIE:
             if (me->isDead())
             {
-
                 sLog.outErrorDb("CreatureEventAI: Event %d ACTION_T_DIE on dead creature. Creature %d", EventId, me->GetEntry());
                 return;
             }
@@ -1024,7 +1019,6 @@ void CreatureEventAI::MoveInLineOfSight(Unit *who)
 
 void CreatureEventAI::SpellHit(Unit* pUnit, const SpellEntry* pSpell)
 {
-
     if (bEmptyList)
         return;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -56,7 +56,6 @@ namespace VMAP
             //uint32 hashCode() const { return ID; }
             // temp?
             const G3D::AABox& getBounds() const { return iBound; }
-
 
             static bool readFromFile(FILE *rf, ModelSpawn &spawn);
             static bool writeToFile(FILE *rw, const ModelSpawn &spawn);

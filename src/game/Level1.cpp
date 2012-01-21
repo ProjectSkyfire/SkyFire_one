@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -1489,7 +1489,6 @@ bool ChatHandler::HandleModifyASpeedCommand(const char* args)
         return false;
 
     float modSpeed = (float)atof((char*)args);
-
 
     if (modSpeed > 10 || modSpeed < 0.1)
     {

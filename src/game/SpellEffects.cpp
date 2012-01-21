@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -2868,7 +2868,6 @@ void Spell::EffectEnergize(uint32 i)
     }
     switch (m_spellInfo->Id)
     {
-
         //Elune's Touch (30% AP
         case 33926:
             damage = m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 30 / 100;
@@ -5871,7 +5870,6 @@ void Spell::EffectSendTaxi(uint32 i)
     }
 
     unitTarget->ToPlayer()->ActivateTaxiPathTo(nodes,mountid);
-
 }
 
 void Spell::EffectPlayerPull(uint32 i)
@@ -6464,7 +6462,6 @@ void Spell::GetSummonPosition(uint32 i, Position &pos, float radius, uint32 coun
 
             if (!found)
                 pos.Relocate(m_caster->GetPositionX(), m_caster->GetPositionY(), m_caster->GetPositionZ(), m_caster->GetOrientation());
-
         }
         // Summon in random point all other units if location present
         else

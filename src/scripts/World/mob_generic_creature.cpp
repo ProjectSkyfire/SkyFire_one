@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -146,7 +146,6 @@ struct generic_creatureAI : public ScriptedAI
 
                     //Set our global cooldown
                     GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
-
                 }//If no spells available and we arn't moving run to target
                 else if (IsSelfRooted)
                 {
@@ -163,7 +162,6 @@ CreatureAI* GetAI_generic_creature(Creature* pCreature)
 {
     return new generic_creatureAI (pCreature);
 }
-
 
 void AddSC_generic_creature()
 {

@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -264,7 +264,7 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
         Reset();
 
         if (!me->isAlive())
-            return;    
+            return;
 
         if (pInstance)
         {
@@ -307,7 +307,6 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
             {
                 if (Creature* pOrc = Creature::GetCreature(*me, *itr))
                     me->SetFacingToObject(pOrc);
-
             }
         }
     }
@@ -347,7 +346,6 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
                 DoCast(me->getVictim(),(HeroicMode ? H_SPELL_SHADOW_SLAM : SPELL_SHADOW_CLEAVE));
                 Cleave_Timer = 6000+rand()%2500;
             } else Cleave_Timer -= diff;
-			
         }
         else
         {

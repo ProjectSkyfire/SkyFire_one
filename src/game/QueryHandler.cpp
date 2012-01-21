@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -148,7 +148,6 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
     CreatureInfo const *ci = objmgr.GetCreatureTemplate(entry);
     if (ci)
     {
-
         std::string Name, SubName;
         Name = ci->Name;
         SubName = ci->SubName;

@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -47,7 +47,6 @@ enum Spells
     SPELL_ENRAGE            =   8269,
     SPELL_SUMMONTIGERS      =   24183,
     SPELL_TIGER_FORM        =   24169,
-                          
 
     // Zealot Lor'Khan Spells
     SPELL_SHIELD            =   20545,
@@ -108,7 +107,6 @@ void Resurrect(Unit* Target)
     if (Target->GetMaxPower(POWER_MANA) > 0)
         Target->SetPower(POWER_MANA, int(Target->GetMaxPower(POWER_MANA) * 1.0f));
 }
-
 
 struct boss_thekalAI : public ScriptedAI
 {
@@ -243,8 +241,8 @@ struct boss_thekalAI : public ScriptedAI
             {
                 DoCast(me->getVictim(), SPELL_MORTALCLEAVE);
                 MortalCleave_Timer = 15000 + rand()%5000;
-            } 
-            else 
+            }
+            else
                 MortalCleave_Timer -= diff;
 
             // Silence Timer
@@ -253,9 +251,8 @@ struct boss_thekalAI : public ScriptedAI
                 DoCast(me->getVictim(), SPELL_SILENCE);
                 Silence_Timer = 20000 + rand()%5000;
             }
-            else 
+            else
                 Silence_Timer -= diff;
-
         }
         else
         // Phase 2 spells
@@ -286,7 +283,7 @@ struct boss_thekalAI : public ScriptedAI
             {
                 DoCast(me, SPELL_FRENZY);
                 Frenzy_Timer = 30000;
-            } 
+            }
             else
                 Frenzy_Timer -= diff;
 
@@ -295,7 +292,7 @@ struct boss_thekalAI : public ScriptedAI
             {
                 DoCast(me->getVictim(), SPELL_SILENCE);
                 ForcePunch_Timer = 16000 + rand()%5000;
-            } 
+            }
             else
                 ForcePunch_Timer -= diff;
 
@@ -304,7 +301,7 @@ struct boss_thekalAI : public ScriptedAI
             {
                 DoCast(me->getVictim(), SPELL_SUMMONTIGERS);
                 SummonTigers_Timer = 10000 + rand()%4000;
-            } 
+            }
             else
                 SummonTigers_Timer -= diff;
         }
@@ -368,7 +365,7 @@ struct mob_zealot_lorkhanAI : public ScriptedAI
 
         uiDamage = 0;
     }
-    
+
     void UpdateAI (const uint32 diff)
     {
         if (!UpdateVictim())
@@ -410,7 +407,7 @@ struct mob_zealot_lorkhanAI : public ScriptedAI
             DoCast(me, SPELL_SHIELD);
             Shield_Timer = 61000;
         }
-        else 
+        else
             Shield_Timer -= diff;
 
         // BloodLust Timer
@@ -621,7 +618,6 @@ struct mob_zealot_zathAI : public ScriptedAI
         }
         else
             Blind_Timer -= diff;
-
 
         DoMeleeAttackIfReady();
     }

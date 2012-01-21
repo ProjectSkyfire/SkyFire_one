@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -389,7 +389,6 @@ void PoolHandler::LoadFromDB()
 
         PoolTemplateData& pPoolTemplate = mPoolTemplate[pool_id];
         pPoolTemplate.MaxLimit  = fields[1].GetUInt32();
-
     } while (result->NextRow());
 
     sLog.outString();
@@ -416,7 +415,6 @@ void PoolHandler::LoadFromDB()
     }
     else
     {
-
         barGoLink bar2(result->GetRowCount());
         do
         {
@@ -452,7 +450,6 @@ void PoolHandler::LoadFromDB()
             cregroup.AddEntry(plObject, pPoolTemplate->MaxLimit);
             SearchPair p(guid, pool_id);
             mCreatureSearchMap.insert(p);
-
         } while (result->NextRow());
         sLog.outString();
         sLog.outString(">> Loaded %u creatures in pools", count);
@@ -478,7 +475,6 @@ void PoolHandler::LoadFromDB()
     }
     else
     {
-
         barGoLink bar2(result->GetRowCount());
         do
         {
@@ -523,7 +519,6 @@ void PoolHandler::LoadFromDB()
             gogroup.AddEntry(plObject, pPoolTemplate->MaxLimit);
             SearchPair p(guid, pool_id);
             mGameobjectSearchMap.insert(p);
-
         } while (result->NextRow());
         sLog.outString();
         sLog.outString(">> Loaded %u gameobject in pools", count);
@@ -548,7 +543,6 @@ void PoolHandler::LoadFromDB()
     }
     else
     {
-
         barGoLink bar2(result->GetRowCount());
         do
         {
@@ -589,7 +583,6 @@ void PoolHandler::LoadFromDB()
             plgroup.AddEntry(plObject, pPoolTemplateMother->MaxLimit);
             SearchPair p(child_pool_id, mother_pool_id);
             mPoolSearchMap.insert(p);
-
         } while (result->NextRow());
 
         // Now check for circular reference

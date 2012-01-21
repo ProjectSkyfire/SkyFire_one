@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -435,7 +435,6 @@ void Spell::FillTargetMap()
                             m_caster->VisitNearbyGridObject(max_range, searcher);
                             if (!result)
                                 m_caster->VisitNearbyWorldObject(max_range, searcher);
-
 
                             if (result)
                             {
@@ -1122,7 +1121,6 @@ void Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask)
             }
         }
     }
-
 
     // Get Data Needed for Diminishing Returns, some effects may have multiple auras, so this must be done on spell hit, not aura add
     if (m_diminishGroup = GetDiminishingReturnsGroupForSpell(m_spellInfo, m_triggeredByAuraSpell))
@@ -4589,10 +4587,10 @@ uint8 Spell::CheckRange(bool strict)
     if (m_spellInfo->Id == 33395) // Elemental Frost Bolt.
     {
         if (!m_caster->IsWithinCombatRange(target, max_range)) // Check if target it to far.
-            return SPELL_FAILED_OUT_OF_RANGE;              
+            return SPELL_FAILED_OUT_OF_RANGE;
     }
 
-    return 0; 
+    return 0;
 }
 
 uint8 Spell::CheckPower()
@@ -5069,7 +5067,6 @@ void Spell::DelayedChannel()
                     if (ihit->effectMask & (1<<j))
                         unit->DelayAura(m_spellInfo->Id, j, delaytime);
             }
-
         }
     }
 

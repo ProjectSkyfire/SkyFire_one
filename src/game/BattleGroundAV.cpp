@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -95,7 +95,6 @@ void BattleGroundAV::HandleKillUnit(Creature *unit, Player *killer)
         Creature* creature = GetBGCreature(AV_CPLACE_HERALD);
         if (creature)
             YellToAll(creature,GetOregonString(LANG_BG_AV_A_CAPTAIN_DEAD),LANG_UNIVERSAL);
-
     }
     else if (entry == BG_AV_CreatureInfo[AV_NPC_H_CAPTAIN][0])
     {
@@ -389,7 +388,6 @@ void BattleGroundAV::AddPlayer(Player *plr)
     m_PlayerScores[plr->GetGUID()] = sc;
     if (m_MaxLevel == 0)
         m_MaxLevel=(plr->getLevel()%10 == 0)? plr->getLevel() : (plr->getLevel()-(plr->getLevel()%10))+10; //TODO: just look at the code \^_^/ --but queue-info should provide this information..
-
 }
 
 void BattleGroundAV::EndBattleGround(uint32 winner)
@@ -522,7 +520,6 @@ void BattleGroundAV::UpdatePlayerScore(Player* Source, uint32 type, uint32 value
 
 void BattleGroundAV::EventPlayerDestroyedPoint(BG_AV_Nodes node)
 {
-
     uint32 object = GetObjectThroughNode(node);
     sLog.outDebug("bg_av: player destroyed point node %i object %i",node,object);
 
@@ -705,11 +702,9 @@ void BattleGroundAV::PopulateNode(BG_AV_Nodes node)
             DelCreature(node);
         if (!AddSpiritGuide(node, BG_AV_CreaturePos[node][0], BG_AV_CreaturePos[node][1], BG_AV_CreaturePos[node][2], BG_AV_CreaturePos[node][3], owner))
             sLog.outError("AV: couldn't spawn spiritguide at node %i",node);
-
     }
     for (uint8 i=0; i<4; i++)
         AddAVCreature(creatureid,c_place+i);
-
 }
 void BattleGroundAV::DePopulateNode(BG_AV_Nodes node)
 {
@@ -1415,6 +1410,5 @@ void BattleGroundAV::ResetBGSubclass()
     for (uint16 i = 0; i < AV_CPLACE_MAX+AV_STATICCPLACE_MAX; i++)
         if (m_BgCreatures[i])
             DelCreature(i);
-
 }
 

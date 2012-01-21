@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -20,7 +20,7 @@
 /* ScriptData
 SDName: Boss_Anzu
 SD%Complete: 95
-SDComment:Summon event is missing. 
+SDComment:Summon event is missing.
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
@@ -86,7 +86,7 @@ struct boss_anzuAI : public ScriptedAI
     void EnterCombat(Unit *who)
     {
         if (pInstance)
-            pInstance->SetData(DATA_ANZUEVENT, IN_PROGRESS);        
+            pInstance->SetData(DATA_ANZUEVENT, IN_PROGRESS);
     }
 
     void JustDied(Unit* Killer)
@@ -94,7 +94,7 @@ struct boss_anzuAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_ANZUEVENT, DONE);
     }
-	
+
     void JustSummoned(Creature *summoned)
     {
         if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))

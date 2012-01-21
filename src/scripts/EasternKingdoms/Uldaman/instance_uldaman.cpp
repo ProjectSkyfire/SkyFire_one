@@ -1,5 +1,3 @@
-
-
 /* ScriptData
 SDName: instance_uldaman
 SD%Complete: 99%
@@ -51,7 +49,6 @@ struct instance_uldaman : public ScriptedInstance
 
         for (uint8 i=0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
-
     }
 
     uint64 archaedasGUID;
@@ -146,7 +143,6 @@ struct instance_uldaman : public ScriptedInstance
         if (!go)
             return;
         go->SetUInt32Value(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
-
     }
 
     void ActivateStoneKeepers()
@@ -407,7 +403,6 @@ struct instance_uldaman : public ScriptedInstance
             case 2748:    // Archaedas
                 archaedasGUID = pCreature->GetGUID();
                 break;
-
         } // end switch
     } // end OnCreatureCreate
 

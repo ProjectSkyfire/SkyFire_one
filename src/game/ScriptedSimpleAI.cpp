@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -264,16 +264,13 @@ void SimpleAI::UpdateAI(const uint32 diff)
                     if (Spell[i].Text_Sound[random_text])
                         DoPlaySoundToSet(me, Spell[i].Text_Sound[random_text]);
                 }
-
             }
 
             //Spell will cast agian when the cooldown is up
             if (Spell[i].CooldownRandomAddition)
                 Spell_Timer[i] = Spell[i].Cooldown + (rand() % Spell[i].CooldownRandomAddition);
             else Spell_Timer[i] = Spell[i].Cooldown;
-
         } else Spell_Timer[i] -= diff;
-
     }
 
     DoMeleeAttackIfReady();

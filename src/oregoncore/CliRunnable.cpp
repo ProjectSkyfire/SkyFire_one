@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -557,7 +557,7 @@ bool ChatHandler::HandleAccountOnlineListCommand(const char* /*args*/)
 
         // Get the username, last IP and GM level of each account
         // No SQL injection. account is uint32.
-        QueryResult_AutoPtr resultLogin = 
+        QueryResult_AutoPtr resultLogin =
             LoginDatabase.PQuery("SELECT a.username, a.last_ip, aa.gmlevel, a.expansion "
                                  "FROM account a "
                                  "LEFT JOIN account_access aa "
@@ -571,7 +571,6 @@ bool ChatHandler::HandleAccountOnlineListCommand(const char* /*args*/)
         }
         else
             PSendSysMessage(LANG_ACCOUNT_LIST_ERROR,name.c_str());
-
     }while(resultDB->NextRow());
 
     SendSysMessage("=====================================================================");
@@ -732,7 +731,6 @@ void CliRunnable::run()
             #if PLATFORM != WINDOWS
             add_history(command.c_str());
             #endif
-
         }
         else if (feof(stdin))
         {

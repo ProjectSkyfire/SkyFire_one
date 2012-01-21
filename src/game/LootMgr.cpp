@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -150,7 +150,6 @@ void LootStore::LoadLootTable()
             // Adds current row to the template
             tab->second->AddEntry(storeitem);
             ++count;
-
         } while (result->NextRow());
 
         Verify();                                           // Checks validity of the loot store

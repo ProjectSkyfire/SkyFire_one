@@ -53,7 +53,6 @@ Base::Base ()
 void Base::IncRef ()
 {
     ++RefCount;
-
 }
 
 /*
