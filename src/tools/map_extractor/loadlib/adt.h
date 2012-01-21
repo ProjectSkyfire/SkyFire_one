@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
- */th this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef ADT_H
@@ -247,7 +246,6 @@ public:
         else
             return 0xFFFFFFFFFFFFFFFFLL;
     }
-
 };
 
 // Adt file header chunk
@@ -279,7 +277,6 @@ public:
     bool prepareLoadedData();
     adt_MCIN *getMCIN(){ return (adt_MCIN *)((uint8 *)&pad+offsMCIN);}
     adt_MH2O *getMH2O(){ return offsMH2O ? (adt_MH2O *)((uint8 *)&pad+offsMH2O) : 0;}
-
 };
 
 class ADT_file : public FileLoader{
