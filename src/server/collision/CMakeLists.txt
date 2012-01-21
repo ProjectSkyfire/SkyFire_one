@@ -10,9 +10,23 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-add_subdirectory(genrev)
-add_subdirectory(server)
+file(GLOB sources_localdir *.cpp *.h)
 
-if(TOOLS)
-  add_subdirectory(tools)
-endif(TOOLS)
+set(collision_STAT_SRCS
+  ${collision_STAT_SRCS}
+  ${sources_localdir}
+)
+
+include_directories(
+  ${CMAKE_SOURCE_DIR}/dep/g3dlite/include
+  ${CMAKE_SOURCE_DIR}/src/server/shared
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Database
+  ${CMAKE_SOURCE_DIR}/src/server/framework
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_BINARY_DIR}
+  ${ACE_INCLUDE_DIR}
+  ${MYSQL_INCLUDE_DIR}
+  ${OPENSSL_INCLUDE_DIR}
+)
+
+add_library(collision STATIC ${collision_STAT_SRCS})
