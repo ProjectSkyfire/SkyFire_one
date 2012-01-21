@@ -1,5 +1,5 @@
-/* Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2010-2011 OregonCore <http://www.oregoncore.com/>
+/* Copyright (C) 2006 - 2012 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * Copyright (C) 2010-2012 OregonCore <http://www.oregoncore.com/>
  *
  * This program is free software licensed under GPL version 2
  * Please see the included DOCS/LICENSE.TXT for more information */
