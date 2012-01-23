@@ -42,7 +42,7 @@ class PatchCache
 
         struct PATCH_INFO
         {
-            ACE_UINT8 md5[md5_DIGEST_LENGTH];
+            ACE_UINT8 md5[MD5_DIGEST_LENGTH];
         };
 
         typedef std::map<std::string, PATCH_INFO*> Patches;
@@ -58,7 +58,7 @@ class PatchCache
         }
 
         void LoadPatchmd5(const char*);
-        bool GetHash(const char * pat, ACE_UINT8 mymd5[md5_DIGEST_LENGTH]);
+        bool GetHash(const char * pat, ACE_UINT8 mymd5[MD5_DIGEST_LENGTH]);
 
     private:
         void LoadPatchesInfo();

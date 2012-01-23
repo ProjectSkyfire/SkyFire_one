@@ -156,8 +156,8 @@ void PatchCache::LoadPatchmd5(const char* szFileName)
         return;
 
     // Calculate the md5 hash
-    md5_CTX ctx;
-    md5_Init(&ctx);
+    MD5_CTX ctx;
+    MD5_Init(&ctx);
 
     const size_t check_chunk_size = 4*1024;
 
@@ -166,22 +166,22 @@ void PatchCache::LoadPatchmd5(const char* szFileName)
     while(!feof (pPatch))
     {
         size_t read = fread(buf, 1, check_chunk_size, pPatch);
-        md5_Update(&ctx, buf, read);
+        MD5_Update(&ctx, buf, read);
     }
 
     fclose(pPatch);
 
     // Store the result in the internal patch hash map
     patches_[path] = new PATCH_INFO;
-    md5_Final((ACE_UINT8 *) & patches_[path]->md5, &ctx);
+    MD5_Final((ACE_UINT8 *) & patches_[path]->md5, &ctx);
 }
 
-bool PatchCache::GetHash(const char * pat, ACE_UINT8 mymd5[md5_DIGEST_LENGTH])
+bool PatchCache::GetHash(const char * pat, ACE_UINT8 mymd5[MD5_DIGEST_LENGTH])
 {
     for (Patches::iterator i = patches_.begin (); i != patches_.end (); i++)
         if (!stricmp(pat, i->first.c_str ()))
         {
-            memcpy(mymd5, i->second->md5, md5_DIGEST_LENGTH);
+            memcpy(mymd5, i->second->md5, MD5_DIGEST_LENGTH);
             return true;
         }
 

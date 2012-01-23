@@ -137,7 +137,7 @@ typedef struct XFER_INIT
     uint8 fileNameLen;                                      // strlen(fileName);
     uint8 fileName[5];                                      // fileName[fileNameLen]
     uint64 file_size;                                       // file size (bytes)
-    uint8 md5[md5_DIGEST_LENGTH];                           // md5
+    uint8 md5[MD5_DIGEST_LENGTH];                           // md5
 }XFER_INIT;
 
 typedef struct AuthHandler
