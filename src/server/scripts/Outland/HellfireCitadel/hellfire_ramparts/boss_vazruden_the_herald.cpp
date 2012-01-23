@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -347,7 +347,7 @@ struct boss_vazruden_the_heraldAI : public ScriptedAI
                 VazrudenGUID = Vazruden->GetGUID();
             Creature* Nazan = me->SummonCreature(ENTRY_NAZAN,VazrudenMiddle[0],VazrudenMiddle[1],VazrudenMiddle[2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,6000000);
             if (Nazan)
-                NazanGUID = Nazan->GetGUID();	    
+                NazanGUID = Nazan->GetGUID();
             summoned = true;
             me->SetVisibility(VISIBILITY_OFF);
             me->addUnitState(UNIT_STAT_ROOT);
@@ -492,7 +492,6 @@ CreatureAI* GetAI_boss_vazruden(Creature* pCreature)
 {
     return new boss_vazrudenAI (pCreature);
 }
-
 
 CreatureAI* GetAI_boss_nazan(Creature* pCreature)
 {

@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -65,7 +65,6 @@ struct npc_ameAI : public npc_escortAI
 
         switch (i)
         {
-
          case 19:
             me->SummonCreature(ENTRY_STOMPER, -6391.69f, -1730.49f, -272.83f, 4.96f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
             DoScriptText(SAY_AGGRO1, me, pPlayer);
@@ -86,7 +85,6 @@ struct npc_ameAI : public npc_escortAI
             if (pPlayer)
                 pPlayer->GroupEventHappens(QUEST_CHASING_AME,me);
             break;
-
         }
     }
 
@@ -117,7 +115,6 @@ struct npc_ameAI : public npc_escortAI
             DoCast(me->getVictim(), SPELL_DEMORALIZINGSHOUT);
             DEMORALIZINGSHOUT_Timer = 70000;
         } else DEMORALIZINGSHOUT_Timer -= diff;
-
     }
 };
 

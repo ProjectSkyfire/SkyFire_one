@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+ * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -151,7 +151,6 @@ struct npc_deathstalker_erlandAI : public npc_escortAI
                     DoScriptText(SAY_QUINN, Quinn);
                 break;}
         case 26: DoScriptText(SAY_ON_BYE, me, NULL); break;
-
         }
     }
 

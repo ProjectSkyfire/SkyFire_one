@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -100,7 +100,6 @@ int ThreadPriority::getPriority(Priority p) const
 
 Thread::Thread() : m_task(0), m_iThreadId(0), m_hThreadHandle(0)
 {
-
 }
 
 Thread::Thread(Runnable* instance) : m_task(instance), m_iThreadId(0), m_hThreadHandle(0)

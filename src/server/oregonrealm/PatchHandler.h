@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -63,7 +63,6 @@ class PatchCache
     private:
         void LoadPatchesInfo();
         Patches patches_;
-
 };
 
 class PatchHandler: public ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_NULL_SYNCH>
@@ -82,7 +81,6 @@ class PatchHandler: public ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_NULL_SYNCH>
 
     private:
         ACE_HANDLE patch_fd_;
-
 };
 
 #endif /* _BK_PATCHHANDLER_H__ */

@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -187,7 +187,6 @@ struct boss_high_king_maulgarAI : public ScriptedAI
                 case 3: DoScriptText(SAY_OGRE_DEATH4, me);break;
             }
        }
-
 
     void EnterCombat(Unit *who)
     {
@@ -398,7 +397,6 @@ struct boss_olm_the_summonerAI : public ScriptedAI
                 DoCast(pTarget, SPELL_DEATH_COIL);
             DeathCoil_Timer = 20000;
         } else DeathCoil_Timer -= diff;
-
 
         DoMeleeAttackIfReady();
     }

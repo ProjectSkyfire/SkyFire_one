@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -309,7 +309,6 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
                     //Darkbeam for 35 seconds
                     PhaseTimer = 35000;
                 } else PhaseTimer -= diff;
-
             }
             break;
             case 1:
@@ -647,7 +646,6 @@ struct cthunAI : public Scripted_NoMovementAI
 
                     PhaseTimer = 0;
                 } else PhaseTimer -= diff;
-
             }break;
 
             //Body Phase
@@ -793,7 +791,6 @@ struct cthunAI : public Scripted_NoMovementAI
                     pTarget = SelectRandomNotStomach();
                     if (pTarget)
                     {
-
                         Creature* Spawned = NULL;
 
                         //Spawn claw tentacle on the random target
@@ -824,7 +821,6 @@ struct cthunAI : public Scripted_NoMovementAI
                     //These spawn at every 30 seconds
                     EyeTentacleTimer = 30000;
                 } else EyeTentacleTimer -= diff;
-
             }break;
 
             //Weakened state
@@ -1048,7 +1044,6 @@ struct claw_tentacleAI : public Scripted_NoMovementAI
             }
 
             me->SetVisibility(VISIBILITY_ON);
-
         } else EvadeTimer -= diff;
 
         //GroundRuptureTimer
@@ -1145,7 +1140,6 @@ struct giant_claw_tentacleAI : public Scripted_NoMovementAI
             }
 
             me->SetVisibility(VISIBILITY_ON);
-
         } else EvadeTimer -= diff;
 
         //GroundRuptureTimer

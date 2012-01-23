@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -151,15 +151,15 @@ void CreatureGroupManager::LoadCreatureGroups()
     {
         fields = result_data->Fetch();
         bar.step();
-        
+
         //Load group member data
         uint32 groupId = fields[0].GetUInt32();
         uint32 leaderGUID = fields[1].GetUInt32();
-        uint8  groupType = fields[2].GetUInt8(); 
+        uint8  groupType = fields[2].GetUInt8();
 
         group_member                        = new GroupInfo;
         group_member->leaderGUID            = leaderGUID;
-        group_member->groupType             = groupType;        
+        group_member->groupType             = groupType;
 
         // check data correctness
         if (guidSet.find(group_member->leaderGUID) == guidSet.end())
@@ -172,7 +172,6 @@ void CreatureGroupManager::LoadCreatureGroups()
         CreatureGroupMap[groupId] = group_member;
 
         sLog.outDebug("CreatureGroup::LoadCreatureGroups: Load Group %u with Leader %u and groupType %u.", groupId, leaderGUID, groupType);
-
     }
     while (result_data->NextRow()) ;
 
@@ -181,7 +180,7 @@ void CreatureGroupManager::LoadCreatureGroups()
     {
         fields = result_member->Fetch();
         bar.step();
-        
+
         //Load group member data
         uint32 groupId = fields[0].GetUInt32();
         uint32 memberGUID = fields[1].GetUInt32();
@@ -196,7 +195,6 @@ void CreatureGroupManager::LoadCreatureGroups()
         CreatureGroupDataMap[memberGUID] = groupId;
 
         sLog.outDebug("CreatureGroup::LoadCreatureGroups: Load Member %u for Group with groupId %u.", memberGUID, groupId);
-
     }
     while (result_member->NextRow()) ;
 
@@ -266,7 +264,7 @@ bool CreatureGroup::IsAllowedToRespawn(Creature *member)
     for (CreatureGroupMemberType::iterator itr = m_members.begin(); itr != m_members.end(); ++itr)
         if (itr->first->isInCombat())
             exist = false;
-    
+
     if (exist)
          sLog.outDebug("CreatureGroup::IsAllowedToRespawn: group member instanceId %u can respawn.",member->GetInstanceId());
 

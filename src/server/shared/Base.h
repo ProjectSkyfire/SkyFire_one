@@ -49,7 +49,6 @@ class Base
 
         void DecRef ();
         int GetRefCount ();
-
 };
 #endif                                                      // __BASE_H__
 

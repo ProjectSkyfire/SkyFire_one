@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -1687,7 +1687,6 @@ float Map::GetHeight(float x, float y, float z, bool pUseVmaps, float maxSearchD
                 return vmapHeight;
             else
                 return mapHeight;                           // better use .map surface height
-
         }
         else
             return vmapHeight;                              // we have only vmapHeight (if have)
@@ -2652,7 +2651,6 @@ void BattleGroundMap::RemoveAllPlayers()
             if (Player* plr = itr->getSource())
                 if (!plr->IsBeingTeleportedFar())
                     plr->TeleportTo(plr->GetBattleGroundEntryPoint());
-
 }
 
 Creature*

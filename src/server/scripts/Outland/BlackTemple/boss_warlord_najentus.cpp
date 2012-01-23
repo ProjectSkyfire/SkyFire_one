@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -16,7 +16,7 @@
   * You should have received a copy of the GNU General Public License along
   * with this program. If not, see <http://www.gnu.org/licenses/>.
   */
-  
+
 /* ScriptData
 SDName: Boss_Warlord_Najentus
 SD%Complete: 95
@@ -52,7 +52,6 @@ enum eEnums
     SPELL_NEEDLE_SPINE_AOE          = 39968,
 
     GOBJECT_SPINE                   = 185584
-
 };
 
 struct boss_najentusAI : public ScriptedAI
@@ -236,7 +235,6 @@ struct boss_najentusAI : public ScriptedAI
                 NeedleSpineTimer = 3000;
             }
         } else NeedleSpineTimer -= diff;
-
 
         DoMeleeAttackIfReady();
     }

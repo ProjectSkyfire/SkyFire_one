@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -120,7 +120,6 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
         FrenzySpawnTimer = 2000;
         DoSpawnFrenzy = false;
         TrashCount = 0;
-
     }
 
     bool IsEncounterInProgress() const
@@ -161,7 +160,6 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
                     {
                         if (Water == WATERSTATE_SCALDING)
                         {
-
                             if (!pPlayer->HasAura(SPELL_SCALDINGWATER, 0))
                             {
                                 pPlayer->CastSpell(pPlayer, SPELL_SCALDINGWATER,true);
@@ -183,7 +181,6 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
                     if (!pPlayer->IsInWater())
                         pPlayer->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
                 }
-
             }
             WaterCheckTimer = 500;//remove stress from core
         } else WaterCheckTimer -= diff;

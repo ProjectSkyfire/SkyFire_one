@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+ * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -215,7 +215,6 @@ struct npc_secondTrialAI : public ScriptedAI
 
     void Reset()
     {
-
       timer = 2000;
       questPhase = 0;
       summonerGuid = 0;
@@ -320,7 +319,6 @@ struct npc_secondTrialAI : public ScriptedAI
     void Activate(uint64 summonerguid);
     void KilledUnit(Unit* Killed);
     void JustDied(Unit* Killer);
-
 };
 
 /*######
@@ -401,10 +399,8 @@ struct master_kelerun_bloodmournAI : public ScriptedAI
 
     void StartEvent()
     {
-
         if (questPhase == 1)
         { // no player check, quest can be finished as group, so no complex PlayerGUID/group search code
-
             for (uint8 i = 0; i < 4; ++i)
             if (Creature *pSummoned = DoSpawnCreature(PaladinEntry[i], SpawnPosition[i].x, SpawnPosition[i].y, SpawnPosition[i].z, SpawnPosition[i].o, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 180000))
                 paladinGuid[i] = pSummoned->GetGUID();

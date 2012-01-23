@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -49,7 +49,6 @@ struct Traveller
     float GetPositionY() const { return i_traveller.GetPositionY(); }
     float GetPositionZ() const { return i_traveller.GetPositionZ(); }
     T& GetTraveller(void) { return i_traveller; }
-
 
     float Speed(void) { assert(false); return 0.0f; }
     float GetMoveDestinationTo(float x, float y, float z);
@@ -141,7 +140,6 @@ inline void Traveller<Player>::Relocation(float x, float y, float z, float orien
 {
     i_traveller.GetMap()->PlayerRelocation(&i_traveller, x, y, z, orientation);
 }
-
 
 template<>
 inline void Traveller<Player>::MoveTo(float x, float y, float z, uint32 t)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -70,7 +70,7 @@ ConfusedMovementGenerator<T>::Initialize(T &unit)
             i_waypoints[idx][2] = new_z;
 
             // prevent falling down over an edge and check vmap if possible
-            if (z > i_waypoints[idx][2] + 3.0f || 
+            if (z > i_waypoints[idx][2] + 3.0f ||
                 vMaps && !vMaps->isInLineOfSight(map->GetId(), x, y, z + 2.0f, i_waypoints[idx][0], i_waypoints[idx][1], i_waypoints[idx][2]))
             {
                 i_waypoints[idx][0] = idx > 0 ? i_waypoints[idx-1][0] : x;

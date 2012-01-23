@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -16,7 +16,7 @@
   * You should have received a copy of the GNU General Public License along
   * with this program. If not, see <http://www.gnu.org/licenses/>.
   */
-  
+
 #include "ScriptPCH.h"
 #include "hyjal.h"
 #include "hyjal_trash.h"
@@ -129,7 +129,6 @@ float AllianceOverrunWP[55][3]=//waypoints in the alliance base used in the end 
     {5180.41f, -2121.87f, 1292.62f},//52 garg target3
     {5088.68f, -2432.04f, 1441.73f},//53 garg target4
     {5111.26f, -2454.73f, 1449.63f}//54 garg target5
-
 };
 
 float HordeOverrunWP[21][3]=//waypoints in the horde base used in the end in the cleaning wave
@@ -663,7 +662,6 @@ struct mob_ghoulAI : public hyjal_trashAI
                 me->setDeathState(DEAD);
                 me->RemoveCorpse();
             }
-
         }
     }
 
@@ -994,7 +992,6 @@ struct mob_crypt_fiendAI : public hyjal_trashAI
                         Start(false, true);
                         SetDespawnAtEnd(false);
                     }
-
                 }
             }
         }
@@ -1079,7 +1076,6 @@ struct mob_fel_stalkerAI : public hyjal_trashAI
                         Start(false, true);
                         SetDespawnAtEnd(false);
                     }
-
                 }
             }
         }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+ * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -294,7 +294,6 @@ struct boss_felblood_kaelthasAI : public ScriptedAI
 
                 if (PhoenixTimer <= diff)
                 {
-
                     Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
 
                     uint8 random = urand(1,2);
@@ -398,7 +397,6 @@ struct boss_felblood_kaelthasAI : public ScriptedAI
                                     Orb->AddThreat(pTarget, 1000000.0f);
                                     Orb->AI()->AttackStart(pTarget);
                                 }
-
                             }
 
                             DoCast(me, SPELL_GRAVITY_LAPSE_CHANNEL);
@@ -488,7 +486,6 @@ struct mob_felkael_phoenixAI : public ScriptedAI
         {
             damage = 0;
             return;
-
         }
         //Don't really die in all phases of Kael'Thas
         if (pInstance && pInstance->GetData(DATA_KAELTHAS_EVENT) == 0)
@@ -531,7 +528,6 @@ struct mob_felkael_phoenixAI : public ScriptedAI
 
             if (Rebirth)
             {
-
                 if (Death_Timer <= diff)
                 {
                     me->SummonCreature(CREATURE_PHOENIX_EGG, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);

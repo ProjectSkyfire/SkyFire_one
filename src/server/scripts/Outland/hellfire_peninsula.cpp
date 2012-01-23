@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -222,7 +222,6 @@ bool GOHello_go_haaleshi_altar(Player *player, GameObject* _GO)
     _GO->SummonCreature(C_AERANAS,-1321.79f, 4043.80f, 116.24f, 1.25f, TEMPSUMMON_TIMED_DESPAWN, 180000);
     return false;
 }
-
 
 /*######
 ## npc_naladu
@@ -656,7 +655,7 @@ struct npc_hand_berserkerAI : public ScriptedAI
         {
             DoCast(pWho, SPELL_CHARGE);
         }
-    }   
+    }
 
     void DamageTaken(Unit* pDoneby, uint32 & Damage)
     {
@@ -700,7 +699,7 @@ enum
 {
     NPC_HAND_BERSERKER      = 16878,
     SPELL_CHANNELS          = 39184,
-    GO_RELIC                = 185298      
+    GO_RELIC                = 185298
 };
 
 struct npc_anchorite_relic_bunnyAI : public ScriptedAI
@@ -780,7 +779,7 @@ enum
 
     SPELL_EXORCIM              = 39277,
     SPELL_EXORCIM2             = 39278,
-    SPELL_COLONEL1             = 39283,         
+    SPELL_COLONEL1             = 39283,
     SPELL_COLONEL2             = 39294,
     SPELL_COLONEL3             = 39284,
     SPELL_COLONEL4             = 39294,
@@ -904,7 +903,7 @@ struct npc_anchorite_baradaAI : public ScriptedAI
             case 41:pColonel->GetMotionMaster()->MovePoint(0, -714.212f, 2750.606f, 103.774f);return 4000;
             case 42:pColonel->GetMotionMaster()->MovePoint(0, -707.784f, 2749.562f, 103.774f);return 4000;
             case 43:DoScriptText(SAY_BARADA6, me, 0); return 1000;
-            case 44:pColonel->GetMotionMaster()->MovePoint(0, -708.558f, 2744.923f, 103.774f);return 4000;         
+            case 44:pColonel->GetMotionMaster()->MovePoint(0, -708.558f, 2744.923f, 103.774f);return 4000;
             case 45:pColonel->GetMotionMaster()->MovePoint(0, -713.406f, 2744.240f, 103.774f);
                     pColonel->CastSpell(pColonel, SPELL_COLONEL8, false);return 4000;
             case 46:pColonel->GetMotionMaster()->MovePoint(0, -714.212f, 2750.606f, 103.774f);
@@ -1116,7 +1115,7 @@ struct npc_sedai_quest_credit_markerAI : public ScriptedAI
 {
     npc_sedai_quest_credit_markerAI(Creature* pCreature) : ScriptedAI(pCreature) {}
 
-    void Reset() 
+    void Reset()
     {
         DoSpawn();
     }
@@ -1263,8 +1262,8 @@ struct npc_vindicator_sedaiAI : public ScriptedAI
             case 17:pAmb->DealDamage(pAmb, pAmb->GetHealth(), 0, DIRECT_DAMAGE);return 1000;
             case 18:pEsc->GetMotionMaster()->MovePoint(0, 235.063f, 4117.826f, 84.471f);return 1000;
             case 19:me->SetUnitMovementFlags(MOVEFLAG_WALK_MODE);
-                    me->GetMotionMaster()->MovePoint(0, 199.706f, 4134.302f, 75.404f);return 6000;       
-            case 20:me->GetMotionMaster()->MovePoint(0, 193.524f, 4147.451f, 73.605f);return 7000;              
+                    me->GetMotionMaster()->MovePoint(0, 199.706f, 4134.302f, 75.404f);return 6000;
+            case 20:me->GetMotionMaster()->MovePoint(0, 193.524f, 4147.451f, 73.605f);return 7000;
             case 21:me->SetStandState(UNIT_STAND_STATE_KNEEL);
                     DoScriptText(SAY_SEDAI2, me,0);return 5000;
             case 22:DoSpawnKrun();return 1000;
@@ -1276,7 +1275,6 @@ struct npc_vindicator_sedaiAI : public ScriptedAI
 
     void UpdateAI(const uint32 uiDiff)
     {
-
         if (uiStepsTimer <= uiDiff)
         {
             if (Vision)
@@ -1345,7 +1343,7 @@ struct npc_demoniac_scryerAI : public ScriptedAI
 
     void AttackedBy(Unit* pEnemy) {}
     void AttackStart(Unit* pEnemy) {}
- 
+
     void DoSpawnButtress()
     {
         ++uiButtressCount;
@@ -1691,7 +1689,7 @@ struct npc_pathaleon_imageAI : public ScriptedAI
     }
 
     int32 NextStep(uint32 uiSteps)
-    {              
+    {
         switch (uiSteps)
         {
             case 1:
@@ -1771,7 +1769,6 @@ void AddSC_hellfire_peninsula()
     newscript->Name = "go_haaleshi_altar";
     newscript->pGOHello = &GOHello_go_haaleshi_altar;
     newscript->RegisterSelf();
-
 
     newscript = new Script;
     newscript->Name = "npc_naladu";

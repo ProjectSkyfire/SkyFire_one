@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -788,7 +788,6 @@ inline bool IsProfessionSkill(uint32 skill)
 #define SPELL_ATTR_CU_LINK_REMOVE       0x00002000
 #define SPELL_ATTR_CU_MOVEMENT_IMPAIR   0x00004000
 #define SPELL_ATTR_CU_IGNORE_ARMOR      0x00008000
-
 
 typedef std::vector<uint32> SpellCustomAttribute;
 

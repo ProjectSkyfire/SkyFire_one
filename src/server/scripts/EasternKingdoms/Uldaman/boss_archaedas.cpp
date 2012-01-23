@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -81,7 +81,6 @@ struct boss_archaedasAI : public ScriptedAI
         me->setFaction(35);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
-
     }
 
     void ActivateMinion (uint64 guid, bool flag)
@@ -187,7 +186,6 @@ struct boss_archaedasAI : public ScriptedAI
             pInstance->SetData(DATA_MINIONS, SPECIAL);        // deactivate his minions
         }
     }
-
 };
 
 CreatureAI* GetAI_boss_archaedas(Creature* pCreature)
@@ -297,7 +295,6 @@ EndScriptData */
 uint64 altarOfArchaedasCount[5];
 int32 altarOfArchaedasCounter=0;
 
-
 bool GOHello_go_altar_of_archaedas(Player *player, GameObject* go)
 {
     bool alreadyUsed;
@@ -374,7 +371,6 @@ struct mob_stonekeepersAI : public ScriptedAI
 
     void UpdateAI(const uint32 /*diff*/)
     {
-
         //Return since we have no target
         if (!UpdateVictim())
             return;
@@ -388,7 +384,6 @@ struct mob_stonekeepersAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_STONE_KEEPERS, IN_PROGRESS);    // activate next stonekeeper
     }
-
 };
 
 CreatureAI* GetAI_mob_stonekeepers(Creature* pCreature)

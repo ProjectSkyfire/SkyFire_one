@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -655,7 +655,6 @@ void Unit::RemoveAurasWithInterruptFlags(uint32 flag, uint32 except)
                 RemoveAurasDueToSpell(aur->GetId());
                 if (m_removedAurasCount > removedAuras + 1)
                     iter = m_interruptableAuras.begin();
-
             }
         }
     }
@@ -1320,7 +1319,6 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage *damageInfo, int32 dama
         break;
     }
 
-
     // damage before absorb/resist calculation
     damageInfo->cleanDamage = damage;
 
@@ -1818,7 +1816,6 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
 
     int32 RemainingDamage = damage - *resist;
 
-
     // Need to remove expired auras after
     bool expiredExists = false;
 
@@ -1884,7 +1881,6 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
                             else
                                 reflectDamage = (*k)->GetModifier()->m_amount * RemainingDamage/100;
                             reflectAura = *i;
-
                         } break;
                         default: break;
                     }
@@ -2069,7 +2065,6 @@ void Unit::AttackerStateUpdate (Unit *pVictim, WeaponAttackType attType, bool ex
     else
         DEBUG_LOG("AttackerStateUpdate: (NPC)    %u attacked %u (TypeId: %u) for %u dmg, absorbed %u, blocked %u, resisted %u.",
             GetGUIDLow(), pVictim->GetGUIDLow(), pVictim->GetTypeId(), damageInfo.damage, damageInfo.absorb, damageInfo.blocked_amount, damageInfo.resist);
-
 }
 
 MeleeHitOutcome Unit::RollMeleeOutcomeAgainst(const Unit *pVictim, WeaponAttackType attType) const
@@ -4009,7 +4004,6 @@ void Unit::RemoveNotOwnSingleTargetAuras()
                 iter = scAuras.begin();
         }
     }
-
 }
 
 void Unit::RemoveAura(AuraMap::iterator &i, AuraRemoveMode mode)
@@ -4075,7 +4069,6 @@ void Unit::RemoveAura(AuraMap::iterator &i, AuraRemoveMode mode)
                     {
                         caster->m_currentSpells[CURRENT_CHANNELED_SPELL]->cancel();
                         caster->m_currentSpells[CURRENT_CHANNELED_SPELL]=NULL;
-
                     }
                 }
 
@@ -7741,7 +7734,6 @@ int32 Unit::SpellBaseDamageBonus(SpellSchoolMask schoolMask)
         for (AuraList::const_iterator i =mDamageDonebyAP.begin();i != mDamageDonebyAP.end(); ++i)
             if ((*i)->GetModifier()->m_miscvalue & schoolMask)
                 DoneAdvertisedBenefit += int32(GetTotalAttackPowerValue(BASE_ATTACK) * (*i)->GetModifierValue() / 100.0f);
-
     }
     return DoneAdvertisedBenefit;
 }
@@ -8422,7 +8414,6 @@ void Unit::ApplySpellImmune(uint32 spellId, uint32 op, uint32 type, bool apply)
             }
         }
     }
-
 }
 
 void Unit::ApplySpellDispelImmunity(const SpellEntry * spellProto, DispelType type, bool apply)

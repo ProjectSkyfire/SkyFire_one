@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -599,7 +599,6 @@ void BattleGround::YellToAll(Creature* creature, const char* text, uint32 langua
     }
 }
 
-
 void BattleGround::RewardHonorToTeam(uint32 Honor, uint32 TeamID)
 {
     for (std::map<uint64, BattleGroundPlayer>::iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
@@ -744,12 +743,10 @@ void BattleGround::EndBattleGround(uint32 winner)
     }
 
     if (!isArena()){
-
     if (m_score[GetTeamIndexByTeamId(ALLIANCE)] == m_score[GetTeamIndexByTeamId(HORDE)])
         almost_winning_team = 0;         //no real winner
     if (m_score[GetTeamIndexByTeamId(ALLIANCE)] > m_score[GetTeamIndexByTeamId(HORDE)])
         almost_winning_team = ALLIANCE;
-
     }
 
     for (std::map<uint64, BattleGroundPlayer>::iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)

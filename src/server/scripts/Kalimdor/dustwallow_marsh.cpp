@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -467,7 +467,6 @@ bool QuestAccept_npc_morokk(Player* pPlayer, Creature* pCreature, const Quest* p
     return false;
 }
 
-
 /*######
 ## npc_ogron
 ######*/
@@ -793,7 +792,6 @@ EventLocation m_afEventMoveTo[] =
 {
     {-2943.92f, -3319.41f, 29.8336f},
     {-2933.01f, -3321.05f, 29.5781f}
-
 };
 
 struct npc_private_hendelAI : public ScriptedAI

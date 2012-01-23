@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -57,7 +57,6 @@ namespace VMAP
             G3D::Vector3&           location,
             bool&                   Inside)
         {
-
             // Integer representation of a floating-point value.
 #define IR(x)   (reinterpret_cast<G3D::uint32 const&>(x))
 

@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -312,7 +312,6 @@ struct npc_injured_draeneiAI : public ScriptedAI
     void UpdateAI(const uint32 /*diff*/)
     {
     }
-
 };
 CreatureAI* GetAI_npc_injured_draenei(Creature* pCreature)
 {
@@ -585,7 +584,6 @@ enum eRavegerCage
 
 bool go_ravager_cage(Player* pPlayer, GameObject* pGo)
 {
-
     if (pPlayer->GetQuestStatus(QUEST_STRENGTH_ONE) == QUEST_STATUS_INCOMPLETE)
     {
         if (Creature* ravager = pGo->FindNearestCreature(NPC_DEATH_RAVAGER, 5.0f, true))
@@ -655,9 +653,7 @@ enum BristlelimbCage
     QUEST_THE_PROPHECY_OF_AKIDA         = 9544,
     NPC_STILLPINE_CAPITIVE              = 17375,
     GO_BRISTELIMB_CAGE                  = 181714
-
 };
-
 
 struct npc_stillpine_capitiveAI : public ScriptedAI
 {
@@ -762,6 +758,5 @@ void AddSC_azuremyst_isle()
     newscript->Name="go_bristlelimb_cage";
     newscript->pGOHello = &go_bristlelimb_cage;
     newscript->RegisterSelf();
-
 }
 

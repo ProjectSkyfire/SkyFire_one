@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -28,7 +28,6 @@
 #include "TicketMgr.h"
 #include "World.h"
 #include "Chat.h"
-
 
 void WorldSession::HandleGMTicketCreateOpcode(WorldPacket & recv_data)
 {
@@ -81,7 +80,6 @@ void WorldSession::HandleGMTicketCreateOpcode(WorldPacket & recv_data)
     SendPacket(&data);
 
     sWorld.SendGMText(LANG_COMMAND_TICKETNEW, ticket->name.c_str(), ticket->guid);
-
 }
 
 void WorldSession::HandleGMTicketUpdateOpcode(WorldPacket & recv_data)
@@ -120,7 +118,6 @@ void WorldSession::HandleGMTicketUpdateOpcode(WorldPacket & recv_data)
     SendPacket(&data);
 
     sWorld.SendGMText(LANG_COMMAND_TICKETUPDATED, GetPlayer()->GetName(), ticket->guid);
-
 }
 
 void WorldSession::HandleGMTicketDeleteOpcode(WorldPacket & /*recv_data*/)
@@ -182,7 +179,6 @@ void WorldSession::HandleGMTicketGetTicketOpcode(WorldPacket & /*recv_data*/)
     }
 
     SendPacket(&data);
-
 }
 
 void WorldSession::HandleGMSurveySubmit(WorldPacket& recv_data)
@@ -241,7 +237,6 @@ void WorldSession::HandleGMTicketSystemStatusOpcode(WorldPacket & /*recv_data*/)
     // in case of disactivity, this should be set to (0)
 
     data << uint32(1);
-
 
     // Send Packet
     SendPacket(&data);

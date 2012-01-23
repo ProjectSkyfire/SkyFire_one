@@ -1,7 +1,7 @@
  /*
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/> 
+  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
   *
   * This program is free software; you can redistribute it and/or modify it
   * under the terms of the GNU General Public License as published by the
@@ -277,7 +277,6 @@ enum eEternalBoard
     LONG_FORGOTTEN_MEMORIES             = 8305,
     EVENT_AREA_RADIUS                   = 65,
     EVENT_COOLDOWN                      = 500000 //in ms. appear after event completed or failed (should be = Adds despawn time)
-
 };
 
 struct QuestCinematic
@@ -458,7 +457,6 @@ static WaveData WavesInfo[] =
     {12, 38, 15414, 0, 0,24000, NULL},  //Qiraji Wasps
     {6, 50, 15422, 0, 0,24000, NULL},   //Qiraji Tanks
     {15, 15, 15423, 0, 0,24000, NULL}   //Kaldorei Soldier
-
 };
 
 struct SpawnSpells
@@ -1053,7 +1051,6 @@ void mob_qiraj_war_spawnAI::JustDied(Unit* /*slayer*/)
     me->RemoveCorpse();
     if (Creature* Mob = (Unit::GetCreature(*me, MobGUID)))
         CAST_AI(npc_anachronos_quest_triggerAI, Mob->AI())->LiveCounter();
-
 };
 
 /*#####
@@ -1077,10 +1074,8 @@ bool OnQuestAccept(Player* plr, GameObject* go, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_A_PAWN_ON_THE_ETERNAL_BOARD)
     {
-
         if (Unit* Anachronos_Quest_Trigger = go->FindNearestCreature(15454, 100, plr))
         {
-
             Unit *Merithra = Anachronos_Quest_Trigger->SummonCreature(15378,-8034.535f,1535.14f,2.61f,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,220000);
             Unit *Caelestrasz = Anachronos_Quest_Trigger->SummonCreature(15379,-8032.767f, 1533.148f,2.61f, 1.5f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,220000);
             Unit *Arygos = Anachronos_Quest_Trigger->SummonCreature(15380,-8034.52f, 1537.843f, 2.61f, 5.7f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,220000);
@@ -1123,7 +1118,6 @@ bool OnQuestAccept(Player* plr, GameObject* go, Quest const* quest)
     }
     return true;
 }
-
 
 CreatureAI* Getmob_qiraj_war_spawnAI(Creature* pCreature)
 {

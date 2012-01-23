@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -908,7 +908,6 @@ const float BG_AV_CreaturePos[AV_CPLACE_MAX][4] = {
 
 enum BG_AV_CreatureIds
 {
-
     AV_NPC_A_GRAVEDEFENSE0 = 0,     // stormpike Defender
     AV_NPC_A_GRAVEDEFENSE1 = 1,     // seasoned defender
     AV_NPC_A_GRAVEDEFENSE2 = 2,     // veteran defender
@@ -960,7 +959,6 @@ enum BG_AV_CreatureIds
     AV_NPC_S_MINE_H_4      = 46,
     AV_NPC_HERALD          = 47,
     AV_NPC_INFO_MAX        = 48
-
 };
 
 //entry, team, minlevel, maxlevel
@@ -1021,7 +1019,6 @@ const uint32 BG_AV_CreatureInfo[AV_NPC_INFO_MAX][4] = {
     {13089,67,54,55}, //guard
     {13088,67,58,58},
     {11997,67,58,58} //Herald
-
 };
 
 //x,y,z,o,static_creature_info-id
@@ -1149,7 +1146,6 @@ const float BG_AV_StaticCreaturePos[AV_STATICCPLACE_MAX][5] = { //static creatur
     {773.651f,-497.482f,99.0408f,2.11185f,46 },//14284 - Stormpike Battleguard
     {949.1f,-506.913f,95.4237f,3.31613f,46 },//14284 - Stormpike Battleguard
     {-1370.9f,-219.793f,98.4258f,5.04381f,47}, //drek thar
-
 };
 
 const uint32 BG_AV_StaticCreatureInfo[51][4] = {
@@ -1356,7 +1352,6 @@ enum BG_AV_WorldStates
     AV_FROSTWOLFE_UNUSED            = 1393,
     AV_FROSTWOLFW_UNUSED            = 1392
 */
-
 };
 
 //alliance_control neutral_control horde_control

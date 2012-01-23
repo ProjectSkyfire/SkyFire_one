@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -347,7 +347,6 @@ void WorldSession::HandleBattleGroundPlayerPortOpcode(WorldPacket &recv_data)
                 uint8 arenatype = itrPlayerStatus->second.GroupInfo->ArenaType;
                 uint8 israted = itrPlayerStatus->second.GroupInfo->IsRated;
                 uint8 status = 0;
-
 
                 if (!itrPlayerStatus->second.GroupInfo->IsInvitedToBGInstanceGUID)
                 {

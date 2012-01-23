@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -156,7 +156,6 @@ void guardAI::UpdateAI(const uint32 diff)
 
                 //Set our global cooldown
                 GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
-
             }                                               //If no spells available and we arn't moving run to target
             else if ((*me).GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
             {
