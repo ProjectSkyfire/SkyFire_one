@@ -23,9 +23,9 @@ ghost@aladdin.com
 */
 /* $Id: md5.c,v 1.6 2002/04/13 19:20:28 lpd Exp $ */
 /*
-  Independent implementation of MD5 (RFC 1321).
+  Independent implementation of md5 (RFC 1321).
 
-  This code implements the MD5 Algorithm defined in RFC 1321, whose
+  This code implements the md5 Algorithm defined in RFC 1321, whose
   text is available at
     http://www.ietf.org/rfc/rfc1321.txt
   The code is derived from the text of the RFC, including the test suite

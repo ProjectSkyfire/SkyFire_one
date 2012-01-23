@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,7 +22,7 @@
 
 #include "Common.h"
 #include "BigNumber.h"
-#include "SHA1.h"
+#include "Sha1.h"
 #include "ByteBuffer.h"
 
 #include "BufferedSocket.h"
@@ -38,7 +38,7 @@ class AuthSocket: public BufferedSocket
 
         void OnAccept();
         void OnRead();
-        void SendProof(SHA1Hash sha);
+        void SendProof(Sha1Hash sha);
         void LoadRealmlist(ByteBuffer &pkt, uint32 acctid);
 
         bool _HandleLogonChallenge();

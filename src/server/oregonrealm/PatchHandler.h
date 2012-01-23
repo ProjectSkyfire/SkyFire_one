@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -29,9 +29,9 @@
 #include <map>
 
 #include <openssl/bn.h>
-#include <openssl/MD5.h>
+#include <openssl/md5.h>
 
-// Caches MD5 hash of client patches present on the server
+// Caches md5 hash of client patches present on the server
 class PatchCache
 {
     public:
@@ -42,7 +42,7 @@ class PatchCache
 
         struct PATCH_INFO
         {
-            ACE_UINT8 MD5[MD5_DIGEST_LENGTH];
+            ACE_UINT8 md5[md5_DIGEST_LENGTH];
         };
 
         typedef std::map<std::string, PATCH_INFO*> Patches;
@@ -57,8 +57,8 @@ class PatchCache
             return patches_.end();
         }
 
-        void LoadPatchMD5(const char*);
-        bool GetHash(const char * pat, ACE_UINT8 myMD5[MD5_DIGEST_LENGTH]);
+        void LoadPatchmd5(const char*);
+        bool GetHash(const char * pat, ACE_UINT8 mymd5[md5_DIGEST_LENGTH]);
 
     private:
         void LoadPatchesInfo();

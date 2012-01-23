@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -26,7 +26,7 @@
 #include "AuthCodes.h"
 #include "PatchHandler.h"
 
-#include <openssl/MD5.h>
+#include <openssl/md5.h>
 //#include "Util.h" -- for commented utf8ToUpperOnlyLatin
 
 #include <ace/OS_NS_unistd.h>
@@ -137,7 +137,7 @@ typedef struct XFER_INIT
     uint8 fileNameLen;                                      // strlen(fileName);
     uint8 fileName[5];                                      // fileName[fileNameLen]
     uint64 file_size;                                       // file size (bytes)
-    uint8 MD5[MD5_DIGEST_LENGTH];                           // MD5
+    uint8 md5[md5_DIGEST_LENGTH];                           // md5
 }XFER_INIT;
 
 typedef struct AuthHandler
@@ -251,7 +251,7 @@ void AuthSocket::_SetVSFields(const std::string& rI)
 
     std::reverse(mDigest, mDigest + SHA_DIGEST_LENGTH);
 
-    SHA1Hash sha;
+    Sha1Hash sha;
     sha.UpdateData(s.AsByteArray(), s.GetNumBytes());
     sha.UpdateData(mDigest, SHA_DIGEST_LENGTH);
     sha.Finalize();
@@ -267,7 +267,7 @@ void AuthSocket::_SetVSFields(const std::string& rI)
     OPENSSL_free((void*)s_hex);
 }
 
-void AuthSocket::SendProof(SHA1Hash sha)
+void AuthSocket::SendProof(Sha1Hash sha)
 {
     switch(_build)
     {
@@ -559,11 +559,11 @@ bool AuthSocket::_HandleLogonProof()
             return false;
         }
 
-        if (!PatchCache::instance()->GetHash(tmp, (uint8*)&xferh.MD5))
+        if (!PatchCache::instance()->GetHash(tmp, (uint8*)&xferh.md5))
         {
-            // calculate patch MD5, happens if patch was added while realmd was running
-            PatchCache::instance()->LoadPatchMD5(tmp);
-            PatchCache::instance()->GetHash(tmp, (uint8*)&xferh.MD5);
+            // calculate patch md5, happens if patch was added while realmd was running
+            PatchCache::instance()->LoadPatchmd5(tmp);
+            PatchCache::instance()->GetHash(tmp, (uint8*)&xferh.md5);
         }
 
         uint8 data[2] = { CMD_AUTH_LOGON_PROOF, WOW_FAIL_VERSION_UPDATE};
@@ -586,7 +586,7 @@ bool AuthSocket::_HandleLogonProof()
     if (A.isZero())
         return false;
 
-    SHA1Hash sha;
+    Sha1Hash sha;
     sha.UpdateBigNumbers(&A, &B, NULL);
     sha.Finalize();
     BigNumber u;
@@ -804,7 +804,7 @@ bool AuthSocket::_HandleReconnectProof()
     BigNumber t1;
     t1.SetBinary(lp.R1, 16);
 
-    SHA1Hash sha;
+    Sha1Hash sha;
     sha.Initialize();
     sha.UpdateData(_login);
     sha.UpdateBigNumbers(&t1, &_reconnectProof, &K, NULL);

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -144,7 +144,7 @@ PatchCache* PatchCache::instance()
     return ACE_Singleton<PatchCache, ACE_Thread_Mutex>::instance();
 }
 
-void PatchCache::LoadPatchMD5(const char* szFileName)
+void PatchCache::LoadPatchmd5(const char* szFileName)
 {
     // Try to open the patch file
     std::string path = "./patches/";
@@ -155,9 +155,9 @@ void PatchCache::LoadPatchMD5(const char* szFileName)
     if (!pPatch)
         return;
 
-    // Calculate the MD5 hash
-    MD5_CTX ctx;
-    MD5_Init(&ctx);
+    // Calculate the md5 hash
+    md5_CTX ctx;
+    md5_Init(&ctx);
 
     const size_t check_chunk_size = 4*1024;
 
@@ -166,22 +166,22 @@ void PatchCache::LoadPatchMD5(const char* szFileName)
     while(!feof (pPatch))
     {
         size_t read = fread(buf, 1, check_chunk_size, pPatch);
-        MD5_Update(&ctx, buf, read);
+        md5_Update(&ctx, buf, read);
     }
 
     fclose(pPatch);
 
     // Store the result in the internal patch hash map
     patches_[path] = new PATCH_INFO;
-    MD5_Final((ACE_UINT8 *) & patches_[path]->MD5, &ctx);
+    md5_Final((ACE_UINT8 *) & patches_[path]->md5, &ctx);
 }
 
-bool PatchCache::GetHash(const char * pat, ACE_UINT8 myMD5[MD5_DIGEST_LENGTH])
+bool PatchCache::GetHash(const char * pat, ACE_UINT8 mymd5[md5_DIGEST_LENGTH])
 {
     for (Patches::iterator i = patches_.begin (); i != patches_.end (); i++)
         if (!stricmp(pat, i->first.c_str ()))
         {
-            memcpy(myMD5, i->second->MD5, MD5_DIGEST_LENGTH);
+            memcpy(mymd5, i->second->md5, md5_DIGEST_LENGTH);
             return true;
         }
 
@@ -204,7 +204,7 @@ void PatchCache::LoadPatchesInfo()
             continue;
 
         if (!memcmp(&dp->d_name[l - 4], ".mpq", 4))
-            LoadPatchMD5(dp->d_name);
+            LoadPatchmd5(dp->d_name);
     }
 
     ACE_OS::closedir(dirp);

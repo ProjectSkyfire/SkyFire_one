@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,19 +17,19 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _AUTH_SHA1_H
-#define _AUTH_SHA1_H
+#ifndef _AUTH_Sha1_H
+#define _AUTH_Sha1_H
 
 #include "Common.h"
 #include <openssl/sha.h>
 #include <openssl/crypto.h>
 #include "BigNumber.h"
 
-class SHA1Hash
+class Sha1Hash
 {
     public:
-        SHA1Hash();
-        ~SHA1Hash();
+        Sha1Hash();
+        ~Sha1Hash();
 
         void UpdateFinalizeBigNumbers(BigNumber *bn0, ...);
         void UpdateBigNumbers(BigNumber *bn0, ...);

@@ -23,9 +23,9 @@ ghost@aladdin.com
 */
 /* $Id: md5.h,v 1.4 2002/04/13 19:20:28 lpd Exp $ */
 /*
-  Independent implementation of MD5 (RFC 1321).
+  Independent implementation of md5 (RFC 1321).
 
-  This code implements the MD5 Algorithm defined in RFC 1321, whose
+  This code implements the md5 Algorithm defined in RFC 1321, whose
   text is available at
     http://www.ietf.org/rfc/rfc1321.txt
   The code is derived from the text of the RFC, including the test suite
@@ -63,7 +63,7 @@ Purschke <purschke@bnl.gov>.
 typedef unsigned char md5_byte_t;                           /* 8-bit byte */
 typedef unsigned int md5_word_t;                            /* 32-bit word */
 
-/* Define the state of the MD5 Algorithm. */
+/* Define the state of the md5 Algorithm. */
 typedef struct md5_state_s
 {
     md5_word_t count[2];                                    /* message length in bits, lsw first */

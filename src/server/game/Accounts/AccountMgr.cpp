@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -23,7 +23,7 @@
 #include "ObjectAccessor.h"
 #include "Player.h"
 #include "Util.h"
-#include "SHA1.h"
+#include "Sha1.h"
 
 extern DatabaseType LoginDatabase;
 
@@ -48,7 +48,7 @@ AccountOpResult AccountMgr::CreateAccount(std::string username, std::string pass
     if (result)
         return AOR_NAME_ALREDY_EXIST;                       // username does already exist
 
-    if (!LoginDatabase.PExecute("INSERT INTO account(username,sha_pass_hash,joindate) VALUES('%s',SHA1(CONCAT('%s',':','%s')),NOW())", username.c_str(), username.c_str(), password.c_str()))
+    if (!LoginDatabase.PExecute("INSERT INTO account(username,sha_pass_hash,joindate) VALUES('%s',Sha1(CONCAT('%s',':','%s')),NOW())", username.c_str(), username.c_str(), password.c_str()))
         return AOR_DB_INTERNAL_ERROR;                       // unexpected error
     LoginDatabase.Execute("INSERT INTO realmcharacters (realmid, acctid, numchars) SELECT realmlist.id, account.id, 0 FROM realmlist,account LEFT JOIN realmcharacters ON acctid=account.id WHERE acctid IS NULL");
 
@@ -119,7 +119,7 @@ AccountOpResult AccountMgr::ChangeUsername(uint32 accid, std::string new_uname, 
     LoginDatabase.escape_string(new_uname);
     LoginDatabase.escape_string(new_passwd);
 
-    if (!LoginDatabase.PExecute("UPDATE account SET username='%s',sha_pass_hash=SHA1(CONCAT('%s',':','%s')) WHERE id='%d'", new_uname.c_str(), new_uname.c_str(), new_passwd.c_str(), accid))
+    if (!LoginDatabase.PExecute("UPDATE account SET username='%s',sha_pass_hash=Sha1(CONCAT('%s',':','%s')) WHERE id='%d'", new_uname.c_str(), new_uname.c_str(), new_passwd.c_str(), accid))
         return AOR_DB_INTERNAL_ERROR;                       // unexpected error
 
     return AOR_OK;
@@ -138,7 +138,7 @@ AccountOpResult AccountMgr::ChangePassword(uint32 accid, std::string new_passwd)
 
     LoginDatabase.escape_string(new_passwd);
     // also reset s and v to force update at next realmd login
-    if (!LoginDatabase.PExecute("UPDATE account SET v='0', s='0', sha_pass_hash=SHA1("_CONCAT3_("username","':'","'%s'")") WHERE id='%d'", new_passwd.c_str(), accid))
+    if (!LoginDatabase.PExecute("UPDATE account SET v='0', s='0', sha_pass_hash=Sha1("_CONCAT3_("username","':'","'%s'")") WHERE id='%d'", new_passwd.c_str(), accid))
         return AOR_DB_INTERNAL_ERROR;                       // unexpected error
 
     return AOR_OK;
@@ -214,7 +214,7 @@ bool AccountMgr::CheckPassword(uint32 accid, std::string passwd)
     normalizeString(passwd);
     LoginDatabase.escape_string(passwd);
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT 1 FROM account WHERE id='%d' AND sha_pass_hash=SHA1(CONCAT(UPPER(username),':',UPPER('%s')))",accid, passwd.c_str());
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT 1 FROM account WHERE id='%d' AND sha_pass_hash=Sha1(CONCAT(UPPER(username),':',UPPER('%s')))",accid, passwd.c_str());
     if (result)
         return true;
 
@@ -236,7 +236,7 @@ bool AccountMgr::normalizeString(std::string& utf8str)
 
 std::string AccountMgr::CalculateShaPassHash(std::string& name, std::string& password)
 {
-    SHA1Hash sha;
+    Sha1Hash sha;
     sha.Initialize();
     sha.UpdateData(name);
     sha.UpdateData(":");

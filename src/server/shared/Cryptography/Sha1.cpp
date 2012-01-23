@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,30 +17,30 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SHA1.h"
+#include "Sha1.h"
 #include <stdarg.h>
 
-SHA1Hash::SHA1Hash()
+Sha1Hash::Sha1Hash()
 {
-    SHA1_Init(&mC);
+    Sha1_Init(&mC);
 }
 
-SHA1Hash::~SHA1Hash()
+Sha1Hash::~Sha1Hash()
 {
-    SHA1_Init(&mC);
+    Sha1_Init(&mC);
 }
 
-void SHA1Hash::UpdateData(const uint8 *dta, int len)
+void Sha1Hash::UpdateData(const uint8 *dta, int len)
 {
-    SHA1_Update(&mC, dta, len);
+    Sha1_Update(&mC, dta, len);
 }
 
-void SHA1Hash::UpdateData(const std::string &str)
+void Sha1Hash::UpdateData(const std::string &str)
 {
     UpdateData((uint8 const*)str.c_str(), str.length());
 }
 
-void SHA1Hash::UpdateBigNumbers(BigNumber *bn0, ...)
+void Sha1Hash::UpdateBigNumbers(BigNumber *bn0, ...)
 {
     va_list v;
     BigNumber *bn;
@@ -55,13 +55,13 @@ void SHA1Hash::UpdateBigNumbers(BigNumber *bn0, ...)
     va_end(v);
 }
 
-void SHA1Hash::Initialize()
+void Sha1Hash::Initialize()
 {
-    SHA1_Init(&mC);
+    Sha1_Init(&mC);
 }
 
-void SHA1Hash::Finalize(void)
+void Sha1Hash::Finalize(void)
 {
-    SHA1_Final(mDigest, &mC);
+    Sha1_Final(mDigest, &mC);
 }
 
