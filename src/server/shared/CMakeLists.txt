@@ -52,7 +52,12 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/sockets/include
   ${CMAKE_SOURCE_DIR}/dep/utf8cpp
   ${CMAKE_SOURCE_DIR}/src/server/framework
-  ${CMAKE_SOURCE_DIR}/src/server/
+  ${CMAKE_SOURCE_DIR}/src/server
+  ${CMAKE_SOURCE_DIR}/src/server/game/World  
+  ${CMAKE_SOURCE_DIR}/src/server/game/Addons    
+  ${CMAKE_SOURCE_DIR}/src/server/game/Server 
+  ${CMAKE_SOURCE_DIR}/src/server/game/Server/Protocol 
+  ${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous   
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Configuration
   ${CMAKE_CURRENT_SOURCE_DIR}/Cryptography
@@ -64,7 +69,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Packets
   ${CMAKE_CURRENT_SOURCE_DIR}/Threading
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities
-  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object
+  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object/Updates
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}

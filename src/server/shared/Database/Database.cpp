@@ -21,7 +21,7 @@
 #include "Config.h"
 
 #include "Common.h"
-#include "../../game/UpdateFields.h"
+#include "UpdateFields.h"
 
 #include "Util.h"
 #include "Policies/SingletonImp.h"

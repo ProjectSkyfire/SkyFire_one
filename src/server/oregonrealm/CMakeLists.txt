@@ -37,8 +37,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Packets
   ${CMAKE_SOURCE_DIR}/src/server/shared/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities    
-  ${CMAKE_SOURCE_DIR}/src/server/game/Conditions
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
   ${CMAKE_SOURCE_DIR}/src/server/framework
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
