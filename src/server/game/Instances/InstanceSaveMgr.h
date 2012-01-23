@@ -20,7 +20,7 @@
 #ifndef __InstanceSaveMgr_H
 #define __InstanceSaveMgr_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Policies/Singleton.h"
 #include "ace/Thread_Mutex.h"
 #include <list>

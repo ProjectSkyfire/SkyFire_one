@@ -25,7 +25,7 @@
 #include <ace/Basic_Types.h>
 #include <ace/ACE_export.h>
 
-#include "Platform/CompilerDefs.h"
+#include "CompilerDefs.h"
 
 #define OREGON_LITTLEENDIAN 0
 #define OREGON_BIGENDIAN    1

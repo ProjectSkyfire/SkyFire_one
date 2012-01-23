@@ -20,7 +20,7 @@
 #ifndef OREGON_TIMER_H
 #define OREGON_TIMER_H
 
-#include "Platform/CompilerDefs.h"
+#include "CompilerDefs.h"
 
 #if PLATFORM == PLATFORM_WINDOWS
 #   include <ace/config-all.h>

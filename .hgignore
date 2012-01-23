@@ -8,3 +8,9 @@ build/
 *.bak
 *.patch
 *.diff
+*~
+.git/
+*.kdev*
+
+# use regexp syntax.
+syntax: regexp

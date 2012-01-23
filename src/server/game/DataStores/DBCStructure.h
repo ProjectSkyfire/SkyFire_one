@@ -21,7 +21,7 @@
 #define DBCSTRUCTURE_H
 
 #include "DBCEnums.h"
-#include "Platform/Define.h"
+#include "Define.h"
 
 #include <map>
 #include <set>

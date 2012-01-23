@@ -20,7 +20,7 @@
 #ifndef OREGON_SHAREDDEFINES_H
 #define OREGON_SHAREDDEFINES_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include <cassert>
 
 enum Gender

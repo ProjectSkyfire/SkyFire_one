@@ -11,11 +11,11 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 # Set projectname (must be done AFTER setting configurationtypes)
-project(OregonCore)
+project(OreganCore)
 
 # CMake policies (can not be handled elsewhere)
 cmake_minimum_required(VERSION 2.6)
-cmake_policy(SET CMP0005 NEW)
+cmake_policy(SET CMP0005 OLD)
 
 # Set RPATH-handing (CMake parameters)
 set(CMAKE_SKIP_BUILD_RPATH 0)

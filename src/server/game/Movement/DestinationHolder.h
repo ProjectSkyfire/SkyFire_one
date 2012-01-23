@@ -20,7 +20,7 @@
 #ifndef OREGON_DESTINATION_HOLDER_H
 #define OREGON_DESTINATION_HOLDER_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Timer.h"
 
 class WorldObject;

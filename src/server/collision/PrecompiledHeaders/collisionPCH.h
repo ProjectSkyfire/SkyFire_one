@@ -1,4 +1,4 @@
-#include "Platform/Define.h"
+#include "Define.h"
 #include "VMapDefinitions.h"
 #include "MapTree.h"
 #include "WorldModel.h"

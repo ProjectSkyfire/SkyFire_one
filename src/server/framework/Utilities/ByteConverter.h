@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -25,8 +25,9 @@
   for cross platform where they have different endians.
  */
 
-#include<Platform/Define.h>
-#include<algorithm>
+#include "Define.h"
+
+#include <algorithm>
 
 namespace ByteConverter
 {

@@ -20,9 +20,8 @@
 #ifndef OREGON_OBJECTACCESSOR_H
 #define OREGON_OBJECTACCESSOR_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Policies/Singleton.h"
-#include <ace/Thread_Mutex.h>
 #include "Utilities/UnorderedMap.h"
 #include "Policies/ThreadingModel.h"
 
@@ -33,6 +32,7 @@
 #include "Object.h"
 #include "Player.h"
 
+#include <ace/Thread_Mutex.h>
 #include <set>
 
 class Creature;

@@ -20,7 +20,7 @@
 #ifndef OREGON_GAMEEVENT_MGR_H
 #define OREGON_GAMEEVENT_MGR_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Creature.h"
 #include "GameObject.h"
 

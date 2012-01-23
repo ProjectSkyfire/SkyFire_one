@@ -22,7 +22,7 @@
 
 #include "Common.h"
 #include <Policies/Singleton.h>
-#include "Platform/Define.h"
+#include "Define.h"
 
 class ACE_Configuration_Heap;
 

@@ -20,7 +20,7 @@
 #ifndef OREGON_MAP_H
 #define OREGON_MAP_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Policies/ThreadingModel.h"
 #include "ace/RW_Thread_Mutex.h"
 #include "ace/Thread_Mutex.h"

@@ -20,7 +20,7 @@
 #ifndef OREGON_FACTORY_HOLDER
 #define OREGON_FACTORY_HOLDER
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Utilities/TypeList.h"
 #include "ObjectRegistry.h"
 #include "Policies/SingletonImp.h"

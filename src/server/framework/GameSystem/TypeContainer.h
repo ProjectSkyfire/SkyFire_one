@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -25,11 +25,12 @@
  * types of object at the same time.
  */
 
-#include <map>
-#include <vector>
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Utilities/TypeList.h"
 #include "GameSystem/GridRefManager.h"
+
+#include <map>
+#include <vector>
 
 /*
  * ContainerMapList is a mulit-type container for map elements
@@ -50,7 +51,6 @@ template<class H, class T> struct ContainerMapList<TypeList<H, T> >
     ContainerMapList<H> _elements;
     ContainerMapList<T> _TailElements;
 };
-
 
 #include "TypeContainerFunctions.h"
 

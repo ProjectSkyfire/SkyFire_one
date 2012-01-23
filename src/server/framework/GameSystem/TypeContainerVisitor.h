@@ -26,7 +26,7 @@
  * to overload its types as a visit method is called.
  */
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "TypeContainer.h"
 
 // forward declaration

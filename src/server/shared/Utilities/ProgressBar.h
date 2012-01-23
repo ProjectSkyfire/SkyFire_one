@@ -21,7 +21,7 @@
 #define OREGONCORE_PROGRESSBAR_H
 
 #include <stdio.h>
-#include "Platform/Define.h"
+#include "Define.h"
 
 class barGoLink
 {

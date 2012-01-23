@@ -20,7 +20,7 @@
 #ifndef OREGONCORE_QUEST_H
 #define OREGONCORE_QUEST_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Database/DatabaseEnv.h"
 
 #include <string>

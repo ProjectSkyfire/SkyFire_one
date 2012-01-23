@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -30,7 +30,7 @@
   Grid's perspective, the loader meets its API requirement is suffice.
 */
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Policies/ThreadingModel.h"
 #include "TypeContainer.h"
 #include "TypeContainerVisitor.h"

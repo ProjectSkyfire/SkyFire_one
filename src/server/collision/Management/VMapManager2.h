@@ -22,7 +22,7 @@
 
 #include "IVMapManager.h"
 #include "Utilities/UnorderedMap.h"
-#include "Platform/Define.h"
+#include "Define.h"
 #include <G3D/Vector3.h>
 
 #define MAP_FILENAME_EXTENSION2 ".vmtree"

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -20,8 +20,8 @@
 #ifndef OREGON_UNORDERED_MAP_H
 #define OREGON_UNORDERED_MAP_H
 
-#include "Platform/CompilerDefs.h"
-#include "Platform/Define.h"
+#include "CompilerDefs.h"
+#include "Define.h"
 
 #if COMPILER == COMPILER_INTEL
 #include <ext/hash_map>
@@ -68,7 +68,6 @@ namespace __gnu_cxx
             return hash<const char *>()(__x.c_str());
         }
     };
-
 };
 
 #else

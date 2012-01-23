@@ -31,7 +31,7 @@
  */
 
 #include <stdexcept>
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Policies/ThreadingModel.h"
 #include "ReferenceHolder.h"
 

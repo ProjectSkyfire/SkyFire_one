@@ -20,7 +20,7 @@
 #ifndef OREGON_OBJECTREGISTRY_H
 #define OREGON_OBJECTREGISTRY_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 #include "Utilities/UnorderedMap.h"
 #include "Policies/Singleton.h"
 

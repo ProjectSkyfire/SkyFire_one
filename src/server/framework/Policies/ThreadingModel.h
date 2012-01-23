@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -20,7 +20,7 @@
 #ifndef OREGON_THREADINGMODEL_H
 #define OREGON_THREADINGMODEL_H
 
-#include "Platform/Define.h"
+#include "Define.h"
 
 namespace Oregon
 {
@@ -113,7 +113,6 @@ namespace Oregon
         private:
             static MUTEX si_mtx;
     };
-
 }
 
 template<class T, class MUTEX> MUTEX Oregon::ClassLevelLockable<T, MUTEX>::si_mtx;
