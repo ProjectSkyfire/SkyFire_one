@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -21,7 +21,7 @@
 #define __ADDONHANDLER_H
 
 #include "Common.h"
-#include "Config/Config.h"
+#include "Config.h"
 #include "Policies/Singleton.h"
 
 #include "WorldPacket.h"

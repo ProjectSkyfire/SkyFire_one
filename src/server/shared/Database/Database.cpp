@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -18,7 +18,7 @@
  */
 
 #include "DatabaseEnv.h"
-#include "Config/Config.h"
+#include "Config.h"
 
 #include "Common.h"
 #include "../../game/UpdateFields.h"
@@ -30,7 +30,6 @@
 #include "Database/SqlDelayThread.h"
 #include "Database/SqlOperations.h"
 #include "Timer.h"
-
 
 #include <ctime>
 #include <iostream>
@@ -207,7 +206,6 @@ unsigned long Database::escape_string(char *to, const char *from, unsigned long 
 
     return(mysql_real_escape_string(mMysql, to, from, length));
 }
-
 
 bool Database::PExecuteLog(const char * format,...)
 {

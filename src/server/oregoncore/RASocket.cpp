@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -18,14 +18,14 @@
  */
 
 #include "Common.h"
-#include "Config/Config.h"
+#include "Config.h"
 #include "DatabaseEnv.h"
 #include "AccountMgr.h"
 #include "Log.h"
 #include "RASocket.h"
 #include "Util.h"
 #include "World.h"
-#include "Auth/Sha1.h"
+#include "Sha1.h"
 
 RASocket::RASocket()
 {
@@ -253,7 +253,6 @@ int RASocket::authenticate()
 
     return 0;
 }
-
 
 int RASocket::subnegotiate()
 {

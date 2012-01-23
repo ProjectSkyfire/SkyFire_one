@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -21,7 +21,7 @@
 #define DBCSTORES_H
 
 #include "Common.h"
-#include "Database/DBCStore.h"
+#include "DBCStore.h"
 #include "DBCStructure.h"
 
 #include <list>

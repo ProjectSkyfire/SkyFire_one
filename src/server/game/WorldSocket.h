@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -36,7 +36,7 @@
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
 #include "Common.h"
-#include "Auth/AuthCrypt.h"
+#include "AuthCrypt.h"
 
 class ACE_Message_Block;
 class WorldPacket;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -45,7 +45,7 @@
 #include "SkillDiscovery.h"
 #include "SkillExtraItems.h"
 #include "SystemConfig.h"
-#include "Config/Config.h"
+#include "Config.h"
 #include "Util.h"
 #include "ItemEnchantmentMgr.h"
 #include "BattleGroundMgr.h"
@@ -1066,7 +1066,6 @@ bool ChatHandler::HandleReloadEventScriptsCommand(const char* arg)
 
 bool ChatHandler::HandleReloadEventAITextsCommand(const char* /*args*/)
 {
-
     sLog.outString("Re-Loading Texts from `creature_ai_texts`...");
     CreatureEAI_Mgr.LoadCreatureEventAI_Texts(true);
     SendGlobalSysMessage("DB table `creature_ai_texts` reloaded.");
@@ -4429,7 +4428,6 @@ bool ChatHandler::HandleWaterwalkCommand(const char *args)
     if (needReportToTarget(player))
         ChatHandler(player).PSendSysMessage(LANG_YOUR_WATERWALK_SET, args, GetName());
     return true;
-
 }
 
 bool ChatHandler::HandleLevelUpCommand(const char *args)

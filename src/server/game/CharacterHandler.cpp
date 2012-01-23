@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -23,7 +23,7 @@
 #include "World.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
-#include "Auth/md5.h"
+#include "md5.h"
 #include "Database/DatabaseEnv.h"
 #include "Database/DatabaseImpl.h"
 
@@ -376,7 +376,6 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
     sLog.outBasic("Account: %d (IP: %s) Create Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), pNewChar->GetGUIDLow());
     sLog.outChar("Account: %d (IP: %s) Create Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), pNewChar->GetGUIDLow());
     delete pNewChar;                                        // created only to call SaveToDB()
-
 }
 
 void WorldSession::HandleCharDeleteOpcode(WorldPacket & recv_data)
@@ -650,7 +649,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         {
             pCurrChar->CastSpell(pCurrChar, 20584, true, 0);// auras SPELL_AURA_INCREASE_SPEED(+speed in wisp form), SPELL_AURA_INCREASE_SWIM_SPEED(+swim speed in wisp form), SPELL_AURA_TRANSFORM (to wisp form)
         }
-        
+
             pCurrChar->CastSpell(pCurrChar, 8326, true, 0);     // auras SPELL_AURA_GHOST, SPELL_AURA_INCREASE_SPEED(why?), SPELL_AURA_INCREASE_SWIM_SPEED(why?)
             pCurrChar->SetMovement(MOVE_WATER_WALK);
     }

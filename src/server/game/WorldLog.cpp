@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -19,7 +19,7 @@
 
 #include "WorldLog.h"
 #include "Policies/SingletonImp.h"
-#include "Config/Config.h"
+#include "Config.h"
 #include "Log.h"
 
 #define CLASS_LOCK Oregon::ClassLevelLockable<WorldLog, ACE_Thread_Mutex>
