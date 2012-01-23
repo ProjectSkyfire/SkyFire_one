@@ -22,7 +22,7 @@
 
 #include "Platform/Define.h"
 #include "Utilities/UnorderedMap.h"
-#include "BIH.h"
+#include "BoundingIntervalHierarchy.h"
 
 namespace VMAP
 {
