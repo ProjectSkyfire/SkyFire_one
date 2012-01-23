@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2002 MaNGOS <http://getmangos.com/>
  *
@@ -22,8 +22,8 @@
 
 // NGrid is nothing more than a wrapper of the Grid with an NxN cells
 
-#include "GameSystem/Grid.h"
-#include "GameSystem/GridReference.h"
+#include "Grid.h"
+#include "GridReference.h"
 #include "Timer.h"
 #include "Util.h"
 

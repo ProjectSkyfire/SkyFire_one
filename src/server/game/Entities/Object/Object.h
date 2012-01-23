@@ -24,7 +24,7 @@
 #include "ByteBuffer.h"
 #include "UpdateFields.h"
 #include "UpdateData.h"
-#include "GameSystem/GridReference.h"
+#include "GridReference.h"
 #include "ObjectGuid.h"
 #include "GridDefines.h"
 #include "Map.h"

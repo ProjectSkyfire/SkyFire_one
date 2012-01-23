@@ -27,7 +27,7 @@
 
 #include "Define.h"
 #include "Utilities/TypeList.h"
-#include "GameSystem/GridRefManager.h"
+#include "GridRefManager.h"
 
 #include <map>
 #include <vector>
