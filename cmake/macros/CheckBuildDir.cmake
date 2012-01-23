@@ -1,3 +1,4 @@
+# Copyright (C) 2009-2010 Oregon <http://www.oregoncore.org/>
 # Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
