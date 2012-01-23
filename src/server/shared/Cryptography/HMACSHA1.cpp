@@ -17,7 +17,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Hmac.h"
+#include "HMACSHA1.h"
 #include "BigNumber.h"
 
 HmacHash::HmacHash()

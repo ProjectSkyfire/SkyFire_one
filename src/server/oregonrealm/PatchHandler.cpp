@@ -173,15 +173,15 @@ void PatchCache::LoadPatchMD5(const char* szFileName)
 
     // Store the result in the internal patch hash map
     patches_[path] = new PATCH_INFO;
-    MD5_Final((ACE_UINT8 *) & patches_[path]->md5, &ctx);
+    MD5_Final((ACE_UINT8 *) & patches_[path]->MD5, &ctx);
 }
 
-bool PatchCache::GetHash(const char * pat, ACE_UINT8 mymd5[MD5_DIGEST_LENGTH])
+bool PatchCache::GetHash(const char * pat, ACE_UINT8 myMD5[MD5_DIGEST_LENGTH])
 {
     for (Patches::iterator i = patches_.begin (); i != patches_.end (); i++)
         if (!stricmp(pat, i->first.c_str ()))
         {
-            memcpy(mymd5, i->second->md5, MD5_DIGEST_LENGTH);
+            memcpy(myMD5, i->second->MD5, MD5_DIGEST_LENGTH);
             return true;
         }
 

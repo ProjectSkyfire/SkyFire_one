@@ -22,7 +22,7 @@
 
 #include "Common.h"
 #include "BigNumber.h"
-#include "Sha1.h"
+#include "SHA1.h"
 #include "ByteBuffer.h"
 
 #include "BufferedSocket.h"
@@ -38,7 +38,7 @@ class AuthSocket: public BufferedSocket
 
         void OnAccept();
         void OnRead();
-        void SendProof(Sha1Hash sha);
+        void SendProof(SHA1Hash sha);
         void LoadRealmlist(ByteBuffer &pkt, uint32 acctid);
 
         bool _HandleLogonChallenge();

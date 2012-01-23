@@ -30,7 +30,7 @@
 #include "ObjectMgr.h"
 #include "WorldSession.h"
 #include "BigNumber.h"
-#include "Sha1.h"
+#include "SHA1.h"
 #include "UpdateData.h"
 #include "LootMgr.h"
 #include "Chat.h"

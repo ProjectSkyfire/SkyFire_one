@@ -18,7 +18,7 @@
  */
 
 #include "AuthCrypt.h"
-#include "Hmac.h"
+#include "HMACSHA1.h"
 
 AuthCrypt::AuthCrypt()
 {
