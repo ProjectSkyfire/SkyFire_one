@@ -25,7 +25,7 @@
 #include "RASocket.h"
 #include "Util.h"
 #include "World.h"
-#include "Sha1.h"
+#include "SHA1.h"
 
 RASocket::RASocket()
 {

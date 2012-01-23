@@ -39,7 +39,7 @@
 #include "AddonHandler.h"
 #include "Opcodes.h"
 #include "Database/DatabaseEnv.h"
-#include "Sha1.h"
+#include "SHA1.h"
 #include "WorldSession.h"
 #include "WorldSocketMgr.h"
 #include "Log.h"
@@ -659,7 +659,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
     //uint8 expansion = 0;
     LocaleConstant locale;
     std::string account;
-    Sha1Hash sha1;
+    SHA1Hash sha1;
     BigNumber v, s, g, N;
     WorldPacket packet, SendAddonPacked;
 
@@ -822,7 +822,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
     }
 
     // Check that Key and account name are the same on client and server
-    Sha1Hash sha;
+    SHA1Hash sha;
 
     uint32 t = 0;
     uint32 seed = m_Seed;

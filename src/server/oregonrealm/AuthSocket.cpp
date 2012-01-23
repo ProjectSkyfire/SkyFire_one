@@ -251,7 +251,7 @@ void AuthSocket::_SetVSFields(const std::string& rI)
 
     std::reverse(mDigest, mDigest + SHA_DIGEST_LENGTH);
 
-    Sha1Hash sha;
+    SHA1Hash sha;
     sha.UpdateData(s.AsByteArray(), s.GetNumBytes());
     sha.UpdateData(mDigest, SHA_DIGEST_LENGTH);
     sha.Finalize();
@@ -267,7 +267,7 @@ void AuthSocket::_SetVSFields(const std::string& rI)
     OPENSSL_free((void*)s_hex);
 }
 
-void AuthSocket::SendProof(Sha1Hash sha)
+void AuthSocket::SendProof(SHA1Hash sha)
 {
     switch(_build)
     {
@@ -586,7 +586,7 @@ bool AuthSocket::_HandleLogonProof()
     if (A.isZero())
         return false;
 
-    Sha1Hash sha;
+    SHA1Hash sha;
     sha.UpdateBigNumbers(&A, &B, NULL);
     sha.Finalize();
     BigNumber u;
@@ -804,7 +804,7 @@ bool AuthSocket::_HandleReconnectProof()
     BigNumber t1;
     t1.SetBinary(lp.R1, 16);
 
-    Sha1Hash sha;
+    SHA1Hash sha;
     sha.Initialize();
     sha.UpdateData(_login);
     sha.UpdateBigNumbers(&t1, &_reconnectProof, &K, NULL);
