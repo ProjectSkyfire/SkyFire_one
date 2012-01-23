@@ -30,6 +30,13 @@ file(GLOB sources_localdir *.cpp *.h)
 # Build shared sourcelist
 #
 
+if( USE_COREPCH AND MSVC )
+  set(shared_STAT_SRCS
+    PrecompiledHeaders/SharedPCH.cpp
+    PrecompiledHeaders/SharedPCH.h
+  )
+endif()
+
 set(shared_STAT_SRCS
   ${shared_STAT_SRCS}
   ${sources_Configuration}
@@ -80,3 +87,12 @@ add_library(shared STATIC ${shared_STAT_SRCS})
 target_link_libraries(shared
   ${ACE_LIBRARY}
 )
+
+# Generate precompiled header
+if( USE_COREPCH )
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    add_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH.h)
+  elseif(MSVC)
+    add_native_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH)
+  endif()
+endif()
