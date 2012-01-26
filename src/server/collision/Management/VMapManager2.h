@@ -21,9 +21,9 @@
 #define _VMAPMANAGER2_H
 
 #include "IVMapManager.h"
-#include "Utilities/UnorderedMap.h"
+#include "UnorderedMap.h"
 #include "Define.h"
-#include <G3D/Vector3.h>
+#include "G3D/Vector3.h"
 
 #define MAP_FILENAME_EXTENSION2 ".vmtree"
 

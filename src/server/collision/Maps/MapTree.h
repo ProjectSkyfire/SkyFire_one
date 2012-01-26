@@ -21,7 +21,7 @@
 #define _MAPTREE_H
 
 #include "Define.h"
-#include "Utilities/UnorderedMap.h"
+#include "UnorderedMap.h"
 #include "BoundingIntervalHierarchy.h"
 
 namespace VMAP

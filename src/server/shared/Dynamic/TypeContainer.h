@@ -26,7 +26,7 @@
  */
 
 #include "Define.h"
-#include "Utilities/TypeList.h"
+#include "TypeList.h"
 #include "GridRefManager.h"
 
 #include <map>

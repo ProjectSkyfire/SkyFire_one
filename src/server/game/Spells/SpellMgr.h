@@ -28,7 +28,7 @@
 #include "DBCStores.h"
 #include "Database/SQLStorage.h"
 
-#include "Utilities/UnorderedMap.h"
+#include "UnorderedMap.h"
 #include <map>
 
 class Player;

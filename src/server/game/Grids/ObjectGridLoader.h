@@ -20,7 +20,7 @@
 #ifndef OREGON_OBJECTGRIDLOADER_H
 #define OREGON_OBJECTGRIDLOADER_H
 
-#include "Utilities/TypeList.h"
+#include "TypeList.h"
 #include "Define.h"
 #include "GridLoader.h"
 #include "GridDefines.h"

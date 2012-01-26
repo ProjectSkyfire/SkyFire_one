@@ -21,7 +21,7 @@
 #define OREGON_OBJECTREGISTRY_H
 
 #include "Define.h"
-#include "Utilities/UnorderedMap.h"
+#include "UnorderedMap.h"
 #include "Policies/Singleton.h"
 
 #include <string>

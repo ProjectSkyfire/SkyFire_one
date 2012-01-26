@@ -27,7 +27,7 @@
  */
 
 #include "Define.h"
-#include "Utilities/TypeList.h"
+#include "TypeList.h"
 #include <map>
 
 namespace Oregon
@@ -109,7 +109,6 @@ namespace Oregon
         SPECIFIC_TYPE* t = Remove(elements._elements, obj);
         return ( t != NULL ? t : Remove(elements._TailElements, obj) );
     }
-
 }
 #endif
 

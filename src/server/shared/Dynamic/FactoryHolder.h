@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -21,7 +21,7 @@
 #define OREGON_FACTORY_HOLDER
 
 #include "Define.h"
-#include "Utilities/TypeList.h"
+#include "TypeList.h"
 #include "ObjectRegistry.h"
 #include "Policies/SingletonImp.h"
 
