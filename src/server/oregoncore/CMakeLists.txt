@@ -16,6 +16,17 @@ file(GLOB_RECURSE sources_OCSoap OCSoap/*.cpp OCSoap/*.h)
 file(GLOB_RECURSE sources_WorldThread WorldThread/*.cpp WorldThread/*.h)
 file(GLOB sources_localdir *.cpp *.h)
 
+if( USE_COREPCH )
+  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+if ( USE_COREPCH AND MSVC )
+  set(oregon-core_SRCS
+    PrecompiledHeaders/worldPCH.cpp
+    PrecompiledHeaders/worldPCH.h
+  )
+endif()
+
 set(oregon-core_SRCS
   ${oregon-core_SRCS}
   ${sources_CommandLine}
@@ -173,4 +184,13 @@ if( UNIX )
 elseif( WIN32 )
   install(TARGETS oregon-core DESTINATION "${CMAKE_INSTALL_PREFIX}")
   install(FILES oregoncore.conf.dist DESTINATION "${CMAKE_INSTALL_PREFIX}")
+endif()
+
+# Generate precompiled header
+if( USE_COREPCH )
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    add_precompiled_header(oregon-core ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH.h)
+  elseif(MSVC)
+    add_native_precompiled_header(oregon-core ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH)
+  endif()
 endif()
