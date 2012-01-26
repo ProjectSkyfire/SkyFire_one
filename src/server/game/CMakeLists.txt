@@ -129,7 +129,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/mersennetwister
   ${CMAKE_SOURCE_DIR}/dep/SFMT
   ${CMAKE_SOURCE_DIR}/dep/zlib
-  ${CMAKE_SOURCE_DIR}/src/server/framework
   ${CMAKE_SOURCE_DIR}/src/server/collision
   ${CMAKE_SOURCE_DIR}/src/server/collision/Management
   ${CMAKE_SOURCE_DIR}/src/server/shared
@@ -144,6 +143,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Packets
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
   ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Policies   
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Accounts
   ${CMAKE_CURRENT_SOURCE_DIR}/Addons

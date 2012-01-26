@@ -23,6 +23,7 @@ file(GLOB_RECURSE sources_Logging Logging/*.cpp Logging/*.h)
 file(GLOB_RECURSE sources_Packets Packets/*.cpp Packets/*.h)
 file(GLOB_RECURSE sources_Threading Threading/*.cpp Threading/*.h)
 file(GLOB_RECURSE sources_Utilities Utilities/*.cpp Utilities/*.h)
+file(GLOB_RECURSE sources_Policies Policies/*.cpp Policies/*.h)
 
 file(GLOB sources_localdir *.cpp *.h)
 
@@ -48,6 +49,7 @@ set(shared_STAT_SRCS
   ${sources_Packets}
   ${sources_Threading}
   ${sources_Utilities}
+  ${sources_Policies} 
   ${sources_localdir}
   Debugging/Errors.h
 )
@@ -58,7 +60,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/mersennetwister
   ${CMAKE_SOURCE_DIR}/dep/sockets/include
   ${CMAKE_SOURCE_DIR}/dep/utf8cpp
-  ${CMAKE_SOURCE_DIR}/src/server/framework
   ${CMAKE_SOURCE_DIR}/src/server
   ${CMAKE_SOURCE_DIR}/src/server/game/World  
   ${CMAKE_SOURCE_DIR}/src/server/game/Addons    
@@ -76,6 +77,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Packets
   ${CMAKE_CURRENT_SOURCE_DIR}/Threading
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities
+  ${CMAKE_CURRENT_SOURCE_DIR}/Policies  
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object/Updates
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}

@@ -64,7 +64,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Packets
   ${CMAKE_SOURCE_DIR}/src/server/shared/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
-  ${CMAKE_SOURCE_DIR}/src/server/framework
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Policies 
   ${CMAKE_SOURCE_DIR}/src/server/game
   ${CMAKE_SOURCE_DIR}/src/server/game/Accounts
   ${CMAKE_SOURCE_DIR}/src/server/game/Addons
@@ -156,7 +156,6 @@ target_link_libraries(worldserver
   game
   shared
   scripts
-  oregonframework
   collision
   g3dlib
   gsoap

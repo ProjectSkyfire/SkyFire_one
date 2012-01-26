@@ -39,7 +39,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
   ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
-  ${CMAKE_SOURCE_DIR}/src/server/framework
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Policies
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
@@ -69,7 +69,6 @@ set_target_properties(oregon-realm PROPERTIES LINK_FLAGS "${oregon-realm_LINK_FL
 
 target_link_libraries(oregon-realm
   shared
-  oregonframework
   ${MYSQL_LIBRARY}
   ${OPENSSL_LIBRARIES}
   ${OPENSSL_EXTRA_LIBRARIES}
