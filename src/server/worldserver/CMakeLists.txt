@@ -21,14 +21,14 @@ if( USE_COREPCH )
 endif()
 
 if ( USE_COREPCH AND MSVC )
-  set(oregon-core_SRCS
+  set(worldserver_SRCS
     PrecompiledHeaders/worldPCH.cpp
     PrecompiledHeaders/worldPCH.h
   )
 endif()
 
-set(oregon-core_SRCS
-  ${oregon-core_SRCS}
+set(worldserver_SRCS
+  ${worldserver_SRCS}
   ${sources_CommandLine}
   ${sources_RemoteAccess}
   ${sources_OCSoap}
@@ -37,10 +37,10 @@ set(oregon-core_SRCS
 )
 
 if( WIN32 )
-  set(oregon-core_SRCS
-    ${oregon-core_SRCS}
+  set(worldserver_SRCS
+    ${worldserver_SRCS}
     ${sources_Debugging}
-    OregonCore.rc
+    worldserver.rc
   )
 endif()
 
@@ -136,23 +136,23 @@ include_directories(
   ${OPENSSL_INCLUDE_DIR}
 )
 
-set(oregon-core_LINK_FLAGS "")
+set(worldserver_LINK_FLAGS "")
 
-add_executable(oregon-core ${oregon-core_SRCS})
+add_executable(worldserver ${worldserver_SRCS})
 
 if( NOT WIN32 )
-  add_definitions(-D_OREGON_CORE_CONFIG="${CONF_DIR}/oregoncore.conf")
+  add_definitions(-D_OREGON_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"')
 endif()
 
-add_dependencies(oregon-core revision.h)
+add_dependencies(worldserver revision.h)
 
 if( UNIX )
-  set(oregon-core_LINK_FLAGS "-pthread ${oregon-core_LINK_FLAGS}")
+  set(worldserver_LINK_FLAGS "-pthread ${worldserver_LINK_FLAGS}")
 endif()
 
-set_target_properties(oregon-core PROPERTIES LINK_FLAGS "${oregon-core_LINK_FLAGS}")
+set_target_properties(worldserver PROPERTIES LINK_FLAGS "${worldserver_LINK_FLAGS}")
 
-target_link_libraries(oregon-core
+target_link_libraries(worldserver
   game
   shared
   scripts
@@ -172,25 +172,25 @@ target_link_libraries(oregon-core
 )
 
 if( WIN32 )
-  add_custom_command(TARGET oregon-core
+  add_custom_command(TARGET worldserver
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/oregoncore.conf.dist ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/worldserver.conf.dist ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/
   )
 endif()
 
 if( UNIX )
-  install(TARGETS oregon-core DESTINATION bin)
-  install(FILES oregoncore.conf.dist DESTINATION etc)
+  install(TARGETS worldserver DESTINATION bin)
+  install(FILES worldserver.conf.dist DESTINATION etc)
 elseif( WIN32 )
-  install(TARGETS oregon-core DESTINATION "${CMAKE_INSTALL_PREFIX}")
-  install(FILES oregoncore.conf.dist DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  install(TARGETS worldserver DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  install(FILES worldserver.conf.dist DESTINATION "${CMAKE_INSTALL_PREFIX}")
 endif()
 
 # Generate precompiled header
 if( USE_COREPCH )
   if(CMAKE_COMPILER_IS_GNUCXX)
-    add_precompiled_header(oregon-core ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH.h)
+    add_precompiled_header(worldserver ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH.h)
   elseif(MSVC)
-    add_native_precompiled_header(oregon-core ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH)
+    add_native_precompiled_header(worldserver ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH)
   endif()
 endif()
