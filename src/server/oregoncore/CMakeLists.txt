@@ -10,10 +10,18 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+file(GLOB_RECURSE sources_CommandLine CommandLine/*.cpp CommandLine/*.h)
+file(GLOB_RECURSE sources_RemoteAccess RemoteAccess/*.cpp RemoteAccess/*.h)
+file(GLOB_RECURSE sources_OCSoap OCSoap/*.cpp OCSoap/*.h)
+file(GLOB_RECURSE sources_WorldThread WorldThread/*.cpp WorldThread/*.h)
 file(GLOB sources_localdir *.cpp *.h)
 
 set(oregon-core_SRCS
   ${oregon-core_SRCS}
+  ${sources_CommandLine}
+  ${sources_RemoteAccess}
+  ${sources_OCSoap}
+  ${sources_WorldThread}
   ${sources_localdir}
 )
 
@@ -106,6 +114,12 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Tools
   ${CMAKE_SOURCE_DIR}/src/server/game/Weather
   ${CMAKE_SOURCE_DIR}/src/server/game/World
+  ${CMAKE_SOURCE_DIR}/src/server/oregonrealm
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/CommandLine
+  ${CMAKE_CURRENT_SOURCE_DIR}/RemoteAccess
+  ${CMAKE_CURRENT_SOURCE_DIR}/OCSoap
+  ${CMAKE_CURRENT_SOURCE_DIR}/WorldThread  
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
