@@ -161,7 +161,7 @@ struct boss_kalecgosAI : public ScriptedAI
         FrostBreathTimer = 15000;
         WildMagicTimer = 10000;
         TailLashTimer = 25000;
-        SpectralBlastTimer = urand(20000,25000);
+        SpectralBlastTimer = urand(20000, 25000);
         CheckTimer = 1000;
         ResetTimer = 30000;
 
@@ -310,7 +310,7 @@ struct boss_kalecgosAI : public ScriptedAI
                 advance(i, rand()%targetList.size());
                 if ((*i))
                 {
-                    (*i)->CastSpell((*i), SPELL_SPECTRAL_BLAST,true);
+                    (*i)->CastSpell((*i), SPELL_SPECTRAL_BLAST, true);
                     SpectralBlastTimer = 20000+rand()%5000;
                 } else SpectralBlastTimer = 1000;
             } else SpectralBlastTimer -= diff;
@@ -350,10 +350,10 @@ struct boss_kalecgosAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_EVIL_SLAY1,SAY_EVIL_SLAY2), me);
+        DoScriptText(RAND(SAY_EVIL_SLAY1, SAY_EVIL_SLAY2), me);
     }
 
-    void MovementInform(uint32 type,uint32 /*id*/)
+    void MovementInform(uint32 type, uint32 /*id*/)
     {
         if (type != POINT_MOTION_TYPE)
             return;
@@ -394,7 +394,7 @@ struct boss_kalecgosAI : public ScriptedAI
             break;
         case 3:
             me->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
-            me->GetMotionMaster()->MovePoint(0,FLY_X,FLY_Y,FLY_Z);
+            me->GetMotionMaster()->MovePoint(0, FLY_X, FLY_Y, FLY_Z);
             TalkTimer = 600000;
             break;
         default:
@@ -412,7 +412,7 @@ struct boss_kalecgosAI : public ScriptedAI
             break;
         case 2:
             me->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
-            me->GetMotionMaster()->MovePoint(0,FLY_X,FLY_Y,FLY_Z);
+            me->GetMotionMaster()->MovePoint(0, FLY_X, FLY_Y, FLY_Z);
             TalkTimer = 15000;
             break;
         case 3:
@@ -506,7 +506,7 @@ struct boss_sathrovarrAI : public ScriptedAI
             EnterEvadeMode();
             return;
         }
-        DoScriptText(RAND(SAY_SATH_SLAY1,SAY_SATH_SLAY2), me);
+        DoScriptText(RAND(SAY_SATH_SLAY1, SAY_SATH_SLAY2), me);
     }
 
     void JustDied(Unit * /*killer*/)
@@ -535,7 +535,7 @@ struct boss_sathrovarrAI : public ScriptedAI
             {
                 if (i->getSource()->HasAura(AURA_SPECTRAL_REALM, 0))
                     i->getSource()->RemoveAurasDueToSpell(AURA_SPECTRAL_REALM);
-                i->getSource()->TeleportTo(me->GetMap()->GetId(),i->getSource()->GetPositionX(),i->getSource()->GetPositionY(),DRAGON_REALM_Z+5,i->getSource()->GetOrientation());
+                i->getSource()->TeleportTo(me->GetMap()->GetId(),i->getSource()->GetPositionX(),i->getSource()->GetPositionY(),DRAGON_REALM_Z+5, i->getSource()->GetOrientation());
             }
         }
     }

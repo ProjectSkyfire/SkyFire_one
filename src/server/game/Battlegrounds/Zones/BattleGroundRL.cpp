@@ -100,7 +100,7 @@ void BattleGroundRL::HandleKillPlayer(Player *player, Player *killer)
         return;
     }
 
-    BattleGround::HandleKillPlayer(player,killer);
+    BattleGround::HandleKillPlayer(player, killer);
 
     UpdateWorldState(0xbb8, GetAlivePlayersCountByTeam(ALLIANCE));
     UpdateWorldState(0xbb9, GetAlivePlayersCountByTeam(HORDE));
@@ -110,7 +110,7 @@ void BattleGroundRL::HandleKillPlayer(Player *player, Player *killer)
 
 bool BattleGroundRL::HandlePlayerUnderMap(Player *player)
 {
-    player->TeleportTo(GetMapId(),1285.810547,1667.896851,39.957642,player->GetOrientation(),false);
+    player->TeleportTo(GetMapId(),1285.810547, 1667.896851, 39.957642, player->GetOrientation(),false);
     return true;
 }
 
@@ -134,7 +134,7 @@ void BattleGroundRL::HandleAreaTrigger(Player *Source, uint32 Trigger)
     }
 
     //if (buff_guid)
-    //    HandleTriggerBuff(buff_guid,Source);
+    //    HandleTriggerBuff(buff_guid, Source);
 }
 
 void BattleGroundRL::FillInitialWorldStates(WorldPacket &data)

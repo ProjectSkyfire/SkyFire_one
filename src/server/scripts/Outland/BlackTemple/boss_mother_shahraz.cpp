@@ -64,7 +64,7 @@ EndScriptData */
 
 struct Locations
 {
-    float x,y,z;
+    float x, y, z;
 };
 
 static Locations TeleportPoint[]=
@@ -128,13 +128,13 @@ struct boss_shahrazAI : public ScriptedAI
 
         DoZoneInCombat();
         DoScriptText(SAY_AGGRO, me);
-        DoCast(me,SPELL_PRISMATIC_SHIELD,true);
-        DoCast(me,SPELL_SABER_LASH_TRIGGER,true);
+        DoCast(me, SPELL_PRISMATIC_SHIELD, true);
+        DoCast(me, SPELL_SABER_LASH_TRIGGER, true);
     }
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -154,7 +154,7 @@ struct boss_shahrazAI : public ScriptedAI
         for (uint8 i = 0; i < 3; ++i)
         {
             Unit* pUnit = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER) && !pUnit->HasAura(SPELL_SABER_LASH_IMM,0))
+            if (pUnit && pUnit->isAlive() && (pUnit->GetTypeId() == TYPEID_PLAYER) && !pUnit->HasAura(SPELL_SABER_LASH_IMM, 0))
             {
                 TargetGUID[i] = pUnit->GetGUID();
                 pUnit->CastSpell(pUnit, SPELL_TELEPORT_VISUAL, true);
@@ -167,7 +167,7 @@ struct boss_shahrazAI : public ScriptedAI
     {
         if (me->IsNonMeleeSpellCasted(false)) return false;
 
-        DoCast(victim,spellId,triggered);
+        DoCast(victim, spellId, triggered);
         return true;
     }
 
@@ -215,7 +215,7 @@ struct boss_shahrazAI : public ScriptedAI
         {
             TeleportPlayers();
 
-            DoScriptText(RAND(SAY_SPELL2,SAY_SPELL3), me);
+            DoScriptText(RAND(SAY_SPELL2, SAY_SPELL3), me);
             FatalAttractionExplodeTimer = 2000;
             FatalAttractionTimer = 30000;
         } else FatalAttractionTimer -= diff;
@@ -242,7 +242,7 @@ struct boss_shahrazAI : public ScriptedAI
                         isNear = true;
 
                 if (isNear)
-                    targets[0]->CastSpell(targets[0],SPELL_ATTRACTION,true);
+                    targets[0]->CastSpell(targets[0],SPELL_ATTRACTION, true);
                 else
                 {
                     targets[0]->RemoveAurasDueToSpell(SPELL_ATTRACTION_VIS);
@@ -262,7 +262,7 @@ struct boss_shahrazAI : public ScriptedAI
                         isNear = true;
 
                 if (isNear)
-                    targets[1]->CastSpell(targets[1],SPELL_ATTRACTION,true);
+                    targets[1]->CastSpell(targets[1],SPELL_ATTRACTION, true);
                 else
                 {
                     targets[1]->RemoveAurasDueToSpell(SPELL_ATTRACTION_VIS);
@@ -282,7 +282,7 @@ struct boss_shahrazAI : public ScriptedAI
                         isNear = true;
 
                 if (isNear)
-                    targets[2]->CastSpell(targets[1],SPELL_ATTRACTION,true);
+                    targets[2]->CastSpell(targets[1],SPELL_ATTRACTION, true);
                 else
                 {
                     targets[2]->RemoveAurasDueToSpell(SPELL_ATTRACTION_VIS);
@@ -321,7 +321,7 @@ struct boss_shahrazAI : public ScriptedAI
         //Random taunts
         if (RandomYellTimer <= diff)
         {
-            DoScriptText(RAND(SAY_TAUNT1,SAY_TAUNT2,SAY_TAUNT3), me);
+            DoScriptText(RAND(SAY_TAUNT1, SAY_TAUNT2, SAY_TAUNT3), me);
             RandomYellTimer = 60000 + rand()%91 * 1000;
         } else RandomYellTimer -= diff;
 

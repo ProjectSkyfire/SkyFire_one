@@ -367,7 +367,7 @@ void PoolHandler::LoadFromDB()
 
     mPoolTemplate.resize(max_pool_id + 1);
 
-    result = WorldDatabase.Query("SELECT entry,max_limit FROM pool_template");
+    result = WorldDatabase.Query("SELECT entry, max_limit FROM pool_template");
     if (!result)
     {
         mPoolTemplate.clear();

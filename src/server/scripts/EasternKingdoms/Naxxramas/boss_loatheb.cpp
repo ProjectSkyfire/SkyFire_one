@@ -92,16 +92,16 @@ struct boss_loathebAI : public ScriptedAI
         switch (rand()%3)
         {
             case 0:
-                me->MonsterYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_AGGRO1);
+                me->MonsterYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_AGGRO1);
                 break;
             case 1:
-                me->MonsterYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_AGGRO2);
+                me->MonsterYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_AGGRO2);
                 break;
             case 2:
-                me->MonsterYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_AGGRO3);
+                me->MonsterYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_AGGRO3);
                 break;
         }
     }
@@ -111,36 +111,36 @@ struct boss_loathebAI : public ScriptedAI
         switch (rand()%6)
         {
             case 0:
-                me->MonsterYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY1);
+                me->MonsterYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY1);
                 break;
             case 1:
-                me->MonsterYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY2);
+                me->MonsterYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY2);
                 break;
             case 2:
-                me->MonsterYell(SAY_SLAY3,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY3);
+                me->MonsterYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY3);
                 break;
             case 3:
-                me->MonsterYell(SAY_SLAY4,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY4);
+                me->MonsterYell(SAY_SLAY4, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY4);
                 break;
             case 4:
-                me->MonsterYell(SAY_SLAY5,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY5);
+                me->MonsterYell(SAY_SLAY5, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY5);
                 break;
             case 5:
-                me->MonsterYell(SAY_SLAY6,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY6);
+                me->MonsterYell(SAY_SLAY6, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY6);
                 break;
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        me->MonsterYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(me,SOUND_DEATH);
+        me->MonsterYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(me, SOUND_DEATH);
     }
 
     void UpdateAI(const uint32 diff)
@@ -179,7 +179,7 @@ struct boss_loathebAI : public ScriptedAI
         //RemoveCurse_Timer
         if (RemoveCurse_Timer <= diff)
         {
-            DoCast(me,SPELL_REMOVE_CURSE);
+            DoCast(me, SPELL_REMOVE_CURSE);
             RemoveCurse_Timer = 30000;
         } else RemoveCurse_Timer -= diff;
 
@@ -189,14 +189,14 @@ struct boss_loathebAI : public ScriptedAI
             Unit *pTarget = NULL;
             Unit* SummonedSpores = NULL;
 
-            SummonedSpores = me->SummonCreature(16286,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedSpores = me->SummonCreature(16286,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedSpores = me->SummonCreature(16286,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            SummonedSpores = me->SummonCreature(16286, ADD_1X, ADD_1Y, ADD_1Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedSpores = me->SummonCreature(16286, ADD_2X, ADD_2Y, ADD_2Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedSpores = me->SummonCreature(16286, ADD_3X, ADD_3Y, ADD_3Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
             if (SummonedSpores)
             {
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (pTarget)
-                    SummonedSpores->AddThreat(pTarget,1.0f);
+                    SummonedSpores->AddThreat(pTarget, 1.0f);
             }
 
             Summon_Timer = 28000;

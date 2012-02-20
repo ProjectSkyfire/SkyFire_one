@@ -134,12 +134,12 @@ EndScriptData */
 //weapon id + position
 float KaelthasWeapons[7][5] =
 {
-    {21270, 794.38f, 15, 48.72f, 2.9f},                        //[Cosmic Infuser]
-    {21269, 785.47f, 12.12f, 48.72f, 3.14f},                    //[Devastation]
-    {21271, 781.25f, 4.39f, 48.72f, 3.14f},                     //[Infinity Blade]
-    {21273, 777.38f, -0.81f, 48.72f, 3.06f},                    //[Phaseshift Bulwark]
-    {21274, 781.48f, -6.08f, 48.72f, 3.9f},                     //[Staff of Disintegration]
-    {21272, 785.42f, -13.59f, 48.72f, 3.4f},                    //[Warp Slicer]
+    {21270, 794.38f, 15, 48.72f, 2.9f},                       //[Cosmic Infuser]
+    {21269, 785.47f, 12.12f, 48.72f, 3.14f},                   //[Devastation]
+    {21271, 781.25f, 4.39f, 48.72f, 3.14f},                    //[Infinity Blade]
+    {21273, 777.38f, -0.81f, 48.72f, 3.06f},                   //[Phaseshift Bulwark]
+    {21274, 781.48f, -6.08f, 48.72f, 3.9f},                    //[Staff of Disintegration]
+    {21272, 785.42f, -13.59f, 48.72f, 3.4f},                   //[Warp Slicer]
     {21268, 793.06f, -16.61f, 48.72f, 3.10f}                    //[Netherstrand Longbow]
 };
 
@@ -239,7 +239,7 @@ struct advisorbase_ai : public ScriptedAI
             me->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->ClearAllReactives();
-            me->SetUInt64Value(UNIT_FIELD_TARGET,0);
+            me->SetUInt64Value(UNIT_FIELD_TARGET, 0);
             me->GetMotionMaster()->Clear();
             me->GetMotionMaster()->MoveIdle();
             me->SetStandState(UNIT_STAND_STATE_DEAD);
@@ -495,7 +495,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     StartEvent();
 
                 //add to the threat list, so we can use SelectTarget
-                me->AddThreat(who,0.0f);
+                me->AddThreat(who, 0.0f);
             }
         }
     }
@@ -692,7 +692,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     for (uint32 i = 0; i < 7; ++i)
                     {
                         Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                        Weapon = me->SummonCreature(((uint32)KaelthasWeapons[i][0]),KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
+                        Weapon = me->SummonCreature(((uint32)KaelthasWeapons[i][0]),KaelthasWeapons[i][1],KaelthasWeapons[i][2],KaelthasWeapons[i][3],0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
 
                         if (!Weapon)
                             error_log("SOSCR: Kael'thas weapon %i could not be spawned", i);
@@ -1413,12 +1413,12 @@ struct mob_phoenix_tkAI : public ScriptedAI
     {
         if (egg)
         {
-            float x,y,z;
-            me->GetPosition(x,y,z);
-            z = me->GetMap()->GetHeight(x,y,z);
+            float x, y, z;
+            me->GetPosition(x, y, z);
+            z = me->GetMap()->GetHeight(x, y, z);
             if (z == INVALID_HEIGHT)
                 z = ROOM_BASE_Z;
-            me->SummonCreature(PHOENIX_EGG,x,y,z,me->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN,16000);
+            me->SummonCreature(PHOENIX_EGG, x, y, z, me->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN, 16000);
             me->RemoveCorpse();
         }
     }
@@ -1428,7 +1428,7 @@ struct mob_phoenix_tkAI : public ScriptedAI
         me->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);//birds can fly! :)
         egg = true;
         Cycle_Timer = 2000;
-        me->CastSpell(me,SPELL_BURN,true);
+        me->CastSpell(me, SPELL_BURN, true);
     }
 
     void EnterCombat(Unit *who) { }
@@ -1453,7 +1453,7 @@ struct mob_phoenix_tkAI : public ScriptedAI
                 }
             }
             //spell Burn should possible do this, but it doesn't, so do this for now.
-            uint32 dmg = urand(4500,5500);
+            uint32 dmg = urand(4500, 5500);
             if (me->GetHealth() > dmg)
                 me->SetHealth(uint32(me->GetHealth()-dmg));
             else//kill itt
@@ -1499,7 +1499,7 @@ struct mob_phoenix_egg_tkAI : public ScriptedAI
     void JustSummoned(Creature* summoned)
     {
         summoned->AddThreat(me->getVictim(), 0.0f);
-        summoned->CastSpell(summoned,SPELL_REBIRTH,false);
+        summoned->CastSpell(summoned, SPELL_REBIRTH, false);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1508,7 +1508,7 @@ struct mob_phoenix_egg_tkAI : public ScriptedAI
         {
             if (!summoned)
             {
-                Creature* Phoenix = me->SummonCreature(PHOENIX,me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),me->GetOrientation(),TEMPSUMMON_CORPSE_DESPAWN,5000);
+                Creature* Phoenix = me->SummonCreature(PHOENIX, me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),me->GetOrientation(),TEMPSUMMON_CORPSE_DESPAWN, 5000);
                 summoned = true;
             }
             me->DealDamage(me, me->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);

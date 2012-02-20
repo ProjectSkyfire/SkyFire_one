@@ -121,7 +121,7 @@ struct boss_gruulAI : public ScriptedAI
         // Gruul can cast this spell up to 30 times
         if (Growth_Timer <= diff)
         {
-            DoCast(me,SPELL_GROWTH);
+            DoCast(me, SPELL_GROWTH);
             DoScriptText(EMOTE_GROW, me);
             Growth_Timer = 30000;
         } else Growth_Timer -= diff;
@@ -243,10 +243,10 @@ struct boss_gruulAI : public ScriptedAI
             if (HurtfulStrike_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
+                pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
 
                 if (pTarget && me->IsWithinMeleeRange(me->getVictim()))
-                    DoCast(pTarget,SPELL_HURTFUL_STRIKE);
+                    DoCast(pTarget, SPELL_HURTFUL_STRIKE);
                 else
                     DoCast(me->getVictim(),SPELL_HURTFUL_STRIKE);
 
@@ -263,8 +263,8 @@ struct boss_gruulAI : public ScriptedAI
             // Cave In
             if (CaveIn_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(pTarget,SPELL_CAVE_IN);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_CAVE_IN);
 
                 CaveIn_Timer = 20000;
             } else CaveIn_Timer -= diff;

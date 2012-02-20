@@ -40,7 +40,7 @@ void WorldSession::HandleAuctionHelloOpcode(WorldPacket & recv_data)
     uint64 guid;                                            // NPC guid
     recv_data >> guid;
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_AUCTIONEER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_AUCTIONEER);
     if (!unit)
     {
         sLog.outDebug("WORLD: HandleAuctionHelloOpcode - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(guid)));
@@ -110,7 +110,7 @@ void WorldSession::SendAuctionOwnerNotification(AuctionEntry* auction)
 // this function sends mail to old bidder
 void WorldSession::SendAuctionOutbiddedMail(AuctionEntry *auction, uint32 newPrice)
 {
-    uint64 oldBidder_guid = MAKE_NEW_GUID(auction->bidder,0, HIGHGUID_PLAYER);
+    uint64 oldBidder_guid = MAKE_NEW_GUID(auction->bidder, 0, HIGHGUID_PLAYER);
     Player *oldBidder = objmgr.GetPlayer(oldBidder_guid);
 
     uint32 oldBidder_accId = 0;
@@ -497,7 +497,7 @@ void WorldSession::HandleAuctionListBidderItems(WorldPacket & recv_data)
         outbiddedCount = 0;
     }
 
-    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_AUCTIONEER);
+    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_AUCTIONEER);
     if (!pCreature)
     {
         sLog.outDebug("WORLD: HandleAuctionListBidderItems - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(guid)));
@@ -619,7 +619,7 @@ void WorldSession::HandleAuctionListItems(WorldPacket & recv_data)
 
     // converting string that we try to find to lower case
     std::wstring wsearchedname;
-    if (!Utf8toWStr(searchedname,wsearchedname))
+    if (!Utf8toWStr(searchedname, wsearchedname))
         return;
 
     wstrToLower(wsearchedname);

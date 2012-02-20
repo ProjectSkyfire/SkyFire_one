@@ -190,7 +190,7 @@ struct npc_the_scourge_cauldronAI : public ScriptedAI
                     if (CAST_PLR(who)->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE ||
                         CAST_PLR(who)->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE)
                     {
-                        me->SummonCreature(11078, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        me->SummonCreature(11078, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
@@ -198,7 +198,7 @@ struct npc_the_scourge_cauldronAI : public ScriptedAI
                     if (CAST_PLR(who)->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE ||
                         CAST_PLR(who)->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE)
                     {
-                        me->SummonCreature(11076, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        me->SummonCreature(11076, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
@@ -287,14 +287,14 @@ struct npc_anchorite_truuenAI : public npc_escortAI
         case 8:
             DoScriptText(SAY_WP_0, me);
             for (int i = 0; i < 2; i++)
-                me->SummonCreature(NPC_GHOUL, 1035.43,-1572.97,61.5412, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 90000);
+                me->SummonCreature(NPC_GHOUL, 1035.43,-1572.97, 61.5412, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 90000);
             break;
         case 9:
             DoScriptText(SAY_WP_1, me);
             break;
         case 14:
             for (int i = 0; i < 4; i++)
-                me->SummonCreature(NPC_GHOUL, 1159.77,-1762.64,60.5699, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                me->SummonCreature(NPC_GHOUL, 1159.77,-1762.64, 60.5699, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
             break;
         case 15:
             DoScriptText(SAY_WP_2, me);
@@ -305,7 +305,7 @@ struct npc_anchorite_truuenAI : public npc_escortAI
                 DoScriptText(SAY_WP_3, pTheldanis);
             break;
         case 23:
-            if (Creature* pUter = me->SummonCreature(NPC_GHOST_UTHER, 971.86,-1825.42 ,81.99 , 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 10000))
+            if (Creature* pUter = me->SummonCreature(NPC_GHOST_UTHER, 971.86,-1825.42 , 81.99 , 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 10000))
             {
                 pUter->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
                 DoScriptText(SAY_WP_4, pUter, me);

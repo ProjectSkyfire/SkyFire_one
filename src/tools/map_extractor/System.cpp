@@ -71,7 +71,7 @@ uint32 maxAreaId = 0;
 // Extractor options
 enum Extract
 {
-    EXTRACT_MAP = 1,
+    EXTRACT_MAP = 1, 
     EXTRACT_DBC = 2
 };
 
@@ -366,7 +366,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     {
         for (int j=0;j<ADT_CELLS_PER_GRID;j++)
         {
-            adt_MCNK * cell = cells->getMCNK(i,j);
+            adt_MCNK * cell = cells->getMCNK(i, j);
             uint32 areaid = cell->areaid;
             if (areaid && areaid <= maxAreaId)
             {
@@ -417,7 +417,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     {
         for (int j=0;j<ADT_CELLS_PER_GRID;j++)
         {
-            adt_MCNK * cell = cells->getMCNK(i,j);
+            adt_MCNK * cell = cells->getMCNK(i, j);
             if (!cell)
                 continue;
             // Height values for triangles stored in order:
@@ -590,7 +590,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
         {
             for (int j=0;j<ADT_CELLS_PER_GRID;j++)
             {
-                adt_liquid_header *h = h2o->getLiquidData(i,j);
+                adt_liquid_header *h = h2o->getLiquidData(i, j);
                 if (!h)
                     continue;
 

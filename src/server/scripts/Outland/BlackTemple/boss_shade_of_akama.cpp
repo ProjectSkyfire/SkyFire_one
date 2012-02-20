@@ -66,10 +66,10 @@ static Location AkamaWP[]=
 
 static Location BrokenCoords[]=
 {
-    {541.375916f, 401.439575f, M_PI, 112.783997f},             // The place where Akama channels
-    {534.130005f, 352.394531f, 2.164150f, 112.783737f},         // Behind a 'pillar' which is behind the east alcove
-    {499.621185f, 341.534729f, 1.652856f, 112.783730f},         // East Alcove
-    {499.151093f, 461.036438f, 4.770888f, 112.78370f},          // West Alcove
+    {541.375916f, 401.439575f, M_PI, 112.783997f},            // The place where Akama channels
+    {534.130005f, 352.394531f, 2.164150f, 112.783737f},        // Behind a 'pillar' which is behind the east alcove
+    {499.621185f, 341.534729f, 1.652856f, 112.783730f},        // East Alcove
+    {499.151093f, 461.036438f, 4.770888f, 112.78370f},         // West Alcove
 };
 
 static Location BrokenWP[]=
@@ -155,7 +155,7 @@ struct mob_ashtongue_sorcererAI : public ScriptedAI
             Creature* Shade = Unit::GetCreature((*me), ShadeGUID);
             if (Shade && Shade->isAlive() && me->isAlive())
             {
-                if (me->IsWithinDist(Shade, 20,false))
+                if (me->IsWithinDist(Shade, 20, false))
                 {
                     me->GetMotionMaster()->Clear(false);
                     me->GetMotionMaster()->MoveIdle();
@@ -178,7 +178,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
         AkamaGUID = pInstance ? pInstance->GetData64(DATA_AKAMA_SHADE) : 0;
         me->setActive(true);//if view distance is too low
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
     }
 
     ScriptedInstance* pInstance;
@@ -369,7 +369,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
     void FindChannelers()
     {
         std::list<Creature*> ChannelerList;
-        me->GetCreatureListWithEntryInGrid(ChannelerList,CREATURE_CHANNELER,50.0f);
+        me->GetCreatureListWithEntryInGrid(ChannelerList, CREATURE_CHANNELER, 50.0f);
 
         if (!ChannelerList.empty())
         {
@@ -425,7 +425,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
                         if (Creature* Akama = Unit::GetCreature(*me, AkamaGUID))
                         {
                             float x, y, z;
-                            Akama->GetPosition(x,y,z);
+                            Akama->GetPosition(x, y, z);
                             // They move towards AKama
                             Defender->GetMotionMaster()->MovePoint(0, x, y, z);
                             Defender->AI()->AttackStart(Akama);

@@ -88,7 +88,7 @@ struct npc_00x09hlAI : public npc_escortAI
         if (pWho->GetEntry() == NPC_MARAUDING_OWL || pWho->GetEntry() == NPC_VILE_AMBUSHER)
             return;
 
-        DoScriptText(RAND(SAY_OOX_AGGRO1,SAY_OOX_AGGRO2), me);
+        DoScriptText(RAND(SAY_OOX_AGGRO1, SAY_OOX_AGGRO2), me);
     }
 
     void JustSummoned(Creature* pSummoned)
@@ -197,7 +197,7 @@ struct npc_rinjiAI : public npc_escortAI
                 return;
 
             //only if attacked and escorter is not in combat?
-            DoScriptText(RAND(SAY_RIN_HELP_1,SAY_RIN_HELP_2), me);
+            DoScriptText(RAND(SAY_RIN_HELP_1, SAY_RIN_HELP_2), me);
         }
     }
 

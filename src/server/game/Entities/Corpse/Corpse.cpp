@@ -82,7 +82,7 @@ bool Corpse::Create(uint32 guidlow, Player *owner, uint32 mapid, float x, float 
 {
     ASSERT(owner);
 
-    Relocate(x,y,z,ang);
+    Relocate(x, y, z, ang);
 
     if (!IsPositionValid())
     {
@@ -116,7 +116,7 @@ void Corpse::SaveToDB()
     DeleteFromDB();
 
     std::ostringstream ss;
-    ss  << "INSERT INTO corpse (guid,player,position_x,position_y,position_z,orientation,zone,map,displayId,itemCache,bytes1,bytes2,guild,flags,dynFlags,time,corpse_type,instance) VALUES ("
+    ss  << "INSERT INTO corpse (guid, player, position_x, position_y, position_z, orientation, zone, map, displayId, itemCache, bytes1, bytes2, guild, flags, dynFlags, time, corpse_type, instance) VALUES ("
         << GetGUIDLow() << ", "
         << GUID_LOPART(GetOwnerGUID()) << ", "
         << GetPositionX() << ", "
@@ -162,7 +162,7 @@ void Corpse::DeleteFromDB()
         CharacterDatabase.PExecute("DELETE FROM corpse WHERE guid = '%d'", GetGUIDLow());
     else
         // all corpses (not bones)
-        CharacterDatabase.PExecute("DELETE FROM corpse WHERE player = '%d' AND corpse_type <> '0'",  GUID_LOPART(GetOwnerGUID()));
+        CharacterDatabase.PExecute("DELETE FROM corpse WHERE player = '%d' AND corpse_type <> '0'", GUID_LOPART(GetOwnerGUID()));
 }
 
 bool Corpse::LoadFromDB(uint32 guid, Field *fields)

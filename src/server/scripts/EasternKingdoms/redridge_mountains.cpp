@@ -105,12 +105,12 @@ struct npc_corporal_keeshanAI : public npc_escortAI
                         uiPhase = 2;
                         break;
                     case 2:
-                        DoScriptText(SAY_CORPORAL_2,me);
+                        DoScriptText(SAY_CORPORAL_2, me);
                         uiTimer = 15000;
                         uiPhase = 3;
                         break;
                     case 3:
-                        DoScriptText(SAY_CORPORAL_3,me);
+                        DoScriptText(SAY_CORPORAL_3, me);
                         me->SetStandState(UNIT_STAND_STATE_STAND);
                         SetEscortPaused(false);
                         uiTimer = 0;
@@ -151,7 +151,7 @@ bool QuestAccept_npc_corporal_keeshan(Player* pPlayer, Creature* pCreature, Ques
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_IN_ACTION)
     {
-        CAST_AI(npc_corporal_keeshanAI,pCreature->AI())->Start(true, false, pPlayer->GetGUID(),pQuest);
+        CAST_AI(npc_corporal_keeshanAI, pCreature->AI())->Start(true, false, pPlayer->GetGUID(),pQuest);
         DoScriptText(SAY_CORPORAL_1, pCreature);
     }
 

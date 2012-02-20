@@ -98,7 +98,7 @@ struct boss_lady_blaumeuxAI : public ScriptedAI
         {
             if (ShieldWall1)
             {
-                DoCast(me,SPELL_SHIELDWALL);
+                DoCast(me, SPELL_SHIELDWALL);
                 ShieldWall1 = false;
             }
        }
@@ -106,7 +106,7 @@ struct boss_lady_blaumeuxAI : public ScriptedAI
        {
            if (ShieldWall2)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall2 = false;
            }
        }
@@ -254,7 +254,7 @@ struct boss_thane_korthazzAI : public ScriptedAI
        {
            if (ShieldWall1)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall1 = false;
            }
        }
@@ -262,7 +262,7 @@ struct boss_thane_korthazzAI : public ScriptedAI
        {
            if (ShieldWall2)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
               ShieldWall2 = false;
            }
        }
@@ -350,7 +350,7 @@ struct boss_sir_zeliekAI : public ScriptedAI
        {
            if (ShieldWall1)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall1 = false;
            }
      }
@@ -358,7 +358,7 @@ struct boss_sir_zeliekAI : public ScriptedAI
        {
            if (ShieldWall2)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall2 = false;
            }
        }

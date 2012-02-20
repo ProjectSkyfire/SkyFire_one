@@ -49,9 +49,9 @@ EndContentData */
 #define MOB_SHARPSHOOTER_GUARD          17622
 #define MOB_REAVER_GUARD                17623
 
-float AssassEntrance[3] = {275.136f,-84.29f,2.3f}; // y +-8
-float AssassExit[3] = {184.233f,-84.29f,2.3f}; // y +-8
-float AddsEntrance[3] = {306.036f,-84.29f,1.93f};
+float AssassEntrance[3] = {275.136f,-84.29f, 2.3f}; // y +-8
+float AssassExit[3] = {184.233f,-84.29f, 2.3f}; // y +-8
+float AddsEntrance[3] = {306.036f,-84.29f, 1.93f};
 
 struct boss_warchief_kargath_bladefistAI : public ScriptedAI
 {
@@ -84,7 +84,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
     {
         removeAdds();
 
-        me->SetSpeed(MOVE_RUN,2);
+        me->SetSpeed(MOVE_RUN, 2);
         me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
 
         summoned = 1;
@@ -103,7 +103,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        DoScriptText(RAND(SAY_AGGRO1,SAY_AGGRO2,SAY_AGGRO3), me);
+        DoScriptText(RAND(SAY_AGGRO1, SAY_AGGRO2, SAY_AGGRO3), me);
 
         if (pInstance)
         {
@@ -111,7 +111,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
 
             if (pInstance->GetData64(DATA_WARBRINGER))
             {
-                Creature *pWar = Unit::GetCreature(*me,pInstance->GetData64(DATA_WARBRINGER));
+                Creature *pWar = Unit::GetCreature(*me, pInstance->GetData64(DATA_WARBRINGER));
                 if (pWar && pWar->isAlive())
                     pWar->AI()->AttackStart(me->getVictim());
             }
@@ -125,7 +125,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
             case MOB_HEARTHEN_GUARD:
             case MOB_SHARPSHOOTER_GUARD:
             case MOB_REAVER_GUARD:
-                summoned->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM,0));
+                summoned->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
                 adds.push_back(summoned->GetGUID());
                 break;
             case MOB_SHATTERED_ASSASSIN:
@@ -138,7 +138,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
     {
         if (victim->GetTypeId() == TYPEID_PLAYER)
         {
-            DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+            DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2), me);
         }
     }
 
@@ -164,7 +164,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
             if (target_num > 0) // to prevent loops
             {
                 Wait_Timer = 1;
-                DoCast(me,SPELL_BLADE_DANCE,true);
+                DoCast(me, SPELL_BLADE_DANCE, true);
                 target_num--;
             }
         }
@@ -178,7 +178,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
             if (temp && temp->isAlive())
             {
                 (*temp).GetMotionMaster()->Clear(true);
-                me->DealDamage(temp,temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                me->DealDamage(temp, temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 CAST_CRE(temp)->RemoveCorpse();
             }
         }
@@ -190,7 +190,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
             if (temp && temp->isAlive())
             {
                 (*temp).GetMotionMaster()->Clear(true);
-                me->DealDamage(temp,temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                me->DealDamage(temp, temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 CAST_CRE(temp)->RemoveCorpse();
             }
         }
@@ -198,10 +198,10 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
     }
     void SpawnAssassin()
     {
-        me->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassEntrance[0],AssassEntrance[1]+8, AssassEntrance[2], 0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-        me->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassEntrance[0],AssassEntrance[1]-8, AssassEntrance[2], 0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-        me->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassExit[0],AssassExit[1]+8, AssassExit[2], 0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-        me->SummonCreature(MOB_SHATTERED_ASSASSIN,AssassExit[0],AssassExit[1]-8, AssassExit[2], 0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
+        me->SummonCreature(MOB_SHATTERED_ASSASSIN, AssassEntrance[0],AssassEntrance[1]+8, AssassEntrance[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+        me->SummonCreature(MOB_SHATTERED_ASSASSIN, AssassEntrance[0],AssassEntrance[1]-8, AssassEntrance[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+        me->SummonCreature(MOB_SHATTERED_ASSASSIN, AssassExit[0],AssassExit[1]+8, AssassExit[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+        me->SummonCreature(MOB_SHATTERED_ASSASSIN, AssassExit[0],AssassExit[1]-8, AssassExit[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -225,7 +225,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
                     {
                         // stop bladedance
                         InBlade = false;
-                        me->SetSpeed(MOVE_RUN,2);
+                        me->SetSpeed(MOVE_RUN, 2);
                         (*me).GetMotionMaster()->MoveChase(me->getVictim());
                         Blade_Dance_Timer = 30000;
                         Wait_Timer = 0;
@@ -235,12 +235,12 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
                     else
                     {
                         //move in bladedance
-                        float x,y,randx,randy;
+                        float x, y, randx, randy;
                         randx = float(rand()%40);
                         randy = float(rand()%40);
                         x = 210+ randx ;
                         y = -60- randy ;
-                        (*me).GetMotionMaster()->MovePoint(1,x,y,me->GetPositionZ());
+                        (*me).GetMotionMaster()->MovePoint(1, x, y, me->GetPositionZ());
                         Wait_Timer = 0;
                     }
                 } else Wait_Timer -= diff;
@@ -254,14 +254,14 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
                     Wait_Timer = 1;
                     InBlade = true;
                     Blade_Dance_Timer = 0;
-                    me->SetSpeed(MOVE_RUN,4);
+                    me->SetSpeed(MOVE_RUN, 4);
                     return;
                 } else Blade_Dance_Timer -= diff;
 
             if (Charge_timer)
                 if (Charge_timer <= diff)
                 {
-                    DoCast(SelectUnit(SELECT_TARGET_RANDOM,0),H_SPELL_CHARGE);
+                    DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0),H_SPELL_CHARGE);
                     Charge_timer = 0;
                 } else Charge_timer -= diff;
 
@@ -274,9 +274,9 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
                 {
                     switch(rand()%3)
                     {
-                        case 0: Summoned = me->SummonCreature(MOB_HEARTHEN_GUARD,AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000); break;
-                        case 1: Summoned = me->SummonCreature(MOB_SHARPSHOOTER_GUARD,AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000); break;
-                        case 2: Summoned = me->SummonCreature(MOB_REAVER_GUARD,AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000); break;
+                        case 0: Summoned = me->SummonCreature(MOB_HEARTHEN_GUARD, AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
+                        case 1: Summoned = me->SummonCreature(MOB_SHARPSHOOTER_GUARD, AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
+                        case 2: Summoned = me->SummonCreature(MOB_REAVER_GUARD, AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
                     }
                 }
                 if (rand()%100 < 6) summoned++;
@@ -288,7 +288,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
 
         if (resetcheck_timer <= diff)
         {
-            float tempx,tempy;
+            float tempx, tempy;
             tempx = me->GetPositionX();
             tempy = me->GetPositionY();
             if (tempx > 255 || tempx < 205)

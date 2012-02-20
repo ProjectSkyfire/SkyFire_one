@@ -95,7 +95,7 @@ bool ChatHandler::HandleSetPoiCommand(const char* args)
 
     uint32 flags = atol(flags_text);
 
-    sLog.outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon,flags);
+    sLog.outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon, flags);
     pPlayer->PlayerTalkClass->SendPointOfInterest(target->GetPositionX(), target->GetPositionY(), Poi_Icon(icon), flags, 30, "Test POI");
     return true;
 }
@@ -295,9 +295,9 @@ bool ChatHandler::HandleDebugPlaySoundCommand(const char* args)
     }
 
     if (m_session->GetPlayer()->GetSelection())
-        unit->PlayDistanceSound(dwSoundId,m_session->GetPlayer());
+        unit->PlayDistanceSound(dwSoundId, m_session->GetPlayer());
     else
-        unit->PlayDirectSound(dwSoundId,m_session->GetPlayer());
+        unit->PlayDirectSound(dwSoundId, m_session->GetPlayer());
 
     PSendSysMessage(LANG_YOU_HEAR_SOUND, dwSoundId);
     return true;
@@ -623,7 +623,7 @@ bool ChatHandler::HandleDebugThreatList(const char * /*args*/)
         if (!unit)
             continue;
         ++cnt;
-        PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt,unit->GetName(), unit->GetGUIDLow(), (*itr)->getThreat());
+        PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt, unit->GetName(), unit->GetGUIDLow(), (*itr)->getThreat());
     }
     SendSysMessage("End of threat list.");
     return true;
@@ -642,7 +642,7 @@ bool ChatHandler::HandleDebugHostilRefList(const char * /*args*/)
         if (Unit * unit = ref->getSource()->getOwner())
         {
             ++cnt;
-            PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt,unit->GetName(), unit->GetGUIDLow(), ref->getThreat());
+            PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt, unit->GetName(), unit->GetGUIDLow(), ref->getThreat());
         }
         ref = ref->next();
     }

@@ -105,7 +105,7 @@ struct boss_doomwalkerAI : public ScriptedAI
         {
             if (Enrage_Timer <= diff)
             {
-                DoCast(me,SPELL_ENRAGE);
+                DoCast(me, SPELL_ENRAGE);
                 Enrage_Timer = 6000;
                 InEnrage = true;
             } else Enrage_Timer -= diff;
@@ -140,7 +140,7 @@ struct boss_doomwalkerAI : public ScriptedAI
             if (InEnrage)
                 me->RemoveAura(SPELL_ENRAGE, 0);
 
-            DoCast(me,SPELL_EARTHQUAKE);
+            DoCast(me, SPELL_EARTHQUAKE);
             Quake_Timer = 30000 + rand()%25000;
         } else Quake_Timer -= diff;
 
@@ -148,13 +148,13 @@ struct boss_doomwalkerAI : public ScriptedAI
         if (Chain_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
             if (!pTarget)
                 pTarget = me->getVictim();
 
             if (pTarget)
-                DoCast(pTarget,SPELL_CHAIN_LIGHTNING);
+                DoCast(pTarget, SPELL_CHAIN_LIGHTNING);
 
             Chain_Timer = 10000 + rand()%25000;
         } else Chain_Timer -= diff;

@@ -412,7 +412,7 @@ bool IsSingleTargetSpells(SpellEntry const *spellInfo1, SpellEntry const *spellI
 
 bool IsAuraAddedBySpell(uint32 auraType, uint32 spellId);
 
-bool IsSpellAllowedInLocation(SpellEntry const *spellInfo,uint32 map_id,uint32 zone_id,uint32 area_id);
+bool IsSpellAllowedInLocation(SpellEntry const *spellInfo, uint32 map_id, uint32 zone_id, uint32 area_id);
 
 extern bool IsAreaEffectTarget[TOTAL_SPELL_TARGETS];
 inline bool IsAreaOfEffectSpell(SpellEntry const *spellInfo)
@@ -648,12 +648,12 @@ enum SpellScriptTargetType
 
 struct SpellTargetEntry
 {
-    SpellTargetEntry(SpellScriptTargetType type_,uint32 targetEntry_) : type(type_), targetEntry(targetEntry_) {}
+    SpellTargetEntry(SpellScriptTargetType type_, uint32 targetEntry_) : type(type_), targetEntry(targetEntry_) {}
     SpellScriptTargetType type;
     uint32 targetEntry;
 };
 
-typedef std::multimap<uint32,SpellTargetEntry> SpellScriptTarget;
+typedef std::multimap<uint32, SpellTargetEntry> SpellScriptTarget;
 
 // coordinates for spells (accessed using SpellMgr functions)
 struct SpellTargetPosition
@@ -935,7 +935,7 @@ class SpellMgr
             return spell_id;
         }
 
-        uint8 IsHighRankOfSpell(uint32 spell1,uint32 spell2) const
+        uint8 IsHighRankOfSpell(uint32 spell1, uint32 spell2) const
         {
             SpellChainMap::const_iterator itr = mSpellChains.find(spell1);
 
@@ -953,7 +953,7 @@ class SpellMgr
             return false;
         }
 
-        bool IsRankSpellDueToSpell(SpellEntry const *spellInfo_1,uint32 spellId_2) const;
+        bool IsRankSpellDueToSpell(SpellEntry const *spellInfo_1, uint32 spellId_2) const;
         static bool canStackSpellRanks(SpellEntry const *spellInfo);
         bool IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2, bool sameCaster) const;
 
@@ -984,7 +984,7 @@ class SpellMgr
             return mSpellLearnSpells.upper_bound(spell_id);
         }
 
-        bool IsSpellLearnToSpell(uint32 spell_id1,uint32 spell_id2) const
+        bool IsSpellLearnToSpell(uint32 spell_id1, uint32 spell_id2) const
         {
             SpellLearnSpellMap::const_iterator b = GetBeginSpellLearnSpell(spell_id1);
             SpellLearnSpellMap::const_iterator e = GetEndSpellLearnSpell(spell_id1);

@@ -95,7 +95,7 @@ struct boss_supremusAI : public ScriptedAI
         summons.DespawnAll();
 
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
     }
 
     void EnterCombat(Unit *who)
@@ -188,7 +188,7 @@ struct boss_supremusAI : public ScriptedAI
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                 {
                     if (me->GetDistance2d(me->getVictim()) < 40)
-                        me->CastSpell(me->getVictim(),SPELL_CHARGE,false);
+                        me->CastSpell(me->getVictim(),SPELL_CHARGE, false);
 
                     DoResetThreat();
                     me->AddThreat(pTarget, 5000000.0f);
@@ -218,7 +218,7 @@ struct boss_supremusAI : public ScriptedAI
                 me->SetSpeed(MOVE_RUN, 1.2f);
                 DoZoneInCombat();
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-                me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+                me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
             }
             else
             {
@@ -230,7 +230,7 @@ struct boss_supremusAI : public ScriptedAI
                 me->SetSpeed(MOVE_RUN, 0.9f);
                 DoZoneInCombat();
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-                me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+                me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
             }
         } else PhaseSwitchTimer -= diff;
 

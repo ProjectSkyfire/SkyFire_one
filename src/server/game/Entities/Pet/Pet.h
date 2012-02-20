@@ -114,7 +114,7 @@ enum PetNameInvalidReason
 };
 
 typedef UNORDERED_MAP<uint16, PetSpell> PetSpellMap;
-typedef std::map<uint32,uint32> TeachSpellMap;
+typedef std::map<uint32, uint32> TeachSpellMap;
 typedef std::vector<uint32> AutoSpellList;
 
 #define HAPPINESS_LEVEL_SIZE        333000
@@ -144,7 +144,7 @@ class Pet : public Guardian
 
         bool Create (uint32 guidlow, Map *map, uint32 Entry, uint32 pet_number);
         bool CreateBaseAtCreature(Creature* creature);
-        bool LoadPetFromDB(Player* owner,uint32 petentry = 0,uint32 petnumber = 0, bool current = false);
+        bool LoadPetFromDB(Player* owner, uint32 petentry = 0, uint32 petnumber = 0, bool current = false);
         void SavePetToDB(PetSaveMode mode);
         void Remove(PetSaveMode mode, bool returnreagent = false);
         static void DeleteFromDB(uint32 guidlow);
@@ -206,7 +206,7 @@ class Pet : public Guardian
         void _LoadSpells();
         void _SaveSpells();
 
-        bool addSpell(uint16 spell_id,uint16 active = ACT_DECIDE, PetSpellState state = PETSPELL_NEW, PetSpellType type = PETSPELL_NORMAL);
+        bool addSpell(uint16 spell_id, uint16 active = ACT_DECIDE, PetSpellState state = PETSPELL_NEW, PetSpellType type = PETSPELL_NORMAL);
         bool learnSpell(uint16 spell_id);
         void removeSpell(uint16 spell_id);
 

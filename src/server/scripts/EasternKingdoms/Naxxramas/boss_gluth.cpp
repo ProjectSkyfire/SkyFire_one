@@ -123,14 +123,14 @@ struct boss_gluthAI : public ScriptedAI
         //Frenzy_Timer
         if (Frenzy_Timer <= diff)
         {
-            DoCast(me,SPELL_FRENZY);
+            DoCast(me, SPELL_FRENZY);
             Frenzy_Timer = 10500;
         } else Frenzy_Timer -= diff;
 
         //Enrage_Timer
         if (Enrage_Timer <= diff)
         {
-            DoCast(me,SPELL_ENRAGE);
+            DoCast(me, SPELL_ENRAGE);
             Enrage_Timer = 61000;
         } else Enrage_Timer -= diff;
 
@@ -140,21 +140,21 @@ struct boss_gluthAI : public ScriptedAI
             Unit *pTarget = NULL;
             Unit* SummonedZombies = NULL;
 
-            SummonedZombies = me->SummonCreature(16360,ADD_1X,ADD_1Y,ADD_1Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_2X,ADD_2Y,ADD_2Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_3X,ADD_3Y,ADD_3Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_4X,ADD_4Y,ADD_4Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_5X,ADD_5Y,ADD_5Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_6X,ADD_6Y,ADD_6Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_7X,ADD_7Y,ADD_7Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_8X,ADD_8Y,ADD_8Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
-            SummonedZombies = me->SummonCreature(16360,ADD_9X,ADD_9Y,ADD_9Z,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_1X, ADD_1Y, ADD_1Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_2X, ADD_2Y, ADD_2Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_3X, ADD_3Y, ADD_3Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_4X, ADD_4Y, ADD_4Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_5X, ADD_5Y, ADD_5Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_6X, ADD_6Y, ADD_6Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_7X, ADD_7Y, ADD_7Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_8X, ADD_8Y, ADD_8Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+            SummonedZombies = me->SummonCreature(16360, ADD_9X, ADD_9Y, ADD_9Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
 
             if (SummonedZombies)
             {
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (pTarget)
-                    SummonedZombies->AddThreat(pTarget,1.0f);
+                    SummonedZombies->AddThreat(pTarget, 1.0f);
             }
 
             Summon_Timer = 28000;

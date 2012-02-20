@@ -140,7 +140,7 @@ struct npc_draenei_survivorAI : public ScriptedAI
                 //set creature health
                 me->SetHealth(int(me->GetMaxHealth()*.1));
                 // ley down
-                me->SetUInt32Value(UNIT_FIELD_BYTES_1,3);
+                me->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
             }
             else ResetlifeTimer -= diff;
         }
@@ -360,7 +360,7 @@ struct npc_magwinAI : public npc_escortAI
         case 29:
             DoScriptText(EMOTE_HUG, me, pPlayer);
             DoScriptText(SAY_END2, me, pPlayer);
-            pPlayer->GroupEventHappens(QUEST_A_CRY_FOR_SAY_HELP,me);
+            pPlayer->GroupEventHappens(QUEST_A_CRY_FOR_SAY_HELP, me);
             break;
         }
     }
@@ -476,7 +476,7 @@ struct npc_geezleAI : public ScriptedAI
             return 20000;
         case 10:
             if (Spark)
-                Spark->DealDamage(Spark,Spark->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                Spark->DealDamage(Spark, Spark->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             //DespawnNagaFlag(false);
             me->SetVisibility(VISIBILITY_OFF);
         default: return 99999999;
@@ -486,7 +486,7 @@ struct npc_geezleAI : public ScriptedAI
     void DespawnNagaFlag(bool despawn)
     {
         std::list<GameObject*> FlagList;
-        me->GetGameObjectListWithEntryInGrid(FlagList,GO_NAGA_FLAG, 100.0f);
+        me->GetGameObjectListWithEntryInGrid(FlagList, GO_NAGA_FLAG, 100.0f);
 
         if (!FlagList.empty())
         {
@@ -589,7 +589,7 @@ bool go_ravager_cage(Player* pPlayer, GameObject* pGo)
     {
         if (Creature* ravager = pGo->FindNearestCreature(NPC_DEATH_RAVAGER, 5.0f, true))
         {
-            ravager->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+            ravager->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             ravager->SetReactState(REACT_AGGRESSIVE);
             ravager->AI()->AttackStart(pPlayer);
         }

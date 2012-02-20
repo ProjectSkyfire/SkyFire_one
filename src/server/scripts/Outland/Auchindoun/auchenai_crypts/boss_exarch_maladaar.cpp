@@ -202,11 +202,11 @@ struct boss_exarch_maladaarAI : public ScriptedAI
         if (summoned->GetEntry() == ENTRY_STOLEN_SOUL)
         {
             //SPELL_STOLEN_SOUL_VISUAL has shapeshift effect, but not implemented feature in TRINITY for this spell.
-            summoned->CastSpell(summoned,SPELL_STOLEN_SOUL_VISUAL,false);
+            summoned->CastSpell(summoned, SPELL_STOLEN_SOUL_VISUAL, false);
             summoned->SetDisplayId(soulmodel);
             summoned->setFaction(me->getFaction());
 
-            if (Unit *pTarget = Unit::GetUnit(*me,soulholder))
+            if (Unit *pTarget = Unit::GetUnit(*me, soulholder))
             {
             ((mob_stolen_soulAI*)summoned->AI())->SetMyClass(soulclass);
              summoned->AI()->AttackStart(pTarget);
@@ -230,7 +230,7 @@ struct boss_exarch_maladaarAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
         //When Exarch Maladar is defeated D'ore appear.
-        DoSpawnCreature(19412,0,0,0,0, TEMPSUMMON_TIMED_DESPAWN, 600000);
+        DoSpawnCreature(19412, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 600000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -252,14 +252,14 @@ struct boss_exarch_maladaarAI : public ScriptedAI
 
         if (StolenSoul_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 if (pTarget->GetTypeId() == TYPEID_PLAYER)
                 {
                     if (me->IsNonMeleeSpellCasted(false))
                         me->InterruptNonMeleeSpells(true);
 
-                    uint32 i = urand(1,2);
+                    uint32 i = urand(1, 2);
                     if (i == 1)
                         DoScriptText(SAY_ROAR, me);
                     else
@@ -269,8 +269,8 @@ struct boss_exarch_maladaarAI : public ScriptedAI
                     soulholder = pTarget->GetGUID();
                     soulclass = pTarget->getClass();
 
-                    DoCast(pTarget,SPELL_STOLEN_SOUL);
-                    DoSpawnCreature(ENTRY_STOLEN_SOUL,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,10000);
+                    DoCast(pTarget, SPELL_STOLEN_SOUL);
+                    DoSpawnCreature(ENTRY_STOLEN_SOUL, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
 
                     StolenSoul_Timer = 20000 + rand()% 10000;
                 } else StolenSoul_Timer = 1000;
@@ -279,15 +279,15 @@ struct boss_exarch_maladaarAI : public ScriptedAI
 
         if (Ribbon_of_Souls_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_RIBBON_OF_SOULS);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_RIBBON_OF_SOULS);
 
             Ribbon_of_Souls_timer = 5000 + (rand()%20 * 1000);
         } else Ribbon_of_Souls_timer -= diff;
 
         if (Fear_timer <= diff)
         {
-            DoCast(me,SPELL_SOUL_SCREAM);
+            DoCast(me, SPELL_SOUL_SCREAM);
             Fear_timer = 15000 + rand()% 15000;
         } else Fear_timer -= diff;
 

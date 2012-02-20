@@ -81,7 +81,7 @@ bool DynamicObject::Create(uint32 guidlow, Unit *caster, uint32 spellId, uint32 
     Relocate(pos);
     if (!IsPositionValid())
     {
-        sLog.outError("DynamicObject (spell %u eff %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",spellId,effIndex,GetPositionX(),GetPositionY());
+        sLog.outError("DynamicObject (spell %u eff %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",spellId, effIndex, GetPositionX(),GetPositionY());
         return false;
     }
 
@@ -144,7 +144,7 @@ void DynamicObject::Update(uint32 p_time)
     {
         if (m_updateTimer < p_time)
         {
-            Trinity::DynamicObjectUpdater notifier(*this,caster);
+            Trinity::DynamicObjectUpdater notifier(*this, caster);
             VisitNearbyObject(GetRadius(), notifier);
             m_updateTimer = 500; // is this official-like?
         }else m_updateTimer -= p_time;

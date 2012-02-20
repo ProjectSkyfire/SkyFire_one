@@ -129,7 +129,7 @@ struct npc_oox22feAI : public npc_escortAI
         if (pWho->GetEntry() == NPC_YETI || pWho->GetEntry() == NPC_GORILLA || pWho->GetEntry() == NPC_WOODPAW_REAVER ||
                 pWho->GetEntry() == NPC_WOODPAW_BRUTE || pWho->GetEntry() == NPC_WOODPAW_MYSTIC)
             return;
-        DoScriptText(RAND(SAY_OOX_AGGRO1,SAY_OOX_AGGRO2), me);
+        DoScriptText(RAND(SAY_OOX_AGGRO1, SAY_OOX_AGGRO2), me);
     }
 
     void JustSummoned(Creature* summoned)
@@ -149,7 +149,7 @@ bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* pCreature, const Quest* 
     {
         pCreature->setFaction(113);
         pCreature->SetHealth(pCreature->GetMaxHealth());
-        pCreature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
+        pCreature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
         DoScriptText(SAY_OOX_START, pCreature);
 

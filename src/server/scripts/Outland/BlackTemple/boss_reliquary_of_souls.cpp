@@ -90,7 +90,7 @@ EndScriptData */
 
 struct Position2d
 {
-    float x,y;
+    float x, y;
 };
 
 static Position2d Coords[]=
@@ -276,7 +276,7 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
                     DoScriptText(DESI_SAY_AFTER, Essence);
                 }
                 Essence->ForcedDespawn();
-                me->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
+                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
                 EssenceGUID = 0;
                 SoulCount = 0;
                 SoulDeathCount = 0;
@@ -336,7 +336,7 @@ struct boss_essence_of_sufferingAI : public ScriptedAI
         {
             damage = 0;
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            me->Yell(SUFF_SAY_RECAP,LANG_UNIVERSAL,0);
+            me->Yell(SUFF_SAY_RECAP, LANG_UNIVERSAL, 0);
             DoScriptText(SUFF_SAY_RECAP, me);
         }
     }
@@ -352,7 +352,7 @@ struct boss_essence_of_sufferingAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SUFF_SAY_SLAY1,SUFF_SAY_SLAY2,SUFF_SAY_SLAY3), me);
+        DoScriptText(RAND(SUFF_SAY_SLAY1, SUFF_SAY_SLAY2, SUFF_SAY_SLAY3), me);
     }
 
     void CastFixate()
@@ -376,7 +376,7 @@ struct boss_essence_of_sufferingAI : public ScriptedAI
         if (pTarget)
             pTarget->CastSpell(me, SPELL_FIXATE_TAUNT, true);
         DoResetThreat();
-        me->AddThreat(pTarget,1000000);
+        me->AddThreat(pTarget, 1000000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -469,7 +469,7 @@ struct boss_essence_of_desireAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(DESI_SAY_SLAY1,DESI_SAY_SLAY2,DESI_SAY_SLAY3), me);
+        DoScriptText(RAND(DESI_SAY_SLAY1, DESI_SAY_SLAY2, DESI_SAY_SLAY3), me);
     }
 
     void UpdateAI(const uint32 diff)
@@ -536,7 +536,7 @@ struct boss_essence_of_angerAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        DoScriptText(RAND(ANGER_SAY_FREED,ANGER_SAY_FREED2), me);
+        DoScriptText(RAND(ANGER_SAY_FREED, ANGER_SAY_FREED2), me);
 
         DoZoneInCombat();
         DoCast(me, AURA_OF_ANGER, true);
@@ -549,7 +549,7 @@ struct boss_essence_of_angerAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(ANGER_SAY_SLAY1,ANGER_SAY_SLAY2), me);
+        DoScriptText(RAND(ANGER_SAY_SLAY1, ANGER_SAY_SLAY2), me);
     }
 
     void UpdateAI(const uint32 diff)

@@ -128,7 +128,7 @@ bool ChatHandler::HandleNpcWhisperCommand(const char* args)
 
     uint64 receiver_guid= atol(receiver_str);
 
-    pCreature->Whisper(text,receiver_guid);
+    pCreature->Whisper(text, receiver_guid);
 
     return true;
 }
@@ -159,7 +159,7 @@ bool ChatHandler::HandleAnnounceCommand(const char* args)
     if (!*args)
         return false;
 
-    sWorld.SendWorldText(LANG_SYSTEMMESSAGE,args);
+    sWorld.SendWorldText(LANG_SYSTEMMESSAGE, args);
     return true;
 }
 
@@ -169,7 +169,7 @@ bool ChatHandler::HandleGMAnnounceCommand(const char* args)
     if (!*args)
         return false;
 
-    sWorld.SendGMText(LANG_GM_BROADCAST,args);
+    sWorld.SendGMText(LANG_GM_BROADCAST, args);
     return true;
 }
 
@@ -285,7 +285,7 @@ std::string ChatHandler::PGetParseString(int32 entry, ...)
         va_list ap;
         char str [1024];
         va_start(ap, entry);
-        vsnprintf(str,1024,format, ap);
+        vsnprintf(str, 1024, format, ap);
         va_end(ap);
         return (std::string)str;
 }
@@ -764,7 +764,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
     float zone_x = obj->GetPositionX();
     float zone_y = obj->GetPositionY();
 
-    Map2ZoneCoordinates(zone_x,zone_y,zone_id);
+    Map2ZoneCoordinates(zone_x, zone_y, zone_id);
 
     Map const *map = obj->GetMap();
     float ground_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), MAX_HEIGHT);
@@ -775,8 +775,8 @@ bool ChatHandler::HandleGPSCommand(const char* args)
     int gx=63-p.x_coord;
     int gy=63-p.y_coord;
 
-    uint32 have_map = Map::ExistMap(obj->GetMapId(),gx,gy) ? 1 : 0;
-    uint32 have_vmap = Map::ExistVMap(obj->GetMapId(),gx,gy) ? 1 : 0;
+    uint32 have_map = Map::ExistMap(obj->GetMapId(),gx, gy) ? 1 : 0;
+    uint32 have_vmap = Map::ExistVMap(obj->GetMapId(),gx, gy) ? 1 : 0;
 
     if (have_vmap)
     {
@@ -848,14 +848,14 @@ bool ChatHandler::HandleNamegoCommand(const char* args)
             // only allow if gm mode is on
             if (!target->isGameMaster())
             {
-                PSendSysMessage(LANG_CANNOT_GO_TO_BG_GM,target->GetName());
+                PSendSysMessage(LANG_CANNOT_GO_TO_BG_GM, target->GetName());
                 SetSentErrorMessage(true);
                 return false;
             }
             // if both players are in different bgs
             else if (target->GetBattleGroundId() && m_session->GetPlayer()->GetBattleGroundId() != target->GetBattleGroundId())
             {
-                PSendSysMessage(LANG_CANNOT_GO_TO_BG_FROM_BG,target->GetName());
+                PSendSysMessage(LANG_CANNOT_GO_TO_BG_FROM_BG, target->GetName());
                 SetSentErrorMessage(true);
                 return false;
             }
@@ -872,7 +872,7 @@ bool ChatHandler::HandleNamegoCommand(const char* args)
             if (cMap->Instanceable() && cMap->GetInstanceId() != pMap->GetInstanceId())
             {
                 // cannot summon from instance to instance
-                PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST,target->GetName());
+                PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST, target->GetName());
                 SetSentErrorMessage(true);
                 return false;
             }
@@ -883,7 +883,7 @@ bool ChatHandler::HandleNamegoCommand(const char* args)
                 (m_session->GetPlayer()->GetGroup()->GetLeaderGUID() != m_session->GetPlayer()->GetGUID()))
                 // the last check is a bit excessive, but let it be, just in case
             {
-                PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST,target->GetName());
+                PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST, target->GetName());
                 SetSentErrorMessage(true);
                 return false;
             }
@@ -904,9 +904,9 @@ bool ChatHandler::HandleNamegoCommand(const char* args)
             target->SaveRecallPosition();
 
         // before GM
-        float x,y,z;
-        m_session->GetPlayer()->GetClosePoint(x,y,z,target->GetObjectSize());
-        target->TeleportTo(m_session->GetPlayer()->GetMapId(),x,y,z,target->GetOrientation());
+        float x, y, z;
+        m_session->GetPlayer()->GetClosePoint(x, y, z, target->GetObjectSize());
+        target->TeleportTo(m_session->GetPlayer()->GetMapId(),x, y, z, target->GetOrientation());
     }
     else if (uint64 guid = objmgr.GetPlayerGUIDByName(name))
     {
@@ -956,14 +956,14 @@ bool ChatHandler::HandleGonameCommand(const char* args)
             // only allow if gm mode is on
             if (!_player->isGameMaster())
             {
-                PSendSysMessage(LANG_CANNOT_GO_TO_BG_GM,target->GetName());
+                PSendSysMessage(LANG_CANNOT_GO_TO_BG_GM, target->GetName());
                 SetSentErrorMessage(true);
                 return false;
             }
             // if both players are in different bgs
             else if (_player->GetBattleGroundId() && _player->GetBattleGroundId() != target->GetBattleGroundId())
             {
-                PSendSysMessage(LANG_CANNOT_GO_TO_BG_FROM_BG,target->GetName());
+                PSendSysMessage(LANG_CANNOT_GO_TO_BG_FROM_BG, target->GetName());
                 SetSentErrorMessage(true);
                 return false;
             }
@@ -984,7 +984,7 @@ bool ChatHandler::HandleGonameCommand(const char* args)
                 // we are in group, we can go only if we are in the player group
                 if (_player->GetGroup() != target->GetGroup())
                 {
-                    PSendSysMessage(LANG_CANNOT_GO_TO_INST_PARTY,target->GetName());
+                    PSendSysMessage(LANG_CANNOT_GO_TO_INST_PARTY, target->GetName());
                     SetSentErrorMessage(true);
                     return false;
                 }
@@ -994,7 +994,7 @@ bool ChatHandler::HandleGonameCommand(const char* args)
                 // we are not in group, let's verify our GM mode
                 if (!_player->isGameMaster())
                 {
-                    PSendSysMessage(LANG_CANNOT_GO_TO_INST_GM,target->GetName());
+                    PSendSysMessage(LANG_CANNOT_GO_TO_INST_GM, target->GetName());
                     SetSentErrorMessage(true);
                     return false;
                 }
@@ -1032,8 +1032,8 @@ bool ChatHandler::HandleGonameCommand(const char* args)
             _player->SaveRecallPosition();
 
         // to point to see at target with same orientation
-        float x,y,z;
-        target->GetContactPoint(_player,x,y,z);
+        float x, y, z;
+        target->GetContactPoint(_player, x, y, z);
 
         _player->TeleportTo(target->GetMapId(), x, y, z, _player->GetAngle(target), TELE_TO_GM_MODE);
 
@@ -1045,10 +1045,10 @@ bool ChatHandler::HandleGonameCommand(const char* args)
         PSendSysMessage(LANG_APPEARING_AT, name.c_str());
 
         // to point where player stay (if loaded)
-        float x,y,z,o;
+        float x, y, z, o;
         uint32 map;
         bool in_flight;
-        if (!Player::LoadPositionFromDB(map,x,y,z,o,in_flight,guid))
+        if (!Player::LoadPositionFromDB(map, x, y, z, o, in_flight, guid))
             return false;
 
         // stop flight if need
@@ -1061,7 +1061,7 @@ bool ChatHandler::HandleGonameCommand(const char* args)
         else
             _player->SaveRecallPosition();
 
-        _player->TeleportTo(map, x, y, z,_player->GetOrientation());
+        _player->TeleportTo(map, x, y, z, _player->GetOrientation());
         return true;
     }
 
@@ -1193,7 +1193,7 @@ bool ChatHandler::HandleModifyManaCommand(const char* args)
     if (needReportToTarget(target))
         ChatHandler(target).PSendSysMessage(LANG_YOURS_MANA_CHANGED, GetName(), mana, manam);
 
-    target->SetMaxPower(POWER_MANA,manam);
+    target->SetMaxPower(POWER_MANA, manam);
     target->SetPower(POWER_MANA, mana);
 
     return true;
@@ -1238,7 +1238,7 @@ bool ChatHandler::HandleModifyEnergyCommand(const char* args)
     if (needReportToTarget(target))
         ChatHandler(target).PSendSysMessage(LANG_YOURS_ENERGY_CHANGED, GetName(), energy/10, energym/10);
 
-    target->SetMaxPower(POWER_ENERGY,energym);
+    target->SetMaxPower(POWER_ENERGY, energym);
     target->SetPower(POWER_ENERGY, energy);
 
     sLog.outDetail(GetTrinityString(LANG_CURRENT_ENERGY),target->GetMaxPower(POWER_ENERGY));
@@ -1285,7 +1285,7 @@ bool ChatHandler::HandleModifyRageCommand(const char* args)
     if (needReportToTarget(target))
         ChatHandler(target).PSendSysMessage(LANG_YOURS_RAGE_CHANGED, GetName(), rage/10, ragem/10);
 
-    target->SetMaxPower(POWER_RAGE,ragem);
+    target->SetMaxPower(POWER_RAGE, ragem);
     target->SetPower(POWER_RAGE, rage);
 
     return true;
@@ -1315,7 +1315,7 @@ bool ChatHandler::HandleModifyFactionCommand(const char* args)
             uint32 flag      = target->GetUInt32Value(UNIT_FIELD_FLAGS);
             uint32 npcflag   = target->GetUInt32Value(UNIT_NPC_FLAGS);
             uint32 dyflag    = target->GetUInt32Value(UNIT_DYNAMIC_FLAGS);
-            PSendSysMessage(LANG_CURRENT_FACTION,target->GetGUIDLow(),factionid,flag,npcflag,dyflag);
+            PSendSysMessage(LANG_CURRENT_FACTION, target->GetGUIDLow(),factionid, flag, npcflag, dyflag);
         }
         return true;
     }
@@ -1359,12 +1359,12 @@ bool ChatHandler::HandleModifyFactionCommand(const char* args)
         return false;
     }
 
-    PSendSysMessage(LANG_YOU_CHANGE_FACTION, target->GetGUIDLow(),factionid,flag,npcflag,dyflag);
+    PSendSysMessage(LANG_YOU_CHANGE_FACTION, target->GetGUIDLow(),factionid, flag, npcflag, dyflag);
 
     target->setFaction(factionid);
-    target->SetUInt32Value(UNIT_FIELD_FLAGS,flag);
-    target->SetUInt32Value(UNIT_NPC_FLAGS,npcflag);
-    target->SetUInt32Value(UNIT_DYNAMIC_FLAGS,dyflag);
+    target->SetUInt32Value(UNIT_FIELD_FLAGS, flag);
+    target->SetUInt32Value(UNIT_NPC_FLAGS, npcflag);
+    target->SetUInt32Value(UNIT_DYNAMIC_FLAGS, dyflag);
 
     return true;
 }
@@ -1508,7 +1508,7 @@ bool ChatHandler::HandleModifyASpeedCommand(const char* args)
 
     if (target->isInFlight())
     {
-        PSendSysMessage(LANG_CHAR_IN_FLIGHT,target->GetName());
+        PSendSysMessage(LANG_CHAR_IN_FLIGHT, target->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -1550,7 +1550,7 @@ bool ChatHandler::HandleModifySpeedCommand(const char* args)
 
     if (target->isInFlight())
     {
-        PSendSysMessage(LANG_CHAR_IN_FLIGHT,target->GetName());
+        PSendSysMessage(LANG_CHAR_IN_FLIGHT, target->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -1589,7 +1589,7 @@ bool ChatHandler::HandleModifySwimCommand(const char* args)
 
     if (target->isInFlight())
     {
-        PSendSysMessage(LANG_CHAR_IN_FLIGHT,target->GetName());
+        PSendSysMessage(LANG_CHAR_IN_FLIGHT, target->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -1628,7 +1628,7 @@ bool ChatHandler::HandleModifyBWalkCommand(const char* args)
 
     if (target->isInFlight())
     {
-        PSendSysMessage(LANG_CHAR_IN_FLIGHT,target->GetName());
+        PSendSysMessage(LANG_CHAR_IN_FLIGHT, target->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -2137,7 +2137,7 @@ bool ChatHandler::HandleLookupAreaCommand(const char* args)
     std::string namepart = args;
     std::wstring wnamepart;
 
-    if (!Utf8toWStr (namepart,wnamepart))
+    if (!Utf8toWStr (namepart, wnamepart))
         return false;
 
     bool found = false;
@@ -2213,7 +2213,7 @@ bool ChatHandler::HandleLookupTeleCommand(const char * args)
     std::string namepart = str;
     std::wstring wnamepart;
 
-    if (!Utf8toWStr(namepart,wnamepart))
+    if (!Utf8toWStr(namepart, wnamepart))
         return false;
 
     // converting string that we try to find to lower case
@@ -2238,7 +2238,7 @@ bool ChatHandler::HandleLookupTeleCommand(const char * args)
     if (reply.str().empty())
         SendSysMessage(LANG_COMMAND_TELE_NOLOCATION);
     else
-        PSendSysMessage(LANG_COMMAND_TELE_LOCATION,reply.str().c_str());
+        PSendSysMessage(LANG_COMMAND_TELE_LOCATION, reply.str().c_str());
 
     return true;
 }
@@ -2352,14 +2352,14 @@ bool ChatHandler::HandleSendMailCommand(const char* args)
 
     uint32 mailId = objmgr.GenerateMailID();
     // from console show not existed sender
-    MailSender sender(MAIL_NORMAL,m_session ? m_session->GetPlayer()->GetGUIDLow() : 0, MAIL_STATIONERY_GM);
+    MailSender sender(MAIL_NORMAL, m_session ? m_session->GetPlayer()->GetGUIDLow() : 0, MAIL_STATIONERY_GM);
 
     uint32 itemTextId = !text.empty() ? objmgr.CreateItemText(text) : 0;
 
     Player *receiver = objmgr.GetPlayer(receiver_guid);
 
     MailDraft(subject, itemTextId)
-        .SendMailTo(MailReceiver(receiver,GUID_LOPART(receiver_guid)),sender);
+        .SendMailTo(MailReceiver(receiver, GUID_LOPART(receiver_guid)),sender);
 
     PSendSysMessage(LANG_MAIL_SENT, name.c_str());
     return true;
@@ -2430,13 +2430,13 @@ bool ChatHandler::HandleNameTeleCommand(const char * args)
         else
             target->SaveRecallPosition();
 
-        target->TeleportTo(tele->mapId,tele->position_x,tele->position_y,tele->position_z,tele->orientation);
+        target->TeleportTo(tele->mapId, tele->position_x, tele->position_y, tele->position_z, tele->orientation);
     }
     else if (uint64 guid = objmgr.GetPlayerGUIDByName(name.c_str()))
     {
         PSendSysMessage(LANG_TELEPORTING_TO, name.c_str(), GetTrinityString(LANG_OFFLINE), tele->name.c_str());
-        Player::SavePositionInDB(tele->mapId,tele->position_x,tele->position_y,tele->position_z,tele->orientation,
-            MapManager::Instance().GetZoneId(tele->mapId,tele->position_x,tele->position_y,tele->position_z),guid);
+        Player::SavePositionInDB(tele->mapId, tele->position_x, tele->position_y, tele->position_z, tele->orientation,
+            MapManager::Instance().GetZoneId(tele->mapId, tele->position_x, tele->position_y, tele->position_z),guid);
     }
     else
         PSendSysMessage(LANG_NO_PLAYER, name.c_str());
@@ -2477,7 +2477,7 @@ bool ChatHandler::HandleGroupTeleCommand(const char * args)
     Group *grp = player->GetGroup();
     if (!grp)
     {
-        PSendSysMessage(LANG_NOT_IN_GROUP,player->GetName());
+        PSendSysMessage(LANG_NOT_IN_GROUP, player->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -2542,7 +2542,7 @@ bool ChatHandler::HandleGroupgoCommand(const char* args)
 
     if (!grp)
     {
-        PSendSysMessage(LANG_NOT_IN_GROUP,player->GetName());
+        PSendSysMessage(LANG_NOT_IN_GROUP, player->GetName());
         SetSentErrorMessage(true);
         return false;
     }
@@ -2582,7 +2582,7 @@ bool ChatHandler::HandleGroupgoCommand(const char* args)
             if (plMap->Instanceable() && plMap->GetInstanceId() != gmMap->GetInstanceId())
             {
                 // cannot summon from instance to instance
-                PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST,pl->GetName());
+                PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST, pl->GetName());
                 SetSentErrorMessage(true);
                 return false;
             }
@@ -2603,9 +2603,9 @@ bool ChatHandler::HandleGroupgoCommand(const char* args)
             pl->SaveRecallPosition();
 
         // before GM
-        float x,y,z;
-        m_session->GetPlayer()->GetClosePoint(x,y,z,pl->GetObjectSize());
-        pl->TeleportTo(m_session->GetPlayer()->GetMapId(),x,y,z,pl->GetOrientation());
+        float x, y, z;
+        m_session->GetPlayer()->GetClosePoint(x, y, z, pl->GetObjectSize());
+        pl->TeleportTo(m_session->GetPlayer()->GetMapId(),x, y, z, pl->GetOrientation());
     }
 
     return true;
@@ -2633,9 +2633,9 @@ bool ChatHandler::HandleGoXYCommand(const char* args)
         mapid = (uint32)atoi(pmapid);
     else mapid = _player->GetMapId();
 
-    if (!MapManager::IsValidMapCoord(mapid,x,y))
+    if (!MapManager::IsValidMapCoord(mapid, x, y))
     {
-        PSendSysMessage(LANG_INVALID_TARGET_COORD,x,y,mapid);
+        PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
         return false;
     }
@@ -2683,9 +2683,9 @@ bool ChatHandler::HandleGoXYZCommand(const char* args)
     else
         mapid = _player->GetMapId();
 
-    if (!MapManager::IsValidMapCoord(mapid,x,y,z))
+    if (!MapManager::IsValidMapCoord(mapid, x, y, z))
     {
-        PSendSysMessage(LANG_INVALID_TARGET_COORD,x,y,mapid);
+        PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
         return false;
     }
@@ -2730,7 +2730,7 @@ bool ChatHandler::HandleGoZoneXYCommand(const char* args)
 
     if (x<0 || x>100 || y<0 || y>100 || !areaEntry)
     {
-        PSendSysMessage(LANG_INVALID_ZONE_COORD,x,y,areaid);
+        PSendSysMessage(LANG_INVALID_ZONE_COORD, x, y, areaid);
         SetSentErrorMessage(true);
         return false;
     }
@@ -2742,16 +2742,16 @@ bool ChatHandler::HandleGoZoneXYCommand(const char* args)
 
     if (map->Instanceable())
     {
-        PSendSysMessage(LANG_INVALID_ZONE_MAP,areaEntry->ID,areaEntry->area_name[m_session->GetSessionDbcLocale()],map->GetId(),map->GetMapName());
+        PSendSysMessage(LANG_INVALID_ZONE_MAP, areaEntry->ID, areaEntry->area_name[m_session->GetSessionDbcLocale()],map->GetId(),map->GetMapName());
         SetSentErrorMessage(true);
         return false;
     }
 
-    Zone2MapCoordinates(x,y,zoneEntry->ID);
+    Zone2MapCoordinates(x, y, zoneEntry->ID);
 
-    if (!MapManager::IsValidMapCoord(zoneEntry->mapid,x,y))
+    if (!MapManager::IsValidMapCoord(zoneEntry->mapid, x, y))
     {
-        PSendSysMessage(LANG_INVALID_TARGET_COORD,x,y,zoneEntry->mapid);
+        PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, zoneEntry->mapid);
         SetSentErrorMessage(true);
         return false;
     }
@@ -2796,9 +2796,9 @@ bool ChatHandler::HandleGoGridCommand(const char* args)
     float x = (grid_x-CENTER_GRID_ID+0.5f)*SIZE_OF_GRIDS;
     float y = (grid_y-CENTER_GRID_ID+0.5f)*SIZE_OF_GRIDS;
 
-    if (!MapManager::IsValidMapCoord(mapid,x,y))
+    if (!MapManager::IsValidMapCoord(mapid, x, y))
     {
-        PSendSysMessage(LANG_INVALID_TARGET_COORD,x,y,mapid);
+        PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
         return false;
     }

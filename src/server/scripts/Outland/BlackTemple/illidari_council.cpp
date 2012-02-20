@@ -66,19 +66,19 @@ struct CouncilYells
 
 static CouncilYells CouncilAggro[]=
 {
-    {-1564069, 5000},                                       // Gathios
-    {-1564070, 5500},                                       // Veras
-    {-1564071, 5000},                                       // Malande
-    {-1564072, 0},                                          // Zerevor
+    {-1564069, 5000},                                      // Gathios
+    {-1564070, 5500},                                      // Veras
+    {-1564071, 5000},                                      // Malande
+    {-1564072, 0},                                         // Zerevor
 };
 
 // Need to get proper timers for this later
 static CouncilYells CouncilEnrage[]=
 {
-    {-1564073, 2000},                                       // Gathios
-    {-1564074, 6000},                                       // Veras
-    {-1564075, 5000},                                       // Malande
-    {-1564076, 0},                                          // Zerevor
+    {-1564073, 2000},                                      // Gathios
+    {-1564074, 6000},                                      // Veras
+    {-1564075, 5000},                                      // Malande
+    {-1564076, 0},                                         // Zerevor
 };
 
 // High Nethermancer Zerevor's spells
@@ -397,7 +397,7 @@ struct boss_illidari_councilAI : public ScriptedAI
     {
         if (me->IsNonMeleeSpellCasted(false)) return false;
 
-        DoCast(victim,spellId,triggered);
+        DoCast(victim, spellId, triggered);
         return true;
     }
 
@@ -504,7 +504,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
     void CastAuraOnCouncil()
     {
         uint32 spellid = 0;
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0: spellid = SPELL_DEVOTION_AURA;   break;
             case 1: spellid = SPELL_CHROMATIC_AURA;  break;
@@ -542,7 +542,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
         {
            if (!me->IsNonMeleeSpellCasted(false))
            {
-                if (me->HasAura(SPELL_SEAL_OF_COMMAND,0))
+                if (me->HasAura(SPELL_SEAL_OF_COMMAND, 0))
                 {
                     if (TryDoCast(me->getVictim(),SPELL_JUDGEMENT_OF_COMMAND))
                     {
@@ -550,7 +550,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
                         JudgeTimer = 45000;
                     }
                 }
-                if (me->HasAura(SPELL_SEAL_OF_BLOOD,0))
+                if (me->HasAura(SPELL_SEAL_OF_BLOOD, 0))
                 {
                     if (TryDoCast(me->getVictim(),SPELL_JUDGEMENT_OF_BLOOD))
                     {
@@ -819,14 +819,14 @@ struct boss_veras_darkshadowAI : public boss_illidari_councilAI
         if (!UpdateVictim())
             return;
 
-        if (!me->HasAura(SPELL_VANISH,0))
+        if (!me->HasAura(SPELL_VANISH, 0))
         {
             if (VanishTimer <= diff)
             {
                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
-                    DoCast(me,SPELL_DEADLY_POISON_TRIGGER,true);
-                    DoCast(me,SPELL_VANISH,false);
+                    DoCast(me, SPELL_DEADLY_POISON_TRIGGER, true);
+                    DoCast(me, SPELL_VANISH, false);
 
                     VanishTimer = 25000;
                     DoResetThreat();
@@ -844,10 +844,10 @@ struct boss_veras_darkshadowAI : public boss_illidari_councilAI
                 {
                     if (Unit *pTarget = Unit::GetUnit((*me),EnvenomTargetGUID))
                     {
-                        if (pTarget->HasAura(SPELL_DEADLY_POISON,0))
+                        if (pTarget->HasAura(SPELL_DEADLY_POISON, 0))
                         {
                             if (rand()%3 == 0)
-                                DoCast(pTarget,SPELL_ENVENOM);
+                                DoCast(pTarget, SPELL_ENVENOM);
                         }
                     }
                 }

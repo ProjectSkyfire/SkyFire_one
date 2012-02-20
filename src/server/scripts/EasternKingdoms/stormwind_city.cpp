@@ -646,7 +646,7 @@ struct npc_tyrion_spybotAI : public npc_escortAI
                 uiPhase = 5;
                 break;
             case 9:
-                if (Creature* pLescovar = me->FindNearestCreature(NPC_LORD_GREGOR_LESCOVAR,10.0f))
+                if (Creature* pLescovar = me->FindNearestCreature(NPC_LORD_GREGOR_LESCOVAR, 10.0f))
                     pLescovar->SetFacingToObject(me);
                 SetEscortPaused(true);
                 DoScriptText(SAY_SPYBOT_3, me);
@@ -701,7 +701,7 @@ struct npc_tyrion_spybotAI : public npc_escortAI
                     uiPhase = 2;
                     break;
                 case 2:
-                    if (Creature* pTyrion = me->FindNearestCreature(NPC_TYRION,10.0f))
+                    if (Creature* pTyrion = me->FindNearestCreature(NPC_TYRION, 10.0f))
                         DoScriptText(SAY_TYRION_1, pTyrion);
                     uiTimer = 3000;
                     uiPhase = 3;
@@ -714,7 +714,7 @@ struct npc_tyrion_spybotAI : public npc_escortAI
                     uiPhase = 4;
                     break;
                 case 4:
-                    if (Creature* pTyrion = me->FindNearestCreature(NPC_TYRION,10.0f))
+                    if (Creature* pTyrion = me->FindNearestCreature(NPC_TYRION, 10.0f))
                         pTyrion->GetMotionMaster()->MoveTargetedHome();
                     SetEscortPaused(false);
                     uiPhase = 0;
@@ -737,7 +737,7 @@ struct npc_tyrion_spybotAI : public npc_escortAI
                     uiPhase = 0;
                     break;
                 case 8:
-                    if (Creature* pLescovar = me->FindNearestCreature(NPC_LORD_GREGOR_LESCOVAR,10.0f))
+                    if (Creature* pLescovar = me->FindNearestCreature(NPC_LORD_GREGOR_LESCOVAR, 10.0f))
                     {
                         DoScriptText(SAY_LESCOVAR_1, pLescovar);
                         me->SetFacingToObject(pLescovar);
@@ -758,11 +758,11 @@ struct npc_tyrion_spybotAI : public npc_escortAI
                     break;
                 case 11:
                     SetEscortPaused(false);
-                    if (Creature* pLescovar = me->FindNearestCreature(NPC_LORD_GREGOR_LESCOVAR,10.0f))
+                    if (Creature* pLescovar = me->FindNearestCreature(NPC_LORD_GREGOR_LESCOVAR, 10.0f))
                     {
                         if (Player* pPlayer = GetPlayerForEscort())
                         {
-                            CAST_AI(npc_lord_gregor_lescovarAI,pLescovar->AI())->Start(false, false, pPlayer->GetGUID());
+                            CAST_AI(npc_lord_gregor_lescovarAI, pLescovar->AI())->Start(false, false, pPlayer->GetGUID());
                             CAST_AI(npc_lord_gregor_lescovarAI, pLescovar->AI())->SetMaxPlayerDistance(200.0f);
                         }
                         uiTimer = 0;
@@ -799,11 +799,11 @@ bool QuestAccept_npc_tyrion(Player* pPlayer, Creature* pCreature, Quest const *p
         if (Creature* pSpybot = pCreature->FindNearestCreature(NPC_TYRION_SPYBOT, 5.0f, true))
         {
             pCreature->SetFacingToObject(pSpybot);
-            CAST_AI(npc_tyrion_spybotAI,pSpybot->AI())->Start(false, false, pPlayer->GetGUID());
-            CAST_AI(npc_tyrion_spybotAI,pSpybot->AI())->SetEscortPaused(true);
-            CAST_AI(npc_tyrion_spybotAI,pSpybot->AI())->uiPhase = 1;
-            CAST_AI(npc_tyrion_spybotAI,pSpybot->AI())->uiTimer = 200;
-            CAST_AI(npc_tyrion_spybotAI,pSpybot->AI())->SetMaxPlayerDistance(200.0f);
+            CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->Start(false, false, pPlayer->GetGUID());
+            CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->SetEscortPaused(true);
+            CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->uiPhase = 1;
+            CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->uiTimer = 200;
+            CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->SetMaxPlayerDistance(200.0f);
         }
         return true;
     }

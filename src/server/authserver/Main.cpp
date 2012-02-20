@@ -75,7 +75,7 @@ void usage(const char *prog)
         "    -s install               install service\n\r"
         "    -s uninstall             uninstall service\n\r"
         #endif
-        ,prog);
+        , prog);
 }
 
 // Launch the realm server
@@ -230,11 +230,11 @@ extern int main(int argc, char **argv)
 
                 if (!curAff )
                 {
-                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for realmd. Accessible processors bitmask (hex): %x",Aff,appAff);
+                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for realmd. Accessible processors bitmask (hex): %x",Aff, appAff);
                 }
                 else
                 {
-                    if (SetProcessAffinityMask(hProcess,curAff))
+                    if (SetProcessAffinityMask(hProcess, curAff))
                         sLog.outString("Using processors (bitmask, hex): %x", curAff);
                     else
                         sLog.outError("Can't set used processors (hex): %x", curAff);
@@ -247,7 +247,7 @@ extern int main(int argc, char **argv)
 
         if (Prio)
         {
-            if (SetPriorityClass(hProcess,HIGH_PRIORITY_CLASS))
+            if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
                 sLog.outString("realmd process priority class set to HIGH");
             else
                 sLog.outError("ERROR: Can't set realmd process priority class.");

@@ -161,7 +161,7 @@ struct boss_sacrolashAI : public ScriptedAI
     void KilledUnit(Unit * /*victim*/)
     {
         if (rand()%4 == 0)
-            DoScriptText(RAND(YELL_SAC_KILL_1,YELL_SAC_KILL_2), me);
+            DoScriptText(RAND(YELL_SAC_KILL_1, YELL_SAC_KILL_2), me);
     }
 
     void JustDied(Unit* /*Killer*/)
@@ -178,7 +178,7 @@ struct boss_sacrolashAI : public ScriptedAI
             me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
     }
 
-    void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+    void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
         switch(spell->Id)
         {
@@ -298,10 +298,10 @@ struct boss_sacrolashAI : public ScriptedAI
             for (uint8 i = 0; i<3; ++i)
             {
                 pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                temp = DoSpawnCreature(MOB_SHADOW_IMAGE,0,0,0,0,TEMPSUMMON_CORPSE_DESPAWN,10000);
+                temp = DoSpawnCreature(MOB_SHADOW_IMAGE, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 10000);
                 if (temp && pTarget)
                 {
-                    temp->AddThreat(pTarget,1000000);//don't change target(healers)
+                    temp->AddThreat(pTarget, 1000000);//don't change target(healers)
                     temp->AI()->AttackStart(pTarget);
                 }
             }
@@ -452,7 +452,7 @@ struct boss_alythessAI : public Scripted_NoMovementAI
     {
         if (rand()%4 == 0)
         {
-            DoScriptText(RAND(YELL_ALY_KILL_1,YELL_ALY_KILL_2), me);
+            DoScriptText(RAND(YELL_ALY_KILL_1, YELL_ALY_KILL_2), me);
         }
     }
 
@@ -469,7 +469,7 @@ struct boss_alythessAI : public Scripted_NoMovementAI
             me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
     }
 
-    void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+    void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
         switch(spell->Id)
         {
@@ -686,7 +686,7 @@ struct mob_shadow_imageAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/){}
 
-    void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+    void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
         switch(spell->Id)
         {
@@ -698,7 +698,7 @@ struct mob_shadow_imageAI : public ScriptedAI
                 {
                     pTarget->RemoveAurasDueToSpell(SPELL_FLAME_TOUCHED);
                     pTarget->CastSpell(pTarget, SPELL_DARK_FLAME, true);
-                } else pTarget->CastSpell(pTarget,SPELL_DARK_TOUCHED,true);
+                } else pTarget->CastSpell(pTarget, SPELL_DARK_TOUCHED, true);
             }
             break;
         }

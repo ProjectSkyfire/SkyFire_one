@@ -25,7 +25,7 @@
 #include "Database/DatabaseEnv.h"
 #include "ItemEnchantmentMgr.h"
 
-void AddItemsSetItem(Player*player,Item *item)
+void AddItemsSetItem(Player*player, Item *item)
 {
     ItemPrototype const *proto = item->GetProto();
     uint32 setid = proto->ItemSet;
@@ -34,7 +34,7 @@ void AddItemsSetItem(Player*player,Item *item)
 
     if (!set)
     {
-        sLog.outErrorDb("Item set %u for item (id %u) not found, mods not applied.",setid,proto->ItemId);
+        sLog.outErrorDb("Item set %u for item (id %u) not found, mods not applied.",setid, proto->ItemId);
         return;
     }
 
@@ -55,7 +55,7 @@ void AddItemsSetItem(Player*player,Item *item)
     if (!eff)
     {
         eff = new ItemSetEffect;
-        memset(eff,0,sizeof(ItemSetEffect));
+        memset(eff, 0, sizeof(ItemSetEffect));
         eff->setid = setid;
 
         size_t x = 0;
@@ -100,7 +100,7 @@ void AddItemsSetItem(Player*player,Item *item)
                 }
 
                 // spell casted only if fit form requirement, in other case will casted at form change
-                player->ApplyEquipSpell(spellInfo,NULL,true);
+                player->ApplyEquipSpell(spellInfo, NULL, true);
                 eff->spells[y] = spellInfo;
                 break;
             }
@@ -108,7 +108,7 @@ void AddItemsSetItem(Player*player,Item *item)
     }
 }
 
-void RemoveItemsSetItem(Player*player,ItemPrototype const *proto)
+void RemoveItemsSetItem(Player*player, ItemPrototype const *proto)
 {
     uint32 setid = proto->ItemSet;
 
@@ -116,7 +116,7 @@ void RemoveItemsSetItem(Player*player,ItemPrototype const *proto)
 
     if (!set)
     {
-        sLog.outErrorDb("Item set #%u for item #%u not found, mods not removed.",setid,proto->ItemId);
+        sLog.outErrorDb("Item set #%u for item #%u not found, mods not removed.",setid, proto->ItemId);
         return;
     }
 
@@ -151,7 +151,7 @@ void RemoveItemsSetItem(Player*player,ItemPrototype const *proto)
             if (eff->spells[z] && eff->spells[z]->Id == set->spells[x])
             {
                 // spell can be not active if not fit form requirement
-                player->ApplyEquipSpell(eff->spells[z],NULL,false);
+                player->ApplyEquipSpell(eff->spells[z],NULL, false);
                 eff->spells[z]=NULL;
                 break;
             }
@@ -262,7 +262,7 @@ bool Item::Create(uint32 guidlow, uint32 itemid, Player const* owner)
     SetUInt32Value(ITEM_FIELD_DURABILITY, itemProto->MaxDurability);
 
     for (int i = 0; i < 5; ++i)
-        SetSpellCharges(i,itemProto->Spells[i].SpellCharges);
+        SetSpellCharges(i, itemProto->Spells[i].SpellCharges);
 
     SetUInt32Value(ITEM_FIELD_FLAGS, itemProto->Flags);
     SetUInt32Value(ITEM_FIELD_DURATION, abs(itemProto->Duration));
@@ -341,7 +341,7 @@ bool Item::LoadFromDB(uint32 guid, uint64 owner_guid, QueryResult_AutoPtr result
 
     if (!result)
     {
-        sLog.outError("Item (GUID: %u owner: %u) not found in table item_instance, can't load. ",guid,GUID_LOPART(owner_guid));
+        sLog.outError("Item (GUID: %u owner: %u) not found in table item_instance, can't load. ",guid, GUID_LOPART(owner_guid));
         return false;
     }
 
@@ -356,10 +356,10 @@ bool Item::LoadFromDB(uint32 guid, uint64 owner_guid, QueryResult_AutoPtr result
     bool need_save = false;                                 // need explicit save data at load fixes
 
     // overwrite possible wrong/corrupted guid
-    uint64 new_item_guid = MAKE_NEW_GUID(guid,0, HIGHGUID_ITEM);
+    uint64 new_item_guid = MAKE_NEW_GUID(guid, 0, HIGHGUID_ITEM);
     if (GetUInt64Value(OBJECT_FIELD_GUID) != new_item_guid)
     {
-        SetUInt64Value(OBJECT_FIELD_GUID, MAKE_NEW_GUID(guid,0, HIGHGUID_ITEM));
+        SetUInt64Value(OBJECT_FIELD_GUID, MAKE_NEW_GUID(guid, 0, HIGHGUID_ITEM));
         need_save = true;
     }
 
@@ -377,14 +377,14 @@ bool Item::LoadFromDB(uint32 guid, uint64 owner_guid, QueryResult_AutoPtr result
     // Remove bind flag for items vs NO_BIND set
     if (IsSoulBound() && proto->Bonding == NO_BIND)
     {
-        ApplyModFlag(ITEM_FIELD_FLAGS,ITEM_FLAGS_BINDED, false);
+        ApplyModFlag(ITEM_FIELD_FLAGS, ITEM_FLAGS_BINDED, false);
         need_save = true;
     }
 
     // update duration if need, and remove if not need
     if ((proto->Duration == 0) != (GetUInt32Value(ITEM_FIELD_DURATION) == 0))
     {
-        SetUInt32Value(ITEM_FIELD_DURATION,abs(proto->Duration));
+        SetUInt32Value(ITEM_FIELD_DURATION, abs(proto->Duration));
         need_save = true;
     }
 
@@ -442,7 +442,7 @@ uint32 Item::GetSkill()
 
     const static uint32 item_armor_skills[MAX_ITEM_SUBCLASS_ARMOR] =
     {
-        0,SKILL_CLOTH,SKILL_LEATHER,SKILL_MAIL,SKILL_PLATE_MAIL,0,SKILL_SHIELD,0,0,0
+        0, SKILL_CLOTH, SKILL_LEATHER, SKILL_MAIL, SKILL_PLATE_MAIL, 0, SKILL_SHIELD, 0, 0, 0
     };
 
     ItemPrototype const* proto = GetProto();
@@ -520,7 +520,7 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
     // item can have not null only one from field values
     if ((itemProto->RandomProperty) && (itemProto->RandomSuffix))
     {
-        sLog.outErrorDb("Item template %u has RandomProperty == %u and RandomSuffix == %u, but must have one from field =0",itemProto->ItemId,itemProto->RandomProperty,itemProto->RandomSuffix);
+        sLog.outErrorDb("Item template %u has RandomProperty == %u and RandomSuffix == %u, but must have one from field =0",itemProto->ItemId, itemProto->RandomProperty, itemProto->RandomSuffix);
         return 0;
     }
 
@@ -564,11 +564,11 @@ void Item::SetItemRandomProperties(int32 randomPropId)
         {
             if (GetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID) != int32(item_rand->ID))
             {
-                SetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID,item_rand->ID);
+                SetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID, item_rand->ID);
                 SetState(ITEM_CHANGED, GetOwner());
             }
             for (uint32 i = PROP_ENCHANTMENT_SLOT_2; i < PROP_ENCHANTMENT_SLOT_2 + 3; ++i)
-                SetEnchantment(EnchantmentSlot(i),item_rand->enchant_id[i - PROP_ENCHANTMENT_SLOT_2],0,0);
+                SetEnchantment(EnchantmentSlot(i),item_rand->enchant_id[i - PROP_ENCHANTMENT_SLOT_2],0, 0);
         }
     }
     else
@@ -585,7 +585,7 @@ void Item::SetItemRandomProperties(int32 randomPropId)
             }
 
             for (uint32 i = PROP_ENCHANTMENT_SLOT_0; i < PROP_ENCHANTMENT_SLOT_0 + 3; ++i)
-                SetEnchantment(EnchantmentSlot(i),item_rand->enchant_id[i - PROP_ENCHANTMENT_SLOT_0],0,0);
+                SetEnchantment(EnchantmentSlot(i),item_rand->enchant_id[i - PROP_ENCHANTMENT_SLOT_0],0, 0);
         }
     }
 }
@@ -595,7 +595,7 @@ bool Item::UpdateItemSuffixFactor()
     uint32 suffixFactor = GenerateEnchSuffixFactor(GetEntry());
     if (GetItemSuffixFactor() == suffixFactor)
         return false;
-    SetUInt32Value(ITEM_FIELD_PROPERTY_SEED,suffixFactor);
+    SetUInt32Value(ITEM_FIELD_PROPERTY_SEED, suffixFactor);
     return true;
 }
 
@@ -759,9 +759,9 @@ void Item::SetEnchantment(EnchantmentSlot slot, uint32 id, uint32 duration, uint
     if ((GetEnchantmentId(slot) == id) && (GetEnchantmentDuration(slot) == duration) && (GetEnchantmentCharges(slot) == charges))
         return;
 
-    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_ID_OFFSET,id);
-    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_DURATION_OFFSET,duration);
-    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_CHARGES_OFFSET,charges);
+    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_ID_OFFSET, id);
+    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_DURATION_OFFSET, duration);
+    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_CHARGES_OFFSET, charges);
     SetState(ITEM_CHANGED, GetOwner());
 }
 
@@ -770,7 +770,7 @@ void Item::SetEnchantmentDuration(EnchantmentSlot slot, uint32 duration, Player*
     if (GetEnchantmentDuration(slot) == duration)
         return;
 
-    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_DURATION_OFFSET,duration);
+    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_DURATION_OFFSET, duration);
     SetState(ITEM_CHANGED, owner);
     // Cannot use GetOwner() here, has to be passed as an argument to avoid freeze due to hashtable locking
 }
@@ -780,7 +780,7 @@ void Item::SetEnchantmentCharges(EnchantmentSlot slot, uint32 charges)
     if (GetEnchantmentCharges(slot) == charges)
         return;
 
-    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_CHARGES_OFFSET,charges);
+    SetUInt32Value(ITEM_FIELD_ENCHANTMENT + slot*MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_CHARGES_OFFSET, charges);
     SetState(ITEM_CHANGED, GetOwner());
 }
 

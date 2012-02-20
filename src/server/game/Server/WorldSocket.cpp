@@ -50,7 +50,7 @@
 #if defined(__GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 struct ServerPktHeader
@@ -261,7 +261,7 @@ int WorldSocket::handle_input (ACE_HANDLE)
             if ((errno == EWOULDBLOCK) ||
                 (errno == EAGAIN))
             {
-                return Update();                           // interesting line ,isn't it ?
+                return Update();                           // interesting line , isn't it ?
             }
 
             DEBUG_LOG("WorldSocket::handle_input: Peer error closing connection errno = %s", ACE_OS::strerror (errno));
@@ -483,7 +483,7 @@ int WorldSocket::handle_input_missing_data (void)
 
         // Its possible on some error situations that this happens
         // for example on closing when epoll receives more chunked data and stuff
-        // hope this is not hack ,as proper m_RecvWPct is asserted around
+        // hope this is not hack , as proper m_RecvWPct is asserted around
         if (!m_RecvWPct)
         {
             sLog.outError ("Forcing close on input m_RecvWPct = NULL");
@@ -605,7 +605,7 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
 
                 return HandleAuthSession (*new_pct);
             case CMSG_KEEP_ALIVE:
-                DEBUG_LOG ("CMSG_KEEP_ALIVE ,size: %d", new_pct->size());
+                DEBUG_LOG ("CMSG_KEEP_ALIVE , size: %d", new_pct->size());
 
                 return 0;
             default:
@@ -618,7 +618,7 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
                     // Catches people idling on the login screen and any lingering ingame connections.
                     m_Session->ResetTimeOutTime();
 
-                    // OK ,give the packet to WorldSession
+                    // OK , give the packet to WorldSession
                     aptr.release();
                     // WARNINIG here we call it with locks held.
                     // Its possible to cause deadlock if QueuePacket calls back
@@ -740,7 +740,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
     const char* sStr = s.AsHexStr ();                       //Must be freed by OPENSSL_free()
     const char* vStr = v.AsHexStr ();                       //Must be freed by OPENSSL_free()
 
-    DEBUG_LOG ("WorldSocket::HandleAuthSession: (s,v) check s: %s v: %s",
+    DEBUG_LOG ("WorldSocket::HandleAuthSession: (s, v) check s: %s v: %s",
                 sStr,
                 vStr);
 

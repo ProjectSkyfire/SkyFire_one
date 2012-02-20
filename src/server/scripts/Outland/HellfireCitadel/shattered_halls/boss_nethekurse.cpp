@@ -174,7 +174,7 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
             {
                 if (pOrc->isAlive())
                 {
-                    DoCast(pOrc,SPELL_SHADOW_SEAR);
+                    DoCast(pOrc, SPELL_SHADOW_SEAR);
                     pOrc->DealDamage(pOrc, pOrc->GetHealth(), 0, DIRECT_DAMAGE);
                 }
             }
@@ -212,7 +212,7 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
                 IsIntroEvent = true;
 
                 if (pInstance)
-                    pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
+                    pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
             }
 
             if (!me->canFly() && me->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
@@ -297,7 +297,7 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
         if (!pInstance)
             return;
 
-        pInstance->SetData(TYPE_NETHEKURSE,DONE);
+        pInstance->SetData(TYPE_NETHEKURSE, DONE);
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId)
@@ -352,15 +352,15 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
         {
             if (ShadowFissure_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(pTarget,SPELL_SHADOW_FISSURE);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_SHADOW_FISSURE);
                 ShadowFissure_Timer = 7500+rand()%7500;
             } else ShadowFissure_Timer -= diff;
 
             if (DeathCoil_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(pTarget,SPELL_DEATH_COIL);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_DEATH_COIL);
                 DeathCoil_Timer = 15000+rand()%5000;
             } else DeathCoil_Timer -= diff;
 
@@ -399,14 +399,14 @@ struct mob_fel_orc_convertAI : public ScriptedAI
         {
             if (pInstance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = Unit::GetCreature(*me,pInstance->GetData64(DATA_NETHEKURSE));
+                Creature *pKurse = Unit::GetCreature(*me, pInstance->GetData64(DATA_NETHEKURSE));
                 if (pKurse)
                     ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonEnterCombat();
             }
 
             if (pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
                 return;
-            else pInstance->SetData(TYPE_NETHEKURSE,IN_PROGRESS);
+            else pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
         }
     }
 
@@ -416,7 +416,7 @@ struct mob_fel_orc_convertAI : public ScriptedAI
         {
             if (pInstance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = Unit::GetCreature(*me,pInstance->GetData64(DATA_NETHEKURSE));
+                Creature *pKurse = Unit::GetCreature(*me, pInstance->GetData64(DATA_NETHEKURSE));
                 if (pKurse)
                     ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonDeath();
             }
@@ -462,7 +462,7 @@ struct mob_lesser_shadow_fissureAI : public ScriptedAI
     {
         if (!Start)
         {
-            me->CastSpell(me,SPELL_CONSUMPTION,false);
+            me->CastSpell(me, SPELL_CONSUMPTION, false);
             Start = true;
         }
 

@@ -217,7 +217,7 @@ struct mobs_nether_drakeAI : public ScriptedAI
         {
             Unit *pTarget = me->getVictim();
             if (pTarget && pTarget->getPowerType() == POWER_MANA)
-                DoCast(pTarget,SPELL_MANA_BURN);
+                DoCast(pTarget, SPELL_MANA_BURN);
             ManaBurn_Timer = 8000+rand()%8000;
         } else ManaBurn_Timer -= diff;
 
@@ -257,7 +257,7 @@ struct npc_daranelleAI : public ScriptedAI
     {
         if (who->GetTypeId() == TYPEID_PLAYER)
         {
-            if (who->HasAura(36904,0))
+            if (who->HasAura(36904, 0))
             {
                 DoScriptText(SAY_DARANELLE, me, who);
                 //TODO: Move the below to updateAI and run if this statement == true

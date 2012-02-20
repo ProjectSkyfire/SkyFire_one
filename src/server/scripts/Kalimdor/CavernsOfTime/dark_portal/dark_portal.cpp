@@ -82,11 +82,11 @@ struct npc_medivh_bmAI : public ScriptedAI
             return;
 
         if (pInstance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
-            me->CastSpell(me,SPELL_CHANNEL,true);
-        else if (me->HasAura(SPELL_CHANNEL,0))
-            me->RemoveAura(SPELL_CHANNEL,0);
+            me->CastSpell(me, SPELL_CHANNEL, true);
+        else if (me->HasAura(SPELL_CHANNEL, 0))
+            me->RemoveAura(SPELL_CHANNEL, 0);
 
-        me->CastSpell(me,SPELL_PORTAL_RUNE,true);
+        me->CastSpell(me, SPELL_PORTAL_RUNE, true);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -100,8 +100,8 @@ struct npc_medivh_bmAI : public ScriptedAI
                 return;
 
             DoScriptText(SAY_INTRO, me);
-            pInstance->SetData(TYPE_MEDIVH,IN_PROGRESS);
-            me->CastSpell(me,SPELL_CHANNEL,false);
+            pInstance->SetData(TYPE_MEDIVH, IN_PROGRESS);
+            me->CastSpell(me, SPELL_CHANNEL, false);
             Check_Timer = 5000;
                  }
         else if (who->GetTypeId() == TYPEID_UNIT && me->IsWithinDistInMap(who, 15.0f))
@@ -113,12 +113,12 @@ struct npc_medivh_bmAI : public ScriptedAI
             if (entry == C_ASSAS || entry == C_WHELP || entry == C_CHRON || entry == C_EXECU || entry == C_VANQU)
             {
                 who->StopMoving();
-                who->CastSpell(me,SPELL_CORRUPT,false);
+                who->CastSpell(me, SPELL_CORRUPT, false);
             }
             else if (entry == C_AEONUS)
             {
                 who->StopMoving();
-                who->CastSpell(me,SPELL_CORRUPT_AEONUS,false);
+                who->CastSpell(me, SPELL_CORRUPT_AEONUS, false);
             }
         }
     }
@@ -162,11 +162,11 @@ struct npc_medivh_bmAI : public ScriptedAI
         {
             if (SpellCorrupt_Timer <= diff)
             {
-                    pInstance->SetData(TYPE_MEDIVH,SPECIAL);
+                    pInstance->SetData(TYPE_MEDIVH, SPECIAL);
 
-                if (me->HasAura(SPELL_CORRUPT_AEONUS,0))
+                if (me->HasAura(SPELL_CORRUPT_AEONUS, 0))
                     SpellCorrupt_Timer = 1000;
-                else if (me->HasAura(SPELL_CORRUPT,0))
+                else if (me->HasAura(SPELL_CORRUPT, 0))
                     SpellCorrupt_Timer = 3000;
                 else
                     SpellCorrupt_Timer = 0;
@@ -292,7 +292,7 @@ struct npc_time_riftAI : public ScriptedAI
 
         if (Unit *Summon = DoSummon(creature_entry, pos, 30000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT))
             if (Unit *temp = Unit::GetUnit(*me, pInstance ? pInstance->GetData64(DATA_MEDIVH) : 0))
-                Summon->AddThreat(temp,0.0f);
+                Summon->AddThreat(temp, 0.0f);
     }
 
     void DoSelectSummon()
@@ -303,7 +303,7 @@ struct npc_time_riftAI : public ScriptedAI
             mRiftWaveCount = 0;
 
         entry = PortalWaves[mWaveId].PortalMob[mRiftWaveCount];
-        debug_log("TSCR: npc_time_rift: summoning wave creature (Wave %u, Entry %u).",mRiftWaveCount,entry);
+        debug_log("TSCR: npc_time_rift: summoning wave creature (Wave %u, Entry %u).",mRiftWaveCount, entry);
 
         ++mRiftWaveCount;
 
@@ -331,7 +331,7 @@ struct npc_time_riftAI : public ScriptedAI
         debug_log("TSCR: npc_time_rift: not casting anylonger, i need to die.");
         me->setDeathState(JUST_DIED);
 
-        pInstance->SetData(TYPE_RIFT,SPECIAL);
+        pInstance->SetData(TYPE_RIFT, SPECIAL);
     }
 };
 
@@ -351,20 +351,20 @@ bool GossipHello_npc_saat(Player *player, Creature* pCreature)
     if (pCreature->isQuestGiver())
         player->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (player->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(ITEM_CHRONO_BEACON,1))
+    if (player->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(ITEM_CHRONO_BEACON, 1))
     {
-        player->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(10000,pCreature->GetGUID());
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->SEND_GOSSIP_MENU(10000, pCreature->GetGUID());
         return true;
     }
-    else if (player->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !player->HasItemCount(ITEM_CHRONO_BEACON,1))
+    else if (player->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !player->HasItemCount(ITEM_CHRONO_BEACON, 1))
     {
-        player->ADD_GOSSIP_ITEM(0,GOSSIP_ITEM_OBTAIN,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(10001,pCreature->GetGUID());
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->SEND_GOSSIP_MENU(10001, pCreature->GetGUID());
         return true;
     }
 
-    player->SEND_GOSSIP_MENU(10002,pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(10002, pCreature->GetGUID());
     return true;
 }
 
@@ -373,7 +373,7 @@ bool GossipSelect_npc_saat(Player *player, Creature* pCreature, uint32 sender, u
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         player->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(player,SPELL_CHRONO_BEACON,false);
+        pCreature->CastSpell(player, SPELL_CHRONO_BEACON, false);
     }
     return true;
 }

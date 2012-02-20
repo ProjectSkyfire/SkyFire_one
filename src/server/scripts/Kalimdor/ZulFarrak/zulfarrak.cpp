@@ -222,7 +222,7 @@ bool GOHello_go_shallow_grave(Player* /*pPlayer*/, GameObject* pGo)
     // randomly summon a zombie or dead hero the first time a grave is used
     if (pGo->GetUseCount() == 0)
     {
-        uint32 randomchance = urand(0,100);
+        uint32 randomchance = urand(0, 100);
         if (randomchance < ZOMBIE_CHANCE)
             pGo->SummonCreature(ZOMBIE, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
         else if ((randomchance-ZOMBIE_CHANCE) < DEAD_HERO_CHANCE)

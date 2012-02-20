@@ -163,9 +163,9 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
     {
         if (summoned->GetEntry() == ENTRY_BEACON)
         {
-            summoned->CastSpell(summoned,SPELL_ETHEREAL_BEACON_VISUAL,false);
+            summoned->CastSpell(summoned, SPELL_ETHEREAL_BEACON_VISUAL, false);
 
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 summoned->AI()->AttackStart(pTarget);
         }
     }
@@ -194,7 +194,7 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 me->InterruptNonMeleeSpells(true);
 
-            DoCast(me,SPELL_FROSTNOVA);
+            DoCast(me, SPELL_FROSTNOVA);
             FrostNova_Timer  = 17500 + rand()%7500;
             CanBlink = true;
         } else FrostNova_Timer -= diff;
@@ -218,7 +218,7 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
                 if (me->IsNonMeleeSpellCasted(false))
                     me->InterruptNonMeleeSpells(true);
 
-                DoCast(me,SPELL_BLINK);
+                DoCast(me, SPELL_BLINK);
                 Blink_Timer = 1000 + rand()%1500;
                 CanBlink = false;
             } else Blink_Timer -= diff;
@@ -229,10 +229,10 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 me->InterruptNonMeleeSpells(true);
 
-            if (!urand(0,3))
+            if (!urand(0, 3))
                 DoScriptText(SAY_SUMMON, me);
 
-            DoCast(me,SPELL_ETHEREAL_BEACON);
+            DoCast(me, SPELL_ETHEREAL_BEACON);
 
             Beacon_Timer = 10000;
         } else Beacon_Timer -= diff;
@@ -324,7 +324,7 @@ struct mob_ethereal_beaconAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 me->InterruptNonMeleeSpells(true);
 
-            me->CastSpell(me,SPELL_ETHEREAL_APPRENTICE,true);
+            me->CastSpell(me, SPELL_ETHEREAL_APPRENTICE, true);
             if (me->isPet())
                 ((Pet*)me)->SetDuration(0);
             KillSelf();

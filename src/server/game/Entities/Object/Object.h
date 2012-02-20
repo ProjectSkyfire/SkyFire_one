@@ -225,7 +225,7 @@ class Object
         void SetFloatValue( uint16 index,       float   value);
         void SetByteValue(  uint16 index, uint8 offset, uint8 value);
         void SetUInt16Value(uint16 index, uint8 offset, uint16 value);
-        void SetInt16Value( uint16 index, uint8 offset, int16 value) { SetUInt16Value(index,offset,(uint16)value); }
+        void SetInt16Value( uint16 index, uint8 offset, int16 value) { SetUInt16Value(index, offset,(uint16)value); }
         void SetStatFloatValue(uint16 index, float value);
         void SetStatInt32Value(uint16 index, int32 value);
 
@@ -281,21 +281,21 @@ class Object
 
         void ApplyModFlag(uint16 index, uint32 flag, bool apply)
         {
-            if (apply) SetFlag(index,flag); else RemoveFlag(index,flag);
+            if (apply) SetFlag(index, flag); else RemoveFlag(index, flag);
         }
 
         void SetFlag64(uint16 index, uint64 newFlag)
         {
             uint64 oldval = GetUInt64Value(index);
             uint64 newval = oldval | newFlag;
-            SetUInt64Value(index,newval);
+            SetUInt64Value(index, newval);
         }
 
         void RemoveFlag64(uint16 index, uint64 oldFlag)
         {
             uint64 oldval = GetUInt64Value(index);
             uint64 newval = oldval & ~oldFlag;
-            SetUInt64Value(index,newval);
+            SetUInt64Value(index, newval);
         }
 
         void ToggleFlag64(uint16 index, uint64 flag)
@@ -314,7 +314,7 @@ class Object
 
         void ApplyModFlag64(uint16 index, uint64 flag, bool apply)
         {
-            if (apply) SetFlag64(index,flag); else RemoveFlag64(index,flag);
+            if (apply) SetFlag64(index, flag); else RemoveFlag64(index, flag);
         }
 
         void ClearUpdateMask(bool remove);
@@ -562,11 +562,11 @@ class WorldObject : public Object, public WorldLocation
         void _Create(uint32 guidlow, HighGuid guidhigh);
 
         void GetNearPoint2D(float &x, float &y, float distance, float absAngle) const;
-        void GetNearPoint(WorldObject const* searcher, float &x, float &y, float &z, float searcher_size, float distance2d,float absAngle) const;
+        void GetNearPoint(WorldObject const* searcher, float &x, float &y, float &z, float searcher_size, float distance2d, float absAngle) const;
         void GetClosePoint(float &x, float &y, float &z, float size, float distance2d = 0, float angle = 0) const
         {
             // angle calculated from current orientation
-            GetNearPoint(NULL,x,y,z,size,distance2d,GetOrientation() + angle);
+            GetNearPoint(NULL, x, y, z, size, distance2d, GetOrientation() + angle);
         }
         void MovePosition(Position &pos, float dist, float angle);
         void GetNearPosition(Position &pos, float dist, float angle)
@@ -589,7 +589,7 @@ class WorldObject : public Object, public WorldLocation
         void GetContactPoint(const WorldObject* obj, float &x, float &y, float &z, float distance2d = CONTACT_DISTANCE) const
         {
             // angle to face `obj` to `this` using distance includes size of `obj`
-            GetNearPoint(obj,x,y,z,obj->GetObjectSize(),distance2d,GetAngle(obj));
+            GetNearPoint(obj, x, y, z, obj->GetObjectSize(),distance2d, GetAngle(obj));
         }
 
         float GetObjectSize() const
@@ -664,11 +664,11 @@ class WorldObject : public Object, public WorldLocation
         // use only if you will sure about placing both object at same map
         bool IsWithinDist(WorldObject const* obj, float dist2compare, bool is3D = true) const
         {
-            return obj && _IsWithinDist(obj,dist2compare,is3D);
+            return obj && _IsWithinDist(obj, dist2compare, is3D);
         }
         bool IsWithinDistInMap(WorldObject const* obj, float dist2compare, bool is3D = true) const
         {
-            return obj && IsInMap(obj) && _IsWithinDist(obj,dist2compare,is3D);
+            return obj && IsInMap(obj) && _IsWithinDist(obj, dist2compare, is3D);
         }
         bool IsWithinLOS(float x, float y, float z) const;
         bool IsWithinLOSInMap(const WorldObject* obj) const;
@@ -703,7 +703,7 @@ class WorldObject : public Object, public WorldLocation
         void AddObjectToRemoveList();
 
         // main visibility check function in normal case (ignore grey zone distance check)
-        bool isVisibleFor(Player const* u) const { return isVisibleForInState(u,false); }
+        bool isVisibleFor(Player const* u) const { return isVisibleForInState(u, false); }
 
         // low level function for visibility change code, must be define in all main world object subclasses
         virtual bool isVisibleForInState(Player const* u, bool inVisibleList) const = 0;

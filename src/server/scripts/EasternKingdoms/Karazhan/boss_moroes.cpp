@@ -126,7 +126,7 @@ struct boss_moroesAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2,SAY_KILL_3), me);
+        DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
     }
 
     void JustDied(Unit* /*victim*/)
@@ -149,7 +149,7 @@ struct boss_moroesAI : public ScriptedAI
 
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             {
-                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE,0))
+                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE, 0))
                     i->getSource()->RemoveAurasDueToSpell(SPELL_GARROTE);
             }
         }
@@ -303,10 +303,10 @@ struct boss_moroesAI : public ScriptedAI
         {
             if (Wait_Timer <= diff)
             {
-                DoScriptText(RAND(SAY_SPECIAL_1,SAY_SPECIAL_2), me);
+                DoScriptText(RAND(SAY_SPECIAL_1, SAY_SPECIAL_2), me);
 
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                    pTarget->CastSpell(pTarget, SPELL_GARROTE,true);
+                    pTarget->CastSpell(pTarget, SPELL_GARROTE, true);
 
                 InVanish = false;
             } else Wait_Timer -= diff;

@@ -53,8 +53,8 @@ struct boss_patchwerkAI : public ScriptedAI
     void Reset()
     {
         HatefullStrike_Timer = 1200;                        //1.2 seconds
-        Enrage_Timer = 420000;                              //7 minutes 420,000
-        Slimebolt_Timer = 450000;                           //7.5 minutes 450,000
+        Enrage_Timer = 420000;                              //7 minutes 420, 000
+        Slimebolt_Timer = 450000;                           //7.5 minutes 450, 000
         Enraged = false;
     }
 
@@ -134,8 +134,8 @@ struct boss_patchwerkAI : public ScriptedAI
         //Enrage if not already enraged and below 5%
         if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 5)
         {
-            DoCast(me,SPELL_ENRAGE);
-            DoScriptText(EMOTE_ENRAGE,NULL);
+            DoCast(me, SPELL_ENRAGE);
+            DoScriptText(EMOTE_ENRAGE, NULL);
             Enraged = true;
         }
 

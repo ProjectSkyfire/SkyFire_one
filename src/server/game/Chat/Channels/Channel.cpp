@@ -466,7 +466,7 @@ void Channel::List(Player* player)
             }
         }
 
-        data.put<uint32>(pos,count);
+        data.put<uint32>(pos, count);
 
         SendToOne(&data, p);
     }

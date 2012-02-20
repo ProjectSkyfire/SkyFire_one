@@ -89,15 +89,15 @@ struct boss_sapphironAI : public ScriptedAI
 
                 if (LifeDrain_Timer <= diff)
                 {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                        DoCast(pTarget,SPELL_LIFE_DRAIN);
+                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        DoCast(pTarget, SPELL_LIFE_DRAIN);
                     LifeDrain_Timer = 24000;
                 } else LifeDrain_Timer -= diff;
 
                 if (Blizzard_Timer <= diff)
                 {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                        DoCast(pTarget,SPELL_BLIZZARD);
+                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        DoCast(pTarget, SPELL_BLIZZARD);
                     Blizzard_Timer = 20000;
                 } else Blizzard_Timer -= diff;
 
@@ -122,9 +122,9 @@ struct boss_sapphironAI : public ScriptedAI
                 {
                     if (Icebolt_Timer <= diff && Icebolt_Count < 5)
                     {
-                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         {
-                            DoCast(pTarget,SPELL_ICEBOLT);
+                            DoCast(pTarget, SPELL_ICEBOLT);
                             ++Icebolt_Count;
                             error_log("Count incremented");
                         }
@@ -159,7 +159,7 @@ struct boss_sapphironAI : public ScriptedAI
                     if (Beserk_Timer <= diff)
                     {
                         DoScriptText(EMOTE_ENRAGE, me);
-                        DoCast(me,SPELL_BESERK);
+                        DoCast(me, SPELL_BESERK);
                         Beserk_Timer = 300000;
                     } else Beserk_Timer -= diff;
                 }

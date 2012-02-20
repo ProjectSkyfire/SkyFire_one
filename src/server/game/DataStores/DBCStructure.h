@@ -30,11 +30,11 @@
 
 // Structures using to access raw DBC data and required packing to portability
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined( __GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 struct AreaTableEntry
@@ -194,9 +194,9 @@ struct CinematicSequencesEntry
 struct CreatureDisplayInfoEntry
 {
     uint32      Displayid;                                  // 0
-                                                            // 1-3,unused
+                                                            // 1-3, unused
     float       scale;                                      // 4
-                                                            // 5-13,unused
+                                                            // 5-13, unused
 };
 
 struct CreatureFamilyEntry
@@ -477,7 +477,7 @@ struct MapEntry
     uint32 resetTimeRaid;                                   // 120
     uint32 resetTimeHeroic;                                 // 121
                                                             // 122-123
-    uint32      addon;                                      // 124 (0-original maps,1-tbc addon)
+    uint32      addon;                                      // 124 (0-original maps, 1-tbc addon)
 
     // Helpers
     uint32 Expansion() const { return addon; }
@@ -690,9 +690,9 @@ struct SpellEntry
 };
 
 typedef std::set<uint32> SpellCategorySet;
-typedef std::map<uint32,SpellCategorySet > SpellCategoryStore;
+typedef std::map<uint32, SpellCategorySet > SpellCategoryStore;
 typedef std::set<uint32> PetFamilySpellsSet;
-typedef std::map<uint32,PetFamilySpellsSet > PetFamilySpellsStore;
+typedef std::map<uint32, PetFamilySpellsSet > PetFamilySpellsStore;
 
 struct SpellCastTimesEntry
 {
@@ -928,18 +928,18 @@ struct TalentSpellPos
     uint8  rank;
 };
 
-typedef std::map<uint32,TalentSpellPos> TalentSpellPosMap;
+typedef std::map<uint32, TalentSpellPos> TalentSpellPosMap;
 
 struct TaxiPathBySourceAndDestination
 {
     TaxiPathBySourceAndDestination() : ID(0),price(0) {}
-    TaxiPathBySourceAndDestination(uint32 _id,uint32 _price) : ID(_id),price(_price) {}
+    TaxiPathBySourceAndDestination(uint32 _id, uint32 _price) : ID(_id),price(_price) {}
 
     uint32    ID;
     uint32    price;
 };
-typedef std::map<uint32,TaxiPathBySourceAndDestination> TaxiPathSetForSource;
-typedef std::map<uint32,TaxiPathSetForSource> TaxiPathSetBySource;
+typedef std::map<uint32, TaxiPathBySourceAndDestination> TaxiPathSetForSource;
+typedef std::map<uint32, TaxiPathSetForSource> TaxiPathSetBySource;
 
 struct TaxiPathNode
 {

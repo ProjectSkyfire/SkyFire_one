@@ -135,7 +135,7 @@ void stripLineInvisibleChars(std::string &str)
     }
 
     if (wpos < str.size())
-        str.erase(wpos,str.size());
+        str.erase(wpos, str.size());
     if (str.find("|TInterface")!=std::string::npos)
         str.clear();
 }
@@ -209,7 +209,7 @@ std::string TimeToTimestampStr(time_t t)
     //       MM     minutes (2 digits 00-59)
     //       SS     seconds (2 digits 00-59)
     char buf[20];
-    snprintf(buf,20,"%04d-%02d-%02d_%02d-%02d-%02d",aTm->tm_year+1900,aTm->tm_mon+1,aTm->tm_mday,aTm->tm_hour,aTm->tm_min,aTm->tm_sec);
+    snprintf(buf, 20,"%04d-%02d-%02d_%02d-%02d-%02d",aTm->tm_year+1900, aTm->tm_mon+1, aTm->tm_mday, aTm->tm_hour, aTm->tm_min, aTm->tm_sec);
     return std::string(buf);
 }
 
@@ -220,7 +220,7 @@ bool IsIPAddress(char const* ipaddress)
         return false;
 
     // Let the big boys do it.
-    // Drawback: all valid ip address formats are recognized e.g.: 12.23,121234,0xABCD)
+    // Drawback: all valid ip address formats are recognized e.g.: 12.23, 121234, 0xABCD)
     return inet_addr(ipaddress) != INADDR_NONE;
 }
 
@@ -256,7 +256,7 @@ size_t utf8length(std::string& utf8str)
     }
 }
 
-void utf8truncate(std::string& utf8str,size_t len)
+void utf8truncate(std::string& utf8str, size_t len)
 {
     try
     {
@@ -281,7 +281,7 @@ bool Utf8toWStr(char const* utf8str, size_t csize, wchar_t* wstr, size_t& wsize)
 {
     try
     {
-        size_t len = utf8::distance(utf8str,utf8str+csize);
+        size_t len = utf8::distance(utf8str, utf8str+csize);
         if (len > wsize)
         {
             wsize = 0;
@@ -290,7 +290,7 @@ bool Utf8toWStr(char const* utf8str, size_t csize, wchar_t* wstr, size_t& wsize)
         }
 
         wsize = len;
-        utf8::utf8to16(utf8str,utf8str+csize,wstr);
+        utf8::utf8to16(utf8str, utf8str+csize, wstr);
         wstr[len] = L'\0';
     }
     catch(std::exception)
@@ -328,7 +328,7 @@ bool WStrToUtf8(wchar_t* wstr, size_t size, std::string& utf8str)
         std::string utf8str2;
         utf8str2.resize(size*4);                            // allocate for most long case
 
-        char* oend = utf8::utf16to8(wstr,wstr+size,&utf8str2[0]);
+        char* oend = utf8::utf16to8(wstr, wstr+size,&utf8str2[0]);
         utf8str2.resize(oend-(&utf8str2[0]));               // remove unused tail
         utf8str = utf8str2;
     }
@@ -389,20 +389,20 @@ std::wstring GetMainPartOfName(std::wstring wname, uint32 declension)
     static wchar_t const j_End[]    = { wchar_t(1), wchar_t(0x0439),wchar_t(0x0000)};
 
     static wchar_t const* const dropEnds[6][8] = {
-        { &a_End[1],  &o_End[1],    &ya_End[1],   &ie_End[1],  &soft_End[1], &j_End[1],    NULL,       NULL },
-        { &a_End[1],  &ya_End[1],   &yeru_End[1], &i_End[1],   NULL,         NULL,         NULL,       NULL },
-        { &ie_End[1], &u_End[1],    &yu_End[1],   &i_End[1],   NULL,         NULL,         NULL,       NULL },
-        { &u_End[1],  &yu_End[1],   &o_End[1],    &ie_End[1],  &soft_End[1], &ya_End[1],   &a_End[1],  NULL },
+        { &a_End[1], &o_End[1],   &ya_End[1],  &ie_End[1], &soft_End[1], &j_End[1],   NULL,       NULL },
+        { &a_End[1], &ya_End[1],  &yeru_End[1], &i_End[1],  NULL,         NULL,         NULL,       NULL },
+        { &ie_End[1], &u_End[1],   &yu_End[1],  &i_End[1],  NULL,         NULL,         NULL,       NULL },
+        { &u_End[1], &yu_End[1],  &o_End[1],   &ie_End[1], &soft_End[1], &ya_End[1],  &a_End[1], NULL },
         { &oj_End[1], &io_j_End[1], &ie_j_End[1], &o_m_End[1], &io_m_End[1], &ie_m_End[1], &yu_End[1], NULL },
-        { &ie_End[1], &i_End[1],    NULL,         NULL,        NULL,         NULL,         NULL,       NULL }
+        { &ie_End[1], &i_End[1],   NULL,         NULL,        NULL,         NULL,         NULL,       NULL }
     };
 
     for (wchar_t const * const* itr = &dropEnds[declension][0]; *itr; ++itr)
     {
         size_t len = size_t((*itr)[-1]);                    // get length from string size field
 
-        if (wname.substr(wname.size()-len,len)==*itr)
-            return wname.substr(0,wname.size()-len);
+        if (wname.substr(wname.size()-len, len)==*itr)
+            return wname.substr(0, wname.size()-len);
     }
 
     return wname;
@@ -412,7 +412,7 @@ bool utf8ToConsole(const std::string& utf8str, std::string& conStr)
 {
 #if PLATFORM == PLATFORM_WINDOWS
     std::wstring wstr;
-    if (!Utf8toWStr(utf8str,wstr))
+    if (!Utf8toWStr(utf8str, wstr))
         return false;
 
     conStr.resize(wstr.size());
@@ -425,14 +425,14 @@ bool utf8ToConsole(const std::string& utf8str, std::string& conStr)
     return true;
 }
 
-bool consoleToUtf8(const std::string& conStr,std::string& utf8str)
+bool consoleToUtf8(const std::string& conStr, std::string& utf8str)
 {
 #if PLATFORM == PLATFORM_WINDOWS
     std::wstring wstr;
     wstr.resize(conStr.size());
     OemToCharBuffW(&conStr[0],&wstr[0],conStr.size());
 
-    return WStrToUtf8(wstr,utf8str);
+    return WStrToUtf8(wstr, utf8str);
 #else
     // not implemented yet
     utf8str = conStr;
@@ -444,7 +444,7 @@ bool Utf8FitTo(const std::string& str, std::wstring search)
 {
     std::wstring temp;
 
-    if (!Utf8toWStr(str,temp))
+    if (!Utf8toWStr(str, temp))
         return false;
 
     // converting to lower case

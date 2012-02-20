@@ -44,7 +44,7 @@ EndScriptData */
 // 19 Coordinates for Infernal spawns
 struct InfernalPoint
 {
-    float x,y;
+    float x, y;
 };
 
 #define INFERNAL_Z  275.5
@@ -208,8 +208,8 @@ struct boss_malchezaarAI : public ScriptedAI
         Cleave_Timer = 8000;
         InfernalTimer = 45000;
         InfernalCleanupTimer = 47000;
-        AxesTargetSwitchTimer = urand(7500,20000);
-        SunderArmorTimer = urand(5000,10000);
+        AxesTargetSwitchTimer = urand(7500, 20000);
+        SunderArmorTimer = urand(5000, 10000);
         phase = 1;
 
         if (pInstance)
@@ -218,7 +218,7 @@ struct boss_malchezaarAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2,SAY_SLAY3), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2, SAY_SLAY3), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -361,7 +361,7 @@ struct boss_malchezaarAI : public ScriptedAI
             DoCast(Infernal, SPELL_INFERNAL_RELAY);
         }
 
-        DoScriptText(RAND(SAY_SUMMON1,SAY_SUMMON2), me);
+        DoScriptText(RAND(SAY_SUMMON1, SAY_SUMMON2), me);
     }
 
     void UpdateAI(const uint32 diff)
@@ -466,20 +466,20 @@ struct boss_malchezaarAI : public ScriptedAI
             if (SunderArmorTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_SUNDER_ARMOR);
-                SunderArmorTimer = urand(10000,18000);
+                SunderArmorTimer = urand(10000, 18000);
             } else SunderArmorTimer -= diff;
 
             if (Cleave_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_CLEAVE);
-                Cleave_Timer = urand(6000,12000);
+                Cleave_Timer = urand(6000, 12000);
             } else Cleave_Timer -= diff;
         }
         else
         {
             if (AxesTargetSwitchTimer <= diff)
             {
-                AxesTargetSwitchTimer = urand(7500,20000);
+                AxesTargetSwitchTimer = urand(7500, 20000);
 
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                 {
@@ -502,7 +502,7 @@ struct boss_malchezaarAI : public ScriptedAI
             {
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                     DoCast(pTarget, SPELL_AMPLIFY_DAMAGE);
-                AmplifyDamageTimer = urand(20000,30000);
+                AmplifyDamageTimer = urand(20000, 30000);
             } else AmplifyDamageTimer -= diff;
         }
 

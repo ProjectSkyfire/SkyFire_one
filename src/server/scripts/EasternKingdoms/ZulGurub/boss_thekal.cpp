@@ -216,7 +216,7 @@ struct boss_thekalAI : public ScriptedAI
                 me->UpdateDamagePhysical(BASE_ATTACK);
                 DoResetThreat();
                 PhaseTwo = true;
-                DoScriptText(SAY_TRANSFORM,me);
+                DoScriptText(SAY_TRANSFORM, me);
             }
 
             if (ThekalDead)

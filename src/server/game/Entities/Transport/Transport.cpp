@@ -109,7 +109,7 @@ void MapManager::LoadTransports()
     sLog.outString(">> Loaded %u transports", count);
 
     // check transport data DB integrity
-    result = WorldDatabase.Query("SELECT gameobject.guid,gameobject.id,transports.name FROM gameobject,transports WHERE gameobject.id = transports.entry");
+    result = WorldDatabase.Query("SELECT gameobject.guid, gameobject.id, transports.name FROM gameobject, transports WHERE gameobject.id = transports.entry");
     if (result)                                              // wrong data found
     {
         do
@@ -119,7 +119,7 @@ void MapManager::LoadTransports()
             uint32 guid  = fields[0].GetUInt32();
             uint32 entry = fields[1].GetUInt32();
             std::string name = fields[2].GetCppString();
-            sLog.outErrorDb("Transport %u '%s' has record (GUID: %u) in gameobject. Transports MUST NOT have any records in gameobject or its behavior will be unpredictable/bugged.",entry,name.c_str(),guid);
+            sLog.outErrorDb("Transport %u '%s' has record (GUID: %u) in gameobject. Transports MUST NOT have any records in gameobject or its behavior will be unpredictable/bugged.",entry, name.c_str(),guid);
         }
         while (result->NextRow());
     }
@@ -133,12 +133,12 @@ Transport::Transport() : GameObject()
 
 bool Transport::Create(uint32 guidlow, uint32 mapid, float x, float y, float z, float ang, uint32 animprogress, uint32 dynflags)
 {
-    Relocate(x,y,z,ang);
+    Relocate(x, y, z, ang);
 
     if (!IsPositionValid())
     {
         sLog.outError("Transport (GUID: %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
-            guidlow,x,y);
+            guidlow, x, y);
         return false;
     }
 

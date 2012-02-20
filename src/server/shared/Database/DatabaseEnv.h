@@ -32,8 +32,8 @@
 typedef Database DatabaseType;
 #define _LIKE_           "LIKE"
 #define _TABLE_SIM_      "`"
-#define _CONCAT3_(A,B,C) "CONCAT( " A " , " B " , " C " )"
-#define _OFFSET_         "LIMIT %d,1"
+#define _CONCAT3_(A, B, C) "CONCAT( " A " , " B " , " C " )"
+#define _OFFSET_         "LIMIT %d, 1"
 
 extern DatabaseType WorldDatabase;
 extern DatabaseType CharacterDatabase;

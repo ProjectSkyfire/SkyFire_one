@@ -28,7 +28,7 @@ typedef short int16;
 typedef unsigned int uint32;
 typedef int int32; */
 
-#pragma pack(push,1)
+#pragma pack(push, 1)
 
 struct ModelHeader
 {
@@ -108,7 +108,7 @@ struct ModelVertex {
     uint8 bones[4];
     Vec3D normal;
     Vec2D texcoords;
-    int unk1, unk2; // always 0,0 so this is probably unused
+    int unk1, unk2; // always 0, 0 so this is probably unused
 };
 
 struct ModelView {

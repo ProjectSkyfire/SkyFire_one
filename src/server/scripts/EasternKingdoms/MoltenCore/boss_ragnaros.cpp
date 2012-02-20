@@ -160,7 +160,7 @@ struct boss_ragnarosAI : public Scripted_NoMovementAI
         {
             DoCast(me->getVictim(), SPELL_WRATHOFRAGNAROS);
 
-            if (urand(0,1))
+            if (urand(0, 1))
                 DoScriptText(SAY_WRATH, me);
 
             WrathOfRagnaros_Timer = 30000;
@@ -171,7 +171,7 @@ struct boss_ragnarosAI : public Scripted_NoMovementAI
         {
             DoCast(me, SPELL_HANDOFRAGNAROS);
 
-            if (urand(0,1))
+            if (urand(0, 1))
                 DoScriptText(SAY_HAND, me);
 
             HandOfRagnaros_Timer = 25000;
@@ -188,14 +188,14 @@ struct boss_ragnarosAI : public Scripted_NoMovementAI
         if (LavaBurst_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_ERRUPTION);
-            Erruption_Timer = urand(20000,45000);
+            Erruption_Timer = urand(20000, 45000);
         } else Erruption_Timer -= diff;
 
         //ElementalFire_Timer
         if (ElementalFire_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_ELEMENTALFIRE);
-            ElementalFire_Timer = urand(10000,14000);
+            ElementalFire_Timer = urand(10000, 14000);
         } else ElementalFire_Timer -= diff;
 
         //Submerge_Timer
@@ -219,9 +219,9 @@ struct boss_ragnarosAI : public Scripted_NoMovementAI
                 // summon 10 elementals
                 for (uint8 i = 0; i < 9; ++i)
                 {
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
-                        if (Creature* pSummoned = me->SummonCreature(12143,pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000))
+                        if (Creature* pSummoned = me->SummonCreature(12143, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 900000))
                             pSummoned->AI()->AttackStart(pTarget);
                     }
                 }
@@ -237,9 +237,9 @@ struct boss_ragnarosAI : public Scripted_NoMovementAI
 
                 for (uint8 i = 0; i < 9; ++i)
                 {
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
-                        if (Creature* pSummoned = me->SummonCreature(12143,pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000))
+                        if (Creature* pSummoned = me->SummonCreature(12143, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 900000))
                             pSummoned->AI()->AttackStart(pTarget);
                     }
                 }

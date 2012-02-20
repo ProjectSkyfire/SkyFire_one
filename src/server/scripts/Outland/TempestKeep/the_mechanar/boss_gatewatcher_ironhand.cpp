@@ -102,7 +102,7 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
         //Shadow Power
         if (Shadow_Power_Timer <= diff)
         {
-            DoCast(me,HeroicMode ? H_SPELL_SHADOW_POWER : SPELL_SHADOW_POWER);
+            DoCast(me, HeroicMode ? H_SPELL_SHADOW_POWER : SPELL_SHADOW_POWER);
             Shadow_Power_Timer = 20000 + rand()%8000;
         } else Shadow_Power_Timer -= diff;
 

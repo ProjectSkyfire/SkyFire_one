@@ -57,7 +57,7 @@ struct boss_jandicebarovAI : public ScriptedAI
 
     void SummonIllusions(Unit* victim)
     {
-        if (Creature *Illusion = DoSpawnCreature(11439, irand(-9,9), irand(-9,9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
+        if (Creature *Illusion = DoSpawnCreature(11439, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
             Illusion->AI()->AttackStart(victim);
     }
 
@@ -105,7 +105,7 @@ struct boss_jandicebarovAI : public ScriptedAI
             Unit *pTarget = NULL;
             for (uint8 i = 0; i < 10; ++i)
             {
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (pTarget)
                     SummonIllusions(pTarget);
             }

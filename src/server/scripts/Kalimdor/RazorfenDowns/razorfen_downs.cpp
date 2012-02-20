@@ -89,7 +89,7 @@ bool GOHello_go_gong(Player* /*pPlayer*/, GameObject* pGO)
 
     if (pInstance)
     {
-        pInstance->SetData(DATA_GONG_WAVES,pInstance->GetData(DATA_GONG_WAVES)+1);
+        pInstance->SetData(DATA_GONG_WAVES, pInstance->GetData(DATA_GONG_WAVES)+1);
         return true;
     }
 
@@ -114,7 +114,7 @@ struct npc_tomb_creatureAI : public ScriptedAI
 
     void Reset()
     {
-        uiWebTimer = urand(5000,8000);
+        uiWebTimer = urand(5000, 8000);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -128,7 +128,7 @@ struct npc_tomb_creatureAI : public ScriptedAI
             if (uiWebTimer <= uiDiff)
             {
                 DoCast(me->getVictim(), SPELL_WEB);
-                uiWebTimer = urand(7000,16000);
+                uiWebTimer = urand(7000, 16000);
             } else uiWebTimer -= uiDiff;
         }
 
@@ -138,7 +138,7 @@ struct npc_tomb_creatureAI : public ScriptedAI
     void JustDied(Unit* /*pKiller*/)
     {
         if (pInstance)
-            pInstance->SetData(DATA_GONG_WAVES,pInstance->GetData(DATA_GONG_WAVES)+1);
+            pInstance->SetData(DATA_GONG_WAVES, pInstance->GetData(DATA_GONG_WAVES)+1);
     }
 };
 

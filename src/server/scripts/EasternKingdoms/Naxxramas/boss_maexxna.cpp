@@ -222,7 +222,7 @@ struct boss_maexxnaAI : public ScriptedAI
         //Enrage if not already enraged and below 30%
         if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 30)
         {
-            DoCast(me,SPELL_FRENZY);
+            DoCast(me, SPELL_FRENZY);
             Enraged = true;
         }
 

@@ -115,7 +115,7 @@ class ScriptMgr
         bool GOHello(Player* pPlayer, GameObject* pGO);
         bool GOQuestAccept(Player* pPlayer, GameObject* pGO, Quest const* pQuest);
         bool GOChooseReward(Player* pPlayer, GameObject* pGO, Quest const* pQuest, uint32 opt);
-        bool AreaTrigger(Player* pPlayer,AreaTriggerEntry const* atEntry);
+        bool AreaTrigger(Player* pPlayer, AreaTriggerEntry const* atEntry);
         CreatureAI* GetAI(Creature* pCreature);
         bool ItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
         bool EffectDummyCreature(Unit *caster, uint32 spellId, uint32 effIndex, Creature *crTarget);
@@ -126,7 +126,7 @@ class ScriptMgr
 void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
 
 #if COMPILER == COMPILER_GNU
-#define FUNC_PTR(name,callconvention,returntype,parameters)    typedef returntype(*name)parameters __attribute__ ((callconvention));
+#define FUNC_PTR(name, callconvention, returntype, parameters)    typedef returntype(*name)parameters __attribute__ ((callconvention));
 #else
 #define FUNC_PTR(name, callconvention, returntype, parameters)    typedef returntype(callconvention *name)parameters;
 #endif

@@ -50,7 +50,7 @@ bool WMORoot::open()
 
     while (!f.isEof())
     {
-        f.read(fourcc,4);
+        f.read(fourcc, 4);
         f.read(&size, 4);
 
         flipcc(fourcc);
@@ -69,8 +69,8 @@ bool WMORoot::open()
             f.read(&nDoodadSets, 4);
             f.read(&col, 4);
             f.read(&RootWMOID, 4);
-            f.read(bbcorn1,12);
-            f.read(bbcorn2,12);
+            f.read(bbcorn1, 12);
+            f.read(bbcorn2, 12);
             f.read(&liquidType, 4);
             break;
         }
@@ -125,11 +125,11 @@ bool WMORoot::ConvertToVMAPRootWmo(FILE *pOutfile)
 {
     //printf("Convert RootWmo...\n");
 
-    fwrite("VMAP003",1,8,pOutfile);
+    fwrite("VMAP003",1, 8, pOutfile);
     unsigned int nVectors = 0;
-    fwrite(&nVectors,sizeof(nVectors),1,pOutfile); // will be filled later
-    fwrite(&nGroups,4,1,pOutfile);
-    fwrite(&RootWMOID,4,1,pOutfile);
+    fwrite(&nVectors, sizeof(nVectors),1, pOutfile); // will be filled later
+    fwrite(&nGroups, 4, 1, pOutfile);
+    fwrite(&RootWMOID, 4, 1, pOutfile);
     return true;
 }
 
@@ -154,7 +154,7 @@ bool WMOGroup::open()
     char fourcc[5];
     while (!f.isEof())
     {
-        f.read(fourcc,4);
+        f.read(fourcc, 4);
         f.read(&size, 4);
         flipcc(fourcc);
         if (!strcmp(fourcc,"MOGP"))//Fix sizeoff = Data size.
@@ -180,7 +180,7 @@ bool WMOGroup::open()
             f.read(&nBatchC, 4);
             f.read(&fogIdx, 4);
             f.read(&liquidType, 4);
-            f.read(&groupWMOID,4);
+            f.read(&groupWMOID, 4);
 
         }
         else if (!strcmp(fourcc,"MOPY"))
@@ -233,17 +233,17 @@ bool WMOGroup::open()
 
 int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPreciseVectorData)
 {
-    fwrite(&mogpFlags,sizeof(uint32),1,output);
-    fwrite(&groupWMOID,sizeof(uint32),1,output);
+    fwrite(&mogpFlags, sizeof(uint32),1, output);
+    fwrite(&groupWMOID, sizeof(uint32),1, output);
     // group bound
     fwrite(bbcorn1, sizeof(float), 3, output);
     fwrite(bbcorn2, sizeof(float), 3, output);
-    fwrite(&liquflags,sizeof(uint32),1,output);
+    fwrite(&liquflags, sizeof(uint32),1, output);
     int nColTriangles = 0;
     if (pPreciseVectorData)
     {
         char GRP[] = "GRP ";
-        fwrite(GRP,1,4,output);
+        fwrite(GRP, 1, 4, output);
 
         int k = 0;
         int moba_batch = moba_size/12;
@@ -253,9 +253,9 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
             MobaEx[k++] = MOBA[i];
         }
         int moba_size_grp = moba_batch*4+4;
-        fwrite(&moba_size_grp,4,1,output);
-        fwrite(&moba_batch,4,1,output);
-        fwrite(MobaEx,4,k,output);
+        fwrite(&moba_size_grp, 4, 1, output);
+        fwrite(&moba_batch, 4, 1, output);
+        fwrite(MobaEx, 4, k, output);
         delete [] MobaEx;
 
         uint32 nIdexes = nTriangles * 3;
@@ -315,7 +315,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
     else
     {
         char GRP[] = "GRP ";
-        fwrite(GRP,1,4,output);
+        fwrite(GRP, 1, 4, output);
         int k = 0;
         int moba_batch = moba_size/12;
         MobaEx = new int[moba_batch*4];
@@ -325,9 +325,9 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
         }
 
         int moba_size_grp = moba_batch*4+4;
-        fwrite(&moba_size_grp,4,1,output);
-        fwrite(&moba_batch,4,1,output);
-        fwrite(MobaEx,4,k,output);
+        fwrite(&moba_size_grp, 4, 1, output);
+        fwrite(&moba_batch, 4, 1, output);
+        fwrite(MobaEx, 4, k, output);
         delete [] MobaEx;
 
         // INDX
@@ -370,13 +370,13 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
 
         // write triangle indices
         int INDX[] = {0x58444E49, nColTriangles*6+4, nColTriangles*3};
-        fwrite(INDX,4,3,output);
-        fwrite(MoviEx,2,nColTriangles*3,output);
+        fwrite(INDX, 4, 3, output);
+        fwrite(MoviEx, 2, nColTriangles*3, output);
 
         // write vertices
         int VERT[] = {0x54524556, nColVertices*3*sizeof(float)+4, nColVertices};// "VERT"
         int check = 3*nColVertices;
-        fwrite(VERT,4,3,output);
+        fwrite(VERT, 4, 3, output);
         for (uint32 i=0; i<nVertices; ++i)
             if (IndexRenum[i] >= 0)
                 check -= fwrite(MOVT+3*i, sizeof(float), 3, output);
@@ -440,25 +440,25 @@ WMOGroup::~WMOGroup()
     delete [] LiquBytes;
 }
 
-WMOInstance::WMOInstance(MPQFile &f,const char* WmoInstName, uint32 mapID, uint32 tileX, uint32 tileY, FILE *pDirfile)
+WMOInstance::WMOInstance(MPQFile &f, const char* WmoInstName, uint32 mapID, uint32 tileX, uint32 tileY, FILE *pDirfile)
 {
-    pos = Vec3D(0,0,0);
+    pos = Vec3D(0, 0, 0);
 
     float ff[3];
     f.read(&id, 4);
-    f.read(ff,12);
+    f.read(ff, 12);
     pos = Vec3D(ff[0],ff[1],ff[2]);
-    f.read(ff,12);
+    f.read(ff, 12);
     rot = Vec3D(ff[0],ff[1],ff[2]);
-    f.read(ff,12);
+    f.read(ff, 12);
     pos2 = Vec3D(ff[0],ff[1],ff[2]);
-    f.read(ff,12);
+    f.read(ff, 12);
     pos3 = Vec3D(ff[0],ff[1],ff[2]);
-    f.read(&d2,4);
+    f.read(&d2, 4);
 
-    uint16 trash,adtId;
-    f.read(&adtId,2);
-    f.read(&trash,2);
+    uint16 trash, adtId;
+    f.read(&adtId, 2);
+    f.read(&trash, 2);
 
     // add_in _dir_file
 
@@ -481,7 +481,7 @@ WMOInstance::WMOInstance(MPQFile &f,const char* WmoInstName, uint32 mapID, uint3
     if (nVertices == 0)
         return;
 
-    float x,z;
+    float x, z;
     x = pos.x;
     z = pos.z;
     if (x==0 && z == 0)
@@ -513,12 +513,12 @@ WMOInstance::WMOInstance(MPQFile &f,const char* WmoInstName, uint32 mapID, uint3
     fwrite(WmoInstName, sizeof(char), nlen, pDirfile);
 
     /* fprintf(pDirfile,"%s/%s %f,%f,%f_%f,%f,%f 1.0 %d %d %d,%d %d\n",
-        MapName,
-        WmoInstName,
-        (float) x, (float) pos.y, (float) z,
-        (float) rot.x, (float) rot.y, (float) rot.z,
-        nVertices,
-        realx1, realy1,
+        MapName, 
+        WmoInstName, 
+        (float) x, (float) pos.y, (float) z, 
+        (float) rot.x, (float) rot.y, (float) rot.z, 
+        nVertices, 
+        realx1, realy1, 
         realx2, realy2
         ); */
 

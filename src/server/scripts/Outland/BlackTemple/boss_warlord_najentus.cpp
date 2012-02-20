@@ -106,7 +106,7 @@ struct boss_najentusAI : public ScriptedAI
     {
         if (me->IsNonMeleeSpellCasted(false)) return false;
 
-        DoCast(victim,spellId,triggered);
+        DoCast(victim, spellId, triggered);
         return true;
     }
 
@@ -125,7 +125,7 @@ struct boss_najentusAI : public ScriptedAI
         switch(spell->Id)
         {
         case SPELL_NEEDLE_SPINE:
-            me->CastSpell(pTarget,SPELL_NEEDLE_SPINE_DMG,true);
+            me->CastSpell(pTarget, SPELL_NEEDLE_SPINE_DMG, true);
             break;
         }
     }
@@ -183,7 +183,7 @@ struct boss_najentusAI : public ScriptedAI
             }
         } else TidalShieldTimer -= diff;
 
-        if (!me->HasAura(SPELL_BERSERK,0))
+        if (!me->HasAura(SPELL_BERSERK, 0))
         {
             if (EnrageTimer <= diff)
             {
@@ -206,7 +206,7 @@ struct boss_najentusAI : public ScriptedAI
         {
             if (!me->IsNonMeleeSpellCasted(false))
             {
-                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 80,true);
+                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 80, true);
                 if (!pTarget) pTarget = me->getVictim();
                 if (pTarget)
                 {

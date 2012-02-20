@@ -89,8 +89,8 @@ struct boss_nothAI : public ScriptedAI
 
     void JustSummoned(Creature* summoned)
     {
-        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-            summoned->AddThreat(pTarget,0.0f);
+        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            summoned->AddThreat(pTarget, 0.0f);
     }
 
     void JustDied(Unit* Killer)
@@ -107,7 +107,7 @@ struct boss_nothAI : public ScriptedAI
         if (Blink_Timer <= diff)
         {
             DoCast(me->getVictim(),SPELL_CRIPPLE);
-            DoCast(me,SPELL_BLINK);
+            DoCast(me, SPELL_BLINK);
 
             Blink_Timer = 25000;
         } else Blink_Timer -= diff;
@@ -125,7 +125,7 @@ struct boss_nothAI : public ScriptedAI
             DoScriptText(SAY_SUMMON, me);
 
             for (uint8 i = 0; i < 6; i++)
-                  me->SummonCreature(C_PLAGUED_WARRIOR,2684.804f,-3502.517f,261.313f,0,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,80000);
+                  me->SummonCreature(C_PLAGUED_WARRIOR, 2684.804f,-3502.517f, 261.313f, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
 
             Summon_Timer = 30500;
         } else Summon_Timer -= diff;

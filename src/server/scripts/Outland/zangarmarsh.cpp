@@ -64,8 +64,8 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature* pCreature, ui
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         pCreature->setPowerType(POWER_MANA);
-        pCreature->SetMaxPower(POWER_MANA,200);             //set a "fake" mana value, we can't depend on database doing it in this case
-        pCreature->SetPower(POWER_MANA,200);
+        pCreature->SetMaxPower(POWER_MANA, 200);             //set a "fake" mana value, we can't depend on database doing it in this case
+        pCreature->SetPower(POWER_MANA, 200);
 
         if (pCreature->GetEntry() == 17900)                //check which creature we are dealing with
         {
@@ -195,7 +195,7 @@ bool GossipHello_npc_elder_kuruti(Player *player, Creature* pCreature)
     if (player->GetQuestStatus(9803) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KUR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9226,pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(9226, pCreature->GetGUID());
 
     return true;
 }
@@ -214,7 +214,7 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature* pCreature, uint32 s
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
         {
-            if (!player->HasItemCount(24573,1))
+            if (!player->HasItemCount(24573, 1))
             {
                 ItemPosCountVec dest;
                 uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 24573, 1, false);
@@ -223,7 +223,7 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature* pCreature, uint32 s
                     player->StoreNewItem(dest, 24573, true);
                 }
                 else
-                    player->SendEquipError(msg,NULL,NULL);
+                    player->SendEquipError(msg, NULL, NULL);
             }
             player->SEND_GOSSIP_MENU(9231, pCreature->GetGUID());
             break;

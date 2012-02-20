@@ -118,14 +118,14 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
     {
         DoScriptText(SAY_MECHANICS, me);
 
-        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,5,5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
-        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
-        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,-5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,-5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
 
         if (rand()%2)
-            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,5,-7,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC, 5,-7, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
         if (rand()%2)
-            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,7,-5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC, 7,-5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -141,8 +141,8 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if (Saw_Blade_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(pTarget,SPELL_SAW_BLADE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                DoCast(pTarget, SPELL_SAW_BLADE);
             else
                 DoCast(me->getVictim(),SPELL_SAW_BLADE);
 
@@ -241,14 +241,14 @@ struct mob_steamrigger_mechanicAI : public ScriptedAI
                             //me->GetMotionMaster()->MovementExpired();
                             //me->GetMotionMaster()->MoveIdle();
 
-                            DoCast(me,HeroicMode ? H_SPELL_REPAIR : SPELL_REPAIR, true);
+                            DoCast(me, HeroicMode ? H_SPELL_REPAIR : SPELL_REPAIR, true);
                         }
                         Repair_Timer = 5000;
                     }
                     else
                     {
                         //me->GetMotionMaster()->MovementExpired();
-                        //me->GetMotionMaster()->MoveFollow(pMekgineer,0,0);
+                        //me->GetMotionMaster()->MoveFollow(pMekgineer, 0, 0);
                     }
                 }
             } else Repair_Timer = 5000;

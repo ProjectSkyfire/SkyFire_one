@@ -183,7 +183,7 @@ bool GOHello_go_mausoleum_trigger(Player* pPlayer, GameObject* pGo)
     if (GameObject* pDoor = pPlayer->FindNearestGameObject(GO_DOOR, 30.0f))
     {
         pGo->SetGoState(GO_STATE_ACTIVE);
-        pDoor->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
+        pDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
         return true;
     }
 

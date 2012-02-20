@@ -65,9 +65,9 @@ struct boss_mr_smiteAI : public ScriptedAI
 
     void Reset()
     {
-        uiTrashTimer = urand(5000,9000);
+        uiTrashTimer = urand(5000, 9000);
         uiSlamTimer = 9000;
-        uiNimbleReflexesTimer = urand(15500,31600);
+        uiNimbleReflexesTimer = urand(15500, 31600);
 
         uiHealth = 0;
 
@@ -84,7 +84,7 @@ struct boss_mr_smiteAI : public ScriptedAI
 
     bool bCheckChances()
     {
-        uint32 uiChances = urand(0,99);
+        uint32 uiChances = urand(0, 99);
         if (uiChances <= 15)
             return false;
         else
@@ -103,7 +103,7 @@ struct boss_mr_smiteAI : public ScriptedAI
                 switch (uiPhase)
                 {
                     case 1:
-                        me->GetMotionMaster()->MovePoint(1,1.37994,-780.29,9.81929);
+                        me->GetMotionMaster()->MovePoint(1, 1.37994,-780.29, 9.81929);
                         uiPhase = 2;
                         break;
                     case 3:
@@ -150,7 +150,7 @@ struct boss_mr_smiteAI : public ScriptedAI
         {
             if (bCheckChances())
                 DoCast(me, SPELL_TRASH);
-            uiTrashTimer = urand(6000,15500);
+            uiTrashTimer = urand(6000, 15500);
         } else uiTrashTimer -= uiDiff;
 
         if (uiSlamTimer <= uiDiff)
@@ -164,7 +164,7 @@ struct boss_mr_smiteAI : public ScriptedAI
         {
             if (bCheckChances())
                 DoCast(me, SPELL_NIMBLE_REFLEXES);
-            uiNimbleReflexesTimer = urand(27300,60100);
+            uiNimbleReflexesTimer = urand(27300, 60100);
         } else uiNimbleReflexesTimer -= uiDiff;
         /*END ACID-AI*/
 

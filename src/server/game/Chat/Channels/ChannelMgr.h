@@ -31,7 +31,7 @@
 class ChannelMgr
 {
     public:
-        typedef std::map<std::string,Channel *> ChannelMap;
+        typedef std::map<std::string, Channel *> ChannelMap;
         ChannelMgr() {}
         ~ChannelMgr()
         {
@@ -43,7 +43,7 @@ class ChannelMgr
         {
             if (channels.count(name) == 0)
             {
-                Channel *nchan = new Channel(name,channel_id);
+                Channel *nchan = new Channel(name, channel_id);
                 channels[name] = nchan;
             }
             return channels[name];
@@ -55,7 +55,7 @@ class ChannelMgr
             if (i == channels.end())
             {
                 WorldPacket data;
-                MakeNotOnPacket(&data,name);
+                MakeNotOnPacket(&data, name);
                 p->GetSession()->SendPacket(&data);
                 return NULL;
             }
@@ -92,7 +92,7 @@ class HordeChannelMgr    : public ChannelMgr {};
 inline ChannelMgr* channelMgr(uint32 team)
 {
     if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHANNEL))
-                                                            //For Test,No Seprate Faction
+                                                            //For Test, No Seprate Faction
         return &Trinity::Singleton<AllianceChannelMgr>::Instance();
 
     if (team == ALLIANCE)

@@ -134,7 +134,7 @@ class LootStore
 
         bool HaveLootFor(uint32 loot_id) const { return m_LootTemplates.find(loot_id) != m_LootTemplates.end(); }
         bool HaveQuestLootFor(uint32 loot_id) const;
-        bool HaveQuestLootForPlayer(uint32 loot_id,Player* player) const;
+        bool HaveQuestLootForPlayer(uint32 loot_id, Player* player) const;
 
         LootTemplate const* GetLootFor(uint32 loot_id) const;
 
@@ -283,7 +283,7 @@ struct LootView
     QuestItemList *conditionallist;
     Player *viewer;
     PermissionTypes permission;
-    LootView(Loot &_loot, QuestItemList *_qlist, QuestItemList *_ffalist, QuestItemList *_conditionallist, Player *_viewer,PermissionTypes _permission = ALL_PERMISSION)
+    LootView(Loot &_loot, QuestItemList *_qlist, QuestItemList *_ffalist, QuestItemList *_conditionallist, Player *_viewer, PermissionTypes _permission = ALL_PERMISSION)
         : loot(_loot), qlist(_qlist), ffalist(_ffalist), conditionallist(_conditionallist), viewer(_viewer), permission(_permission) {}
 };
 

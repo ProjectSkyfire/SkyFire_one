@@ -211,7 +211,7 @@ void WorldSession::HandleLfmSetOpcode(WorldPacket & recv_data)
     entry = (temp & 0xFFFF);
     type = ((temp >> 24) & 0xFFFF);
 
-    _player->m_lookingForGroup.more.Set(entry,type);
+    _player->m_lookingForGroup.more.Set(entry, type);
     sLog.outDebug("LFM set: temp %u, zone %u, type %u", temp, entry, type);
 
     if (LookingForGroup_auto_add)
@@ -311,7 +311,7 @@ void WorldSession::SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type)
 
     // fill count placeholders
     data.put<uint32>(4+4,  number);
-    data.put<uint32>(4+4+4,number);
+    data.put<uint32>(4+4+4, number);
 
     SendPacket(&data);
 }
@@ -330,7 +330,7 @@ void WorldSession::HandleSetLfgOpcode(WorldPacket & recv_data)
     if (slot >= MAX_LOOKING_FOR_GROUP_SLOT)
         return;
 
-    _player->m_lookingForGroup.slots[slot].Set(entry,type);
+    _player->m_lookingForGroup.slots[slot].Set(entry, type);
     sLog.outDebug("LFG set: looknumber %u, temp %X, type %u, entry %u", slot, temp, type, entry);
 
     if (LookingForGroup_auto_join)

@@ -75,7 +75,7 @@ struct npc_aged_dying_ancient_kodoAI : public ScriptedAI
 
             if (me->GetEntry() == NPC_TAMED_KODO && me->IsWithinDistInMap(pWho, 10.0f))
             {
-                DoScriptText(RAND(SAY_SMEED_HOME_1,SAY_SMEED_HOME_2,SAY_SMEED_HOME_3), pWho);
+                DoScriptText(RAND(SAY_SMEED_HOME_1, SAY_SMEED_HOME_2, SAY_SMEED_HOME_3), pWho);
                 me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                 m_uiDespawnTimer = 60000;
             }
@@ -107,17 +107,17 @@ bool EffectDummyCreature_npc_aged_dying_ancient_kodo(Unit *pCaster, uint32 spell
     if (spellId == SPELL_KODO_KOMBO_ITEM && effIndex == 0)
     {
         //no effect if player/creature already have aura from spells
-        if (pCaster->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF,0) || pCreatureTarget->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF,0))
+        if (pCaster->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) || pCreatureTarget->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
             return true;
 
         if (pCreatureTarget->GetEntry() == NPC_AGED_KODO ||
             pCreatureTarget->GetEntry() == NPC_DYING_KODO ||
             pCreatureTarget->GetEntry() == NPC_ANCIENT_KODO)
         {
-            pCaster->CastSpell(pCaster,SPELL_KODO_KOMBO_PLAYER_BUFF,true);
+            pCaster->CastSpell(pCaster, SPELL_KODO_KOMBO_PLAYER_BUFF, true);
 
             pCreatureTarget->UpdateEntry(NPC_TAMED_KODO);
-            pCreatureTarget->CastSpell(pCreatureTarget,SPELL_KODO_KOMBO_DESPAWN_BUFF,false);
+            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_KODO_KOMBO_DESPAWN_BUFF, false);
 
             if (pCreatureTarget->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
                 pCreatureTarget->GetMotionMaster()->MoveIdle();
@@ -134,10 +134,10 @@ bool EffectDummyCreature_npc_aged_dying_ancient_kodo(Unit *pCaster, uint32 spell
 
 bool GossipHello_npc_aged_dying_ancient_kodo(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF,0) && pCreature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF,0))
+    if (pPlayer->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) && pCreature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
     {
         pPlayer->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_PLAYER_BUFF);
-        pPlayer->CastSpell(pCreature,SPELL_KODO_KOMBO_GOSSIP,true);
+        pPlayer->CastSpell(pCreature, SPELL_KODO_KOMBO_GOSSIP, true);
 
         pCreature->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_DESPAWN_BUFF);
         pCreature->GetMotionMaster()->MoveIdle();

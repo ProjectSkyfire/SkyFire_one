@@ -242,7 +242,7 @@ bool EquippedOk(Player* pPlayer, uint32 spellId)
                 if (pItem->GetProto()->RequiredSpell == reqSpell)
             {
                 //player has item equipped that require specialty. Not allow to unlearn, player has to unequip first
-                debug_log("TSCR: pPlayer attempt to unlearn spell %u, but item %u is equipped.",reqSpell,pItem->GetProto()->ItemId);
+                debug_log("TSCR: pPlayer attempt to unlearn spell %u, but item %u is equipped.",reqSpell, pItem->GetProto()->ItemId);
                 return false;
             }
         }
@@ -639,7 +639,7 @@ void SendActionMenu_npc_prof_blacksmith(Player* pPlayer, Creature* pCreature, ui
                                                             //unknown textID (TALK_MUST_UNLEARN_WEAPON)
                 pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
             }
-            else if (EquippedOk(pPlayer,S_UNLEARN_WEAPON))
+            else if (EquippedOk(pPlayer, S_UNLEARN_WEAPON))
             {
                 if (pPlayer->GetMoney() >= DoLowUnlearnCost(pPlayer))
                 {
@@ -653,12 +653,12 @@ void SendActionMenu_npc_prof_blacksmith(Player* pPlayer, Creature* pCreature, ui
             }
             else
             {
-                pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+                pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
                 pPlayer->CLOSE_GOSSIP_MENU();
             }
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:
-            if (EquippedOk(pPlayer,S_UNLEARN_ARMOR))
+            if (EquippedOk(pPlayer, S_UNLEARN_ARMOR))
             {
                 if (pPlayer->GetMoney() >= DoLowUnlearnCost(pPlayer))
                 {
@@ -669,7 +669,7 @@ void SendActionMenu_npc_prof_blacksmith(Player* pPlayer, Creature* pCreature, ui
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
             //Learn Hammer/Axe/Sword
@@ -687,7 +687,7 @@ void SendActionMenu_npc_prof_blacksmith(Player* pPlayer, Creature* pCreature, ui
             break;
             //Unlearn Hammer/Axe/Sword
         case GOSSIP_ACTION_INFO_DEF + 8:
-            if (EquippedOk(pPlayer,S_UNLEARN_HAMMER))
+            if (EquippedOk(pPlayer, S_UNLEARN_HAMMER))
             {
                 if (pPlayer->GetMoney() >= DoMedUnlearnCost(pPlayer))
                 {
@@ -697,11 +697,11 @@ void SendActionMenu_npc_prof_blacksmith(Player* pPlayer, Creature* pCreature, ui
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
         case GOSSIP_ACTION_INFO_DEF + 9:
-            if (EquippedOk(pPlayer,S_UNLEARN_AXE))
+            if (EquippedOk(pPlayer, S_UNLEARN_AXE))
             {
                 if (pPlayer->GetMoney() >= DoMedUnlearnCost(pPlayer))
                 {
@@ -711,11 +711,11 @@ void SendActionMenu_npc_prof_blacksmith(Player* pPlayer, Creature* pCreature, ui
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
         case GOSSIP_ACTION_INFO_DEF + 10:
-            if (EquippedOk(pPlayer,S_UNLEARN_SWORD))
+            if (EquippedOk(pPlayer, S_UNLEARN_SWORD))
             {
                 if (pPlayer->GetMoney() >= DoMedUnlearnCost(pPlayer))
                 {
@@ -725,7 +725,7 @@ void SendActionMenu_npc_prof_blacksmith(Player* pPlayer, Creature* pCreature, ui
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
     }
@@ -868,7 +868,7 @@ void SendActionMenu_npc_prof_leather(Player* pPlayer, Creature* pCreature, uint3
             break;
             //Unlearn Leather
         case GOSSIP_ACTION_INFO_DEF + 1:
-            if (EquippedOk(pPlayer,S_UNLEARN_DRAGON))
+            if (EquippedOk(pPlayer, S_UNLEARN_DRAGON))
             {
                 if (pPlayer->GetMoney() >= DoMedUnlearnCost(pPlayer))
                 {
@@ -878,11 +878,11 @@ void SendActionMenu_npc_prof_leather(Player* pPlayer, Creature* pCreature, uint3
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-            if (EquippedOk(pPlayer,S_UNLEARN_ELEMENTAL))
+            if (EquippedOk(pPlayer, S_UNLEARN_ELEMENTAL))
             {
                 if (pPlayer->GetMoney() >= DoMedUnlearnCost(pPlayer))
                 {
@@ -892,11 +892,11 @@ void SendActionMenu_npc_prof_leather(Player* pPlayer, Creature* pCreature, uint3
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-            if (EquippedOk(pPlayer,S_UNLEARN_TRIBAL))
+            if (EquippedOk(pPlayer, S_UNLEARN_TRIBAL))
             {
                 if (pPlayer->GetMoney() >= DoMedUnlearnCost(pPlayer))
                 {
@@ -906,7 +906,7 @@ void SendActionMenu_npc_prof_leather(Player* pPlayer, Creature* pCreature, uint3
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
     }
@@ -1046,7 +1046,7 @@ void SendActionMenu_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32
             break;
             //Unlearn Tailor
         case GOSSIP_ACTION_INFO_DEF + 4:
-            if (EquippedOk(pPlayer,S_UNLEARN_SPELLFIRE))
+            if (EquippedOk(pPlayer, S_UNLEARN_SPELLFIRE))
             {
                 if (pPlayer->GetMoney() >= DoHighUnlearnCost(pPlayer))
                 {
@@ -1056,11 +1056,11 @@ void SendActionMenu_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:
-            if (EquippedOk(pPlayer,S_UNLEARN_MOONCLOTH))
+            if (EquippedOk(pPlayer, S_UNLEARN_MOONCLOTH))
             {
                 if (pPlayer->GetMoney() >= DoHighUnlearnCost(pPlayer))
                 {
@@ -1070,11 +1070,11 @@ void SendActionMenu_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:
-            if (EquippedOk(pPlayer,S_UNLEARN_SHADOWEAVE))
+            if (EquippedOk(pPlayer, S_UNLEARN_SHADOWEAVE))
             {
                 if (pPlayer->GetMoney() >= DoHighUnlearnCost(pPlayer))
                 {
@@ -1084,7 +1084,7 @@ void SendActionMenu_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32
                 } else
                 pPlayer->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, 0, 0);
             } else
-            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,NULL,NULL);
+            pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, NULL, NULL);
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
     }
@@ -1134,7 +1134,7 @@ void SendConfirmUnlearn_npc_prof_tailor(Player* pPlayer, Creature* pCreature, ui
                 pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
                 break;
             case 22212:                                     //Andrion Darkspinner
-                pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_UNLEARN_SHADOWEAVE, GOSSIP_SENDER_CHECK, uiAction,BOX_UNLEARN_TAILOR_SPEC, DoHighUnlearnCost(pPlayer),false);
+                pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_UNLEARN_SHADOWEAVE, GOSSIP_SENDER_CHECK, uiAction, BOX_UNLEARN_TAILOR_SPEC, DoHighUnlearnCost(pPlayer),false);
                                                             //unknown textID ()
                 pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
                 break;
@@ -1160,7 +1160,7 @@ bool GossipSelect_npc_prof_tailor(Player* pPlayer, Creature* pCreature, uint32 u
 
 /*bool GOHello_go_soothsaying_for_dummies(Player* pPlayer, GameObject* pGo)
 {
-    pPlayer->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0,GOSSIP_LEARN_DRAGON, GOSSIP_SENDER_INFO, GOSSIP_ACTION_INFO_DEF, "", 0);
+    pPlayer->PlayerTalkClass->GetGossipMenu()->AddMenuItem(0, GOSSIP_LEARN_DRAGON, GOSSIP_SENDER_INFO, GOSSIP_ACTION_INFO_DEF, "", 0);
 
     pPlayer->SEND_GOSSIP_MENU(5584, pGo->GetGUID());
 

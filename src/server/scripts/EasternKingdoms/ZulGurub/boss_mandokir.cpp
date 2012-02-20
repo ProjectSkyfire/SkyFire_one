@@ -179,7 +179,7 @@ struct boss_mandokirAI : public ScriptedAI
                         else
                         {
                             DoCast(pUnit, SPELL_CHARGE);
-                            //me->SendMonsterMove(pUnit->GetPositionX(), pUnit->GetPositionY(), pUnit->GetPositionZ(), 0, true,1);
+                            //me->SendMonsterMove(pUnit->GetPositionX(), pUnit->GetPositionY(), pUnit->GetPositionZ(), 0, true, 1);
                             AttackStart(pUnit);
                         }
                     }

@@ -110,7 +110,7 @@ bool WStrToUtf8(std::wstring wstr, std::string& utf8str);
 bool WStrToUtf8(wchar_t* wstr, size_t size, std::string& utf8str);
 
 size_t utf8length(std::string& utf8str);                    // set string to "" if invalid utf8 sequence
-void utf8truncate(std::string& utf8str,size_t len);
+void utf8truncate(std::string& utf8str, size_t len);
 
 inline bool isBasicLatinCharacter(wchar_t wchar)
 {
@@ -292,28 +292,28 @@ inline void wstrToLower(std::wstring& str)
 std::wstring GetMainPartOfName(std::wstring wname, uint32 declension);
 
 bool utf8ToConsole(const std::string& utf8str, std::string& conStr);
-bool consoleToUtf8(const std::string& conStr,std::string& utf8str);
+bool consoleToUtf8(const std::string& conStr, std::string& utf8str);
 bool Utf8FitTo(const std::string& str, std::wstring search);
 void hexEncodeByteArray(uint8* bytes, uint32 arrayLen, std::string& result);
 
 #if PLATFORM == PLATFORM_WINDOWS
-#define UTF8PRINTF(OUT,FRM,RESERR)                      \
+#define UTF8PRINTF(OUT, FRM, RESERR)                      \
 {                                                       \
     char temp_buf[6000];                                \
     va_list ap;                                         \
     va_start(ap, FRM);                                  \
-    size_t temp_len = vsnprintf(temp_buf,6000,FRM,ap);  \
+    size_t temp_len = vsnprintf(temp_buf, 6000, FRM, ap);  \
     va_end(ap);                                         \
                                                         \
     wchar_t wtemp_buf[6000];                            \
     size_t wtemp_len = 6000-1;                          \
-    if (!Utf8toWStr(temp_buf,temp_len,wtemp_buf,wtemp_len)) \
+    if (!Utf8toWStr(temp_buf, temp_len, wtemp_buf, wtemp_len)) \
         return RESERR;                                  \
     CharToOemBuffW(&wtemp_buf[0],&temp_buf[0],wtemp_len+1);\
-    fprintf(OUT,temp_buf);                              \
+    fprintf(OUT, temp_buf);                              \
 }
 #else
-#define UTF8PRINTF(OUT,FRM,RESERR)                      \
+#define UTF8PRINTF(OUT, FRM, RESERR)                      \
 {                                                       \
     va_list ap;                                         \
     va_start(ap, FRM);                                  \

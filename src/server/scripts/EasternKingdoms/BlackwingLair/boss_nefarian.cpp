@@ -104,7 +104,7 @@ struct boss_nefarianAI : public ScriptedAI
 
     void EnterCombat(Unit * who)
     {
-        DoScriptText(RAND(SAY_XHEALTH,SAY_AGGRO,SAY_SHADOWFLAME), me);
+        DoScriptText(RAND(SAY_XHEALTH, SAY_AGGRO, SAY_SHADOWFLAME), me);
 
         DoCast(who, SPELL_SHADOWFLAME_INITIAL);
         DoZoneInCombat();
@@ -166,7 +166,7 @@ struct boss_nefarianAI : public ScriptedAI
             //On official it is based on what classes are currently on the hostil list
             //but we can't do that yet so just randomly call one
 
-            switch (urand(0,8))
+            switch (urand(0, 8))
             {
                 case 0:
                     DoScriptText(SAY_MAGE, me);

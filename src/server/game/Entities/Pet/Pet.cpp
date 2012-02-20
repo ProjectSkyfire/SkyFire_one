@@ -35,9 +35,9 @@
 
 char const* petTypeSuffix[MAX_PET_TYPE] =
 {
-    "'s Minion",                                            // SUMMON_PET
-    "'s Pet",                                               // HUNTER_PET
-    "'s Guardian",                                          // GUARDIAN_PET
+    "'s Minion",                                           // SUMMON_PET
+    "'s Pet",                                              // HUNTER_PET
+    "'s Guardian",                                         // GUARDIAN_PET
     "'s Companion"                                          // MINI_PET
 };
 
@@ -192,7 +192,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
     }
 
     setPetType(PetType(fields[22].GetUInt8()));
-    SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE,owner->getFaction());
+    SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, owner->getFaction());
     SetUInt32Value(UNIT_CREATED_BY_SPELL, summon_spell_id);
 
     CreatureInfo const *cinfo = GetCreatureInfo();
@@ -215,7 +215,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         case SUMMON_PET:
             petlevel=owner->getLevel();
 
-            SetUInt32Value(UNIT_FIELD_BYTES_0,2048);
+            SetUInt32Value(UNIT_FIELD_BYTES_0, 2048);
             SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
                                                             // this enables popup window (pet dismiss, cancel)
             break;
@@ -233,8 +233,8 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
             SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
                                                             // this enables popup window (pet abandon, cancel)
             SetTP(fields[9].GetInt32());
-            SetMaxPower(POWER_HAPPINESS,GetCreatePowers(POWER_HAPPINESS));
-            SetPower(  POWER_HAPPINESS,fields[15].GetUInt32());
+            SetMaxPower(POWER_HAPPINESS, GetCreatePowers(POWER_HAPPINESS));
+            SetPower(  POWER_HAPPINESS, fields[15].GetUInt32());
             setPowerType(POWER_FOCUS);
             break;
         default:
@@ -399,7 +399,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
             CharacterDatabase.escape_string(name);
             CharacterDatabase.BeginTransaction();
             // remove current data
-            CharacterDatabase.PExecute("DELETE FROM character_pet WHERE owner = '%u' AND id = '%u'", owner,m_charmInfo->GetPetNumber());
+            CharacterDatabase.PExecute("DELETE FROM character_pet WHERE owner = '%u' AND id = '%u'", owner, m_charmInfo->GetPetNumber());
 
             // prevent duplicate using slot (except PET_SAVE_NOT_IN_SLOT)
             if (mode != PET_SAVE_NOT_IN_SLOT)
@@ -410,7 +410,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
                 CharacterDatabase.PExecute("DELETE FROM character_pet WHERE owner = '%u' AND (slot = '0' OR slot = '3')", owner);
             // save pet
             std::ostringstream ss;
-            ss  << "INSERT INTO character_pet (id, entry,  owner, modelid, level, exp, Reactstate, loyaltypoints, loyalty, trainpoint, slot, name, renamed, curhealth, curmana, curhappiness, abdata,TeachSpelldata,savetime,resettalents_cost,resettalents_time,CreatedBySpell,PetType) "
+            ss  << "INSERT INTO character_pet (id, entry,  owner, modelid, level, exp, Reactstate, loyaltypoints, loyalty, trainpoint, slot, name, renamed, curhealth, curmana, curhappiness, abdata, TeachSpelldata, savetime, resettalents_cost, resettalents_time, CreatedBySpell, PetType) "
                 << "VALUES ("
                 << m_charmInfo->GetPetNumber() << ", "
                 << GetEntry() << ", "
@@ -644,7 +644,7 @@ void Pet::ModifyLoyalty(int32 addvalue)
                 owner->ToPlayer()->GetSession()->SendPacket(&data);
 
                 //run away
-                owner->ToPlayer()->RemovePet(this,PET_SAVE_AS_DELETED);
+                owner->ToPlayer()->RemovePet(this, PET_SAVE_AS_DELETED);
             }
         }
     }
@@ -981,7 +981,7 @@ bool Guardian::InitStatsForLevel(uint32 petlevel)
     }
 
     //resistance
-    int32 createResistance[MAX_SPELL_SCHOOL] = {0,0,0,0,0,0,0};
+    int32 createResistance[MAX_SPELL_SCHOOL] = {0, 0, 0, 0, 0, 0, 0};
     if (cinfo && petType != HUNTER_PET)
     {
         createResistance[SPELL_SCHOOL_HOLY]   = cinfo->resistance1;
@@ -1186,7 +1186,7 @@ void Pet::_LoadSpellCooldowns()
     m_CreatureSpellCooldowns.clear();
     m_CreatureCategoryCooldowns.clear();
 
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT spell,time FROM pet_spell_cooldown WHERE guid = '%u'",m_charmInfo->GetPetNumber());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT spell, time FROM pet_spell_cooldown WHERE guid = '%u'",m_charmInfo->GetPetNumber());
 
     if (result)
     {
@@ -1216,7 +1216,7 @@ void Pet::_LoadSpellCooldowns()
             data << uint32(spell_id);
             data << uint32(uint32(db_time-curTime)*IN_MILLISECONDS);   // in m.secs
 
-            _AddCreatureSpellCooldown(spell_id,db_time);
+            _AddCreatureSpellCooldown(spell_id, db_time);
 
             sLog.outDebug("Pet (Number: %u) spell %u cooldown loaded (%u secs).", m_charmInfo->GetPetNumber(), spell_id, uint32(db_time-curTime));
         }
@@ -1243,7 +1243,7 @@ void Pet::_SaveSpellCooldowns()
             m_CreatureSpellCooldowns.erase(itr++);
         else
         {
-            CharacterDatabase.PExecute("INSERT INTO pet_spell_cooldown (guid,spell,time) VALUES ('%u', '%u', '" UI64FMTD "')", m_charmInfo->GetPetNumber(), itr->first, uint64(itr->second));
+            CharacterDatabase.PExecute("INSERT INTO pet_spell_cooldown (guid, spell, time) VALUES ('%u', '%u', '" UI64FMTD "')", m_charmInfo->GetPetNumber(), itr->first, uint64(itr->second));
             ++itr;
         }
     }
@@ -1251,7 +1251,7 @@ void Pet::_SaveSpellCooldowns()
 
 void Pet::_LoadSpells()
 {
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT spell,active FROM pet_spell WHERE guid = '%u'",m_charmInfo->GetPetNumber());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT spell, active FROM pet_spell WHERE guid = '%u'",m_charmInfo->GetPetNumber());
 
     if (result)
     {
@@ -1283,10 +1283,10 @@ void Pet::_SaveSpells()
                 continue;
             case PETSPELL_CHANGED:
                 CharacterDatabase.PExecute("DELETE FROM pet_spell WHERE guid = '%u' and spell = '%u'", m_charmInfo->GetPetNumber(), itr->first);
-                CharacterDatabase.PExecute("INSERT INTO pet_spell (guid,spell,active) VALUES ('%u', '%u', '%u')", m_charmInfo->GetPetNumber(), itr->first, itr->second.active);
+                CharacterDatabase.PExecute("INSERT INTO pet_spell (guid, spell, active) VALUES ('%u', '%u', '%u')", m_charmInfo->GetPetNumber(), itr->first, itr->second.active);
                 break;
             case PETSPELL_NEW:
-                CharacterDatabase.PExecute("INSERT INTO pet_spell (guid,spell,active) VALUES ('%u', '%u', '%u')", m_charmInfo->GetPetNumber(), itr->first, itr->second.active);
+                CharacterDatabase.PExecute("INSERT INTO pet_spell (guid, spell, active) VALUES ('%u', '%u', '%u')", m_charmInfo->GetPetNumber(), itr->first, itr->second.active);
                 break;
             case PETSPELL_UNCHANGED:
                 continue;
@@ -1306,7 +1306,7 @@ void Pet::_LoadAuras(uint32 timediff)
     for (int i = UNIT_FIELD_AURA; i <= UNIT_FIELD_AURASTATE; ++i)
         SetUInt32Value(i, 0);
 
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT caster_guid,spell,effect_index,stackcount,amount,maxduration,remaintime,remaincharges FROM pet_aura WHERE guid = '%u'",m_charmInfo->GetPetNumber());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT caster_guid, spell, effect_index, stackcount, amount, maxduration, remaintime, remaincharges FROM pet_aura WHERE guid = '%u'",m_charmInfo->GetPetNumber());
 
     if (result)
     {
@@ -1325,13 +1325,13 @@ void Pet::_LoadAuras(uint32 timediff)
             SpellEntry const* spellproto = sSpellStore.LookupEntry(spellid);
             if (!spellproto)
             {
-                sLog.outError("Unknown aura (spellid %u, effindex %u), ignore.",spellid,effindex);
+                sLog.outError("Unknown aura (spellid %u, effindex %u), ignore.",spellid, effindex);
                 continue;
             }
 
             if (effindex >= 3)
             {
-                sLog.outError("Invalid effect index (spellid %u, effindex %u), ignore.",spellid,effindex);
+                sLog.outError("Invalid effect index (spellid %u, effindex %u), ignore.",spellid, effindex);
                 continue;
             }
 
@@ -1363,7 +1363,7 @@ void Pet::_LoadAuras(uint32 timediff)
 
                 if (!damage)
                     damage = aura->GetModifier()->m_amount;
-                aura->SetLoadedState(caster_guid,damage,maxduration,remaintime,remaincharges);
+                aura->SetLoadedState(caster_guid, damage, maxduration, remaintime, remaincharges);
                 AddAura(aura);
             }
         }
@@ -1405,9 +1405,9 @@ void Pet::_SaveAuras()
 
                     if (i == 3)
                     {
-                        CharacterDatabase.PExecute("INSERT INTO pet_aura (guid,caster_guid,spell,effect_index,stackcount,amount,maxduration,remaintime,remaincharges) "
+                        CharacterDatabase.PExecute("INSERT INTO pet_aura (guid, caster_guid, spell, effect_index, stackcount, amount, maxduration, remaintime, remaincharges) "
                             "VALUES ('%u', '" UI64FMTD "', '%u', '%u', '%u', '%d', '%d', '%d', '%d')",
-                            m_charmInfo->GetPetNumber(), itr2->second->GetCasterGUID(),(uint32)itr2->second->GetId(), (uint32)itr2->second->GetEffIndex(), (uint32)itr2->second->GetStackAmount(), itr2->second->GetModifier()->m_amount,int(itr2->second->GetAuraMaxDuration()),int(itr2->second->GetAuraDuration()),int(itr2->second->m_procCharges));
+                            m_charmInfo->GetPetNumber(), itr2->second->GetCasterGUID(),(uint32)itr2->second->GetId(), (uint32)itr2->second->GetEffIndex(), (uint32)itr2->second->GetStackAmount(), itr2->second->GetModifier()->m_amount, int(itr2->second->GetAuraMaxDuration()),int(itr2->second->GetAuraDuration()),int(itr2->second->m_procCharges));
                     }
                 }
             }

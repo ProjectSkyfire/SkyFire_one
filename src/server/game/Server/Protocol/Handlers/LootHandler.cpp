@@ -47,7 +47,7 @@ void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket & recv_data)
         GameObject *go = player->GetMap()->GetGameObject(lguid);
 
         // not check distance for GO in case owned GO (fishing bobber case, for example) or Fishing hole GO
-        if (!go || ((go->GetOwnerGUID() != _player->GetGUID() && go->GetGoType() != GAMEOBJECT_TYPE_FISHINGHOLE) && !go->IsWithinDistInMap(_player,INTERACTION_DISTANCE)))
+        if (!go || ((go->GetOwnerGUID() != _player->GetGUID() && go->GetGoType() != GAMEOBJECT_TYPE_FISHINGHOLE) && !go->IsWithinDistInMap(_player, INTERACTION_DISTANCE)))
         {
             player->SendLootRelease(lguid);
             return;
@@ -83,7 +83,7 @@ void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket & recv_data)
 
         bool ok_loot = pCreature && pCreature->isAlive() == (player->getClass() == CLASS_ROGUE && pCreature->lootForPickPocketed);
 
-        if (!ok_loot || !pCreature->IsWithinDistInMap(_player,INTERACTION_DISTANCE))
+        if (!ok_loot || !pCreature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
         {
             player->SendLootRelease(lguid);
             return;
@@ -96,7 +96,7 @@ void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket & recv_data)
     QuestItem *ffaitem = NULL;
     QuestItem *conditem = NULL;
 
-    LootItem *item = loot->LootItemInSlot(lootSlot,player,&qitem,&ffaitem,&conditem);
+    LootItem *item = loot->LootItemInSlot(lootSlot, player,&qitem,&ffaitem,&conditem);
 
     if (!item)
     {
@@ -173,7 +173,7 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket & /*recv_data*/)
             GameObject *pGameObject = GetPlayer()->GetMap()->GetGameObject(guid);
 
             // not check distance for GO in case owned GO (fishing bobber case, for example)
-            if (pGameObject && ((pGameObject->GetOwnerGUID() == _player->GetGUID() || pGameObject->IsWithinDistInMap(_player,INTERACTION_DISTANCE))))
+            if (pGameObject && ((pGameObject->GetOwnerGUID() == _player->GetGUID() || pGameObject->IsWithinDistInMap(_player, INTERACTION_DISTANCE))))
                 pLoot = &pGameObject->loot;
 
             break;
@@ -182,7 +182,7 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket & /*recv_data*/)
         {
             Corpse *bones = ObjectAccessor::GetCorpse(*GetPlayer(), guid);
 
-            if (bones && bones->IsWithinDistInMap(_player,INTERACTION_DISTANCE))
+            if (bones && bones->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
                 pLoot = &bones->loot;
 
             break;
@@ -199,7 +199,7 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket & /*recv_data*/)
 
             bool ok_loot = pCreature && pCreature->isAlive() == (player->getClass() == CLASS_ROGUE && pCreature->lootForPickPocketed);
 
-            if (ok_loot && pCreature->IsWithinDistInMap(_player,INTERACTION_DISTANCE))
+            if (ok_loot && pCreature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
                 pLoot = &pCreature->loot ;
 
             break;
@@ -286,7 +286,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
         GameObject *go = GetPlayer()->GetMap()->GetGameObject(lguid);
 
         // not check distance for GO in case owned GO (fishing bobber case, for example) or Fishing hole GO
-        if (!go || ((go->GetOwnerGUID() != _player->GetGUID() && go->GetGoType() != GAMEOBJECT_TYPE_FISHINGHOLE) && !go->IsWithinDistInMap(_player,INTERACTION_DISTANCE)))
+        if (!go || ((go->GetOwnerGUID() != _player->GetGUID() && go->GetGoType() != GAMEOBJECT_TYPE_FISHINGHOLE) && !go->IsWithinDistInMap(_player, INTERACTION_DISTANCE)))
             return;
 
         loot = &go->loot;
@@ -325,7 +325,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
                             if (lockInfo)
                                 ReqValue = lockInfo->requiredminingskill;
                             float skill = float(player->GetSkillValue(SKILL_MINING))/(ReqValue+25);
-                            double chance = pow(0.8*chance_rate,4*(1/double(max_amount))*double(uses));
+                            double chance = pow(0.8*chance_rate, 4*(1/double(max_amount))*double(uses));
                             if (roll_chance_f(100*chance+skill))
                             {
                                 go->SetLootState(GO_READY);
@@ -345,7 +345,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
             else if (go->GetGoType() == GAMEOBJECT_TYPE_FISHINGHOLE)
             {                                               // The fishing hole used once more
                 go->AddUse();                               // if the max usage is reached, will be despawned in next tick
-                if (go->GetUseCount() >= irand(go->GetGOInfo()->fishinghole.minSuccessOpens,go->GetGOInfo()->fishinghole.maxSuccessOpens))
+                if (go->GetUseCount() >= irand(go->GetGOInfo()->fishinghole.minSuccessOpens, go->GetGOInfo()->fishinghole.maxSuccessOpens))
                 {
                     go->SetLootState(GO_JUST_DEACTIVATED);
                 }
@@ -364,7 +364,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
     else if (IS_CORPSE_GUID(lguid))        // ONLY remove insignia at BG
     {
         Corpse *corpse = ObjectAccessor::GetCorpse(*player, lguid);
-        if (!corpse || !corpse->IsWithinDistInMap(_player,INTERACTION_DISTANCE))
+        if (!corpse || !corpse->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
             return;
 
         loot = &corpse->loot;
@@ -401,7 +401,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
         Creature* pCreature = GetPlayer()->GetMap()->GetCreature(lguid);
 
         bool ok_loot = pCreature && pCreature->isAlive() == (player->getClass() == CLASS_ROGUE && pCreature->lootForPickPocketed);
-        if (!ok_loot || !pCreature->IsWithinDistInMap(_player,INTERACTION_DISTANCE))
+        if (!ok_loot || !pCreature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
             return;
 
         loot = &pCreature->loot;

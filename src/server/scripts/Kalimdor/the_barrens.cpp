@@ -402,7 +402,7 @@ struct npc_twiggy_flatheadAI : public ScriptedAI
 
             if (!EventGrate && EventInProgress)
             {
-                float x,y,z;
+                float x, y, z;
                 pWarrior->GetPosition(x, y, z);
 
                 if (x >= -1684 && x <= -1674 && y >= -4334 && y <= -4324) {

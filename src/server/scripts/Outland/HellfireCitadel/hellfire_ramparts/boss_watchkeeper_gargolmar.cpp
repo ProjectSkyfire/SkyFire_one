@@ -140,8 +140,8 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
         {
             DoScriptText(SAY_SURGE, me);
 
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_SURGE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_SURGE);
 
             Surge_Timer = 5000+rand()%8000;
         } else Surge_Timer -= diff;
@@ -150,7 +150,7 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
         {
             if (Retaliation_Timer <= diff)
             {
-                DoCast(me,SPELL_RETALIATION);
+                DoCast(me, SPELL_RETALIATION);
                 Retaliation_Timer = 30000;
             } else Retaliation_Timer -= diff;
         }

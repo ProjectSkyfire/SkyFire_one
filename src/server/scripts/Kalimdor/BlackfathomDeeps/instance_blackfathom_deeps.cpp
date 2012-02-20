@@ -94,7 +94,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
                 m_uiTwilightLordKelrisGUID = pCreature->GetGUID();
                 break;
             case NPC_LORGUS_JETT:
-                pCreature->SetHomePosition(LorgusPosition[urand(0,3)]);
+                pCreature->SetHomePosition(LorgusPosition[urand(0, 3)]);
                 break;
         }
     }
@@ -127,7 +127,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
                 break;
             case GO_AKU_MAI_DOOR:
                 if (m_auiEncounter[2] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 m_uiMainDoorGUID = pGo->GetGUID();
                 break;
         }
@@ -149,7 +149,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
                     if (GameObject *pGo = instance->GetGameObject(m_uiAltarOfTheDeepsGUID))
                     {
                         pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
-                        pGo->SummonCreature(NPC_MORRIDUNE,SpawnsLocation[4], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000);
+                        pGo->SummonCreature(NPC_MORRIDUNE, SpawnsLocation[4], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000);
                     }
                 break;
             case DATA_FIRE:
@@ -198,7 +198,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
             case DATA_EVENT:
                 uiDeathTimes = uiData;
                 if (uiDeathTimes == 18)
-                    HandleGameObject(m_uiMainDoorGUID,true);
+                    HandleGameObject(m_uiMainDoorGUID, true);
                 break;
         }
     }

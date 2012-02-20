@@ -534,19 +534,19 @@ struct boss_roarAI : public ScriptedAI
         if (MangleTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_MANGLE);
-            MangleTimer = urand(5000,8000);
+            MangleTimer = urand(5000, 8000);
         } else MangleTimer -= diff;
 
         if (ShredTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_SHRED);
-            ShredTimer = urand(10000,15000);
+            ShredTimer = urand(10000, 15000);
         } else ShredTimer -= diff;
 
         if (ScreamTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_FRIGHTENED_SCREAM);
-            ScreamTimer = urand(20000,30000);
+            ScreamTimer = urand(20000, 30000);
         } else ScreamTimer -= diff;
 
         DoMeleeAttackIfReady();
@@ -578,7 +578,7 @@ struct boss_croneAI : public ScriptedAI
 
     void EnterCombat(Unit* /*who*/)
     {
-        DoScriptText(RAND(SAY_CRONE_AGGRO,SAY_CRONE_AGGRO2), me);
+        DoScriptText(RAND(SAY_CRONE_AGGRO, SAY_CRONE_AGGRO2), me);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
@@ -608,7 +608,7 @@ struct boss_croneAI : public ScriptedAI
 
         if (CycloneTimer <= diff)
         {
-            if (Creature* Cyclone = DoSpawnCreature(CREATURE_CYCLONE, urand(0,9), urand(0,9), 0, 0, TEMPSUMMON_TIMED_DESPAWN, 15000))
+            if (Creature* Cyclone = DoSpawnCreature(CREATURE_CYCLONE, urand(0, 9), urand(0, 9), 0, 0, TEMPSUMMON_TIMED_DESPAWN, 15000))
                 Cyclone->CastSpell(Cyclone, SPELL_CYCLONE_VISUAL, true);
             CycloneTimer = 30000;
         } else CycloneTimer -= diff;
@@ -650,7 +650,7 @@ struct mob_cycloneAI : public ScriptedAI
             Position pos;
             me->GetRandomNearPosition(pos, 10);
             me->GetMotionMaster()->MovePoint(0, pos);
-            MoveTimer = urand(5000,8000);
+            MoveTimer = urand(5000, 8000);
         } else MoveTimer -= diff;
     }
 };
@@ -833,13 +833,13 @@ struct boss_bigbadwolfAI : public ScriptedAI
         if (FearTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_TERRIFYING_HOWL);
-            FearTimer = urand(25000,35000);
+            FearTimer = urand(25000, 35000);
         } else FearTimer -= diff;
 
         if (SwipeTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_WIDE_SWIPE);
-            SwipeTimer = urand(25000,30000);
+            SwipeTimer = urand(25000, 30000);
         } else SwipeTimer -= diff;
     }
 };
@@ -1331,31 +1331,31 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
     {
         if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
             DoCast(pTarget, SPELL_BLINDING_PASSION);
-        BlindingPassionTimer = urand(30000,45000);
+        BlindingPassionTimer = urand(30000, 45000);
     } else BlindingPassionTimer -= diff;
 
     if (DevotionTimer <= diff)
     {
         DoCast(me, SPELL_DEVOTION);
-        DevotionTimer = urand(15000,45000);
+        DevotionTimer = urand(15000, 45000);
     } else DevotionTimer -= diff;
 
     if (PowerfulAttractionTimer <= diff)
     {
         DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_POWERFUL_ATTRACTION);
-        PowerfulAttractionTimer = urand(5000,30000);
+        PowerfulAttractionTimer = urand(5000, 30000);
     } else PowerfulAttractionTimer -= diff;
 
     if (EternalAffectionTimer <= diff)
     {
-        if (urand(0,1) && SummonedRomulo)
+        if (urand(0, 1) && SummonedRomulo)
         {
             Creature* Romulo = (Unit::GetCreature((*me), RomuloGUID));
             if (Romulo && Romulo->isAlive() && !RomuloDead)
                 DoCast(Romulo, SPELL_ETERNAL_AFFECTION);
         } else DoCast(me, SPELL_ETERNAL_AFFECTION);
 
-        EternalAffectionTimer = urand(45000,60000);
+        EternalAffectionTimer = urand(45000, 60000);
     } else EternalAffectionTimer -= diff;
 
     DoMeleeAttackIfReady();
@@ -1388,27 +1388,27 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
         if (pTarget && !me->HasInArc(M_PI, pTarget))
         {
             DoCast(pTarget, SPELL_BACKWARD_LUNGE);
-            BackwardLungeTimer = urand(15000,30000);
+            BackwardLungeTimer = urand(15000, 30000);
         }
     } else BackwardLungeTimer -= diff;
 
     if (DaringTimer <= diff)
     {
         DoCast(me, SPELL_DARING);
-        DaringTimer = urand(20000,40000);
+        DaringTimer = urand(20000, 40000);
     } else DaringTimer -= diff;
 
     if (DeadlySwatheTimer <= diff)
     {
         if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
             DoCast(pTarget, SPELL_DEADLY_SWATHE);
-        DeadlySwatheTimer = urand(15000,25000);
+        DeadlySwatheTimer = urand(15000, 25000);
     } else DeadlySwatheTimer -= diff;
 
     if (PoisonThrustTimer <= diff)
     {
         DoCast(me->getVictim(), SPELL_POISON_THRUST);
-        PoisonThrustTimer = urand(10000,20000);
+        PoisonThrustTimer = urand(10000, 20000);
     } else PoisonThrustTimer -= diff;
 
     DoMeleeAttackIfReady();

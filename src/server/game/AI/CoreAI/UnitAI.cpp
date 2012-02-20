@@ -94,12 +94,12 @@ inline bool SelectTargetHelper(const Unit * me, const Unit * target, const bool 
     {
         if (aura > 0)
         {
-            if (!target->HasAura(aura,0))
+            if (!target->HasAura(aura, 0))
                 return false;
         }
         else
         {
-            if (target->HasAura(aura,0))
+            if (target->HasAura(aura, 0))
                 return false;
         }
     }

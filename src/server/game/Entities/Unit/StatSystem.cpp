@@ -161,7 +161,7 @@ void Player::UpdateArmor()
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
     // Druid Enrage armor reduction
-    if (HasAura(5229,0))
+    if (HasAura(5229, 0))
         value -= (m_form == FORM_DIREBEAR) ? 0.16*value : 0.27*value;
 
     SetArmor(int32(value));
@@ -376,7 +376,7 @@ void Player::CalculateMinMaxDamage(WeaponAttackType attType, bool normalized, fl
             break;
     }
 
-    float att_speed = GetAPMultiplier(attType,normalized);
+    float att_speed = GetAPMultiplier(attType, normalized);
 
     float base_value  = GetModifierValue(unitMod, BASE_VALUE) + GetTotalAttackPowerValue(attType)/ 14.0f * att_speed;
     float base_pct    = GetModifierValue(unitMod, BASE_PCT);
@@ -420,22 +420,22 @@ void Player::UpdateDamagePhysical(WeaponAttackType attType)
     float mindamage;
     float maxdamage;
 
-    CalculateMinMaxDamage(attType,false,mindamage,maxdamage);
+    CalculateMinMaxDamage(attType, false, mindamage, maxdamage);
 
     switch(attType)
     {
         case BASE_ATTACK:
         default:
-            SetStatFloatValue(UNIT_FIELD_MINDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE, maxdamage);
             break;
         case OFF_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, maxdamage);
             break;
         case RANGED_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE, maxdamage);
             break;
     }
 }
@@ -803,16 +803,16 @@ void Creature::UpdateDamagePhysical(WeaponAttackType attType)
     {
         case BASE_ATTACK:
         default:
-            SetStatFloatValue(UNIT_FIELD_MINDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE, maxdamage);
             break;
         case OFF_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, maxdamage);
             break;
         case RANGED_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE, maxdamage);
             break;
     }
 }

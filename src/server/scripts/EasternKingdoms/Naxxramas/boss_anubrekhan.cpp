@@ -112,10 +112,10 @@ struct boss_anubrekhanAI : public ScriptedAI
         {
             //Cast Impale on a random target
             //Do NOT cast it when we are afflicted by locust swarm
-            if (!me->HasAura(SPELL_LOCUSTSWARM,1))
+            if (!me->HasAura(SPELL_LOCUSTSWARM, 1))
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(pTarget,SPELL_IMPALE);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_IMPALE);
             }
 
             Impale_Timer = 15000;

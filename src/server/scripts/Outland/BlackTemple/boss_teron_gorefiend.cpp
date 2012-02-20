@@ -264,7 +264,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -278,7 +278,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
     float CalculateRandomLocation(float Loc, uint32 radius)
     {
         float coord = Loc;
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 coord += rand()%radius;
@@ -321,8 +321,8 @@ struct boss_teron_gorefiendAI : public ScriptedAI
             Ghost = Unit::GetUnit((*me), GhostGUID);
         if (Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, 0))
         {
-            /*float x,y,z;
-            Ghost->GetPosition(x,y,z);
+            /*float x, y, z;
+            Ghost->GetPosition(x, y, z);
             Creature* control = me->SummonCreature(CREATURE_GHOST, x, y, z, 0, TEMPSUMMON_TIMED_DESAWN, 30000);
             if (control)
             {
@@ -434,7 +434,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
             if (pTarget)
             {
-                DoScriptText(RAND(SAY_SPECIAL1,SAY_SPECIAL2), me);
+                DoScriptText(RAND(SAY_SPECIAL1, SAY_SPECIAL2), me);
                 DoCast(pTarget, SPELL_INCINERATE);
                 IncinerateTimer = 20000 + rand()%31 * 1000;
             }
@@ -467,7 +467,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
         if (RandomYellTimer <= diff)
         {
-            DoScriptText(RAND(SAY_SPELL1,SAY_SPELL2), me);
+            DoScriptText(RAND(SAY_SPELL1, SAY_SPELL2), me);
             RandomYellTimer = 50000 + rand()%51 * 1000;
         } else RandomYellTimer -= diff;
 

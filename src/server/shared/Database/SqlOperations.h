@@ -111,7 +111,7 @@ class SqlQueryHolder
         SqlQueryHolder() {}
         ~SqlQueryHolder();
         bool SetQuery(size_t index, const char *sql);
-        bool SetPQuery(size_t index, const char *format, ...) ATTR_PRINTF(3,4);
+        bool SetPQuery(size_t index, const char *format, ...) ATTR_PRINTF(3, 4);
         void SetSize(size_t size);
         QueryResult_AutoPtr GetResult(size_t index);
         void SetResult(size_t index, QueryResult_AutoPtr result);

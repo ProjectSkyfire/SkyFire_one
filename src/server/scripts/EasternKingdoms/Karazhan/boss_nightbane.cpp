@@ -50,14 +50,14 @@ EndScriptData */
 
 float IntroWay[8][3] =
 {
-    {-11053.37f,-1794.48f,149},
-    {-11141.07f,-1841.40f,125},
-    {-11187.28f,-1890.23f,125},
-    {-11189.20f,-1931.25f,125},
-    {-11153.76f,-1948.93f,125},
-    {-11128.73f,-1929.75f,125},
-    {-11140   , -1915  ,122},
-    {-11163   , -1903  ,91.473f}
+    {-11053.37f,-1794.48f, 149},
+    {-11141.07f,-1841.40f, 125},
+    {-11187.28f,-1890.23f, 125},
+    {-11189.20f,-1931.25f, 125},
+    {-11153.76f,-1948.93f, 125},
+    {-11128.73f,-1929.75f, 125},
+    {-11140   , -1915  , 122},
+    {-11163   , -1903  , 91.473f}
 };
 
 struct boss_nightbaneAI : public ScriptedAI
@@ -124,7 +124,7 @@ struct boss_nightbaneAI : public ScriptedAI
             }
             else
             {
-                pInstance->SetData64(DATA_NIGHTBANE,me->GetGUID());
+                pInstance->SetData64(DATA_NIGHTBANE, me->GetGUID());
             }
 
             if (!Intro)
@@ -277,11 +277,11 @@ struct boss_nightbaneAI : public ScriptedAI
         me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
         me->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);
         (*me).GetMotionMaster()->Clear(false);
-        (*me).GetMotionMaster()->MovePoint(0,IntroWay[2][0],IntroWay[2][1],IntroWay[2][2]);
+        (*me).GetMotionMaster()->MovePoint(0, IntroWay[2][0],IntroWay[2][1],IntroWay[2][2]);
 
         Flying = true;
 
-        FlyTimer = urand(45000,60000); //timer wrong between 45 and 60 seconds
+        FlyTimer = urand(45000, 60000); //timer wrong between 45 and 60 seconds
         ++FlyCount;
 
         RainofBonesTimer = 5000; //timer wrong (maybe)
@@ -299,11 +299,11 @@ struct boss_nightbaneAI : public ScriptedAI
                 {
                     me->RemoveUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);
                     me->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-                    me->GetMotionMaster()->MovePoint(8,IntroWay[7][0],IntroWay[7][1],IntroWay[7][2]);
+                    me->GetMotionMaster()->MovePoint(8, IntroWay[7][0],IntroWay[7][1],IntroWay[7][2]);
                 }
                 else
                 {
-                    me->GetMotionMaster()->MovePoint(MovePhase,IntroWay[MovePhase][0],IntroWay[MovePhase][1],IntroWay[MovePhase][2]);
+                    me->GetMotionMaster()->MovePoint(MovePhase, IntroWay[MovePhase][0],IntroWay[MovePhase][1],IntroWay[MovePhase][2]);
                     ++MovePhase;
                 }
             }
@@ -314,11 +314,11 @@ struct boss_nightbaneAI : public ScriptedAI
                 {
                     me->RemoveUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);
                     me->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
-                    me->GetMotionMaster()->MovePoint(8,IntroWay[7][0],IntroWay[7][1],IntroWay[7][2]);
+                    me->GetMotionMaster()->MovePoint(8, IntroWay[7][0],IntroWay[7][1],IntroWay[7][2]);
                 }
                 else
                 {
-                    me->GetMotionMaster()->MovePoint(MovePhase,IntroWay[MovePhase][0],IntroWay[MovePhase][1],IntroWay[MovePhase][2]);
+                    me->GetMotionMaster()->MovePoint(MovePhase, IntroWay[MovePhase][0],IntroWay[MovePhase][1],IntroWay[MovePhase][2]);
                     ++MovePhase;
                 }
             }
@@ -344,7 +344,7 @@ struct boss_nightbaneAI : public ScriptedAI
             if (BellowingRoarTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_BELLOWING_ROAR);
-                BellowingRoarTimer = urand(30000,40000);
+                BellowingRoarTimer = urand(30000, 40000);
             } else BellowingRoarTimer -= diff;
 
             if (SmolderingBreathTimer <= diff)
@@ -434,7 +434,7 @@ struct boss_nightbaneAI : public ScriptedAI
                 for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                 {
                     if (Player* i_pl = i->getSource())
-                        if (i_pl->isAlive() && !me->IsWithinDistInMap(i_pl,80))
+                        if (i_pl->isAlive() && !me->IsWithinDistInMap(i_pl, 80))
                         {
                             DoCast(i_pl, SPELL_FIREBALL_BARRAGE);
                         }
@@ -447,7 +447,7 @@ struct boss_nightbaneAI : public ScriptedAI
                 me->MonsterYell(RAND(*YELL_LAND_PHASE_1,*YELL_LAND_PHASE_2), LANG_UNIVERSAL, NULL);
 
                 me->GetMotionMaster()->Clear(false);
-                me->GetMotionMaster()->MovePoint(3,IntroWay[3][0],IntroWay[3][1],IntroWay[3][2]);
+                me->GetMotionMaster()->MovePoint(3, IntroWay[3][0],IntroWay[3][1],IntroWay[3][2]);
 
                 Flying = true;
             } else FlyTimer -= diff;

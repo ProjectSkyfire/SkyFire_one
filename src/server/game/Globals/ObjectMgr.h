@@ -339,9 +339,9 @@ struct CellObjectGuids
     CellCorpseSet corpses;
 };
 typedef UNORDERED_MAP<uint32/*cell_id*/,CellObjectGuids> CellObjectGuidsMap;
-typedef UNORDERED_MAP<uint32/*(mapid,spawnMode) pair*/,CellObjectGuidsMap> MapObjectGuids;
+typedef UNORDERED_MAP<uint32/*(mapid, spawnMode) pair*/,CellObjectGuidsMap> MapObjectGuids;
 
-typedef UNORDERED_MAP<uint64/*(instance,guid) pair*/,time_t> RespawnTimes;
+typedef UNORDERED_MAP<uint64/*(instance, guid) pair*/,time_t> RespawnTimes;
 
 // Trinity string ranges
 #define MIN_TRINITY_STRING_ID           1                    // 'mangos_string'
@@ -356,19 +356,19 @@ struct TrinityStringLocale
     std::vector<std::string> Content;                       // 0 -> default, i -> i-1 locale index
 };
 
-typedef std::map<uint32,uint32> CreatureLinkedRespawnMap;
-typedef UNORDERED_MAP<uint32,CreatureData> CreatureDataMap;
-typedef UNORDERED_MAP<uint32,GameObjectData> GameObjectDataMap;
-typedef UNORDERED_MAP<uint32,CreatureLocale> CreatureLocaleMap;
-typedef UNORDERED_MAP<uint32,GameObjectLocale> GameObjectLocaleMap;
-typedef UNORDERED_MAP<uint32,ItemLocale> ItemLocaleMap;
-typedef UNORDERED_MAP<uint32,QuestLocale> QuestLocaleMap;
-typedef UNORDERED_MAP<uint32,NpcTextLocale> NpcTextLocaleMap;
-typedef UNORDERED_MAP<uint32,PageTextLocale> PageTextLocaleMap;
-typedef UNORDERED_MAP<uint32,TrinityStringLocale> TrinityStringLocaleMap;
-typedef UNORDERED_MAP<uint32,GossipMenuItemsLocale> GossipMenuItemsLocaleMap;
+typedef std::map<uint32, uint32> CreatureLinkedRespawnMap;
+typedef UNORDERED_MAP<uint32, CreatureData> CreatureDataMap;
+typedef UNORDERED_MAP<uint32, GameObjectData> GameObjectDataMap;
+typedef UNORDERED_MAP<uint32, CreatureLocale> CreatureLocaleMap;
+typedef UNORDERED_MAP<uint32, GameObjectLocale> GameObjectLocaleMap;
+typedef UNORDERED_MAP<uint32, ItemLocale> ItemLocaleMap;
+typedef UNORDERED_MAP<uint32, QuestLocale> QuestLocaleMap;
+typedef UNORDERED_MAP<uint32, NpcTextLocale> NpcTextLocaleMap;
+typedef UNORDERED_MAP<uint32, PageTextLocale> PageTextLocaleMap;
+typedef UNORDERED_MAP<uint32, TrinityStringLocale> TrinityStringLocaleMap;
+typedef UNORDERED_MAP<uint32, GossipMenuItemsLocale> GossipMenuItemsLocaleMap;
 
-typedef std::multimap<uint32,uint32> QuestRelations;
+typedef std::multimap<uint32, uint32> QuestRelations;
 
 struct PetLevelInfo
 {
@@ -420,9 +420,9 @@ struct GossipMenus
     uint16          cond_2;
 };
 
-typedef std::multimap<uint32,GossipMenus> GossipMenusMap;
+typedef std::multimap<uint32, GossipMenus> GossipMenusMap;
 typedef std::pair<GossipMenusMap::const_iterator, GossipMenusMap::const_iterator> GossipMenusMapBounds;
-typedef std::multimap<uint32,GossipMenuItems> GossipMenuItemsMap;
+typedef std::multimap<uint32, GossipMenuItems> GossipMenuItemsMap;
 typedef std::pair<GossipMenuItemsMap::const_iterator, GossipMenuItemsMap::const_iterator> GossipMenuItemsMapBounds;
 
 struct PetCreateSpellEntry
@@ -448,7 +448,7 @@ struct GraveYardData
     uint32 safeLocId;
     uint32 team;
 };
-typedef std::multimap<uint32,GraveYardData> GraveYardMap;
+typedef std::multimap<uint32, GraveYardData> GraveYardMap;
 
 enum ConditionType
 {                                                           // value1       value2  for the Condition enumed
@@ -612,7 +612,7 @@ class ObjectMgr
             if (class_ >= MAX_CLASSES) return NULL;
             return &playerClassInfo[class_];
         }
-        void GetPlayerClassLevelInfo(uint32 class_,uint32 level, PlayerClassLevelInfo* info) const;
+        void GetPlayerClassLevelInfo(uint32 class_, uint32 level, PlayerClassLevelInfo* info) const;
 
         PlayerInfo const* GetPlayerInfo(uint32 race, uint32 class_) const
         {
@@ -622,7 +622,7 @@ class ObjectMgr
             if (info->displayId_m == 0 || info->displayId_f == 0) return NULL;
             return info;
         }
-        void GetPlayerLevelInfo(uint32 race, uint32 class_,uint32 level, PlayerLevelInfo* info) const;
+        void GetPlayerLevelInfo(uint32 race, uint32 class_, uint32 level, PlayerLevelInfo* info) const;
 
         uint64 GetPlayerGUIDByName(std::string name) const;
         bool GetPlayerNameByGUID(const uint64 &guid, std::string &name) const;
@@ -739,7 +739,7 @@ class ObjectMgr
         void LoadTransportEvents();
 
         bool LoadTrinityStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value);
-        bool LoadTrinityStrings() { return LoadTrinityStrings(WorldDatabase,"trinity_string",MIN_TRINITY_STRING_ID,MAX_TRINITY_STRING_ID); }
+        bool LoadTrinityStrings() { return LoadTrinityStrings(WorldDatabase,"trinity_string",MIN_TRINITY_STRING_ID, MAX_TRINITY_STRING_ID); }
     void LoadDbScriptStrings();
         void LoadPetCreateSpells();
         void LoadCreatureLocales();
@@ -841,7 +841,7 @@ class ObjectMgr
 
         CellObjectGuids const& GetCellObjectGuids(uint16 mapid, uint8 spawnMode, uint32 cell_id)
         {
-            return mMapObjectGuids[MAKE_PAIR32(mapid,spawnMode)][cell_id];
+            return mMapObjectGuids[MAKE_PAIR32(mapid, spawnMode)][cell_id];
         }
 
         CreatureData const* GetCreatureData(uint32 guid) const
@@ -917,16 +917,16 @@ class ObjectMgr
             return &itr->second;
         }
         const char *GetTrinityString(int32 entry, int locale_idx) const;
-        const char *GetTrinityStringForDBCLocale(int32 entry) const { return GetTrinityString(entry,DBCLocaleIndex); }
+        const char *GetTrinityStringForDBCLocale(int32 entry) const { return GetTrinityString(entry, DBCLocaleIndex); }
         int32 GetDBCLocaleIndex() const { return DBCLocaleIndex; }
         void SetDBCLocaleIndex(uint32 lang) { DBCLocaleIndex = GetIndexForLocale(LocaleConstant(lang)); }
 
         void AddCorpseCellData(uint32 mapid, uint32 cellid, uint32 player_guid, uint32 instance);
         void DeleteCorpseCellData(uint32 mapid, uint32 cellid, uint32 player_guid);
 
-        time_t GetCreatureRespawnTime(uint32 loguid, uint32 instance) { return mCreatureRespawnTimes[MAKE_PAIR64(loguid,instance)]; }
+        time_t GetCreatureRespawnTime(uint32 loguid, uint32 instance) { return mCreatureRespawnTimes[MAKE_PAIR64(loguid, instance)]; }
         void SaveCreatureRespawnTime(uint32 loguid, uint32 instance, time_t t);
-        time_t GetGORespawnTime(uint32 loguid, uint32 instance) { return mGORespawnTimes[MAKE_PAIR64(loguid,instance)]; }
+        time_t GetGORespawnTime(uint32 loguid, uint32 instance) { return mGORespawnTimes[MAKE_PAIR64(loguid, instance)]; }
         void SaveGORespawnTime(uint32 loguid, uint32 instance, time_t t);
         void DeleteRespawnTimeForInstance(uint32 instance);
 
@@ -1008,8 +1008,8 @@ class ObjectMgr
 
             return &iter->second;
         }
-        void AddVendorItem(uint32 entry,uint32 item, uint32 maxcount, uint32 incrtime, uint32 ExtendedCost, bool savetodb = true); // for event
-        bool RemoveVendorItem(uint32 entry,uint32 item, bool savetodb = true); // for event
+        void AddVendorItem(uint32 entry, uint32 item, uint32 maxcount, uint32 incrtime, uint32 ExtendedCost, bool savetodb = true); // for event
+        bool RemoveVendorItem(uint32 entry, uint32 item, bool savetodb = true); // for event
         bool IsVendorItemValid(uint32 vendor_entry, uint32 item, uint32 maxcount, uint32 ptime, uint32 ExtendedCost, Player* pl = NULL, std::set<uint32>* skip_vendors = NULL, uint32 ORnpcflag = 0) const;
 
         void LoadScriptNames();
@@ -1105,9 +1105,9 @@ class ObjectMgr
         void LoadScripts(ScriptsType type);
         void CheckScripts(ScriptsType type, std::set<int32>& ids);
         void ConvertCreatureAddonAuras(CreatureDataAddon* addon, char const* table, char const* guidEntryStr);
-        void LoadQuestRelationsHelper(QuestRelations& map,char const* table);
+        void LoadQuestRelationsHelper(QuestRelations& map, char const* table);
 
-        typedef std::map<uint32,PetLevelInfo*> PetLevelInfoMap;
+        typedef std::map<uint32, PetLevelInfo*> PetLevelInfoMap;
         // PetLevelInfoMap[creature_id][level]
         PetLevelInfoMap petInfo;                            // [creature_id][level]
 
@@ -1116,13 +1116,13 @@ class ObjectMgr
         void BuildPlayerLevelInfo(uint8 race, uint8 class_, uint8 level, PlayerLevelInfo* plinfo) const;
         PlayerInfo playerInfo[MAX_RACES][MAX_CLASSES];
 
-        typedef std::map<uint32,uint32> BaseXPMap;          // [area level][base xp]
+        typedef std::map<uint32, uint32> BaseXPMap;          // [area level][base xp]
         BaseXPMap mBaseXPTable;
 
-        typedef std::map<uint32,int32> FishingBaseSkillMap; // [areaId][base skill level]
+        typedef std::map<uint32, int32> FishingBaseSkillMap; // [areaId][base skill level]
         FishingBaseSkillMap mFishingBaseForArea;
 
-        typedef std::map<uint32,std::vector<std::string> > HalfNameMap;
+        typedef std::map<uint32, std::vector<std::string> > HalfNameMap;
         HalfNameMap PetHalfName0;
         HalfNameMap PetHalfName1;
 
@@ -1156,7 +1156,7 @@ class ObjectMgr
 #define objmgr Trinity::Singleton<ObjectMgr>::Instance()
 
 // scripting access functions
-bool LoadTrinityStrings(DatabaseType& db, char const* table,int32 start_value = MAX_CREATURE_AI_TEXT_STRING_ID, int32 end_value = std::numeric_limits<int32>::min());
+bool LoadTrinityStrings(DatabaseType& db, char const* table, int32 start_value = MAX_CREATURE_AI_TEXT_STRING_ID, int32 end_value = std::numeric_limits<int32>::min());
 uint32 GetAreaTriggerScriptId(uint32 trigger_id);
 uint32 GetScriptId(const char *name);
 ObjectMgr::ScriptNameMap& GetScriptNames();

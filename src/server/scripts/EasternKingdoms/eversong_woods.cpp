@@ -369,16 +369,16 @@ struct master_kelerun_bloodmournAI : public ScriptedAI
                     switch(paladinPhase)
                     {
                     case 0:
-                        DoScriptText(TEXT_SECOND_TRIAL_1,me);
+                        DoScriptText(TEXT_SECOND_TRIAL_1, me);
                         break;
                     case 1:
-                        DoScriptText(TEXT_SECOND_TRIAL_2,me);
+                        DoScriptText(TEXT_SECOND_TRIAL_2, me);
                         break;
                     case 2:
-                        DoScriptText(TEXT_SECOND_TRIAL_3,me);
+                        DoScriptText(TEXT_SECOND_TRIAL_3, me);
                         break;
                     case 3:
-                        DoScriptText(TEXT_SECOND_TRIAL_4,me);
+                        DoScriptText(TEXT_SECOND_TRIAL_4, me);
                         break;
                     }
                 }
@@ -680,7 +680,7 @@ struct npc_infused_crystalAI : public Scripted_NoMovementAI
                 if (Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID))
                     CAST_PLR(pPlayer)->CompleteQuest(QUEST_POWERING_OUR_DEFENSES);
 
-            me->DealDamage(me,me->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            me->DealDamage(me, me->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             me->RemoveCorpse();
         } else EndTimer -= diff;
 

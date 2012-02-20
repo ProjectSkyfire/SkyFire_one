@@ -60,14 +60,14 @@ struct mob_treantAI  : public ScriptedAI
             {
                 if (Unit *Warp = (Unit*)Unit::GetUnit(*me, WarpGuid))
                 {
-                    if (me->IsWithinMeleeRange(Warp,2.5f))
+                    if (me->IsWithinMeleeRange(Warp, 2.5f))
                     {
                         int32 CurrentHP_Treant = (int32)me->GetHealth();
-                        Warp->CastCustomSpell(Warp,SPELL_HEAL_FATHER,&CurrentHP_Treant, 0, 0, true,0 ,0, me->GetGUID());
+                        Warp->CastCustomSpell(Warp, SPELL_HEAL_FATHER,&CurrentHP_Treant, 0, 0, true, 0 , 0, me->GetGUID());
                         me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                         return;
                     }
-                    me->GetMotionMaster()->MoveFollow(Warp,0,0);
+                    me->GetMotionMaster()->MoveFollow(Warp, 0, 0);
                 }
                 check_Timer = 1000;
             } else check_Timer -= diff;
@@ -161,9 +161,9 @@ struct boss_warp_splinterAI : public ScriptedAI
 
             float X = Treant_Spawn_Pos_X + TREANT_SPAWN_DIST * cos(angle);
             float Y = Treant_Spawn_Pos_Y + TREANT_SPAWN_DIST * sin(angle);
-            float O = - me->GetAngle(X,Y);
+            float O = - me->GetAngle(X, Y);
 
-            if (Creature *pTreant = me->SummonCreature(CREATURE_TREANT,treant_pos[i][0],treant_pos[i][1],treant_pos[i][2],O,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,25000))
+            if (Creature *pTreant = me->SummonCreature(CREATURE_TREANT, treant_pos[i][0],treant_pos[i][1],treant_pos[i][2],O, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000))
                 ((mob_treantAI*)pTreant->AI())->WarpGuid = me->GetGUID();
         }
         switch(rand()%2)

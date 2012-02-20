@@ -375,13 +375,13 @@ struct npc_fel_guard_houndAI : public ScriptedAI
         if (uiType != POINT_MOTION_TYPE || uiId != 1)
             return;
 
-        if (Creature* pHelboar = me->GetCreature(*me,uiHelboarGUID))
+        if (Creature* pHelboar = me->GetCreature(*me, uiHelboarGUID))
         {
             pHelboar->RemoveCorpse();
             DoCast(SPELL_SUMMON_POO);
 
             if (Player* pOwner = me->GetCharmerOrOwnerPlayerOrPlayerItself())
-                me->GetMotionMaster()->MoveFollow(pOwner,0.0f,0.0f);
+                me->GetMotionMaster()->MoveFollow(pOwner, 0.0f, 0.0f);
         }
     }
 
@@ -394,7 +394,7 @@ struct npc_fel_guard_houndAI : public ScriptedAI
                 if (pHelboar->GetGUID() != uiHelboarGUID && me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE && !me->FindCurrentSpellBySpellId(SPELL_SUMMON_POO))
                 {
                     uiHelboarGUID = pHelboar->GetGUID();
-                    me->GetMotionMaster()->MovePoint(1,pHelboar->GetPositionX(),pHelboar->GetPositionY(),pHelboar->GetPositionZ());
+                    me->GetMotionMaster()->MovePoint(1, pHelboar->GetPositionX(),pHelboar->GetPositionY(),pHelboar->GetPositionZ());
                 }
             }
             uiCheckTimer = 5000;
@@ -442,12 +442,12 @@ bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature* pCreature
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
         player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,33768,true);               //TaxiPath 585 (Gateways Murket and Shaadraz)
+        player->CastSpell(player, 33768, true);               //TaxiPath 585 (Gateways Murket and Shaadraz)
     }
     if (action == GOSSIP_ACTION_INFO_DEF + 2)
     {
         player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,35069,true);               //TaxiPath 612 (Taxi - Hellfire Peninsula - Expedition Point to Shatter Point)
+        player->CastSpell(player, 35069, true);               //TaxiPath 612 (Taxi - Hellfire Peninsula - Expedition Point to Shatter Point)
     }
     return true;
 }
@@ -479,7 +479,7 @@ bool GossipSelect_npc_gryphoneer_leafbeard(Player *player, Creature* pCreature, 
     {
         player->CLOSE_GOSSIP_MENU();
         //TaxiPath 609 (3.x.x)
-        player->CastSpell(player,SPELL_TAXI_TO_SHATTERP,true);
+        player->CastSpell(player, SPELL_TAXI_TO_SHATTERP, true);
     }
     return true;
 }
@@ -520,15 +520,15 @@ bool GossipSelect_npc_wing_commander_brack(Player *player, Creature* pCreature, 
     {
     case GOSSIP_ACTION_INFO_DEF + 1:
         player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,33659,true);               //TaxiPath 584 (Gateways Murket and Shaadraz)
+        player->CastSpell(player, 33659, true);               //TaxiPath 584 (Gateways Murket and Shaadraz)
         break;
     case GOSSIP_ACTION_INFO_DEF + 2:
         player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,33825,true);               //TaxiPath 587 (Aerial Assault Flight (Horde))
+        player->CastSpell(player, 33825, true);               //TaxiPath 587 (Aerial Assault Flight (Horde))
         break;
     case GOSSIP_ACTION_INFO_DEF + 3:
         player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player,34578,true);               //TaxiPath 604 (Taxi - Reaver's Fall to Spinebreaker Ridge)
+        player->CastSpell(player, 34578, true);               //TaxiPath 604 (Taxi - Reaver's Fall to Spinebreaker Ridge)
         break;
     }
         return true;
@@ -584,7 +584,7 @@ struct npc_wounded_blood_elfAI : public npc_escortAI
         case 27:
             DoScriptText(SAY_ELF_COMPLETE, me, pPlayer);
             // Award quest credit
-            pPlayer->GroupEventHappens(QUEST_ROAD_TO_FALCON_WATCH,me);
+            pPlayer->GroupEventHappens(QUEST_ROAD_TO_FALCON_WATCH, me);
             break;
         }
     }
@@ -841,8 +841,8 @@ struct npc_anchorite_baradaAI : public ScriptedAI
             case 1:me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                    pColonel->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                    me->SetStandState(UNIT_STAND_STATE_STAND);return 2000;
-            case 2:DoScriptText(SAY_BARADA1, me,0);return 5000;
-            case 3:DoScriptText(SAY_BARADA2, me,0);return 3000;
+            case 2:DoScriptText(SAY_BARADA1, me, 0);return 5000;
+            case 3:DoScriptText(SAY_BARADA2, me, 0);return 3000;
             case 4:DoScriptText(SAY_COLONEL1, pColonel, 0);return 3000;
             case 5:me->SetUnitMovementFlags(MOVEFLAG_WALK_MODE);return 3000;
             case 6:me->GetMotionMaster()->MovePoint(0, -707.702f, 2749.038f, 101.590f);return 2000;
@@ -850,7 +850,7 @@ struct npc_anchorite_baradaAI : public ScriptedAI
             case 8:me->SetOrientation(colonel);
                    me->SendMovementFlagUpdate();return 2000;
             case 9:me->CastSpell(me, SPELL_EXORCIM , false);return 10000;
-            case 10:DoScriptText(SAY_BARADA3, me,0); return 10000;
+            case 10:DoScriptText(SAY_BARADA3, me, 0); return 10000;
             case 11:DoScriptText(SAY_COLONEL2, pColonel, 0);return 8000;
             case 12:me->RemoveAllAuras();
             case 13:me->CastSpell(me, SPELL_EXORCIM2 , false);
@@ -876,7 +876,7 @@ struct npc_anchorite_baradaAI : public ScriptedAI
             case 23:pColonel->GetMotionMaster()->MovePoint(0, -707.784f, 2749.562f, 103.774f);
                     DoSpawnDarkness();return 4000;
             case 24:pColonel->GetMotionMaster()->MovePoint(0, -708.558f, 2744.923f, 103.774f);
-                    pColonel->CastSpell(me,SPELL_COLONEL5, false);return 2500;
+                    pColonel->CastSpell(me, SPELL_COLONEL5, false);return 2500;
             case 25:DoScriptText(SAY_BARADA6, me, 0);
             case 26:pColonel->GetMotionMaster()->MovePoint(0, -713.406f, 2744.240f, 103.774f);
                     DoSpawnDarkness();return 3500;
@@ -996,7 +996,7 @@ struct npc_darkness_releasedAI : public ScriptedAI
         DoCast(SPELL_AURA_ME);
         me->SetUnitMovementFlags(MOVEFLAG_LEVITATING);
         me->SetSpeed(MOVE_RUN, 0.10f);
-        switch(urand(0,3))
+        switch(urand(0, 3))
         {
             case 0: me->GetMotionMaster()->MovePoint(0, -714.212f, 2750.606f, 105.0f); break;
             case 1: me->GetMotionMaster()->MovePoint(0, -713.406f, 2744.240f, 105.0f); break;
@@ -1018,7 +1018,7 @@ struct npc_darkness_releasedAI : public ScriptedAI
         if (uiAtTimer <= uiDiff)
         {
             DoCast(SPELL_DARKNESS);
-            switch (urand(0,3))
+            switch (urand(0, 3))
             {
                 case 0: me->GetMotionMaster()->MovePoint(0, -714.212f, 2750.606f, 105.0f); break;
                 case 1: me->GetMotionMaster()->MovePoint(0, -713.406f, 2744.240f, 105.0f); break;
@@ -1211,7 +1211,7 @@ struct npc_vindicator_sedaiAI : public ScriptedAI
             {
                 pSummoned->SetUnitMovementFlags(MOVEFLAG_WALK_MODE);
                 pSummoned->GetMotionMaster()->MovePoint(0, 194.739868f, 4143.145996f, 73.798088f);
-                DoScriptText(SAY_KRUN, pSummoned,0);
+                DoScriptText(SAY_KRUN, pSummoned, 0);
                 pSummoned->AI()->AttackStart(me);
             }
         }
@@ -1247,10 +1247,10 @@ struct npc_vindicator_sedaiAI : public ScriptedAI
             case 1:DoSpawnEscort();
             case 2:me->SetUnitMovementFlags(MOVEFLAG_WALK_MODE);
             case 3:me->GetMotionMaster()->MovePoint(0, 204.877f, 4133.172f, 76.897f);return 2900;
-            case 4:DoScriptText(SAY_MAG_ESSCORT, pEsc,0);return 1000;
+            case 4:DoScriptText(SAY_MAG_ESSCORT, pEsc, 0);return 1000;
             case 5:pEsc->GetMotionMaster()->MovePoint(0, 229.257f, 4125.271f, 83.388f);return 1500;
             case 6:pEsc->GetMotionMaster()->MovePoint(0, 227.188f, 4121.116f, 82.745f);return 1000;
-            case 7:DoScriptText(SAY_SEDAI1, me,0);return 1000;
+            case 7:DoScriptText(SAY_SEDAI1, me, 0);return 1000;
             case 8:DoSpawnAmbusher();return 3000;
             case 9:DoSpawnAmbusher();return 1000;
             case 10:me->AI()->AttackStart(pAmb);return 2000;
@@ -1266,7 +1266,7 @@ struct npc_vindicator_sedaiAI : public ScriptedAI
                     me->GetMotionMaster()->MovePoint(0, 199.706f, 4134.302f, 75.404f);return 6000;
             case 20:me->GetMotionMaster()->MovePoint(0, 193.524f, 4147.451f, 73.605f);return 7000;
             case 21:me->SetStandState(UNIT_STAND_STATE_KNEEL);
-                    DoScriptText(SAY_SEDAI2, me,0);return 5000;
+                    DoScriptText(SAY_SEDAI2, me, 0);return 5000;
             case 22:DoSpawnKrun();return 1000;
             case 23:me->CastSpell(pKrun, SPELL_HOLYFIRE, false);return 3000;
             case 24:me->DealDamage(me, me->GetHealth(), 0, DIRECT_DAMAGE);
@@ -1368,14 +1368,14 @@ struct npc_demoniac_scryerAI : public ScriptedAI
     void DoSpawnDemon()
     {
         float fX, fY, fZ;
-        me->GetNearPoint(me,fX, fY, fZ, 5.0f, 5.0f, -13.0f);
+        me->GetNearPoint(me, fX, fY, fZ, 5.0f, 5.0f, -13.0f);
         me->SummonCreature(NPC_HELLFIRE_WARDLING, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
     }
 
     void DospawnOrc()
     {
         float fX, fY, fZ;
-        me->GetNearPoint(me,fX, fY, fZ, 5.0f, 5.0f, -13.0f);
+        me->GetNearPoint(me, fX, fY, fZ, 5.0f, 5.0f, -13.0f);
         me->SummonCreature(NPC_ORC_HA, fX, fY, fZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
     }
 

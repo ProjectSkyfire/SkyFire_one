@@ -91,7 +91,7 @@ struct boss_archaedasAI : public ScriptedAI
         if (minion && minion->isAlive())
         {
             DoCast (minion, SPELL_AWAKEN_VAULT_WALKER, flag);
-            minion->CastSpell(minion, SPELL_ARCHAEDAS_AWAKEN,true);
+            minion->CastSpell(minion, SPELL_ARCHAEDAS_AWAKEN, true);
         }
     }
 
@@ -99,15 +99,15 @@ struct boss_archaedasAI : public ScriptedAI
     {
         me->setFaction (14);
         me->RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        me->RemoveFlag (UNIT_FIELD_FLAGS,UNIT_FLAG_DISABLE_MOVE);
+        me->RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
     }
 
     void SpellHit (Unit* /*caster*/, const SpellEntry *spell)
     {
         // Being woken up from the altar, start the awaken sequence
         if (spell == GetSpellStore()->LookupEntry(SPELL_ARCHAEDAS_AWAKEN)) {
-            me->MonsterYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(me,SOUND_AGGRO);
+            me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(me, SOUND_AGGRO);
             Awaken_Timer = 4000;
             wakingUp = true;
         }
@@ -115,7 +115,7 @@ struct boss_archaedasAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        me->MonsterYell(SAY_KILL,LANG_UNIVERSAL, NULL);
+        me->MonsterYell(SAY_KILL, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_KILL);
     }
 
@@ -152,7 +152,7 @@ struct boss_archaedasAI : public ScriptedAI
             ActivateMinion(pInstance->GetData64(8),true);   // EarthenGuardian4
             ActivateMinion(pInstance->GetData64(9),true);   // EarthenGuardian5
             ActivateMinion(pInstance->GetData64(10),false); // EarthenGuardian6
-            me->MonsterYell(SAY_SUMMON,LANG_UNIVERSAL, NULL);
+            me->MonsterYell(SAY_SUMMON, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(me, SOUND_SUMMON);
             guardiansAwake = true;
         }
@@ -330,7 +330,7 @@ bool GOHello_go_altar_of_archaedas(Player *player, GameObject* go)
 
     ScriptedInstance* pInstance = (player->GetInstanceData());
     if (!pInstance) return false;
-    pInstance->SetData64(0,player->GetGUID());     // activate archaedas
+    pInstance->SetData64(0, player->GetGUID());     // activate archaedas
 
     return false;
 }
@@ -381,7 +381,7 @@ struct mob_stonekeepersAI : public ScriptedAI
 
     void JustDied(Unit * /*attacker*/)
     {
-        DoCast (me, SPELL_SELF_DESTRUCT,true);
+        DoCast (me, SPELL_SELF_DESTRUCT, true);
         if (pInstance)
             pInstance->SetData(DATA_STONE_KEEPERS, IN_PROGRESS);    // activate next stonekeeper
     }

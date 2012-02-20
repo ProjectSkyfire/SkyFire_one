@@ -91,7 +91,7 @@ enum GroupUpdateFlags
 };
 
 #define GROUP_UPDATE_FLAGS_COUNT          20
-                                                                // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19
+                                                                // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
 static const uint8 GroupUpdateLength[GROUP_UPDATE_FLAGS_COUNT] = { 0, 2, 2, 2, 1, 2, 2, 2, 2, 4, 8, 8, 1, 2, 2, 2, 1, 2, 2, 8};
 
 class InstanceSave;
@@ -209,7 +209,7 @@ class Group
         Player* GetInvited(const uint64& guid) const;
         Player* GetInvited(const std::string& name) const;
 
-        bool SameSubGroup(uint64 guid1,const uint64& guid2) const
+        bool SameSubGroup(uint64 guid1, const uint64& guid2) const
         {
             member_citerator mslot2 = _getMemberCSlot(guid2);
             if (mslot2 == m_memberSlots.end())
@@ -237,7 +237,7 @@ class Group
         MemberSlotList const& GetMemberSlots() const { return m_memberSlots; }
         GroupReference* GetFirstMember() { return m_memberMgr.getFirst(); }
         uint32 GetMembersCount() const { return m_memberSlots.size(); }
-        void GetDataForXPAtKill(Unit const* victim, uint32& count,uint32& sum_level, Player* & member_with_max_level, Player* & not_gray_member_with_max_level);
+        void GetDataForXPAtKill(Unit const* victim, uint32& count, uint32& sum_level, Player* & member_with_max_level, Player* & not_gray_member_with_max_level);
         uint8  GetMemberGroup(uint64 guid) const
         {
             member_citerator mslot = _getMemberCSlot(guid);

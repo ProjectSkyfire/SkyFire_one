@@ -60,7 +60,7 @@ struct boss_firemawAI : public ScriptedAI
         if (ShadowFlame_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_SHADOWFLAME);
-            ShadowFlame_Timer = urand(15000,18000);
+            ShadowFlame_Timer = urand(15000, 18000);
         } else ShadowFlame_Timer -= diff;
 
         //WingBuffet_Timer

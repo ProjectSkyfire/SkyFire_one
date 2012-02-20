@@ -94,9 +94,9 @@ struct boss_akilzonAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_AKILZONEVENT, NOT_STARTED);
 
-        StaticDisruption_Timer = urand(10000,20000); //10 to 20 seconds (bosskillers)
-        GustOfWind_Timer = urand(20000,30000); //20 to 30 seconds(bosskillers)
-        CallLighting_Timer = urand(10000,20000); //totaly random timer. can't find any info on this
+        StaticDisruption_Timer = urand(10000, 20000); //10 to 20 seconds (bosskillers)
+        GustOfWind_Timer = urand(20000, 30000); //20 to 30 seconds(bosskillers)
+        CallLighting_Timer = urand(10000, 20000); //totaly random timer. can't find any info on this
         ElectricalStorm_Timer = 60000; //60 seconds(bosskillers)
         Enrage_Timer = 10*MINUTE*IN_MILLISECONDS; //10 minutes till enrage(bosskillers)
         SummonEagles_Timer = 99999;
@@ -127,7 +127,7 @@ struct boss_akilzonAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        me->MonsterYell(SAY_ONDEATH,LANG_UNIVERSAL,NULL);
+        me->MonsterYell(SAY_ONDEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_ONDEATH);
         if (pInstance)
             pInstance->SetData(DATA_AKILZONEVENT, DONE);
@@ -136,7 +136,7 @@ struct boss_akilzonAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 me->MonsterYell(SAY_ONSLAY1, LANG_UNIVERSAL, NULL);
@@ -153,7 +153,7 @@ struct boss_akilzonAI : public ScriptedAI
     {
         for (uint8 i = 0; i < 8; ++i)
         {
-            Unit* bird = Unit::GetUnit(*me,BirdGUIDs[i]);
+            Unit* bird = Unit::GetUnit(*me, BirdGUIDs[i]);
             if (bird && bird->isAlive())
             {
                 bird->SetVisibility(VISIBILITY_OFF);
@@ -209,7 +209,7 @@ struct boss_akilzonAI : public ScriptedAI
                 }
             }
             // visual
-            float x,y,z;
+            float x, y, z;
             z = me->GetPositionZ();
             for (uint8 i = 0; i < 5+rand()%5; ++i)
             {
@@ -222,7 +222,7 @@ struct boss_akilzonAI : public ScriptedAI
                     trigger->SetHealth(100000);
                     trigger->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     if (Cloud)
-                        Cloud->CastCustomSpell(trigger, /*43661*/43137, &bp0, NULL, NULL,true, 0, 0, Cloud->GetGUID());
+                        Cloud->CastCustomSpell(trigger, /*43661*/43137, &bp0, NULL, NULL, true, 0, 0, Cloud->GetGUID());
                 }
             }
         }
@@ -315,12 +315,12 @@ struct boss_akilzonAI : public ScriptedAI
             }
             pTarget->CastSpell(pTarget, 44007, true);//cloud visual
             DoCast(pTarget, SPELL_ELECTRICAL_STORM, false);//storm cyclon + visual
-            float x,y,z;
-            pTarget->GetPosition(x,y,z);
+            float x, y, z;
+            pTarget->GetPosition(x, y, z);
             if (pTarget)
             {
                 pTarget->SetUnitMovementFlags(MOVEFLAG_LEVITATING);
-                pTarget->SendMonsterMove(x,y,me->GetPositionZ()+15,0);
+                pTarget->SendMonsterMove(x, y, me->GetPositionZ()+15, 0);
             }
             Unit *Cloud = me->SummonTrigger(x, y, me->GetPositionZ()+16, 0, 15000);
             if (Cloud)
@@ -349,16 +349,16 @@ struct boss_akilzonAI : public ScriptedAI
 
             for (uint8 i = 0; i < 8; ++i)
             {
-                Unit* bird = Unit::GetUnit(*me,BirdGUIDs[i]);
+                Unit* bird = Unit::GetUnit(*me, BirdGUIDs[i]);
                 if (!bird) //they despawned on die
                 {
                     if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     {
-                        x = pTarget->GetPositionX() + irand(-10,10);
-                        y = pTarget->GetPositionY() + irand(-10,10);
-                        z = pTarget->GetPositionZ() + urand(16,20);
+                        x = pTarget->GetPositionX() + irand(-10, 10);
+                        y = pTarget->GetPositionY() + irand(-10, 10);
+                        z = pTarget->GetPositionZ() + urand(16, 20);
                         if (z > 95)
-                            z = 95 - urand(0,5);
+                            z = 95 - urand(0, 5);
                     }
                     Creature *pCreature = me->SummonCreature(MOB_SOARING_EAGLE, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
                     if (pCreature)
@@ -423,11 +423,11 @@ struct mob_soaring_eagleAI : public ScriptedAI
                 float x, y, z;
                 if (EagleSwoop_Timer)
                 {
-                    x = pTarget->GetPositionX() + irand(-10,10);
-                    y = pTarget->GetPositionY() + irand(-10,10);
-                    z = pTarget->GetPositionZ() + urand(10,15);
+                    x = pTarget->GetPositionX() + irand(-10, 10);
+                    y = pTarget->GetPositionY() + irand(-10, 10);
+                    z = pTarget->GetPositionZ() + urand(10, 15);
                     if (z > 95)
-                        z = 95 - urand(0,5);
+                        z = 95 - urand(0, 5);
                 }
                 else
                 {

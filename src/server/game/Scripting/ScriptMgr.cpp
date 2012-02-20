@@ -303,7 +303,7 @@ bool ScriptMgr::GOSelectWithCode(Player* pPlayer, GameObject* pGO, uint32 uiSend
     if (!tmpscript || !tmpscript->pGOSelectWithCode) return false;
 
     pPlayer->PlayerTalkClass->ClearMenus();
-    return tmpscript->pGOSelectWithCode(pPlayer, pGO, uiSender ,uiAction, sCode);
+    return tmpscript->pGOSelectWithCode(pPlayer, pGO, uiSender , uiAction, sCode);
 }
 
 bool ScriptMgr::QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest)

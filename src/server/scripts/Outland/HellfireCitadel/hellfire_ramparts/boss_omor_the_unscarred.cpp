@@ -108,7 +108,7 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
     {
         DoScriptText(SAY_SUMMON, me);
 
-        if (Unit* random = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit* random = SelectUnit(SELECT_TARGET_RANDOM, 0))
             summoned->AI()->AttackStart(random);
     }
 
@@ -128,7 +128,7 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
         if (Summon_Timer <= diff)
         {
             me->InterruptNonMeleeSpells(false);
-            DoCast(me,SPELL_SUMMON_FIENDISH_HOUND);
+            DoCast(me, SPELL_SUMMON_FIENDISH_HOUND);
             Summon_Timer = 24100+rand()%2800;
         } else Summon_Timer -= diff;
 
@@ -136,13 +136,13 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
         {
             if (ShadowWhip_Timer <= diff)
             {
-                if (Unit* temp = Unit::GetUnit(*me,playerGUID))
+                if (Unit* temp = Unit::GetUnit(*me, playerGUID))
                 {
                     //if unit dosen't have this flag, then no pulling back (script will attempt cast, even if orbital strike was resisted)
                     if (temp->HasUnitMovementFlag(MOVEFLAG_FALLING))
                     {
                         me->InterruptNonMeleeSpells(false);
-                        DoCast(temp,SPELL_SHADOW_WHIP);
+                        DoCast(temp, SPELL_SHADOW_WHIP);
                     }
                     else
                         if (!temp->HasUnitMovementFlag(MOVEFLAG_FALLING))
@@ -159,12 +159,12 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
             Unit* temp = NULL;
             if (me->IsWithinMeleeRange(me->getVictim()))
                 temp = me->getVictim();
-            else temp = SelectUnit(SELECT_TARGET_RANDOM,0);
+            else temp = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
             if (temp && temp->GetTypeId() == TYPEID_PLAYER)
             {
                 me->InterruptNonMeleeSpells(false);
-                DoCast(temp,SPELL_ORBITAL_STRIKE);
+                DoCast(temp, SPELL_ORBITAL_STRIKE);
                 OrbitalStrike_Timer = 14000+rand()%2000;
                 playerGUID = temp->GetGUID();
 
@@ -180,7 +180,7 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
         {
             if (DemonicShield_Timer <= diff)
             {
-                DoCast(me,SPELL_DEMONIC_SHIELD);
+                DoCast(me, SPELL_DEMONIC_SHIELD);
                 DemonicShield_Timer = 15000;
             } else DemonicShield_Timer -= diff;
         }
@@ -189,21 +189,21 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
         {
             DoScriptText(SAY_CURSE, me);
 
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(pTarget,HeroicMode ? H_SPELL_BANE_OF_TREACHERY : SPELL_TREACHEROUS_AURA);
+                DoCast(pTarget, HeroicMode ? H_SPELL_BANE_OF_TREACHERY : SPELL_TREACHEROUS_AURA);
                 Aura_Timer = 8000+rand()%8000;
             }
         } else Aura_Timer -= diff;
 
         if (Shadowbolt_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 if (pTarget)
                     pTarget = me->getVictim();
 
-                DoCast(pTarget,HeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
+                DoCast(pTarget, HeroicMode ? H_SPELL_SHADOW_BOLT : SPELL_SHADOW_BOLT);
                 Shadowbolt_Timer = 4000+rand()%3100;
             }
         } else Shadowbolt_Timer -= diff;

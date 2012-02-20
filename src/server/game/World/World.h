@@ -526,12 +526,12 @@ class World
 
         void UpdateSessions(time_t diff);
         // Set a server rate (see #Rates)
-        void setRate(Rates rate,float value) { rate_values[rate]=value; }
+        void setRate(Rates rate, float value) { rate_values[rate]=value; }
         // Get a server rate (see #Rates)
         float getRate(Rates rate) const { return rate_values[rate]; }
 
         // Set a server configuration element (see #WorldConfigs)
-        void setConfig(uint32 index,uint32 value)
+        void setConfig(uint32 index, uint32 value)
         {
             if (index<CONFIG_VALUE_COUNT)
                 m_configs[index]=value;

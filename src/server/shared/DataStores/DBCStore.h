@@ -44,7 +44,7 @@ class DBCStorage
                 return false;
 
             fieldCount = dbc.GetCols();
-            m_dataTable = (T*)dbc.AutoProduceData(fmt,nCount,(char**&)indexTable);
+            m_dataTable = (T*)dbc.AutoProduceData(fmt, nCount,(char**&)indexTable);
 
             m_stringPoolList.push_back(dbc.AutoProduceStrings(fmt,(char*)m_dataTable));
 

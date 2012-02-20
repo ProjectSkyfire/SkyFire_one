@@ -89,7 +89,7 @@ struct boss_instructormaliciaAI : public ScriptedAI
         if (Corruption_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget) DoCast(pTarget, SPELL_CORRUPTION);
 
             Corruption_Timer = 24000;

@@ -74,9 +74,9 @@ struct mob_shattered_rumblerAI : public ScriptedAI
             float y = me->GetPositionY();
             float z = me->GetPositionZ();
 
-            Hitter->SummonCreature(18181,x+(0.7f * (rand()%30)),y+(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-            Hitter->SummonCreature(18181,x+(rand()%5),y-(rand()%5),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
-            Hitter->SummonCreature(18181,x-(rand()%5),y+(0.5f *(rand()%60)),z,0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,60000);
+            Hitter->SummonCreature(18181, x+(0.7f * (rand()%30)),y+(rand()%5),z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
+            Hitter->SummonCreature(18181, x+(rand()%5),y-(rand()%5),z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
+            Hitter->SummonCreature(18181, x-(rand()%5),y+(0.5f *(rand()%60)),z, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
             me->setDeathState(CORPSE);
             Spawn = true;
         }
@@ -151,8 +151,8 @@ struct mob_lumpAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        if (me->HasAura(SPELL_VISUAL_SLEEP,0))
-            me->RemoveAura(SPELL_VISUAL_SLEEP,0);
+        if (me->HasAura(SPELL_VISUAL_SLEEP, 0))
+            me->RemoveAura(SPELL_VISUAL_SLEEP, 0);
 
         if (!me->IsStandState())
              me->SetStandState(UNIT_STAND_STATE_STAND);
@@ -244,7 +244,7 @@ struct mob_sunspring_villagerAI : public ScriptedAI
     void Reset()
     {
         me->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
-        me->SetUInt32Value(UNIT_FIELD_BYTES_1,7);   // lay down
+        me->SetUInt32Value(UNIT_FIELD_BYTES_1, 7);   // lay down
     }
 
     void EnterCombat(Unit *who) {}
@@ -871,7 +871,7 @@ struct npc_maghar_prisonerAI : public npc_escortAI
             }
             else uiPlayerGUID = 0;
 
-            switch (urand(0,3))
+            switch (urand(0, 3))
             {
                 case 0:
                     DoScriptText(SAY_MAG_PRISONER1, me);
@@ -1035,7 +1035,7 @@ bool GOHello_maghar_prison(Player* pPlayer, GameObject* pGo)
         {
             pPlayer->KilledMonsterCredit(NPC_MPRISONER, pPrisoner->GetGUID());
 
-            switch (urand(0,3))
+            switch (urand(0, 3))
             {
                 case 0:
                     DoScriptText(SAYT_MAG_PRISONER1, pPrisoner, pPlayer);
@@ -1108,7 +1108,7 @@ struct npc_corki1AI : public npc_escortAI
             }
             else uiPlayerGUID = 0;
 
-            switch (urand(0,4))
+            switch (urand(0, 4))
             {
                 case 0:
                     DoScriptText(SAY_KORKI2, me);
@@ -1196,7 +1196,7 @@ struct npc_corki2AI : public npc_escortAI
             }
             else uiPlayerGUID = 0;
 
-            switch (urand(0,4))
+            switch (urand(0, 4))
             {
                 case 0:
                     DoScriptText(SAY_KORKI2, me);
@@ -1282,7 +1282,7 @@ struct npc_corki3AI : public npc_escortAI
             }
             else uiPlayerGUID = 0;
 
-            switch (urand(0,4))
+            switch (urand(0, 4))
             {
                 case 0:
                     DoScriptText(SAY_KORKI2, me);

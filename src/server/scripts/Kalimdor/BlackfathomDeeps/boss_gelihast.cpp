@@ -39,7 +39,7 @@ struct boss_gelihastAI : public ScriptedAI
 
     void Reset()
     {
-        uiNetTimer = urand(2000,4000);
+        uiNetTimer = urand(2000, 4000);
         if (pInstance)
             pInstance->SetData(TYPE_GELIHAST, NOT_STARTED);
     }
@@ -64,7 +64,7 @@ struct boss_gelihastAI : public ScriptedAI
         if (uiNetTimer < diff)
         {
             DoCastVictim(SPELL_NET);
-            uiNetTimer = urand(4000,7000);
+            uiNetTimer = urand(4000, 7000);
         } else uiNetTimer -= diff;
 
         DoMeleeAttackIfReady();

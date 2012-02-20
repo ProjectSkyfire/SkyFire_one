@@ -83,7 +83,7 @@ bool ChatHandler::HandleStartCommand(const char* /*args*/)
     }
 
     // cast spell Stuck
-    chr->CastSpell(chr,7355,false);
+    chr->CastSpell(chr, 7355, false);
     return true;
 }
 
@@ -98,12 +98,12 @@ bool ChatHandler::HandleServerInfoCommand(const char* /*args*/)
 
     PSendSysMessage(_FULLVERSION);
     //if (m_session)
-    //    full = _FULLVERSION(REVISION_DATE,REVISION_TIME,"|cffffffff|Hurl:" REVISION_ID "|h" REVISION_ID "|h|r");
+    //    full = _FULLVERSION(REVISION_DATE, REVISION_TIME,"|cffffffff|Hurl:" REVISION_ID "|h" REVISION_ID "|h|r");
     //else
-    //    full = _FULLVERSION(REVISION_DATE,REVISION_TIME,REVISION_ID);
+    //    full = _FULLVERSION(REVISION_DATE, REVISION_TIME, REVISION_ID);
 
     //SendSysMessage(full);
-    //PSendSysMessage(LANG_USING_WORLD_DB,sWorld.GetDBVersion());
+    //PSendSysMessage(LANG_USING_WORLD_DB, sWorld.GetDBVersion());
     PSendSysMessage(LANG_CONNECTED_USERS, activeClientsNum, maxActiveClientsNum, queuedClientsNum, maxQueuedClientsNum);
     PSendSysMessage(LANG_UPTIME, str.c_str());
     PSendSysMessage("Update time diff: %u.", updateTime);

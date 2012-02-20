@@ -48,7 +48,7 @@ void guardAI::Reset()
 void guardAI::EnterCombat(Unit *who)
 {
     if (me->GetEntry() == 15184)
-        DoScriptText(RAND(SAY_GUARD_SIL_AGGRO1,SAY_GUARD_SIL_AGGRO2,SAY_GUARD_SIL_AGGRO3), me, who);
+        DoScriptText(RAND(SAY_GUARD_SIL_AGGRO1, SAY_GUARD_SIL_AGGRO2, SAY_GUARD_SIL_AGGRO3), me, who);
 
     if (SpellEntry const *spell = me->reachWithSpellAttack(who))
         DoCastSpell(who, spell);
@@ -152,7 +152,7 @@ void guardAI::UpdateAI(const uint32 diff)
                 }
 
                 //Cast spell
-                if (Healing) DoCastSpell(me,info);
+                if (Healing) DoCastSpell(me, info);
                 else DoCastSpell(me->getVictim(),info);
 
                 //Set our global cooldown

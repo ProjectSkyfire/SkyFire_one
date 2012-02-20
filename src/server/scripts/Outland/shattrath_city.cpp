@@ -133,7 +133,7 @@ struct npc_salsalabimAI : public ScriptedAI
         if (done_by->GetTypeId() == TYPEID_PLAYER)
             if ((me->GetHealth()-damage)*100 / me->GetMaxHealth() < 20)
         {
-            CAST_PLR(done_by)->GroupEventHappens(QUEST_10004,me);
+            CAST_PLR(done_by)->GroupEventHappens(QUEST_10004, me);
             damage = 0;
             EnterEvadeMode();
         }
@@ -245,7 +245,7 @@ bool GossipHello_npc_zephyr(Player *player, Creature* pCreature)
 bool GossipSelect_npc_zephyr(Player *player, Creature* pCreature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
-        player->CastSpell(player,37778,false);
+        player->CastSpell(player, 37778, false);
 
     return true;
 }

@@ -230,7 +230,7 @@ struct boss_twinemperorsAI : public ScriptedAI
 
             Map *thismap = me->GetMap();
             thismap->CreatureRelocation(pOtherBoss, me->GetPositionX(),
-                me->GetPositionY(),    me->GetPositionZ(), me->GetOrientation());
+                me->GetPositionY(),   me->GetPositionZ(), me->GetOrientation());
             thismap->CreatureRelocation(me, other_x, other_y, other_z, other_o);
 
             SetAfterTeleport();
@@ -475,7 +475,7 @@ struct boss_veknilashAI : public boss_twinemperorsAI
         {
             Unit* randomMelee = SelectTarget(SELECT_TARGET_RANDOM, 0, NOMINAL_MELEE_RANGE, true);
             if (randomMelee)
-                DoCast(randomMelee,SPELL_UPPERCUT);
+                DoCast(randomMelee, SPELL_UPPERCUT);
             UpperCut_Timer = 15000+rand()%15000;
         } else UpperCut_Timer -= diff;
 
@@ -568,7 +568,7 @@ struct boss_veklorAI : public boss_twinemperorsAI
             Unit *pTarget = NULL;
             pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 45, true);
             if (pTarget)
-                DoCast(pTarget,SPELL_BLIZZARD);
+                DoCast(pTarget, SPELL_BLIZZARD);
             Blizzard_Timer = 15000+rand()%15000;
         } else Blizzard_Timer -= diff;
 
@@ -577,7 +577,7 @@ struct boss_veklorAI : public boss_twinemperorsAI
             Unit *mvic;
             if ((mvic=SelectTarget(SELECT_TARGET_NEAREST, 0, NOMINAL_MELEE_RANGE, true)) != NULL)
             {
-                DoCast(mvic,SPELL_ARCANEBURST);
+                DoCast(mvic, SPELL_ARCANEBURST);
                 ArcaneBurst_Timer = 5000;
             }
         } else ArcaneBurst_Timer -= diff;

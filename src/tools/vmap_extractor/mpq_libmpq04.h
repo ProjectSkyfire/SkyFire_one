@@ -78,7 +78,7 @@ class MPQFile
     //MPQHANDLE handle;
     bool eof;
     char *buffer;
-    libmpq__off_t pointer,size;
+    libmpq__off_t pointer, size;
 
     // disable copying
     MPQFile(const MPQFile &f) {}

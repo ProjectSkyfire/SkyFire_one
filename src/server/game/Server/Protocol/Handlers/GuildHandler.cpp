@@ -522,7 +522,7 @@ void WorldSession::HandleGuildSetPublicNoteOpcode(WorldPacket& recvPacket)
 {
     //sLog.outDebug("WORLD: Received CMSG_GUILD_SET_PUBLIC_NOTE");
 
-    std::string name,PNOTE;
+    std::string name, PNOTE;
     recvPacket >> name;
 
     if (!normalizePlayerName(name))
@@ -701,7 +701,7 @@ void WorldSession::HandleGuildDelRankOpcode(WorldPacket& /*recvPacket*/)
     guild->Roster();                                        // broadcast for tab rights update
 }
 
-void WorldSession::SendGuildCommandResult(uint32 typecmd, const std::string& str,uint32 cmdresult)
+void WorldSession::SendGuildCommandResult(uint32 typecmd, const std::string& str, uint32 cmdresult)
 {
     WorldPacket data(SMSG_GUILD_COMMAND_RESULT, (8+str.size()+1));
     data << typecmd;
@@ -749,7 +749,7 @@ void WorldSession::HandleGuildSaveEmblemOpcode(WorldPacket& recvPacket)
 
     recvPacket >> vendorGuid;
 
-    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(vendorGuid,UNIT_NPC_FLAG_TABARDDESIGNER);
+    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(vendorGuid, UNIT_NPC_FLAG_TABARDDESIGNER);
     if (!pCreature)
     {
         //"That's not an emblem vendor!"
@@ -893,7 +893,7 @@ void WorldSession::HandleGuildBankTabColon(WorldPacket & recv_data)
     sLog.outDebug("WORLD: Received (CMSG_GUILD_BANK_QUERY_TAB)");
 
     uint64 GoGuid;
-    uint8 TabId,unk1;
+    uint8 TabId, unk1;
     recv_data >> GoGuid >> TabId >> unk1;
 
     if (!GetPlayer()->GetGameObjectIfCanInteractWith(GoGuid, GAMEOBJECT_TYPE_GUILD_BANK))
@@ -951,7 +951,7 @@ void WorldSession::HandleGuildBankDeposit(WorldPacket & recv_data)
     if (_player->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
     {
         sLog.outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit money (Amount: %u) to guild bank (Guild ID %u)",
-            _player->GetName(),_player->GetSession()->GetAccountId(),money,GuildId);
+            _player->GetName(),_player->GetSession()->GetAccountId(),money, GuildId);
     }
 
     // log
@@ -1110,7 +1110,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
         if (SplitedAmount)
         {                                                   // Bank -> Bank item split (in empty or non empty slot
             GuildItemPosCountVec dest;
-            uint8 msg = pGuild->CanStoreItem(BankTabDst,BankTabSlotDst,dest,SplitedAmount,pItemSrc,false);
+            uint8 msg = pGuild->CanStoreItem(BankTabDst, BankTabSlotDst, dest, SplitedAmount, pItemSrc, false);
             if (msg != EQUIP_ERR_OK)
             {
                 pl->SendEquipError(msg, pItemSrc, NULL);
@@ -1131,13 +1131,13 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             pItemSrc->SetCount(pItemSrc->GetCount() - SplitedAmount);
             pItemSrc->FSetState(ITEM_CHANGED);
             pItemSrc->SaveToDB();                           // not in inventory and can be save standalone
-            pGuild->StoreItem(BankTabDst,dest,pNewItem);
+            pGuild->StoreItem(BankTabDst, dest, pNewItem);
             CharacterDatabase.CommitTransaction();
         }
         else                                                // non split
         {
             GuildItemPosCountVec gDest;
-            uint8 msg = pGuild->CanStoreItem(BankTabDst,BankTabSlotDst,gDest,pItemSrc->GetCount(),pItemSrc,false);
+            uint8 msg = pGuild->CanStoreItem(BankTabDst, BankTabSlotDst, gDest, pItemSrc->GetCount(),pItemSrc, false);
             if (msg == EQUIP_ERR_OK)                       // merge to
             {
                 CharacterDatabase.BeginTransaction();
@@ -1150,7 +1150,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             else                                            // swap
             {
                 gDest.clear();
-                uint8 msg = pGuild->CanStoreItem(BankTabDst,BankTabSlotDst,gDest,pItemSrc->GetCount(),pItemSrc,true);
+                uint8 msg = pGuild->CanStoreItem(BankTabDst, BankTabSlotDst, gDest, pItemSrc->GetCount(),pItemSrc, true);
                 if (msg != EQUIP_ERR_OK)
                 {
                     pl->SendEquipError(msg, pItemSrc, NULL);
@@ -1158,7 +1158,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                 }
 
                 GuildItemPosCountVec gSrc;
-                msg = pGuild->CanStoreItem(BankTab,BankTabSlot,gSrc,pItemDst->GetCount(),pItemDst,true);
+                msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gSrc, pItemDst->GetCount(),pItemDst, true);
                 if (msg != EQUIP_ERR_OK)
                 {
                     pl->SendEquipError(msg, pItemDst, NULL);
@@ -1188,9 +1188,9 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                 CharacterDatabase.CommitTransaction();
             }
         }
-        pGuild->DisplayGuildBankContentUpdate(BankTab,BankTabSlot,BankTab == BankTabDst ? BankTabSlotDst : -1);
+        pGuild->DisplayGuildBankContentUpdate(BankTab, BankTabSlot, BankTab == BankTabDst ? BankTabSlotDst : -1);
         if (BankTab != BankTabDst)
-            pGuild->DisplayGuildBankContentUpdate(BankTabDst,BankTabSlotDst);
+            pGuild->DisplayGuildBankContentUpdate(BankTabDst, BankTabSlotDst);
         return;
     }
 
@@ -1205,7 +1205,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
     }
 
     // allow work with inventory only
-    if (!Player::IsInventoryPos(PlayerBag,PlayerSlot) && !(PlayerBag == NULL_BAG && PlayerSlot == NULL_SLOT))
+    if (!Player::IsInventoryPos(PlayerBag, PlayerSlot) && !(PlayerBag == NULL_BAG && PlayerSlot == NULL_SLOT))
     {
         _player->SendEquipError(EQUIP_ERR_NONE, NULL, NULL);
         return;
@@ -1263,7 +1263,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             pItemBank->SetCount(pItemBank->GetCount()-SplitedAmount);
             pItemBank->FSetState(ITEM_CHANGED);
             pItemBank->SaveToDB();                          // not in inventory and can be save standalone
-            pl->MoveItemToInventory(dest,pNewItem,true);
+            pl->MoveItemToInventory(dest, pNewItem, true);
             pl->SaveInventoryAndGoldToDB();
 
             pGuild->MemberItemWithdraw(BankTab, pl->GetGUIDLow());
@@ -1284,7 +1284,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                 pGuild->LogBankEvent(GUILD_BANK_LOG_WITHDRAW_ITEM, BankTab, pl->GetGUIDLow(), pItemBank->GetEntry(), pItemBank->GetCount());
 
                 pGuild->RemoveItem(BankTab, BankTabSlot);
-                pl->MoveItemToInventory(dest,pItemBank,true);
+                pl->MoveItemToInventory(dest, pItemBank, true);
                 pl->SaveInventoryAndGoldToDB();
 
                 pGuild->MemberItemWithdraw(BankTab, pl->GetGUIDLow());
@@ -1316,7 +1316,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                 GuildItemPosCountVec gDest;
                 if (pItemChar)
                 {
-                    msg = pGuild->CanStoreItem(BankTab,BankTabSlot,gDest,pItemChar->GetCount(),pItemChar,true);
+                    msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gDest, pItemChar->GetCount(),pItemChar, true);
                     if (msg != EQUIP_ERR_OK)
                     {
                         pl->SendEquipError(msg, pItemChar, NULL);
@@ -1336,7 +1336,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                     {
                         sLog.outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
                             _player->GetName(),_player->GetSession()->GetAccountId(),
-                            pItemChar->GetProto()->Name1,pItemChar->GetEntry(),pItemChar->GetCount(),
+                            pItemChar->GetProto()->Name1, pItemChar->GetEntry(),pItemChar->GetCount(),
                             GuildId);
                     }
                 }
@@ -1355,14 +1355,14 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
 
                 if (pItemChar)
                     pGuild->StoreItem(BankTab, gDest, pItemChar);
-                pl->MoveItemToInventory(iDest,pItemBank,true);
+                pl->MoveItemToInventory(iDest, pItemBank, true);
                 pl->SaveInventoryAndGoldToDB();
 
                 pGuild->MemberItemWithdraw(BankTab, pl->GetGUIDLow());
                 CharacterDatabase.CommitTransaction();
             }
         }
-        pGuild->DisplayGuildBankContentUpdate(BankTab,BankTabSlot);
+        pGuild->DisplayGuildBankContentUpdate(BankTab, BankTabSlot);
         return;
     }                                                       // End "To char" part
 
@@ -1386,7 +1386,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
     if (SplitedAmount)
     {                                                       // Char -> Bank split to empty or non-empty slot (partly move)
         GuildItemPosCountVec dest;
-        uint8 msg = pGuild->CanStoreItem(BankTab,BankTabSlot,dest,SplitedAmount,pItemChar,false);
+        uint8 msg = pGuild->CanStoreItem(BankTab, BankTabSlot, dest, SplitedAmount, pItemChar, false);
         if (msg != EQUIP_ERR_OK)
         {
             pl->SendEquipError(msg, pItemChar, NULL);
@@ -1405,7 +1405,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
         {
             sLog.outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
                 _player->GetName(),_player->GetSession()->GetAccountId(),
-                pItemChar->GetProto()->Name1,pItemChar->GetEntry(),SplitedAmount,GuildId);
+                pItemChar->GetProto()->Name1, pItemChar->GetEntry(),SplitedAmount, GuildId);
         }
 
         CharacterDatabase.BeginTransaction();
@@ -1418,12 +1418,12 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
         pGuild->StoreItem(BankTab, dest, pNewItem);
         CharacterDatabase.CommitTransaction();
 
-        pGuild->DisplayGuildBankContentUpdate(BankTab,dest);
+        pGuild->DisplayGuildBankContentUpdate(BankTab, dest);
     }
     else                                                    // Char -> Bank swap with empty or non-empty (move)
     {
         GuildItemPosCountVec dest;
-        uint8 msg = pGuild->CanStoreItem(BankTab,BankTabSlot,dest,pItemChar->GetCount(),pItemChar,false);
+        uint8 msg = pGuild->CanStoreItem(BankTab, BankTabSlot, dest, pItemChar->GetCount(),pItemChar, false);
         if (msg == EQUIP_ERR_OK)                           // merge
         {
             // logging item move to bank
@@ -1431,7 +1431,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             {
                 sLog.outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
                     _player->GetName(),_player->GetSession()->GetAccountId(),
-                    pItemChar->GetProto()->Name1,pItemChar->GetEntry(),pItemChar->GetCount(),
+                    pItemChar->GetProto()->Name1, pItemChar->GetEntry(),pItemChar->GetCount(),
                     GuildId);
             }
 
@@ -1441,11 +1441,11 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             pl->MoveItemFromInventory(PlayerBag, PlayerSlot, true);
             pItemChar->DeleteFromInventoryDB();
 
-            pGuild->StoreItem(BankTab,dest,pItemChar);
+            pGuild->StoreItem(BankTab, dest, pItemChar);
             pl->SaveInventoryAndGoldToDB();
             CharacterDatabase.CommitTransaction();
 
-            pGuild->DisplayGuildBankContentUpdate(BankTab,dest);
+            pGuild->DisplayGuildBankContentUpdate(BankTab, dest);
         }
         else                                                // Char <-> Bank swap items (posible NULL bank item)
         {
@@ -1461,7 +1461,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             }
 
             GuildItemPosCountVec gDest;
-            msg = pGuild->CanStoreItem(BankTab,BankTabSlot,gDest,pItemChar->GetCount(),pItemChar,true);
+            msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gDest, pItemChar->GetCount(),pItemChar, true);
             if (msg != EQUIP_ERR_OK)
             {
                 pl->SendEquipError(msg, pItemChar, NULL);
@@ -1481,7 +1481,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             {
                 sLog.outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
                     _player->GetName(),_player->GetSession()->GetAccountId(),
-                    pItemChar->GetProto()->Name1,pItemChar->GetEntry(),pItemChar->GetCount(),
+                    pItemChar->GetProto()->Name1, pItemChar->GetEntry(),pItemChar->GetCount(),
                     GuildId);
             }
 
@@ -1495,15 +1495,15 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             if (pItemBank)
                 pGuild->RemoveItem(BankTab, BankTabSlot);
 
-            pGuild->StoreItem(BankTab,gDest,pItemChar);
+            pGuild->StoreItem(BankTab, gDest, pItemChar);
             if (pItemBank)
-                pl->MoveItemToInventory(iDest,pItemBank,true);
+                pl->MoveItemToInventory(iDest, pItemBank, true);
             pl->SaveInventoryAndGoldToDB();
             if (pItemBank)
                 pGuild->MemberItemWithdraw(BankTab, pl->GetGUIDLow());
             CharacterDatabase.CommitTransaction();
 
-            pGuild->DisplayGuildBankContentUpdate(BankTab,gDest);
+            pGuild->DisplayGuildBankContentUpdate(BankTab, gDest);
         }
     }
 }

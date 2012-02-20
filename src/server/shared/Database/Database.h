@@ -63,9 +63,9 @@ class Database
         void HaltDelayThread();
 
         QueryResult_AutoPtr Query(const char *sql);
-        QueryResult_AutoPtr PQuery(const char *format,...) ATTR_PRINTF(2,3);
+        QueryResult_AutoPtr PQuery(const char *format,...) ATTR_PRINTF(2, 3);
         QueryNamedResult* QueryNamed(const char *sql);
-        QueryNamedResult* PQueryNamed(const char *format,...) ATTR_PRINTF(2,3);
+        QueryNamedResult* PQueryNamed(const char *format,...) ATTR_PRINTF(2, 3);
 
         // Async queries and query holders, implemented in DatabaseImpl.h
 
@@ -87,20 +87,20 @@ class Database
             bool AsyncQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *sql);
         // PQuery / member
         template<class Class>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr), const char *format,...) ATTR_PRINTF(4,5);
+            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr), const char *format,...) ATTR_PRINTF(4, 5);
         template<class Class, typename ParamType1>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *format,...) ATTR_PRINTF(5,6);
+            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *format,...) ATTR_PRINTF(5, 6);
         template<class Class, typename ParamType1, typename ParamType2>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *format,...) ATTR_PRINTF(6,7);
+            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *format,...) ATTR_PRINTF(6, 7);
         template<class Class, typename ParamType1, typename ParamType2, typename ParamType3>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *format,...) ATTR_PRINTF(7,8);
+            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *format,...) ATTR_PRINTF(7, 8);
         // PQuery / static
         template<typename ParamType1>
-            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *format,...) ATTR_PRINTF(4,5);
+            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *format,...) ATTR_PRINTF(4, 5);
         template<typename ParamType1, typename ParamType2>
-            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *format,...) ATTR_PRINTF(5,6);
+            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *format,...) ATTR_PRINTF(5, 6);
         template<typename ParamType1, typename ParamType2, typename ParamType3>
-            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *format,...) ATTR_PRINTF(6,7);
+            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *format,...) ATTR_PRINTF(6, 7);
         template<class Class>
         // QueryHolder
             bool DelayQueryHolder(Class *object, void (Class::*method)(QueryResult_AutoPtr, SqlQueryHolder*), SqlQueryHolder *holder);
@@ -108,12 +108,12 @@ class Database
             bool DelayQueryHolder(Class *object, void (Class::*method)(QueryResult_AutoPtr, SqlQueryHolder*, ParamType1), SqlQueryHolder *holder, ParamType1 param1);
 
         bool Execute(const char *sql);
-        bool PExecute(const char *format,...) ATTR_PRINTF(2,3);
+        bool PExecute(const char *format,...) ATTR_PRINTF(2, 3);
         bool DirectExecute(const char* sql);
-        bool DirectPExecute(const char *format,...) ATTR_PRINTF(2,3);
+        bool DirectPExecute(const char *format,...) ATTR_PRINTF(2, 3);
 
         // Writes SQL commands to a LOG file (see Trinityd.conf "LogSQL")
-        bool PExecuteLog(const char *format,...) ATTR_PRINTF(2,3);
+        bool PExecuteLog(const char *format,...) ATTR_PRINTF(2, 3);
 
         bool BeginTransaction();
         bool CommitTransaction();

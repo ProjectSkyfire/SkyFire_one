@@ -109,15 +109,15 @@ struct boss_faerlinaAI : public ScriptedAI
         //RainOfFire_Timer
         if (RainOfFire_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_RAINOFFIRE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_RAINOFFIRE);
             RainOfFire_Timer = 16000;
         } else RainOfFire_Timer -= diff;
 
         //Enrage_Timer
         if (Enrage_Timer <= diff)
         {
-            DoCast(me,SPELL_ENRAGE);
+            DoCast(me, SPELL_ENRAGE);
             Enrage_Timer = 61000;
         } else Enrage_Timer -= diff;
 

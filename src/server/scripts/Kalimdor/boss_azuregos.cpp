@@ -114,15 +114,15 @@ struct boss_azuregosAI : public ScriptedAI
         //ManaStorm_Timer
         if (ManaStorm_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_MANASTORM);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_MANASTORM);
             ManaStorm_Timer = 7500 + rand()%5000;
         } else ManaStorm_Timer -= diff;
 
         //Reflect_Timer
         if (Reflect_Timer <= diff)
         {
-            DoCast(me,SPELL_REFLECT);
+            DoCast(me, SPELL_REFLECT);
             Reflect_Timer = 20000 + rand()%15000;
         } else Reflect_Timer -= diff;
 

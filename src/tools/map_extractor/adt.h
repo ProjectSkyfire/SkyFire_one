@@ -133,9 +133,9 @@ typedef struct
 
 enum LiquidType
 {
-    LIQUID_TYPE_WATER = 0,
-    LIQUID_TYPE_OCEAN = 1,
-    LIQUID_TYPE_MAGMA = 2,
+    LIQUID_TYPE_WATER = 0, 
+    LIQUID_TYPE_OCEAN = 1, 
+    LIQUID_TYPE_MAGMA = 2, 
     LIQUID_TYPE_SLIME = 3
 };
 

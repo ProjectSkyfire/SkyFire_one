@@ -93,7 +93,7 @@ struct boss_arcanist_doanAI : public ScriptedAI
 
         if (Polymorph_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                 DoCast(pTarget, SPELL_POLYMORPH);
 
             Polymorph_Timer = 20000;

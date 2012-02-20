@@ -46,7 +46,7 @@ void WorldSession::HandleTabardVendorActivateOpcode(WorldPacket & recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_TABARDDESIGNER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TABARDDESIGNER);
     if (!unit)
     {
         sLog.outDebug("WORLD: HandleTabardVendorActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
@@ -74,7 +74,7 @@ void WorldSession::HandleBankerActivateOpcode(WorldPacket & recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_BANKER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_BANKER);
     if (!unit)
     {
         sLog.outDebug("WORLD: HandleBankerActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
@@ -113,7 +113,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 {
     sLog.outDebug("WORLD: SendTrainerList");
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_TRAINER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
     if (!unit)
     {
         sLog.outDebug("WORLD: SendTrainerList - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
@@ -125,7 +125,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
         GetPlayer()->RemoveSpellsCausingAura(SPELL_AURA_FEIGN_DEATH);
 
     // trainer list loaded at check;
-    if (!unit->isCanTrainingOf(_player,true))
+    if (!unit->isCanTrainingOf(_player, true))
         return;
 
     CreatureInfo const *ci = unit->GetCreatureInfo();
@@ -185,7 +185,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 
     data << strTitle;
 
-    data.put<uint32>(count_pos,count);
+    data.put<uint32>(count_pos, count);
     SendPacket(&data);
 }
 
@@ -208,7 +208,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket & recv_data)
     if (GetPlayer()->hasUnitState(UNIT_STAT_DIED))
         GetPlayer()->RemoveSpellsCausingAura(SPELL_AURA_FEIGN_DEATH);
 
-    if (!unit->isCanTrainingOf(_player,true))
+    if (!unit->isCanTrainingOf(_player, true))
         return;
 
     // check present spell in trainer spell list
@@ -361,7 +361,7 @@ void WorldSession::SendSpiritResurrect()
 {
     _player->ResurrectPlayer(0.5f, true);
 
-    _player->DurabilityLossAll(0.25f,true);
+    _player->DurabilityLossAll(0.25f, true);
 
     // get corpse nearest graveyard
     WorldSafeLocsEntry const *corpseGrave = NULL;
@@ -398,7 +398,7 @@ void WorldSession::HandleBinderActivateOpcode(WorldPacket & recv_data)
     if (!GetPlayer()->IsInWorld() || !GetPlayer()->isAlive())
         return;
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID,UNIT_NPC_FLAG_INNKEEPER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_INNKEEPER);
     if (!unit)
     {
         sLog.outDebug("WORLD: HandleBinderActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
@@ -540,7 +540,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
 
     uint32 free_slot = 1;
 
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner,slot,id FROM character_pet WHERE owner = '%u'  AND slot > 0 AND slot < 3 ORDER BY slot ",_player->GetGUIDLow());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id FROM character_pet WHERE owner = '%u'  AND slot > 0 AND slot < 3 ORDER BY slot ",_player->GetGUIDLow());
     if (result)
     {
         do
@@ -556,7 +556,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
 
     if (free_slot > 0 && free_slot <= GetPlayer()->m_stableSlots)
     {
-        _player->RemovePet(pet,PetSaveMode(free_slot));
+        _player->RemovePet(pet, PetSaveMode(free_slot));
         data << uint8(0x08);
     }
     else
@@ -597,7 +597,7 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
 
     // delete dead pet
     if (pet)
-        _player->RemovePet(pet,PET_SAVE_AS_DELETED);
+        _player->RemovePet(pet, PET_SAVE_AS_DELETED);
 
     Pet *newpet = NULL;
 
@@ -608,7 +608,7 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
         uint32 petentry = fields[0].GetUInt32();
 
         newpet = new Pet(_player, HUNTER_PET);
-        if (!newpet->LoadPetFromDB(_player,petentry,petnumber))
+        if (!newpet->LoadPetFromDB(_player, petentry, petnumber))
         {
             delete newpet;
             newpet = NULL;
@@ -692,7 +692,7 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
         return;
 
     // find swapped pet slot in stable
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT slot,entry FROM character_pet WHERE owner = '%u' AND id = '%u'",_player->GetGUIDLow(),pet_number);
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT slot, entry FROM character_pet WHERE owner = '%u' AND id = '%u'",_player->GetGUIDLow(),pet_number);
     if (!result)
         return;
 
@@ -702,11 +702,11 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
     uint32 petentry = fields[1].GetUInt32();
 
     // move alive pet to slot or delele dead pet
-    _player->RemovePet(pet,pet->isAlive() ? PetSaveMode(slot) : PET_SAVE_AS_DELETED);
+    _player->RemovePet(pet, pet->isAlive() ? PetSaveMode(slot) : PET_SAVE_AS_DELETED);
 
     // summon unstabled pet
     Pet *newpet = new Pet(_player);
-    if (!newpet->LoadPetFromDB(_player,petentry,pet_number))
+    if (!newpet->LoadPetFromDB(_player, petentry, pet_number))
     {
         delete newpet;
         data << uint8(0x06);
@@ -748,13 +748,13 @@ void WorldSession::HandleRepairItemOpcode(WorldPacket & recv_data)
         Item* item = _player->GetItemByGuid(itemGUID);
 
         if (item)
-            TotalCost= _player->DurabilityRepair(item->GetPos(),true,discountMod,guildBank>0?true:false);
+            TotalCost= _player->DurabilityRepair(item->GetPos(),true, discountMod, guildBank>0?true:false);
     }
     else
     {
         sLog.outDebug("ITEM: Repair all items, npcGUID = %u", GUID_LOPART(npcGUID));
 
-        TotalCost = _player->DurabilityRepairAll(true,discountMod,guildBank>0?true:false);
+        TotalCost = _player->DurabilityRepairAll(true, discountMod, guildBank>0?true:false);
     }
     if (guildBank)
     {

@@ -99,7 +99,7 @@ struct instance_razorfen_downs : public ScriptedInstance
             case GO_GONG:
                 uiGongGUID = pGo->GetGUID();
                 if (m_auiEncounter[0] == DONE)
-                    pGo->SetFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
+                    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                 break;
             default:
                 break;
@@ -117,7 +117,7 @@ struct instance_razorfen_downs : public ScriptedInstance
                 case 9:
                 case 14:
                     if (GameObject* pGo = instance->GetGameObject(uiGongGUID))
-                        pGo->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
+                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                     break;
                 case 1:
                 case 10:
@@ -128,7 +128,7 @@ struct instance_razorfen_downs : public ScriptedInstance
                     if (!pGo)
                         return;
 
-                    pGo->SetFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
+                    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
 
                     uint32 uiCreature = 0;
                     uint8 uiSummonTimes = 0;
@@ -156,11 +156,11 @@ struct instance_razorfen_downs : public ScriptedInstance
                         {
                             for (uint8 i = 0; i < uiSummonTimes; ++i)
                             {
-                                if (Creature* pSummon = pGo->SummonCreature(uiCreature, 2502.635f + float(irand(-5,5)), 844.140f + float(irand(-5,5)), 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
-                                    pSummon->GetMotionMaster()->MovePoint(0,2533.479 + float(irand(-5,5)),870.020 + float(irand(-5,5)),47.678);
+                                if (Creature* pSummon = pGo->SummonCreature(uiCreature, 2502.635f + float(irand(-5, 5)), 844.140f + float(irand(-5, 5)), 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                                    pSummon->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
                             }
                         }
-                        pCreature->GetMotionMaster()->MovePoint(0,2533.479 + float(irand(-5,5)),870.020 + float(irand(-5,5)),47.678);
+                        pCreature->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
                     }
                     break;
                 }

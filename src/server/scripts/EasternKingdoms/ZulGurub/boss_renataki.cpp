@@ -86,7 +86,7 @@ struct boss_renatakiAI : public ScriptedAI
             if (Ambush_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (pTarget)
                 {
                     DoTeleportTo(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
@@ -121,7 +121,7 @@ struct boss_renatakiAI : public ScriptedAI
             if (Aggro_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
             if (DoGetThreat(me->getVictim()))
                 DoModifyThreatPercent(me->getVictim(),-50);

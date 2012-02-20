@@ -159,7 +159,7 @@ struct npc_deathstalker_erlandAI : public npc_escortAI
 
     void EnterCombat(Unit* who)
     {
-        DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2,SAY_AGGRO_3), me, who);
+        DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2, SAY_AGGRO_3), me, who);
     }
 };
 

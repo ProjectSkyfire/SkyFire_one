@@ -173,7 +173,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             GetPlayer()->UpdateSpeakTime();
     }
 
-    if (GetPlayer()->HasAura(1852,0) && type != CHAT_MSG_WHISPER)
+    if (GetPlayer()->HasAura(1852, 0) && type != CHAT_MSG_WHISPER)
     {
         std::string msg="";
         recv_data >> msg;
@@ -251,7 +251,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                 }
             }
 
-            if (GetPlayer()->HasAura(1852,0) && !player->isGameMaster())
+            if (GetPlayer()->HasAura(1852, 0) && !player->isGameMaster())
             {
                 SendNotification(GetTrinityString(LANG_GM_SILENCE), GetPlayer()->GetName());
                 return;
@@ -643,7 +643,7 @@ void WorldSession::HandleTextEmoteOpcode(WorldPacket & recv_data)
     else
         data << (uint8)0x00;
 
-    GetPlayer()->SendMessageToSetInRange(&data,sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),true);
+    GetPlayer()->SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),true);
 
     //Send scripted event call
     if (unit && unit->GetTypeId() == TYPEID_UNIT && ((Creature*)unit)->AI())

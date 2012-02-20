@@ -117,8 +117,8 @@ class InstanceData : public ZoneScript
         virtual void OnPlayerEnter(Player *) {}
 
         //Handle open / close objects
-        //use HandleGameObject(NULL,boolen,GO); in OnObjectCreate in instance scripts
-        //use HandleGameObject(GUID,boolen,NULL); in any other script
+        //use HandleGameObject(NULL, boolen, GO); in OnObjectCreate in instance scripts
+        //use HandleGameObject(GUID, boolen, NULL); in any other script
         void HandleGameObject(uint64 GUID, bool open, GameObject *go = NULL);
 
         //change active state of doors or buttons

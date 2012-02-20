@@ -595,7 +595,7 @@ void BattleGround::YellToAll(Creature* creature, const char* text, uint32 langua
             sLog.outError("BattleGround: Player (GUID: %u) not found!", GUID_LOPART(itr->first));
             continue;
         }
-        creature->BuildMonsterChat(&data,CHAT_MSG_MONSTER_YELL,text,language,creature->GetName(),itr->first);
+        creature->BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, text, language, creature->GetName(),itr->first);
         plr->GetSession()->SendPacket(&data);
     }
 }
@@ -786,29 +786,29 @@ void BattleGround::EndBattleGround(uint32 winner)
         if (isArena() && isRated() && winner_arena_team && loser_arena_team)
         {
             if (team == winner)
-                winner_arena_team->MemberWon(plr,loser_rating);
+                winner_arena_team->MemberWon(plr, loser_rating);
             else
-                loser_arena_team->MemberLost(plr,winner_rating);
+                loser_arena_team->MemberLost(plr, winner_rating);
         }
 
         if (team == winner)
         {
-            RewardMark(plr,ITEM_WINNER_COUNT);
+            RewardMark(plr, ITEM_WINNER_COUNT);
             UpdatePlayerScore(plr, SCORE_BONUS_HONOR, 20);
             RewardQuest(plr);
         }
         else if (winner != 0)
         {
-            RewardMark(plr,ITEM_LOSER_COUNT);
+            RewardMark(plr, ITEM_LOSER_COUNT);
         }
         else if (winner == 0)
         {
             if (sWorld.getConfig(CONFIG_BATTLEGROUND_PREMATURE_REWARD))
             {
                 if (almost_winning_team == team)                  // player's team had more points
-                    RewardMark(plr,ITEM_WINNER_COUNT);
+                    RewardMark(plr, ITEM_WINNER_COUNT);
                 else
-                    RewardMark(plr,ITEM_LOSER_COUNT);            // if scores were the same, each team gets 1 mark.
+                    RewardMark(plr, ITEM_LOSER_COUNT);            // if scores were the same, each team gets 1 mark.
             }
         }
 
@@ -860,7 +860,7 @@ uint32 BattleGround::GetBattlemasterEntry() const
     }
 }
 
-void BattleGround::RewardMark(Player *plr,uint32 count)
+void BattleGround::RewardMark(Player *plr, uint32 count)
 {
     // 'Inactive' this aura prevents the player from gaining honor points and battleground tokens
     if (plr->GetDummyAura(SPELL_AURA_PLAYER_INACTIVE))
@@ -898,14 +898,14 @@ void BattleGround::RewardMark(Player *plr,uint32 count)
 
         if (!dest.empty())                // can add some
             if (Item* item = plr->StoreNewItem(dest, mark, true, 0))
-                plr->SendNewItem(item,count,false,true);
+                plr->SendNewItem(item, count, false, true);
 
         if (no_space_count > 0)
-            SendRewardMarkByMail(plr,mark,no_space_count);
+            SendRewardMarkByMail(plr, mark, no_space_count);
     }
 }
 
-void BattleGround::SendRewardMarkByMail(Player *plr,uint32 mark, uint32 count)
+void BattleGround::SendRewardMarkByMail(Player *plr, uint32 mark, uint32 count)
 {
     uint32 bmEntry = GetBattlemasterEntry();
     if (!bmEntry)
@@ -915,7 +915,7 @@ void BattleGround::SendRewardMarkByMail(Player *plr,uint32 mark, uint32 count)
     if (!markProto)
         return;
 
-    if (Item* markItem = Item::CreateItem(mark,count,plr))
+    if (Item* markItem = Item::CreateItem(mark, count, plr))
     {
         // save new item before send
         markItem->SaveToDB();                               // save for prevent lost at next mail load, if send fail then item will deleted
@@ -931,7 +931,7 @@ void BattleGround::SendRewardMarkByMail(Player *plr,uint32 mark, uint32 count)
         // text
         std::string textFormat = plr->GetSession()->GetTrinityString(LANG_BG_MARK_BY_MAIL);
         char textBuf[300];
-        snprintf(textBuf,300,textFormat.c_str(),GetName(),GetName());
+        snprintf(textBuf, 300, textFormat.c_str(),GetName(),GetName());
         uint32 itemTextId = objmgr.CreateItemText(textBuf);
 
         MailDraft(subject, itemTextId)
@@ -1040,7 +1040,7 @@ void BattleGround::RemovePlayerAtLeave(uint64 guid, bool Transport, bool SendPac
                     ArenaTeam * winner_arena_team = objmgr.GetArenaTeamById(GetArenaTeamIdForTeam(GetOtherTeam(team)));
                     ArenaTeam * loser_arena_team = objmgr.GetArenaTeamById(GetArenaTeamIdForTeam(team));
                     if (winner_arena_team && loser_arena_team)
-                        loser_arena_team->MemberLost(plr,winner_arena_team->GetRating());
+                        loser_arena_team->MemberLost(plr, winner_arena_team->GetRating());
                 }
             }
 
@@ -1186,16 +1186,16 @@ void BattleGround::AddPlayer(Player *plr)
         if (team == ALLIANCE)                                // gold
         {
             if (plr->GetTeam() == HORDE)
-                plr->CastSpell(plr, SPELL_HORDE_GOLD_FLAG,true);
+                plr->CastSpell(plr, SPELL_HORDE_GOLD_FLAG, true);
             else
-                plr->CastSpell(plr, SPELL_ALLIANCE_GOLD_FLAG,true);
+                plr->CastSpell(plr, SPELL_ALLIANCE_GOLD_FLAG, true);
         }
         else                                                // green
         {
             if (plr->GetTeam() == HORDE)
-                plr->CastSpell(plr, SPELL_HORDE_GREEN_FLAG,true);
+                plr->CastSpell(plr, SPELL_HORDE_GREEN_FLAG, true);
             else
-                plr->CastSpell(plr, SPELL_ALLIANCE_GREEN_FLAG,true);
+                plr->CastSpell(plr, SPELL_ALLIANCE_GREEN_FLAG, true);
         }
 
         plr->DestroyConjuredItems(true);
@@ -1208,7 +1208,7 @@ void BattleGround::AddPlayer(Player *plr)
                 (plr)->SetTemporaryUnsummonedPetNumber(pet->GetCharmInfo()->GetPetNumber());
                 (plr)->SetOldPetSpell(pet->GetUInt32Value(UNIT_CREATED_BY_SPELL));
             }
-            (plr)->RemovePet(NULL,PET_SAVE_NOT_IN_SLOT);
+            (plr)->RemovePet(NULL, PET_SAVE_NOT_IN_SLOT);
         }
         else
             (plr)->SetTemporaryUnsummonedPetNumber(0);
@@ -1424,7 +1424,7 @@ bool BattleGround::AddObject(uint32 type, uint32 entry, float x, float y, float 
     // and when loading it (in go::LoadFromDB()), a new guid would be assigned to the object, and a new object would be created
     // so we must create it specific for this instance
     GameObject * go = new GameObject;
-    if (!go->Create(objmgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT),entry, map,x,y,z,o,rotation0,rotation1,rotation2,rotation3,100,GO_STATE_READY))
+    if (!go->Create(objmgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT),entry, map, x, y, z, o, rotation0, rotation1, rotation2, rotation3, 100, GO_STATE_READY))
     {
         sLog.outErrorDb("Gameobject template %u not found in database! BattleGround not created!", entry);
         sLog.outError("Cannot create gameobject template %u! BattleGround not created!", entry);
@@ -1637,7 +1637,7 @@ bool BattleGround::AddSpiritGuide(uint32 type, float x, float y, float z, float 
     else
         entry = 13117;
 
-    Creature* pCreature = AddCreature(entry,type,team,x,y,z,o);
+    Creature* pCreature = AddCreature(entry, type, team, x, y, z, o);
     if (!pCreature)
     {
         sLog.outError("Can't create Spirit guide. BattleGround not created!");

@@ -290,14 +290,14 @@ struct boss_felblood_kaelthasAI : public ScriptedAI
                 if (FireballTimer <= diff)
                 {
                     DoCast(me->getVictim(), Heroic ? SPELL_FIREBALL_HEROIC : SPELL_FIREBALL_NORMAL);
-                    FireballTimer = urand(2000,6000);
+                    FireballTimer = urand(2000, 6000);
                 } else FireballTimer -= diff;
 
                 if (PhoenixTimer <= diff)
                 {
-                    Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+                    Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
-                    uint8 random = urand(1,2);
+                    uint8 random = urand(1, 2);
                     float x = KaelLocations[random][0];
                     float y = KaelLocations[random][1];
 
@@ -323,7 +323,7 @@ struct boss_felblood_kaelthasAI : public ScriptedAI
                         DoCast(pTarget, SPELL_FLAMESTRIKE3, true);
                         DoScriptText(SAY_FLAMESTRIKE, me);
                     }
-                    FlameStrikeTimer = urand(15000,25000);
+                    FlameStrikeTimer = urand(15000, 25000);
                 } else FlameStrikeTimer -= diff;
 
                 // Below 50%
@@ -389,7 +389,7 @@ struct boss_felblood_kaelthasAI : public ScriptedAI
                             for (uint8 i = 0; i < 3; ++i)
                             {
                                 Unit *pTarget = NULL;
-                                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
                                 Creature* Orb = DoSpawnCreature(CREATURE_ARCANE_SPHERE, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
                                 if (Orb && pTarget)
@@ -504,7 +504,7 @@ struct mob_felkael_phoenixAI : public ScriptedAI
             me->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->ClearAllReactives();
-            me->SetUInt64Value(UNIT_FIELD_TARGET,0);
+            me->SetUInt64Value(UNIT_FIELD_TARGET, 0);
             me->GetMotionMaster()->Clear();
             me->GetMotionMaster()->MoveIdle();
             me->SetStandState(UNIT_STAND_STATE_DEAD);
@@ -544,7 +544,7 @@ struct mob_felkael_phoenixAI : public ScriptedAI
         if (BurnTimer <= diff)
         {
             //spell Burn should possible do this, but it doesn't, so do this for now.
-            uint16 dmg = urand(1650,2050);
+            uint16 dmg = urand(1650, 2050);
             me->DealDamage(me, dmg, 0, DOT, SPELL_SCHOOL_MASK_FIRE, NULL, false);
             BurnTimer += 2000;
         } BurnTimer -= diff;
@@ -587,7 +587,7 @@ struct mob_arcane_sphereAI : public ScriptedAI
     void Reset()
     {
         DespawnTimer = 30000;
-        ChangeTargetTimer = urand(6000,12000);
+        ChangeTargetTimer = urand(6000, 12000);
 
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         me->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT);
@@ -617,7 +617,7 @@ struct mob_arcane_sphereAI : public ScriptedAI
                 AttackStart(pTarget);
             }
 
-            ChangeTargetTimer = urand(5000,15000);
+            ChangeTargetTimer = urand(5000, 15000);
         } else ChangeTargetTimer -= diff;
     }
 };

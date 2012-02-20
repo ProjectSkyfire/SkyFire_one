@@ -134,20 +134,20 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
 
             if (bidder_security > SEC_PLAYER) // not do redundant DB requests
             {
-                if (!objmgr.GetPlayerNameByGUID(bidder_guid,bidder_name))
+                if (!objmgr.GetPlayerNameByGUID(bidder_guid, bidder_name))
                     bidder_name = objmgr.GetTrinityStringForDBCLocale(LANG_UNKNOWN);
             }
         }
         if (bidder_security > SEC_PLAYER)
         {
             std::string owner_name;
-            if (!objmgr.GetPlayerNameByGUID(auction->owner,owner_name))
+            if (!objmgr.GetPlayerNameByGUID(auction->owner, owner_name))
                 owner_name = objmgr.GetTrinityStringForDBCLocale(LANG_UNKNOWN);
 
             uint32 owner_accid = objmgr.GetPlayerAccountIdByGUID(auction->owner);
 
             sLog.outCommand(bidder_accId,"GM %s (Account: %u) won item in auction: %s (Entry: %u Count: %u) and pay money: %u. Original owner %s (Account: %u)",
-                bidder_name.c_str(),bidder_accId,pItem->GetProto()->Name1,pItem->GetEntry(),pItem->GetCount(),auction->bid,owner_name.c_str(),owner_accid);
+                bidder_name.c_str(),bidder_accId, pItem->GetProto()->Name1, pItem->GetEntry(),pItem->GetCount(),auction->bid, owner_name.c_str(),owner_accid);
         }
     }
 
@@ -168,14 +168,14 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
 
         // set owner to bidder (to prevent delete item with sender char deleting)
         // owner in data will set at mail receive and item extracting
-        CharacterDatabase.PExecute("UPDATE item_instance SET owner_guid = '%u' WHERE guid='%u'",auction->bidder,pItem->GetGUIDLow());
+        CharacterDatabase.PExecute("UPDATE item_instance SET owner_guid = '%u' WHERE guid='%u'",auction->bidder, pItem->GetGUIDLow());
 
         if (bidder)
             bidder->GetSession()->SendAuctionBidderNotification(auction->GetHouseId(), auction->Id, bidder_guid, 0, 0, auction->item_template);
 
         MailDraft(msgAuctionWonSubject.str(), itemTextId)
             .AddItem(pItem)
-            .SendMailTo(MailReceiver(bidder,auction->bidder), auction, MAIL_CHECK_MASK_COPIED);
+            .SendMailTo(MailReceiver(bidder, auction->bidder), auction, MAIL_CHECK_MASK_COPIED);
     }
 }
 
@@ -206,7 +206,7 @@ void AuctionHouseMgr::SendAuctionSalePendingMail(AuctionEntry * auction)
         uint32 itemTextId = objmgr.CreateItemText(msgAuctionSalePendingBody.str());
 
         MailDraft(msgAuctionSalePendingSubject.str(), itemTextId)
-            .SendMailTo(MailReceiver(owner,auction->owner), auction, MAIL_CHECK_MASK_COPIED);
+            .SendMailTo(MailReceiver(owner, auction->owner), auction, MAIL_CHECK_MASK_COPIED);
     }
 }
 
@@ -244,7 +244,7 @@ void AuctionHouseMgr::SendAuctionSuccessfulMail(AuctionEntry * auction)
 
         MailDraft(msgAuctionSuccessfulSubject.str(), itemTextId)
             .AddMoney(profit)
-            .SendMailTo(MailReceiver(owner,auction->owner), auction, MAIL_CHECK_MASK_COPIED, HOUR);
+            .SendMailTo(MailReceiver(owner, auction->owner), auction, MAIL_CHECK_MASK_COPIED, HOUR);
     }
 }
 
@@ -269,14 +269,14 @@ void AuctionHouseMgr::SendAuctionExpiredMail(AuctionEntry * auction)
 
         MailDraft(subject.str())
             .AddItem(pItem)
-            .SendMailTo(MailReceiver(owner,auction->owner), auction, MAIL_CHECK_MASK_COPIED);
+            .SendMailTo(MailReceiver(owner, auction->owner), auction, MAIL_CHECK_MASK_COPIED);
     }
 }
 
 void AuctionHouseMgr::LoadAuctionItems()
 {
     // data needs to be at first place for Item::LoadFromDB
-    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT data,itemguid,item_template FROM auctionhouse JOIN item_instance ON itemguid = guid");
+    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT data, itemguid, item_template FROM auctionhouse JOIN item_instance ON itemguid = guid");
 
     if (!result)
     {
@@ -298,13 +298,13 @@ void AuctionHouseMgr::LoadAuctionItems()
 
         if (!proto)
         {
-            sLog.outError("AuctionHouseMgr::LoadAuctionItems: Unknown item (GUID: %u id: #%u) in auction, skipped.", item_guid,item_template);
+            sLog.outError("AuctionHouseMgr::LoadAuctionItems: Unknown item (GUID: %u id: #%u) in auction, skipped.", item_guid, item_template);
             continue;
         }
 
         Item *item = NewItemOrBag(proto);
 
-        if (!item->LoadFromDB(item_guid,0, result))
+        if (!item->LoadFromDB(item_guid, 0, result))
         {
             delete item;
             continue;
@@ -339,7 +339,7 @@ void AuctionHouseMgr::LoadAuctions()
         return;
     }
 
-    result = CharacterDatabase.Query("SELECT id,auctioneerguid,itemguid,item_template,itemowner,buyoutprice,time,buyguid,lastbid,startbid,deposit FROM auctionhouse");
+    result = CharacterDatabase.Query("SELECT id, auctioneerguid, itemguid, item_template, itemowner, buyoutprice, time, buyguid, lastbid, startbid, deposit FROM auctionhouse");
     if (!result)
     {
         sLog.outString();
@@ -379,7 +379,7 @@ void AuctionHouseMgr::LoadAuctions()
         if (!auctioneerInfo)
         {
             aItem->DeleteFromDB();
-            sLog.outError("Auction %u has invalid auctioneer (GUID : %u Entry: %u)", aItem->Id, aItem->auctioneer,auctioneerData->id);
+            sLog.outError("Auction %u has invalid auctioneer (GUID : %u Entry: %u)", aItem->Id, aItem->auctioneer, auctioneerData->id);
             delete aItem;
             continue;
         }
@@ -389,7 +389,7 @@ void AuctionHouseMgr::LoadAuctions()
         {
             aItem->DeleteFromDB();
             sLog.outError("Auction %u has auctioneer (GUID : %u Entry: %u) with wrong faction %u",
-                aItem->Id, aItem->auctioneer,auctioneerData->id,auctioneerInfo->faction_A);
+                aItem->Id, aItem->auctioneer, auctioneerData->id, auctioneerInfo->faction_A);
             delete aItem;
             continue;
         }
@@ -700,7 +700,7 @@ void AuctionEntry::DeleteFromDB() const
 void AuctionEntry::SaveToDB() const
 {
     // No SQL injection (no strings)
-    CharacterDatabase.PExecute("INSERT INTO auctionhouse (id,auctioneerguid,itemguid,item_template,itemowner,buyoutprice,time,buyguid,lastbid,startbid,deposit) "
+    CharacterDatabase.PExecute("INSERT INTO auctionhouse (id, auctioneerguid, itemguid, item_template, itemowner, buyoutprice, time, buyguid, lastbid, startbid, deposit) "
         "VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '" UI64FMTD "', '%u', '%u', '%u', '%u')",
         Id, auctioneer, item_guidlow, item_template, owner, buyout, (uint64)expire_time, bidder, bid, startbid, deposit);
 }

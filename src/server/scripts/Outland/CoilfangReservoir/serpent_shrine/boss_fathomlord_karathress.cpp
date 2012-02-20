@@ -191,7 +191,7 @@ struct boss_fathomlord_karathressAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2,SAY_SLAY3), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2, SAY_SLAY3), me);
     }
 
     void JustDied(Unit * /*killer*/)
@@ -421,8 +421,8 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
                 break;
             }
             //DoCast(me, spell_id, true);
-            Creature *Pet = DoSpawnCreature(pet_id,0,0,0,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            Creature *Pet = DoSpawnCreature(pet_id, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (Pet && pTarget)
             {
                 Pet->AI()->AttackStart(pTarget);

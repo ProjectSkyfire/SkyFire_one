@@ -171,7 +171,7 @@ void AddonHandler::BuildAddonPacket(WorldPacket* Source, WorldPacket* Target, ui
             uint64 CRCCHECK;
             AddOnPacked >> AddonNames >> CRCCHECK >> unk6;
 
-            //sLog.outDebug("ADDON:    Name:%s CRC:%x Unknown:%x",AddonNames.c_str(), CRCCHECK,unk6);
+            //sLog.outDebug("ADDON:    Name:%s CRC:%x Unknown:%x",AddonNames.c_str(), CRCCHECK, unk6);
 
             Addonstr->Name = AddonNames;
             Addonstr->CRC = CRCCHECK;

@@ -84,7 +84,7 @@ struct npc_ameAI : public npc_escortAI
          case 55:
             DoScriptText(SAY_FINISH, me, pPlayer);
             if (pPlayer)
-                pPlayer->GroupEventHappens(QUEST_CHASING_AME,me);
+                pPlayer->GroupEventHappens(QUEST_CHASING_AME, me);
             break;
         }
     }
@@ -125,7 +125,7 @@ bool QuestAccept_npc_ame(Player* pPlayer, Creature* pCreature, Quest const* ques
     {
         CAST_AI(npc_escortAI, (pCreature->AI()))->Start(false, false, pPlayer->GetGUID());
         DoScriptText(SAY_READY, pCreature, pPlayer);
-        pCreature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
+        pCreature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
         // Change faction so mobs attack
         pCreature->setFaction(113);
     }
@@ -221,7 +221,7 @@ struct npc_ringoAI : public FollowerAI
         {
             SetFollowPaused(true);
 
-            DoScriptText(RAND(SAY_FAINT_1,SAY_FAINT_2,SAY_FAINT_3,SAY_FAINT_4), me);
+            DoScriptText(RAND(SAY_FAINT_1, SAY_FAINT_2, SAY_FAINT_3, SAY_FAINT_4), me);
         }
 
         //what does actually happen here? Emote? Aura?
@@ -235,7 +235,7 @@ struct npc_ringoAI : public FollowerAI
         if (HasFollowState(STATE_FOLLOW_POSTEVENT))
             return;
 
-        DoScriptText(RAND(SAY_WAKE_1,SAY_WAKE_2,SAY_WAKE_3,SAY_WAKE_4), me);
+        DoScriptText(RAND(SAY_WAKE_1, SAY_WAKE_2, SAY_WAKE_3, SAY_WAKE_4), me);
 
         SetFollowPaused(false);
     }

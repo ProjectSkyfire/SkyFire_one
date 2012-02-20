@@ -27,7 +27,7 @@
 class Vec3D
 {
 public:
-    float x,y,z;
+    float x, y, z;
 
     Vec3D(float x0 = 0.0f, float y0 = 0.0f, float z0 = 0.0f) : x(x0), y(y0), z(z0) {}
 
@@ -42,13 +42,13 @@ public:
 
     Vec3D operator+ (const Vec3D &v) const
     {
-        Vec3D r(x+v.x,y+v.y,z+v.z);
+        Vec3D r(x+v.x, y+v.y, z+v.z);
         return r;
     }
 
     Vec3D operator- (const Vec3D &v) const
     {
-        Vec3D r(x-v.x,y-v.y,z-v.z);
+        Vec3D r(x-v.x, y-v.y, z-v.z);
         return r;
     }
 
@@ -59,7 +59,7 @@ public:
 
     Vec3D operator* (float d) const
     {
-        Vec3D r(x*d,y*d,z*d);
+        Vec3D r(x*d, y*d, z*d);
         return r;
     }
 
@@ -143,7 +143,7 @@ public:
 class Vec2D
 {
 public:
-    float x,y;
+    float x, y;
 
     Vec2D(float x0 = 0.0f, float y0 = 0.0f) : x(x0), y(y0) {}
 
@@ -157,13 +157,13 @@ public:
 
     Vec2D operator+ (const Vec2D &v) const
     {
-        Vec2D r(x+v.x,y+v.y);
+        Vec2D r(x+v.x, y+v.y);
         return r;
     }
 
     Vec2D operator- (const Vec2D &v) const
     {
-        Vec2D r(x-v.x,y-v.y);
+        Vec2D r(x-v.x, y-v.y);
         return r;
     }
 
@@ -174,7 +174,7 @@ public:
 
     Vec2D operator* (float d) const
     {
-        Vec2D r(x*d,y*d);
+        Vec2D r(x*d, y*d);
         return r;
     }
 

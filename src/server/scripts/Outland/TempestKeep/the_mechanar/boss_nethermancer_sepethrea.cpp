@@ -220,7 +220,7 @@ struct mob_ragin_flamesAI : public ScriptedAI
 
         if (!onlyonce)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 me->GetMotionMaster()->MoveChase(pTarget);
             onlyonce = true;
         }
@@ -234,7 +234,7 @@ struct mob_ragin_flamesAI : public ScriptedAI
 
         if (flame_timer <= diff)
         {
-            DoCast(me,SPELL_FIRE_TAIL);
+            DoCast(me, SPELL_FIRE_TAIL);
             flame_timer = 500;
         } else flame_timer -=diff;
 

@@ -60,10 +60,10 @@
 
 #if COMPILER == COMPILER_GNU
 #  define ATTR_NORETURN __attribute__((noreturn))
-#  define ATTR_PRINTF(F,V) __attribute__ ((format (printf, F, V)))
+#  define ATTR_PRINTF(F, V) __attribute__ ((format (printf, F, V)))
 #else //COMPILER != COMPILER_GNU
 #  define ATTR_NORETURN
-#  define ATTR_PRINTF(F,V)
+#  define ATTR_PRINTF(F, V)
 #endif //COMPILER == COMPILER_GNU
 
 typedef ACE_INT64 int64;

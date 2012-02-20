@@ -69,7 +69,7 @@ struct boss_curatorAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_KILL1,SAY_KILL2), me);
+        DoScriptText(RAND(SAY_KILL1, SAY_KILL2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -151,9 +151,9 @@ struct boss_curatorAI : public ScriptedAI
                     }
                     else
                     {
-                        if (urand(0,1) == 0)
+                        if (urand(0, 1) == 0)
                         {
-                            DoScriptText(RAND(SAY_SUMMON1,SAY_SUMMON2), me);
+                            DoScriptText(RAND(SAY_SUMMON1, SAY_SUMMON2), me);
                         }
                     }
                 }

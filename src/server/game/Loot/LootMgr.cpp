@@ -36,17 +36,17 @@ static Rates const qualityToRate[MAX_ITEM_QUALITY] = {
     RATE_DROP_ITEM_ARTIFACT,                                // ITEM_QUALITY_ARTIFACT
 };
 
-LootStore LootTemplates_Creature(       "creature_loot_template",       "creature entry"                );
-LootStore LootTemplates_Disenchant(     "disenchant_loot_template",     "item disenchant id"            );
-LootStore LootTemplates_Fishing(        "fishing_loot_template",        "area id"                       );
-LootStore LootTemplates_Gameobject(     "gameobject_loot_template",     "gameobject entry"              );
-LootStore LootTemplates_Item(           "item_loot_template",           "item entry"                    );
-LootStore LootTemplates_Mail(           "mail_loot_template",           "mail template id"              );
-LootStore LootTemplates_Pickpocketing(  "pickpocketing_loot_template",  "creature pickpocket lootid"    );
-LootStore LootTemplates_Prospecting(    "prospecting_loot_template",    "item entry (ore)"              );
-LootStore LootTemplates_QuestMail(      "quest_mail_loot_template",     "quest id (with mail template)" );
-LootStore LootTemplates_Reference(      "reference_loot_template",      "reference id"                  );
-LootStore LootTemplates_Skinning(       "skinning_loot_template",       "creature skinning id"          );
+LootStore LootTemplates_Creature(       "creature_loot_template",      "creature entry"                );
+LootStore LootTemplates_Disenchant(     "disenchant_loot_template",    "item disenchant id"            );
+LootStore LootTemplates_Fishing(        "fishing_loot_template",       "area id"                       );
+LootStore LootTemplates_Gameobject(     "gameobject_loot_template",    "gameobject entry"              );
+LootStore LootTemplates_Item(           "item_loot_template",          "item entry"                    );
+LootStore LootTemplates_Mail(           "mail_loot_template",          "mail template id"              );
+LootStore LootTemplates_Pickpocketing(  "pickpocketing_loot_template", "creature pickpocket lootid"    );
+LootStore LootTemplates_Prospecting(    "prospecting_loot_template",   "item entry (ore)"              );
+LootStore LootTemplates_QuestMail(      "quest_mail_loot_template",    "quest id (with mail template)" );
+LootStore LootTemplates_Reference(      "reference_loot_template",     "reference id"                  );
+LootStore LootTemplates_Skinning(       "skinning_loot_template",      "creature skinning id"          );
 
 class LootTemplate::LootGroup                               // A set of loot definitions for items (refs are not allowed)
 {
@@ -116,7 +116,7 @@ void LootStore::LoadLootTable()
             uint32 cond_value1         = fields[7].GetUInt32();
             uint32 cond_value2         = fields[8].GetUInt32();
 
-            if (!PlayerCondition::IsValid(condition,cond_value1, cond_value2))
+            if (!PlayerCondition::IsValid(condition, cond_value1, cond_value2))
             {
                 sLog.outErrorDb("... in table '%s' entry %u item %u", GetName(), entry, item);
                 continue;                                   // error already printed to log/console.
@@ -127,7 +127,7 @@ void LootStore::LoadLootTable()
 
             LootStoreItem storeitem = LootStoreItem(item, chanceOrQuestChance, group, conditionId, mincountOrRef, maxcount);
 
-            if (!storeitem.IsValid(*this,entry))            // Validity checks
+            if (!storeitem.IsValid(*this, entry))            // Validity checks
                 continue;
 
             // Looking for the template of the entry
@@ -172,7 +172,7 @@ bool LootStore::HaveQuestLootFor(uint32 loot_id) const
     return itr->second->HasQuestDrop(m_LootTemplates);
 }
 
-bool LootStore::HaveQuestLootForPlayer(uint32 loot_id,Player* player) const
+bool LootStore::HaveQuestLootForPlayer(uint32 loot_id, Player* player) const
 {
     LootTemplateMap::const_iterator tab = m_LootTemplates.find(loot_id);
     if (tab != m_LootTemplates.end())
@@ -203,19 +203,19 @@ void LootStore::LoadAndCollectLootIds(LootIdSet& ids_set)
 void LootStore::CheckLootRefs(LootIdSet* ref_set) const
 {
     for (LootTemplateMap::const_iterator ltItr = m_LootTemplates.begin(); ltItr != m_LootTemplates.end(); ++ltItr)
-        ltItr->second->CheckLootRefs(m_LootTemplates,ref_set);
+        ltItr->second->CheckLootRefs(m_LootTemplates, ref_set);
 }
 
 void LootStore::ReportUnusedIds(LootIdSet const& ids_set) const
 {
     // all still listed ids isn't referenced
     for (LootIdSet::const_iterator itr = ids_set.begin(); itr != ids_set.end(); ++itr)
-        sLog.outErrorDb("Table '%s' entry %d isn't %s and not referenced from loot, and then useless.", GetName(), *itr,GetEntryName());
+        sLog.outErrorDb("Table '%s' entry %d isn't %s and not referenced from loot, and then useless.", GetName(), *itr, GetEntryName());
 }
 
 void LootStore::ReportNotExistedId(uint32 id) const
 {
-    sLog.outErrorDb("Table '%s' entry %d (%s) not exist but used as loot id in DB.", GetName(), id,GetEntryName());
+    sLog.outErrorDb("Table '%s' entry %d (%s) not exist but used as loot id in DB.", GetName(), id, GetEntryName());
 }
 
 //
@@ -311,7 +311,7 @@ LootItem::LootItem(LootStoreItem const& li)
 bool LootItem::AllowedForPlayer(Player const * player) const
 {
     // DB conditions check
-    if (!objmgr.IsPlayerMeetToCondition(player,conditionId))
+    if (!objmgr.IsPlayerMeetToCondition(player, conditionId))
         return false;
 
     if (needs_quest)
@@ -746,7 +746,7 @@ ByteBuffer& operator<<(ByteBuffer& b, LootView const& lv)
     }
 
     //update number of items shown
-    b.put<uint8>(count_pos,itemsShown);
+    b.put<uint8>(count_pos, itemsShown);
 
     return b;
 }
@@ -1006,7 +1006,7 @@ void LootTemplate::Verify(LootStore const& lootstore, uint32 id) const
 {
     // Checking group chances
     for (uint32 i=0; i < Groups.size(); ++i)
-        Groups[i].Verify(lootstore,id,i+1);
+        Groups[i].Verify(lootstore, id, i+1);
 
     // TODO: References validity checks
 }
@@ -1025,7 +1025,7 @@ void LootTemplate::CheckLootRefs(LootTemplateMap const& store, LootIdSet* ref_se
     }
 
     for (LootGroups::const_iterator grItr = Groups.begin(); grItr != Groups.end(); ++grItr)
-        grItr->CheckLootRefs(store,ref_set);
+        grItr->CheckLootRefs(store, ref_set);
 }
 
 void LoadLootTemplates_Creature()

@@ -49,7 +49,7 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
 
     void SummonSpirits(Unit* victim)
     {
-        if (Creature *Spirit = DoSpawnCreature(9178, irand(-9,9), irand(-9,9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
+        if (Creature *Spirit = DoSpawnCreature(9178, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
             Spirit->AI()->AttackStart(victim);
     }
 

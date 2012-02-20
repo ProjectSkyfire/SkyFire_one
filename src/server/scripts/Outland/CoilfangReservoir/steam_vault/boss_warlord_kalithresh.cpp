@@ -76,17 +76,17 @@ struct mob_naga_distillerAI : public ScriptedAI
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        DoCast(me,SPELL_WARLORDS_RAGE_NAGA,true);
+        DoCast(me, SPELL_WARLORDS_RAGE_NAGA, true);
 
         if (pInstance)
-            pInstance->SetData(TYPE_DISTILLER,IN_PROGRESS);
+            pInstance->SetData(TYPE_DISTILLER, IN_PROGRESS);
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (me->GetHealth() <= damage)
             if (pInstance)
-                pInstance->SetData(TYPE_DISTILLER,DONE);
+                pInstance->SetData(TYPE_DISTILLER, DONE);
     }
 };
 
@@ -182,7 +182,7 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
             if (distiller)
             {
                 DoScriptText(SAY_REGEN, me);
-                DoCast(me,SPELL_WARLORDS_RAGE);
+                DoCast(me, SPELL_WARLORDS_RAGE);
                 ((mob_naga_distillerAI*)distiller->AI())->StartRageGen(me);
             }
             Rage_Timer = 3000+rand()%15000;
@@ -198,8 +198,8 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
         //Impale_Timer
         if (Impale_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_IMPALE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_IMPALE);
 
             Impale_Timer = 7500+rand()%5000;
         } else Impale_Timer -= diff;

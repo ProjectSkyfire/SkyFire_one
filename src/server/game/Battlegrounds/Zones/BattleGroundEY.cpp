@@ -711,7 +711,7 @@ void BattleGroundEY::EventTeamCapturedPoint(Player *Source, uint32 Point)
         sLog.outError("BatteGroundEY: Failed to spawn spirit guide! point: %u, team: %u, graveyard_id: %u",
             Point, Team, m_CapturingPointTypes[Point].GraveYardId);
 
-//    SpawnBGCreature(Point,RESPAWN_IMMEDIATELY);
+//    SpawnBGCreature(Point, RESPAWN_IMMEDIATELY);
 
     UpdatePointsIcons(Team, Point);
     UpdatePointsCount(Team);

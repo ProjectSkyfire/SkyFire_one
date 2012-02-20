@@ -157,7 +157,7 @@ struct boss_void_reaverAI : public ScriptedAI
         //Berserk
         if (Berserk_Timer <= diff && !Enraged)
         {
-            DoCast(me,SPELL_BERSERK);
+            DoCast(me, SPELL_BERSERK);
             Enraged = true;
         } else Berserk_Timer -= diff;
 

@@ -110,12 +110,12 @@ float GameObjects_Wolf[5][4]=
 // Entries and spawn locations for creatures in Oz event
 float Spawns[6][2]=
 {
-    {17535, -10896},                                        // Dorothee
-    {17546, -10891},                                        // Roar
-    {17547, -10884},                                        // Tinhead
-    {17543, -10902},                                        // Strawman
-    {17603, -10892},                                        // Grandmother
-    {17534, -10900},                                        // Julianne
+    {17535, -10896},                                       // Dorothee
+    {17546, -10891},                                       // Roar
+    {17547, -10884},                                       // Tinhead
+    {17543, -10902},                                       // Strawman
+    {17603, -10892},                                       // Grandmother
+    {17534, -10900},                                       // Julianne
 };
 
 #define CREATURE_SPOTLIGHT  19525
@@ -215,15 +215,15 @@ struct npc_barnesAI : public npc_escortAI
                 {
                     case EVENT_OZ:
                         for (int i = 0; i<5; i++)
-                            me->SummonGameObject(GameObjects_OZ[i][0],GameObjects_OZ[i][1],GameObjects_OZ[i][2],GameObjects_OZ[i][3],4.63f,0,0,0.73f,-0.68f,60000);
+                            me->SummonGameObject(GameObjects_OZ[i][0],GameObjects_OZ[i][1],GameObjects_OZ[i][2],GameObjects_OZ[i][3],4.63f, 0, 0, 0.73f,-0.68f, 60000);
                         break;
                     case EVENT_HOOD:
                         for (int i = 0; i<5; i++)
-                            me->SummonGameObject(GameObjects_Wolf[i][0],GameObjects_Wolf[i][1],GameObjects_Wolf[i][2],GameObjects_Wolf[i][3],4.63f,0,0,0.73f,-0.68f,60000);
+                            me->SummonGameObject(GameObjects_Wolf[i][0],GameObjects_Wolf[i][1],GameObjects_Wolf[i][2],GameObjects_Wolf[i][3],4.63f, 0, 0, 0.73f,-0.68f, 60000);
                         break;
                     case EVENT_RAJ:
                         for (int i = 0; i<1; i++)
-                            me->SummonGameObject(GameObjects_RomeJulia[i][0],GameObjects_RomeJulia[i][1],GameObjects_RomeJulia[i][2],GameObjects_RomeJulia[i][3],4.63f,0,0,0.73f,-0.68f,60000);
+                            me->SummonGameObject(GameObjects_RomeJulia[i][0],GameObjects_RomeJulia[i][1],GameObjects_RomeJulia[i][2],GameObjects_RomeJulia[i][3],4.63f, 0, 0, 0.73f,-0.68f, 60000);
                         break;
                 }
                 break;
@@ -387,7 +387,7 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
             }
 
-            if (npc_barnesAI* pBarnesAI = CAST_AI(npc_barnesAI,pCreature->AI()))
+            if (npc_barnesAI* pBarnesAI = CAST_AI(npc_barnesAI, pCreature->AI()))
             {
                 if (!pBarnesAI->RaidWiped)
                     pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetGUID());
@@ -490,8 +490,8 @@ bool GossipSelect_npc_berthold(Player* pPlayer, Creature* /*pCreature*/, uint32 
 #define SPELL_CONFLAGRATION_BLAST   30977
 #define SPELL_MANA_SHIELD           31635
 
-static float MedivPos[4] = {-11161.49f,-1902.24f,91.48f,1.94f};
-static float ArcanagosPos[4] = {-11169.75f,-1881.48f,95.39f,4.83f};
+static float MedivPos[4] = {-11161.49f,-1902.24f, 91.48f, 1.94f};
+static float ArcanagosPos[4] = {-11169.75f,-1881.48f, 95.39f, 4.83f};
 
 struct npc_image_of_medivhAI : public ScriptedAI
 {
@@ -518,11 +518,11 @@ struct npc_image_of_medivhAI : public ScriptedAI
         if (pInstance && pInstance->GetData64(DATA_IMAGE_OF_MEDIVH) == 0)
         {
             pInstance->SetData64(DATA_IMAGE_OF_MEDIVH, me->GetGUID());
-            (*me).GetMotionMaster()->MovePoint(1,MedivPos[0],MedivPos[1],MedivPos[2]);
+            (*me).GetMotionMaster()->MovePoint(1, MedivPos[0],MedivPos[1],MedivPos[2]);
             Step = 0;
         } else
         {
-            me->DealDamage(me,me->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            me->DealDamage(me, me->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             me->RemoveCorpse();
         }
     }
@@ -544,12 +544,12 @@ struct npc_image_of_medivhAI : public ScriptedAI
     {
         Step = 1;
         EventStarted = true;
-        Creature* Arcanagos = me->SummonCreature(MOB_ARCANAGOS,ArcanagosPos[0],ArcanagosPos[1],ArcanagosPos[2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,20000);
+        Creature* Arcanagos = me->SummonCreature(MOB_ARCANAGOS, ArcanagosPos[0],ArcanagosPos[1],ArcanagosPos[2],0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
         if (!Arcanagos)
             return;
         ArcanagosGUID = Arcanagos->GetGUID();
         Arcanagos->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);
-        (*Arcanagos).GetMotionMaster()->MovePoint(0,ArcanagosPos[0],ArcanagosPos[1],ArcanagosPos[2]);
+        (*Arcanagos).GetMotionMaster()->MovePoint(0, ArcanagosPos[0],ArcanagosPos[1],ArcanagosPos[2]);
         Arcanagos->SetOrientation(ArcanagosPos[3]);
         me->SetOrientation(MedivPos[3]);
         YellTimer = 10000;
@@ -563,14 +563,14 @@ struct npc_image_of_medivhAI : public ScriptedAI
         {
         case 0: return 9999999;
         case 1:
-            me->MonsterYell(SAY_DIALOG_MEDIVH_1,LANG_UNIVERSAL,NULL);
+            me->MonsterYell(SAY_DIALOG_MEDIVH_1, LANG_UNIVERSAL, NULL);
             return 10000;
         case 2:
             if (arca)
-                CAST_CRE(arca)->MonsterYell(SAY_DIALOG_ARCANAGOS_2,LANG_UNIVERSAL,NULL);
+                CAST_CRE(arca)->MonsterYell(SAY_DIALOG_ARCANAGOS_2, LANG_UNIVERSAL, NULL);
             return 20000;
         case 3:
-            me->MonsterYell(SAY_DIALOG_MEDIVH_3,LANG_UNIVERSAL,NULL);
+            me->MonsterYell(SAY_DIALOG_MEDIVH_3, LANG_UNIVERSAL, NULL);
             return 10000;
         case 4:
             if (arca)
@@ -628,7 +628,7 @@ struct npc_image_of_medivhAI : public ScriptedAI
             }
             return 50000;
         case 15:
-            arca->DealDamage(arca,arca->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            arca->DealDamage(arca, arca->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             return 5000;
         default : return 9999999;
         }

@@ -95,7 +95,7 @@ struct boss_doomlordkazzakAI : public ScriptedAI
          if (victim->GetTypeId() != TYPEID_PLAYER)
              return;
 
-            DoCast(me,SPELL_CAPTURESOUL);
+            DoCast(me, SPELL_CAPTURESOUL);
 
             switch(rand()%3)
             {
@@ -159,7 +159,7 @@ struct boss_doomlordkazzakAI : public ScriptedAI
         if (Enrage_Timer <= diff)
         {
             DoScriptText(EMOTE_FRENZY, me);
-            DoCast(me,SPELL_ENRAGE);
+            DoCast(me, SPELL_ENRAGE);
             Enrage_Timer = 30000;
         } else Enrage_Timer -= diff;
 

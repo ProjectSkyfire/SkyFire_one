@@ -98,8 +98,8 @@ struct boss_the_makerAI : public ScriptedAI
 
         if (ExplodingBreaker_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,HeroicMode ? SPELL_EXPLODING_BREAKER_H : SPELL_EXPLODING_BREAKER);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, HeroicMode ? SPELL_EXPLODING_BREAKER_H : SPELL_EXPLODING_BREAKER);
             ExplodingBreaker_Timer = 9000+rand()%2000;
         }
         else ExplodingBreaker_Timer -=diff;
@@ -107,8 +107,8 @@ struct boss_the_makerAI : public ScriptedAI
         if (Domination_Timer <= diff)
         {
             Unit *pTarget;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
-            DoCast(pTarget,SPELL_DOMINATION);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            DoCast(pTarget, SPELL_DOMINATION);
             Domination_Timer = 60000;
         }
         else Domination_Timer -=diff;

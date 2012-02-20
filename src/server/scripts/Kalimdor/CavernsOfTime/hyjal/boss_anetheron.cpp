@@ -99,7 +99,7 @@ struct boss_anetheronAI : public hyjal_trashAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        switch (urand(0,2))
+        switch (urand(0, 2))
         {
             case 0:
                 DoPlaySoundToSet(me, SOUND_ONSLAY1);
@@ -123,7 +123,7 @@ struct boss_anetheronAI : public hyjal_trashAI
         {
             Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_JAINAPROUDMOORE));
             if (pTarget && pTarget->isAlive())
-                me->AddThreat(pTarget,0.0f);
+                me->AddThreat(pTarget, 0.0f);
         }
     }
 
@@ -170,8 +170,8 @@ struct boss_anetheronAI : public hyjal_trashAI
             if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                 DoCast(pTarget, SPELL_CARRION_SWARM);
 
-            SwarmTimer = urand(45000,60000);
-            switch (urand(0,1))
+            SwarmTimer = urand(45000, 60000);
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_SWARM1);
@@ -189,10 +189,10 @@ struct boss_anetheronAI : public hyjal_trashAI
             for (uint8 i = 0; i < 3; ++i)
             {
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                    pTarget->CastSpell(pTarget,SPELL_SLEEP,true);
+                    pTarget->CastSpell(pTarget, SPELL_SLEEP, true);
             }
             SleepTimer = 60000;
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_SLEEP1);
@@ -207,13 +207,13 @@ struct boss_anetheronAI : public hyjal_trashAI
         if (AuraTimer <= diff)
         {
             DoCast(me, SPELL_VAMPIRIC_AURA, true);
-            AuraTimer = urand(10000,20000);
+            AuraTimer = urand(10000, 20000);
         } else AuraTimer -= diff;
         if (InfernoTimer <= diff)
         {
             DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true), SPELL_INFERNO);
             InfernoTimer = 45000;
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_INFERNO1);
@@ -274,7 +274,7 @@ struct mob_towering_infernalAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who)
     {
         if (me->IsWithinDist(who, 50) && !me->isInCombat() && me->IsHostileTo(who))
-            me->Attack(who,false);
+            me->Attack(who, false);
     }
 
     void UpdateAI(const uint32 diff)

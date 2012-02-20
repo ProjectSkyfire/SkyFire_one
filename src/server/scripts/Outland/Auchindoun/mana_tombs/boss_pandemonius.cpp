@@ -95,7 +95,7 @@ struct boss_pandemoniusAI : public ScriptedAI
         {
             if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(pTarget,HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
+                DoCast(pTarget, HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
                 VoidBlast_Timer = 500;
                 ++VoidBlast_Counter;
             }
@@ -116,7 +116,7 @@ struct boss_pandemoniusAI : public ScriptedAI
 
                 DoScriptText(EMOTE_DARK_SHELL, me);
 
-                DoCast(me,HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
+                DoCast(me, HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
                 DarkShell_Timer = 20000;
             } else DarkShell_Timer -= diff;
         }

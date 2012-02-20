@@ -69,7 +69,7 @@ void WorldSession::HandleRepopRequestOpcode(WorldPacket & recv_data)
     }
 
     //this is spirit release confirm?
-    GetPlayer()->RemovePet(NULL,PET_SAVE_NOT_IN_SLOT, true);
+    GetPlayer()->RemovePet(NULL, PET_SAVE_NOT_IN_SLOT, true);
     GetPlayer()->BuildPlayerRepop();
     GetPlayer()->RepopAtGraveyard();
 }
@@ -190,7 +190,7 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
         std::string temp;
         recv_data >> temp;                                  // user entered string, it used as universal search pattern(guild+player name)?
 
-        if (!Utf8toWStr(temp,str[i]))
+        if (!Utf8toWStr(temp, str[i]))
             continue;
 
         wstrToLower(str[i]);
@@ -276,7 +276,7 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
 
         std::string pname = itr->second->GetName();
         std::wstring wpname;
-        if (!Utf8toWStr(pname,wpname))
+        if (!Utf8toWStr(pname, wpname))
             continue;
         wstrToLower(wpname);
 
@@ -285,7 +285,7 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
 
         std::string gname = objmgr.GetGuildNameById(itr->second->GetGuildId());
         std::wstring wgname;
-        if (!Utf8toWStr(gname,wgname))
+        if (!Utf8toWStr(gname, wgname))
             continue;
         wstrToLower(wgname);
 
@@ -345,7 +345,7 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPacket & /*recv_data*/)
     //Can not logout if...
     if (GetPlayer()->isInCombat() ||                        //...is in combat
         GetPlayer()->duel         ||                        //...is in Duel
-        GetPlayer()->HasAura(9454,0)         ||             //...is frozen by GM via freeze command
+        GetPlayer()->HasAura(9454, 0)         ||             //...is frozen by GM via freeze command
                                                             //...is jumping ...is falling
         GetPlayer()->HasUnitMovementFlag(MOVEFLAG_FALLING | MOVEFLAG_FALLINGFAR))
     {
@@ -453,7 +453,7 @@ void WorldSession::HandleZoneUpdateOpcode(WorldPacket & recv_data)
 
     GetPlayer()->UpdateZone(newZone);
 
-    GetPlayer()->SendInitWorldStates(true,newZone);
+    GetPlayer()->SendInitWorldStates(true, newZone);
 }
 
 void WorldSession::HandleSetTargetOpcode(WorldPacket & recv_data)
@@ -692,7 +692,7 @@ void WorldSession::HandleBugOpcode(WorldPacket & recv_data)
 
     CharacterDatabase.escape_string(type);
     CharacterDatabase.escape_string(content);
-    CharacterDatabase.PExecute("INSERT INTO bugreport (type,content) VALUES('%s', '%s')", type.c_str(), content.c_str());
+    CharacterDatabase.PExecute("INSERT INTO bugreport (type, content) VALUES('%s', '%s')", type.c_str(), content.c_str());
 }
 
 void WorldSession::HandleCorpseReclaimOpcode(WorldPacket &recv_data)
@@ -792,7 +792,7 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
     if (atEntry->radius > 0)
     {
         // if we have radius check it
-        float dist = pl->GetDistance(atEntry->x,atEntry->y,atEntry->z);
+        float dist = pl->GetDistance(atEntry->x, atEntry->y, atEntry->z);
         if (dist > atEntry->radius + delta)
         {
             DEBUG_LOG("Player '%s' (GUID: %u) too far (radius: %f distance: %f), ignore Area Trigger ID: %u",
@@ -873,7 +873,7 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
     if (!GetPlayer()->Satisfy(objmgr.GetAccessRequirement(at->access_id), at->target_mapId, true))
         return;
 
-    GetPlayer()->TeleportTo(at->target_mapId,at->target_X,at->target_Y,at->target_Z,at->target_Orientation,TELE_TO_NOT_LEAVE_TRANSPORT);
+    GetPlayer()->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation, TELE_TO_NOT_LEAVE_TRANSPORT);
 }
 
 void WorldSession::HandleUpdateAccountData(WorldPacket &recv_data)
@@ -907,17 +907,17 @@ void WorldSession::HandleSetActionButtonOpcode(WorldPacket& recv_data)
         if (type == ACTION_BUTTON_MACRO || type == ACTION_BUTTON_CMACRO)
         {
             DEBUG_LOG("MISC: Added Macro %u into button %u", action, button);
-            GetPlayer()->addActionButton(button,action,type,misc);
+            GetPlayer()->addActionButton(button, action, type, misc);
         }
         else if (type == ACTION_BUTTON_SPELL)
         {
             DEBUG_LOG("MISC: Added Action %u into button %u", action, button);
-            GetPlayer()->addActionButton(button,action,type,misc);
+            GetPlayer()->addActionButton(button, action, type, misc);
         }
         else if (type == ACTION_BUTTON_ITEM)
         {
             DEBUG_LOG("MISC: Added Item %u into button %u", action, button);
-            GetPlayer()->addActionButton(button,action,type,misc);
+            GetPlayer()->addActionButton(button, action, type, misc);
         }
         else
             sLog.outError("MISC: Unknown action button type %u for action %u into button %u", type, action, button);
@@ -1175,7 +1175,7 @@ void WorldSession::HandleWorldTeleportOpcode(WorldPacket& recv_data)
     DEBUG_LOG("Time %u sec, map=%u, x=%f, y=%f, z=%f, orient=%f", time/IN_MILLISECONDS, mapid, PositionX, PositionY, PositionZ, Orientation);
 
     if (GetSecurity() >= SEC_ADMINISTRATOR)
-        GetPlayer()->TeleportTo(mapid,PositionX,PositionY,PositionZ,Orientation);
+        GetPlayer()->TeleportTo(mapid, PositionX, PositionY, PositionZ, Orientation);
     else
         SendNotification(LANG_YOU_NOT_HAVE_PERMISSION);
 
@@ -1210,7 +1210,7 @@ void WorldSession::HandleWhoisOpcode(WorldPacket& recv_data)
 
     uint32 accid = plr->GetSession()->GetAccountId();
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT username,email,last_ip FROM account WHERE id=%u", accid);
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT username, email, last_ip FROM account WHERE id=%u", accid);
     if (!result)
     {
         SendNotification(LANG_ACCOUNT_FOR_PLAYER_NOT_FOUND, charname.c_str());

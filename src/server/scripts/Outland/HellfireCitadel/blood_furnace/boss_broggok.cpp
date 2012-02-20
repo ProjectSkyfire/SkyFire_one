@@ -125,7 +125,7 @@ struct boss_broggokAI : public ScriptedAI
 
         if (PoisonSpawn_Timer <= diff)
         {
-            DoCast(me,SPELL_POISON_CLOUD);
+            DoCast(me, SPELL_POISON_CLOUD);
             PoisonSpawn_Timer = 20000;
         } else PoisonSpawn_Timer -=diff;
 
@@ -233,7 +233,7 @@ struct mob_broggok_poisoncloudAI : public ScriptedAI
 
     void Reset()
     {
-        DoCast(me,HeroicMode ? SPELL_POISON_H : SPELL_POISON);
+        DoCast(me, HeroicMode ? SPELL_POISON_H : SPELL_POISON);
     }
 
     void AttackedBy(Unit* who) {}

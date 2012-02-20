@@ -199,7 +199,7 @@ bool GossipHello_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature)
     uint32 AzgalorEvent = ai->GetInstanceData(DATA_AZGALOREVENT);
 
     // Only let them get item if Azgalor is dead.
-    if (AzgalorEvent == DONE && !pPlayer->HasItemCount(ITEM_TEAR_OF_GODDESS,1))
+    if (AzgalorEvent == DONE && !pPlayer->HasItemCount(ITEM_TEAR_OF_GODDESS, 1))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TYRANDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
     pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
     return true;
@@ -215,7 +215,7 @@ bool GossipSelect_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature, 
             {
                  Item* item = pPlayer->StoreNewItem(dest, ITEM_TEAR_OF_GODDESS, true);
                  if (item && pPlayer)
-                     pPlayer->SendNewItem(item,1,true,false,true);
+                     pPlayer->SendNewItem(item, 1, true, false, true);
             }
             pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
             CAST_AI(hyjalAI, pCreature->AI());

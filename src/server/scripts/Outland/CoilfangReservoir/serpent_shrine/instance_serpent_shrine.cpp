@@ -163,16 +163,16 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
                         {
                             if (!pPlayer->HasAura(SPELL_SCALDINGWATER, 0))
                             {
-                                pPlayer->CastSpell(pPlayer, SPELL_SCALDINGWATER,true);
+                                pPlayer->CastSpell(pPlayer, SPELL_SCALDINGWATER, true);
                             }
                         } else if (Water == WATERSTATE_FRENZY)
                         {
                             //spawn frenzy
                             if (DoSpawnFrenzy)
                             {
-                                if (Creature* frenzy = pPlayer->SummonCreature(MOB_COILFANG_FRENZY,pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ(),pPlayer->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,2000))
+                                if (Creature* frenzy = pPlayer->SummonCreature(MOB_COILFANG_FRENZY, pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ(),pPlayer->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 2000))
                                 {
-                                    frenzy->Attack(pPlayer,false);
+                                    frenzy->Attack(pPlayer, false);
                                     frenzy->AddUnitMovementFlag(MOVEFLAG_SWIMMING | MOVEFLAG_LEVITATING);
                                 }
                                 DoSpawnFrenzy = false;

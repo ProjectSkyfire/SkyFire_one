@@ -112,10 +112,10 @@ struct boss_vexallusAI : public ScriptedAI
     void JustSummoned(Creature *summoned)
     {
         if (Unit *temp = SelectUnit(SELECT_TARGET_RANDOM, 0))
-            summoned->GetMotionMaster()->MoveFollow(temp,0,0);
+            summoned->GetMotionMaster()->MoveFollow(temp, 0, 0);
 
         //spells are SUMMON_TYPE_GUARDIAN, so using setOwner should be ok
-        summoned->CastSpell(summoned,SPELL_ENERGY_BOLT,false,0,0,me->GetGUID());
+        summoned->CastSpell(summoned, SPELL_ENERGY_BOLT, false, 0, 0, me->GetGUID());
     }
 
     void UpdateAI(const uint32 diff)

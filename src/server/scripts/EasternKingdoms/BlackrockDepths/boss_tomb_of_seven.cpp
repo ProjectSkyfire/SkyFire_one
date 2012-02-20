@@ -233,7 +233,7 @@ bool GossipSelect_boss_doomrel(Player* pPlayer, Creature* pCreature, uint32 /*ui
             pCreature->AI()->AttackStart(pPlayer);
             ScriptedInstance* pInstance = pCreature->GetInstanceData();
             if (pInstance)
-                pInstance->SetData64(DATA_EVENSTARTER,pPlayer->GetGUID());
+                pInstance->SetData64(DATA_EVENSTARTER, pPlayer->GetGUID());
             break;
     }
     return true;

@@ -28,17 +28,17 @@
 #include "Language.h"
 #include "GossipDef.h"
 
-const uint32 EP_LANG_LOOSE_A[EP_TOWER_NUM] = {LANG_OPVP_EP_LOOSE_CROWNGUARD_A,LANG_OPVP_EP_LOOSE_EASTWALL_A,LANG_OPVP_EP_LOOSE_NORTHPASS_A,LANG_OPVP_EP_LOOSE_PLAGUEWOOD_A};
+const uint32 EP_LANG_LOOSE_A[EP_TOWER_NUM] = {LANG_OPVP_EP_LOOSE_CROWNGUARD_A, LANG_OPVP_EP_LOOSE_EASTWALL_A, LANG_OPVP_EP_LOOSE_NORTHPASS_A, LANG_OPVP_EP_LOOSE_PLAGUEWOOD_A};
 
-const uint32 EP_LANG_LOOSE_H[EP_TOWER_NUM] = {LANG_OPVP_EP_LOOSE_CROWNGUARD_H,LANG_OPVP_EP_LOOSE_EASTWALL_H,LANG_OPVP_EP_LOOSE_NORTHPASS_H,LANG_OPVP_EP_LOOSE_PLAGUEWOOD_H};
+const uint32 EP_LANG_LOOSE_H[EP_TOWER_NUM] = {LANG_OPVP_EP_LOOSE_CROWNGUARD_H, LANG_OPVP_EP_LOOSE_EASTWALL_H, LANG_OPVP_EP_LOOSE_NORTHPASS_H, LANG_OPVP_EP_LOOSE_PLAGUEWOOD_H};
 
-const uint32 EP_LANG_CAPTURE_A[EP_TOWER_NUM] = {LANG_OPVP_EP_CAPTURE_CROWNGUARD_A,LANG_OPVP_EP_CAPTURE_EASTWALL_A,LANG_OPVP_EP_CAPTURE_NORTHPASS_A,LANG_OPVP_EP_CAPTURE_PLAGUEWOOD_A};
+const uint32 EP_LANG_CAPTURE_A[EP_TOWER_NUM] = {LANG_OPVP_EP_CAPTURE_CROWNGUARD_A, LANG_OPVP_EP_CAPTURE_EASTWALL_A, LANG_OPVP_EP_CAPTURE_NORTHPASS_A, LANG_OPVP_EP_CAPTURE_PLAGUEWOOD_A};
 
-const uint32 EP_LANG_CAPTURE_H[EP_TOWER_NUM] = {LANG_OPVP_EP_CAPTURE_CROWNGUARD_H,LANG_OPVP_EP_CAPTURE_EASTWALL_H,LANG_OPVP_EP_CAPTURE_NORTHPASS_H,LANG_OPVP_EP_CAPTURE_PLAGUEWOOD_H};
+const uint32 EP_LANG_CAPTURE_H[EP_TOWER_NUM] = {LANG_OPVP_EP_CAPTURE_CROWNGUARD_H, LANG_OPVP_EP_CAPTURE_EASTWALL_H, LANG_OPVP_EP_CAPTURE_NORTHPASS_H, LANG_OPVP_EP_CAPTURE_PLAGUEWOOD_H};
 
-const uint32 EP_LANG_FLIGHT_GOSSIPS[EP_TOWER_NUM-1] = {LANG_OPVP_EP_FLIGHT_NORTHPASS,LANG_OPVP_EP_FLIGHT_EASTWALL,LANG_OPVP_EP_FLIGHT_CROWNGUARD};
+const uint32 EP_LANG_FLIGHT_GOSSIPS[EP_TOWER_NUM-1] = {LANG_OPVP_EP_FLIGHT_NORTHPASS, LANG_OPVP_EP_FLIGHT_EASTWALL, LANG_OPVP_EP_FLIGHT_CROWNGUARD};
 
-OPvPCapturePointEP::OPvPCapturePointEP(OutdoorPvP *pvp,OutdoorPvPEPTowerType type)
+OPvPCapturePointEP::OPvPCapturePointEP(OutdoorPvP *pvp, OutdoorPvPEPTowerType type)
 : OPvPCapturePoint(pvp), m_TowerType(type)
 {
     SetCapturePointData(EPCapturePoints[type].entry,
@@ -83,10 +83,10 @@ bool OutdoorPvPEP::SetupOutdoorPvP()
     for (uint8 i = 0; i < OutdoorPvPEPBuffZonesNum; ++i)
         RegisterZone(OutdoorPvPEPBuffZones[i]);
 
-    AddCapturePoint(new OPvPCapturePointEP(this,EP_TOWER_CROWNGUARD));
-    AddCapturePoint(new OPvPCapturePointEP(this,EP_TOWER_EASTWALL));
-    AddCapturePoint(new OPvPCapturePointEP(this,EP_TOWER_NORTHPASS));
-    AddCapturePoint(new OPvPCapturePointEP(this,EP_TOWER_PLAGUEWOOD));
+    AddCapturePoint(new OPvPCapturePointEP(this, EP_TOWER_CROWNGUARD));
+    AddCapturePoint(new OPvPCapturePointEP(this, EP_TOWER_EASTWALL));
+    AddCapturePoint(new OPvPCapturePointEP(this, EP_TOWER_NORTHPASS));
+    AddCapturePoint(new OPvPCapturePointEP(this, EP_TOWER_PLAGUEWOOD));
 
     return true;
 }
@@ -97,14 +97,14 @@ void OutdoorPvPEP::HandlePlayerEnterZone(Player * plr, uint32 zone)
     if (plr->GetTeam() == ALLIANCE)
     {
         if (m_AllianceTowersControlled > 0)
-            plr->CastSpell(plr,EP_AllianceBuffs[m_AllianceTowersControlled-1],true);
+            plr->CastSpell(plr, EP_AllianceBuffs[m_AllianceTowersControlled-1],true);
     }
     else
     {
         if (m_HordeTowersControlled > 0)
-            plr->CastSpell(plr,EP_HordeBuffs[m_HordeTowersControlled-1],true);
+            plr->CastSpell(plr, EP_HordeBuffs[m_HordeTowersControlled-1],true);
     }
-    OutdoorPvP::HandlePlayerEnterZone(plr,zone);
+    OutdoorPvP::HandlePlayerEnterZone(plr, zone);
 }
 
 void OutdoorPvPEP::HandlePlayerLeaveZone(Player * plr, uint32 zone)
@@ -149,11 +149,11 @@ bool OutdoorPvPEP::Update(uint32 diff)
 
 void OutdoorPvPEP::SendRemoveWorldStates(Player *plr)
 {
-    plr->SendUpdateWorldState(EP_UI_TOWER_COUNT_A,0);
-    plr->SendUpdateWorldState(EP_UI_TOWER_COUNT_H,0);
-    plr->SendUpdateWorldState(EP_UI_TOWER_SLIDER_DISPLAY,0);
-    plr->SendUpdateWorldState(EP_UI_TOWER_SLIDER_POS,0);
-    plr->SendUpdateWorldState(EP_UI_TOWER_SLIDER_N,0);
+    plr->SendUpdateWorldState(EP_UI_TOWER_COUNT_A, 0);
+    plr->SendUpdateWorldState(EP_UI_TOWER_COUNT_H, 0);
+    plr->SendUpdateWorldState(EP_UI_TOWER_SLIDER_DISPLAY, 0);
+    plr->SendUpdateWorldState(EP_UI_TOWER_SLIDER_POS, 0);
+    plr->SendUpdateWorldState(EP_UI_TOWER_SLIDER_N, 0);
 
     for (uint8 i = 0; i < EP_TOWER_NUM; ++i)
     {
@@ -385,14 +385,14 @@ void OPvPCapturePointEP::LinkGraveYard(uint32 team)
     if (EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD] != team)
     {
         EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD] = team;
-        objmgr.RemoveGraveYardLink(EP_GraveYardId,EP_GraveYardZone,team,false);
-        objmgr.AddGraveYardLink(EP_GraveYardId,EP_GraveYardZone,team,false);
+        objmgr.RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, team, false);
+        objmgr.AddGraveYardLink(EP_GraveYardId, EP_GraveYardZone, team, false);
     }
 }
 
 void OPvPCapturePointEP::UnlinkGraveYard()
 {
-    objmgr.RemoveGraveYardLink(EP_GraveYardId,EP_GraveYardZone,EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD],false);
+    objmgr.RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD],false);
     EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD] = 0;
 }
 
@@ -410,7 +410,7 @@ void OPvPCapturePointEP::SummonSupportUnits(uint32 team)
         for (uint8 i = 0; i < EP_EWT_NUM_CREATURES; ++i)
         {
             DelCreature(i);
-            AddCreature(i,ct[i].entry,ct[i].teamval,ct[i].map,ct[i].x,ct[i].y,ct[i].z,ct[i].o,1000000);
+            AddCreature(i, ct[i].entry, ct[i].teamval, ct[i].map, ct[i].x, ct[i].y, ct[i].z, ct[i].o, 1000000);
         }
     }
 }
@@ -428,14 +428,14 @@ void OPvPCapturePointEP::SummonShrine(uint32 team)
     {
         EP_TOWER_EVENT_TEAM[EP_TOWER_NORTHPASS] = team;
         DelObject(EP_NPT_SHRINE);
-        AddObject(EP_NPT_SHRINE,EP_NPT_LordaeronShrine.entry,0,EP_NPT_LordaeronShrine.map,EP_NPT_LordaeronShrine.x,EP_NPT_LordaeronShrine.y,EP_NPT_LordaeronShrine.z,EP_NPT_LordaeronShrine.o,EP_NPT_LordaeronShrine.rot0,EP_NPT_LordaeronShrine.rot1,EP_NPT_LordaeronShrine.rot2,EP_NPT_LordaeronShrine.rot3);
+        AddObject(EP_NPT_SHRINE, EP_NPT_LordaeronShrine.entry, 0, EP_NPT_LordaeronShrine.map, EP_NPT_LordaeronShrine.x, EP_NPT_LordaeronShrine.y, EP_NPT_LordaeronShrine.z, EP_NPT_LordaeronShrine.o, EP_NPT_LordaeronShrine.rot0, EP_NPT_LordaeronShrine.rot1, EP_NPT_LordaeronShrine.rot2, EP_NPT_LordaeronShrine.rot3);
         GameObject * go = HashMapHolder<GameObject>::Find(m_Objects[EP_NPT_SHRINE]);
         if (go)
             go->SetUInt32Value(GAMEOBJECT_FACTION,(team == ALLIANCE ? 84 : 83));
 
         DelObject(EP_NPT_SHRINE_AURA);
         uint32 shrineEntry = (team == ALLIANCE ? EP_NPT_LordaeronShrineAura.entry : EP_NPT_LordaeronShrineAura.entry + 1);
-        AddObject(EP_NPT_SHRINE_AURA,shrineEntry,0,EP_NPT_LordaeronShrineAura.map,EP_NPT_LordaeronShrineAura.x,EP_NPT_LordaeronShrineAura.y,EP_NPT_LordaeronShrineAura.z,EP_NPT_LordaeronShrineAura.o,EP_NPT_LordaeronShrineAura.rot0,EP_NPT_LordaeronShrineAura.rot1,EP_NPT_LordaeronShrineAura.rot2,EP_NPT_LordaeronShrineAura.rot3);
+        AddObject(EP_NPT_SHRINE_AURA, shrineEntry, 0, EP_NPT_LordaeronShrineAura.map, EP_NPT_LordaeronShrineAura.x, EP_NPT_LordaeronShrineAura.y, EP_NPT_LordaeronShrineAura.z, EP_NPT_LordaeronShrineAura.o, EP_NPT_LordaeronShrineAura.rot0, EP_NPT_LordaeronShrineAura.rot1, EP_NPT_LordaeronShrineAura.rot2, EP_NPT_LordaeronShrineAura.rot3);
     }
 }
 
@@ -452,7 +452,7 @@ void OPvPCapturePointEP::SummonFlightMaster(uint32 team)
     {
         EP_TOWER_EVENT_TEAM[EP_TOWER_PLAGUEWOOD] = team;
         DelCreature(EP_PWT_FLIGHTMASTER);
-        AddCreature(EP_PWT_FLIGHTMASTER,EP_PWT_FlightMaster.entry,team,EP_PWT_FlightMaster.map,EP_PWT_FlightMaster.x,EP_PWT_FlightMaster.y,EP_PWT_FlightMaster.z,EP_PWT_FlightMaster.o);
+        AddCreature(EP_PWT_FLIGHTMASTER, EP_PWT_FlightMaster.entry, team, EP_PWT_FlightMaster.map, EP_PWT_FlightMaster.x, EP_PWT_FlightMaster.y, EP_PWT_FlightMaster.z, EP_PWT_FlightMaster.o);
 
         // Change the flightmasters's faction to horde and display a red aura around the npc
         Creature * c = HashMapHolder<Creature>::Find(m_Creatures[EP_PWT_FLIGHTMASTER]);

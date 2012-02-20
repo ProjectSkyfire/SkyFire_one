@@ -125,20 +125,20 @@ struct boss_lajAI : public ScriptedAI
         switch(rand()%4)
         {
             case 0:
-                DoCast(me,SPELL_SUMMON_LASHER_1,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_1,true);
+                DoCast(me, SPELL_SUMMON_LASHER_1, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_1, true);
                 break;
             case 1:
-                DoCast(me,SPELL_SUMMON_LASHER_2,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_2,true);
+                DoCast(me, SPELL_SUMMON_LASHER_2, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_2, true);
                 break;
             case 2:
-                DoCast(me,SPELL_SUMMON_LASHER_3,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_3,true);
+                DoCast(me, SPELL_SUMMON_LASHER_3, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_3, true);
                 break;
             case 3:
-                DoCast(me,SPELL_SUMMON_LASHER_4,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_4,true);
+                DoCast(me, SPELL_SUMMON_LASHER_4, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_4, true);
                 break;
         }
         CanSummon = false;
@@ -177,7 +177,7 @@ struct boss_lajAI : public ScriptedAI
 
         if (Teleport_Timer <= diff)
         {
-            DoCast(me,SPELL_TELEPORT_SELF);
+            DoCast(me, SPELL_TELEPORT_SELF);
             Teleport_Timer = 30000+rand()%10000;
             CanSummon = true;
         } else Teleport_Timer -= diff;

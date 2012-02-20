@@ -131,7 +131,7 @@ void HostileRefManager::deleteReference(Unit *pCreature)
 //=================================================
 // set state for one reference, defined by Unit
 
-void HostileRefManager::setOnlineOfflineState(Unit *pCreature,bool pIsOnline)
+void HostileRefManager::setOnlineOfflineState(Unit *pCreature, bool pIsOnline)
 {
     HostileReference* ref = getFirst();
     while (ref)

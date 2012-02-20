@@ -27,11 +27,11 @@
 #include "LootMgr.h"
 #include "Database/DatabaseEnv.h"
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 // from `gameobject_template`
@@ -472,14 +472,14 @@ class GameObject : public WorldObject, public GridObject<GameObject>
 
         void UpdateRotationFields(float rotation2 = 0.0f, float rotation3 = 0.0f);
 
-        void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text,language,TargetGuid); }
-        void Yell(const char* text, uint32 language, uint64 TargetGuid) { MonsterYell(text,language,TargetGuid); }
-        void TextEmote(const char* text, uint64 TargetGuid) { MonsterTextEmote(text,TargetGuid); }
-        void Whisper(const char* text,uint64 receiver) { MonsterWhisper(text,receiver); }
-        void Say(int32 textId, uint32 language, uint64 TargetGuid) { MonsterSay(textId,language,TargetGuid); }
-        void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId,language,TargetGuid); }
-        void TextEmote(int32 textId, uint64 TargetGuid) { MonsterTextEmote(textId,TargetGuid); }
-        void Whisper(int32 textId, uint64 receiver) { MonsterWhisper(textId,receiver); }
+        void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text, language, TargetGuid); }
+        void Yell(const char* text, uint32 language, uint64 TargetGuid) { MonsterYell(text, language, TargetGuid); }
+        void TextEmote(const char* text, uint64 TargetGuid) { MonsterTextEmote(text, TargetGuid); }
+        void Whisper(const char* text, uint64 receiver) { MonsterWhisper(text, receiver); }
+        void Say(int32 textId, uint32 language, uint64 TargetGuid) { MonsterSay(textId, language, TargetGuid); }
+        void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId, language, TargetGuid); }
+        void TextEmote(int32 textId, uint64 TargetGuid) { MonsterTextEmote(textId, TargetGuid); }
+        void Whisper(int32 textId, uint64 receiver) { MonsterWhisper(textId, receiver); }
 
         // overwrite WorldObject function for proper name localization
         const char* GetNameForLocaleIdx(int32 locale_idx) const;

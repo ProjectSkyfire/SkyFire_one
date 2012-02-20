@@ -204,9 +204,9 @@ Position DeceiverLocations[3]=
 // Locations, where Shield Orbs will spawn
 float ShieldOrbLocations[4][2]=
 {
-    {1698.900f, 627.870f},    // middle pont of Sunwell
-    {12, 3.14f},             // First one spawns northeast of KJ
-    {12, 3.14f/0.7f},         // Second one spawns southeast
+    {1698.900f, 627.870f},   // middle pont of Sunwell
+    {12, 3.14f},            // First one spawns northeast of KJ
+    {12, 3.14f/0.7f},        // Second one spawns southeast
     {12, 3.14f*3.8f}          // Third one spawns (?)
 };
 
@@ -317,7 +317,7 @@ struct boss_kalecgos_kjAI : public ScriptedAI
         }
         else
         {
-            if (GameObject* pOrb = GetOrb(urand(0,3)))
+            if (GameObject* pOrb = GetOrb(urand(0, 3)))
             {
                 pOrb->CastSpell(me, SPELL_RING_OF_BLUE_FLAMES);
                 pOrb->SetUInt32Value(GAMEOBJECT_FACTION, 35);
@@ -447,7 +447,7 @@ struct mob_kiljaeden_controllerAI : public Scripted_NoMovementAI
         if (uiRandomSayTimer < diff)
         {
             if (pInstance && pInstance->GetData(DATA_MURU_EVENT) != DONE && pInstance->GetData(DATA_KILJAEDEN_EVENT) == NOT_STARTED)
-                DoScriptText(RAND(SAY_KJ_OFFCOMBAT1,SAY_KJ_OFFCOMBAT2,SAY_KJ_OFFCOMBAT3,SAY_KJ_OFFCOMBAT4,SAY_KJ_OFFCOMBAT5), me);
+                DoScriptText(RAND(SAY_KJ_OFFCOMBAT1, SAY_KJ_OFFCOMBAT2, SAY_KJ_OFFCOMBAT3, SAY_KJ_OFFCOMBAT4, SAY_KJ_OFFCOMBAT5), me);
             uiRandomSayTimer = 30000;
         } else uiRandomSayTimer -= diff;
 
@@ -465,7 +465,7 @@ struct mob_kiljaeden_controllerAI : public Scripted_NoMovementAI
         {
             me->RemoveAurasDueToSpell(SPELL_ANVEENA_ENERGY_DRAIN);
             phase = PHASE_NORMAL;
-            DoSpawnCreature(CREATURE_KILJAEDEN, 0, 0,0, 0, TEMPSUMMON_MANUAL_DESPAWN, 0);
+            DoSpawnCreature(CREATURE_KILJAEDEN, 0, 0, 0, 0, TEMPSUMMON_MANUAL_DESPAWN, 0);
         }
     }
 };
@@ -593,7 +593,7 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        DoScriptText(RAND(SAY_KJ_SLAY1,SAY_KJ_SLAY2), me);
+        DoScriptText(RAND(SAY_KJ_SLAY1, SAY_KJ_SLAY2), me);
     }
 
     void EnterEvadeMode()
@@ -620,26 +620,26 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
         TimerIsDeactivated[TIMER_SHADOW_SPIKE] = false;
         Timer[TIMER_SHADOW_SPIKE]     = 100;
         // empowered orbs before darkness
-        Timer[TIMER_DARKNESS] = (Phase == PHASE_SACRIFICE) ? 15000 : urand(10000,40000);
+        Timer[TIMER_DARKNESS] = (Phase == PHASE_SACRIFICE) ? 15000 : urand(10000, 40000);
         Timer[TIMER_ORBS_EMPOWER] = (Phase == PHASE_SACRIFICE) ? 10000 : 5000;
     }
 
     void CastSinisterReflection()
     {
-        DoScriptText(RAND(SAY_KJ_REFLECTION1,SAY_KJ_REFLECTION2), me);
+        DoScriptText(RAND(SAY_KJ_REFLECTION1, SAY_KJ_REFLECTION2), me);
         for (uint8 i = 0; i < 4; ++i)
         {
-            float x,y,z;
+            float x, y, z;
             Unit *pTarget = NULL;
             for (uint8 z = 0; z < 6; ++z)
             {
                 pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-                if (!pTarget || !pTarget->HasAura(SPELL_VENGEANCE_OF_THE_BLUE_FLIGHT,0)) break;
+                if (!pTarget || !pTarget->HasAura(SPELL_VENGEANCE_OF_THE_BLUE_FLIGHT, 0)) break;
             }
             if (pTarget)
             {
-                pTarget->GetPosition(x,y,z);
-                if (Creature* pSinisterReflection = me->SummonCreature(CREATURE_SINISTER_REFLECTION, x,y,z,0, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                pTarget->GetPosition(x, y, z);
+                if (Creature* pSinisterReflection = me->SummonCreature(CREATURE_SINISTER_REFLECTION, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
                 {
                     pSinisterReflection->SetDisplayId(pTarget->GetDisplayId());
                     pSinisterReflection->AI()->AttackStart(pTarget);
@@ -721,7 +721,7 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
                             for (uint8 z = 0; z < 6; ++z)
                             {
                                 pRandomPlayer = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-                                if (!pRandomPlayer || !pRandomPlayer->HasAura(SPELL_VENGEANCE_OF_THE_BLUE_FLIGHT,0))
+                                if (!pRandomPlayer || !pRandomPlayer->HasAura(SPELL_VENGEANCE_OF_THE_BLUE_FLIGHT, 0))
                                     break;
                             }
 
@@ -751,7 +751,7 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
                             sy = ShieldOrbLocations[0][1] + sin(ShieldOrbLocations[i][1]);
                             me->SummonCreature(CREATURE_SHIELD_ORB, sx, sy, SHIELD_ORB_Z, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
                         }
-                        Timer[TIMER_SUMMON_SHILEDORB] = urand(30000,60000); // 30-60seconds cooldown
+                        Timer[TIMER_SUMMON_SHILEDORB] = urand(30000, 60000); // 30-60seconds cooldown
                         Timer[TIMER_SOUL_FLAY] = 2000;
                         break;
                     case TIMER_SHADOW_SPIKE: //Phase 3
@@ -785,10 +785,10 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
                             }
                             else
                             {
-                                Timer[TIMER_DARKNESS] = (Phase == PHASE_SACRIFICE) ? 15000 : urand(40000,70000);
+                                Timer[TIMER_DARKNESS] = (Phase == PHASE_SACRIFICE) ? 15000 : urand(40000, 70000);
                                 IsInDarkness = false;
                                 DoCastAOE(SPELL_DARKNESS_OF_A_THOUSAND_SOULS_DAMAGE);
-                                DoScriptText(RAND(SAY_KJ_DARKNESS1,SAY_KJ_DARKNESS2,SAY_KJ_DARKNESS3), me);
+                                DoScriptText(RAND(SAY_KJ_DARKNESS1, SAY_KJ_DARKNESS2, SAY_KJ_DARKNESS3), me);
                             }
                             Timer[TIMER_SOUL_FLAY] = 9000;
                         }
@@ -815,13 +815,13 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
                         for (uint8 z = 0; z < 6; ++z)
                         {
                             pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-                            if (!pTarget || !pTarget->HasAura(SPELL_VENGEANCE_OF_THE_BLUE_FLIGHT,0)) break;
+                            if (!pTarget || !pTarget->HasAura(SPELL_VENGEANCE_OF_THE_BLUE_FLIGHT, 0)) break;
                         }
                         if (pTarget)
                         {
                             float x, y, z;
                             pTarget->GetPosition(x, y, z);
-                            me->SummonCreature(CREATURE_ARMAGEDDON_TARGET, x,y,z,0, TEMPSUMMON_TIMED_DESPAWN,15000);
+                            me->SummonCreature(CREATURE_ARMAGEDDON_TARGET, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN, 15000);
                         }
                         Timer[TIMER_ARMAGEDDON] = 2000; // No, I'm not kidding
                         break;
@@ -895,7 +895,7 @@ struct mob_hand_of_the_deceiverAI : public ScriptedAI
     void Reset()
     {
         // TODO: Timers!
-        ShadowBoltVolleyTimer = urand(8000,14000); // So they don't all cast it in the same moment.
+        ShadowBoltVolleyTimer = urand(8000, 14000); // So they don't all cast it in the same moment.
         FelfirePortalTimer = 20000;
         if (pInstance)
             pInstance->SetData(DATA_KILJAEDEN_EVENT, NOT_STARTED);
@@ -951,7 +951,7 @@ struct mob_hand_of_the_deceiverAI : public ScriptedAI
         // Felfire Portal - Creatres a portal, that spawns Volatile Felfire Fiends, which do suicide bombing.
         if (FelfirePortalTimer <= diff)
         {
-            if (Creature* pPortal = DoSpawnCreature(CREATURE_FELFIRE_PORTAL, 0, 0,0, 0, TEMPSUMMON_TIMED_DESPAWN, 20000))
+            if (Creature* pPortal = DoSpawnCreature(CREATURE_FELFIRE_PORTAL, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 20000))
             {
                 std::list<HostileReference*>::iterator itr;
                 for (itr = me->getThreatManager().getThreatList().begin(); itr != me->getThreatManager().getThreatList().end(); ++itr)
@@ -1000,8 +1000,8 @@ struct mob_felfire_portalAI : public Scripted_NoMovementAI
         if (uiSpawnFiendTimer <= diff)
         {
             if (Creature* pFiend = DoSpawnCreature(CREATURE_VOLATILE_FELFIRE_FIEND, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 20000))
-                pFiend->AddThreat(SelectUnit(SELECT_TARGET_RANDOM,0), 100000.0f);
-            uiSpawnFiendTimer = urand(4000,8000);
+                pFiend->AddThreat(SelectUnit(SELECT_TARGET_RANDOM, 0), 100000.0f);
+            uiSpawnFiendTimer = urand(4000, 8000);
         } else uiSpawnFiendTimer -= diff;
     }
 };
@@ -1130,13 +1130,13 @@ struct mob_shield_orbAI : public ScriptedAI
     {
         me->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
         bPointReached = true;
-        uiTimer = urand(500,1000);
+        uiTimer = urand(500, 1000);
         uiCheckTimer = 1000;
         r = 17;
         c = 0;
         mx = ShieldOrbLocations[0][0];
         my = ShieldOrbLocations[0][1];
-        bClockwise = urand(0,1);
+        bClockwise = urand(0, 1);
     }
 
     void UpdateAI(const uint32 diff)
@@ -1155,7 +1155,7 @@ struct mob_shield_orbAI : public ScriptedAI
             }
             bPointReached = false;
             uiCheckTimer = 1000;
-            me->GetMotionMaster()->MovePoint(1,x, y, SHIELD_ORB_Z);
+            me->GetMotionMaster()->MovePoint(1, x, y, SHIELD_ORB_Z);
             c += M_PI/32;
             if (c >= 2*M_PI) c = 0;
         }
@@ -1163,7 +1163,7 @@ struct mob_shield_orbAI : public ScriptedAI
         {
             if (uiCheckTimer <= diff)
             {
-                DoTeleportTo(x,y,SHIELD_ORB_Z);
+                DoTeleportTo(x, y, SHIELD_ORB_Z);
                 bPointReached = true;
             }
             else uiCheckTimer -= diff;
@@ -1173,7 +1173,7 @@ struct mob_shield_orbAI : public ScriptedAI
         {
             if (Unit* random = Unit::GetUnit(*me, pInstance ? pInstance->GetData64(DATA_PLAYER_GUID) : 0))
                 DoCast(random, SPELL_SHADOW_BOLT, false);
-            uiTimer = urand(500,1000);
+            uiTimer = urand(500, 1000);
         } else uiTimer -= diff;
     }
 
@@ -1246,7 +1246,7 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_MOONFIRE, false);
-                    uiTimer[1] = urand(2000,4000);
+                    uiTimer[1] = urand(2000, 4000);
                 }
                 DoMeleeAttackIfReady();
                 break;
@@ -1254,19 +1254,19 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_MULTI_SHOT, false);
-                    uiTimer[1] = urand(8000,10000);
+                    uiTimer[1] = urand(8000, 10000);
                 }
                 if (uiTimer[2] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_SHOOT, false);
-                    uiTimer[2] = urand(4000,6000);
+                    uiTimer[2] = urand(4000, 6000);
                 }
                 if (me->IsWithinMeleeRange(me->getVictim(), 6))
                 {
                     if (uiTimer[0] <= diff)
                     {
                         DoCast(me->getVictim(), SPELL_SR_MULTI_SHOT, false);
-                        uiTimer[0] = urand(6000,8000);
+                        uiTimer[0] = urand(6000, 8000);
                     }
                     DoMeleeAttackIfReady();
                 }
@@ -1275,7 +1275,7 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_FIREBALL, false);
-                    uiTimer[1] = urand(2000,4000);
+                    uiTimer[1] = urand(2000, 4000);
                 }
                 DoMeleeAttackIfReady();
                 break;
@@ -1283,12 +1283,12 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_SHADOW_BOLT, false);
-                    uiTimer[1] = urand(3000,5000);
+                    uiTimer[1] = urand(3000, 5000);
                 }
                 if (uiTimer[2] <= diff)
                 {
                     DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true), SPELL_SR_CURSE_OF_AGONY, true);
-                    uiTimer[2] = urand(2000,4000);
+                    uiTimer[2] = urand(2000, 4000);
                 }
                 DoMeleeAttackIfReady();
                 break;
@@ -1296,7 +1296,7 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_WHIRLWIND, false);
-                    uiTimer[1] = urand(9000,11000);
+                    uiTimer[1] = urand(9000, 11000);
                 }
                 DoMeleeAttackIfReady();
                 break;
@@ -1304,12 +1304,12 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_HAMMER_OF_JUSTICE, false);
-                    uiTimer[1] = urand(6000,8000);
+                    uiTimer[1] = urand(6000, 8000);
                 }
                 if (uiTimer[2] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_HOLY_SHOCK, false);
-                    uiTimer[2] = urand(2000,4000);
+                    uiTimer[2] = urand(2000, 4000);
                 }
                 DoMeleeAttackIfReady();
                 break;
@@ -1317,12 +1317,12 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_HOLY_SMITE, false);
-                    uiTimer[1] = urand(4000,6000);
+                    uiTimer[1] = urand(4000, 6000);
                 }
                 if (uiTimer[2] <= diff)
                 {
                     DoCast(me, SPELL_SR_RENEW, false);
-                    uiTimer[2] = urand(6000,8000);
+                    uiTimer[2] = urand(6000, 8000);
                 }
                 DoMeleeAttackIfReady();
                 break;
@@ -1330,7 +1330,7 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_EARTH_SHOCK, false);
-                    uiTimer[1] = urand(4000,6000);
+                    uiTimer[1] = urand(4000, 6000);
                 }
                 DoMeleeAttackIfReady();
                 break;
@@ -1338,7 +1338,7 @@ struct mob_sinster_reflectionAI : public ScriptedAI
                 if (uiTimer[1] <= diff)
                 {
                     DoCast(me->getVictim(), SPELL_SR_HEMORRHAGE, true);
-                    uiTimer[1] = urand(4000,6000);
+                    uiTimer[1] = urand(4000, 6000);
                 }
                 DoMeleeAttackIfReady();
                 break;

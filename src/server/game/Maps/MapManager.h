@@ -78,19 +78,19 @@ class MapManager : public Trinity::Singleton<MapManager, Trinity::ClassLevelLock
         static bool ExistMapAndVMap(uint32 mapid, float x, float y);
         static bool IsValidMAP(uint32 mapid);
 
-        static bool IsValidMapCoord(uint32 mapid, float x,float y)
+        static bool IsValidMapCoord(uint32 mapid, float x, float y)
         {
-            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x,y);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x, y);
         }
 
-        static bool IsValidMapCoord(uint32 mapid, float x,float y,float z)
+        static bool IsValidMapCoord(uint32 mapid, float x, float y, float z)
         {
-            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x,y,z);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x, y, z);
         }
 
-        static bool IsValidMapCoord(uint32 mapid, float x,float y,float z,float o)
+        static bool IsValidMapCoord(uint32 mapid, float x, float y, float z, float o)
         {
-            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x,y,z,o);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x, y, z, o);
         }
 
         static bool IsValidMapCoord(WorldLocation const& loc)

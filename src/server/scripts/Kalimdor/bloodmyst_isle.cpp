@@ -55,7 +55,7 @@ struct mob_webbed_creatureAI : public ScriptedAI
     {
         uint32 spawnCreatureID = 0;
 
-        switch (urand(0,2))
+        switch (urand(0, 2))
         {
             case 0:
                 spawnCreatureID = 17681;
@@ -64,12 +64,12 @@ struct mob_webbed_creatureAI : public ScriptedAI
                 break;
             case 1:
             case 2:
-                spawnCreatureID = possibleSpawns[urand(0,30)];
+                spawnCreatureID = possibleSpawns[urand(0, 30)];
                 break;
         }
 
         if (spawnCreatureID)
-            DoSpawnCreature(spawnCreatureID,0,0,0,me->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+            DoSpawnCreature(spawnCreatureID, 0, 0, 0, me->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
     }
 };
 CreatureAI* GetAI_mob_webbed_creature(Creature* pCreature)
@@ -92,7 +92,7 @@ CreatureAI* GetAI_mob_webbed_creature(Creature* pCreature)
 
 bool GossipHello_npc_captured_sunhawk_agent(Player* pPlayer, Creature* pCreature)
 {
-    if (pPlayer->HasAura(31609,1) && pPlayer->GetQuestStatus(9756) == QUEST_STATUS_INCOMPLETE)
+    if (pPlayer->HasAura(31609, 1) && pPlayer->GetQuestStatus(9756) == QUEST_STATUS_INCOMPLETE)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_CSA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->SEND_GOSSIP_MENU(9136, pCreature->GetGUID());

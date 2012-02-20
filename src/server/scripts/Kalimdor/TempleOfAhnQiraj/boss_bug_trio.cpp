@@ -174,11 +174,11 @@ struct boss_vemAI : public ScriptedAI
         if (Charge_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget)
             {
                 DoCast(pTarget, SPELL_CHARGE);
-                //me->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+                //me->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true, 1);
                 AttackStart(pTarget);
             }
 
@@ -197,7 +197,7 @@ struct boss_vemAI : public ScriptedAI
         //Enrage_Timer
         if (!Enraged && Enrage_Timer <= diff)
         {
-            DoCast(me,SPELL_ENRAGE);
+            DoCast(me, SPELL_ENRAGE);
             Enraged = true;
         } else Charge_Timer -= diff;
 
@@ -241,8 +241,8 @@ struct boss_yaujAI : public ScriptedAI
 
         for (int i = 0; i < 10;i++)
         {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
-            Creature* Summoned = me->SummonCreature(15621,me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,90000);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Creature* Summoned = me->SummonCreature(15621, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
             if (Summoned && pTarget)
                 ((CreatureAI*)Summoned->AI())->AttackStart(pTarget);
         }

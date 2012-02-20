@@ -524,7 +524,7 @@ void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 ui
     if (bLoadDefault)
     {
         if (CreatureInfo const* pInfo = GetCreatureTemplateStore(me->GetEntry()))
-            me->LoadEquipment(pInfo->equipmentId,true);
+            me->LoadEquipment(pInfo->equipmentId, true);
 
         return;
     }

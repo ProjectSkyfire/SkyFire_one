@@ -80,7 +80,7 @@ struct boss_temporusAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
 
         if (pInstance)
-            pInstance->SetData(TYPE_RIFT,SPECIAL);
+            pInstance->SetData(TYPE_RIFT, SPECIAL);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -88,7 +88,7 @@ struct boss_temporusAI : public ScriptedAI
         //Despawn Time Keeper
         if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
         {
-            if (me->IsWithinDistInMap(who,20.0f))
+            if (me->IsWithinDistInMap(who, 20.0f))
             {
                 DoScriptText(SAY_BANISH, me);
 

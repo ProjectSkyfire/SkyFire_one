@@ -66,7 +66,7 @@ struct npc_converted_sentryAI : public ScriptedAI
         {
             if (Timer <= diff)
             {
-                uint32 i = urand(1,2);
+                uint32 i = urand(1, 2);
                 if (i == 1)
                     DoScriptText(SAY_CONVERTED_1, me);
                 else

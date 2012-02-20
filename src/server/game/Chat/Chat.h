@@ -69,7 +69,7 @@ class ChatHandler
         char* extractQuotedArg(char* args);
 
         void SendSysMessage(int32     entry);
-        void PSendSysMessage(const char *format, ...) ATTR_PRINTF(2,3);
+        void PSendSysMessage(const char *format, ...) ATTR_PRINTF(2, 3);
         void PSendSysMessage(int32     entry, ...);
         std::string PGetParseString(int32 entry, ...);
 
@@ -532,14 +532,14 @@ class ChatHandler
         GameTele const* extractGameTeleFromLink(char* text);
         bool GetPlayerGroupAndGUIDByName(const char* cname, Player* &plr, Group* &group, uint64 &guid, bool offline = false);
 
-        GameObject* GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid,uint32 entry);
+        GameObject* GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid, uint32 entry);
 
         // Utility methods for commands
         bool LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 limit);
         bool HandleBanListHelper(QueryResult_AutoPtr result);
-        bool HandleBanHelper(BanMode mode,char const* args);
+        bool HandleBanHelper(BanMode mode, char const* args);
         bool HandleBanInfoHelper(uint32 accountid, char const* accountname);
-        bool HandleUnBanHelper(BanMode mode,char const* args);
+        bool HandleUnBanHelper(BanMode mode, char const* args);
 
         /**
          * Stores informations about a deleted character

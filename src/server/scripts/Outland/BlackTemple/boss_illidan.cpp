@@ -467,7 +467,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
     {
         if (victim == me) return;
         // TODO: Find better way to handle emote
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
         case 0:
             me->MonsterYell(SAY_KILL1, LANG_UNIVERSAL, victim->GetGUID());
@@ -1256,8 +1256,8 @@ struct npc_akama_illidanAI : public ScriptedAI
             break;
         case 2: // spirit help
             DoCast(Channel, SPELL_AKAMA_DOOR_CHANNEL);
-            Spirit[0]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL,false);
-            Spirit[1]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL,false);
+            Spirit[0]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL, false);
+            Spirit[1]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL, false);
             Timer = 5000;
             break;
         case 3: //open the gate
@@ -1987,7 +1987,7 @@ void boss_illidan_stormrageAI::HandleTalkSequence()
         {
             Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
             Maiev->setDeathState(JUST_DIED);
-            me->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);
+            me->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_DEAD);
         }
         break;
     case 21: // Kill ourself.

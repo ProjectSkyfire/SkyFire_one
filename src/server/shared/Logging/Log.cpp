@@ -137,7 +137,7 @@ void Log::Initialize()
             if (dot_pos!=m_gmlog_filename_format.npos)
             {
                 if (m_gmlog_timestamp)
-                    m_gmlog_filename_format.insert(dot_pos,m_logsTimestamp);
+                    m_gmlog_filename_format.insert(dot_pos, m_logsTimestamp);
 
                 m_gmlog_filename_format.insert(dot_pos,"_#%u");
             }
@@ -177,17 +177,17 @@ void Log::Initialize()
     m_charLog_Dump = sConfig.GetBoolDefault("CharLogDump", false);
 }
 
-FILE* Log::openLogFile(char const* configFileName,char const* configTimeStampFlag, char const* mode)
+FILE* Log::openLogFile(char const* configFileName, char const* configTimeStampFlag, char const* mode)
 {
     std::string logfn=sConfig.GetStringDefault(configFileName, "");
     if (logfn.empty())
         return NULL;
 
-    if (configTimeStampFlag && sConfig.GetBoolDefault(configTimeStampFlag,false))
+    if (configTimeStampFlag && sConfig.GetBoolDefault(configTimeStampFlag, false))
     {
         size_t dot_pos = logfn.find_last_of(".");
         if (dot_pos!=logfn.npos)
-            logfn.insert(dot_pos,m_logsTimestamp);
+            logfn.insert(dot_pos, m_logsTimestamp);
         else
             logfn += m_logsTimestamp;
     }
@@ -201,7 +201,7 @@ FILE* Log::openGmlogPerAccount(uint32 account)
         return NULL;
 
     char namebuf[TRINITY_PATH_MAX];
-    snprintf(namebuf,TRINITY_PATH_MAX,m_gmlog_filename_format.c_str(),account);
+    snprintf(namebuf, TRINITY_PATH_MAX, m_gmlog_filename_format.c_str(),account);
     return fopen(namebuf, "a");
 }
 
@@ -215,7 +215,7 @@ void Log::outTimestamp(FILE* file)
     //       HH     hour (2 digits 00-23)
     //       MM     minutes (2 digits 00-59)
     //       SS     seconds (2 digits 00-59)
-    fprintf(file,"%-4d-%02d-%02d %02d:%02d:%02d ",aTm->tm_year+1900,aTm->tm_mon+1,aTm->tm_mday,aTm->tm_hour,aTm->tm_min,aTm->tm_sec);
+    fprintf(file,"%-4d-%02d-%02d %02d:%02d:%02d ",aTm->tm_year+1900, aTm->tm_mon+1, aTm->tm_mday, aTm->tm_hour, aTm->tm_min, aTm->tm_sec);
 }
 
 void Log::InitColors(const std::string& str)
@@ -342,7 +342,7 @@ std::string Log::GetTimestampStr()
     //       MM     minutes (2 digits 00-59)
     //       SS     seconds (2 digits 00-59)
     char buf[20];
-    snprintf(buf,20,"%04d-%02d-%02d_%02d-%02d-%02d",aTm->tm_year+1900,aTm->tm_mon+1,aTm->tm_mday,aTm->tm_hour,aTm->tm_min,aTm->tm_sec);
+    snprintf(buf, 20,"%04d-%02d-%02d_%02d-%02d-%02d",aTm->tm_year+1900, aTm->tm_mon+1, aTm->tm_mday, aTm->tm_hour, aTm->tm_min, aTm->tm_sec);
     return std::string(buf);
 }
 
@@ -381,9 +381,9 @@ void Log::outString(const char * str, ...)
     }
 
     if (m_colored)
-        SetColor(true,m_colors[LOGL_NORMAL]);
+        SetColor(true, m_colors[LOGL_NORMAL]);
 
-    UTF8PRINTF(stdout,str,);
+    UTF8PRINTF(stdout, str,);
 
     if (m_colored)
         ResetColor(true);
@@ -432,9 +432,9 @@ void Log::outCrash(const char * err, ...)
     }
 
     if (m_colored)
-        SetColor(false,LRED);
+        SetColor(false, LRED);
 
-    UTF8PRINTF(stderr,err,);
+    UTF8PRINTF(stderr, err,);
 
     if (m_colored)
         ResetColor(false);
@@ -472,9 +472,9 @@ void Log::outError(const char * err, ...)
     }
 
     if (m_colored)
-        SetColor(false,LRED);
+        SetColor(false, LRED);
 
-    UTF8PRINTF(stderr,err,);
+    UTF8PRINTF(stderr, err,);
 
     if (m_colored)
         ResetColor(false);
@@ -521,9 +521,9 @@ void Log::outErrorDb(const char * err, ...)
         return;
 
     if (m_colored)
-        SetColor(false,LRED);
+        SetColor(false, LRED);
 
-    UTF8PRINTF(stderr,err,);
+    UTF8PRINTF(stderr, err,);
 
     if (m_colored)
         ResetColor(false);
@@ -578,9 +578,9 @@ void Log::outBasic(const char * str, ...)
     if (m_logLevel > LOGL_NORMAL)
     {
         if (m_colored)
-            SetColor(true,m_colors[LOGL_BASIC]);
+            SetColor(true, m_colors[LOGL_BASIC]);
 
-        UTF8PRINTF(stdout,str,);
+        UTF8PRINTF(stdout, str,);
 
         if (m_colored)
             ResetColor(true);
@@ -619,9 +619,9 @@ void Log::outDetail(const char * str, ...)
     if (m_logLevel > LOGL_BASIC)
     {
         if (m_colored)
-            SetColor(true,m_colors[LOGL_DETAIL]);
+            SetColor(true, m_colors[LOGL_DETAIL]);
 
-        UTF8PRINTF(stdout,str,);
+        UTF8PRINTF(stdout, str,);
 
         if (m_colored)
             ResetColor(true);
@@ -651,7 +651,7 @@ void Log::outDebugInLine(const char * str, ...)
 
     if (m_logLevel > LOGL_DETAIL)
     {
-        UTF8PRINTF(stdout,str,);
+        UTF8PRINTF(stdout, str,);
 
         if (logfile)
         {
@@ -681,9 +681,9 @@ void Log::outDebug(const char * str, ...)
     if (m_logLevel > LOGL_DETAIL)
     {
         if (m_colored)
-            SetColor(true,m_colors[LOGL_DEBUG]);
+            SetColor(true, m_colors[LOGL_DEBUG]);
 
-        UTF8PRINTF(stdout,str,);
+        UTF8PRINTF(stdout, str,);
 
         if (m_colored)
             ResetColor(true);
@@ -710,7 +710,7 @@ void Log::outStringInLine(const char * str, ...)
     if (!str)
         return;
 
-    UTF8PRINTF(stdout,str,);
+    UTF8PRINTF(stdout, str,);
 
     if (logfile)
     {
@@ -740,9 +740,9 @@ void Log::outCommand(uint32 account, const char * str, ...)
     if (m_logLevel > LOGL_NORMAL)
     {
         if (m_colored)
-            SetColor(true,m_colors[LOGL_BASIC]);
+            SetColor(true, m_colors[LOGL_BASIC]);
 
-        UTF8PRINTF(stdout,str,);
+        UTF8PRINTF(stdout, str,);
 
         if (m_colored)
             ResetColor(true);
@@ -818,7 +818,7 @@ void Log::outCharDump(const char * str, uint32 account_id, uint32 guid, const ch
 {
     if (charLogfile)
     {
-        fprintf(charLogfile, "== START DUMP == (account: %u guid: %u name: %s)\n%s\n== END DUMP ==\n",account_id,guid,name,str);
+        fprintf(charLogfile, "== START DUMP == (account: %u guid: %u name: %s)\n%s\n== END DUMP ==\n",account_id, guid, name, str);
         fflush(charLogfile);
     }
 }

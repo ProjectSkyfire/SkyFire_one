@@ -225,7 +225,7 @@ void InstanceData::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bo
         if (pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR || pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON)
         {
             if (pGo->getLootState() == GO_READY)
-                pGo->UseDoorOrButton(uiWithRestoreTime,bUseAlternativeState);
+                pGo->UseDoorOrButton(uiWithRestoreTime, bUseAlternativeState);
             else if (pGo->getLootState() == GO_ACTIVATED)
                 pGo->ResetDoorOrButton();
         }

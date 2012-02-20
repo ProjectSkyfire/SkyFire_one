@@ -48,7 +48,7 @@ void GuardAI::MoveInLineOfSight(Unit *u)
         u->isInAccessiblePlaceFor(me))
     {
         float attackRadius = me->GetAttackDistance(u);
-        if (me->IsWithinDistInMap(u,attackRadius))
+        if (me->IsWithinDistInMap(u, attackRadius))
         {
             //Need add code to let guard support player
             AttackStart(u);
@@ -126,8 +126,8 @@ void GuardAI::UpdateAI(const uint32 /*diff*/)
 
 bool GuardAI::IsVisible(Unit *pl) const
 {
-    return me->IsWithinDistInMap(pl,sWorld.getConfig(CONFIG_SIGHT_GUARDER))
-        && pl->isVisibleForOrDetect(me,true);
+    return me->IsWithinDistInMap(pl, sWorld.getConfig(CONFIG_SIGHT_GUARDER))
+        && pl->isVisibleForOrDetect(me, true);
 }
 
 void GuardAI::JustDied(Unit *killer)

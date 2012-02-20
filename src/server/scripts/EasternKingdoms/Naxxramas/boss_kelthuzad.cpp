@@ -261,7 +261,7 @@ struct boss_kelthuzadAI : public ScriptedAI
                     Walk_Pos_Z = ADDZ_RIGHT_NEAR;
                     break;
             }
-            pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z,MOVEFLAG_WALK_MODE);
+            pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z, MOVEFLAG_WALK_MODE);
         }
     }
 
@@ -363,21 +363,21 @@ struct boss_kelthuzadAI : public ScriptedAI
                 switch(rand()%6)
                 {
                     case 0:
-                        pUnit = me->SummonCreature(16441,ADDX_LEFT_FAR,ADDY_LEFT_FAR,ADDZ_LEFT_FAR,ADDO_LEFT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pUnit = me->SummonCreature(16441, ADDX_LEFT_FAR, ADDY_LEFT_FAR, ADDZ_LEFT_FAR, ADDO_LEFT_FAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                         //Setting walk position
                         Walk_Pos_X = WALKX_LEFT_FAR;
                         Walk_Pos_Y = WALKY_LEFT_FAR;
                         Walk_Pos_Z = WALKZ_LEFT_FAR;
                         break;
                     case 1:
-                        pUnit = me->SummonCreature(16441,ADDX_LEFT_MIDDLE,ADDY_LEFT_MIDDLE,ADDZ_LEFT_MIDDLE,ADDO_LEFT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pUnit = me->SummonCreature(16441, ADDX_LEFT_MIDDLE, ADDY_LEFT_MIDDLE, ADDZ_LEFT_MIDDLE, ADDO_LEFT_MIDDLE, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_LEFT_MIDDLE;
                         Walk_Pos_Y = WALKY_LEFT_MIDDLE;
                         Walk_Pos_Z = WALKZ_LEFT_MIDDLE;
                         break;
                     case 2:
-                        pUnit = me->SummonCreature(16441,ADDX_LEFT_NEAR,ADDY_LEFT_NEAR,ADDZ_LEFT_NEAR,ADDO_LEFT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pUnit = me->SummonCreature(16441, ADDX_LEFT_NEAR, ADDY_LEFT_NEAR, ADDZ_LEFT_NEAR, ADDO_LEFT_NEAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_LEFT_NEAR;
                         Walk_Pos_Y = WALKY_LEFT_NEAR;
@@ -385,21 +385,21 @@ struct boss_kelthuzadAI : public ScriptedAI
                         break;
                     case 3:
 
-                        pUnit = me->SummonCreature(16441,ADDX_RIGHT_FAR,ADDY_RIGHT_FAR,ADDZ_RIGHT_FAR,ADDO_RIGHT_FAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pUnit = me->SummonCreature(16441, ADDX_RIGHT_FAR, ADDY_RIGHT_FAR, ADDZ_RIGHT_FAR, ADDO_RIGHT_FAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_RIGHT_FAR;
                         Walk_Pos_Y = WALKY_RIGHT_FAR;
                         Walk_Pos_Z = WALKZ_RIGHT_FAR;
                         break;
                     case 4:
-                        pUnit = me->SummonCreature(16441,ADDX_RIGHT_MIDDLE,ADDY_RIGHT_MIDDLE,ADDZ_RIGHT_MIDDLE,ADDO_RIGHT_MIDDLE,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pUnit = me->SummonCreature(16441, ADDX_RIGHT_MIDDLE, ADDY_RIGHT_MIDDLE, ADDZ_RIGHT_MIDDLE, ADDO_RIGHT_MIDDLE, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_RIGHT_MIDDLE;
                         Walk_Pos_Y = WALKY_RIGHT_MIDDLE;
                         Walk_Pos_Z = WALKZ_RIGHT_MIDDLE;
                         break;
                     case 5:
-                        pUnit = me->SummonCreature(16441,ADDX_RIGHT_NEAR,ADDY_RIGHT_NEAR,ADDZ_RIGHT_NEAR,ADDO_RIGHT_NEAR,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,1000);
+                        pUnit = me->SummonCreature(16441, ADDX_RIGHT_NEAR, ADDY_RIGHT_NEAR, ADDZ_RIGHT_NEAR, ADDO_RIGHT_NEAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
                         //Start moving guardian towards the center of the room
                         Walk_Pos_X = WALKX_RIGHT_NEAR;
                         Walk_Pos_Y = WALKY_RIGHT_NEAR;
@@ -411,7 +411,7 @@ struct boss_kelthuzadAI : public ScriptedAI
                 {
                     //if we find no one to figth walk to the center
                     if (!pUnit->isInCombat())
-                        pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X,Walk_Pos_Y,Walk_Pos_Z,MOVEFLAG_WALK_MODE);
+                        pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z, MOVEFLAG_WALK_MODE);
 
                     //Safe storing of creatures
                     GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = pUnit->GetGUID();

@@ -126,10 +126,10 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
 
         Charge_Timer = 30000;
 
-        DoCast(me,SPELL_ACIDIC_WOUND,true);
+        DoCast(me, SPELL_ACIDIC_WOUND, true);
 
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void EnterCombat(Unit * /*who*/)
@@ -142,7 +142,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -270,7 +270,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
                 FelGeyserTimer = 30000;
             } else FelGeyserTimer -= diff;
 
-            if (me->getVictim()->IsImmunedToDamage(SPELL_SCHOOL_MASK_ALL,true))
+            if (me->getVictim()->IsImmunedToDamage(SPELL_SCHOOL_MASK_ALL, true))
                 me->getThreatManager().modifyThreatPercent(me->getVictim(),-100);
         }
 
@@ -290,19 +290,19 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
                     me->AddThreat(pTarget, 50000000.0f);
                     pTarget->CastSpell(me, SPELL_TAUNT_GURTOGG, true);
                     me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-                    me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+                    me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
 
                     // If VMaps are disabled, this spell can call the whole instance
                     DoCast(me, SPELL_INSIGNIFIGANCE, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_1, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_2, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_3, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_SCALE, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_1, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_2, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_3, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_SCALE, true);
 
                     //Cast this without triggered so that it appears in combat logs and shows visual.
                     DoCast(me, SPELL_FEL_RAGE_SELF);
 
-                    DoScriptText(RAND(SAY_SPECIAL1,SAY_SPECIAL2), me);
+                    DoScriptText(RAND(SAY_SPECIAL1, SAY_SPECIAL2), me);
 
                     FelGeyserTimer = 1000;
                     PhaseChangeTimer = 30000;
@@ -320,7 +320,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
                 EjectTimer += 2000;
                 PhaseChangeTimer = 65000;
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-                me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+                me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
             }
         } else PhaseChangeTimer -= diff;
 

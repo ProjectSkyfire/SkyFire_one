@@ -116,7 +116,7 @@ int ExtractWmo()
                 // Copy files from archive
                 //std::cout << "found *.wmo file " << *fname << std::endl;
                 sprintf(szLocalFile, "%s/%s", szWorkDirWmo, GetPlainName(fname->c_str()));
-                fixnamen(szLocalFile,strlen(szLocalFile));
+                fixnamen(szLocalFile, strlen(szLocalFile));
                 FILE * n;
                 if ((n = fopen(szLocalFile, "rb"))== NULL)
                 {
@@ -126,7 +126,7 @@ int ExtractWmo()
                     if (rchr != NULL)
                     {
                         char cpy[4];
-                        strncpy((char*)cpy,rchr,4);
+                        strncpy((char*)cpy, rchr, 4);
                         for (int i=0;i<4; ++i)
                         {
                             int m = cpy[i];
@@ -177,7 +177,7 @@ int ExtractWmo()
                             }
                         }
                         fseek(output, 8, SEEK_SET); // store the correct no of vertices
-                        fwrite(&Wmo_nVertices,sizeof(int),1,output);
+                        fwrite(&Wmo_nVertices, sizeof(int),1, output);
                         fclose(output);
                         delete froot;
                     }
@@ -212,7 +212,7 @@ void ParsMapFiles()
     {
         sprintf(id,"%03u",map_ids[i].id);
         sprintf(fn,"World\\Maps\\%s\\%s.wdt", map_ids[i].name, map_ids[i].name);
-        WDTFile WDT(fn,map_ids[i].name);
+        WDTFile WDT(fn, map_ids[i].name);
         if (WDT.init(id, map_ids[i].id))
         {
             printf("Processing Map %u\n[", map_ids[i].id);
@@ -220,9 +220,9 @@ void ParsMapFiles()
             {
                 for (int y=0; y<64; ++y)
                 {
-                    if (ADTFile *ADT = WDT.GetMap(x,y))
+                    if (ADTFile *ADT = WDT.GetMap(x, y))
                     {
-                        //sprintf(id_filename,"%02u %02u %03u",x,y,map_ids[i].id);//!!!!!!!!!
+                        //sprintf(id_filename,"%02u %02u %03u",x, y, map_ids[i].id);//!!!!!!!!!
                         ADT->init(map_ids[i].id, x, y);
                         delete ADT;
                     }
@@ -239,12 +239,12 @@ void getGamePath()
 {
 #ifdef _WIN32
     HKEY key;
-    DWORD t,s;
+    DWORD t, s;
     LONG l;
     s = sizeof(input_path);
-    memset(input_path,0,s);
-    l = RegOpenKeyEx(HKEY_LOCAL_MACHINE,"SOFTWARE\\Blizzard Entertainment\\World of Warcraft",0,KEY_QUERY_VALUE,&key);
-    //l = RegOpenKeyEx(HKEY_LOCAL_MACHINE,"SOFTWARE\\Blizzard Entertainment\\Burning Crusade Closed Beta",0,KEY_QUERY_VALUE,&key);
+    memset(input_path, 0, s);
+    l = RegOpenKeyEx(HKEY_LOCAL_MACHINE,"SOFTWARE\\Blizzard Entertainment\\World of Warcraft",0, KEY_QUERY_VALUE,&key);
+    //l = RegOpenKeyEx(HKEY_LOCAL_MACHINE,"SOFTWARE\\Blizzard Entertainment\\Burning Crusade Closed Beta",0, KEY_QUERY_VALUE,&key);
     l = RegQueryValueEx(key,"InstallPath",0,&t,(LPBYTE)input_path,&s);
     RegCloseKey(key);
     if (strlen(input_path) > 0)
@@ -495,7 +495,7 @@ int main(int argc, char ** argv)
         for (unsigned int x=0;x<map_count;++x)
         {
             map_ids[x].id=dbc->getRecord (x).getUInt(0);
-            strcpy(map_ids[x].name,dbc->getRecord(x).getString(1));
+            strcpy(map_ids[x].name, dbc->getRecord(x).getString(1));
             printf("Map - %s\n",map_ids[x].name);
         }
 

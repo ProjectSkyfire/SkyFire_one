@@ -43,11 +43,11 @@ enum eStatus
     STATUS_AUTHED
 };
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some paltform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some paltform
 #if defined( __GNUC__ )
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 typedef struct AUTH_LOGON_CHALLENGE_C
@@ -378,7 +378,7 @@ bool AuthSocket::_HandleLogonChallenge()
         // No SQL injection (escaped user name)
 
         result =
-            LoginDatabase.PQuery("SELECT a.sha_pass_hash,a.id,a.locked,a.last_ip,aa.gmlevel,a.v,a.s "
+            LoginDatabase.PQuery("SELECT a.sha_pass_hash, a.id, a.locked, a.last_ip, aa.gmlevel, a.v, a.s "
                                  "FROM account a "
                                  "LEFT JOIN account_access aa "
                                  "ON (a.id = aa.id) "
@@ -410,7 +410,7 @@ bool AuthSocket::_HandleLogonChallenge()
             if (!locked)
             {
                 // If the account is banned, reject the logon attempt
-                QueryResult_AutoPtr banresult = LoginDatabase.PQuery("SELECT bandate,unbandate FROM account_banned WHERE "
+                QueryResult_AutoPtr banresult = LoginDatabase.PQuery("SELECT bandate, unbandate FROM account_banned WHERE "
                     "id = %u AND active = 1 AND (unbandate > UNIX_TIMESTAMP() OR unbandate = bandate)", (*result)[1].GetUInt32());
                 if (banresult)
                 {
@@ -846,7 +846,7 @@ bool AuthSocket::_HandleRealmList()
     // Get the user id (else close the connection)
     // No SQL injection (escaped user name)
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT id,sha_pass_hash FROM account WHERE username = '%s'",_safelogin.c_str());
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT id, sha_pass_hash FROM account WHERE username = '%s'",_safelogin.c_str());
     if (!result)
     {
         sLog.outError("[ERROR] user %s tried to login and we cannot find him in the database.",_login.c_str());

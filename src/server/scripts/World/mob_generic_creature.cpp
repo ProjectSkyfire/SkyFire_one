@@ -142,7 +142,7 @@ struct generic_creatureAI : public ScriptedAI
                     }
 
                     //Cast spell
-                    if (Healing) DoCastSpell(me,info);
+                    if (Healing) DoCastSpell(me, info);
                     else DoCastSpell(me->getVictim(),info);
 
                     //Set our global cooldown

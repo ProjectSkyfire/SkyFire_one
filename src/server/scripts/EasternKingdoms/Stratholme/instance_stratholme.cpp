@@ -156,7 +156,7 @@ struct instance_stratholme : public ScriptedInstance
             break;
         case GO_GAUNTLET_GATE1:
             //weird, but unless flag is set, client will not respond as expected. DB bug?
-            pGo->SetFlag(GAMEOBJECT_FLAGS,GO_FLAG_LOCKED);
+            pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             gauntletGate1GUID = pGo->GetGUID();
             break;
         case GO_ZIGGURAT1:
@@ -223,7 +223,7 @@ struct instance_stratholme : public ScriptedInstance
                 if (Creature* pYsidaT = instance->GetCreature(ysidaTriggerGUID))
                     pYsidaT->SummonCreature(C_YSIDA,
                     pYsidaT->GetPositionX(),pYsidaT->GetPositionY(),pYsidaT->GetPositionZ(),pYsidaT->GetOrientation(),
-                    TEMPSUMMON_TIMED_DESPAWN,1800000);
+                    TEMPSUMMON_TIMED_DESPAWN, 1800000);
                 BaronRun_Timer = 0;
                 break;
             }
@@ -267,9 +267,9 @@ struct instance_stratholme : public ScriptedInstance
                 if (!count)
                 {
                     //a bit itchy, it should close the door after 10 secs, but it doesn't. skipping it for now.
-                    //UpdateGoState(ziggurat4GUID,0,true);
+                    //UpdateGoState(ziggurat4GUID, 0, true);
                     if (Creature* pBaron = instance->GetCreature(baronGUID))
-                        pBaron->SummonCreature(C_RAMSTEIN,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                        pBaron->SummonCreature(C_RAMSTEIN, 4032.84,-3390.24, 119.73, 4.71, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
                     debug_log("TSCR: Instance Stratholme: Ramstein spawned.");
                 }
                 else
@@ -310,7 +310,7 @@ struct instance_stratholme : public ScriptedInstance
                         }
                     }
 
-                    SetData(TYPE_BARON_RUN,DONE);
+                    SetData(TYPE_BARON_RUN, DONE);
                 }
             }
             if (data == DONE || data == NOT_STARTED)
@@ -434,7 +434,7 @@ struct instance_stratholme : public ScriptedInstance
                 if (Creature* pBaron = instance->GetCreature(baronGUID))
                 {
                     for (uint8 i = 0; i < 4; ++i)
-                        pBaron->SummonCreature(C_BLACK_GUARD,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                        pBaron->SummonCreature(C_BLACK_GUARD, 4032.84,-3390.24, 119.73, 4.71, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
 
                     HandleGameObject(ziggurat4GUID, true);
                     HandleGameObject(ziggurat5GUID, true);

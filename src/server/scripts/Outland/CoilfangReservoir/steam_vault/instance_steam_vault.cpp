@@ -48,10 +48,10 @@ bool GOHello_go_main_chambers_access_panel(Player *player, GameObject* _GO)
         return false;
 
     if (_GO->GetEntry() == ACCESS_PANEL_HYDRO && (pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE || pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL))
-        pInstance->SetData(TYPE_HYDROMANCER_THESPIA,SPECIAL);
+        pInstance->SetData(TYPE_HYDROMANCER_THESPIA, SPECIAL);
 
     if (_GO->GetEntry() == ACCESS_PANEL_MEK && (pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE || pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL))
-        pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER,SPECIAL);
+        pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, SPECIAL);
 
     return true;
 }
@@ -144,12 +144,12 @@ struct instance_steam_vault : public ScriptedInstance
             case TYPE_HYDROMANCER_THESPIA:
                 if (data == SPECIAL)
                 {
-                    if (GameObject *_go = GameObject::GetGameObject(*player,AccessPanelHydro))
+                    if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelHydro))
                         _go->SetGoState(GO_STATE_ACTIVE);
 
                     if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
                     {
-                        if (GameObject *_go = GameObject::GetGameObject(*player,MainChambersDoor))
+                        if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
                             _go->SetGoState(GO_STATE_ACTIVE);
                     }
                     debug_log("TSCR: Instance Steamvault: Access panel used.");
@@ -159,12 +159,12 @@ struct instance_steam_vault : public ScriptedInstance
             case TYPE_MEKGINEER_STEAMRIGGER:
                 if (data == SPECIAL)
                 {
-                    if (GameObject *_go = GameObject::GetGameObject(*player,AccessPanelMek))
+                    if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelMek))
                         _go->SetGoState(GO_STATE_ACTIVE);
 
                     if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
                     {
-                     if (GameObject *_go = GameObject::GetGameObject(*player,MainChambersDoor))
+                     if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
                       _go->SetGoState(GO_STATE_ACTIVE);
                     }
                     debug_log("TSCR: Instance Steamvault: Access panel used.");

@@ -339,7 +339,7 @@ void BattleGroundQueue::RemovePlayer(uint64 guid, bool decreaseInvitedCount)
             if (Player *plr2 = objmgr.GetPlayer(group->Players.begin()->first))
             {
                 BattleGround * bg = sBattleGroundMgr.GetBattleGroundTemplate(group->BgTypeId);
-                uint32 bgQueueTypeId = sBattleGroundMgr.BGQueueTypeId(group->BgTypeId,group->ArenaType);
+                uint32 bgQueueTypeId = sBattleGroundMgr.BGQueueTypeId(group->BgTypeId, group->ArenaType);
                 uint32 queueSlot = plr2->GetBattleGroundQueueIndex(bgQueueTypeId);
                 plr2->RemoveBattleGroundQueueId(bgQueueTypeId); // must be called this way, because if you move this call to queue->removeplayer, it causes bugs
                 WorldPacket data;
@@ -347,7 +347,7 @@ void BattleGroundQueue::RemovePlayer(uint64 guid, bool decreaseInvitedCount)
                 plr2->GetSession()->SendPacket(&data);
             }
             // then actually delete, this may delete the group as well!
-            RemovePlayer(group->Players.begin()->first,decreaseInvitedCount);
+            RemovePlayer(group->Players.begin()->first, decreaseInvitedCount);
         }
     }
 }
@@ -365,7 +365,7 @@ bool BattleGroundQueue::InviteGroupToBG(GroupQueueInfo * ginfo, BattleGround * b
         ginfo->IsInvitedToBGInstanceGUID = bg->GetInstanceID();
         uint32 bgQueueTypeId = sBattleGroundMgr.BGQueueTypeId(bg->GetTypeID(), bg->GetArenaType());
         // loop through the players
-        for (std::map<uint64,PlayerQueueInfo*>::iterator itr = ginfo->Players.begin(); itr != ginfo->Players.end(); ++itr)
+        for (std::map<uint64, PlayerQueueInfo*>::iterator itr = ginfo->Players.begin(); itr != ginfo->Players.end(); ++itr)
         {
             // set status
             itr->second->InviteTime = getMSTime();
@@ -384,7 +384,7 @@ bool BattleGroundQueue::InviteGroupToBG(GroupQueueInfo * ginfo, BattleGround * b
 
             uint32 queueSlot = plr->GetBattleGroundQueueIndex(bgQueueTypeId);
 
-            sLog.outDebug("Battleground: invited plr %s (%u) to BG instance %u queueindex %u bgtype %u, I can't help it if they don't press the enter battle button.",plr->GetName(),plr->GetGUIDLow(),bg->GetInstanceID(),queueSlot,bg->GetTypeID());
+            sLog.outDebug("Battleground: invited plr %s (%u) to BG instance %u queueindex %u bgtype %u, I can't help it if they don't press the enter battle button.",plr->GetName(),plr->GetGUIDLow(),bg->GetInstanceID(),queueSlot, bg->GetTypeID());
 
             // send status packet
             sBattleGroundMgr.BuildBattleGroundStatusPacket(&data, bg, side?side:plr->GetTeam(), queueSlot, STATUS_WAIT_JOIN, INVITE_ACCEPT_WAIT_TIME, 0);
@@ -415,7 +415,7 @@ bool BattleGroundQueue::SelectionPool::Build(uint32 MinPlayers, uint32 MaxPlayer
             }
             // try building from the rest of the elig. groups
             // if that succeeds, return true
-            if (Build(MinPlayers,MaxPlayers,next))
+            if (Build(MinPlayers, MaxPlayers, next))
                 return true;
             // the rest didn't succeed, so this group cannot be included
             RemoveGroup((*itr1));
@@ -455,7 +455,7 @@ bool BattleGroundQueue::BuildSelectionPool(uint32 bgTypeId, uint32 queue_id, uin
     // we set it this way to only have one EligibleGroups object to save some memory
     m_SelectionPools[mode].Init(&m_EligibleGroups);
     // build succeeded
-    if (m_SelectionPools[mode].Build(MinPlayers,MaxPlayers,m_EligibleGroups.begin()))
+    if (m_SelectionPools[mode].Build(MinPlayers, MaxPlayers, m_EligibleGroups.begin()))
     {
         // the selection pool is set, return
         sLog.outDebug("Battleground-debug: pool build succeeded, return true");
@@ -663,7 +663,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
         {
             // Find a random arena, that can be created
             uint8 arenas[] = {BATTLEGROUND_NA, BATTLEGROUND_BE, BATTLEGROUND_RL};
-            uint32 arena_num = urand(0,2);
+            uint32 arena_num = urand(0, 2);
             if (!(bg2 = sBattleGroundMgr.CreateNewBattleGround(arenas[arena_num%3], arenatype, isRated)) &&
                 !(bg2 = sBattleGroundMgr.CreateNewBattleGround(arenas[(arena_num+1)%3], arenatype, isRated)) &&
                 !(bg2 = sBattleGroundMgr.CreateNewBattleGround(arenas[(arena_num+2)%3], arenatype, isRated)))
@@ -732,7 +732,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
         {
             if (invitecounter >= maxbginvites)
                 return;
-            InviteGroupToBG((*itr),bg2,HORDE);
+            InviteGroupToBG((*itr),bg2, HORDE);
             ++invitecounter;
         }
 
@@ -742,7 +742,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
         {
             if (invitecounter >= maxbginvites)
                 return;
-            InviteGroupToBG((*itr),bg2,ALLIANCE);
+            InviteGroupToBG((*itr),bg2, ALLIANCE);
             ++invitecounter;
         }
 
@@ -767,7 +767,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
     {
         bool bOneSideHordeTeam1 = false, bOneSideHordeTeam2 = false;
         bool bOneSideAllyTeam1 = false, bOneSideAllyTeam2 = false;
-        bOneSideHordeTeam1 = BuildSelectionPool(bgTypeId, queue_id,MaxPlayersPerTeam,MaxPlayersPerTeam,ONESIDE_HORDE_TEAM1,arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime);
+        bOneSideHordeTeam1 = BuildSelectionPool(bgTypeId, queue_id, MaxPlayersPerTeam, MaxPlayersPerTeam, ONESIDE_HORDE_TEAM1, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime);
         if (bOneSideHordeTeam1)
         {
             // one team has been selected, find out if other can be selected too
@@ -776,7 +776,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
             for (itr = m_SelectionPools[ONESIDE_HORDE_TEAM1].SelectedGroups.begin(); itr != m_SelectionPools[ONESIDE_HORDE_TEAM1].SelectedGroups.end(); ++itr)
                 (*itr)->Team=ALLIANCE;
 
-            bOneSideHordeTeam2 = BuildSelectionPool(bgTypeId, queue_id,MaxPlayersPerTeam,MaxPlayersPerTeam,ONESIDE_HORDE_TEAM2,arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime, (*(m_SelectionPools[ONESIDE_HORDE_TEAM1].SelectedGroups.begin()))->ArenaTeamId);
+            bOneSideHordeTeam2 = BuildSelectionPool(bgTypeId, queue_id, MaxPlayersPerTeam, MaxPlayersPerTeam, ONESIDE_HORDE_TEAM2, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime, (*(m_SelectionPools[ONESIDE_HORDE_TEAM1].SelectedGroups.begin()))->ArenaTeamId);
 
             // change back the team to horde
             for (itr = m_SelectionPools[ONESIDE_HORDE_TEAM1].SelectedGroups.begin(); itr != m_SelectionPools[ONESIDE_HORDE_TEAM1].SelectedGroups.end(); ++itr)
@@ -788,7 +788,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
         if (!bOneSideHordeTeam1)
         {
             // check for one sided ally
-            bOneSideAllyTeam1 = BuildSelectionPool(bgTypeId, queue_id,MaxPlayersPerTeam,MaxPlayersPerTeam,ONESIDE_ALLIANCE_TEAM1,arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime);
+            bOneSideAllyTeam1 = BuildSelectionPool(bgTypeId, queue_id, MaxPlayersPerTeam, MaxPlayersPerTeam, ONESIDE_ALLIANCE_TEAM1, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime);
             if (bOneSideAllyTeam1)
             {
                 // one team has been selected, find out if other can be selected too
@@ -797,7 +797,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
                 for (itr = m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin(); itr != m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.end(); ++itr)
                     (*itr)->Team=HORDE;
 
-                bOneSideAllyTeam2 = BuildSelectionPool(bgTypeId, queue_id,MaxPlayersPerTeam,MaxPlayersPerTeam,ONESIDE_ALLIANCE_TEAM2,arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime,(*(m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin()))->ArenaTeamId);
+                bOneSideAllyTeam2 = BuildSelectionPool(bgTypeId, queue_id, MaxPlayersPerTeam, MaxPlayersPerTeam, ONESIDE_ALLIANCE_TEAM2, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime,(*(m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin()))->ArenaTeamId);
 
                 // change back the team to ally
                 for (itr = m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin(); itr != m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.end(); ++itr)
@@ -830,7 +830,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
 
             // create random arena
             uint8 arenas[] = {BATTLEGROUND_NA, BATTLEGROUND_BE, BATTLEGROUND_RL};
-            uint32 arena_num = urand(0,2);
+            uint32 arena_num = urand(0, 2);
             BattleGround* bg2 = NULL;
             if (!(bg2 = sBattleGroundMgr.CreateNewBattleGround(arenas[arena_num%3], arenatype, isRated)) &&
                 !(bg2 = sBattleGroundMgr.CreateNewBattleGround(arenas[(arena_num+1)%3], arenatype, isRated)) &&
@@ -882,13 +882,13 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
             // invite players from the first group as horde players (actually green team)
             for (itr = m_SelectionPools[mode1].SelectedGroups.begin(); itr != m_SelectionPools[mode1].SelectedGroups.end(); ++itr)
             {
-                InviteGroupToBG((*itr),bg2,HORDE);
+                InviteGroupToBG((*itr),bg2, HORDE);
             }
 
             // invite players from the second group as ally players (actually gold team)
             for (itr = m_SelectionPools[mode2].SelectedGroups.begin(); itr != m_SelectionPools[mode2].SelectedGroups.end(); ++itr)
             {
-                InviteGroupToBG((*itr),bg2,ALLIANCE);
+                InviteGroupToBG((*itr),bg2, ALLIANCE);
             }
 
             if (isRated)
@@ -1059,9 +1059,9 @@ void BattleGroundMgr::Update(time_t diff)
         if (m_NextRatingDiscardUpdate < diff)
         {
             // forced update for level 70 rated arenas
-            m_BattleGroundQueues[BATTLEGROUND_QUEUE_2v2].Update(BATTLEGROUND_AA,6,ARENA_TYPE_2v2,true,0);
-            m_BattleGroundQueues[BATTLEGROUND_QUEUE_3v3].Update(BATTLEGROUND_AA,6,ARENA_TYPE_3v3,true,0);
-            m_BattleGroundQueues[BATTLEGROUND_QUEUE_5v5].Update(BATTLEGROUND_AA,6,ARENA_TYPE_5v5,true,0);
+            m_BattleGroundQueues[BATTLEGROUND_QUEUE_2v2].Update(BATTLEGROUND_AA, 6, ARENA_TYPE_2v2, true, 0);
+            m_BattleGroundQueues[BATTLEGROUND_QUEUE_3v3].Update(BATTLEGROUND_AA, 6, ARENA_TYPE_3v3, true, 0);
+            m_BattleGroundQueues[BATTLEGROUND_QUEUE_5v5].Update(BATTLEGROUND_AA, 6, ARENA_TYPE_5v5, true, 0);
             m_NextRatingDiscardUpdate = m_RatingDiscardTimer;
         }
         else
@@ -1509,7 +1509,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
     uint32 count = 0;
 
     //                                                       0   1                 2                 3      4      5                6              7             8
-    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT id, MinPlayersPerTeam,MaxPlayersPerTeam,MinLvl,MaxLvl,AllianceStartLoc,AllianceStartO,HordeStartLoc,HordeStartO FROM battleground_template");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT id, MinPlayersPerTeam, MaxPlayersPerTeam, MinLvl, MaxLvl, AllianceStartLoc, AllianceStartO, HordeStartLoc, HordeStartO FROM battleground_template");
 
     if (!result)
     {
@@ -1567,7 +1567,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
         }
         else
         {
-            sLog.outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field AllianceStartLoc. BG not created.",bgTypeID,start1);
+            sLog.outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field AllianceStartLoc. BG not created.",bgTypeID, start1);
             continue;
         }
 
@@ -1590,7 +1590,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
         }
         else
         {
-            sLog.outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field HordeStartLoc. BG not created.",bgTypeID,start2);
+            sLog.outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field HordeStartLoc. BG not created.",bgTypeID, start2);
             continue;
         }
 

@@ -62,14 +62,14 @@ struct boss_hungarfenAI : public ScriptedAI
         {
             if (!Root)
             {
-                DoCast(me,SPELL_FOUL_SPORES);
+                DoCast(me, SPELL_FOUL_SPORES);
                 Root = true;
             }
         }
 
         if (Mushroom_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 me->SummonCreature(17990, pTarget->GetPositionX()+float(rand()%8), pTarget->GetPositionY()+float(rand()%8), pTarget->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
             else
                 me->SummonCreature(17990, me->GetPositionX()+float(rand()%8), me->GetPositionY()+float(rand()%8), me->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
@@ -79,8 +79,8 @@ struct boss_hungarfenAI : public ScriptedAI
 
         if (AcidGeyser_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_ACID_GEYSER);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_ACID_GEYSER);
             AcidGeyser_Timer = 10000+rand()%7500;
         } else AcidGeyser_Timer -= diff;
 
@@ -110,8 +110,8 @@ struct mob_underbog_mushroomAI : public ScriptedAI
         Grow_Timer = 0;
         Shrink_Timer = 20000;
 
-        DoCast(me,SPELL_PUTRID_MUSHROOM,true);
-        DoCast(me,SPELL_SPORE_CLOUD,true);
+        DoCast(me, SPELL_PUTRID_MUSHROOM, true);
+        DoCast(me, SPELL_SPORE_CLOUD, true);
     }
 
     void MoveInLineOfSight(Unit *who) { return; }
@@ -127,7 +127,7 @@ struct mob_underbog_mushroomAI : public ScriptedAI
 
         if (Grow_Timer <= diff)
         {
-            DoCast(me,SPELL_GROW);
+            DoCast(me, SPELL_GROW);
             Grow_Timer = 3000;
         } else Grow_Timer -= diff;
 

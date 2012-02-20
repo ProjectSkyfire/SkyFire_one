@@ -32,9 +32,9 @@ item_blackwhelp_net(i31129)         Quest Whelps of the Wyrmcult (q10747). Preve
 item_draenei_fishing_net(i23654)    Hacklike implements chance to spawn item or creature
 item_disciplinary_rod               Prevents abuse
 item_nether_wraith_beacon(i31742)   Summons creatures for quest Becoming a Spellfire Tailor (q10832)
-item_flying_machine(i34060,i34061)  Engineering crafted flying machines
+item_flying_machine(i34060, i34061)  Engineering crafted flying machines
 item_gor_dreks_ointment(i30175)     Protecting Our Own(q10488)
-item_muiseks_vessel                 Cast on creature, they must be dead(q 3123,3124,3125,3126,3127)
+item_muiseks_vessel                 Cast on creature, they must be dead(q 3123, 3124, 3125, 3126, 3127)
 item_only_for_flight                Items which should only useable while flying
 item_protovoltaic_magneto_collector Prevents abuse
 item_razorthorn_flayer_gland        Quest Discovering Your Roots (q11520) and Rediscovering Your Roots (q11521). Prevents abuse
@@ -65,7 +65,7 @@ bool ItemUse_item_area_52_special(Player *player, Item* _Item, SpellCastTargets 
     }
     else
     {
-        player->SendEquipError(EQUIP_ERR_OUT_OF_RANGE,_Item,NULL);
+        player->SendEquipError(EQUIP_ERR_OUT_OF_RANGE, _Item, NULL);
         return true;
     }
 }
@@ -97,7 +97,7 @@ bool ItemUse_item_only_for_flight(Player* pPlayer, Item* pItem, SpellCastTargets
         return false;
 
     // error
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,pItem,NULL);
+    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
     return true;
 }
 
@@ -115,7 +115,7 @@ bool ItemUse_item_attuned_crystal_cores(Player *player, Item* _Item, SpellCastTa
         return false;
     }
 
-    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, _Item, NULL);
     return true;
 }
 
@@ -129,7 +129,7 @@ bool ItemUse_item_blackwhelp_net(Player *player, Item* _Item, SpellCastTargets c
         targets.getUnitTarget()->GetEntry() == 21387)
         return false;
 
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, _Item, NULL);
     return true;
 }
 
@@ -146,7 +146,7 @@ bool ItemUse_item_draenei_fishing_net(Player* pPlayer, Item* /*pItem*/, SpellCas
     //{
     if (pPlayer->GetQuestStatus(9452) == QUEST_STATUS_INCOMPLETE)
     {
-        if (urand(0,99) < 35)
+        if (urand(0, 99) < 35)
         {
             Creature *Murloc = pPlayer->SummonCreature(17102, pPlayer->GetPositionX(), pPlayer->GetPositionY()+20, pPlayer->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
             if (Murloc)
@@ -158,10 +158,10 @@ bool ItemUse_item_draenei_fishing_net(Player* pPlayer, Item* /*pItem*/, SpellCas
             uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 23614, 1);
             if (msg == EQUIP_ERR_OK)
             {
-                if (Item* item = pPlayer->StoreNewItem(dest,23614,true))
-                    pPlayer->SendNewItem(item,1,false,true);
+                if (Item* item = pPlayer->StoreNewItem(dest, 23614, true))
+                    pPlayer->SendNewItem(item, 1, false, true);
             } else
-                pPlayer->SendEquipError(msg,NULL,NULL);
+                pPlayer->SendEquipError(msg, NULL, NULL);
         }
     }
     //}
@@ -178,7 +178,7 @@ bool ItemUse_item_disciplinary_rod(Player *player, Item* _Item, SpellCastTargets
         (targets.getUnitTarget()->GetEntry() == 15941 || targets.getUnitTarget()->GetEntry() == 15945))
         return false;
 
-    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, _Item, NULL);
     return true;
 }
 
@@ -215,7 +215,7 @@ bool ItemUse_item_flying_machine(Player* pPlayer, Item* pItem, SpellCastTargets 
             return false;
 
     debug_log("TSCR: Player attempt to use item %u, but did not meet riding requirement",itemId);
-    pPlayer->SendEquipError(EQUIP_ERR_ERR_CANT_EQUIP_SKILL,pItem,NULL);
+    pPlayer->SendEquipError(EQUIP_ERR_ERR_CANT_EQUIP_SKILL, pItem, NULL);
     return true;
 }
 
@@ -229,7 +229,7 @@ bool ItemUse_item_gor_dreks_ointment(Player *pPlayer, Item *pItem, SpellCastTarg
         targets.getUnitTarget()->GetEntry() == 20748 && !targets.getUnitTarget()->HasAura(32578, 0))
         return false;
 
-    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,pItem,NULL);
+    pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
     return true;
 }
 
@@ -289,7 +289,7 @@ bool ItemUse_item_muiseks_vessel(Player *player, Item* _Item, SpellCastTargets c
     data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
     player->GetSession()->SendPacket(&data);                // send message: Invalid target
 
-    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    player->SendEquipError(EQUIP_ERR_NONE, _Item, NULL);      // break spell
     return true;
 }
 
@@ -308,7 +308,7 @@ bool ItemUse_item_inoculating_crystal(Player *player, Item* _Item, SpellCastTarg
     data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
     player->GetSession()->SendPacket(&data);                // send message: Invalid target
 
-    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    player->SendEquipError(EQUIP_ERR_NONE, _Item, NULL);      // break spell
     return true;
 }
 
@@ -322,7 +322,7 @@ bool ItemUse_item_razorthorn_flayer_gland(Player *player, Item* _Item, SpellCast
         targets.getUnitTarget()->GetEntry() == 24922)
         return false;
 
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, _Item, NULL);
     return true;
 }
 
@@ -368,7 +368,7 @@ bool ItemUse_item_tame_beast_rods(Player *player, Item* _Item, SpellCastTargets 
     data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
     player->GetSession()->SendPacket(&data);                // send message: Invalid target
 
-    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    player->SendEquipError(EQUIP_ERR_NONE, _Item, NULL);      // break spell
     return true;
 }
 
@@ -382,7 +382,7 @@ bool ItemUse_item_protovoltaic_magneto_collector(Player *player, Item* _Item, Sp
         targets.getUnitTarget()->GetEntry() == 21729)
         return false;
 
-    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, _Item, NULL);
     return true;
 }
 
@@ -398,7 +398,7 @@ bool ItemUse_item_soul_cannon(Player *player, Item* _Item, SpellCastTargets cons
         return false;
 
     // error
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, _Item, NULL);
     return true;
 }
 
@@ -412,7 +412,7 @@ bool ItemUse_item_sparrowhawk_net(Player *player, Item* _Item, SpellCastTargets 
         targets.getUnitTarget()->GetEntry() == 22979)
         return false;
 
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, _Item, NULL);
     return true;
 }
 
@@ -431,7 +431,7 @@ bool ItemUse_item_voodoo_charm(Player *player, Item* _Item, SpellCastTargets con
     data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
     player->GetSession()->SendPacket(&data);                // send message: Invalid target
 
-    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    player->SendEquipError(EQUIP_ERR_NONE, _Item, NULL);      // break spell
     return true;
 }
 
@@ -447,7 +447,7 @@ bool ItemUse_item_vorenthals_presence(Player *player, Item* _Item, SpellCastTarg
         return false;
 
     // error
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, _Item, NULL);
     return true;
 }
 
@@ -474,7 +474,7 @@ bool ItemUse_item_yehkinyas_bramble(Player *player, Item* _Item, SpellCastTarget
     data << uint32(10699);                                  // itemId
     data << uint8(SPELL_FAILED_BAD_TARGETS);                // reason
     player->GetSession()->SendPacket(&data);                // send message: Bad target
-    player->SendEquipError(EQUIP_ERR_NONE,_Item,NULL);      // break spell
+    player->SendEquipError(EQUIP_ERR_NONE, _Item, NULL);      // break spell
     return true;
 }
 
@@ -488,7 +488,7 @@ bool ItemUse_item_zezzak_shard(Player *player, Item* _Item, SpellCastTargets con
         targets.getUnitTarget()->GetEntry() == 19440)
         return false;
 
-    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM,_Item,NULL);
+    player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, _Item, NULL);
     return true;
 }
 

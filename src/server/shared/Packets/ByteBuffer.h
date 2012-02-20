@@ -79,10 +79,10 @@ class ByteBuffer
             _rpos = _wpos = 0;
         }
 
-        template <typename T> void put(size_t pos,T value)
+        template <typename T> void put(size_t pos, T value)
         {
             EndianConvert(value);
-            put(pos,(uint8 *)&value,sizeof(value));
+            put(pos,(uint8 *)&value, sizeof(value));
         }
 
         ByteBuffer &operator<<(uint8 value)

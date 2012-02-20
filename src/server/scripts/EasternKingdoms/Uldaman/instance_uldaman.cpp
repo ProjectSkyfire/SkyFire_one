@@ -82,14 +82,14 @@ struct instance_uldaman : public ScriptedInstance
                 altarOfTheKeeperTempleDoor = pGo->GetGUID();
 
                 if (Encounters[0] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case ARCHAEDAS_TEMPLE_DOOR:
                 archaedasTempleDoor = pGo->GetGUID();
 
                 if (Encounters[0] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case ANCIENT_VAULT_DOOR:
@@ -98,21 +98,21 @@ struct instance_uldaman : public ScriptedInstance
                 ancientVaultDoor = pGo->GetGUID();
 
                 if (Encounters[1] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case IRONAYA_SEAL_DOOR:
                 ironayaSealDoor = pGo->GetGUID();
 
                 if (Encounters[2] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case KEYSTONE_GO:
                 keystoneGUID = pGo->GetGUID();
                 if (Encounters[2] == DONE)
                 {
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                     pGo->SetUInt32Value(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
                 }
                 break;
@@ -123,7 +123,7 @@ struct instance_uldaman : public ScriptedInstance
     {
         pCreature->setFaction(35);
         pCreature->RemoveAllAuras();
-        //creature->RemoveFlag (UNIT_FIELD_FLAGS,UNIT_FLAG_ANIMATION_FROZEN);
+        //creature->RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_ANIMATION_FROZEN);
         pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
     }
@@ -134,7 +134,7 @@ struct instance_uldaman : public ScriptedInstance
         if (!pGo)
             return;
 
-        HandleGameObject(NULL,open,pGo);
+        HandleGameObject(NULL, open, pGo);
     }
 
     void BlockGO(uint64 guid)
@@ -152,7 +152,7 @@ struct instance_uldaman : public ScriptedInstance
             Creature *pTarget = instance->GetCreature(*i);
             if (!pTarget || !pTarget->isAlive() || pTarget->getFaction() == 14)
                 continue;
-            pTarget->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_DISABLE_MOVE);
+            pTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
             pTarget->setFaction(14);
             pTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             return;        // only want the first one we find
@@ -174,7 +174,7 @@ struct instance_uldaman : public ScriptedInstance
             if (!pTarget || !pTarget->isAlive() || pTarget->getFaction() == 14)
                 continue;
             archaedas->CastSpell(pTarget, SPELL_AWAKEN_VAULT_WALKER, true);
-            pTarget->CastSpell(pTarget, SPELL_ARCHAEDAS_AWAKEN,true);
+            pTarget->CastSpell(pTarget, SPELL_ARCHAEDAS_AWAKEN, true);
             return;        // only want the first one we find
         }
     }
@@ -221,7 +221,7 @@ struct instance_uldaman : public ScriptedInstance
 
         if (Unit *victim = Unit::GetUnit(*archaedas, target))
         {
-            archaedas->CastSpell(archaedas, SPELL_ARCHAEDAS_AWAKEN,false);
+            archaedas->CastSpell(archaedas, SPELL_ARCHAEDAS_AWAKEN, false);
             whoWokeArchaedasGUID = target;
         }
     }
@@ -233,7 +233,7 @@ struct instance_uldaman : public ScriptedInstance
             return;
 
         ironaya->setFaction(415);
-        ironaya->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_DISABLE_MOVE);
+        ironaya->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
         ironaya->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 

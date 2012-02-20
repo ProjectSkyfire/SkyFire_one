@@ -161,8 +161,8 @@ struct Namespace namespaces[] =
 { { "SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/" }, // must be first
   { "SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/" }, // must be second
   { "xsi", "http://www.w3.org/1999/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance" },
-  { "xsd", "http://www.w3.org/1999/XMLSchema",          "http://www.w3.org/*/XMLSchema" },
-  { "ns1", "urn:Trinity" },     // "ns1" namespace prefix
+  { "xsd", "http://www.w3.org/1999/XMLSchema",         "http://www.w3.org/*/XMLSchema" },
+  { "ns1", "urn:Trinity" },    // "ns1" namespace prefix
   { NULL, NULL }
 };
 

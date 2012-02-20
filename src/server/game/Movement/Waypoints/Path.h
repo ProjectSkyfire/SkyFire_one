@@ -29,7 +29,7 @@ class Path
     public:
         struct PathNode
         {
-            float x,y,z;
+            float x, y, z;
         };
 
         void SetLength(const unsigned int sz)
@@ -42,7 +42,7 @@ class Path
         void Resize(unsigned int sz) { i_nodes.resize(sz); }
         void Clear(void) { i_nodes.clear(); }
         PathNode const* GetNodes(uint32 start = 0) const { return &i_nodes[start]; }
-        float GetTotalLength() const { return GetTotalLength(0,Size()); }
+        float GetTotalLength() const { return GetTotalLength(0, Size()); }
         float GetTotalLength(uint32 start, uint32 end) const
         {
             float len = 0, xd, yd, zd;

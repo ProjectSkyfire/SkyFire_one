@@ -106,7 +106,7 @@ void WorldSession::HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid
                 case COMMAND_FOLLOW:                        //spellid=1792  //FOLLOW
                     pet->AttackStop();
                     pet->InterruptNonMeleeSpells(false);
-                    pet->GetMotionMaster()->MoveFollow(_player,PET_FOLLOW_DIST,pet->GetFollowAngle());
+                    pet->GetMotionMaster()->MoveFollow(_player, PET_FOLLOW_DIST, pet->GetFollowAngle());
                     charmInfo->SetCommandState(COMMAND_FOLLOW);
 
                     charmInfo->SetIsCommandAttack(false);
@@ -174,7 +174,7 @@ void WorldSession::HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid
                             charmInfo->SetIsFollowing(false);
                             charmInfo->SetIsReturning(false);
 
-                            pet->Attack(TargetUnit,true);
+                            pet->Attack(TargetUnit, true);
                             pet->SendPetAIReaction(guid1);
                         }
                     }
@@ -227,7 +227,7 @@ void WorldSession::HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid
                 return;
 
             if (guid2)
-                unit_target = ObjectAccessor::GetUnit(*_player,guid2);
+                unit_target = ObjectAccessor::GetUnit(*_player, guid2);
 
             // do not cast unknown spells
             SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellid);
@@ -352,7 +352,7 @@ void WorldSession::HandlePetNameQuery(WorldPacket& recv_data)
     recv_data >> petnumber;
     recv_data >> petguid;
 
-    SendPetNameQuery(petguid,petnumber);
+    SendPetNameQuery(petguid, petnumber);
 }
 
 void WorldSession::SendPetNameQuery(uint64 petguid, uint32 petnumber)
@@ -489,7 +489,7 @@ void WorldSession::HandlePetRename(WorldPacket & recv_data)
 
         std::wstring wname;
         Utf8toWStr(name, wname);
-        if (!ObjectMgr::CheckDeclinedNames(GetMainPartOfName(wname,0),declinedname))
+        if (!ObjectMgr::CheckDeclinedNames(GetMainPartOfName(wname, 0),declinedname))
         {
             SendPetNameInvalid(PET_NAME_DECLENSION_DOESNT_MATCH_BASE_NAME, name, &declinedname);
             return;
@@ -534,7 +534,7 @@ void WorldSession::HandlePetAbandon(WorldPacket & recv_data)
                 pet->SetPower(POWER_HAPPINESS ,(feelty-50000) > 0 ?(feelty-50000) : 0);
             }
 
-            _player->RemovePet((Pet*)pet,PET_SAVE_AS_DELETED);
+            _player->RemovePet((Pet*)pet, PET_SAVE_AS_DELETED);
         }
         else if (pet->GetGUID() == _player->GetCharmGUID())
             _player->StopCastingCharm();
@@ -613,7 +613,7 @@ void WorldSession::HandlePetSpellAutocastOpcode(WorldPacket& recvPacket)
     if (ObjectAccessor::FindPlayer(guid))
         return;
 
-    Creature* pet=ObjectAccessor::GetCreatureOrPet(*_player,guid);
+    Creature* pet=ObjectAccessor::GetCreatureOrPet(*_player, guid);
 
     if (!pet || (pet != _player->GetGuardianPet() && pet != _player->GetCharm()))
     {

@@ -58,16 +58,16 @@ bool GOHello_go_gauntlet_gate(Player* pPlayer, GameObject* pGo)
                 continue;
 
             if (pGroupie->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
-                !pGroupie->HasAura(SPELL_BARON_ULTIMATUM,0) &&
+                !pGroupie->HasAura(SPELL_BARON_ULTIMATUM, 0) &&
                 pGroupie->GetMap() == pGo->GetMap())
-                pGroupie->CastSpell(pGroupie,SPELL_BARON_ULTIMATUM,true);
+                pGroupie->CastSpell(pGroupie, SPELL_BARON_ULTIMATUM, true);
         }
     } else if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
-                !pPlayer->HasAura(SPELL_BARON_ULTIMATUM,0) &&
+                !pPlayer->HasAura(SPELL_BARON_ULTIMATUM, 0) &&
                 pPlayer->GetMap() == pGo->GetMap())
-                pPlayer->CastSpell(pPlayer,SPELL_BARON_ULTIMATUM,true);
+                pPlayer->CastSpell(pPlayer, SPELL_BARON_ULTIMATUM, true);
 
-    pInstance->SetData(TYPE_BARON_RUN,IN_PROGRESS);
+    pInstance->SetData(TYPE_BARON_RUN, IN_PROGRESS);
     return false;
 }
 
@@ -87,7 +87,7 @@ struct mob_freed_soulAI : public ScriptedAI
 
     void Reset()
     {
-        DoScriptText(RAND(SAY_ZAPPED0,SAY_ZAPPED1,SAY_ZAPPED2,SAY_ZAPPED3), me);
+        DoScriptText(RAND(SAY_ZAPPED0, SAY_ZAPPED1, SAY_ZAPPED2, SAY_ZAPPED3), me);
     }
 
     void EnterCombat(Unit* /*who*/) {}
@@ -139,7 +139,7 @@ struct mob_restless_soulAI : public ScriptedAI
 
     void JustSummoned(Creature *summoned)
     {
-        summoned->CastSpell(summoned,SPELL_SOUL_FREED,false);
+        summoned->CastSpell(summoned, SPELL_SOUL_FREED, false);
     }
 
     void JustDied(Unit* /*Killer*/)
@@ -154,7 +154,7 @@ struct mob_restless_soulAI : public ScriptedAI
         {
             if (Die_Timer <= diff)
             {
-                if (Unit* pTemp = Unit::GetUnit(*me,Tagger))
+                if (Unit* pTemp = Unit::GetUnit(*me, Tagger))
                 {
                     CAST_PLR(pTemp)->KilledMonsterCredit(ENTRY_RESTLESS, me->GetGUID());
                     me->Kill(me);
@@ -207,7 +207,7 @@ struct mobs_spectral_ghostly_citizenAI : public ScriptedAI
             for (uint32 i = 1; i <= 4; ++i)
             {
                  //100%, 50%, 33%, 25% chance to spawn
-                 if (urand(1,i) == 1)
+                 if (urand(1, i) == 1)
                      DoSummon(ENTRY_RESTLESS, me, 20.0f, 600000);
             }
         }

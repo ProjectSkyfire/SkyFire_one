@@ -123,14 +123,14 @@ struct boss_epoch_hunterAI : public ScriptedAI
 
         if (WingBuffet_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_WING_BUFFET);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_WING_BUFFET);
             WingBuffet_Timer = 25000+rand()%10000;
         } else WingBuffet_Timer -= diff;
 
         if (Mda_Timer <= diff)
         {
-            DoCast(me,SPELL_MAGIC_DISRUPTION_AURA);
+            DoCast(me, SPELL_MAGIC_DISRUPTION_AURA);
             Mda_Timer = 15000;
         } else Mda_Timer -= diff;
 

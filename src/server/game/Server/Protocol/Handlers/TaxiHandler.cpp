@@ -108,7 +108,7 @@ void WorldSession::SendTaxiMenu(Creature* unit)
     data << uint32(1);
     data << uint64(unit->GetGUID());
     data << uint32(curloc);
-    GetPlayer()->m_taxi.AppendTaximaskTo(data,GetPlayer()->isTaxiCheater());
+    GetPlayer()->m_taxi.AppendTaximaskTo(data, GetPlayer()->isTaxiCheater());
     SendPacket(&data);
 
     DEBUG_LOG("WORLD: Sent SMSG_SHOWTAXINODES");
@@ -124,7 +124,7 @@ void WorldSession::SendDoFlight(uint16 MountId, uint32 path, uint32 pathNode)
         GetPlayer()->GetMotionMaster()->MovementExpired(false);
 
     GetPlayer()->Mount(MountId);
-    GetPlayer()->GetMotionMaster()->MoveTaxiFlight(path,pathNode);
+    GetPlayer()->GetMotionMaster()->MoveTaxiFlight(path, pathNode);
 }
 
 bool WorldSession::SendLearnNewTaxiNode(Creature* unit)
@@ -178,7 +178,7 @@ void WorldSession::HandleActivateTaxiFarOpcode (WorldPacket & recv_data)
     if (nodes.empty())
         return;
 
-    DEBUG_LOG("WORLD: Received CMSG_ACTIVATETAXIEXPRESS from %d to %d" ,nodes.front(),nodes.back());
+    DEBUG_LOG("WORLD: Received CMSG_ACTIVATETAXIEXPRESS from %d to %d" , nodes.front(),nodes.back());
 
     GetPlayer()->ActivateTaxiPathTo(nodes, 0, npc);
 }
@@ -215,7 +215,7 @@ void WorldSession::HandleTaxiNextDestinationOpcode(WorldPacket& recv_data)
             Path::PathNode const& node = flight->GetPath()[flight->GetCurrentNode()];
             flight->SkipCurrentNode();
 
-            GetPlayer()->TeleportTo(curDestNode->map_id,node.x,node.y,node.z,GetPlayer()->GetOrientation());
+            GetPlayer()->TeleportTo(curDestNode->map_id, node.x, node.y, node.z, GetPlayer()->GetOrientation());
         }
         return;
     }
@@ -261,7 +261,7 @@ void WorldSession::HandleActivateTaxiOpcode(WorldPacket & recv_data)
     nodes.resize(2);
 
     recv_data >> guid >> nodes[0] >> nodes[1];
-    DEBUG_LOG("WORLD: Received CMSG_ACTIVATETAXI from %d to %d" ,nodes[0],nodes[1]);
+    DEBUG_LOG("WORLD: Received CMSG_ACTIVATETAXI from %d to %d" , nodes[0],nodes[1]);
     Creature *npc = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_FLIGHTMASTER);
     if (!npc)
     {

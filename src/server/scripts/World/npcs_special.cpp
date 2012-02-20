@@ -195,13 +195,13 @@ struct npc_dancing_flamesAI : public ScriptedAI
         DoCast(me, SPELL_BRAZIER, true);
         DoCast(me, SPELL_FIERY_AURA, false);
         float x, y, z;
-        me->GetPosition(x,y,z);
-        me->GetMap()->CreatureRelocation(me,x,y,z + 0.94f,0.0f);
+        me->GetPosition(x, y, z);
+        me->GetMap()->CreatureRelocation(me, x, y, z + 0.94f, 0.0f);
         me->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);
         me->HandleEmoteCommand(EMOTE_ONESHOT_DANCE);
         WorldPacket data;                       //send update position to client
         me->BuildHeartBeatMsg(&data);
-        me->SendMessageToSet(&data,true);
+        me->SendMessageToSet(&data, true);
     }
 
     void UpdateAI(const uint32 diff)
@@ -220,14 +220,14 @@ struct npc_dancing_flamesAI : public ScriptedAI
 
     void ReceiveEmote(Player* pPlayer, uint32 emote)
     {
-        if (me->IsWithinLOS(pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ()) && me->IsWithinDistInMap(pPlayer,30.0f))
+        if (me->IsWithinLOS(pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ()) && me->IsWithinDistInMap(pPlayer, 30.0f))
         {
             me->SetInFront(pPlayer);
             active = false;
 
             WorldPacket data;
             me->BuildHeartBeatMsg(&data);
-            me->SendMessageToSet(&data,true);
+            me->SendMessageToSet(&data, true);
             switch(emote)
             {
                 case TEXTEMOTE_KISS:    me->HandleEmoteCommand(EMOTE_ONESHOT_SHY); break;
@@ -273,13 +273,13 @@ struct Location
 
 static Location AllianceCoords[]=
 {
-    {-3757.38f, -4533.05f, 14.16f, 3.62f},                      // Top-far-right bunk as seen from entrance
-    {-3754.36f, -4539.13f, 14.16f, 5.13f},                      // Top-far-left bunk
-    {-3749.54f, -4540.25f, 14.28f, 3.34f},                      // Far-right bunk
-    {-3742.10f, -4536.85f, 14.28f, 3.64f},                      // Right bunk near entrance
-    {-3755.89f, -4529.07f, 14.05f, 0.57f},                      // Far-left bunk
-    {-3749.51f, -4527.08f, 14.07f, 5.26f},                      // Mid-left bunk
-    {-3746.37f, -4525.35f, 14.16f, 5.22f},                      // Left bunk near entrance
+    {-3757.38f, -4533.05f, 14.16f, 3.62f},                     // Top-far-right bunk as seen from entrance
+    {-3754.36f, -4539.13f, 14.16f, 5.13f},                     // Top-far-left bunk
+    {-3749.54f, -4540.25f, 14.28f, 3.34f},                     // Far-right bunk
+    {-3742.10f, -4536.85f, 14.28f, 3.64f},                     // Right bunk near entrance
+    {-3755.89f, -4529.07f, 14.05f, 0.57f},                     // Far-left bunk
+    {-3749.51f, -4527.08f, 14.07f, 5.26f},                     // Mid-left bunk
+    {-3746.37f, -4525.35f, 14.16f, 5.22f},                     // Left bunk near entrance
 };
 
 //alliance run to where
@@ -289,11 +289,11 @@ static Location AllianceCoords[]=
 
 static Location HordeCoords[]=
 {
-    {-1013.75f, -3492.59f, 62.62f, 4.34f},                      // Left, Behind
-    {-1017.72f, -3490.92f, 62.62f, 4.34f},                      // Right, Behind
-    {-1015.77f, -3497.15f, 62.82f, 4.34f},                      // Left, Mid
-    {-1019.51f, -3495.49f, 62.82f, 4.34f},                      // Right, Mid
-    {-1017.25f, -3500.85f, 62.98f, 4.34f},                      // Left, front
+    {-1013.75f, -3492.59f, 62.62f, 4.34f},                     // Left, Behind
+    {-1017.72f, -3490.92f, 62.62f, 4.34f},                     // Right, Behind
+    {-1015.77f, -3497.15f, 62.82f, 4.34f},                     // Left, Mid
+    {-1019.51f, -3495.49f, 62.82f, 4.34f},                     // Right, Mid
+    {-1017.25f, -3500.85f, 62.98f, 4.34f},                     // Left, front
     {-1020.95f, -3499.21f, 62.98f, 4.34f}                       // Right, Front
 };
 
@@ -425,7 +425,7 @@ struct npc_injured_patientAI : public ScriptedAI
             //stand up
             me->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
 
-            DoScriptText(RAND(SAY_DOC1,SAY_DOC2,SAY_DOC3), me);
+            DoScriptText(RAND(SAY_DOC1, SAY_DOC2, SAY_DOC3), me);
 
             uint32 mobId = me->GetEntry();
             me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
@@ -710,14 +710,14 @@ struct npc_garments_of_questsAI : public npc_escortAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_SHAYA_THANKS,me,pCaster);
+                                DoScriptText(SAY_SHAYA_THANKS, me, pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 me->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,me,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED, me, pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -727,14 +727,14 @@ struct npc_garments_of_questsAI : public npc_escortAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_ROBERTS_THANKS,me,pCaster);
+                                DoScriptText(SAY_ROBERTS_THANKS, me, pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 me->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,me,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED, me, pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -744,14 +744,14 @@ struct npc_garments_of_questsAI : public npc_escortAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_DOLF_THANKS,me,pCaster);
+                                DoScriptText(SAY_DOLF_THANKS, me, pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 me->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,me,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED, me, pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -761,14 +761,14 @@ struct npc_garments_of_questsAI : public npc_escortAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_KORJA_THANKS,me,pCaster);
+                                DoScriptText(SAY_KORJA_THANKS, me, pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 me->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,me,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED, me, pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -778,14 +778,14 @@ struct npc_garments_of_questsAI : public npc_escortAI
                         {
                             if (bIsHealed && !bCanRun && Spell->Id == SPELL_FORTITUDE_R1)
                             {
-                                DoScriptText(SAY_DG_KEL_THANKS,me,pCaster);
+                                DoScriptText(SAY_DG_KEL_THANKS, me, pCaster);
                                 bCanRun = true;
                             }
                             else if (!bIsHealed && Spell->Id == SPELL_LESSER_HEAL_R2)
                             {
                                 caster = pCaster->GetGUID();
                                 me->SetStandState(UNIT_STAND_STATE_STAND);
-                                DoScriptText(SAY_COMMON_HEALED,me,pCaster);
+                                DoScriptText(SAY_COMMON_HEALED, me, pCaster);
                                 bIsHealed = true;
                             }
                         }
@@ -809,18 +809,18 @@ struct npc_garments_of_questsAI : public npc_escortAI
         {
             if (RunAwayTimer <= diff)
             {
-                if (Unit *pUnit = Unit::GetUnit(*me,caster))
+                if (Unit *pUnit = Unit::GetUnit(*me, caster))
                 {
                     switch(me->GetEntry())
                     {
-                        case ENTRY_SHAYA: DoScriptText(SAY_SHAYA_GOODBYE,me,pUnit); break;
-                        case ENTRY_ROBERTS: DoScriptText(SAY_ROBERTS_GOODBYE,me,pUnit); break;
-                        case ENTRY_DOLF: DoScriptText(SAY_DOLF_GOODBYE,me,pUnit); break;
-                        case ENTRY_KORJA: DoScriptText(SAY_KORJA_GOODBYE,me,pUnit); break;
-                        case ENTRY_DG_KEL: DoScriptText(SAY_DG_KEL_GOODBYE,me,pUnit); break;
+                        case ENTRY_SHAYA: DoScriptText(SAY_SHAYA_GOODBYE, me, pUnit); break;
+                        case ENTRY_ROBERTS: DoScriptText(SAY_ROBERTS_GOODBYE, me, pUnit); break;
+                        case ENTRY_DOLF: DoScriptText(SAY_DOLF_GOODBYE, me, pUnit); break;
+                        case ENTRY_KORJA: DoScriptText(SAY_KORJA_GOODBYE, me, pUnit); break;
+                        case ENTRY_DG_KEL: DoScriptText(SAY_DG_KEL_GOODBYE, me, pUnit); break;
                     }
 
-                    Start(false,true,true);
+                    Start(false, true, true);
                 }
                 else
                     EnterEvadeMode();                       //something went wrong
@@ -984,7 +984,7 @@ bool GossipHello_npc_rogue_trainer(Player* pPlayer, Creature* pCreature)
     if (pCreature->isCanTrainingAndResetTalentsOf(pPlayer))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_HELLO_ROGUE1, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_UNLEARNTALENTS);
 
-    if (pPlayer->getClass() == CLASS_ROGUE && pPlayer->getLevel() >= 24 && !pPlayer->HasItemCount(17126,1) && !pPlayer->GetQuestRewardStatus(6681))
+    if (pPlayer->getClass() == CLASS_ROGUE && pPlayer->getLevel() >= 24 && !pPlayer->HasItemCount(17126, 1) && !pPlayer->GetQuestRewardStatus(6681))
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_ROGUE2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         pPlayer->SEND_GOSSIP_MENU(5996, pCreature->GetGUID());
@@ -1000,7 +1000,7 @@ bool GossipSelect_npc_rogue_trainer(Player* pPlayer, Creature* pCreature, uint32
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CastSpell(pPlayer,21100,false);
+            pPlayer->CastSpell(pPlayer, 21100, false);
             break;
         case GOSSIP_ACTION_TRAIN:
             pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
@@ -1124,42 +1124,42 @@ bool GossipSelect_npc_sayge(Player* pPlayer, Creature* pCreature, uint32 uiSende
             break;
         case GOSSIP_SENDER_MAIN+1:
             pCreature->CastSpell(pPlayer, SPELL_DMG, false);
-            pPlayer->AddSpellCooldown(SPELL_DMG,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_DMG, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+2:
             pCreature->CastSpell(pPlayer, SPELL_RES, false);
-            pPlayer->AddSpellCooldown(SPELL_RES,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_RES, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+3:
             pCreature->CastSpell(pPlayer, SPELL_ARM, false);
-            pPlayer->AddSpellCooldown(SPELL_ARM,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_ARM, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+4:
             pCreature->CastSpell(pPlayer, SPELL_SPI, false);
-            pPlayer->AddSpellCooldown(SPELL_SPI,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_SPI, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+5:
             pCreature->CastSpell(pPlayer, SPELL_INT, false);
-            pPlayer->AddSpellCooldown(SPELL_INT,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_INT, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+6:
             pCreature->CastSpell(pPlayer, SPELL_STM, false);
-            pPlayer->AddSpellCooldown(SPELL_STM,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_STM, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+7:
             pCreature->CastSpell(pPlayer, SPELL_STR, false);
-            pPlayer->AddSpellCooldown(SPELL_STR,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_STR, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
         case GOSSIP_SENDER_MAIN+8:
             pCreature->CastSpell(pPlayer, SPELL_AGI, false);
-            pPlayer->AddSpellCooldown(SPELL_AGI,0,time(NULL) + 7200);
+            pPlayer->AddSpellCooldown(SPELL_AGI, 0, time(NULL) + 7200);
             SendAction_npc_sayge(pPlayer, pCreature, uiAction);
             break;
     }
@@ -1265,7 +1265,7 @@ struct npc_winter_revelerAI : public ScriptedAI
         {
             me->CastSpell(me, 26218, false);
             pPlayer->CastSpell(pPlayer, 26218, false);
-            switch (urand(0,2))
+            switch (urand(0, 2))
             {
                 case 0: me->CastSpell(pPlayer, 26207, false); break;
                 case 1: me->CastSpell(pPlayer, 26206, false); break;
@@ -1356,7 +1356,7 @@ struct npc_snake_trap_serpentsAI : public ScriptedAI
         if (!me->hasUnitState(UNIT_STAT_FOLLOW)&& !me->isInCombat())
         {
             me->GetMotionMaster()->Clear();
-            me->GetMotionMaster()->MoveFollow(Owner,PET_FOLLOW_DIST,PET_FOLLOW_ANGLE);
+            me->GetMotionMaster()->MoveFollow(Owner, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
         }
 
         //No victim -> get new from owner (need this because MoveInLineOfSight won't work while following -> corebug)
@@ -1375,10 +1375,10 @@ struct npc_snake_trap_serpentsAI : public ScriptedAI
         {
             if (IsViper) //Viper
             {
-                if (urand(0,2) == 0) //33% chance to cast
+                if (urand(0, 2) == 0) //33% chance to cast
                 {
                     uint32 spell;
-                    if (urand(0,1) == 0)
+                    if (urand(0, 1) == 0)
                         spell = SPELL_MIND_NUMBING_POISON;
                     else
                         spell = SPELL_CRIPPLING_POISON;
@@ -1424,7 +1424,7 @@ struct mob_mojoAI : public ScriptedAI
         victimGUID = 0;
         hearts = 15000;
         if (Unit* own = me->GetOwner())
-            me->GetMotionMaster()->MoveFollow(own,0,0);
+            me->GetMotionMaster()->MoveFollow(own, 0, 0);
     }
     void Aggro(Unit * /*who*/){}
     void UpdateAI(const uint32 diff)
@@ -1469,10 +1469,10 @@ struct mob_mojoAI : public ScriptedAI
                 if (victim && victim->HasAura(43906, 0))
                     victim->RemoveAurasDueToSpell(43906); // remove polymorph frog thing
             }
-            me->AddAura(43906,pPlayer);//add polymorph frog thing
+            me->AddAura(43906, pPlayer);//add polymorph frog thing
             victimGUID = pPlayer->GetGUID();
             DoCast(me, 20372, true);//tag.hearts
-            me->GetMotionMaster()->MoveFollow(pPlayer,0,0);
+            me->GetMotionMaster()->MoveFollow(pPlayer, 0, 0);
             hearts = 15000;
         }
     }

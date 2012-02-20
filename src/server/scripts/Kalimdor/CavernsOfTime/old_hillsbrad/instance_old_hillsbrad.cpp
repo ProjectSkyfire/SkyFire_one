@@ -90,10 +90,10 @@ struct instance_old_hillsbrad : public ScriptedInstance
             {
                 if (Player* player = itr->getSource())
                 {
-                    player->SendUpdateWorldState(WORLD_STATE_OH,mBarrelCount);
+                    player->SendUpdateWorldState(WORLD_STATE_OH, mBarrelCount);
 
                     if (mBarrelCount == 5)
-                        player->KilledMonsterCredit(LODGE_QUEST_TRIGGER,0);
+                        player->KilledMonsterCredit(LODGE_QUEST_TRIGGER, 0);
                 }
             }
         } else
@@ -144,7 +144,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
 
                     if (mBarrelCount == 5)
                     {
-                    player->SummonCreature(DRAKE_ENTRY,2128.43f,71.01f,64.42f,1.74f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                    player->SummonCreature(DRAKE_ENTRY, 2128.43f, 71.01f, 64.42f, 1.74f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
                     Encounter[0] = DONE;
                     }
                 }

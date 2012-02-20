@@ -267,7 +267,7 @@ struct boss_arlokkAI : public ScriptedAI
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
                     AttackStart(pTarget);
-                    DoCast(pTarget,SPELL_BACKSTAB);
+                    DoCast(pTarget, SPELL_BACKSTAB);
                 }
 
                 m_bIsPhaseTwo = true;

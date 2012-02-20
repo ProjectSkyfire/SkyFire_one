@@ -50,7 +50,7 @@ EndScriptData */
 class ov_mycoordinates
 {
     public:
-        float x,y,z,r;
+        float x, y, z, r;
         ov_mycoordinates(float cx, float cy, float cz, float cr)
         {
             x = cx; y = cy; z = cz; r = cr;
@@ -168,15 +168,15 @@ struct boss_skeramAI : public ScriptedAI
             switch(rand()%3)
             {
                 case 0:
-                    me->GetMap()->CreatureRelocation(me, -8340.782227f,2083.814453f,125.648788f,0.0f);
+                    me->GetMap()->CreatureRelocation(me, -8340.782227f, 2083.814453f, 125.648788f, 0.0f);
                     DoResetThreat();
                     break;
                 case 1:
-                    me->GetMap()->CreatureRelocation(me, -8341.546875f,2118.504639f,133.058151f,0.0f);
+                    me->GetMap()->CreatureRelocation(me, -8341.546875f, 2118.504639f, 133.058151f, 0.0f);
                     DoResetThreat();
                     break;
                 case 2:
-                    me->GetMap()->CreatureRelocation(me, -8318.822266f,2058.231201f,133.058151f,0.0f);
+                    me->GetMap()->CreatureRelocation(me, -8318.822266f, 2058.231201f, 133.058151f, 0.0f);
                     DoResetThreat();
                     break;
             }
@@ -221,9 +221,9 @@ struct boss_skeramAI : public ScriptedAI
     {
         DoScriptText(SAY_SPLIT, me);
 
-        ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227f,2083.814453f,125.648788f,0);
-        ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875f,2118.504639f,133.058151f,0);
-        ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266f,2058.231201f,133.058151f,0);
+        ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227f, 2083.814453f, 125.648788f, 0);
+        ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875f, 2118.504639f, 133.058151f, 0);
+        ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266f, 2058.231201f, 133.058151f, 0);
 
         ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
 
@@ -279,7 +279,7 @@ struct boss_skeramAI : public ScriptedAI
             case 25: Images25 = true; break;
         }
 
-        Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+        Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
         Image1 = me->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
         if (!Image1)
@@ -292,7 +292,7 @@ struct boss_skeramAI : public ScriptedAI
         if (pTarget)
             Image1->AI()->AttackStart(pTarget);
 
-        Image2 = me->SummonCreature(15263,i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
+        Image2 = me->SummonCreature(15263, i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
         if (!Image2)
         {
           PLACES_CLEANUP

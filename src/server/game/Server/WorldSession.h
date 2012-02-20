@@ -78,12 +78,12 @@ class WorldSession
         void SizeError(WorldPacket const& packet, uint32 size) const;
 
         void SendPacket(WorldPacket const* packet);
-        void SendNotification(const char *format,...) ATTR_PRINTF(2,3);
+        void SendNotification(const char *format,...) ATTR_PRINTF(2, 3);
         void SendNotification(int32 string_id,...);
         void SendPetNameInvalid(uint32 error, const std::string& name, DeclinedName *declinedName);
         void SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type);
         void SendPartyResult(PartyOperation operation, const std::string& member, PartyResult res);
-        void SendAreaTriggerMessage(const char* Text, ...) ATTR_PRINTF(2,3);
+        void SendAreaTriggerMessage(const char* Text, ...) ATTR_PRINTF(2, 3);
 
         uint32 GetSecurity() const { return _security; }
         uint32 GetAccountId() const { return _accountId; }
@@ -163,8 +163,8 @@ class WorldSession
         void SendAuctionCancelledToBidderMail(AuctionEntry* auction);
 
         //Item Enchantment
-        void SendEnchantmentLog(uint64 Target, uint64 Caster,uint32 ItemID,uint32 SpellID);
-        void SendItemEnchantTimeUpdate(uint64 Playerguid, uint64 Itemguid,uint32 slot,uint32 Duration);
+        void SendEnchantmentLog(uint64 Target, uint64 Caster, uint32 ItemID, uint32 SpellID);
+        void SendItemEnchantTimeUpdate(uint64 Playerguid, uint64 Itemguid, uint32 slot, uint32 Duration);
 
         //Taxi
         void SendTaxiStatus(uint64 guid);

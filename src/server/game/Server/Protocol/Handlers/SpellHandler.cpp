@@ -92,7 +92,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
         pUser->InArena())
     {
         recvPacket.rpos(recvPacket.wpos());                 // prevent spam at not read packet tail
-        pUser->SendEquipError(EQUIP_ERR_NOT_DURING_ARENA_MATCH,pItem,NULL);
+        pUser->SendEquipError(EQUIP_ERR_NOT_DURING_ARENA_MATCH, pItem, NULL);
         return;
     }
 
@@ -105,7 +105,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
                 if (IsNonCombatSpell(spellInfo))
                 {
                     recvPacket.rpos(recvPacket.wpos());     // prevent spam at not read packet tail
-                    pUser->SendEquipError(EQUIP_ERR_NOT_IN_COMBAT,pItem,NULL);
+                    pUser->SendEquipError(EQUIP_ERR_NOT_IN_COMBAT, pItem, NULL);
                     return;
                 }
             }
@@ -127,7 +127,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
     recvPacket >> targets.ReadForCaster(pUser);
 
     //Note: If script stop casting it must send appropriate data to client to prevent stuck item in gray state.
-    if (!sScriptMgr.ItemUse(pUser,pItem,targets))
+    if (!sScriptMgr.ItemUse(pUser, pItem, targets))
     {
         // no script or script not process request by self
 
@@ -140,7 +140,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
             if (!spellInfo)
             {
                 sLog.outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, SPELL_ID_GENERIC_LEARN);
-                pUser->SendEquipError(EQUIP_ERR_NONE,pItem,NULL);
+                pUser->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
                 return;
             }
 
@@ -199,7 +199,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
 
     recvPacket >> bagIndex >> slot;
 
-    sLog.outDetail("bagIndex: %u, slot: %u",bagIndex,slot);
+    sLog.outDetail("bagIndex: %u, slot: %u",bagIndex, slot);
 
     Item *pItem = pUser->GetItemByPos(bagIndex, slot);
     if (!pItem)
@@ -339,7 +339,7 @@ void WorldSession::HandleCancelCastOpcode(WorldPacket& recvPacket)
     recvPacket >> spellId;
 
     if (_player->IsNonMeleeSpellCasted(false))
-        _player->InterruptNonMeleeSpells(false,spellId,false);
+        _player->InterruptNonMeleeSpells(false, spellId, false);
 }
 
 void WorldSession::HandleCancelAuraOpcode(WorldPacket& recvPacket)
@@ -387,7 +387,7 @@ void WorldSession::HandlePetCancelAuraOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    Creature* pet=ObjectAccessor::GetCreatureOrPet(*_player,guid);
+    Creature* pet=ObjectAccessor::GetCreatureOrPet(*_player, guid);
 
     if (!pet)
     {
@@ -456,7 +456,7 @@ void WorldSession::HandleSelfResOpcode(WorldPacket & /*recv_data*/)
     {
         SpellEntry const *spellInfo = sSpellStore.LookupEntry(_player->GetUInt32Value(PLAYER_SELF_RES_SPELL));
         if (spellInfo)
-            _player->CastSpell(_player, spellInfo, false,0);
+            _player->CastSpell(_player, spellInfo, false, 0);
 
         _player->SetUInt32Value(PLAYER_SELF_RES_SPELL, 0);
     }

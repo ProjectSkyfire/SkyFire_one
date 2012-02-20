@@ -393,7 +393,7 @@ Weather* World::AddWeather(uint32 zone_id)
     if (!weatherChances)
         return NULL;
 
-    Weather* w = new Weather(zone_id,weatherChances);
+    Weather* w = new Weather(zone_id, weatherChances);
     m_weathers[w->GetZone()] = w;
     w->ReGenerate();
     w->UpdateWeather();
@@ -498,13 +498,13 @@ void World::LoadConfigSettings(bool reload)
     rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] = sConfig.GetFloatDefault("TargetPosRecalculateRange",1.5f);
     if (rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] < CONTACT_DISTANCE)
     {
-        sLog.outError("TargetPosRecalculateRange (%f) must be >= %f. Using %f instead.",rate_values[RATE_TARGET_POS_RECALCULATION_RANGE],CONTACT_DISTANCE,CONTACT_DISTANCE);
+        sLog.outError("TargetPosRecalculateRange (%f) must be >= %f. Using %f instead.",rate_values[RATE_TARGET_POS_RECALCULATION_RANGE],CONTACT_DISTANCE, CONTACT_DISTANCE);
         rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] = CONTACT_DISTANCE;
     }
     else if (rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] > NOMINAL_MELEE_RANGE)
     {
         sLog.outError("TargetPosRecalculateRange (%f) must be <= %f. Using %f instead.",
-            rate_values[RATE_TARGET_POS_RECALCULATION_RANGE],NOMINAL_MELEE_RANGE,NOMINAL_MELEE_RANGE);
+            rate_values[RATE_TARGET_POS_RECALCULATION_RANGE],NOMINAL_MELEE_RANGE, NOMINAL_MELEE_RANGE);
         rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] = NOMINAL_MELEE_RANGE;
     }
 
@@ -620,9 +620,9 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_ALLOW_TWO_SIDE_WHO_LIST]            = sConfig.GetBoolDefault("AllowTwoSide.WhoList", false);
     m_configs[CONFIG_ALLOW_TWO_SIDE_ADD_FRIEND]          = sConfig.GetBoolDefault("AllowTwoSide.AddFriend", false);
     m_configs[CONFIG_ALLOW_TWO_SIDE_TRADE]               = sConfig.GetBoolDefault("AllowTwoSide.trade", false);
-    m_configs[CONFIG_STRICT_PLAYER_NAMES]                = sConfig.GetIntDefault ("StrictPlayerNames",  0);
+    m_configs[CONFIG_STRICT_PLAYER_NAMES]                = sConfig.GetIntDefault ("StrictPlayerNames", 0);
     m_configs[CONFIG_STRICT_CHARTER_NAMES]               = sConfig.GetIntDefault ("StrictCharterNames", 0);
-    m_configs[CONFIG_STRICT_PET_NAMES]                   = sConfig.GetIntDefault ("StrictPetNames",     0);
+    m_configs[CONFIG_STRICT_PET_NAMES]                   = sConfig.GetIntDefault ("StrictPetNames",    0);
 
     m_configs[CONFIG_CHARACTERS_CREATING_DISABLED]       = sConfig.GetIntDefault ("CharactersCreatingDisabled", 0);
 
@@ -659,7 +659,7 @@ void World::LoadConfigSettings(bool reload)
 
     if (m_configs[CONFIG_MAX_PLAYER_LEVEL] > MAX_LEVEL)
     {
-        sLog.outError("MaxPlayerLevel (%i) must be in range 1..%u. Set to %u.",m_configs[CONFIG_MAX_PLAYER_LEVEL],MAX_LEVEL,MAX_LEVEL);
+        sLog.outError("MaxPlayerLevel (%i) must be in range 1..%u. Set to %u.",m_configs[CONFIG_MAX_PLAYER_LEVEL],MAX_LEVEL, MAX_LEVEL);
         m_configs[CONFIG_MAX_PLAYER_LEVEL] = MAX_LEVEL;
     }
 
@@ -678,13 +678,13 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_START_PLAYER_MONEY] = sConfig.GetIntDefault("StartPlayerMoney", 0);
     if (int32(m_configs[CONFIG_START_PLAYER_MONEY]) < 0)
     {
-        sLog.outError("StartPlayerMoney (%i) must be in range 0..%u. Set to %u.",m_configs[CONFIG_START_PLAYER_MONEY],MAX_MONEY_AMOUNT,0);
+        sLog.outError("StartPlayerMoney (%i) must be in range 0..%u. Set to %u.",m_configs[CONFIG_START_PLAYER_MONEY],MAX_MONEY_AMOUNT, 0);
         m_configs[CONFIG_START_PLAYER_MONEY] = 0;
     }
     else if (m_configs[CONFIG_START_PLAYER_MONEY] > MAX_MONEY_AMOUNT)
     {
         sLog.outError("StartPlayerMoney (%i) must be in range 0..%u. Set to %u.",
-            m_configs[CONFIG_START_PLAYER_MONEY],MAX_MONEY_AMOUNT,MAX_MONEY_AMOUNT);
+            m_configs[CONFIG_START_PLAYER_MONEY],MAX_MONEY_AMOUNT, MAX_MONEY_AMOUNT);
         m_configs[CONFIG_START_PLAYER_MONEY] = MAX_MONEY_AMOUNT;
     }
 
@@ -1011,8 +1011,8 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_CHARDELETE_KEEP_DAYS] = sConfig.GetIntDefault("CharDelete.KeepDays", 30);
 
     m_visibility_notify_periodOnContinents = sConfig.GetIntDefault("Visibility.Notify.Period.OnContinents", DEFAULT_VISIBILITY_NOTIFY_PERIOD);
-    m_visibility_notify_periodInInstances = sConfig.GetIntDefault("Visibility.Notify.Period.InInstances",   DEFAULT_VISIBILITY_NOTIFY_PERIOD);
-    m_visibility_notify_periodInBGArenas = sConfig.GetIntDefault("Visibility.Notify.Period.InBGArenas",    DEFAULT_VISIBILITY_NOTIFY_PERIOD);
+    m_visibility_notify_periodInInstances = sConfig.GetIntDefault("Visibility.Notify.Period.InInstances",  DEFAULT_VISIBILITY_NOTIFY_PERIOD);
+    m_visibility_notify_periodInBGArenas = sConfig.GetIntDefault("Visibility.Notify.Period.InBGArenas",   DEFAULT_VISIBILITY_NOTIFY_PERIOD);
 
     // Read the "Data" directory from the config file
     std::string dataPath = sConfig.GetStringDefault("DataDir","./");
@@ -1085,7 +1085,7 @@ void World::LoadConfigSettings(bool reload)
     {
         int32 mapid = strtol(token, NULL, 10);
         m_forbiddenMapIds.insert(mapid);
-        token = strtok(NULL,delim);
+        token = strtok(NULL, delim);
     }
     delete[] forbiddenMaps;
 
@@ -1121,7 +1121,7 @@ void World::SetInitialWorldSettings()
         ||!MapManager::ExistMapAndVMap(1, 10311.3f, 832.463f)
         ||!MapManager::ExistMapAndVMap(1,-2917.58f,-257.98f)
         ||m_configs[CONFIG_EXPANSION] && (
-        !MapManager::ExistMapAndVMap(530,10349.6f,-6357.29f) || !MapManager::ExistMapAndVMap(530,-3961.64f,-13931.2f)))
+        !MapManager::ExistMapAndVMap(530, 10349.6f,-6357.29f) || !MapManager::ExistMapAndVMap(530,-3961.64f,-13931.2f)))
     {
         sLog.outError("Correct *.map files not found in path '%smaps' or *.vmtree/*.vmtile files in '%svmaps'. Please place *.map/*.vmtree/*.vmtile files in appropriate directories or correct the DataDir value in the trinitycore.conf file.",m_dataPath.c_str(),m_dataPath.c_str());
         exit(1);
@@ -1864,13 +1864,13 @@ void World::SendWorldText(int32 string_id, ...)
 
             data_list = &data_cache[cache_idx];
 
-            char const* text = objmgr.GetTrinityString(string_id,loc_idx);
+            char const* text = objmgr.GetTrinityString(string_id, loc_idx);
 
             char buf[1000];
 
             va_list argptr;
             va_start(argptr, string_id);
-            vsnprintf(buf,1000, text, argptr);
+            vsnprintf(buf, 1000, text, argptr);
             va_end(argptr);
 
             char* pos = &buf[0];
@@ -1917,13 +1917,13 @@ void World::SendGMText(int32 string_id, ...)
 
             data_list = &data_cache[cache_idx];
 
-            char const* text = objmgr.GetTrinityString(string_id,loc_idx);
+            char const* text = objmgr.GetTrinityString(string_id, loc_idx);
 
             char buf[1000];
 
             va_list argptr;
             va_start(argptr, string_id);
-            vsnprintf(buf,1000, text, argptr);
+            vsnprintf(buf, 1000, text, argptr);
             va_end(argptr);
 
             char* pos = &buf[0];
@@ -1990,7 +1990,7 @@ void World::SendZoneText(uint32 zone, const char* text, WorldSession *self, uint
 {
     WorldPacket data;
     ChatHandler::FillMessageData(&data, NULL, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, NULL, 0, text, NULL);
-    SendZoneMessage(zone, &data, self,team);
+    SendZoneMessage(zone, &data, self, team);
 }
 
 // Kick (and save) all players
@@ -2054,7 +2054,7 @@ BanReturn World::BanAccount(BanMode mode, std::string nameOrIP, std::string dura
         case BAN_IP:
             //No SQL injection as strings are escaped
             resultAccounts = LoginDatabase.PQuery("SELECT id FROM account WHERE last_ip = '%s'",nameOrIP.c_str());
-            LoginDatabase.PExecute("INSERT INTO ip_banned VALUES ('%s',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+%u,'%s','%s')",nameOrIP.c_str(),duration_secs,safe_author.c_str(),reason.c_str());
+            LoginDatabase.PExecute("INSERT INTO ip_banned VALUES ('%s',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+%u,'%s','%s')",nameOrIP.c_str(),duration_secs, safe_author.c_str(),reason.c_str());
             break;
         case BAN_ACCOUNT:
             //No SQL injection as string is escaped
@@ -2086,7 +2086,7 @@ BanReturn World::BanAccount(BanMode mode, std::string nameOrIP, std::string dura
         {
             //No SQL injection as strings are escaped
             LoginDatabase.PExecute("INSERT INTO account_banned VALUES ('%u', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()+%u, '%s', '%s', '1')",
-                account,duration_secs,safe_author.c_str(),reason.c_str());
+                account, duration_secs, safe_author.c_str(),reason.c_str());
         }
 
         if (WorldSession* sess = FindSession(account))
@@ -2203,7 +2203,7 @@ void World::ShutdownMsg(bool show, Player* player)
 
         ServerMessageType msgid = (m_ShutdownMask & SHUTDOWN_MASK_RESTART) ? SERVER_MSG_RESTART_TIME : SERVER_MSG_SHUTDOWN_TIME;
 
-        SendServerMessage(msgid,str.c_str(),player);
+        SendServerMessage(msgid, str.c_str(),player);
         DEBUG_LOG("Server is %s in %s",(m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shutting down"),str.c_str());
     }
 }
@@ -2414,8 +2414,8 @@ void World::SetPlayerLimit(int32 limit, bool needUpdate)
 
 void World::UpdateMaxSessionCounters()
 {
-    m_maxActiveSessionCount = std::max(m_maxActiveSessionCount,uint32(m_sessions.size()-m_QueuedPlayer.size()));
-    m_maxQueuedSessionCount = std::max(m_maxQueuedSessionCount,uint32(m_QueuedPlayer.size()));
+    m_maxActiveSessionCount = std::max(m_maxActiveSessionCount, uint32(m_sessions.size()-m_QueuedPlayer.size()));
+    m_maxQueuedSessionCount = std::max(m_maxQueuedSessionCount, uint32(m_QueuedPlayer.size()));
 }
 
 void World::LoadDBVersion()

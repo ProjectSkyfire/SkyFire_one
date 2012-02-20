@@ -76,10 +76,10 @@ struct mob_aquementasAI : public ScriptedAI
 
     void SendItem(Unit* receiver)
     {
-        if (CAST_PLR(receiver)->HasItemCount(11169,1,false) &&
-            CAST_PLR(receiver)->HasItemCount(11172,11,false) &&
-            CAST_PLR(receiver)->HasItemCount(11173,1,false) &&
-            !CAST_PLR(receiver)->HasItemCount(11522,1,true))
+        if (CAST_PLR(receiver)->HasItemCount(11169, 1, false) &&
+            CAST_PLR(receiver)->HasItemCount(11172, 11, false) &&
+            CAST_PLR(receiver)->HasItemCount(11173, 1, false) &&
+            !CAST_PLR(receiver)->HasItemCount(11522, 1, true))
         {
             ItemPosCountVec dest;
             uint8 msg = CAST_PLR(receiver)->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 11522, 1, false);
@@ -204,7 +204,7 @@ struct npc_custodian_of_timeAI : public npc_escortAI
 
         if (who->GetTypeId() == TYPEID_PLAYER)
         {
-            if (who->HasAura(34877,1) && CAST_PLR(who)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE)
+            if (who->HasAura(34877, 1) && CAST_PLR(who)->GetQuestStatus(10277) == QUEST_STATUS_INCOMPLETE)
             {
                 float Radius = 10.0f;
                 if (me->IsWithinDistInMap(who, Radius))
@@ -279,7 +279,7 @@ bool GossipHello_npc_steward_of_time(Player* pPlayer, Creature* pCreature)
 bool QuestAccept_npc_steward_of_time(Player* pPlayer, Creature* /*pCreature*/, Quest const *quest)
 {
     if (quest->GetQuestId() == 10279)                      //Quest: To The Master's Lair
-        pPlayer->CastSpell(pPlayer,34891,true);               //(Flight through Caverns)
+        pPlayer->CastSpell(pPlayer, 34891, true);               //(Flight through Caverns)
 
     return false;
 }
@@ -287,7 +287,7 @@ bool QuestAccept_npc_steward_of_time(Player* pPlayer, Creature* /*pCreature*/, Q
 bool GossipSelect_npc_steward_of_time(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-        pPlayer->CastSpell(pPlayer,34891,true);               //(Flight through Caverns)
+        pPlayer->CastSpell(pPlayer, 34891, true);               //(Flight through Caverns)
 
     return true;
 }
@@ -409,7 +409,7 @@ struct npc_OOX17AI : public npc_escortAI
 
     void EnterCombat(Unit* /*who*/)
     {
-        DoScriptText(RAND(SAY_OOX_AGGRO1,SAY_OOX_AGGRO2), me);
+        DoScriptText(RAND(SAY_OOX_AGGRO1, SAY_OOX_AGGRO2), me);
     }
 
     void JustSummoned(Creature* summoned)
@@ -424,7 +424,7 @@ bool QuestAccept_npc_OOX17(Player* pPlayer, Creature* pCreature, Quest const* qu
     {
         pCreature->setFaction(113);
         pCreature->SetHealth(pCreature->GetMaxHealth());
-        pCreature->SetUInt32Value(UNIT_FIELD_BYTES_1,0);
+        pCreature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
         pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
         DoScriptText(SAY_OOX_START, pCreature);
 
@@ -615,8 +615,8 @@ struct npc_toogaAI : public FollowerAI
                 {
                     m_uiCheckSpeechTimer = 5000;
 
-                    if (urand(0,9) > 8)
-                        DoScriptText(RAND(SAY_TOOG_THIRST,SAY_TOOG_WORRIED), me);
+                    if (urand(0, 9) > 8)
+                        DoScriptText(RAND(SAY_TOOG_THIRST, SAY_TOOG_WORRIED), me);
                 }
                 else
                     m_uiCheckSpeechTimer -= uiDiff;

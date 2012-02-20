@@ -195,7 +195,7 @@ void Database::escape_string(std::string& str)
         return;
 
     char* buf = new char[str.size()*2+1];
-    escape_string(buf,str.c_str(),str.size());
+    escape_string(buf, str.c_str(),str.size());
     str = buf;
     delete[] buf;
 }
@@ -277,7 +277,7 @@ bool Database::_Query(const char *sql, MYSQL_RES **pResult, MYSQL_FIELD **pField
         else
         {
             #ifdef TRINITY_DEBUG
-            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s,getMSTime()), sql );
+            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql );
             #endif
         }
 
@@ -439,7 +439,7 @@ bool Database::DirectExecute(const char* sql)
         else
         {
             #ifdef TRINITY_DEBUG
-            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s,getMSTime()), sql);
+            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
             #endif
         }
     }

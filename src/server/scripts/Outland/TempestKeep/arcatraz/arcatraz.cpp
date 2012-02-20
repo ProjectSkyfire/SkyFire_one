@@ -156,17 +156,17 @@ struct npc_millhouse_manastormAI : public ScriptedAI
                             break;
                         case 3:
                             DoScriptText(SAY_WATER, me);
-                            DoCast(me,SPELL_CONJURE_WATER);
+                            DoCast(me, SPELL_CONJURE_WATER);
                             EventProgress_Timer = 7000;
                             break;
                         case 4:
                             DoScriptText(SAY_BUFFS, me);
-                            DoCast(me,SPELL_ICE_ARMOR);
+                            DoCast(me, SPELL_ICE_ARMOR);
                             EventProgress_Timer = 7000;
                             break;
                         case 5:
                              DoScriptText(SAY_DRINK, me);
-                            DoCast(me,SPELL_ARCANE_INTELLECT);
+                            DoCast(me, SPELL_ARCANE_INTELLECT);
                             EventProgress_Timer = 7000;
                             break;
                         case 6:
@@ -175,7 +175,7 @@ struct npc_millhouse_manastormAI : public ScriptedAI
                             break;
                         case 7:
                             if (pInstance)
-                                pInstance->SetData(TYPE_WARDEN_2,DONE);
+                                pInstance->SetData(TYPE_WARDEN_2, DONE);
                             Init = true;
                             break;
                     }
@@ -277,11 +277,11 @@ struct npc_warden_mellicharAI : public ScriptedAI
         EventProgress_Timer = 22000;
         Phase = 1;
 
-        me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
-        DoCast(me,SPELL_TARGET_OMEGA);
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        DoCast(me, SPELL_TARGET_OMEGA);
 
         if (pInstance)
-            pInstance->SetData(TYPE_HARBINGERSKYRISS,NOT_STARTED);
+            pInstance->SetData(TYPE_HARBINGERSKYRISS, NOT_STARTED);
     }
 
     void AttackStart(Unit* who) { }
@@ -307,12 +307,12 @@ struct npc_warden_mellicharAI : public ScriptedAI
     void EnterCombat(Unit *who)
     {
         DoScriptText(YELL_INTRO1, me);
-        DoCast(me,SPELL_BUBBLE_VISUAL);
+        DoCast(me, SPELL_BUBBLE_VISUAL);
 
         if (pInstance)
         {
-            pInstance->SetData(TYPE_HARBINGERSKYRISS,IN_PROGRESS);
-            if (GameObject* Sphere = GameObject::GetGameObject(*me,pInstance->GetData64(DATA_SPHERE_SHIELD)))
+            pInstance->SetData(TYPE_HARBINGERSKYRISS, IN_PROGRESS);
+            if (GameObject* Sphere = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_SPHERE_SHIELD)))
                 Sphere->SetGoState(GO_STATE_READY);
             IsRunning = true;
         }
@@ -351,25 +351,25 @@ struct npc_warden_mellicharAI : public ScriptedAI
             switch(Phase)
             {
                 case 2:
-                    DoCast(me,SPELL_TARGET_ALPHA);
-                    pInstance->SetData(TYPE_WARDEN_1,IN_PROGRESS);
-                    if (GameObject *Sphere = GameObject::GetGameObject(*me,pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                    DoCast(me, SPELL_TARGET_ALPHA);
+                    pInstance->SetData(TYPE_WARDEN_1, IN_PROGRESS);
+                    if (GameObject *Sphere = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_SPHERE_SHIELD)))
                         Sphere->SetGoState(GO_STATE_READY);
                     break;
                 case 3:
-                    DoCast(me,SPELL_TARGET_BETA);
-                    pInstance->SetData(TYPE_WARDEN_2,IN_PROGRESS);
+                    DoCast(me, SPELL_TARGET_BETA);
+                    pInstance->SetData(TYPE_WARDEN_2, IN_PROGRESS);
                     break;
                 case 5:
-                    DoCast(me,SPELL_TARGET_DELTA);
-                    pInstance->SetData(TYPE_WARDEN_3,IN_PROGRESS);
+                    DoCast(me, SPELL_TARGET_DELTA);
+                    pInstance->SetData(TYPE_WARDEN_3, IN_PROGRESS);
                     break;
                 case 6:
-                    DoCast(me,SPELL_TARGET_GAMMA);
-                    pInstance->SetData(TYPE_WARDEN_4,IN_PROGRESS);
+                    DoCast(me, SPELL_TARGET_GAMMA);
+                    pInstance->SetData(TYPE_WARDEN_4, IN_PROGRESS);
                     break;
                 case 7:
-                    pInstance->SetData(TYPE_WARDEN_5,IN_PROGRESS);
+                    pInstance->SetData(TYPE_WARDEN_5, IN_PROGRESS);
                     break;
             }
             CanSpawn = true;
@@ -393,19 +393,19 @@ struct npc_warden_mellicharAI : public ScriptedAI
             {
                 //continue beam omega pod, unless we are about to summon skyriss
                 if (Phase != 7)
-                    DoCast(me,SPELL_TARGET_OMEGA);
+                    DoCast(me, SPELL_TARGET_OMEGA);
 
                 switch(Phase)
                 {
                     case 2:
                         switch(rand()%2)
                         {
-                            case 0: me->SummonCreature(ENTRY_TRICKSTER,478.326f,-148.505f,42.56f,3.19f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
-                            case 1: me->SummonCreature(ENTRY_PH_HUNTER,478.326f,-148.505f,42.56f,3.19f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 0: me->SummonCreature(ENTRY_TRICKSTER, 478.326f,-148.505f, 42.56f, 3.19f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000); break;
+                            case 1: me->SummonCreature(ENTRY_PH_HUNTER, 478.326f,-148.505f, 42.56f, 3.19f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000); break;
                         }
                         break;
                     case 3:
-                        me->SummonCreature(ENTRY_MILLHOUSE,413.292f,-148.378f,42.56f,6.27f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        me->SummonCreature(ENTRY_MILLHOUSE, 413.292f,-148.378f, 42.56f, 6.27f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         break;
                     case 4:
                        DoScriptText(YELL_RELEASE2B, me);
@@ -413,19 +413,19 @@ struct npc_warden_mellicharAI : public ScriptedAI
                     case 5:
                         switch(rand()%2)
                         {
-                            case 0: me->SummonCreature(ENTRY_AKKIRIS,420.179f,-174.396f,42.58f,0.02f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
-                            case 1: me->SummonCreature(ENTRY_SULFURON,420.179f,-174.396f,42.58f,0.02f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 0: me->SummonCreature(ENTRY_AKKIRIS, 420.179f,-174.396f, 42.58f, 0.02f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000); break;
+                            case 1: me->SummonCreature(ENTRY_SULFURON, 420.179f,-174.396f, 42.58f, 0.02f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000); break;
                         }
                         break;
                     case 6:
                         switch(rand()%2)
                         {
-                            case 0: me->SummonCreature(ENTRY_TW_DRAK,471.795f,-174.58f,42.58f,3.06f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
-                            case 1: me->SummonCreature(ENTRY_BL_DRAK,471.795f,-174.58f,42.58f,3.06f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000); break;
+                            case 0: me->SummonCreature(ENTRY_TW_DRAK, 471.795f,-174.58f, 42.58f, 3.06f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000); break;
+                            case 1: me->SummonCreature(ENTRY_BL_DRAK, 471.795f,-174.58f, 42.58f, 3.06f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000); break;
                         }
                         break;
                     case 7:
-                        me->SummonCreature(ENTRY_SKYRISS,445.763f,-191.639f,44.64f,1.60f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,600000);
+                        me->SummonCreature(ENTRY_SKYRISS, 445.763f,-191.639f, 44.64f, 1.60f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoScriptText(YELL_WELCOME, me);
                         break;
                 }
@@ -491,11 +491,11 @@ struct mob_zerekethvoidzoneAI : public ScriptedAI
 
     void Reset()
     {
-        me->SetUInt32Value(UNIT_NPC_FLAGS,0);
+        me->SetUInt32Value(UNIT_NPC_FLAGS, 0);
         me->setFaction(16);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        DoCast(me,SPELL_VOID_ZONE_DAMAGE);
+        DoCast(me, SPELL_VOID_ZONE_DAMAGE);
     }
 
     void EnterCombat(Unit* who) {}

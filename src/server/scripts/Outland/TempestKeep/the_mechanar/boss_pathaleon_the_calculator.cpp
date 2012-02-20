@@ -118,7 +118,7 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
             for (int i = 0; i < 3;i++)
             {
                 Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                Creature* Wraith = me->SummonCreature(21062,me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                Creature* Wraith = me->SummonCreature(21062, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                 if (pTarget && Wraith)
                     Wraith->AI()->AttackStart(pTarget);
             }
@@ -140,7 +140,7 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
 
         if (Domination_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
             {
                 switch(rand()%2)
                 {
@@ -148,7 +148,7 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
                 case 1: DoScriptText(SAY_DOMINATION_2, me); break;
                 }
 
-                DoCast(pTarget,SPELL_DOMINATION);
+                DoCast(pTarget, SPELL_DOMINATION);
             }
                 Domination_Timer = 25000 + rand()%5000;
             } else Domination_Timer -= diff;
@@ -208,8 +208,8 @@ struct mob_nether_wraithAI : public ScriptedAI
 
         if (ArcaneMissiles_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(pTarget,SPELL_ARCANE_MISSILES);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                DoCast(pTarget, SPELL_ARCANE_MISSILES);
             else
                 DoCast(me->getVictim(),SPELL_ARCANE_MISSILES);
 
@@ -220,7 +220,7 @@ struct mob_nether_wraithAI : public ScriptedAI
         {
             if (Detonation_Timer <= diff)
             {
-                DoCast(me,SPELL_DETONATION);
+                DoCast(me, SPELL_DETONATION);
                 Detonation = true;
             } else Detonation_Timer -= diff;
         }

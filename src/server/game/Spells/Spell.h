@@ -114,7 +114,7 @@ class SpellCastTargets
         void read(ByteBuffer& data, Unit *caster);
         void write(ByteBuffer& data) const;
 
-        SpellCastTargetsReader ReadForCaster(Unit* caster) { return SpellCastTargetsReader(*this,caster); }
+        SpellCastTargetsReader ReadForCaster(Unit* caster) { return SpellCastTargetsReader(*this, caster); }
 
         SpellCastTargets& operator=(const SpellCastTargets &target)
         {
@@ -199,7 +199,7 @@ inline ByteBuffer& operator<< (ByteBuffer& buf, SpellCastTargets const& targets)
 
 inline ByteBuffer& operator>> (ByteBuffer& buf, SpellCastTargetsReader const& targets)
 {
-    targets.targets.read(buf,targets.caster);
+    targets.targets.read(buf, targets.caster);
     return buf;
 }
 
@@ -373,7 +373,7 @@ class Spell
         uint8 CheckPower();
         uint8 CheckCasterAuras() const;
 
-        int32 CalculateDamage(uint8 i, Unit* target) { return m_caster->CalculateSpellDamage(m_spellInfo,i,m_currentBasePoints[i],target); }
+        int32 CalculateDamage(uint8 i, Unit* target) { return m_caster->CalculateSpellDamage(m_spellInfo, i, m_currentBasePoints[i],target); }
 
         bool HaveTargetsForEffect(uint8 effect) const;
         void Delayed();
@@ -407,7 +407,7 @@ class Spell
         void SendResurrectRequest(Player* target);
         void SendPlaySpellVisual(uint32 SpellID);
 
-        void HandleEffects(Unit *pUnitTarget,Item *pItemTarget,GameObject *pGOTarget,uint32 i, float DamageMultiplier = 1.0);
+        void HandleEffects(Unit *pUnitTarget, Item *pItemTarget, GameObject *pGOTarget, uint32 i, float DamageMultiplier = 1.0);
         void HandleThreatSpells(uint32 spellId);
         //void HandleAddAura(Unit* Target);
 

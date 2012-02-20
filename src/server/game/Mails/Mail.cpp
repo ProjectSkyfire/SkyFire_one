@@ -474,11 +474,11 @@ void WorldSession::HandleTakeItem(WorldPacket & recv_data)
                     // can be calculated early
                     sender_accId = objmgr.GetPlayerAccountIdByGUID(sender_guid);
 
-                    if (!objmgr.GetPlayerNameByGUID(sender_guid,sender_name))
+                    if (!objmgr.GetPlayerNameByGUID(sender_guid, sender_name))
                         sender_name = objmgr.GetTrinityStringForDBCLocale(LANG_UNKNOWN);
                 }
                 sLog.outCommand(GetAccountId(),"GM %s (Account: %u) receive mail item: %s (Entry: %u Count: %u) and send COD money: %u to player: %s (Account: %u)",
-                    GetPlayerName(),GetAccountId(),it->GetProto()->Name1,it->GetEntry(),it->GetCount(),m->COD,sender_name.c_str(),sender_accId);
+                    GetPlayerName(),GetAccountId(),it->GetProto()->Name1, it->GetEntry(),it->GetCount(),m->COD, sender_name.c_str(),sender_accId);
             }
             else if (!receive)
                 sender_accId = objmgr.GetPlayerAccountIdByGUID(sender_guid);
@@ -862,7 +862,7 @@ MailReceiver::MailReceiver(Player* receiver) : m_receiver(receiver), m_receiver_
  * @param receiver The player receiving the mail.
  * @param receiver_lowguid The GUID to use instead of the receivers.
  */
-MailReceiver::MailReceiver(Player* receiver,uint32 receiver_lowguid) : m_receiver(receiver), m_receiver_lowguid(receiver_lowguid)
+MailReceiver::MailReceiver(Player* receiver, uint32 receiver_lowguid) : m_receiver(receiver), m_receiver_lowguid(receiver_lowguid)
 {
     ASSERT(!receiver || receiver->GetGUIDLow() == receiver_lowguid);
 }
@@ -896,9 +896,9 @@ void MailDraft::prepareItems(Player* receiver)
     uint32 max_slot = mailLoot.GetMaxSlotInLootFor(receiver);
     for (uint32 i = 0; m_items.size() < MAX_MAIL_ITEMS && i < max_slot; ++i)
     {
-        if (LootItem* lootitem = mailLoot.LootItemInSlot(i,receiver))
+        if (LootItem* lootitem = mailLoot.LootItemInSlot(i, receiver))
         {
-            if (Item* item = Item::CreateItem(lootitem->itemid,lootitem->count,receiver))
+            if (Item* item = Item::CreateItem(lootitem->itemid, lootitem->count, receiver))
             {
                 item->SaveToDB();                           // save for prevent lost at next mail load, if send fail then item will deleted
                 AddItem(item);
@@ -971,7 +971,7 @@ void MailDraft::SendReturnToSender(uint32 sender_acc, uint32 sender_guid, uint32
     uint32 deliver_delay = needItemDelay ? sWorld.getConfig(CONFIG_MAIL_DELIVERY_DELAY) : 0;
 
     // will delete item or place to receiver mail list
-    SendMailTo(MailReceiver(receiver,receiver_guid), MailSender(MAIL_NORMAL, sender_guid), MAIL_CHECK_MASK_RETURNED, deliver_delay);
+    SendMailTo(MailReceiver(receiver, receiver_guid), MailSender(MAIL_NORMAL, sender_guid), MAIL_CHECK_MASK_RETURNED, deliver_delay);
 }
 
 /**
@@ -1015,14 +1015,14 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
 
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.escape_string(safe_subject);
-    CharacterDatabase.PExecute("INSERT INTO mail (id,messageType,stationery,mailTemplateId,sender,receiver,subject,itemTextId,has_items,expire_time,deliver_time,money,cod,checked) "
+    CharacterDatabase.PExecute("INSERT INTO mail (id, messageType, stationery, mailTemplateId, sender, receiver, subject, itemTextId, has_items, expire_time, deliver_time, money, cod, checked) "
         "VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '%s', '%u', '%u', '" UI64FMTD "','" UI64FMTD "', '%u', '%u', '%d')",
         mailId, sender.GetMailMessageType(), sender.GetStationery(), GetMailTemplateId(), sender.GetSenderId(), receiver.GetPlayerGUIDLow(), safe_subject.c_str(), GetBodyId(), (m_items.empty() ? 0 : 1), (uint64)expire_time, (uint64)deliver_time, m_money, m_COD, checked);
 
     for (MailItemMap::const_iterator mailItemIter = m_items.begin(); mailItemIter != m_items.end(); ++mailItemIter)
     {
         Item* item = mailItemIter->second;
-        CharacterDatabase.PExecute("INSERT INTO mail_items (mail_id,item_guid,item_template,receiver) VALUES ('%u', '%u', '%u','%u')", mailId, item->GetGUIDLow(), item->GetEntry(), receiver.GetPlayerGUIDLow());
+        CharacterDatabase.PExecute("INSERT INTO mail_items (mail_id, item_guid, item_template, receiver) VALUES ('%u', '%u', '%u','%u')", mailId, item->GetGUIDLow(), item->GetEntry(), receiver.GetPlayerGUIDLow());
     }
     CharacterDatabase.CommitTransaction();
 
@@ -1074,7 +1074,7 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
 void WorldSession::SendExternalMails()
 {
     sLog.outDebug("External Mail - Send Mails from Queue...");
-    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT id,receiver,subject,message,money,item,item_count FROM mail_external");
+    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT id, receiver, subject, message, money, item, item_count FROM mail_external");
         if (!result)
         {
             sLog.outDebug("External Mail - No Mails in Queue...");

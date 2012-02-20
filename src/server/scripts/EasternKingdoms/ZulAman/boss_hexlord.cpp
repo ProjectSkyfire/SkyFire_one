@@ -271,7 +271,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
@@ -374,7 +374,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
             //me->AddAura(44132, me);
             me->MonsterYell(YELL_DRAIN_POWER, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(me, SOUND_YELL_DRAIN_POWER);
-            DrainPower_Timer = urand(40000,55000);    // must cast in 60 sec, or buff/debuff will disappear
+            DrainPower_Timer = urand(40000, 55000);    // must cast in 60 sec, or buff/debuff will disappear
         } else DrainPower_Timer -= diff;
 
         if (SpiritBolts_Timer <= diff)
@@ -413,7 +413,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
                 //me->SetUInt32Value(UNIT_CHANNEL_SPELL, SPELL_SIPHON_SOUL);
 
                 PlayerGUID = pTarget->GetGUID();
-                PlayerAbility_Timer = urand(8000,10000);
+                PlayerAbility_Timer = urand(8000, 10000);
                 PlayerClass = pTarget->getClass() - 1;
 
                 if (PlayerClass == 10)
@@ -431,7 +431,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
             //if (pTarget && pTarget->isAlive())
             //{
                 UseAbility();
-                PlayerAbility_Timer = urand(8000,10000);
+                PlayerAbility_Timer = urand(8000, 10000);
             //}
         } else PlayerAbility_Timer -= diff;
 
@@ -440,7 +440,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
     void UseAbility()
     {
-        uint32 random = urand(0,2);
+        uint32 random = urand(0, 2);
         Unit *pTarget = NULL;
         switch(PlayerAbility[PlayerClass][random].target)
         {
@@ -571,7 +571,7 @@ struct boss_alyson_antilleAI : public boss_hexlord_addAI
             }
             else
             {
-                if (urand(0,1))
+                if (urand(0, 1))
                     pTarget = DoSelectLowestHpFriendly(50, 0);
                 else
                     pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -583,7 +583,7 @@ struct boss_alyson_antilleAI : public boss_hexlord_addAI
 
         /*if (dispelmagic_timer <= diff)
         {
-        if (urand(0,1))
+        if (urand(0, 1))
         {
             Unit *pTarget = SelectTarget();
 

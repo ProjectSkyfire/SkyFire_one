@@ -174,7 +174,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     recordsize=(store.iNumFields-sc-bo-bb)*4+sc*sizeof(char*)+bo*sizeof(bool)+bb*sizeof(char);
 
     char** newIndex=new char*[maxi];
-    memset(newIndex,0,maxi*sizeof(char*));
+    memset(newIndex, 0, maxi*sizeof(char*));
 
     char * _data= new char[store.RecordCount *recordsize];
     uint32 count=0;

@@ -118,7 +118,7 @@ namespace Trinity
 
 template<class T, class MUTEX> MUTEX Trinity::ClassLevelLockable<T, MUTEX>::si_mtx;
 
-#define INSTANTIATE_CLASS_MUTEX(CTYPE,MUTEX) \
+#define INSTANTIATE_CLASS_MUTEX(CTYPE, MUTEX) \
     template class Trinity::ClassLevelLockable<CTYPE, MUTEX >
 #endif
 

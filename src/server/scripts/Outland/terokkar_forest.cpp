@@ -119,7 +119,7 @@ struct mob_unkor_the_ruthlessAI : public ScriptedAI
         {
             if (!UnkorUnfriendly_Timer)
             {
-                //DoCast(me,SPELL_QUID9889);        //not using spell for now
+                //DoCast(me, SPELL_QUID9889);        //not using spell for now
                 DoNice();
             }
             else
@@ -137,7 +137,7 @@ struct mob_unkor_the_ruthlessAI : public ScriptedAI
 
         if (Pulverize_Timer <= diff)
         {
-            DoCast(me,SPELL_PULVERIZE);
+            DoCast(me, SPELL_PULVERIZE);
             Pulverize_Timer = 9000;
         } else Pulverize_Timer -= diff;
 
@@ -167,7 +167,7 @@ struct mob_infested_root_walkerAI : public ScriptedAI
             if (me->GetHealth() <= damage)
                 if (rand()%100 < 75)
                     //Summon Wood Mites
-                    me->CastSpell(me,39130,true);
+                    me->CastSpell(me, 39130, true);
     }
 };
 CreatureAI* GetAI_mob_infested_root_walker(Creature* pCreature)
@@ -192,7 +192,7 @@ struct mob_rotting_forest_ragerAI : public ScriptedAI
             if (me->GetHealth() <= damage)
                 if (rand()%100 < 75)
                     //Summon Lots of Wood Mights
-                    me->CastSpell(me,39134,true);
+                    me->CastSpell(me, 39134, true);
     }
 };
 CreatureAI* GetAI_mob_rotting_forest_rager(Creature* pCreature)
@@ -227,14 +227,14 @@ struct mob_netherweb_victimAI : public ScriptedAI
             {
                 if (rand()%100 < 25)
                 {
-                    DoSpawnCreature(QUEST_TARGET,0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
+                    DoSpawnCreature(QUEST_TARGET, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
                     CAST_PLR(Killer)->KilledMonsterCredit(QUEST_TARGET, me->GetGUID());
                 } else
-                DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
+                DoSpawnCreature(netherwebVictims[rand()%6],0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
 
                 if (rand()%100 < 75)
-                    DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
-                DoSpawnCreature(netherwebVictims[rand()%6],0,0,0,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,60000);
+                    DoSpawnCreature(netherwebVictims[rand()%6],0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                DoSpawnCreature(netherwebVictims[rand()%6],0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
             }
         }
     }
@@ -294,7 +294,7 @@ struct npc_floonAI : public ScriptedAI
 
         if (FrostNova_Timer <= diff)
         {
-            DoCast(me,SPELL_FROST_NOVA);
+            DoCast(me, SPELL_FROST_NOVA);
             FrostNova_Timer = 20000;
         } else FrostNova_Timer -= diff;
 
@@ -452,16 +452,16 @@ void SendActionMenu_go_skull_pile(Player *player, GameObject* _GO, uint32 action
     switch(action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
-              player->CastSpell(player,40642,false);
+              player->CastSpell(player, 40642, false);
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
-              player->CastSpell(player,40640,false);
+              player->CastSpell(player, 40640, false);
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
-              player->CastSpell(player,40632,false);
+              player->CastSpell(player, 40632, false);
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:
-              player->CastSpell(player,40644,false);
+              player->CastSpell(player, 40644, false);
             break;
     }
 }
@@ -499,7 +499,7 @@ struct npc_skywingAI : public npc_escortAI
         switch(i)
         {
         case 7:
-            me->SummonCreature(NPC_LUANGA_IMPRISONER, -3399.274658,4055.948975,18.603474, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+            me->SummonCreature(NPC_LUANGA_IMPRISONER, -3399.274658, 4055.948975, 18.603474, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
             break;
         case 8:
             pPlayer->AreaExploredOrEventHappens(10898);
@@ -605,11 +605,11 @@ struct npc_akunoAI : public npc_escortAI
         switch(uiPointId)
         {
             case 5:
-                DoScriptText(SAY_AKU_AMBUSH_A,me);
+                DoScriptText(SAY_AKU_AMBUSH_A, me);
                me->SummonCreature(NPC_CABAL_SKIRMISHER, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                 break;
             case 14:
-                DoScriptText(SAY_AKU_AMBUSH_B,me);
+                DoScriptText(SAY_AKU_AMBUSH_B, me);
 
                 if (Creature* pTemp =me->SummonCreature(NPC_CABAL_SKIRMISHER, m_afAmbushB1[0], m_afAmbushB1[1], m_afAmbushB1[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000))
                     DoScriptText(SAY_AKU_AMBUSH_B_REPLY, pTemp);
@@ -620,10 +620,10 @@ struct npc_akunoAI : public npc_escortAI
                 SetRun();
                 break;
             case 18:
-                DoScriptText(SAY_AKU_COMPLETE,me);
+                DoScriptText(SAY_AKU_COMPLETE, me);
 
                 if (Player* pPlayer = GetPlayerForEscort())
-                    pPlayer->GroupEventHappens(QUEST_ESCAPING_TOMB,me);
+                    pPlayer->GroupEventHappens(QUEST_ESCAPING_TOMB, me);
 
                 break;
         }
@@ -696,7 +696,7 @@ bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreatu
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer,41279,true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
+        pPlayer->CastSpell(pPlayer, 41279, true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
     }
     return true;
 }
@@ -1004,7 +1004,7 @@ struct npc_mana_bomb_exp_triggerAI : public ScriptedAI
 
         m_bIsActivated = true;
 
-        pPlayer->KilledMonsterCredit(NPC_MANA_BOMB_KILL_TRIGGER,me->GetGUID());
+        pPlayer->KilledMonsterCredit(NPC_MANA_BOMB_KILL_TRIGGER, me->GetGUID());
 
         pManaBomb = pGo;
     }
@@ -1101,7 +1101,7 @@ bool GOHello_veil_skith_cage(Player* pPlayer, GameObject* pGo)
         {
             pPlayer->KilledMonsterCredit(NPC_CAPTIVE_CHILD, pChild->GetGUID());
 
-            switch(urand(0,3))
+            switch(urand(0, 3))
             {
                 case 0: DoScriptText(SAY_THANKS_1, pChild); break;
                 case 1: DoScriptText(SAY_THANKS_2, pChild); break;

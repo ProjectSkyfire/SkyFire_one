@@ -175,7 +175,7 @@ struct instance_mount_hyjal : public ScriptedInstance
                         Creature* pCreature = instance->GetCreature(Azgalor);
                         if (pCreature)
                         {
-                            Creature* pUnit = pCreature->SummonCreature(21987,pCreature->GetPositionX(),pCreature->GetPositionY(),pCreature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,10000);
+                            Creature* pUnit = pCreature->SummonCreature(21987, pCreature->GetPositionX(),pCreature->GetPositionY(),pCreature->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN, 10000);
 
                             Map* pMap = pCreature->GetMap();
                             if (pMap->IsDungeon() && pUnit)
@@ -190,7 +190,7 @@ struct instance_mount_hyjal : public ScriptedInstance
                                      if (i->getSource())
                                      {
                                         WorldPacket data(SMSG_MESSAGECHAT, 200);
-                                        pUnit->BuildMonsterChat(&data,CHAT_MSG_MONSTER_YELL,YELL_EFFORTS,0,YELL_EFFORTS_NAME,i->getSource()->GetGUID());
+                                        pUnit->BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, YELL_EFFORTS, 0, YELL_EFFORTS_NAME, i->getSource()->GetGUID());
                                         i->getSource()->GetSession()->SendPacket(&data);
 
                                         WorldPacket data2(SMSG_PLAY_SOUND, 4);
@@ -213,12 +213,12 @@ struct instance_mount_hyjal : public ScriptedInstance
                 break;
             case DATA_ALLIANCE_RETREAT:
                 allianceRetreat = data;
-                OpenDoor(HordeGate,true);
+                OpenDoor(HordeGate, true);
                 SaveToDB();
                 break;
             case DATA_HORDE_RETREAT:
                 hordeRetreat = data;
-                OpenDoor(ElfGate,true);
+                OpenDoor(ElfGate, true);
                 SaveToDB();
                 break;
             case DATA_RAIDDAMAGE:
@@ -231,7 +231,7 @@ struct instance_mount_hyjal : public ScriptedInstance
                 break;
         }
 
-         debug_log("TSCR: Instance Hyjal: Instance data updated for event %u (Data=%u)",type,data);
+         debug_log("TSCR: Instance Hyjal: Instance data updated for event %u (Data=%u)",type, data);
 
         if (data == DONE)
             SaveToDB();
@@ -263,7 +263,7 @@ struct instance_mount_hyjal : public ScriptedInstance
                 for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                 {
                     if (Player* player = itr->getSource())
-                        player->SendUpdateWorldState(id,state);
+                        player->SendUpdateWorldState(id, state);
                 }
         } else debug_log("TSCR: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
     }

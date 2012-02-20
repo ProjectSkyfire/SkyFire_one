@@ -76,7 +76,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
     boss_victor_nefariusAI(Creature *c) : ScriptedAI(c)
     {
         NefarianGUID = 0;
-        switch (urand(0,19))
+        switch (urand(0, 19))
         {
             case 0:
                 DrakType1 = CREATURE_BRONZE_DRAKANOID;
@@ -182,7 +182,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
         NefarianGUID = 0;
         NefCheckTime = 2000;
 
-        me->SetUInt32Value(UNIT_NPC_FLAGS,1);
+        me->SetUInt32Value(UNIT_NPC_FLAGS, 1);
         me->setFaction(35);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
@@ -200,7 +200,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
         AttackStart((*i));
         }
         */
-        me->SetUInt32Value(UNIT_NPC_FLAGS,0);
+        me->SetUInt32Value(UNIT_NPC_FLAGS, 0);
         me->setFaction(103);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         AttackStart(pTarget);
@@ -235,7 +235,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                     DoCast(pTarget, SPELL_SHADOWBOLT);
 
-                ShadowBoltTimer = urand(3000,10000);
+                ShadowBoltTimer = urand(3000, 10000);
             } else ShadowBoltTimer -= diff;
 
             //FearTimer
@@ -256,7 +256,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
                 Unit *pTarget = NULL;
 
                 //1 in 3 chance it will be a chromatic
-                if (urand(0,2) == 0)
+                if (urand(0, 2) == 0)
                     CreatureID = CREATURE_CHROMATIC_DRAKANOID;
                 else
                     CreatureID = DrakType1;
@@ -264,7 +264,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
                 ++SpawnedAdds;
 
                 //Spawn Creature and force it to start attacking a random target
-                Spawned = me->SummonCreature(CreatureID,ADD_X1,ADD_Y1,ADD_Z1,5.000f,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
+                Spawned = me->SummonCreature(CreatureID, ADD_X1, ADD_Y1, ADD_Z1, 5.000f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                 pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
                 if (pTarget && Spawned)
                 {
@@ -273,14 +273,14 @@ struct boss_victor_nefariusAI : public ScriptedAI
                 }
 
                 //1 in 3 chance it will be a chromatic
-                if (urand(0,2) == 0)
+                if (urand(0, 2) == 0)
                     CreatureID = CREATURE_CHROMATIC_DRAKANOID;
                 else
                     CreatureID = DrakType2;
 
                 ++SpawnedAdds;
 
-                Spawned = me->SummonCreature(CreatureID,ADD_X2,ADD_Y2,ADD_Z2,5.000f,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,5000);
+                Spawned = me->SummonCreature(CreatureID, ADD_X2, ADD_Y2, ADD_Z2, 5.000f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                 pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
                 if (pTarget && Spawned)
                 {
@@ -292,7 +292,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
                 if (SpawnedAdds >= 42)
                 {
                     //Teleport Victor Nefarius way out of the map
-                    //MapManager::Instance().GetMap(me->GetMapId(), me)->CreatureRelocation(me,0,0,-5000,0);
+                    //MapManager::Instance().GetMap(me->GetMapId(), me)->CreatureRelocation(me, 0, 0,-5000, 0);
 
                     //Inturrupt any spell casting
                     me->InterruptNonMeleeSpells(false);
@@ -304,11 +304,11 @@ struct boss_victor_nefariusAI : public ScriptedAI
                     DoCast(me, 8149);
 
                     //Teleport self to a hiding spot (this causes errors in the Trinity log but no real issues)
-                    DoTeleportTo(HIDE_X,HIDE_Y,HIDE_Z);
+                    DoTeleportTo(HIDE_X, HIDE_Y, HIDE_Z);
                     me->addUnitState(UNIT_STAT_FLEEING);
 
                     //Spawn nef and have him attack a random target
-                    Creature* Nefarian = me->SummonCreature(CREATURE_NEFARIAN,NEF_X,NEF_Y,NEF_Z,0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,120000);
+                    Creature* Nefarian = me->SummonCreature(CREATURE_NEFARIAN, NEF_X, NEF_Y, NEF_Z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
                     pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
                     if (pTarget && Nefarian)
                     {

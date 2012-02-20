@@ -21,7 +21,7 @@
 /* ScriptData
 SDName: Dustwallow_Marsh
 SD%Complete: 95
-SDComment: Quest support: 11180, 558, 11126, 1173, 1273, 1324, 11183, 11142, 11209,Vendor Nat Pagle
+SDComment: Quest support: 11180, 558, 11126, 1173, 1273, 1324, 11183, 11142, 11209, Vendor Nat Pagle
 SDCategory: Dustwallow Marsh
 EndScriptData */
 
@@ -69,7 +69,7 @@ struct mobs_risen_husk_spiritAI : public ScriptedAI
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
             if (damage >= me->GetHealth() && CAST_PLR(done_by)->GetQuestStatus(11180) == QUEST_STATUS_INCOMPLETE)
-                me->CastSpell(done_by,SPELL_SUMMON_RESTLESS_APPARITION,false);
+                me->CastSpell(done_by, SPELL_SUMMON_RESTLESS_APPARITION, false);
     }
 
     void UpdateAI(const uint32 diff)
@@ -171,7 +171,7 @@ bool GossipSelect_npc_deserter_agitator(Player* pPlayer, Creature* pCreature, ui
     if (uiAction == GOSSIP_SENDER_INFO)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
         case 0:
             pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -840,7 +840,7 @@ struct npc_private_hendelAI : public ScriptedAI
             pSummoned->GetMotionMaster()->MovePoint(0, -2889.27f, -3347.17f, 32.2615f);
             return;
         }
-        pSummoned->GetMotionMaster()->MovePoint(0, -2890.31f,-3345.23f,32.3087f);
+        pSummoned->GetMotionMaster()->MovePoint(0, -2890.31f,-3345.23f, 32.3087f);
     }
 
     void DoAttackPlayer()
@@ -939,7 +939,7 @@ struct npc_private_hendelAI : public ScriptedAI
             me->DeleteThreatList();
             me->CombatStop(true);
             me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
-            me->SetHomePosition(-2892.28f,-3347.81f,31.8609f,0.160719f);
+            me->SetHomePosition(-2892.28f,-3347.81f, 31.8609f, 0.160719f);
             me->GetMotionMaster()->MoveTargetedHome();
 
             if (Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID))
@@ -1028,7 +1028,7 @@ struct npc_zelfraxAI : public ScriptedAI
             return;
 
         me->SetHomePosition(me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),me->GetOrientation());
-        me->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
         SetCombatMovement(true);
 
         if (me->isInCombat())
@@ -1039,9 +1039,9 @@ struct npc_zelfraxAI : public ScriptedAI
     void MoveToDock()
     {
         SetCombatMovement(false);
-        me->GetMotionMaster()->MovePoint(0,-2967.030,-3872.1799,35.620);
-        DoScriptText(SAY_ZELFRAX,me);
-        DoScriptText(SAY_ZELFRAX_2,me);
+        me->GetMotionMaster()->MovePoint(0,-2967.030,-3872.1799, 35.620);
+        DoScriptText(SAY_ZELFRAX, me);
+        DoScriptText(SAY_ZELFRAX_2, me);
     }
 
     void UpdateAI(uint32 const /*uiDiff*/)
@@ -1101,7 +1101,7 @@ enum
 
 bool AreaTrigger_at_nats_landing(Player* pPlayer, const AreaTriggerEntry* pAt)
 {
-    if (pPlayer->GetQuestStatus(QUEST_NATS_BARGAIN) == QUEST_STATUS_INCOMPLETE && pPlayer->HasAura(SPELL_FISH_PASTE,0))
+    if (pPlayer->GetQuestStatus(QUEST_NATS_BARGAIN) == QUEST_STATUS_INCOMPLETE && pPlayer->HasAura(SPELL_FISH_PASTE, 0))
     {
         Creature* pShark = GetClosestCreatureWithEntry(pPlayer, NPC_LURKING_SHARK, 20.0f);
 

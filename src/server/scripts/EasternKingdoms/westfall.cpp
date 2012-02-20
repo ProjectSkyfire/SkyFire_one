@@ -218,14 +218,14 @@ struct npc_defias_traitorAI : public npc_escortAI
                 DoScriptText(SAY_END, me, pPlayer);
                 {
                     if (pPlayer)
-                        pPlayer->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD,me);
+                        pPlayer->GroupEventHappens(QUEST_DEFIAS_BROTHERHOOD, me);
                 }
                 break;
         }
     }
     void EnterCombat(Unit* who)
     {
-        DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2), me, who);
+        DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2), me, who);
     }
 
     void Reset() {}

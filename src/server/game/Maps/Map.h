@@ -207,11 +207,11 @@ struct CreatureMover
     float x, y, z, ang;
 };
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 struct InstanceTemplate
@@ -339,17 +339,17 @@ class Map : public GridRefManager<NGridType>, public Trinity::ObjectLevelLockabl
         bool IsInWater(float x, float y, float z, LiquidData *data = 0) const;
         bool IsUnderWater(float x, float y, float z) const;
 
-        static uint32 GetAreaId(uint16 areaflag,uint32 map_id);
-        static uint32 GetZoneId(uint16 areaflag,uint32 map_id);
+        static uint32 GetAreaId(uint16 areaflag, uint32 map_id);
+        static uint32 GetZoneId(uint16 areaflag, uint32 map_id);
 
         uint32 GetAreaId(float x, float y, float z) const
         {
-            return GetAreaId(GetAreaFlag(x,y,z),GetId());
+            return GetAreaId(GetAreaFlag(x, y, z),GetId());
         }
 
         uint32 GetZoneId(float x, float y, float z) const
         {
-            return GetZoneId(GetAreaFlag(x,y,z),GetId());
+            return GetZoneId(GetAreaFlag(x, y, z),GetId());
         }
 
         void MoveAllCreaturesInMoveList();
@@ -430,7 +430,7 @@ class Map : public GridRefManager<NGridType>, public Trinity::ObjectLevelLockabl
     private:
         void LoadMapAndVMap(int gx, int gy);
         void LoadVMap(int gx, int gy);
-        void LoadMap(int gx,int gy, bool reload = false);
+        void LoadMap(int gx, int gy, bool reload = false);
         GridMap *GetGrid(float x, float y);
 
         void SetTimer(uint32 t) { i_gridExpiry = t < MIN_GRID_DELAY ? MIN_GRID_DELAY : t; }
@@ -462,8 +462,8 @@ class Map : public GridRefManager<NGridType>, public Trinity::ObjectLevelLockabl
             return i_grids[x][y];
         }
 
-        bool isGridObjectDataLoaded(uint32 x, uint32 y) const { return getNGrid(x,y)->isGridObjectDataLoaded(); }
-        void setGridObjectDataLoaded(bool pLoaded, uint32 x, uint32 y) { getNGrid(x,y)->setGridObjectDataLoaded(pLoaded); }
+        bool isGridObjectDataLoaded(uint32 x, uint32 y) const { return getNGrid(x, y)->isGridObjectDataLoaded(); }
+        void setGridObjectDataLoaded(bool pLoaded, uint32 x, uint32 y) { getNGrid(x, y)->setGridObjectDataLoaded(pLoaded); }
 
         void setNGrid(NGridType* grid, uint32 x, uint32 y);
         void ScriptsProcess();
@@ -628,7 +628,7 @@ Map::Visit(const Cell& cell, TypeContainerVisitor<T, CONTAINER> &visitor)
     const uint32 cell_x = cell.CellX();
     const uint32 cell_y = cell.CellY();
 
-    if (!cell.NoCreate() || loaded(GridPair(x,y)))
+    if (!cell.NoCreate() || loaded(GridPair(x, y)))
     {
         EnsureGridLoaded(cell);
         getNGrid(x, y)->Visit(cell_x, cell_y, visitor);

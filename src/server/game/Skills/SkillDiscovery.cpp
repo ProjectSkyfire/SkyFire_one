@@ -78,7 +78,7 @@ void LoadSkillDiscoveryTable()
                 SpellEntry const* spellEntry = sSpellStore.LookupEntry(reqSkillOrSpell);
                 if (!spellEntry)
                 {
-                    sLog.outErrorDb("Spell (ID: %u) has invalid spell (ID: %i) in reqSpell field in skill_discovery_template table",spellId,reqSkillOrSpell);
+                    sLog.outErrorDb("Spell (ID: %u) has invalid spell (ID: %i) in reqSpell field in skill_discovery_template table",spellId, reqSkillOrSpell);
                     continue;
                 }
 

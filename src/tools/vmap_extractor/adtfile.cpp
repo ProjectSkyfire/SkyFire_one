@@ -80,7 +80,7 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
 
     Adtfilename.erase(Adtfilename.find(".adt"),4);
     string TempMapNumber;
-    TempMapNumber = Adtfilename.substr(Adtfilename.length()-6,6);
+    TempMapNumber = Adtfilename.substr(Adtfilename.length()-6, 6);
     xMap = TempMapNumber.substr(TempMapNumber.find("_")+1,(TempMapNumber.find_last_of("_")-1) - (TempMapNumber.find("_")));
     yMap = TempMapNumber.substr(TempMapNumber.find_last_of("_")+1,(TempMapNumber.length()) - (TempMapNumber.find_last_of("_")));
     Adtfilename.erase((Adtfilename.length()-xMap.length()-yMap.length()-2), (xMap.length()+yMap.length()+2));
@@ -102,7 +102,7 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
     while (!ADT.isEof())
     {
         char fourcc[5];
-        ADT.read(&fourcc,4);
+        ADT.read(&fourcc, 4);
         ADT.read(&size, 4);
         flipcc(fourcc);
         fourcc[4] = 0;
@@ -126,15 +126,15 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
                 ModelInstansName = new string[size];
                 while (p<buf+size)
                 {
-                    fixnamen(p,strlen(p));
+                    fixnamen(p, strlen(p));
                     string path(p);
                     char* s=GetPlainName(p);
-                    fixname2(s,strlen(s));
+                    fixname2(s, strlen(s));
                     p=p+strlen(p)+1;
                     ModelInstansName[t++] = s;
 
                     // replace .mdx -> .m2
-                    path.erase(path.length()-2,2);
+                    path.erase(path.length()-2, 2);
                     path.append("2");
 
                     char szLocalFile[1024];
@@ -165,8 +165,8 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
                 {
                     string path(p);
                     char* s=GetPlainName(p);
-                    fixnamen(s,strlen(s));
-                    fixname2(s,strlen(s));
+                    fixnamen(s, strlen(s));
+                    fixname2(s, strlen(s));
                     p=p+strlen(p)+1;
                     WmoInstansName[q++] = s;
                 }
@@ -182,7 +182,7 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
                 {
                     uint32 id;
                     ADT.read(&id, 4);
-                    ModelInstance inst(ADT,ModelInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
+                    ModelInstance inst(ADT, ModelInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
                 }
                 delete[] ModelInstansName;
             }
@@ -196,7 +196,7 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
                 {
                     uint32 id;
                     ADT.read(&id, 4);
-                    WMOInstance inst(ADT,WmoInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
+                    WMOInstance inst(ADT, WmoInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
                 }
                 delete[] WmoInstansName;
             }

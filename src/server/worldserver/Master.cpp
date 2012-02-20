@@ -75,7 +75,7 @@ public:
                 w_loops = World::m_worldLoopCounter;
             }
             // possible freeze
-            else if (getMSTimeDiff(w_lastchange,curtime) > _delaytime)
+            else if (getMSTimeDiff(w_lastchange, curtime) > _delaytime)
             {
                 sLog.outError("World Thread is stuck.  Terminating server!");
                 *((uint32 volatile*)NULL) = 0;                       // bang crash
@@ -180,11 +180,11 @@ int Master::Run()
 
                 if (!curAff)
                 {
-                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for TrinityCore. Accessible processors bitmask (hex): %x",Aff,appAff);
+                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for TrinityCore. Accessible processors bitmask (hex): %x",Aff, appAff);
                 }
                 else
                 {
-                    if (SetProcessAffinityMask(hProcess,curAff))
+                    if (SetProcessAffinityMask(hProcess, curAff))
                         sLog.outString("Using processors (bitmask, hex): %x", curAff);
                     else
                         sLog.outError("Can't set used processors (hex): %x",curAff);
@@ -197,7 +197,7 @@ int Master::Run()
 
         if (Prio)
         {
-            if (SetPriorityClass(hProcess,HIGH_PRIORITY_CLASS))
+            if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
                 sLog.outString("TrinityCore process priority class set to HIGH");
             else
                 sLog.outError("ERROR: Can't set TrinityCore process priority class.");

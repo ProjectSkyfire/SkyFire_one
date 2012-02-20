@@ -63,7 +63,7 @@ struct boss_ebonrocAI : public ScriptedAI
         if (ShadowFlame_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_SHADOWFLAME);
-            ShadowFlame_Timer = urand(12000,15000);
+            ShadowFlame_Timer = urand(12000, 15000);
         } else ShadowFlame_Timer -= diff;
 
         //Wing Buffet Timer
@@ -77,7 +77,7 @@ struct boss_ebonrocAI : public ScriptedAI
         if (ShadowOfEbonroc_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_SHADOWOFEBONROC);
-            ShadowOfEbonroc_Timer = urand(25000,350000);
+            ShadowOfEbonroc_Timer = urand(25000, 350000);
         } else ShadowOfEbonroc_Timer -= diff;
 
         if (me->getVictim()->HasAura(SPELL_SHADOWOFEBONROC, 0))
@@ -85,7 +85,7 @@ struct boss_ebonrocAI : public ScriptedAI
             if (Heal_Timer <= diff)
             {
                 DoCast(me, SPELL_HEAL);
-                Heal_Timer = urand(1000,3000);
+                Heal_Timer = urand(1000, 3000);
             } else Heal_Timer -= diff;
         }
 

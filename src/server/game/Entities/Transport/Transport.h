@@ -33,7 +33,7 @@ class TransportPath
         struct PathNode
         {
             uint32 mapid;
-            float x,y,z;
+            float x, y, z;
             uint32 actionFlag;
             uint32 delay;
         };

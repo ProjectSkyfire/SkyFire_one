@@ -87,7 +87,7 @@ struct boss_kazrogalAI : public hyjal_trashAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        switch (urand(0,2))
+        switch (urand(0, 2))
         {
             case 0:
                 DoPlaySoundToSet(me, SOUND_ONSLAY1);
@@ -111,7 +111,7 @@ struct boss_kazrogalAI : public hyjal_trashAI
         {
             Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_THRALL));
             if (pTarget && pTarget->isAlive())
-                me->AddThreat(pTarget,0.0f);
+                me->AddThreat(pTarget, 0.0f);
         }
     }
 
@@ -164,7 +164,7 @@ struct boss_kazrogalAI : public hyjal_trashAI
             WarStompTimer = 60000;
         } else WarStompTimer -= diff;
 
-        if (me->HasAura(SPELL_MARK,0))
+        if (me->HasAura(SPELL_MARK, 0))
             me->RemoveAurasDueToSpell(SPELL_MARK);
         if (MarkTimer <= diff)
         {
@@ -177,14 +177,14 @@ struct boss_kazrogalAI : public hyjal_trashAI
                 Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
                 if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->getPowerType() == POWER_MANA)
                 {
-                    pTarget->CastSpell(pTarget, SPELL_MARK,true);//only cast on mana users
+                    pTarget->CastSpell(pTarget, SPELL_MARK, true);//only cast on mana users
                 }
             }
             MarkTimerBase -= 5000;
             if (MarkTimerBase < 5500)
                 MarkTimerBase = 5500;
             MarkTimer = MarkTimerBase;
-            switch (urand(0,2))
+            switch (urand(0, 2))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_MARK1);

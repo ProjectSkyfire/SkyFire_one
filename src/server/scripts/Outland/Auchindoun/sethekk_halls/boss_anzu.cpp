@@ -98,7 +98,7 @@ struct boss_anzuAI : public ScriptedAI
 
     void JustSummoned(Creature *summoned)
     {
-        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             summoned->AI()->AttackStart(pTarget);
     }
 
@@ -115,7 +115,7 @@ struct boss_anzuAI : public ScriptedAI
             Creature* Summoned;
             for (uint32 i = 0; i < SummonedCount; i++)
             {
-                Summoned = me->SummonCreature(NPC_BROOD,me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
+                Summoned = me->SummonCreature(NPC_BROOD, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
             }
             Summon1 = true;
         }
@@ -128,7 +128,7 @@ struct boss_anzuAI : public ScriptedAI
             Creature* Summoned;
             for (uint32 i = 0; i < SummonedCount; i++)
             {
-                Summoned = me->SummonCreature(NPC_BROOD,me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,25000);
+                Summoned = me->SummonCreature(NPC_BROOD, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
             }
             Summon2 = true;
         }
@@ -147,7 +147,7 @@ struct boss_anzuAI : public ScriptedAI
         {
             if (Cyclone_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
                     DoCast(pTarget, SPELL_CYCLONE);
                     Cyclone_Timer = 20000+rand()%1000;
@@ -156,7 +156,7 @@ struct boss_anzuAI : public ScriptedAI
 
             if (Bomb_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
                     DoCast(pTarget, SPELL_BOMB);
                     Bomb_Timer = 30000+rand()%1000;

@@ -138,7 +138,7 @@
 
 #define DEFAULT_GOSSIP_MESSAGE              0xffffff
 
-extern uint32 GetSkillLevel(Player *player,uint32 skill);
+extern uint32 GetSkillLevel(Player *player, uint32 skill);
 
 // Defined fuctions to use with player.
 
@@ -149,11 +149,11 @@ extern uint32 GetSkillLevel(Player *player,uint32 skill);
 // d - Action (identifys this Menu Item)
 // e - Text to be displayed in pop up box
 // f - Money value in pop up box
-#define ADD_GOSSIP_ITEM(a,b,c,d)   PlayerTalkClass->GetGossipMenu().AddMenuItem(a,b,c,d,"",0)
-#define ADD_GOSSIP_ITEM_EXTENDED(a,b,c,d,e,f,g)   PlayerTalkClass->GetGossipMenu().AddMenuItem(a,b,c,d,e,f,g)
+#define ADD_GOSSIP_ITEM(a, b, c, d)   PlayerTalkClass->GetGossipMenu().AddMenuItem(a, b, c, d,"",0)
+#define ADD_GOSSIP_ITEM_EXTENDED(a, b, c, d, e, f, g)   PlayerTalkClass->GetGossipMenu().AddMenuItem(a, b, c, d, e, f, g)
 
 // This fuction Sends the current menu to show to client, a - NPCTEXTID(uint32) , b - npc guid(uint64)
-#define SEND_GOSSIP_MENU(a,b)      PlayerTalkClass->SendGossipMenu(a,b)
+#define SEND_GOSSIP_MENU(a, b)      PlayerTalkClass->SendGossipMenu(a, b)
 
 // This fuction shows POI(point of interest) to client.
 // a - position X
@@ -162,7 +162,7 @@ extern uint32 GetSkillLevel(Player *player,uint32 skill);
 // d - Flags
 // e - Data
 // f - Location Name
-#define SEND_POI(a,b,c,d,e,f)      PlayerTalkClass->SendPointOfInterest(a,b,c,d,e,f)
+#define SEND_POI(a, b, c, d, e, f)      PlayerTalkClass->SendPointOfInterest(a, b, c, d, e, f)
 
 // Closes the Menu
 #define CLOSE_GOSSIP_MENU()        PlayerTalkClass->CloseGossip()
@@ -171,14 +171,14 @@ extern uint32 GetSkillLevel(Player *player,uint32 skill);
 // a - quest object
 // b - npc guid(uint64)
 // c - Activate accept(bool)
-#define SEND_QUEST_DETAILS(a,b,c)  PlayerTalkClass->SendQuestDetails(a,b,c)
+#define SEND_QUEST_DETAILS(a, b, c)  PlayerTalkClass->SendQuestDetails(a, b, c)
 
 // Fuction to tell to client the requested items to complete quest
 // a - quest object
 // b - npc guid(uint64)
 // c - Iscompletable(bool)
 // d - close at cancel(bool) - in case single incomplite ques
-#define SEND_REQUESTEDITEMS(a,b,c,d) PlayerTalkClass->SendRequestedItems(a,b,c,d)
+#define SEND_REQUESTEDITEMS(a, b, c, d) PlayerTalkClass->SendRequestedItems(a, b, c, d)
 
 // Fuctions to send NPC lists, a - is always the npc guid(uint64)
 #define SEND_VENDORLIST(a)         GetSession()->SendListInventory(a)
@@ -197,6 +197,6 @@ extern uint32 GetSkillLevel(Player *player,uint32 skill);
 
 // defined fuctions to use with Creature
 
-#define QUEST_DIALOG_STATUS(a,b,c)   GetSession()->getDialogStatus(a,b,c)
+#define QUEST_DIALOG_STATUS(a, b, c)   GetSession()->getDialogStatus(a, b, c)
 #endif
 

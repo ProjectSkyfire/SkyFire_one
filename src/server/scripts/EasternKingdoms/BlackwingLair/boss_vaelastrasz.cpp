@@ -46,7 +46,7 @@ struct boss_vaelAI : public ScriptedAI
 {
     boss_vaelAI(Creature *c) : ScriptedAI(c)
     {
-        c->SetUInt32Value(UNIT_NPC_FLAGS,1);
+        c->SetUInt32Value(UNIT_NPC_FLAGS, 1);
         c->setFaction(35);
         c->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
@@ -165,7 +165,7 @@ struct boss_vaelAI : public ScriptedAI
         if (FlameBreath_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_FLAMEBREATH);
-            FlameBreath_Timer = urand(4000,8000);
+            FlameBreath_Timer = urand(4000, 8000);
         } else FlameBreath_Timer -= diff;
 
         //BurningAdrenalineCaster_Timer
@@ -182,7 +182,7 @@ struct boss_vaelAI : public ScriptedAI
                         i = 3;
             }
             if (pTarget)                                     // cast on self (see below)
-                pTarget->CastSpell(pTarget,SPELL_BURNINGADRENALINE,1);
+                pTarget->CastSpell(pTarget, SPELL_BURNINGADRENALINE, 1);
 
             BurningAdrenalineCaster_Timer = 15000;
         } else BurningAdrenalineCaster_Timer -= diff;
@@ -192,7 +192,7 @@ struct boss_vaelAI : public ScriptedAI
         {
             // have the victim cast the spell on himself otherwise the third effect aura will be applied
             // to Vael instead of the player
-            me->getVictim()->CastSpell(me->getVictim(),SPELL_BURNINGADRENALINE,1);
+            me->getVictim()->CastSpell(me->getVictim(),SPELL_BURNINGADRENALINE, 1);
 
             BurningAdrenalineTank_Timer = 45000;
         } else BurningAdrenalineTank_Timer -= diff;
