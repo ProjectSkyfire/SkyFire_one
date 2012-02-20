@@ -27,7 +27,6 @@
 
 #include "WorldPacket.h"
 #include "DBCStores.h"
-#include "ProgressBar.h"
 
 #include "World.h"
 
@@ -39,20 +38,13 @@ void MapManager::LoadTransports()
 
     if (!result)
     {
-        barGoLink bar(1);
-        bar.step();
-
         sLog.outString();
         sLog.outString(">> Loaded %u transports", count);
         return;
     }
 
-    barGoLink bar(result->GetRowCount());
-
     do
     {
-        bar.step();
-
         Transport *t = new Transport;
 
         Field *fields = result->Fetch();

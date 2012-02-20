@@ -129,7 +129,7 @@ struct instance_black_temple : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Black Temple: GetPlayerInMap, but PlayerList is empty!");
+        debug_log("TSCR: Instance Black Temple: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 

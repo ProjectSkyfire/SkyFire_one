@@ -126,7 +126,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Sunwell Plateau: GetPlayerInMap, but PlayerList is empty!");
+        debug_log("TSCR: Instance Sunwell Plateau: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 

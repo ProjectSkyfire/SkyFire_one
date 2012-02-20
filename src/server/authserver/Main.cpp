@@ -37,12 +37,8 @@
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.
-#ifndef _REALMDCONFVERSION
-# define _REALMDCONFVERSION 2010101001
-#endif
-
 #ifndef _TRINITY_REALM_CONFIG
-# define _TRINITY_REALM_CONFIG  "trinityrealm.conf"
+# define _TRINITY_REALM_CONFIG  "authserver.conf"
 #endif
 
 #ifdef _WIN32
@@ -158,20 +154,6 @@ extern int main(int argc, char **argv)
     sLog.outString( "%s [realm-daemon]", _FULLVERSION);
     sLog.outString( "<Ctrl-C> to stop.\n" );
     sLog.outString("Using configuration file %s.", cfg_file);
-
-    // Check the version of the configuration file
-    uint32 confVersion = sConfig.GetIntDefault("ConfVersion", 0);
-    if (confVersion < _REALMDCONFVERSION)
-    {
-        sLog.outError("*****************************************************************************");
-        sLog.outError(" WARNING: Your trinityrealm.conf version indicates your conf file is out of date!");
-        sLog.outError("          Please check for updates, as your current default values may cause");
-        sLog.outError("          strange behavior.");
-        sLog.outError("*****************************************************************************");
-        clock_t pause = 3000 + clock();
-
-        while (pause > clock()) {}
-    }
 
     sLog.outDetail("Using ACE: %s", ACE_VERSION);
 

@@ -173,7 +173,7 @@ struct boss_arlokkAI : public ScriptedAI
                     MarkedTargetGUID = pMarkedTarget->GetGUID();
                 }
                 else
-                    error_log("OSCR: boss_arlokk could not acquire pMarkedTarget.");
+                    error_log("TSCR: boss_arlokk could not acquire pMarkedTarget.");
 
                 m_uiMark_Timer = 15000;
             }

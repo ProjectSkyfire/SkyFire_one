@@ -179,7 +179,7 @@ struct instance_shattered_halls : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Shattered Halls: GetPlayerInMap, but PlayerList is empty!");
+        debug_log("TSCR: Instance Shattered Halls: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 

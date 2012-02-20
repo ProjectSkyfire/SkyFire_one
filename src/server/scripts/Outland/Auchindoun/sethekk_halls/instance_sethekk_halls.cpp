@@ -107,7 +107,7 @@ struct instance_sethekk_halls : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Sethekk Halls: GetPlayerInMap, but PlayerList is empty!");
+        debug_log("TSCR: Instance Sethekk Halls: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 

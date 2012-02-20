@@ -20,7 +20,7 @@
 
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
-#include "ProgressBar.h"
+
 #include "Policies/SingletonImp.h"
 #include "ObjectAccessor.h"
 #include "World.h"
@@ -57,14 +57,11 @@ void LoadSkillDiscoveryTable()
 
     if (result)
     {
-        barGoLink bar(result->GetRowCount());
-
         std::ostringstream ssNonDiscoverableEntries;
 
         do
         {
             Field *fields = result->Fetch();
-            bar.step();
 
             uint32 spellId         = fields[0].GetUInt32();
             int32  reqSkillOrSpell = fields[1].GetInt32();

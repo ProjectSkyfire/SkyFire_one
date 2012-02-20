@@ -35,7 +35,7 @@
 #include "Map.h"
 #include "MapInstanced.h"
 #include "ObjectMgr.h"
-#include "ProgressBar.h"
+
 #include "World.h"
 #include "Chat.h"
 #include "ArenaTeam.h"
@@ -1513,22 +1513,14 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
 
     if (!result)
     {
-        barGoLink bar(1);
-
-        bar.step();
-
         sLog.outString();
         sLog.outErrorDb(">> Loaded 0 battlegrounds. DB table battleground_template is empty.");
         return;
     }
 
-    barGoLink bar(result->GetRowCount());
-
     do
     {
         Field *fields = result->Fetch();
-        bar.step();
-
         uint32 bgTypeID = fields[0].GetUInt32();
 
         // can be overwritten by values from DB

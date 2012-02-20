@@ -41,7 +41,7 @@ void InstanceData::HandleGameObject(uint64 GUID, bool open, GameObject *go)
     if (go)
         go->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
     else
-        debug_log("OSCR: InstanceData: HandleGameObject failed");
+        debug_log("TSCR: InstanceData: HandleGameObject failed");
 }
 
 bool InstanceData::IsEncounterInProgress() const
@@ -230,7 +230,7 @@ void InstanceData::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bo
                 pGo->ResetDoorOrButton();
         }
         else
-            error_log("OSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.",pGo->GetEntry(),pGo->GetGoType());
+            error_log("TSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.",pGo->GetEntry(),pGo->GetGoType());
     }
 }
 

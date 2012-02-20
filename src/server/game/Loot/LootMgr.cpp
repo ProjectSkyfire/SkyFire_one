@@ -21,7 +21,7 @@
 #include "LootMgr.h"
 #include "Log.h"
 #include "ObjectMgr.h"
-#include "ProgressBar.h"
+
 #include "World.h"
 #include "Util.h"
 #include "SharedDefines.h"
@@ -102,12 +102,9 @@ void LootStore::LoadLootTable()
 
     if (result)
     {
-        barGoLink bar(result->GetRowCount());
-
         do
         {
             Field *fields = result->Fetch();
-            bar.step();
 
             uint32 entry               = fields[0].GetUInt32();
             uint32 item                = fields[1].GetUInt32();
