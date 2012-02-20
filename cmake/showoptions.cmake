@@ -1,8 +1,8 @@
-# output generic information about the core and buildtype chosen
 message("")
-message("* SkyFireEMU revision    : ${rev_id_str} (${rev_hash_str})")
+message("* SkyFireEMU rev. hash  : ${rev_hash}")
+message("* SkyFireEMU rev. date  : ${rev_date}")
 if( UNIX )
-  message("* Build binaries in      : ${CMAKE_BUILD_TYPE} mode")
+  message("* SkyFireEMU buildtype  : ${CMAKE_BUILD_TYPE}")
 endif()
 message("")
 
