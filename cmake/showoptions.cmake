@@ -1,3 +1,4 @@
+# output generic information about the core and buildtype chosen
 message("")
 message("* SkyFireEMU rev. hash  : ${rev_hash}")
 message("* SkyFireEMU rev. date  : ${rev_date}")
