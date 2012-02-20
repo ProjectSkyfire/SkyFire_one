@@ -31,7 +31,7 @@
 #include "Guild.h"
 #include "World.h"
 #include "ObjectAccessor.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "OutdoorPvPMgr.h"
 #include "MapManager.h"
 #include "Chat.h"

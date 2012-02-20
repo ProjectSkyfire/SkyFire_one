@@ -36,8 +36,8 @@
 #include "Creature.h"
 #include "MapManager.h"
 #include "Pet.h"
-#include "BattleGroundMgr.h"
-#include "BattleGround.h"
+#include "BattlegroundMgr.h"
+#include "Battleground.h"
 #include "Guild.h"
 #include "ScriptMgr.h"
 

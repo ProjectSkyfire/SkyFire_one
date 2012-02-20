@@ -40,7 +40,7 @@
 #include "SpellAuras.h"
 #include "WaypointMovementGenerator.h"
 #include "InstanceData.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "Util.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"

@@ -26,7 +26,7 @@
 #include "WorldSession.h"
 #include "Opcodes.h"
 #include "ObjectMgr.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "SharedDefines.h"
 
 enum BattleGroundSounds

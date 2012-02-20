@@ -41,7 +41,7 @@
 #include "Totem.h"
 #include "Creature.h"
 #include "Formulas.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "OutdoorPvP.h"
 #include "OutdoorPvPMgr.h"
 #include "CreatureAI.h"

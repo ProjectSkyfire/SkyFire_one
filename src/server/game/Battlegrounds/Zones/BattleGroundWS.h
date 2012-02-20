@@ -21,7 +21,7 @@
 #ifndef __BATTLEGROUNDWS_H
 #define __BATTLEGROUNDWS_H
 
-#include "BattleGround.h"
+#include "Battleground.h"
 
 enum BG_WS_TimerOrScore
 {

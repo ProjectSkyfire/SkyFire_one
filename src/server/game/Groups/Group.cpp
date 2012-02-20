@@ -28,7 +28,7 @@
 #include "Group.h"
 #include "Formulas.h"
 #include "ObjectAccessor.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "MapManager.h"
 #include "InstanceSaveMgr.h"
 #include "MapInstanced.h"

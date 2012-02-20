@@ -27,7 +27,7 @@
 #include "Player.h"
 #include "MapManager.h"
 #include "Transport.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "WaypointMovementGenerator.h"
 #include "InstanceSaveMgr.h"
 

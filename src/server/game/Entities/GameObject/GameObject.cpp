@@ -37,7 +37,7 @@
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "InstanceData.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "Util.h"
 #include "OutdoorPvPMgr.h"
 #include "BattleGroundAV.h"

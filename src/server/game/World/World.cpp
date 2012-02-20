@@ -42,7 +42,7 @@
 #include "MapManager.h"
 #include "CreatureAIRegistry.h"
 #include "Policies/SingletonImp.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "OutdoorPvPMgr.h"
 #include "TemporarySummon.h"
 #include "AuctionHouseBot.h"

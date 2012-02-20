@@ -20,7 +20,7 @@
 
 #include "Common.h"
 #include "Player.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "BattleGroundAV.h"
 #include "BattleGroundAB.h"
 #include "BattleGroundEY.h"

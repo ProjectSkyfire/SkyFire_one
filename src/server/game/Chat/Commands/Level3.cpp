@@ -49,7 +49,7 @@
 #include "Config.h"
 #include "Util.h"
 #include "ItemEnchantmentMgr.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "InstanceSaveMgr.h"
 #include "InstanceData.h"
 #include "AuctionHouseBot.h"

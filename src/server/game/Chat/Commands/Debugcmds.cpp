@@ -32,7 +32,7 @@
 #include "GossipDef.h"
 #include "Language.h"
 #include "MapManager.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include <fstream>
 #include "ObjectMgr.h"
 #include "InstanceData.h"

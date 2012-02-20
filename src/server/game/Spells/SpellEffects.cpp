@@ -47,7 +47,7 @@
 #include "Creature.h"
 #include "Totem.h"
 #include "CreatureAI.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "BattleGroundEY.h"
 #include "BattleGroundWS.h"
 #include "OutdoorPvPMgr.h"
