@@ -30,14 +30,8 @@
 #include <ace/Get_Opt.h>
 
 #ifndef _TRINITY_CORE_CONFIG
-# define _TRINITY_CORE_CONFIG  "trinitycore.conf"
+# define _TRINITY_CORE_CONFIG  "worldserver.conf"
 #endif //_TRINITY_CORE_CONFIG
-
-// Format is YYYYMMDDRR where RR is the change in the conf file
-// for that day.
-#ifndef _TRINITY_CORE_CONFVER
-# define _TRINITY_CORE_CONFVER 2011091401
-#endif //_TRINITY_CORE_CONFVER
 
 #ifdef _WIN32
 #include "ServiceWin32.h"
@@ -146,19 +140,6 @@ extern int main(int argc, char **argv)
         return 1;
     }
     sLog.outString("Using configuration file %s.", cfg_file);
-
-    uint32 confVersion = sConfig.GetIntDefault("ConfVersion", 0);
-    if (confVersion < _TRINITY_CORE_CONFVER)
-    {
-        sLog.outError("*****************************************************************************");
-        sLog.outError(" WARNING: Your trinitycore.conf version indicates your conf file is out of date!");
-        sLog.outError("          Please check for updates, as your current default values may cause");
-        sLog.outError("          strange behavior.");
-        sLog.outError("*****************************************************************************");
-        clock_t pause = 3000 + clock();
-
-        while (pause > clock()) {}
-    }
 
     sLog.outDetail("Using ACE: %s", ACE_VERSION);
 
