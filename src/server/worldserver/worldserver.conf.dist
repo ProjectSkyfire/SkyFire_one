@@ -1,9 +1,7 @@
 ###############################################
 # Trinity Core World Server configuration file #
 ###############################################
-
 [worldserver]
-ConfVersion=2011091401
 
 # Note to devs, line breaks should be at column 80
 ###############################################################################
@@ -51,7 +49,7 @@ ConfVersion=2011091401
 RealmID = 1
 DataDir = "."
 LogsDir = ""
-LoginDatabaseInfo     = "127.0.0.1;3306;trinity;trinity;realmd"
+LoginDatabaseInfo     = "127.0.0.1;3306;trinity;trinity;auth"
 WorldDatabaseInfo     = "127.0.0.1;3306;trinity;trinity;world"
 CharacterDatabaseInfo = "127.0.0.1;3306;trinity;trinity;characters"
 MaxPingTime = 30
@@ -243,7 +241,7 @@ vmap.enableLOS = 1
 vmap.enableHeight = 1
 vmap.ignoreSpellIds = "7720"
 vmap.petLOS = 1
-vmap.totem = 0
+vmap.totem = 1
 vmap.enableIndoorCheck = 1
 DetectPosCollision = 1
 TargetPosRecalculateRange = 1.5
