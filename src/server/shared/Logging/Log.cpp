@@ -726,6 +726,51 @@ void Log::outDetail(const char * str, ...)
     fflush(stdout);
 }
 
+void Log::outStaticDebug(const char * str, ...)
+{
+    if (!str)
+        return;
+
+    if (m_enableLogDB && m_dbLogLevel > LOGL_DETAIL)
+    {
+        va_list ap2;
+        va_start(ap2, str);
+        char nnew_str[MAX_QUERY_LEN];
+        vsnprintf(nnew_str, MAX_QUERY_LEN, str, ap2);
+        outDB(LOG_TYPE_DEBUG, nnew_str);
+        va_end(ap2);
+    }
+
+    if ( m_logLevel > LOGL_DETAIL )
+    {
+        if (m_colored)
+            SetColor(true, m_colors[LOGL_DEBUG]);
+
+        va_list ap;
+        va_start(ap, str);
+        vutf8printf(stdout, str, &ap);
+        va_end(ap);
+
+        if (m_colored)
+            ResetColor(true);
+
+        printf( "\n" );
+
+        if (logfile)
+        {
+            outTimestamp(logfile);
+            va_list ap2;
+            va_start(ap2, str);
+            vfprintf(logfile, str, ap2);
+            va_end(ap2);
+
+            fprintf(logfile, "\n" );
+            fflush(logfile);
+        }
+    }
+    fflush(stdout);
+}
+
 void Log::outDebugInLine(const char * str, ...)
 {
     if (!str)
