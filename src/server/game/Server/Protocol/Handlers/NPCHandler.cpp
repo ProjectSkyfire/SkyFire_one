@@ -367,7 +367,7 @@ void WorldSession::SendSpiritResurrect()
     WorldSafeLocsEntry const *corpseGrave = NULL;
     Corpse *corpse = _player->GetCorpse();
     if (corpse)
-        corpseGrave = objmgr.GetClosestGraveYard(
+        corpseGrave = sObjectMgr.GetClosestGraveYard(
             corpse->GetPositionX(), corpse->GetPositionY(), corpse->GetPositionZ(), corpse->GetMapId(), _player->GetTeam());
 
     // now can spawn bones
@@ -376,7 +376,7 @@ void WorldSession::SendSpiritResurrect()
     // teleport to nearest from corpse graveyard, if different from nearest to player ghost
     if (corpseGrave)
     {
-        WorldSafeLocsEntry const *ghostGrave = objmgr.GetClosestGraveYard(
+        WorldSafeLocsEntry const *ghostGrave = sObjectMgr.GetClosestGraveYard(
             _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetMapId(), _player->GetTeam());
 
         if (corpseGrave != ghostGrave)
@@ -761,7 +761,7 @@ void WorldSession::HandleRepairItemOpcode(WorldPacket & recv_data)
         uint32 GuildId = _player->GetGuildId();
         if (!GuildId)
             return;
-        Guild *pGuild = objmgr.GetGuildById(GuildId);
+        Guild *pGuild = sObjectMgr.GetGuildById(GuildId);
         if (!pGuild)
             return;
         pGuild->LogBankEvent(GUILD_BANK_LOG_REPAIR_MONEY, 0, _player->GetGUIDLow(), TotalCost);

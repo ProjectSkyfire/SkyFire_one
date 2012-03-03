@@ -206,7 +206,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                     if (instance_map == mapid)
                         break;
 
-                    InstanceTemplate const* instance = objmgr.GetInstanceTemplate(instance_map);
+                    InstanceTemplate const* instance = sObjectMgr.GetInstanceTemplate(instance_map);
                     instance_map = instance ? instance->parent : 0;
                 }
                 while (instance_map);
@@ -226,11 +226,11 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
         }
 
         // Requirements
-        InstanceTemplate const* instance = objmgr.GetInstanceTemplate(mapid);
+        InstanceTemplate const* instance = sObjectMgr.GetInstanceTemplate(mapid);
         if (!instance)
             return false;
 
-        return player->Satisfy(objmgr.GetAccessRequirement(instance->access_id), mapid, true);
+        return player->Satisfy(sObjectMgr.GetAccessRequirement(instance->access_id), mapid, true);
     }
     else
         return true;
@@ -280,7 +280,7 @@ bool MapManager::ExistMapAndVMap(uint32 mapid, float x, float y)
 bool MapManager::IsValidMAP(uint32 mapid)
 {
     MapEntry const* mEntry = sMapStore.LookupEntry(mapid);
-    return mEntry && (!mEntry->Instanceable() || objmgr.GetInstanceTemplate(mapid));
+    return mEntry && (!mEntry->Instanceable() || sObjectMgr.GetInstanceTemplate(mapid));
 }
 
 void MapManager::UnloadAll()

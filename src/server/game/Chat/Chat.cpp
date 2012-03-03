@@ -1114,7 +1114,7 @@ valid examples:
                     // read item entry
                     reader.getline(buffer, 256, ':');
 
-                    linkedItem= objmgr.GetItemPrototype(atoi(buffer));
+                    linkedItem= sObjectMgr.GetItemPrototype(atoi(buffer));
                     if (!linkedItem)
                     {
 #ifdef TRINITY_DEBUG
@@ -1155,7 +1155,7 @@ valid examples:
                         c = reader.peek();
                     }
 
-                    linkedQuest = objmgr.GetQuestTemplate(questid);
+                    linkedQuest = sObjectMgr.GetQuestTemplate(questid);
 
                     if (!linkedQuest)
                     {
@@ -1312,7 +1312,7 @@ valid examples:
                     {
                         if (linkedQuest->GetTitle() != buffer)
                         {
-                            QuestLocale const *ql = objmgr.GetQuestLocale(linkedQuest->GetQuestId());
+                            QuestLocale const *ql = sObjectMgr.GetQuestLocale(linkedQuest->GetQuestId());
 
                             if (!ql)
                             {
@@ -1344,7 +1344,7 @@ valid examples:
                     {
                         if (strcmp(linkedItem->Name1, buffer) != 0)
                         {
-                            ItemLocale const *il = objmgr.GetItemLocale(linkedItem->ItemId);
+                            ItemLocale const *il = sObjectMgr.GetItemLocale(linkedItem->ItemId);
 
                             if (!il)
                             {
@@ -1582,7 +1582,7 @@ Player * ChatHandler::getSelectedPlayer()
     if (guid == 0)
         return m_session->GetPlayer();
 
-    return objmgr.GetPlayer(guid);
+    return sObjectMgr.GetPlayer(guid);
 }
 
 Unit* ChatHandler::getSelectedUnit()
@@ -1748,7 +1748,7 @@ GameObject* ChatHandler::GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid
 
     GameObject* obj = pl->GetMap()->GetGameObject(MAKE_NEW_GUID(lowguid, entry, HIGHGUID_GAMEOBJECT));
 
-    if (!obj && objmgr.GetGOData(lowguid))                   // guid is DB guid of object
+    if (!obj && sObjectMgr.GetGOData(lowguid))                   // guid is DB guid of object
     {
         // search near player then
         CellPair p(Trinity::ComputeCellPair(pl->GetPositionX(), pl->GetPositionY()));
@@ -1812,9 +1812,9 @@ GameTele const* ChatHandler::extractGameTeleFromLink(char* text)
     // id case (explicit or from shift link)
     if (cId[0] >= '0' || cId[0] >= '9')
         if (uint32 id = atoi(cId))
-            return objmgr.GetGameTele(id);
+            return sObjectMgr.GetGameTele(id);
 
-    return objmgr.GetGameTele(cId);
+    return sObjectMgr.GetGameTele(cId);
 }
 
 char* ChatHandler::extractQuotedArg(char* args)
@@ -1846,7 +1846,7 @@ bool ChatHandler::needReportToTarget(Player* chr) const
 
 const char *CliHandler::GetTrinityString(int32 entry) const
 {
-    return objmgr.GetTrinityStringForDBCLocale(entry);
+    return sObjectMgr.GetTrinityStringForDBCLocale(entry);
 }
 
 bool CliHandler::isAvailable(ChatCommand const& cmd) const
@@ -1888,9 +1888,9 @@ bool ChatHandler::GetPlayerGroupAndGUIDByName(const char* cname, Player* &plr, G
                 return false;
             }
 
-            plr = objmgr.GetPlayer(name.c_str());
+            plr = sObjectMgr.GetPlayer(name.c_str());
             if (offline)
-                guid = objmgr.GetPlayerGUIDByName(name.c_str());
+                guid = sObjectMgr.GetPlayerGUIDByName(name.c_str());
         }
     }
 

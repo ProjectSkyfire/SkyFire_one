@@ -38,9 +38,9 @@
 #include "Map.h"
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"
-#include "Policies/Singleton.h"
 #include "Database/SQLStorage.h"
 
+#include <ace/Singleton.h>
 #include <string>
 #include <map>
 #include <limits>
@@ -525,7 +525,7 @@ class PlayerDumpReader;
 class ObjectMgr
 {
     friend class PlayerDumpReader;
-
+    friend class ACE_Singleton<ObjectMgr, ACE_Null_Mutex>;
     public:
         ObjectMgr();
         ~ObjectMgr();
@@ -1153,7 +1153,7 @@ class ObjectMgr
         CacheTrainerSpellMap m_mCacheTrainerSpellMap;
 };
 
-#define objmgr Trinity::Singleton<ObjectMgr>::Instance()
+#define sObjectMgr (*ACE_Singleton<ObjectMgr, ACE_Null_Mutex>::instance())
 
 // scripting access functions
 bool LoadTrinityStrings(DatabaseType& db, char const* table, int32 start_value = MAX_CREATURE_AI_TEXT_STRING_ID, int32 end_value = std::numeric_limits<int32>::min());

@@ -437,7 +437,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                 {
                     if (CreatureInfo const* ci = GetCreatureTemplateStore(action.morph.creatureId))
                     {
-                        uint32 display_id = objmgr.ChooseDisplayId(0, ci);
+                        uint32 display_id = sObjectMgr.ChooseDisplayId(0, ci);
                         me->SetDisplayId(display_id);
                     }
                 }

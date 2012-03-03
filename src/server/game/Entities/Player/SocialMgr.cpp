@@ -123,7 +123,7 @@ void PlayerSocial::SetFriendNote(uint32 friend_guid, std::string note)
 
 void PlayerSocial::SendSocialList()
 {
-    Player *plr = objmgr.GetPlayer(GetPlayerGUID());
+    Player *plr = sObjectMgr.GetPlayer(GetPlayerGUID());
     if (!plr)
         return;
 

@@ -99,6 +99,6 @@ void WorldRunnable::run()
 
     // End the database thread
     WorldDatabase.ThreadEnd();                                  // free mySQL thread resources
-    //objmgr.UnloadAll();             // unload 'i_player2corpse' storage and remove from world
+    //sObjectMgr.UnloadAll();             // unload 'i_player2corpse' storage and remove from world
     //sScriptMgr.Unload();
 }

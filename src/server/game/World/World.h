@@ -687,6 +687,6 @@ class World
 
 extern uint32 realmID;
 
-#define sWorld Trinity::Singleton<World>::Instance()
+#define sWorld (*ACE_Singleton<World, ACE_Null_Mutex>::instance())
 #endif
 

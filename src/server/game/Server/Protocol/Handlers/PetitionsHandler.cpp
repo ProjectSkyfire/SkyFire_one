@@ -140,12 +140,12 @@ void WorldSession::HandlePetitionBuyOpcode(WorldPacket & recv_data)
 
     if (type == 9)
     {
-        if (objmgr.GetGuildByName(name))
+        if (sObjectMgr.GetGuildByName(name))
         {
             SendGuildCommandResult(GUILD_CREATE_S, name, ERR_GUILD_NAME_EXISTS_S);
             return;
         }
-        if (objmgr.IsReservedName(name) || !ObjectMgr::IsValidCharterName(name))
+        if (sObjectMgr.IsReservedName(name) || !ObjectMgr::IsValidCharterName(name))
         {
             SendGuildCommandResult(GUILD_CREATE_S, name, ERR_GUILD_NAME_INVALID);
             return;
@@ -153,19 +153,19 @@ void WorldSession::HandlePetitionBuyOpcode(WorldPacket & recv_data)
     }
     else
     {
-        if (objmgr.GetArenaTeamByName(name))
+        if (sObjectMgr.GetArenaTeamByName(name))
         {
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, name, "", ERR_ARENA_TEAM_NAME_EXISTS_S);
             return;
         }
-        if (objmgr.IsReservedName(name) || !ObjectMgr::IsValidCharterName(name))
+        if (sObjectMgr.IsReservedName(name) || !ObjectMgr::IsValidCharterName(name))
         {
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, name, "", ERR_ARENA_TEAM_NAME_INVALID);
             return;
         }
     }
 
-    ItemPrototype const *pProto = objmgr.GetItemPrototype(charterid);
+    ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(charterid);
     if (!pProto)
     {
         _player->SendBuyError(BUY_ERR_CANT_FIND_ITEM, NULL, charterid, 0);
@@ -383,12 +383,12 @@ void WorldSession::HandlePetitionRenameOpcode(WorldPacket & recv_data)
 
     if (type == 9)
     {
-        if (objmgr.GetGuildByName(newname))
+        if (sObjectMgr.GetGuildByName(newname))
         {
             SendGuildCommandResult(GUILD_CREATE_S, newname, ERR_GUILD_NAME_EXISTS_S);
             return;
         }
-        if (objmgr.IsReservedName(newname) || !ObjectMgr::IsValidCharterName(newname))
+        if (sObjectMgr.IsReservedName(newname) || !ObjectMgr::IsValidCharterName(newname))
         {
             SendGuildCommandResult(GUILD_CREATE_S, newname, ERR_GUILD_NAME_INVALID);
             return;
@@ -396,12 +396,12 @@ void WorldSession::HandlePetitionRenameOpcode(WorldPacket & recv_data)
     }
     else
     {
-        if (objmgr.GetArenaTeamByName(newname))
+        if (sObjectMgr.GetArenaTeamByName(newname))
         {
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, newname, "", ERR_ARENA_TEAM_NAME_EXISTS_S);
             return;
         }
-        if (objmgr.IsReservedName(newname) || !ObjectMgr::IsValidCharterName(newname))
+        if (sObjectMgr.IsReservedName(newname) || !ObjectMgr::IsValidCharterName(newname))
         {
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, newname, "", ERR_ARENA_TEAM_NAME_INVALID);
             return;
@@ -452,7 +452,7 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
         return;
 
     // not let enemies sign guild charter
-    if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD) && GetPlayer()->GetTeam() != objmgr.GetPlayerTeamByGUID(ownerguid))
+    if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD) && GetPlayer()->GetTeam() != sObjectMgr.GetPlayerTeamByGUID(ownerguid))
     {
         if (type != 9)
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_INVITE_SS, "", "", ERR_ARENA_TEAM_NOT_ALLIED);
@@ -517,7 +517,7 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
         SendPacket(&data);
 
         // update for owner if online
-        if (Player *owner = objmgr.GetPlayer(ownerguid))
+        if (Player *owner = sObjectMgr.GetPlayer(ownerguid))
             owner->GetSession()->SendPacket(&data);
         return;
     }
@@ -540,7 +540,7 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
     //    item->SetUInt32Value(ITEM_FIELD_ENCHANTMENT+1, signs);
 
     // update for owner if online
-    if (Player *owner = objmgr.GetPlayer(ownerguid))
+    if (Player *owner = sObjectMgr.GetPlayer(ownerguid))
         owner->GetSession()->SendPacket(&data);
 }
 
@@ -560,7 +560,7 @@ void WorldSession::HandlePetitionDeclineOpcode(WorldPacket & recv_data)
     Field *fields = result->Fetch();
     ownerguid = MAKE_NEW_GUID(fields[0].GetUInt32(), 0, HIGHGUID_PLAYER);
 
-    Player *owner = objmgr.GetPlayer(ownerguid);
+    Player *owner = sObjectMgr.GetPlayer(ownerguid);
     if (owner)                                               // petition owner online
     {
         WorldPacket data(MSG_PETITION_DECLINE, 8);
@@ -752,7 +752,7 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket & recv_data)
 
     if (type == 9)
     {
-        if (objmgr.GetGuildByName(name))
+        if (sObjectMgr.GetGuildByName(name))
         {
             SendGuildCommandResult(GUILD_CREATE_S, name, ERR_GUILD_NAME_EXISTS_S);
             return;
@@ -760,7 +760,7 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket & recv_data)
     }
     else
     {
-        if (objmgr.GetArenaTeamByName(name))
+        if (sObjectMgr.GetArenaTeamByName(name))
         {
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, name, "", ERR_ARENA_TEAM_NAME_EXISTS_S);
             return;
@@ -787,7 +787,7 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket & recv_data)
         }
 
         // register guild and add guildmaster
-        objmgr.AddGuild(guild);
+        sObjectMgr.AddGuild(guild);
 
         // add members
         for (uint8 i = 0; i < signs; ++i)
@@ -813,7 +813,7 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket & recv_data)
         at->SetEmblem(backgroud, icon, iconcolor, border, bordercolor);
 
         // register team and add captain
-        objmgr.AddArenaTeam(at);
+        sObjectMgr.AddArenaTeam(at);
         sLog->outDebug("PetitonsHandler: arena team added to objmrg");
 
         // add members
