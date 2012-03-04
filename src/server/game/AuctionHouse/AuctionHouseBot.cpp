@@ -713,7 +713,7 @@ void AuctionHouseBot::Update()
     WorldSession _session(AHBplayerAccount, NULL, SEC_PLAYER, true, 0, LOCALE_enUS);
     Player _AHBplayer(&_session);
     _AHBplayer.Initialize(AHBplayerGUID);
-    ObjectAccessor::Instance().AddObject(&_AHBplayer);
+    sObjectAccessor.AddObject(&_AHBplayer);
 
     // Add New Bids
     if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
@@ -745,7 +745,7 @@ void AuctionHouseBot::Update()
         addNewAuctionBuyerBotBid(&_AHBplayer, &NeutralConfig, &_session);
         _lastrun_n = _newrun;
     }
-    ObjectAccessor::Instance().RemoveObject(&_AHBplayer);
+    sObjectAccessor.RemoveObject(&_AHBplayer);
 }
 
 void AuctionHouseBot::Initialize()

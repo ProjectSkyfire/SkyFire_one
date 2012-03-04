@@ -622,7 +622,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
             pCurrChar->TeleportToHomebind();
     }
 
-    ObjectAccessor::Instance().AddObject(pCurrChar);
+    sObjectAccessor.AddObject(pCurrChar);
     //sLog->outDebug("Player %s added to Map.",pCurrChar->GetName());
     pCurrChar->GetSocial()->SendSocialList();
 

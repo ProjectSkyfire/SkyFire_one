@@ -3739,7 +3739,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
 
     // convert corpse to bones if exist (to prevent exiting Corpse in World without DB entry)
     // bones will be deleted by corpse/bones deleting thread shortly
-    ObjectAccessor::Instance().ConvertCorpseForPlayer(playerguid);
+    sObjectAccessor.ConvertCorpseForPlayer(playerguid);
 
     // remove from guild
     if (uint32 guildId = GetGuildIdFromDB(playerguid))
@@ -4201,18 +4201,18 @@ void Player::CreateCorpse()
         corpse->SaveToDB();
 
     // register for player, but not show
-    ObjectAccessor::Instance().AddCorpse(corpse);
+    sObjectAccessor.AddCorpse(corpse);
 }
 
 void Player::SpawnCorpseBones()
 {
-    if (ObjectAccessor::Instance().ConvertCorpseForPlayer(GetGUID()) && !GetSession()->PlayerLogoutWithSave()) // at logout we will already store the player
+    if (sObjectAccessor.ConvertCorpseForPlayer(GetGUID()) && !GetSession()->PlayerLogoutWithSave()) // at logout we will already store the player
         SaveToDB();                                     // prevent loading as ghost without corpse
 }
 
 Corpse* Player::GetCorpse() const
 {
-    return ObjectAccessor::Instance().GetCorpseForPlayerGUID(GetGUID());
+    return sObjectAccessor.GetCorpseForPlayerGUID(GetGUID());
 }
 
 void Player::DurabilityLossAll(double percent, bool inventory)
@@ -7586,7 +7586,7 @@ void Player::RemovedInsignia(Player* looterPlr)
 
     // We have to convert player corpse to bones, not to be able to resurrect there
     // SpawnCorpseBones isn't handy, 'cos it saves player while he in BG
-    Corpse *bones = ObjectAccessor::Instance().ConvertCorpseForPlayer(GetGUID(),true);
+    Corpse *bones = sObjectAccessor.ConvertCorpseForPlayer(GetGUID(),true);
     if (!bones)
         return;
 
@@ -15295,7 +15295,7 @@ void Player::_LoadAuras(QueryResult_AutoPtr result, uint32 timediff)
 void Player::LoadCorpse()
 {
     if (isAlive())
-        ObjectAccessor::Instance().ConvertCorpseForPlayer(GetGUID());
+        sObjectAccessor.ConvertCorpseForPlayer(GetGUID());
     else
     {
         if (Corpse *corpse = GetCorpse())

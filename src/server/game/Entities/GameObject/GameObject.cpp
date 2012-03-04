@@ -104,7 +104,7 @@ void GameObject::AddToWorld()
         if (m_zoneScript)
             m_zoneScript->OnGameObjectCreate(this, true);
 
-        ObjectAccessor::Instance().AddObject(this);
+        sObjectAccessor.AddObject(this);
         WorldObject::AddToWorld();
     }
 }
@@ -127,7 +127,7 @@ void GameObject::RemoveFromWorld()
         }
 
         WorldObject::RemoveFromWorld();
-        ObjectAccessor::Instance().RemoveObject(this);
+        sObjectAccessor.RemoveObject(this);
     }
 }
 

@@ -1776,7 +1776,7 @@ void World::Update(time_t diff)
     if (m_timers[WUPDATE_CORPSES].Passed())
     {
         m_timers[WUPDATE_CORPSES].Reset();
-        ObjectAccessor::Instance().RemoveOldCorpses();
+        sObjectAccessor.RemoveOldCorpses();
     }
 
     // Process Game events when necessary

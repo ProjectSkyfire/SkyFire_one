@@ -188,7 +188,7 @@ void Creature::AddToWorld()
     {
         if (m_zoneScript)
             m_zoneScript->OnCreatureCreate(this, true);
-        ObjectAccessor::Instance().AddObject(this);
+        sObjectAccessor.AddObject(this);
         Unit::AddToWorld();
         SearchFormation();
         SearchGroup();
@@ -205,7 +205,7 @@ void Creature::RemoveFromWorld()
         if (m_formation)
             formation_mgr.RemoveCreatureFromFormation(m_formation, this);
         Unit::RemoveFromWorld();
-        ObjectAccessor::Instance().RemoveObject(this);
+        sObjectAccessor.RemoveObject(this);
     }
 }
 

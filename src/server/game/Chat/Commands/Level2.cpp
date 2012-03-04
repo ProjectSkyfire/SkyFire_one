@@ -3711,7 +3711,7 @@ bool ChatHandler::LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 li
 // Triggering corpses expire check in world
 bool ChatHandler::HandleServerCorpsesCommand(const char* /*args*/)
 {
-    ObjectAccessor::Instance().RemoveOldCorpses();
+    sObjectAccessor.RemoveOldCorpses();
     return true;
 }
 

@@ -3674,7 +3674,7 @@ bool ChatHandler::HandleGuildCreateCommand(const char *args)
 
     std::string guildname = gname;
 
-    Player* player = ObjectAccessor::Instance ().FindPlayerByName (lname);
+    Player* player = sObjectAccessor.FindPlayerByName (lname);
     if (!player)
     {
         SendSysMessage (LANG_PLAYER_NOT_FOUND);
@@ -3725,7 +3725,7 @@ bool ChatHandler::HandleGuildInviteCommand(const char *args)
     }
 
     uint64 plGuid = 0;
-    if (Player* targetPlayer = ObjectAccessor::Instance ().FindPlayerByName (plName.c_str ()))
+    if (Player* targetPlayer = sObjectAccessor.FindPlayerByName (plName.c_str ()))
         plGuid = targetPlayer->GetGUID ();
     else
         plGuid = sObjectMgr.GetPlayerGUIDByName (plName.c_str ());
@@ -3759,7 +3759,7 @@ bool ChatHandler::HandleGuildUninviteCommand(const char *args)
 
     uint64 plGuid = 0;
     uint32 glId   = 0;
-    if (Player* targetPlayer = ObjectAccessor::Instance ().FindPlayerByName (plName.c_str ()))
+    if (Player* targetPlayer = sObjectAccessor.FindPlayerByName (plName.c_str ()))
     {
         plGuid = targetPlayer->GetGUID ();
         glId   = targetPlayer->GetGuildId ();
@@ -3800,7 +3800,7 @@ bool ChatHandler::HandleGuildRankCommand(const char *args)
 
     uint64 plGuid = 0;
     uint32 glId   = 0;
-    if (Player* targetPlayer = ObjectAccessor::Instance ().FindPlayerByName (plName.c_str ()))
+    if (Player* targetPlayer = sObjectAccessor.FindPlayerByName (plName.c_str ()))
     {
         plGuid = targetPlayer->GetGUID ();
         glId   = targetPlayer->GetGuildId ();
@@ -4081,7 +4081,7 @@ bool ChatHandler::HandleReviveCommand(const char *args)
     else if (player_guid)
     {
         // will resurrected at login without corpse
-        ObjectAccessor::Instance().ConvertCorpseForPlayer(player_guid);
+        sObjectAccessor.ConvertCorpseForPlayer(player_guid);
     }
     else
     {
@@ -5261,8 +5261,8 @@ bool ChatHandler::HandleResetAllCommand(const char * args)
 
     CharacterDatabase.PExecute("UPDATE characters SET at_login = at_login | '%u' WHERE (at_login & '%u') = '0'",atLogin, atLogin);
 
-    ObjectAccessor::Guard guard(*HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType const& plist = ObjectAccessor::Instance().GetPlayers();
+    ACE_GUARD_RETURN(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock(), true);
+    HashMapHolder<Player>::MapType const& plist = sObjectAccessor.GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator itr = plist.begin(); itr != plist.end(); ++itr)
         itr->second->SetAtLoginFlag(atLogin);
 

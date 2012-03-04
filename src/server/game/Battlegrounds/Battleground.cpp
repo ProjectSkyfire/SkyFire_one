@@ -340,7 +340,7 @@ void BattleGround::Update(time_t diff)
                 continue;
             plr->ResurrectPlayer(1.0f);
             plr->CastSpell(plr, SPELL_SPIRIT_HEAL_MANA, true);
-            ObjectAccessor::Instance().ConvertCorpseForPlayer(*itr);
+            sObjectAccessor.ConvertCorpseForPlayer(*itr);
         }
         m_ResurrectQueue.clear();
     }

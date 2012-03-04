@@ -32,8 +32,8 @@ static void AttemptJoin(Player* _player)
     if (!_player->m_lookingForGroup.canAutoJoin() || _player->GetGroup())
         return;
 
-    ObjectAccessor::Guard guard(*HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType const& players = ObjectAccessor::Instance().GetPlayers();
+    ACE_GUARD(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock());
+    HashMapHolder<Player>::MapType const& players = sObjectAccessor.GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator iter = players.begin(); iter != players.end(); ++iter)
     {
         Player *plr = iter->second;
@@ -92,8 +92,8 @@ static void AttemptAddMore(Player* _player)
     if (!_player->m_lookingForGroup.more.canAutoJoin())
         return;
 
-    ObjectAccessor::Guard guard(*HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType const& players = ObjectAccessor::Instance().GetPlayers();
+    ACE_GUARD(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock());
+    HashMapHolder<Player>::MapType const& players = sObjectAccessor.GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator iter = players.begin(); iter != players.end(); ++iter)
     {
         Player *plr = iter->second;
@@ -262,7 +262,7 @@ void WorldSession::SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type)
     data << uint32(0);                                      // count again, strange, placeholder
 
     //TODO: Guard Player map
-    HashMapHolder<Player>::MapType const& players = ObjectAccessor::Instance().GetPlayers();
+    HashMapHolder<Player>::MapType const& players = sObjectAccessor.GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator iter = players.begin(); iter != players.end(); ++iter)
     {
         Player *plr = iter->second;

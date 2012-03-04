@@ -1116,7 +1116,7 @@ void GameEventMgr::GameEventUnspawn(int16 event_id)
         {
             sObjectMgr.RemoveCreatureFromGrid(*itr, data);
 
-            if (Creature* pCreature = ObjectAccessor::Instance().GetObjectInWorld(MAKE_NEW_GUID(*itr, data->id, HIGHGUID_UNIT), (Creature*)NULL))
+            if (Creature* pCreature = sObjectAccessor.GetObjectInWorld(MAKE_NEW_GUID(*itr, data->id, HIGHGUID_UNIT), (Creature*)NULL))
                 pCreature->AddObjectToRemoveList();
         }
     }
@@ -1137,7 +1137,7 @@ void GameEventMgr::GameEventUnspawn(int16 event_id)
         {
             sObjectMgr.RemoveGameobjectFromGrid(*itr, data);
 
-            if (GameObject* pGameobject = ObjectAccessor::Instance().GetObjectInWorld(MAKE_NEW_GUID(*itr, data->id, HIGHGUID_GAMEOBJECT), (GameObject*)NULL))
+            if (GameObject* pGameobject = sObjectAccessor.GetObjectInWorld(MAKE_NEW_GUID(*itr, data->id, HIGHGUID_GAMEOBJECT), (GameObject*)NULL))
                 pGameobject->AddObjectToRemoveList();
         }
     }
@@ -1162,7 +1162,7 @@ void GameEventMgr::ChangeEquipOrModel(int16 event_id, bool activate)
             continue;
 
         // Update if spawned
-        Creature* pCreature = ObjectAccessor::Instance().GetObjectInWorld(MAKE_NEW_GUID(itr->first, data->id, HIGHGUID_UNIT), (Creature*)NULL);
+        Creature* pCreature = sObjectAccessor.GetObjectInWorld(MAKE_NEW_GUID(itr->first, data->id, HIGHGUID_UNIT), (Creature*)NULL);
         if (pCreature)
         {
             if (activate)

@@ -219,8 +219,8 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
     data << uint32(clientcount);                            // clientcount place holder, listed count
     data << uint32(clientcount);                            // clientcount place holder, online count
 
-    ObjectAccessor::Guard guard(*HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType& m = ObjectAccessor::Instance().GetPlayers();
+    ACE_GUARD(ACE_Thread_Mutex, g, *HashMapHolder<Player>::GetLock());
+    HashMapHolder<Player>::MapType& m = sObjectAccessor.GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator itr = m.begin(); itr != m.end(); ++itr)
     {
         if (security == SEC_PLAYER)

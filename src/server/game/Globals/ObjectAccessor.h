@@ -22,9 +22,7 @@
 #define TRINITY_OBJECTACCESSOR_H
 
 #include "Define.h"
-#include "Policies/Singleton.h"
 #include "UnorderedMap.h"
-#include "Policies/ThreadingModel.h"
 
 #include "ByteBuffer.h"
 #include "UpdateData.h"
@@ -33,6 +31,7 @@
 #include "Object.h"
 #include "Player.h"
 
+#include <ace/Singleton.h>
 #include <ace/Thread_Mutex.h>
 #include <set>
 
@@ -51,23 +50,23 @@ class HashMapHolder
 
         typedef UNORDERED_MAP<uint64, T*> MapType;
         typedef ACE_Thread_Mutex LockType;
-        typedef Trinity::GeneralLock<LockType > Guard;
+
 
         static void Insert(T* o)
         {
-            Guard guard(i_lock);
+            ACE_GUARD(LockType, Guard, i_lock);
             m_objectMap[o->GetGUID()] = o;
         }
 
         static void Remove(T* o)
         {
-            Guard guard(i_lock);
+            ACE_GUARD(LockType, Guard, i_lock);
             m_objectMap.erase(o->GetGUID());
         }
 
         static T* Find(uint64 guid)
         {
-            Guard guard(i_lock);
+            ACE_GUARD_RETURN(LockType, Guard, i_lock, NULL);
             typename MapType::iterator itr = m_objectMap.find(guid);
             return (itr != m_objectMap.end()) ? itr->second : NULL;
         }
@@ -84,9 +83,9 @@ class HashMapHolder
         static MapType  m_objectMap;
 };
 
-class ObjectAccessor : public Trinity::Singleton<ObjectAccessor, Trinity::ClassLevelLockable<ObjectAccessor, ACE_Thread_Mutex> >
+class ObjectAccessor
 {
-    friend class Trinity::OperatorNew<ObjectAccessor>;
+    friend class ACE_Singleton<ObjectAccessor, ACE_Thread_Mutex>;
     ObjectAccessor();
     ~ObjectAccessor();
     ObjectAccessor(const ObjectAccessor&);
@@ -206,13 +205,13 @@ class ObjectAccessor : public Trinity::Singleton<ObjectAccessor, Trinity::ClassL
 
         void AddUpdateObject(Object* obj)
         {
-            Guard guard(i_updateGuard);
+            ACE_GUARD(LockType, Guard, i_updateGuard);
             i_objects.insert(obj);
         }
 
         void RemoveUpdateObject(Object* obj)
         {
-            Guard guard(i_updateGuard);
+            ACE_GUARD(LockType, Guard, i_updateGuard);
             i_objects.erase(obj);
         }
 
@@ -226,7 +225,6 @@ class ObjectAccessor : public Trinity::Singleton<ObjectAccessor, Trinity::ClassL
         void RemoveOldCorpses();
 
         typedef ACE_Thread_Mutex LockType;
-        typedef Trinity::GeneralLock<LockType> Guard;
 
     private:
 
@@ -241,5 +239,7 @@ class ObjectAccessor : public Trinity::Singleton<ObjectAccessor, Trinity::ClassL
         LockType i_updateGuard;
         LockType i_corpseGuard;
 };
+
+#define sObjectAccessor (*ACE_Singleton<ObjectAccessor, ACE_Thread_Mutex>::instance())
 #endif
 
