@@ -1,12 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -27,23 +26,31 @@ mValue(NULL), mType(DB_TYPE_UNKNOWN)
 
 Field::Field(Field &f)
 {
-    const char *value;
+    const char* value;
 
     value = f.GetString();
 
-    if (value && (mValue = new char[strlen(value) + 1]))
-        strcpy(mValue, value);
+    if (value)
+    {
+        mValue = new char[strlen(value) + 1];
+        if (mValue)
+            strcpy(mValue, value);
+    }
     else
         mValue = NULL;
 
     mType = f.GetType();
 }
 
-Field::Field(const char *value, enum Field::DataTypes type) :
+Field::Field(const char* value, enum Field::DataTypes type) :
 mType(type)
 {
-    if (value && (mValue = new char[strlen(value) + 1]))
-        strcpy(mValue, value);
+    if (value)
+    {
+        mValue = new char[strlen(value) + 1];
+        if (mValue)
+            strcpy(mValue, value);
+    }
     else
         mValue = NULL;
 }
@@ -54,7 +61,7 @@ Field::~Field()
         delete [] mValue;
 }
 
-void Field::SetValue(const char *value)
+void Field::SetValue(const char* value)
 {
     if (mValue)
         delete [] mValue;
@@ -67,4 +74,3 @@ void Field::SetValue(const char *value)
     else
         mValue = NULL;
 }
-
