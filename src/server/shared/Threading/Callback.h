@@ -1,12 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -21,7 +20,7 @@
 #ifndef TRINITY_CALLBACK_H
 #define TRINITY_CALLBACK_H
 
-// BASE CLASSES
+/// ------------ BASE CLASSES ------------
 
 namespace Trinity
 {
@@ -110,7 +109,7 @@ namespace Trinity
                 : m_object(cb.m_object), m_method(cb.m_method) {}
     };
 
-    // STATICS
+    /// ---- Statics ----
 
     template < typename ParamType1 = void, typename ParamType2 = void, typename ParamType3 = void, typename ParamType4 = void >
     class _SCallback
@@ -193,7 +192,7 @@ namespace Trinity
     };
 }
 
-// GENERIC CALLBACKS
+/// --------- GENERIC CALLBACKS ----------
 
 namespace Trinity
 {
@@ -267,7 +266,7 @@ namespace Trinity
     };
 }
 
-// QUERY CALLBACKS
+/// ---------- QUERY CALLBACKS -----------
 
 #include "QueryResult.h"
 class QueryResult;
@@ -336,7 +335,7 @@ namespace Trinity
                 : _IQueryCallback< QC0 >(QC0(object, method, result)) {}
     };
 
-    // STATICS
+    /// ---- Statics ----
 
     template < typename ParamType1 = void, typename ParamType2 = void, typename ParamType3 = void >
     class SQueryCallback :
