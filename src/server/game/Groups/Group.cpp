@@ -1626,7 +1626,7 @@ void Group::BroadcastGroupUpdate(void)
         {
             pp->ForceValuesUpdateAtIndex(UNIT_FIELD_BYTES_2);
             pp->ForceValuesUpdateAtIndex(UNIT_FIELD_FACTIONTEMPLATE);
-            DEBUG_LOG("-- Forced group value update for '%s'", pp->GetName());
+            sLog->outDebug("-- Forced group value update for '%s'", pp->GetName());
         }
     }
 }

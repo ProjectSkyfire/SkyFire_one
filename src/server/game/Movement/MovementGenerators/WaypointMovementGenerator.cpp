@@ -298,7 +298,7 @@ bool FlightPathMovementGenerator::Update(Player &player, const uint32 &diff)
                 ++i_currentNode;
                 if (MovementInProgress())
                 {
-                    DEBUG_LOG("loading node %u for player %s", i_currentNode, player.GetName());
+                    sLog->outDebug("loading node %u for player %s", i_currentNode, player.GetName());
                     if (i_mapIds[i_currentNode] == curMap)
                     {
                         // do not send movement, it was sent already

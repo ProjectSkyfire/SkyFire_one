@@ -476,7 +476,7 @@ bool Database::_TransactionCmd(const char *sql)
         return false;
     }
     else
-        DEBUG_LOG("SQL: %s", sql);
+        sLog->outDebug("SQL: %s", sql);
 
     return true;
 }

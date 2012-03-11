@@ -146,7 +146,7 @@ class Log
         FILE* sqlLogFile;
         FILE* sqlDevLogFile;
 
-        // cache values for after initilization use (like gm log per account case)
+        // cache values for after initialization use (like gm log per account case)
         std::string m_logsDir;
         std::string m_logsTimestamp;
 
@@ -182,12 +182,6 @@ class Log
 };
 
 #define sLog ACE_Singleton<Log, ACE_Thread_Mutex>::instance()
-
-#ifdef TRINITY_DEBUG
-#define DEBUG_LOG sLog->outDebug
-#else
-#define DEBUG_LOG
-#endif
 
 #endif
 

@@ -449,7 +449,7 @@ void WorldSession::HandlePlayerLoginOpcode(WorldPacket & recv_data)
     m_playerLoading = true;
     uint64 playerGuid = 0;
 
-    DEBUG_LOG("WORLD: Recvd Player Logon Message");
+    sLog->outDebug("WORLD: Recvd Player Logon Message");
 
     recv_data >> playerGuid;
 
@@ -538,13 +538,13 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         data.put(0, linecount);
 
         SendPacket(&data);
-        DEBUG_LOG("WORLD: Sent motd (SMSG_MOTD)");
+        sLog->outDebug("WORLD: Sent motd (SMSG_MOTD)");
 
         // send server info
         if (sWorld.getConfig(CONFIG_ENABLE_SINFO_LOGIN) == 1)
             chH.PSendSysMessage(_FULLVERSION);
 
-        DEBUG_LOG("WORLD: Sent server info");
+        sLog->outDebug("WORLD: Sent server info");
     }
 
     QueryResult_AutoPtr resultGuild = holder->GetResult(PLAYER_LOGIN_QUERY_LOADGUILD);
@@ -571,7 +571,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
             data << uint8(1);
             data << guild->GetMOTD();
             SendPacket(&data);
-            DEBUG_LOG("WORLD: Sent guild-motd (SMSG_GUILD_EVENT)");
+            sLog->outDebug("WORLD: Sent guild-motd (SMSG_GUILD_EVENT)");
 
             data.Initialize(SMSG_GUILD_EVENT, (5+10));      // we guess size
             data<<(uint8)GE_SIGNED_ON;
@@ -579,7 +579,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
             data<<pCurrChar->GetName();
             data<<pCurrChar->GetGUID();
             guild->BroadcastPacket(&data);
-            DEBUG_LOG("WORLD: Sent guild-signed-on (SMSG_GUILD_EVENT)");
+            sLog->outDebug("WORLD: Sent guild-signed-on (SMSG_GUILD_EVENT)");
 
             // Increment online members of the guild
             guild->IncOnlineMemberCount();
@@ -753,7 +753,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
 
 void WorldSession::HandleSetFactionAtWar(WorldPacket & recv_data)
 {
-    DEBUG_LOG("WORLD: Received CMSG_SET_FACTION_ATWAR");
+    sLog->outDebug("WORLD: Received CMSG_SET_FACTION_ATWAR");
 
     uint32 repListID;
     uint8  flag;
@@ -774,7 +774,7 @@ void WorldSession::HandleSetFactionAtWar(WorldPacket & recv_data)
 
 void WorldSession::HandleMeetingStoneInfo(WorldPacket & /*recv_data*/)
 {
-    DEBUG_LOG("WORLD: Received CMSG_MEETING_STONE_INFO");
+    sLog->outDebug("WORLD: Received CMSG_MEETING_STONE_INFO");
 
     WorldPacket data(SMSG_MEETINGSTONE_SETQUEUE, 5);
     data << uint32(0) << uint8(6);
@@ -815,7 +815,7 @@ void WorldSession::HandleTutorialReset(WorldPacket & /*recv_data*/)
 
 void WorldSession::HandleSetWatchedFactionIndexOpcode(WorldPacket & recv_data)
 {
-    DEBUG_LOG("WORLD: Received CMSG_SET_WATCHED_FACTION");
+    sLog->outDebug("WORLD: Received CMSG_SET_WATCHED_FACTION");
     int32 repId;
     recv_data >> repId;
     GetPlayer()->SetInt32Value(PLAYER_FIELD_WATCHED_FACTION_INDEX, repId);
@@ -823,7 +823,7 @@ void WorldSession::HandleSetWatchedFactionIndexOpcode(WorldPacket & recv_data)
 
 void WorldSession::HandleSetWatchedFactionInactiveOpcode(WorldPacket & recv_data)
 {
-    DEBUG_LOG("WORLD: Received CMSG_SET_FACTION_INACTIVE");
+    sLog->outDebug("WORLD: Received CMSG_SET_FACTION_INACTIVE");
     uint32 replistid;
     uint8 inactive;
     recv_data >> replistid >> inactive;
@@ -837,13 +837,13 @@ void WorldSession::HandleSetWatchedFactionInactiveOpcode(WorldPacket & recv_data
 
 void WorldSession::HandleToggleHelmOpcode(WorldPacket & /*recv_data*/)
 {
-    DEBUG_LOG("CMSG_TOGGLE_HELM for %s", _player->GetName());
+    sLog->outDebug("CMSG_TOGGLE_HELM for %s", _player->GetName());
     _player->ToggleFlag(PLAYER_FLAGS, PLAYER_FLAGS_HIDE_HELM);
 }
 
 void WorldSession::HandleToggleCloakOpcode(WorldPacket & /*recv_data*/)
 {
-    DEBUG_LOG("CMSG_TOGGLE_CLOAK for %s", _player->GetName());
+    sLog->outDebug("CMSG_TOGGLE_CLOAK for %s", _player->GetName());
     _player->ToggleFlag(PLAYER_FLAGS, PLAYER_FLAGS_HIDE_CLOAK);
 }
 

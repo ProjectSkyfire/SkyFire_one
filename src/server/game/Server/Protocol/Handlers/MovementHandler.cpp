@@ -33,7 +33,7 @@
 
 void WorldSession::HandleMoveWorldportAckOpcode(WorldPacket & /*recv_data*/)
 {
-    DEBUG_LOG("WORLD: got MSG_MOVE_WORLDPORT_ACK.");
+    sLog->outDebug("WORLD: got MSG_MOVE_WORLDPORT_ACK.");
     HandleMoveWorldportAckOpcode();
 }
 
@@ -192,8 +192,8 @@ void WorldSession::HandleMoveTeleportAck(WorldPacket& recv_data)
 
     recv_data >> guid;
     recv_data >> flags >> time;
-    DEBUG_LOG("Guid " UI64FMTD, guid);
-    DEBUG_LOG("Flags %u, time %u", flags, time/IN_MILLISECONDS);
+    sLog->outDebug("Guid " UI64FMTD, guid);
+    sLog->outDebug("Flags %u, time %u", flags, time/IN_MILLISECONDS);
 
     Unit *mover = _player->m_mover;
     Player *plMover = mover->GetTypeId() == TYPEID_PLAYER ? mover->ToPlayer() : NULL;
@@ -350,7 +350,7 @@ void WorldSession::HandleMovementOpcodes(WorldPacket & recv_data)
 
 void WorldSession::HandleForceSpeedChangeAck(WorldPacket &recv_data)
 {
-    DEBUG_LOG("WORLD: Recvd CMSG_SPEED_CHANGE_ACK");
+    sLog->outDebug("WORLD: Recvd CMSG_SPEED_CHANGE_ACK");
     /* extract packet */
     ObjectGuid guid;
     MovementInfo movementInfo;
@@ -404,7 +404,7 @@ void WorldSession::HandleForceSpeedChangeAck(WorldPacket &recv_data)
 
 void WorldSession::HandleSetActiveMoverOpcode(WorldPacket &recv_data)
 {
-    DEBUG_LOG("WORLD: Recvd CMSG_SET_ACTIVE_MOVER");
+    sLog->outDebug("WORLD: Recvd CMSG_SET_ACTIVE_MOVER");
 
     uint64 guid;
     recv_data >> guid;
@@ -421,7 +421,7 @@ void WorldSession::HandleSetActiveMoverOpcode(WorldPacket &recv_data)
 
 void WorldSession::HandleMoveNotActiveMoverOpcode(WorldPacket &recv_data)
 {
-    DEBUG_LOG("WORLD: Recvd CMSG_MOVE_NOT_ACTIVE_MOVER");
+    sLog->outDebug("WORLD: Recvd CMSG_MOVE_NOT_ACTIVE_MOVER");
     recv_data.hexlike();
 
     uint64 old_mover_guid;
@@ -438,7 +438,7 @@ void WorldSession::HandleMoveNotActiveMoverOpcode(WorldPacket &recv_data)
 
 void WorldSession::HandleMountSpecialAnimOpcode(WorldPacket& /*recvdata*/)
 {
-    DEBUG_LOG("WORLD: Recvd CMSG_MOUNTSPECIAL_ANIM");
+    sLog->outDebug("WORLD: Recvd CMSG_MOUNTSPECIAL_ANIM");
 
     WorldPacket data(SMSG_MOUNTSPECIAL_ANIM, 8);
     data << uint64(GetPlayer()->GetGUID());
@@ -450,7 +450,7 @@ void WorldSession::HandleMoveKnockBackAck(WorldPacket & recv_data)
 {
     // Currently not used but maybe use later for recheck final player position
     // (must be at call same as into "recv_data >> x >> y >> z >> orientation;"
-    DEBUG_LOG("CMSG_MOVE_KNOCK_BACK_ACK");
+    sLog->outDebug("CMSG_MOVE_KNOCK_BACK_ACK");
 
     MovementInfo movementInfo;
     uint64 guid;
@@ -469,7 +469,7 @@ void WorldSession::HandleMoveKnockBackAck(WorldPacket & recv_data)
 void WorldSession::HandleMoveFlyModeChangeAckOpcode(WorldPacket & recv_data)
 {
     // fly mode on/off
-    DEBUG_LOG("WORLD: CMSG_MOVE_SET_CAN_FLY_ACK");
+    sLog->outDebug("WORLD: CMSG_MOVE_SET_CAN_FLY_ACK");
     //recv_data.hexlike();
 
     MovementInfo movementInfo;
@@ -484,7 +484,7 @@ void WorldSession::HandleMoveFlyModeChangeAckOpcode(WorldPacket & recv_data)
 
 void WorldSession::HandleMoveHoverAck(WorldPacket& recv_data)
 {
-    DEBUG_LOG("CMSG_MOVE_HOVER_ACK");
+    sLog->outDebug("CMSG_MOVE_HOVER_ACK");
 
     MovementInfo movementInfo;
 
@@ -496,7 +496,7 @@ void WorldSession::HandleMoveHoverAck(WorldPacket& recv_data)
 
 void WorldSession::HandleMoveWaterWalkAck(WorldPacket& recv_data)
 {
-    DEBUG_LOG("CMSG_MOVE_WATER_WALK_ACK");
+    sLog->outDebug("CMSG_MOVE_WATER_WALK_ACK");
 
     MovementInfo movementInfo;
 

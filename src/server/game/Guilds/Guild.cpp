@@ -2017,7 +2017,7 @@ void Guild::BroadcastEvent(GuildEvents event, uint64 guid, char const* str1 /*=N
 
     BroadcastPacket(&data);
 
-    DEBUG_LOG("WORLD: Sent SMSG_GUILD_EVENT");
+    sLog->outDebug("WORLD: Sent SMSG_GUILD_EVENT");
 }
 
 bool GuildItemPosCount::isContainedIn(GuildItemPosCountVec const &vec) const
