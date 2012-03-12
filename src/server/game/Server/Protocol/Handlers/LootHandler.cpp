@@ -96,7 +96,7 @@ void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket & recv_data)
     QuestItem *ffaitem = NULL;
     QuestItem *conditem = NULL;
 
-    LootItem *item = loot->LootItemInSlot(lootSlot, player,&qitem,&ffaitem,&conditem);
+    LootItem *item = loot->LootItemInSlot(lootSlot, player, &qitem, &ffaitem, &conditem);
 
     if (!item)
     {
@@ -393,7 +393,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
         }
         else
             // FIXME: item must not be deleted in case not fully looted state. But this pre-request implement loot saving in DB at item save. Or cheating possible.
-            player->DestroyItem(pItem->GetBagSlot(),pItem->GetSlot(), true);
+            player->DestroyItem(pItem->GetBagSlot(), pItem->GetSlot(), true);
         return;                                             // item can be looted only single player
     }
     else
@@ -477,7 +477,7 @@ void WorldSession::HandleLootMasterGiveOpcode(WorldPacket & recv_data)
 
     if (slotid > pLoot->items.size())
     {
-        sLog->outDebug("AutoLootItem: Player %s might be using a hack! (slot %d, size %lu)",GetPlayer()->GetName(), slotid, (unsigned long)pLoot->items.size());
+        sLog->outDebug("AutoLootItem: Player %s might be using a hack! (slot %d, size %lu)", GetPlayer()->GetName(), slotid, (unsigned long)pLoot->items.size());
         return;
     }
 

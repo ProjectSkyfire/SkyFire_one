@@ -1089,7 +1089,7 @@ void Object::RemoveByteFlag(uint16 index, uint8 offset, uint8 oldFlag)
 
 bool Object::PrintIndexError(uint32 index, bool set) const
 {
-    sLog->outError("Attempt %s invalid value field: %u (count: %u) for object typeid: %u type mask: %u",(set ? "set value to" : "get value from"),index, m_valuesCount, GetTypeId(),m_objectType);
+    sLog->outError("Attempt %s invalid value field: %u (count: %u) for object typeid: %u type mask: %u", (set ? "set value to" : "get value from"), index, m_valuesCount, GetTypeId(), m_objectType);
 
     // assert must fail after function call
     return false;
@@ -1385,22 +1385,22 @@ bool Position::IsPositionValid() const
 void WorldObject::MonsterSay(const char* text, uint32 language, uint64 TargetGuid)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
-    BuildMonsterChat(&data, CHAT_MSG_MONSTER_SAY, text, language, GetName(),TargetGuid);
-    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),true);
+    BuildMonsterChat(&data, CHAT_MSG_MONSTER_SAY, text, language, GetName(), TargetGuid);
+    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY), true);
 }
 
 void WorldObject::MonsterYell(const char* text, uint32 language, uint64 TargetGuid)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
-    BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, text, language, GetName(),TargetGuid);
-    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL),true);
+    BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, text, language, GetName(), TargetGuid);
+    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL), true);
 }
 
 void WorldObject::MonsterTextEmote(const char* text, uint64 TargetGuid, bool IsBossEmote)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
-    BuildMonsterChat(&data, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, text, LANG_UNIVERSAL, GetName(),TargetGuid);
-    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),true);
+    BuildMonsterChat(&data, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, text, LANG_UNIVERSAL, GetName(), TargetGuid);
+    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), true);
 }
 
 void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossWhisper)
@@ -1410,7 +1410,7 @@ void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossW
         return;
 
     WorldPacket data(SMSG_MESSAGECHAT, 200);
-    BuildMonsterChat(&data, IsBossWhisper ? CHAT_MSG_RAID_BOSS_WHISPER : CHAT_MSG_MONSTER_WHISPER, text, LANG_UNIVERSAL, GetName(),receiver);
+    BuildMonsterChat(&data, IsBossWhisper ? CHAT_MSG_RAID_BOSS_WHISPER : CHAT_MSG_MONSTER_WHISPER, text, LANG_UNIVERSAL, GetName(), receiver);
 
     player->GetSession()->SendPacket(&data);
 }
@@ -1450,7 +1450,7 @@ namespace Trinity
                 char const* text = sObjectMgr.GetTrinityString(i_textId, loc_idx);
 
                 // TODO: i_object.GetName() also must be localized?
-                i_object.BuildMonsterChat(&data, i_msgtype, text, i_language, i_object.GetNameForLocaleIdx(loc_idx),i_targetGUID);
+                i_object.BuildMonsterChat(&data, i_msgtype, text, i_language, i_object.GetNameForLocaleIdx(loc_idx), i_targetGUID);
             }
 
         private:
@@ -1530,7 +1530,7 @@ void WorldObject::MonsterWhisper(int32 textId, uint64 receiver, bool IsBossWhisp
     char const* text = sObjectMgr.GetTrinityString(textId, loc_idx);
 
     WorldPacket data(SMSG_MESSAGECHAT, 200);
-    BuildMonsterChat(&data, IsBossWhisper ? CHAT_MSG_RAID_BOSS_WHISPER : CHAT_MSG_MONSTER_WHISPER, text, LANG_UNIVERSAL, GetName(),receiver);
+    BuildMonsterChat(&data, IsBossWhisper ? CHAT_MSG_RAID_BOSS_WHISPER : CHAT_MSG_MONSTER_WHISPER, text, LANG_UNIVERSAL, GetName(), receiver);
 
     player->GetSession()->SendPacket(&data);
 }
@@ -1553,7 +1553,7 @@ void WorldObject::BuildMonsterChat(WorldPacket *data, uint8 msgtype, char const*
     }
     *data << (uint32)(strlen(text)+1+(pre?3:0));
     if (pre)
-        data->append("%s ",3);
+        data->append("%s ", 3);
     *data << text;
     *data << (uint8)0;                                      // ChatTag
 }
@@ -1628,7 +1628,7 @@ void WorldObject::AddObjectToRemoveList()
     Map* map = FindMap();
     if (!map)
     {
-        sLog->outError("Object (TypeId: %u Entry: %u GUID: %u) at attempt add to move list has invalid map (Id: %u).",GetTypeId(),GetEntry(),GetGUIDLow(),GetMapId());
+        sLog->outError("Object (TypeId: %u Entry: %u GUID: %u) at attempt add to move list has invalid map (Id: %u).", GetTypeId(), GetEntry(), GetGUIDLow(), GetMapId());
         return;
     }
 
@@ -1802,7 +1802,7 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
     pet->Relocate(x, y, z, ang);
     if (!pet->IsPositionValid())
     {
-        sLog->outError("Pet (guidlow %d, entry %d) not summoned. Suggested coordinates isn't valid (X: %f Y: %f)",pet->GetGUIDLow(),pet->GetEntry(),pet->GetPositionX(),pet->GetPositionY());
+        sLog->outError("Pet (guidlow %d, entry %d) not summoned. Suggested coordinates isn't valid (X: %f Y: %f)", pet->GetGUIDLow(), pet->GetEntry(), pet->GetPositionX(), pet->GetPositionY());
         delete pet;
         return NULL;
     }
@@ -1878,7 +1878,7 @@ GameObject* WorldObject::SummonGameObject(uint32 entry, float x, float y, float 
     }
     Map *map = GetMap();
     GameObject *go = new GameObject();
-    if (!go->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT),entry, map, x, y, z, ang, rotation0, rotation1, rotation2, rotation3, 100, GO_STATE_READY))
+    if (!go->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT), entry, map, x, y, z, ang, rotation0, rotation1, rotation2, rotation3, 100, GO_STATE_READY))
     {
         delete go;
         return NULL;
@@ -1996,7 +1996,7 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
         floor = GetMap()->GetHeight(destx, desty, pos.m_positionZ, true);
         destz = fabs(ground - pos.m_positionZ) <= fabs(floor - pos.m_positionZ) ? ground : floor;
 
-        bool col = VMAP::VMapFactory::createOrGetVMapManager()->getObjectHitPos(GetMapId(),pos.m_positionX, pos.m_positionY, pos.m_positionZ+0.5f, destx, desty, destz+0.5f, destx, desty, destz,-0.5f);
+        bool col = VMAP::VMapFactory::createOrGetVMapManager()->getObjectHitPos(GetMapId(), pos.m_positionX, pos.m_positionY, pos.m_positionZ+0.5f, destx, desty, destz+0.5f, destx, desty, destz, -0.5f);
 
         // collision occured
         if (col)

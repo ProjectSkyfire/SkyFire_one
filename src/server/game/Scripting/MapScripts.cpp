@@ -337,7 +337,7 @@ void Map::ScriptsProcess()
                     }
                     break;
                 default:
-                    sLog->outError("*_script source with unsupported high guid value %u",GUID_HIPART(step.sourceGUID));
+                    sLog->outError("*_script source with unsupported high guid value %u", GUID_HIPART(step.sourceGUID));
                     break;
             }
         }
@@ -366,7 +366,7 @@ void Map::ScriptsProcess()
                     target = HashMapHolder<Corpse>::Find(step.targetGUID);
                     break;
                 default:
-                    sLog->outError("*_script source with unsupported high guid value %u",GUID_HIPART(step.targetGUID));
+                    sLog->outError("*_script source with unsupported high guid value %u", GUID_HIPART(step.targetGUID));
                     break;
             }
         }

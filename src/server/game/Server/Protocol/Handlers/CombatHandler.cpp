@@ -49,7 +49,7 @@ void WorldSession::HandleAttackSwingOpcode(WorldPacket & recv_data)
 
     if (!_player->canAttack(pEnemy))
     {
-        sLog->outError("WORLD: Enemy %s is friendly",guid.GetString().c_str());
+        sLog->outError("WORLD: Enemy %s is friendly", guid.GetString().c_str());
 
         // stop attack state at client
         SendAttackStop(pEnemy);
@@ -71,7 +71,7 @@ void WorldSession::HandleSetSheathedOpcode(WorldPacket & recv_data)
 
     if (sheathed >= MAX_SHEATH_STATE)
     {
-        sLog->outError("Unknown sheath state %u ??",sheathed);
+        sLog->outError("Unknown sheath state %u ??", sheathed);
         return;
     }
 

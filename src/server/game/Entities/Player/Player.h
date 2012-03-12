@@ -188,7 +188,7 @@ struct PlayerClassInfo
 
 struct PlayerLevelInfo
 {
-    PlayerLevelInfo() { for (int i=0; i < MAX_STATS; ++i) stats[i] = 0; }
+    PlayerLevelInfo() { for (int i = 0; i < MAX_STATS; ++i) stats[i] = 0; }
 
     uint8 stats[MAX_STATS];
 };
@@ -196,7 +196,7 @@ struct PlayerLevelInfo
 struct PlayerInfo
 {
                                                             // existence checked by displayId != 0             // existence checked by displayId != 0
-    PlayerInfo() : displayId_m(0),displayId_f(0),levelInfo(NULL)
+    PlayerInfo() : displayId_m(0), displayId_f(0), levelInfo(NULL)
     {
     }
 
@@ -919,7 +919,7 @@ class Player : public Unit, public GridObject<Player>
         PlayerSocial *GetSocial() { return m_social; }
 
         PlayerTaxi m_taxi;
-        void InitTaxiNodesForLevel() { m_taxi.InitTaxiNodesForLevel(getRace(),getLevel()); }
+        void InitTaxiNodesForLevel() { m_taxi.InitTaxiNodesForLevel(getRace(), getLevel()); }
         bool ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_id = 0 , Creature* npc = NULL);
         void CleanupAfterTaxiFlight();
         void ContinueTaxiFlight();
@@ -1014,7 +1014,7 @@ class Player : public Unit, public GridObject<Player>
         bool HasItemCount(uint32 item, uint32 count, bool inBankAlso = false) const;
         bool HasItemFitToSpellReqirements(SpellEntry const* spellInfo, Item const* ignoreItem = NULL);
         Item* GetItemOrItemWithGemEquipped(uint32 item) const;
-        uint8 CanTakeMoreSimilarItems(Item* pItem) const { return _CanTakeMoreSimilarItems(pItem->GetEntry(),pItem->GetCount(),pItem); }
+        uint8 CanTakeMoreSimilarItems(Item* pItem) const { return _CanTakeMoreSimilarItems(pItem->GetEntry(), pItem->GetCount(), pItem); }
         uint8 CanTakeMoreSimilarItems(uint32 entry, uint32 count) const { return _CanTakeMoreSimilarItems(entry, count, NULL); }
         uint8 CanStoreNewItem(uint8 bag, uint8 slot, ItemPosCountVec& dest, uint32 item, uint32 count, uint32* no_space_count = NULL) const
         {
@@ -1509,7 +1509,7 @@ class Player : public Unit, public GridObject<Player>
         bool IsInSameRaidWith(Player const* p) const { return p == this || (GetGroup() != NULL && GetGroup() == p->GetGroup()); }
         void UninviteFromGroup();
         static void RemoveFromGroup(Group* group, uint64 guid);
-        void RemoveFromGroup() { RemoveFromGroup(GetGroup(),GetGUID()); }
+        void RemoveFromGroup() { RemoveFromGroup(GetGroup(), GetGUID()); }
         void SendUpdateToOutOfRangeGroupMembers();
 
         void SetInGuild(uint32 GuildId) { SetUInt32Value(PLAYER_GUILDID, GuildId); }
@@ -1854,7 +1854,7 @@ class Player : public Unit, public GridObject<Player>
         void SetBattleGroundId(uint32 val)  { m_bgData.bgInstanceID = val; }
         uint32 AddBattleGroundQueueId(uint32 val)
         {
-            for (uint8 i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
+            for (uint8 i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
             {
                 if (m_bgBattleGroundQueueID[i].bgQueueType == 0 || m_bgBattleGroundQueueID[i].bgQueueType == val)
                 {
@@ -1867,14 +1867,14 @@ class Player : public Unit, public GridObject<Player>
         }
         bool HasFreeBattleGroundQueueId()
         {
-            for (uint8 i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
+            for (uint8 i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
                 if (m_bgBattleGroundQueueID[i].bgQueueType == 0)
                     return true;
             return false;
         }
         void RemoveBattleGroundQueueId(uint32 val)
         {
-            for (uint8 i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
+            for (uint8 i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
             {
                 if (m_bgBattleGroundQueueID[i].bgQueueType == val)
                 {
@@ -1886,13 +1886,13 @@ class Player : public Unit, public GridObject<Player>
         }
         void SetInviteForBattleGroundQueueType(uint32 bgQueueType, uint32 instanceId)
         {
-            for (uint8 i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
+            for (uint8 i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
                 if (m_bgBattleGroundQueueID[i].bgQueueType == bgQueueType)
                     m_bgBattleGroundQueueID[i].invitedToInstance = instanceId;
         }
         bool IsInvitedForBattleGroundInstance(uint32 instanceId) const
         {
-            for (uint8 i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
+            for (uint8 i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
                 if (m_bgBattleGroundQueueID[i].invitedToInstance == instanceId)
                     return true;
             return false;

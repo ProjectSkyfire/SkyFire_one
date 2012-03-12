@@ -189,7 +189,7 @@ struct boss_kelthuzadAI : public ScriptedAI
         FrostBlast_Timer = (rand()%30+30)*1000;             //Random time between 30-60 seconds
         GuardiansOfIcecrown_Timer = 5000;                   //5 seconds for summoning each Guardian of Icecrown in phase 3
 
-        for (int i=0; i<5; i++)
+        for (int i = 0; i < 5; i++)
         {
             if (GuardiansOfIcecrown[i])
         {
@@ -217,7 +217,7 @@ struct boss_kelthuzadAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, me);
-        for (int i=0; i<5; i++)
+        for (int i = 0; i < 5; i++)
             if (GuardiansOfIcecrown[i])
         {
             Unit* pUnit = Unit::GetUnit((*me), GuardiansOfIcecrown[i]);

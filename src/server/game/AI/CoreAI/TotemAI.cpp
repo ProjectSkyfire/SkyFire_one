@@ -82,7 +82,7 @@ TotemAI::UpdateAI(const uint32 /*diff*/)
         !victim->isTargetableForAttack() || !i_totem.IsWithinDistInMap(victim, max_range) ||
         i_totem.IsFriendlyTo(victim) || !victim->isVisibleForOrDetect(&i_totem, false))
     {
-        CellPair p(Trinity::ComputeCellPair(i_totem.GetPositionX(),i_totem.GetPositionY()));
+        CellPair p(Trinity::ComputeCellPair(i_totem.GetPositionX(), i_totem.GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 

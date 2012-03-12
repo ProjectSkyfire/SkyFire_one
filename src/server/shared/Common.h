@@ -201,9 +201,9 @@ enum LocaleConstant
     LOCALE_ruRU = 8
 };
 
-const uint8 MAX_LOCALE = 9;
+const uint8 TOTAL_LOCALES = 9;
 
-extern char const* localeNames[MAX_LOCALE];
+extern char const* localeNames[TOTAL_LOCALES];
 
 LocaleConstant GetLocaleByName(const std::string& name);
 

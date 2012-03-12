@@ -366,7 +366,7 @@ MotionMaster::MoveSeekAssistance(float x, float y, float z)
 {
     if (i_owner->GetTypeId() == TYPEID_PLAYER)
     {
-        sLog->outError("Player (GUID: %u) attempt to seek assistance",i_owner->GetGUIDLow());
+        sLog->outError("Player (GUID: %u) attempt to seek assistance", i_owner->GetGUIDLow());
     }
     else
     {
@@ -383,7 +383,7 @@ MotionMaster::MoveSeekAssistanceDistract(uint32 time)
 {
     if (i_owner->GetTypeId() == TYPEID_PLAYER)
     {
-        sLog->outError("Player (GUID: %u) attempt to call distract after assistance",i_owner->GetGUIDLow());
+        sLog->outError("Player (GUID: %u) attempt to call distract after assistance", i_owner->GetGUIDLow());
     }
     else
     {

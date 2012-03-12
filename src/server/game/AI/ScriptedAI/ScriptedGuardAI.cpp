@@ -153,7 +153,7 @@ void guardAI::UpdateAI(const uint32 diff)
 
                 //Cast spell
                 if (Healing) DoCastSpell(me, info);
-                else DoCastSpell(me->getVictim(),info);
+                else DoCastSpell(me->getVictim(), info);
 
                 //Set our global cooldown
                 GlobalCooldown = GENERIC_CREATURE_COOLDOWN;

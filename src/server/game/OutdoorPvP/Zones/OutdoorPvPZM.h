@@ -50,9 +50,9 @@ enum OutdoorPvPZMSpells
 };
 
 // banners 182527, 182528, 182529, gotta check them ingame
-const go_type ZM_Banner_A = { 182527, 530, 253.54f, 7083.81f, 36.7728f,-0.017453f, 0.0f, 0.0f, 0.008727f,-0.999962f };
-const go_type ZM_Banner_H = { 182528, 530, 253.54f, 7083.81f, 36.7728f,-0.017453f, 0.0f, 0.0f, 0.008727f,-0.999962f };
-const go_type ZM_Banner_N = { 182529, 530, 253.54f, 7083.81f, 36.7728f,-0.017453f, 0.0f, 0.0f, 0.008727f,-0.999962f };
+const go_type ZM_Banner_A = { 182527, 530, 253.54f, 7083.81f, 36.7728f, -0.017453f, 0.0f, 0.0f, 0.008727f, -0.999962f };
+const go_type ZM_Banner_H = { 182528, 530, 253.54f, 7083.81f, 36.7728f, -0.017453f, 0.0f, 0.0f, 0.008727f, -0.999962f };
+const go_type ZM_Banner_N = { 182529, 530, 253.54f, 7083.81f, 36.7728f, -0.017453f, 0.0f, 0.0f, 0.008727f, -0.999962f };
 
 // horde field scout spawn data
 const creature_type ZM_HordeFieldScout = {18564, 67, 530, 296.625f, 7818.4f, 42.6294f, 5.18363f};
@@ -121,8 +121,8 @@ const uint32 ZMBeaconLooseH[ZM_NUM_BEACONS] =
 
 const go_type ZMCapturePoints[ZM_NUM_BEACONS] =
 {
-    {182523, 530, 303.243f, 6841.36f, 40.1245f,-1.58825f, 0.0f, 0.0f, 0.71325f,-0.700909f},
-    {182522, 530, 336.466f, 7340.26f, 41.4984f,-1.58825f, 0.0f, 0.0f, 0.71325f,-0.700909f}
+    {182523, 530, 303.243f, 6841.36f, 40.1245f, -1.58825f, 0.0f, 0.0f, 0.71325f, -0.700909f},
+    {182522, 530, 336.466f, 7340.26f, 41.4984f, -1.58825f, 0.0f, 0.0f, 0.71325f, -0.700909f}
 };
 
 enum OutdoorPvPZMWorldStates

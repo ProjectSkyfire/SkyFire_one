@@ -99,7 +99,7 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (result)
     {
-        sLog->outDetail(">> %u Formations without member found, formations skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Formations without member found, formations skipped.", result->Fetch()->GetInt32());
     }
 
     //Check if member without formation exist
@@ -107,7 +107,7 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (result)
     {
-        sLog->outDetail(">> %u Member without formation found, member skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Member without formation found, member skipped.", result->Fetch()->GetInt32());
     }
 
     //Get formations

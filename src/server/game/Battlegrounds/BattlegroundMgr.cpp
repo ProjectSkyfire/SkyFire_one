@@ -378,13 +378,13 @@ bool BattleGroundQueue::InviteGroupToBG(GroupQueueInfo * ginfo, BattleGround * b
                 continue;
 
             // invite the player
-            sBattleGroundMgr.InvitePlayer(plr, bg->GetInstanceID(),ginfo->Team);
+            sBattleGroundMgr.InvitePlayer(plr, bg->GetInstanceID(), ginfo->Team);
 
             WorldPacket data;
 
             uint32 queueSlot = plr->GetBattleGroundQueueIndex(bgQueueTypeId);
 
-            sLog->outDebug("Battleground: invited plr %s (%u) to BG instance %u queueindex %u bgtype %u, I can't help it if they don't press the enter battle button.",plr->GetName(),plr->GetGUIDLow(),bg->GetInstanceID(),queueSlot, bg->GetTypeID());
+            sLog->outDebug("Battleground: invited plr %s (%u) to BG instance %u queueindex %u bgtype %u, I can't help it if they don't press the enter battle button.", plr->GetName(), plr->GetGUIDLow(), bg->GetInstanceID(), queueSlot, bg->GetTypeID());
 
             // send status packet
             sBattleGroundMgr.BuildBattleGroundStatusPacket(&data, bg, side?side:plr->GetTeam(), queueSlot, STATUS_WAIT_JOIN, INVITE_ACCEPT_WAIT_TIME, 0);
@@ -462,7 +462,7 @@ bool BattleGroundQueue::BuildSelectionPool(uint32 bgTypeId, uint32 queue_id, uin
         sLog->outDebug("Battleground-debug: Player size for mode %u is %u", mode, m_SelectionPools[mode].GetPlayerCount());
         for (std::list<GroupQueueInfo* >::iterator itr = m_SelectionPools[mode].SelectedGroups.begin(); itr != m_SelectionPools[mode].SelectedGroups.end(); ++itr)
         {
-            sLog->outDebug("Battleground-debug: queued group in selection with %u players",(*itr)->Players.size());
+            sLog->outDebug("Battleground-debug: queued group in selection with %u players", (*itr)->Players.size());
             for (std::map<uint64, PlayerQueueInfo * >::iterator itr2 = (*itr)->Players.begin(); itr2 != (*itr)->Players.end(); ++itr2)
                 sLog->outDebug("Battleground-debug:    player in above group GUID %u", (uint32)(itr2->first));
         }
@@ -573,7 +573,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
                 if (bg->GetFreeSlotsForTeam((*itr)->Team) >= (*itr)->Players.size())
                 {
                     // if group fits in, invite it
-                    InviteGroupToBG((*itr),bg,(*itr)->Team);
+                    InviteGroupToBG((*itr), bg, (*itr)->Team);
                 }
             }
 
@@ -708,7 +708,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
 
         if (!bg2)
         {
-            sLog->outError("Battleground: couldn't create bg %u",bgTypeId);
+            sLog->outError("Battleground: couldn't create bg %u", bgTypeId);
             return;
         }
 
@@ -732,7 +732,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
         {
             if (invitecounter >= maxbginvites)
                 return;
-            InviteGroupToBG((*itr),bg2, HORDE);
+            InviteGroupToBG((*itr), bg2, HORDE);
             ++invitecounter;
         }
 
@@ -742,7 +742,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
         {
             if (invitecounter >= maxbginvites)
                 return;
-            InviteGroupToBG((*itr),bg2, ALLIANCE);
+            InviteGroupToBG((*itr), bg2, ALLIANCE);
             ++invitecounter;
         }
 
@@ -797,7 +797,7 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
                 for (itr = m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin(); itr != m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.end(); ++itr)
                     (*itr)->Team=HORDE;
 
-                bOneSideAllyTeam2 = BuildSelectionPool(bgTypeId, queue_id, MaxPlayersPerTeam, MaxPlayersPerTeam, ONESIDE_ALLIANCE_TEAM2, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime,(*(m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin()))->ArenaTeamId);
+                bOneSideAllyTeam2 = BuildSelectionPool(bgTypeId, queue_id, MaxPlayersPerTeam, MaxPlayersPerTeam, ONESIDE_ALLIANCE_TEAM2, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime, (*(m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin()))->ArenaTeamId);
 
                 // change back the team to ally
                 for (itr = m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.begin(); itr != m_SelectionPools[ONESIDE_ALLIANCE_TEAM1].SelectedGroups.end(); ++itr)
@@ -882,13 +882,13 @@ void BattleGroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
             // invite players from the first group as horde players (actually green team)
             for (itr = m_SelectionPools[mode1].SelectedGroups.begin(); itr != m_SelectionPools[mode1].SelectedGroups.end(); ++itr)
             {
-                InviteGroupToBG((*itr),bg2, HORDE);
+                InviteGroupToBG((*itr), bg2, HORDE);
             }
 
             // invite players from the second group as ally players (actually gold team)
             for (itr = m_SelectionPools[mode2].SelectedGroups.begin(); itr != m_SelectionPools[mode2].SelectedGroups.end(); ++itr)
             {
-                InviteGroupToBG((*itr),bg2, ALLIANCE);
+                InviteGroupToBG((*itr), bg2, ALLIANCE);
             }
 
             if (isRated)
@@ -963,7 +963,7 @@ bool BGQueueRemoveEvent::Execute(uint64 /*e_time*/, uint32 /*p_time*/)
     if (!bg)
         return true;
 
-    sLog->outDebug("Battleground: removing player %u from bg queue for instance %u because of not pressing enter battle in time.",plr->GetGUIDLow(),m_BgInstanceGUID);
+    sLog->outDebug("Battleground: removing player %u from bg queue for instance %u because of not pressing enter battle in time.", plr->GetGUIDLow(), m_BgInstanceGUID);
 
     uint32 bgQueueTypeId = sBattleGroundMgr.BGQueueTypeId(bg->GetTypeID(), bg->GetArenaType());
     uint32 queueSlot = plr->GetBattleGroundQueueIndex(bgQueueTypeId);
@@ -1338,7 +1338,7 @@ void BattleGroundMgr::InvitePlayer(Player* plr, uint32 bgInstanceGUID, uint32 te
         return;
     bg->IncreaseInvitedCount(team);
 
-    plr->SetInviteForBattleGroundQueueType(BGQueueTypeId(bg->GetTypeID(),bg->GetArenaType()), bgInstanceGUID);
+    plr->SetInviteForBattleGroundQueueType(BGQueueTypeId(bg->GetTypeID(), bg->GetArenaType()), bgInstanceGUID);
 
     // set the arena teams for rated matches
     if (bg->isArena() && bg->isRated())
@@ -1527,7 +1527,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
         bl = sBattlemasterListStore.LookupEntry(bgTypeID);
         if (!bl)
         {
-            sLog->outError("Battleground ID %u not found in BattlemasterList.dbc. Battleground not created.",bgTypeID);
+            sLog->outError("Battleground ID %u not found in BattlemasterList.dbc. Battleground not created.", bgTypeID);
             continue;
         }
 
@@ -1567,7 +1567,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
         }
         else
         {
-            sLog->outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field AllianceStartLoc. BG not created.",bgTypeID, start1);
+            sLog->outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field AllianceStartLoc. BG not created.", bgTypeID, start1);
             continue;
         }
 
@@ -1590,7 +1590,7 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
         }
         else
         {
-            sLog->outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field HordeStartLoc. BG not created.",bgTypeID, start2);
+            sLog->outErrorDb("Table battleground_template for id %u has invalid WorldSafeLocs.dbc id %u in field HordeStartLoc. BG not created.", bgTypeID, start2);
             continue;
         }
 
@@ -1726,7 +1726,7 @@ void BattleGroundMgr::SendToBattleGround(Player *pl, uint32 instanceId)
     }
     else
     {
-        sLog->outError("player %u trying to port to non-existent bg instance %u",pl->GetGUIDLow(), instanceId);
+        sLog->outError("player %u trying to port to non-existent bg instance %u", pl->GetGUIDLow(), instanceId);
     }
 }
 

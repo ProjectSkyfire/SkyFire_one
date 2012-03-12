@@ -102,7 +102,7 @@ bool WDTFile::init(char *map_id, unsigned int mapID)
                 fake_mapname = "65 65 ";
                 //gWMO_mapname = fake_mapname + filename;
                 gWMO_mapname = fake_mapname + std::string(map_id);
-                for (int i=0; i<gnWMO; ++i)
+                for (int i = 0; i < gnWMO; ++i)
                 {
                     int id;
                     WDT.read(&id, 4);

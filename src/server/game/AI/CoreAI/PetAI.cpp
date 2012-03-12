@@ -171,7 +171,7 @@ void PetAI::UpdateAI(const uint32 diff)
                 bool spellUsed = false;
                 for (std::set<uint64>::const_iterator tar = m_AllySet.begin(); tar != m_AllySet.end(); ++tar)
                 {
-                    Unit* Target = ObjectAccessor::GetUnit(*me,*tar);
+                    Unit* Target = ObjectAccessor::GetUnit(*me, *tar);
 
                     //only buff targets that are in combat, unless the spell can only be cast while out of combat
                     if (!Target)
@@ -343,7 +343,7 @@ void PetAI::HandleReturnMovement()
                 me->GetCharmInfo()->GetStayPosition(x, y, z);
                 me->GetCharmInfo()->SetIsReturning(true);
                 me->GetMotionMaster()->Clear();
-                me->GetMotionMaster()->MovePoint(me->GetGUIDLow(),x, y, z);
+                me->GetMotionMaster()->MovePoint(me->GetGUIDLow(), x, y, z);
             }
         }
     }

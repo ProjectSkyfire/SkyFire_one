@@ -59,7 +59,7 @@ ScriptMgr::~ScriptMgr()
     delete []SpellSummary;
 
     // Free resources before library unload
-    for (uint16 i =0; i<MAX_SCRIPTS; ++i)
+    for (uint16 i =0; i < MAX_SCRIPTS; ++i)
         delete m_scripts[i];
 
     num_sc_scripts = 0;
@@ -73,7 +73,7 @@ void ScriptMgr::ScriptsInit()
     sLog->outString("TSCR: Loading C++ scripts");
     sLog->outString("");
 
-    for (uint16 i =0; i<MAX_SCRIPTS; ++i)
+    for (uint16 i =0; i < MAX_SCRIPTS; ++i)
         m_scripts[i]=NULL;
 
     FillSpellSummary();
@@ -218,7 +218,7 @@ void Script::RegisterSelf()
     else
     {
         if (Name.find("example") == std::string::npos)
-            sLog->outErrorDb("TSCR: RegisterSelf, but script named %s does not have ScriptName assigned in database.",(this)->Name.c_str());
+            sLog->outErrorDb("TSCR: RegisterSelf, but script named %s does not have ScriptName assigned in database.", (this)->Name.c_str());
         delete this;
     }
 }
@@ -297,7 +297,7 @@ bool ScriptMgr::GOSelectWithCode(Player* pPlayer, GameObject* pGO, uint32 uiSend
 {
     if (!pGO)
     return false;
-    sLog->outDebug("TSCR: Gossip selection, sender: %d, action: %d",uiSender, uiAction);
+    sLog->outDebug("TSCR: Gossip selection, sender: %d, action: %d", uiSender, uiAction);
 
     Script *tmpscript = m_scripts[pGO->GetGOInfo()->ScriptId];
     if (!tmpscript || !tmpscript->pGOSelectWithCode) return false;

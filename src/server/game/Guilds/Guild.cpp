@@ -100,7 +100,7 @@ bool Guild::Create(Player* leader, std::string gname)
     CharacterDatabase.PExecute("DELETE FROM guild_rank WHERE guildid='%u'", m_Id);
     CharacterDatabase.PExecute("DELETE FROM guild_member WHERE guildid='%u'", m_Id);
     CharacterDatabase.PExecute("INSERT INTO guild (guildid, name, leaderguid, info, motd, createdate, EmblemStyle, EmblemColor, BorderStyle, BorderColor, BackgroundColor, BankMoney) "
-        "VALUES('%u','%s','%u', '%s', '%s', NOW(),'%u','%u','%u','%u','%u','" UI64FMTD "')",
+        "VALUES('%u', '%s', '%u', '%s', '%s', NOW(), '%u', '%u', '%u', '%u', '%u', '" UI64FMTD "')",
         m_Id, gname.c_str(), GUID_LOPART(m_LeaderGuid), dbGINFO.c_str(), dbMOTD.c_str(), m_EmblemStyle, m_EmblemColor, m_BorderStyle, m_BorderColor, m_BackgroundColor, m_GuildBankMoney);
     CharacterDatabase.CommitTransaction();
 
@@ -159,7 +159,7 @@ bool Guild::AddMember(uint64 plGuid, uint32 plRank)
     CharacterDatabase.EscapeString(dbPnote);
     CharacterDatabase.EscapeString(dbOFFnote);
 
-    CharacterDatabase.PExecute("INSERT INTO guild_member (guildid, guid, rank, pnote, offnote) VALUES ('%u', '%u', '%u','%s','%s')",
+    CharacterDatabase.PExecute("INSERT INTO guild_member (guildid, guid, rank, pnote, offnote) VALUES ('%u', '%u', '%u', '%s', '%s')",
         m_Id, GUID_LOPART(plGuid), newmember.RankId, dbPnote.c_str(), dbOFFnote.c_str());
 
     // If player not in game data in data field will be loaded from guild tables, no need to update it!!
@@ -431,13 +431,13 @@ bool Guild::FillPlayerData(uint64 guid, MemberSlot* memslot)
 
         if (plLevel<1||plLevel>STRONG_MAX_LEVEL)             // can be at broken `data` field
         {
-            sLog->outError("Player (GUID: %u) has a broken data in field characters.data.",GUID_LOPART(guid));
+            sLog->outError("Player (GUID: %u) has a broken data in field characters.data.", GUID_LOPART(guid));
             return false;
         }
 
         if (!plZone)
         {
-            sLog->outError("Player (GUID: %u) has broken zone-data",GUID_LOPART(guid));
+            sLog->outError("Player (GUID: %u) has broken zone-data", GUID_LOPART(guid));
             // here it will also try the same, to get the zone from characters-table, but additional it tries to find
             // the zone through xy coords .. this is a bit redundant, but shouldn't be called often
             plZone = Player::GetZoneIdFromDB(guid);
@@ -445,7 +445,7 @@ bool Guild::FillPlayerData(uint64 guid, MemberSlot* memslot)
 
         if (plClass<CLASS_WARRIOR||plClass>=MAX_CLASSES)     // can be at broken `class` field
         {
-            sLog->outError("Player (GUID: %u) has a broken data in field characters.class.",GUID_LOPART(guid));
+            sLog->outError("Player (GUID: %u) has a broken data in field characters.class.", GUID_LOPART(guid));
             return false;
         }
     }
@@ -575,7 +575,7 @@ void Guild::SetOFFNOTE(uint64 guid, std::string offnote)
 
 void Guild::BroadcastToGuild(WorldSession *session, const std::string& msg, uint32 language)
 {
-    if (session && session->GetPlayer() && HasRankRight(session->GetPlayer()->GetRank(),GR_RIGHT_GCHATSPEAK))
+    if (session && session->GetPlayer() && HasRankRight(session->GetPlayer()->GetRank(), GR_RIGHT_GCHATSPEAK))
     {
         WorldPacket data;
         ChatHandler(session).FillMessageData(&data, CHAT_MSG_GUILD, language, 0, msg.c_str());
@@ -584,7 +584,7 @@ void Guild::BroadcastToGuild(WorldSession *session, const std::string& msg, uint
         {
             Player *pl = ObjectAccessor::FindPlayer(MAKE_NEW_GUID(itr->first, 0, HIGHGUID_PLAYER));
 
-            if (pl && pl->GetSession() && HasRankRight(pl->GetRank(),GR_RIGHT_GCHATLISTEN) && !pl->GetSocial()->HasIgnore(session->GetPlayer()->GetGUIDLow()))
+            if (pl && pl->GetSession() && HasRankRight(pl->GetRank(), GR_RIGHT_GCHATLISTEN) && !pl->GetSocial()->HasIgnore(session->GetPlayer()->GetGUIDLow()))
                 pl->GetSession()->SendPacket(&data);
         }
     }
@@ -601,7 +601,7 @@ void Guild::BroadcastToOfficers(WorldSession *session, const std::string& msg, u
 
             Player *pl = ObjectAccessor::FindPlayer(MAKE_NEW_GUID(itr->first, 0, HIGHGUID_PLAYER));
 
-            if (pl && pl->GetSession() && HasRankRight(pl->GetRank(),GR_RIGHT_OFFCHATLISTEN) && !pl->GetSocial()->HasIgnore(session->GetPlayer()->GetGUIDLow()))
+            if (pl && pl->GetSession() && HasRankRight(pl->GetRank(), GR_RIGHT_OFFCHATLISTEN) && !pl->GetSocial()->HasIgnore(session->GetPlayer()->GetGUIDLow()))
                 pl->GetSession()->SendPacket(&data);
         }
     }
@@ -943,7 +943,7 @@ void Guild::RenumGuildEventlog()
         return;
 
     Field *fields = result->Fetch();
-    CharacterDatabase.PExecute("UPDATE guild_eventlog SET LogGuid=LogGuid-%u+1 WHERE guildid=%u ORDER BY LogGuid %s",fields[0].GetUInt32(), m_Id, fields[0].GetUInt32()?"ASC":"DESC");
+    CharacterDatabase.PExecute("UPDATE guild_eventlog SET LogGuid=LogGuid-%u+1 WHERE guildid=%u ORDER BY LogGuid %s", fields[0].GetUInt32(), m_Id, fields[0].GetUInt32()?"ASC":"DESC");
     GuildEventlogMaxGuid = fields[1].GetUInt32()+1;
 }
 
@@ -967,7 +967,7 @@ void Guild::LogGuildEvent(uint8 EventType, uint32 PlayerGuid1, uint32 PlayerGuid
     // Add event to list
     m_GuildEventlog.push_back(NewEvent);
     // Save event to DB
-    CharacterDatabase.PExecute("INSERT INTO guild_eventlog (guildid, LogGuid, EventType, PlayerGuid1, PlayerGuid2, NewRank, TimeStamp) VALUES ('%u','%u','%u','%u','%u','%u','" UI64FMTD "')",
+    CharacterDatabase.PExecute("INSERT INTO guild_eventlog (guildid, LogGuid, EventType, PlayerGuid1, PlayerGuid2, NewRank, TimeStamp) VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '" UI64FMTD "')",
         m_Id, NewEvent.LogGuid, uint32(NewEvent.EventType), NewEvent.PlayerGuid1, NewEvent.PlayerGuid2, uint32(NewEvent.NewRank), NewEvent.TimeStamp);
 }
 
@@ -983,7 +983,7 @@ void Guild::DisplayGuildBankContent(WorldSession *session, uint8 TabId)
     if (!tab)
         return;
 
-    if (!IsMemberHaveRights(session->GetPlayer()->GetGUIDLow(),TabId, GUILD_BANK_RIGHT_VIEW_TAB))
+    if (!IsMemberHaveRights(session->GetPlayer()->GetGUIDLow(), TabId, GUILD_BANK_RIGHT_VIEW_TAB))
         return;
 
     data << uint64(GetGuildBankMoney());
@@ -1152,7 +1152,7 @@ void Guild::CreateNewBankTab()
 
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.PExecute("DELETE FROM guild_bank_tab WHERE guildid='%u' AND TabId='%u'", m_Id, uint32(m_PurchasedTabs-1));
-    CharacterDatabase.PExecute("INSERT INTO guild_bank_tab (guildid, TabId) VALUES ('%u','%u')", m_Id, uint32(m_PurchasedTabs-1));
+    CharacterDatabase.PExecute("INSERT INTO guild_bank_tab (guildid, TabId) VALUES ('%u', '%u')", m_Id, uint32(m_PurchasedTabs-1));
     CharacterDatabase.CommitTransaction();
 }
 
@@ -1174,7 +1174,7 @@ void Guild::SetGuildBankTabInfo(uint8 TabId, std::string Name, std::string Icon)
 
     CharacterDatabase.EscapeString(Name);
     CharacterDatabase.EscapeString(Icon);
-    CharacterDatabase.PExecute("UPDATE guild_bank_tab SET TabName='%s',TabIcon='%s' WHERE guildid='%u' AND TabId='%u'", Name.c_str(), Icon.c_str(), m_Id, uint32(TabId));
+    CharacterDatabase.PExecute("UPDATE guild_bank_tab SET TabName='%s', TabIcon='%s' WHERE guildid='%u' AND TabId='%u'", Name.c_str(), Icon.c_str(), m_Id, uint32(TabId));
 }
 
 void Guild::CreateBankRightForTab(uint32 rankId, uint8 TabId)
@@ -1187,7 +1187,7 @@ void Guild::CreateBankRightForTab(uint32 rankId, uint8 TabId)
     m_Ranks[rankId].TabSlotPerDay[TabId]=0;
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.PExecute("DELETE FROM guild_bank_right WHERE guildid = '%u' AND TabId = '%u' AND rid = '%u'", m_Id, uint32(TabId), rankId);
-    CharacterDatabase.PExecute("INSERT INTO guild_bank_right (guildid, TabId, rid) VALUES ('%u','%u','%u')", m_Id, uint32(TabId), rankId);
+    CharacterDatabase.PExecute("INSERT INTO guild_bank_right (guildid, TabId, rid) VALUES ('%u', '%u', '%u')", m_Id, uint32(TabId), rankId);
     CharacterDatabase.CommitTransaction();
 }
 
@@ -1419,7 +1419,7 @@ uint32 Guild::GetMemberMoneyWithdrawRem(uint32 LowGuid)
     {
         itr->second.BankResetTimeMoney = curTime;
         itr->second.BankRemMoney = GetBankMoneyPerDay(itr->second.RankId);
-        CharacterDatabase.PExecute("UPDATE guild_member SET BankResetTimeMoney='%u',BankRemMoney='%u' WHERE guildid='%u' AND guid='%u'",
+        CharacterDatabase.PExecute("UPDATE guild_member SET BankResetTimeMoney='%u', BankRemMoney='%u' WHERE guildid='%u' AND guid='%u'",
             itr->second.BankResetTimeMoney, itr->second.BankRemMoney, m_Id, LowGuid);
     }
     return itr->second.BankRemMoney;
@@ -1472,7 +1472,7 @@ void Guild::SetBankRightsAndSlots(uint32 rankId, uint8 TabId, uint32 right, uint
 
         CharacterDatabase.PExecute("DELETE FROM guild_bank_right WHERE guildid='%u' AND TabId='%u' AND rid='%u'", m_Id, uint32(TabId), rankId);
         CharacterDatabase.PExecute("INSERT INTO guild_bank_right (guildid, TabId, rid, gbright, SlotPerDay) VALUES "
-            "('%u','%u','%u','%u','%u')", m_Id, uint32(TabId), rankId, m_Ranks[rankId].TabRight[TabId], m_Ranks[rankId].TabSlotPerDay[TabId]);
+            "('%u', '%u', '%u', '%u', '%u')", m_Id, uint32(TabId), rankId, m_Ranks[rankId].TabRight[TabId], m_Ranks[rankId].TabSlotPerDay[TabId]);
         CharacterDatabase.PExecute("UPDATE guild_member SET BankResetTimeTab%u='0' WHERE guildid='%u' AND rank='%u'", uint32(TabId), m_Id, rankId);
     }
 }
@@ -1672,7 +1672,7 @@ void Guild::LogBankEvent(uint8 LogEntry, uint8 TabId, uint32 PlayerGuidLow, uint
         }
         m_GuildBankEventLog_Item[TabId].push_back(NewEvent);
     }
-    CharacterDatabase.PExecute("INSERT INTO guild_bank_eventlog (guildid, LogGuid, LogEntry, TabId, PlayerGuid, ItemOrMoney, ItemStackCount, DestTabId, TimeStamp) VALUES ('%u','%u','%u','%u','%u','%u','%u','%u','" UI64FMTD "')",
+    CharacterDatabase.PExecute("INSERT INTO guild_bank_eventlog (guildid, LogGuid, LogEntry, TabId, PlayerGuid, ItemOrMoney, ItemStackCount, DestTabId, TimeStamp) VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '" UI64FMTD "')",
         m_Id, NewEvent.LogGuid, uint32(NewEvent.LogEntry), uint32(TabId), NewEvent.PlayerGuid, NewEvent.ItemOrMoney, uint32(NewEvent.ItemStackCount), uint32(NewEvent.DestTabId), NewEvent.TimeStamp);
 }
 
@@ -1684,7 +1684,7 @@ void Guild::RenumBankLogs()
         return;
 
     Field *fields = result->Fetch();
-    CharacterDatabase.PExecute("UPDATE guild_bank_eventlog SET LogGuid=LogGuid-%u+1 WHERE guildid=%u ORDER BY LogGuid %s",fields[0].GetUInt32(), m_Id, fields[0].GetUInt32()?"ASC":"DESC");
+    CharacterDatabase.PExecute("UPDATE guild_bank_eventlog SET LogGuid=LogGuid-%u+1 WHERE guildid=%u ORDER BY LogGuid %s", fields[0].GetUInt32(), m_Id, fields[0].GetUInt32()?"ASC":"DESC");
     LogMaxGuid = fields[1].GetUInt32()+1;
 }
 

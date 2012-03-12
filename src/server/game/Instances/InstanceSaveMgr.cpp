@@ -168,7 +168,7 @@ void InstanceSave::SaveToDB()
     // save instance data too
     std::string data;
 
-    Map *map = MapManager::Instance().FindMap(GetMapId(),m_instanceid);
+    Map *map = MapManager::Instance().FindMap(GetMapId(), m_instanceid);
     if (map)
     {
         ASSERT(map->IsDungeon());
@@ -222,7 +222,7 @@ bool InstanceSave::UnloadIfEmpty()
         return true;
 }
 
-void InstanceSaveManager::_DelHelper(DatabaseType &db, const char *fields, const char *table, const char *queryTail,...)
+void InstanceSaveManager::_DelHelper(DatabaseType &db, const char *fields, const char *table, const char *queryTail, ...)
 {
     Tokens fieldTokens = StrSplit(fields, ", ");
     ASSERT(fieldTokens.size() != 0);
@@ -482,7 +482,7 @@ void InstanceSaveManager::LoadResetTimes()
         {
             // initialize the reset time
             t = today + period + diff;
-            CharacterDatabase.DirectPExecute("INSERT INTO instance_reset VALUES ('%u','"UI64FMTD"')", i, (uint64)t);
+            CharacterDatabase.DirectPExecute("INSERT INTO instance_reset VALUES ('%u', '"UI64FMTD"')", i, (uint64)t);
         }
 
         if (t < now)
@@ -522,7 +522,7 @@ void InstanceSaveManager::ScheduleReset(bool add, time_t time, InstResetEvent ev
             for (itr = m_resetTimeQueue.begin(); itr != m_resetTimeQueue.end(); ++itr)
                 if (itr->second == event) { m_resetTimeQueue.erase(itr); return; }
             if (itr == m_resetTimeQueue.end())
-                sLog->outError("InstanceSaveManager::ScheduleReset: cannot cancel the reset, the event(%d,%d,%d) was not found!", event.type, event.mapid, event.instanceId);
+                sLog->outError("InstanceSaveManager::ScheduleReset: cannot cancel the reset, the event(%d, %d, %d) was not found!", event.type, event.mapid, event.instanceId);
         }
     }
 }

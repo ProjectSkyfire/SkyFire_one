@@ -105,7 +105,7 @@ struct boss_shahrazAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
 
-        for (uint8 i = 0; i<3; ++i)
+        for (uint8 i = 0; i < 3; ++i)
             TargetGUID[i] = 0;
 
         BeamTimer = 5000; // Timers may be incorrect

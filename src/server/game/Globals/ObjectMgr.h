@@ -331,17 +331,17 @@ struct AreaTrigger
 };
 
 typedef std::set<uint32> CellGuidSet;
-typedef std::map<uint32/*player guid*/,uint32/*instance*/> CellCorpseSet;
+typedef std::map<uint32/*player guid*/, uint32/*instance*/> CellCorpseSet;
 struct CellObjectGuids
 {
     CellGuidSet creatures;
     CellGuidSet gameobjects;
     CellCorpseSet corpses;
 };
-typedef UNORDERED_MAP<uint32/*cell_id*/,CellObjectGuids> CellObjectGuidsMap;
-typedef UNORDERED_MAP<uint32/*(mapid, spawnMode) pair*/,CellObjectGuidsMap> MapObjectGuids;
+typedef UNORDERED_MAP<uint32/*cell_id*/, CellObjectGuids> CellObjectGuidsMap;
+typedef UNORDERED_MAP<uint32/*(mapid, spawnMode) pair*/, CellObjectGuidsMap> MapObjectGuids;
 
-typedef UNORDERED_MAP<uint64/*(instance, guid) pair*/,time_t> RespawnTimes;
+typedef UNORDERED_MAP<uint64/*(instance, guid) pair*/, time_t> RespawnTimes;
 
 // Trinity string ranges
 #define MIN_TRINITY_STRING_ID           1                    // 'mangos_string'
@@ -372,7 +372,7 @@ typedef std::multimap<uint32, uint32> QuestRelations;
 
 struct PetLevelInfo
 {
-    PetLevelInfo() : health(0), mana(0) { for (int i=0; i < MAX_STATS; ++i) stats[i] = 0; }
+    PetLevelInfo() : health(0), mana(0) { for (int i = 0; i < MAX_STATS; ++i) stats[i] = 0; }
 
     uint16 stats[MAX_STATS];
     uint16 health;
@@ -739,7 +739,7 @@ class ObjectMgr
         void LoadTransportEvents();
 
         bool LoadTrinityStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value);
-        bool LoadTrinityStrings() { return LoadTrinityStrings(WorldDatabase,"trinity_string",MIN_TRINITY_STRING_ID, MAX_TRINITY_STRING_ID); }
+        bool LoadTrinityStrings() { return LoadTrinityStrings(WorldDatabase, "trinity_string", MIN_TRINITY_STRING_ID, MAX_TRINITY_STRING_ID); }
     void LoadDbScriptStrings();
         void LoadPetCreateSpells();
         void LoadCreatureLocales();
@@ -1019,12 +1019,12 @@ class ObjectMgr
 
         GossipMenusMapBounds GetGossipMenusMapBounds(uint32 uiMenuId) const
         {
-            return GossipMenusMapBounds(m_mGossipMenusMap.lower_bound(uiMenuId),m_mGossipMenusMap.upper_bound(uiMenuId));
+            return GossipMenusMapBounds(m_mGossipMenusMap.lower_bound(uiMenuId), m_mGossipMenusMap.upper_bound(uiMenuId));
         }
 
         GossipMenuItemsMapBounds GetGossipMenuItemsMapBounds(uint32 uiMenuId) const
         {
-            return GossipMenuItemsMapBounds(m_mGossipMenuItemsMap.lower_bound(uiMenuId),m_mGossipMenuItemsMap.upper_bound(uiMenuId));
+            return GossipMenuItemsMapBounds(m_mGossipMenuItemsMap.lower_bound(uiMenuId), m_mGossipMenuItemsMap.upper_bound(uiMenuId));
         }
 
     protected:

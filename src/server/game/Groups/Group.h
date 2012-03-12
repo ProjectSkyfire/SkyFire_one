@@ -215,7 +215,7 @@ class Group
             if (mslot2 == m_memberSlots.end())
                 return false;
 
-            return SameSubGroup(guid1,&*mslot2);
+            return SameSubGroup(guid1, &*mslot2);
         }
 
         bool SameSubGroup(uint64 guid1, MemberSlot const* slot2) const

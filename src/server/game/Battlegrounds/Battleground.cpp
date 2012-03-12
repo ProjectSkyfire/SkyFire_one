@@ -46,7 +46,7 @@ namespace Trinity
                 {
                     // we need copy va_list before use or original va_list will corrupted
                     va_list ap;
-                    va_copy(ap,*i_args);
+                    va_copy(ap, *i_args);
 
                     char str [2048];
                     vsnprintf(str, 2048, text, ap );
@@ -210,10 +210,10 @@ BattleGround::~BattleGround()
     if (GetInstanceID())                                     // not spam by useless queries in case BG templates
     {
         // delete creature and go respawn times
-        WorldDatabase.PExecute("DELETE FROM creature_respawn WHERE instance = '%u'",GetInstanceID());
-        WorldDatabase.PExecute("DELETE FROM gameobject_respawn WHERE instance = '%u'",GetInstanceID());
+        WorldDatabase.PExecute("DELETE FROM creature_respawn WHERE instance = '%u'", GetInstanceID());
+        WorldDatabase.PExecute("DELETE FROM gameobject_respawn WHERE instance = '%u'", GetInstanceID());
         // delete instance from db
-        CharacterDatabase.PExecute("DELETE FROM instance WHERE id = '%u'",GetInstanceID());
+        CharacterDatabase.PExecute("DELETE FROM instance WHERE id = '%u'", GetInstanceID());
         // remove from battlegrounds
     }
 
@@ -595,7 +595,7 @@ void BattleGround::YellToAll(Creature* creature, const char* text, uint32 langua
             sLog->outError("BattleGround: Player (GUID: %u) not found!", GUID_LOPART(itr->first));
             continue;
         }
-        creature->BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, text, language, creature->GetName(),itr->first);
+        creature->BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, text, language, creature->GetName(), itr->first);
         plr->GetSession()->SendPacket(&data);
     }
 }
@@ -931,7 +931,7 @@ void BattleGround::SendRewardMarkByMail(Player *plr, uint32 mark, uint32 count)
         // text
         std::string textFormat = plr->GetSession()->GetTrinityString(LANG_BG_MARK_BY_MAIL);
         char textBuf[300];
-        snprintf(textBuf, 300, textFormat.c_str(),GetName(),GetName());
+        snprintf(textBuf, 300, textFormat.c_str(), GetName(), GetName());
         uint32 itemTextId = sObjectMgr.CreateItemText(textBuf);
 
         MailDraft(subject, itemTextId)
@@ -1424,7 +1424,7 @@ bool BattleGround::AddObject(uint32 type, uint32 entry, float x, float y, float 
     // and when loading it (in go::LoadFromDB()), a new guid would be assigned to the object, and a new object would be created
     // so we must create it specific for this instance
     GameObject * go = new GameObject;
-    if (!go->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT),entry, map, x, y, z, o, rotation0, rotation1, rotation2, rotation3, 100, GO_STATE_READY))
+    if (!go->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT), entry, map, x, y, z, o, rotation0, rotation1, rotation2, rotation3, 100, GO_STATE_READY))
     {
         sLog->outErrorDb("Gameobject template %u not found in database! BattleGround not created!", entry);
         sLog->outError("Cannot create gameobject template %u! BattleGround not created!", entry);
@@ -1499,7 +1499,7 @@ GameObject* BattleGround::GetBGObject(uint32 type)
 {
     GameObject *obj = GetBgMap()->GetGameObject(m_BgObjects[type]);
     if (!obj)
-        sLog->outError("couldn't get gameobject %i",type);
+        sLog->outError("couldn't get gameobject %i", type);
     return obj;
 }
 
@@ -1507,7 +1507,7 @@ Creature* BattleGround::GetBGCreature(uint32 type)
 {
     Creature *creature = GetBgMap()->GetCreature(m_BgCreatures[type]);
     if (!creature)
-        sLog->outError("couldn't get creature %i",type);
+        sLog->outError("couldn't get creature %i", type);
     return creature;
 }
 
@@ -1549,7 +1549,7 @@ Creature* BattleGround::AddCreature(uint32 entry, uint32 type, uint32 teamval, f
     Creature* pCreature = new Creature;
     if (!pCreature->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_UNIT), map, entry, teamval, x, y, z, o))
     {
-        sLog->outError("Can't create creature entry: %u",entry);
+        sLog->outError("Can't create creature entry: %u", entry);
         delete pCreature;
         return NULL;
     }
@@ -1566,7 +1566,7 @@ Creature* BattleGround::AddCreature(uint32 entry, uint32 type, uint32 teamval, f
 /*
 void BattleGround::SpawnBGCreature(uint32 type, uint32 respawntime)
 {
-    Map * map = MapManager::Instance().FindMap(GetMapId(),GetInstanceId());
+    Map * map = MapManager::Instance().FindMap(GetMapId(), GetInstanceId());
     if (!map)
         return false;
 
@@ -1601,7 +1601,7 @@ bool BattleGround::DelCreature(uint32 type)
     Creature *cr = GetBgMap()->GetCreature(m_BgCreatures[type]);
     if (!cr)
     {
-        sLog->outError("Can't find creature guid: %u",GUID_LOPART(m_BgCreatures[type]));
+        sLog->outError("Can't find creature guid: %u", GUID_LOPART(m_BgCreatures[type]));
         return false;
     }
     //TODO: only delete creature after not in combat
@@ -1618,7 +1618,7 @@ bool BattleGround::DelObject(uint32 type)
     GameObject *obj = GetBgMap()->GetGameObject(m_BgObjects[type]);
     if (!obj)
     {
-        sLog->outError("Can't find gobject guid: %u",GUID_LOPART(m_BgObjects[type]));
+        sLog->outError("Can't find gobject guid: %u", GUID_LOPART(m_BgObjects[type]));
         return false;
     }
 
@@ -1722,7 +1722,7 @@ void BattleGround::HandleTriggerBuff(uint64 const& go_guid)
         index--;
     if (index < 0)
     {
-        sLog->outError("BattleGround (Type: %u) has buff gameobject (Guid: %u Entry: %u Type:%u) but it hasn't that object in its internal data",GetTypeID(),GUID_LOPART(go_guid),obj->GetEntry(),obj->GetGoType());
+        sLog->outError("BattleGround (Type: %u) has buff gameobject (Guid: %u Entry: %u Type:%u) but it hasn't that object in its internal data", GetTypeID(), GUID_LOPART(go_guid), obj->GetEntry(), obj->GetGoType());
         return;
     }
 

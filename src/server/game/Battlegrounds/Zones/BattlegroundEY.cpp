@@ -540,7 +540,7 @@ void BattleGroundEY::RespawnFlagAfterDrop()
     if (obj)
         obj->Delete();
     else
-        sLog->outError("BattleGroundEY: Unknown dropped flag guid: %u",GUID_LOPART(GetDroppedFlagGUID()));
+        sLog->outError("BattleGroundEY: Unknown dropped flag guid: %u", GUID_LOPART(GetDroppedFlagGUID()));
 
     SetDroppedFlagGUID(0);
 }
@@ -860,7 +860,7 @@ WorldSafeLocsEntry const *BattleGroundEY::GetClosestGraveYard(Player* player)
         {
             entry = sWorldSafeLocsStore.LookupEntry(m_CapturingPointTypes[i].GraveYardId);
             if (!entry)
-                sLog->outError("BattleGroundEY: Not found graveyard: %u",m_CapturingPointTypes[i].GraveYardId);
+                sLog->outError("BattleGroundEY: Not found graveyard: %u", m_CapturingPointTypes[i].GraveYardId);
             else
             {
                 distance = (entry->x - plr_x)*(entry->x - plr_x) + (entry->y - plr_y)*(entry->y - plr_y) + (entry->z - plr_z)*(entry->z - plr_z);

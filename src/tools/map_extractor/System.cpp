@@ -71,7 +71,7 @@ uint32 maxAreaId = 0;
 // Extractor options
 enum Extract
 {
-    EXTRACT_MAP = 1, 
+    EXTRACT_MAP = 1,
     EXTRACT_DBC = 2
 };
 
@@ -299,7 +299,6 @@ struct map_heightHeader
 #define MAP_LIQUID_TYPE_DARK_WATER  0x10
 #define MAP_LIQUID_TYPE_WMO_WATER   0x20
 
-
 #define MAP_LIQUID_NO_TYPE    0x0001
 #define MAP_LIQUID_NO_HEIGHT  0x0002
 
@@ -362,7 +361,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     map.versionMagic = MAP_VERSION_MAGIC;
 
     // Get area flags data
-    for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+    for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
     {
         for (int j=0;j<ADT_CELLS_PER_GRID;j++)
         {
@@ -413,7 +412,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     }
 
     // Get Height map from grid
-    for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+    for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
     {
         for (int j=0;j<ADT_CELLS_PER_GRID;j++)
         {
@@ -586,7 +585,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     adt_MH2O * h2o = adt.a_grid->getMH2O();
     if (h2o)
     {
-        for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+        for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
         {
             for (int j=0;j<ADT_CELLS_PER_GRID;j++)
             {
@@ -654,7 +653,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     else
     {
         // Get from MCLQ chunk (old)
-        for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+        for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
         {
             for (int j=0;j<ADT_CELLS_PER_GRID;j++)
             {

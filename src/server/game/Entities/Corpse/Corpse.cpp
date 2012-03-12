@@ -192,7 +192,7 @@ bool Corpse::LoadFromDB(uint32 guid, Field *fields)
 
     if (m_type >= MAX_CORPSE_TYPE)
     {
-        sLog->outError("Corpse (guidlow %d, owner %d) has wrong corpse type.  Not loaded.",GetGUIDLow(),GUID_LOPART(GetOwnerGUID()));
+        sLog->outError("Corpse (guidlow %d, owner %d) has wrong corpse type.  Not loaded.", GetGUIDLow(), GUID_LOPART(GetOwnerGUID()));
         return false;
     }
 

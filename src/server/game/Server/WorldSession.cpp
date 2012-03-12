@@ -41,7 +41,7 @@
 // WorldSession constructor
 WorldSession::WorldSession(uint32 id, WorldSocket *sock, uint32 sec, uint8 expansion, time_t mute_time, LocaleConstant locale) :
 LookingForGroup_auto_join(false), LookingForGroup_auto_add(false), m_muteTime(mute_time),
-_player(NULL), m_Socket(sock),_security(sec), _accountId(id), m_expansion(expansion),
+_player(NULL), m_Socket(sock), _security(sec), _accountId(id), m_expansion(expansion),
 m_sessionDbcLocale(sWorld.GetAvailableDbcLocale(locale)), m_sessionDbLocaleIndex(sObjectMgr.GetIndexForLocale(locale)),
 _logoutTime(0), m_inQueue(false), m_playerLoading(false), m_playerLogout(false), m_playerRecentlyLogout(false), m_playerSave(false),
 m_latency(0), m_timeOutTime(0)
@@ -122,8 +122,8 @@ void WorldSession::SendPacket(WorldPacket const* packet)
     {
         uint64 minTime = uint64(cur_time - lastTime);
         uint64 fullTime = uint64(lastTime - firstTime);
-        sLog->outDetail("Send all time packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f time: %u",sendPacketCount, sendPacketBytes, float(sendPacketCount)/fullTime, float(sendPacketBytes)/fullTime, uint32(fullTime));
-        sLog->outDetail("Send last min packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f",sendLastPacketCount, sendLastPacketBytes, float(sendLastPacketCount)/minTime, float(sendLastPacketBytes)/minTime);
+        sLog->outDetail("Send all time packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f time: %u", sendPacketCount, sendPacketBytes, float(sendPacketCount)/fullTime, float(sendPacketBytes)/fullTime, uint32(fullTime));
+        sLog->outDetail("Send last min packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f", sendLastPacketCount, sendLastPacketBytes, float(sendLastPacketCount)/minTime, float(sendLastPacketBytes)/minTime);
 
         lastTime = cur_time;
         sendLastPacketCount = 1;
@@ -157,7 +157,7 @@ void WorldSession::LogUnprocessedTail(WorldPacket *packet)
     sLog->outError("SESSION: opcode %s (0x%.4X) has unprocessed tail data (read stop at %u from %u)",
         LookupOpcodeName(packet->GetOpcode()),
         packet->GetOpcode(),
-        packet->rpos(),packet->wpos());
+        packet->rpos(), packet->wpos());
 }
 
 // Update the WorldSession (triggered by World update)
@@ -324,7 +324,7 @@ void WorldSession::LogoutPlayer(bool Save)
             // this can't be called for all attackers.
             if (!aset.empty())
                 if (BattleGround *bg = _player->GetBattleGround())
-                    bg->HandleKillPlayer(_player,*aset.begin());
+                    bg->HandleKillPlayer(_player, *aset.begin());
         }
         else if (_player->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
         {
@@ -354,7 +354,7 @@ void WorldSession::LogoutPlayer(bool Save)
 
         sOutdoorPvPMgr.HandlePlayerLeaveZone(_player, _player->GetZoneId());
 
-        for (int i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
+        for (int i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
         {
             if (int32 bgTypeId = _player->GetBattleGroundQueueId(i))
             {
@@ -464,7 +464,7 @@ void WorldSession::SendAreaTriggerMessage(const char* Text, ...)
     SendPacket(&data);
 }
 
-void WorldSession::SendNotification(const char *format,...)
+void WorldSession::SendNotification(const char *format, ...)
 {
     if (format)
     {
@@ -481,7 +481,7 @@ void WorldSession::SendNotification(const char *format,...)
     }
 }
 
-void WorldSession::SendNotification(int32 string_id,...)
+void WorldSession::SendNotification(int32 string_id, ...)
 {
     char const* format = GetTrinityString(string_id);
     if (format)

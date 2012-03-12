@@ -616,14 +616,14 @@ bool ChatHandler::HandleDebugThreatList(const char * /*args*/)
     std::list<HostileReference*>& tlist = target->getThreatManager().getThreatList();
     std::list<HostileReference*>::iterator itr;
     uint32 cnt = 0;
-    PSendSysMessage("Threat list of %s (guid %u)",target->GetName(), target->GetGUIDLow());
+    PSendSysMessage("Threat list of %s (guid %u)", target->GetName(), target->GetGUIDLow());
     for (itr = tlist.begin(); itr != tlist.end(); ++itr)
     {
         Unit* unit = (*itr)->getTarget();
         if (!unit)
             continue;
         ++cnt;
-        PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt, unit->GetName(), unit->GetGUIDLow(), (*itr)->getThreat());
+        PSendSysMessage("   %u.   %s   (guid %u)  - threat %f", cnt, unit->GetName(), unit->GetGUIDLow(), (*itr)->getThreat());
     }
     SendSysMessage("End of threat list.");
     return true;
@@ -636,13 +636,13 @@ bool ChatHandler::HandleDebugHostilRefList(const char * /*args*/)
         target = m_session->GetPlayer();
     HostileReference* ref = target->getHostileRefManager().getFirst();
     uint32 cnt = 0;
-    PSendSysMessage("Hostil reference list of %s (guid %u)",target->GetName(), target->GetGUIDLow());
+    PSendSysMessage("Hostil reference list of %s (guid %u)", target->GetName(), target->GetGUIDLow());
     while (ref)
     {
         if (Unit * unit = ref->getSource()->getOwner())
         {
             ++cnt;
-            PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt, unit->GetName(), unit->GetGUIDLow(), ref->getThreat());
+            PSendSysMessage("   %u.   %s   (guid %u)  - threat %f", cnt, unit->GetName(), unit->GetGUIDLow(), ref->getThreat());
         }
         ref = ref->next();
     }

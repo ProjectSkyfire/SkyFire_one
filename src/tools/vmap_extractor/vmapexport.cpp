@@ -127,7 +127,7 @@ int ExtractWmo()
                     {
                         char cpy[4];
                         strncpy((char*)cpy, rchr, 4);
-                        for (int i=0;i<4; ++i)
+                        for (int i = 0;i < 4; ++i)
                         {
                             int m = cpy[i];
                             if (isdigit(m))
@@ -155,7 +155,7 @@ int ExtractWmo()
                         //printf("root has %d groups\n", froot->nGroups);
                         if (froot->nGroups !=0)
                         {
-                            for (uint32 i=0; i<froot->nGroups; ++i)
+                            for (uint32 i = 0; i < froot->nGroups; ++i)
                             {
                                 char temp[1024];
                                 strcpy(temp, fname->c_str());
@@ -208,7 +208,7 @@ void ParsMapFiles()
     char fn[512];
     //char id_filename[64];
     char id[10];
-    for (unsigned int i=0; i<map_count; ++i)
+    for (unsigned int i = 0; i < map_count; ++i)
     {
         sprintf(id,"%03u",map_ids[i].id);
         sprintf(fn,"World\\Maps\\%s\\%s.wdt", map_ids[i].name, map_ids[i].name);
@@ -371,7 +371,7 @@ bool processArgv(int argc, char ** argv, const char *versionString)
     hasInputPathParam = false;
     bool preciseVectorData = false;
 
-    for (int i=1; i< argc; ++i)
+    for (int i=1; i <  argc; ++i)
     {
         if (strcmp("-s",argv[i]) == 0)
         {
@@ -463,7 +463,7 @@ int main(int argc, char ** argv)
     // prepare archive name list
     std::vector<std::string> archiveNames;
     fillArchiveNameVector(archiveNames);
-    for (size_t i=0; i < archiveNames.size(); ++i)
+    for (size_t i = 0; i < archiveNames.size(); ++i)
     {
         MPQArchive *archive = new MPQArchive(archiveNames[i].c_str());
         if (!gOpenArchives.size() || gOpenArchives.front() != archive)
@@ -498,7 +498,6 @@ int main(int argc, char ** argv)
             strcpy(map_ids[x].name, dbc->getRecord(x).getString(1));
             printf("Map - %s\n",map_ids[x].name);
         }
-
 
         delete dbc;
         ParsMapFiles();

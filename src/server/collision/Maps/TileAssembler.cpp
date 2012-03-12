@@ -107,7 +107,7 @@ namespace VMAP
 
             // possibly move this code to StaticMapTree class
             std::map<uint32, uint32> modelNodeIdx;
-            for (uint32 i=0; i<mapSpawns.size(); ++i)
+            for (uint32 i = 0; i < mapSpawns.size(); ++i)
                 modelNodeIdx.insert(pair<uint32, uint32>(mapSpawns[i]->ID, i));
 
             // write map tree file
@@ -428,7 +428,7 @@ namespace VMAP
             {
                 uint16 *indexarray = new uint16[nindexes];
                 READ_OR_RETURN(indexarray, nindexes*sizeof(uint16));
-                for (uint32 i=0; i<nindexes; i+=3)
+                for (uint32 i = 0; i < nindexes; i+=3)
                 {
                     triangles.push_back(MeshTriangle(indexarray[i], indexarray[i+1], indexarray[i+2]));
                 }
@@ -446,7 +446,7 @@ namespace VMAP
             {
                 float *vectorarray = new float[nvectors*3];
                 READ_OR_RETURN(vectorarray, nvectors*sizeof(float)*3);
-                for (uint32 i=0; i<nvectors; ++i)
+                for (uint32 i = 0; i < nvectors; ++i)
                 {
                     vertexArray.push_back( Vector3(vectorarray + 3*i) );
                 }

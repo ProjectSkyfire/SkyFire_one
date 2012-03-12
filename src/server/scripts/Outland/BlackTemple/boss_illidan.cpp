@@ -575,7 +575,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
             me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
             me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
             {
-                uint8 i=0;
+                uint8 i = 0;
                 Creature* Glaive = me->SummonCreature(BLADE_OF_AZZINOTH, GlaivePosition[i].x, GlaivePosition[i].y, GlaivePosition[i].z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 if (Glaive)
                 {

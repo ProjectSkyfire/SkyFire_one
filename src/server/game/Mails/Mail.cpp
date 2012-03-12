@@ -261,7 +261,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
 
         if (money > 0 &&  GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
         {
-            sLog->outCommand(GetAccountId(),"GM %s (Account: %u) mail money: %u to player: %s (Account: %u)",
+            sLog->outCommand(GetAccountId(), "GM %s (Account: %u) mail money: %u to player: %s (Account: %u)",
                 GetPlayerName(), GetAccountId(), money, receiver.c_str(), rc_account);
         }
     }
@@ -477,8 +477,8 @@ void WorldSession::HandleTakeItem(WorldPacket & recv_data)
                     if (!sObjectMgr.GetPlayerNameByGUID(sender_guid, sender_name))
                         sender_name = sObjectMgr.GetTrinityStringForDBCLocale(LANG_UNKNOWN);
                 }
-                sLog->outCommand(GetAccountId(),"GM %s (Account: %u) receive mail item: %s (Entry: %u Count: %u) and send COD money: %u to player: %s (Account: %u)",
-                    GetPlayerName(),GetAccountId(),it->GetProto()->Name1, it->GetEntry(),it->GetCount(),m->COD, sender_name.c_str(),sender_accId);
+                sLog->outCommand(GetAccountId(), "GM %s (Account: %u) receive mail item: %s (Entry: %u Count: %u) and send COD money: %u to player: %s (Account: %u)",
+                    GetPlayerName(), GetAccountId(), it->GetProto()->Name1, it->GetEntry(), it->GetCount(), m->COD, sender_name.c_str(), sender_accId);
             }
             else if (!receive)
                 sender_accId = sObjectMgr.GetPlayerAccountIdByGUID(sender_guid);
@@ -1016,13 +1016,13 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.EscapeString(safe_subject);
     CharacterDatabase.PExecute("INSERT INTO mail (id, messageType, stationery, mailTemplateId, sender, receiver, subject, itemTextId, has_items, expire_time, deliver_time, money, cod, checked) "
-        "VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '%s', '%u', '%u', '" UI64FMTD "','" UI64FMTD "', '%u', '%u', '%d')",
+        "VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '%s', '%u', '%u', '" UI64FMTD "', '" UI64FMTD "', '%u', '%u', '%d')",
         mailId, sender.GetMailMessageType(), sender.GetStationery(), GetMailTemplateId(), sender.GetSenderId(), receiver.GetPlayerGUIDLow(), safe_subject.c_str(), GetBodyId(), (m_items.empty() ? 0 : 1), (uint64)expire_time, (uint64)deliver_time, m_money, m_COD, checked);
 
     for (MailItemMap::const_iterator mailItemIter = m_items.begin(); mailItemIter != m_items.end(); ++mailItemIter)
     {
         Item* item = mailItemIter->second;
-        CharacterDatabase.PExecute("INSERT INTO mail_items (mail_id, item_guid, item_template, receiver) VALUES ('%u', '%u', '%u','%u')", mailId, item->GetGUIDLow(), item->GetEntry(), receiver.GetPlayerGUIDLow());
+        CharacterDatabase.PExecute("INSERT INTO mail_items (mail_id, item_guid, item_template, receiver) VALUES ('%u', '%u', '%u', '%u')", mailId, item->GetGUIDLow(), item->GetEntry(), receiver.GetPlayerGUIDLow());
     }
     CharacterDatabase.CommitTransaction();
 

@@ -36,7 +36,7 @@ Trinity::VisibleNotifier::Visit(GridRefManager<T> &m)
     for (typename GridRefManager<T>::iterator iter = m.begin(); iter != m.end(); ++iter)
     {
         vis_guids.erase(iter->getSource()->GetGUID());
-        i_player.UpdateVisibilityOf(iter->getSource(),i_data, i_visibleNow);
+        i_player.UpdateVisibilityOf(iter->getSource(), i_data, i_visibleNow);
     }
 }
 

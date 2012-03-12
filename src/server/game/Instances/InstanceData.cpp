@@ -230,7 +230,7 @@ void InstanceData::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bo
                 pGo->ResetDoorOrButton();
         }
         else
-            sLog->outError("TSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.",pGo->GetEntry(),pGo->GetGoType());
+            sLog->outError("TSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.", pGo->GetEntry(), pGo->GetGoType());
     }
 }
 

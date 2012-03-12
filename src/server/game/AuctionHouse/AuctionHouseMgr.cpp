@@ -146,8 +146,8 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
 
             uint32 owner_accid = sObjectMgr.GetPlayerAccountIdByGUID(auction->owner);
 
-            sLog->outCommand(bidder_accId,"GM %s (Account: %u) won item in auction: %s (Entry: %u Count: %u) and pay money: %u. Original owner %s (Account: %u)",
-                bidder_name.c_str(),bidder_accId, pItem->GetProto()->Name1, pItem->GetEntry(),pItem->GetCount(),auction->bid, owner_name.c_str(),owner_accid);
+            sLog->outCommand(bidder_accId, "GM %s (Account: %u) won item in auction: %s (Entry: %u Count: %u) and pay money: %u. Original owner %s (Account: %u)",
+                bidder_name.c_str(), bidder_accId, pItem->GetProto()->Name1, pItem->GetEntry(), pItem->GetCount(), auction->bid, owner_name.c_str(), owner_accid);
         }
     }
 
@@ -168,7 +168,7 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
 
         // set owner to bidder (to prevent delete item with sender char deleting)
         // owner in data will set at mail receive and item extracting
-        CharacterDatabase.PExecute("UPDATE item_instance SET owner_guid = '%u' WHERE guid='%u'",auction->bidder, pItem->GetGUIDLow());
+        CharacterDatabase.PExecute("UPDATE item_instance SET owner_guid = '%u' WHERE guid='%u'", auction->bidder, pItem->GetGUIDLow());
 
         if (bidder)
             bidder->GetSession()->SendAuctionBidderNotification(auction->GetHouseId(), auction->Id, bidder_guid, 0, 0, auction->item_template);
@@ -694,7 +694,7 @@ uint32 AuctionEntry::GetAuctionOutBid() const
 void AuctionEntry::DeleteFromDB() const
 {
     // No SQL injection (Id is integer)
-    CharacterDatabase.PExecute("DELETE FROM auctionhouse WHERE id = '%u'",Id);
+    CharacterDatabase.PExecute("DELETE FROM auctionhouse WHERE id = '%u'", Id);
 }
 
 void AuctionEntry::SaveToDB() const

@@ -767,7 +767,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
     time_t mutetime = time_t (fields[7].GetUInt64 ());
 
     locale = LocaleConstant (fields[8].GetUInt8 ());
-    if (locale >= MAX_LOCALE)
+    if (locale >= TOTAL_LOCALES)
         locale = LOCALE_enUS;
 
         // Checks gmlevel per Realm
@@ -932,7 +932,7 @@ int WorldSocket::HandlePing (WorldPacket& recvPacket)
         else
         {
             sLog->outError ("WorldSocket::HandlePing: peer sent CMSG_PING, "
-                            "but is not authenticated or got recently kicked,"
+                            "but is not authenticated or got recently kicked, "
                             " address = %s",
                             GetRemoteAddress().c_str());
              return -1;

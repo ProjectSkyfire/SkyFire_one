@@ -183,8 +183,8 @@ FleeingMovementGenerator<T>::_getPoint(T &owner, float &x, float &y, float &z)
 
             if (!(new_z - z) || distance / fabs(new_z - z) > 1.0f)
             {
-                float new_z_left = _map->GetHeight(temp_x + 1.0f*cos(angle+M_PI/2),temp_y + 1.0f*sin(angle+M_PI/2),z, true);
-                float new_z_right = _map->GetHeight(temp_x + 1.0f*cos(angle-M_PI/2),temp_y + 1.0f*sin(angle-M_PI/2),z, true);
+                float new_z_left = _map->GetHeight(temp_x + 1.0f*cos(angle+M_PI/2), temp_y + 1.0f*sin(angle+M_PI/2), z, true);
+                float new_z_right = _map->GetHeight(temp_x + 1.0f*cos(angle-M_PI/2), temp_y + 1.0f*sin(angle-M_PI/2), z, true);
                 if (fabs(new_z_left - new_z) < 1.2f && fabs(new_z_right - new_z) < 1.2f)
                 {
                     x = temp_x;

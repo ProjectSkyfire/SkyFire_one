@@ -104,7 +104,7 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (result)
     {
-        sLog->outDetail(">> %u Groups without member found, groups skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Groups without member found, groups skipped.", result->Fetch()->GetInt32());
     }
 
     //Check if member without group exist
@@ -112,7 +112,7 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (result)
     {
-        sLog->outDetail(">> %u Member without group found, member skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Member without group found, member skipped.", result->Fetch()->GetInt32());
     }
 
     //Get groups
@@ -224,7 +224,7 @@ void CreatureGroup::MemberAttackStart(Creature *member, Unit *target)
     {
         Creature* pCreature = itr->first;
 
-        sLog->outDebug("CreatureGroup::MemberAttackStart: group member instanceId %u .",member->GetInstanceId());
+        sLog->outDebug("CreatureGroup::MemberAttackStart: group member instanceId %u .", member->GetInstanceId());
 
         //Skip one check
         if (pCreature == member)
@@ -260,7 +260,7 @@ bool CreatureGroup::IsAllowedToRespawn(Creature *member)
             exist = false;
 
     if (exist)
-         sLog->outDebug("CreatureGroup::IsAllowedToRespawn: group member instanceId %u can respawn.",member->GetInstanceId());
+         sLog->outDebug("CreatureGroup::IsAllowedToRespawn: group member instanceId %u can respawn.", member->GetInstanceId());
 
     return exist;
 }

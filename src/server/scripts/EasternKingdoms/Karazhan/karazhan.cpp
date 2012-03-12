@@ -214,15 +214,15 @@ struct npc_barnesAI : public npc_escortAI
                 switch (m_uiEventId)
                 {
                     case EVENT_OZ:
-                        for (int i = 0; i<5; i++)
+                        for (int i = 0; i < 5; i++)
                             me->SummonGameObject(GameObjects_OZ[i][0],GameObjects_OZ[i][1],GameObjects_OZ[i][2],GameObjects_OZ[i][3],4.63f, 0, 0, 0.73f,-0.68f, 60000);
                         break;
                     case EVENT_HOOD:
-                        for (int i = 0; i<5; i++)
+                        for (int i = 0; i < 5; i++)
                             me->SummonGameObject(GameObjects_Wolf[i][0],GameObjects_Wolf[i][1],GameObjects_Wolf[i][2],GameObjects_Wolf[i][3],4.63f, 0, 0, 0.73f,-0.68f, 60000);
                         break;
                     case EVENT_RAJ:
-                        for (int i = 0; i<1; i++)
+                        for (int i = 0; i < 1; i++)
                             me->SummonGameObject(GameObjects_RomeJulia[i][0],GameObjects_RomeJulia[i][1],GameObjects_RomeJulia[i][2],GameObjects_RomeJulia[i][3],4.63f, 0, 0, 0.73f,-0.68f, 60000);
                         break;
                 }

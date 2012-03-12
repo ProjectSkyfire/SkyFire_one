@@ -449,7 +449,7 @@ void vutf8printf(FILE *out, const char *str, va_list* ap)
 void hexEncodeByteArray(uint8* bytes, uint32 arrayLen, std::string& result)
 {
     std::ostringstream ss;
-    for (uint32 i=0; i<arrayLen; ++i)
+    for (uint32 i = 0; i < arrayLen; ++i)
     {
         for (uint8 j=0; j<2; ++j)
         {

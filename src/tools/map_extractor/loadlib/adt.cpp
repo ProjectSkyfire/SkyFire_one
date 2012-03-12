@@ -79,7 +79,7 @@ bool adt_MCIN::prepareLoadedData()
         return false;
 
     // Check cells data
-    for (int i=0; i<ADT_CELLS_PER_GRID;i++)
+    for (int i = 0; i < ADT_CELLS_PER_GRID;i++)
         for (int j=0; j<ADT_CELLS_PER_GRID;j++)
             if (cells[i][j].offsMCNK && !getMCNK(i, j)->prepareLoadedData())
                 return false;
@@ -93,7 +93,7 @@ bool adt_MH2O::prepareLoadedData()
         return false;
 
     // Check liquid data
-//    for (int i=0; i<ADT_CELLS_PER_GRID;i++)
+//    for (int i = 0; i < ADT_CELLS_PER_GRID;i++)
 //        for (int j=0; j<ADT_CELLS_PER_GRID;j++)
 
     return true;

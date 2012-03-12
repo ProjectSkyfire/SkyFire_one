@@ -446,7 +446,7 @@ struct boss_veknilashAI : public boss_twinemperorsAI
         pTarget->setFaction(14);
         ((CreatureAI*)pTarget->AI())->AttackStart(me->getThreatManager().getHostileTarget());
         SpellEntry *spell = (SpellEntry *)GetSpellStore()->LookupEntry(SPELL_MUTATE_BUG);
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (!spell->Effect[i])
                 continue;
@@ -529,7 +529,7 @@ struct boss_veklorAI : public boss_twinemperorsAI
     {
         pTarget->setFaction(14);
         SpellEntry *spell = (SpellEntry *)GetSpellStore()->LookupEntry(SPELL_EXPLODEBUG);
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (!spell->Effect[i])
                 continue;

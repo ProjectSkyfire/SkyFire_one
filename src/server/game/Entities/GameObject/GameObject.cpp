@@ -123,7 +123,7 @@ void GameObject::RemoveFromWorld()
             if (Unit * owner = GetOwner())
                 owner->RemoveGameObject(this, false);
             else
-                sLog->outError("Delete GameObject (GUID: %u Entry: %u) that has references in invalid creature %u GO list. Crash possible.",GetGUIDLow(),GetGOInfo()->id, GUID_LOPART(owner_guid));
+                sLog->outError("Delete GameObject (GUID: %u Entry: %u) that has references in invalid creature %u GO list. Crash possible.", GetGUIDLow(), GetGOInfo()->id, GUID_LOPART(owner_guid));
         }
 
         WorldObject::RemoveFromWorld();
@@ -139,14 +139,14 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map *map, float x, float
     Relocate(x, y, z, ang);
     if (!IsPositionValid())
     {
-        sLog->outError("Gameobject (GUID: %u Entry: %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",guidlow, name_id, x, y);
+        sLog->outError("Gameobject (GUID: %u Entry: %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)", guidlow, name_id, x, y);
         return false;
     }
 
     GameObjectInfo const* goinfo = sObjectMgr.GetGameObjectInfo(name_id);
     if (!goinfo)
     {
-        sLog->outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid entry in gameobject_template. Map: %u  (X: %f Y: %f Z: %f) ang: %f rotation0: %f rotation1: %f rotation2: %f rotation3: %f",guidlow, name_id, map->GetId(), x, y, z, ang, rotation0, rotation1, rotation2, rotation3);
+        sLog->outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid entry in gameobject_template. Map: %u  (X: %f Y: %f Z: %f) ang: %f rotation0: %f rotation1: %f rotation2: %f rotation3: %f", guidlow, name_id, map->GetId(), x, y, z, ang, rotation0, rotation1, rotation2, rotation3);
         return false;
     }
 
@@ -156,7 +156,7 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map *map, float x, float
 
     if (goinfo->type >= MAX_GAMEOBJECT_TYPE)
     {
-        sLog->outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid GO type '%u' in gameobject_template. It will crash the client if created.",guidlow, name_id, goinfo->type);
+        sLog->outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid GO type '%u' in gameobject_template. It will crash the client if created.", guidlow, name_id, goinfo->type);
         return false;
     }
 
@@ -602,7 +602,7 @@ bool GameObject::LoadFromDB(uint32 guid, Map *map)
 
     if (!data)
     {
-        sLog->outErrorDb("ERROR: Gameobject (GUID: %u) not found in table gameobject, can't load. ",guid);
+        sLog->outErrorDb("ERROR: Gameobject (GUID: %u) not found in table gameobject, can't load. ", guid);
         return false;
     }
 
@@ -647,7 +647,7 @@ bool GameObject::LoadFromDB(uint32 guid, Map *map)
             if (m_respawnTime && m_respawnTime <= time(NULL))
             {
                 m_respawnTime = 0;
-                sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(),0);
+                sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(), 0);
             }
         }
     }
@@ -665,7 +665,7 @@ bool GameObject::LoadFromDB(uint32 guid, Map *map)
 
 void GameObject::DeleteFromDB()
 {
-    sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(),0);
+    sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(), 0);
     sObjectMgr.DeleteGOData(m_DBTableGuid);
     WorldDatabase.PExecuteLog("DELETE FROM gameobject WHERE guid = '%u'", m_DBTableGuid);
     WorldDatabase.PExecuteLog("DELETE FROM game_event_gameobject WHERE guid = '%u'", m_DBTableGuid);
@@ -735,7 +735,7 @@ Unit* GameObject::GetOwner() const
 void GameObject::SaveRespawnTime()
 {
     if (m_goData && m_goData->dbData && m_respawnTime > time(NULL) && m_spawnedByDefault)
-        sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(),m_respawnTime);
+        sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(), m_respawnTime);
 }
 
 bool GameObject::isVisibleForInState(Player const* u, bool inVisibleList) const
@@ -799,7 +799,7 @@ void GameObject::Respawn()
     if (m_spawnedByDefault && m_respawnTime > 0)
     {
         m_respawnTime = time(NULL);
-        sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(),0);
+        sObjectMgr.SaveGORespawnTime(m_DBTableGuid, GetInstanceId(), 0);
     }
 }
 
@@ -819,7 +819,7 @@ bool GameObject::ActivateToQuest(Player *pTarget) const
                 //look for battlegroundAV for some objects which are only activated after mine gots captured by own team
                 if (GetEntry() == BG_AV_OBJECTID_MINE_N || GetEntry() == BG_AV_OBJECTID_MINE_S)
                     if (BattleGround *bg = pTarget->GetBattleGround())
-                        if (bg->GetTypeID() == BATTLEGROUND_AV && !(((BattleGroundAV*)bg)->PlayerCanDoMineQuest(GetEntry(),pTarget->GetTeam())))
+                        if (bg->GetTypeID() == BATTLEGROUND_AV && !(((BattleGroundAV*)bg)->PlayerCanDoMineQuest(GetEntry(), pTarget->GetTeam())))
                             return false;
                 return true;
             }
@@ -875,7 +875,7 @@ GameObject* GameObject::LookupFishingHoleAround(float range)
 {
     GameObject* ok = NULL;
 
-    CellPair p(Trinity::ComputeCellPair(GetPositionX(),GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     Trinity::NearestGameObjectFishingHole u_check(*this, range);
@@ -987,7 +987,7 @@ void GameObject::Use(Unit* user)
                 // every slot will be on that straight line
                 float orthogonalOrientation = GetOrientation()+M_PI*0.5f;
                 // find nearest slot
-                for (uint32 i=0; i<info->chair.slots; i++)
+                for (uint32 i = 0; i < info->chair.slots; i++)
                 {
                     // the distance between this slot and the center of the go - imagine a 1D space
                     float relativeDistance = (info->size*i)-(info->size*(info->chair.slots-1)/2.0f);
@@ -1012,12 +1012,12 @@ void GameObject::Use(Unit* user)
                         y_lowest = y_i;
                     }
                 }
-                player->TeleportTo(GetMapId(), x_lowest, y_lowest, GetPositionZ(), GetOrientation(),TELE_TO_NOT_LEAVE_TRANSPORT | TELE_TO_NOT_LEAVE_COMBAT | TELE_TO_NOT_UNSUMMON_PET);
+                player->TeleportTo(GetMapId(), x_lowest, y_lowest, GetPositionZ(), GetOrientation(), TELE_TO_NOT_LEAVE_TRANSPORT | TELE_TO_NOT_LEAVE_COMBAT | TELE_TO_NOT_UNSUMMON_PET);
             }
             else
             {
                 // fallback, will always work
-                player->TeleportTo(GetMapId(), GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation(),TELE_TO_NOT_LEAVE_TRANSPORT | TELE_TO_NOT_LEAVE_COMBAT | TELE_TO_NOT_UNSUMMON_PET);
+                player->TeleportTo(GetMapId(), GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation(), TELE_TO_NOT_LEAVE_TRANSPORT | TELE_TO_NOT_LEAVE_COMBAT | TELE_TO_NOT_UNSUMMON_PET);
             }
             player->SetStandState(UNIT_STAND_STATE_SIT_LOW_CHAIR+info->chair.height);
             return;
@@ -1104,13 +1104,13 @@ void GameObject::Use(Unit* user)
 
                     //provide error, no fishable zone or area should be 0
                     if (!zone_skill)
-                        sLog->outErrorDb("Fishable areaId %u is not properly defined in skill_fishing_base_level.",subzone);
+                        sLog->outErrorDb("Fishable areaId %u is not properly defined in skill_fishing_base_level.", subzone);
 
                     int32 skill = player->GetSkillValue(SKILL_FISHING);
                     int32 chance = skill - zone_skill + 5;
                     int32 roll = irand(1, 100);
 
-                    sLog->outDebug("Fishing check (skill: %i zone min skill: %i chance %i roll: %i",skill, zone_skill, chance, roll);
+                    sLog->outDebug("Fishing check (skill: %i zone min skill: %i chance %i roll: %i", skill, zone_skill, chance, roll);
 
                     if (skill >= zone_skill && chance >= roll)
                     {
@@ -1124,11 +1124,11 @@ void GameObject::Use(Unit* user)
                         GameObject* ok = LookupFishingHoleAround(DEFAULT_VISIBILITY_DISTANCE);
                         if (ok)
                         {
-                            player->SendLoot(ok->GetGUID(),LOOT_FISHINGHOLE);
+                            player->SendLoot(ok->GetGUID(), LOOT_FISHINGHOLE);
                             SetLootState(GO_JUST_DEACTIVATED);
                         }
                         else
-                            player->SendLoot(GetGUID(),LOOT_FISHING);
+                            player->SendLoot(GetGUID(), LOOT_FISHING);
                     }
                     else
                     {
@@ -1365,8 +1365,8 @@ void GameObject::Use(Unit* user)
     SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellId);
     if (!spellInfo)
     {
-        if (user->GetTypeId() != TYPEID_PLAYER || !sOutdoorPvPMgr.HandleCustomSpell(user->ToPlayer(),spellId, this))
-            sLog->outError("WORLD: unknown spell id %u at use action for gameobject (Entry: %u GoType: %u)", spellId, GetEntry(),GetGoType());
+        if (user->GetTypeId() != TYPEID_PLAYER || !sOutdoorPvPMgr.HandleCustomSpell(user->ToPlayer(), spellId, this))
+            sLog->outError("WORLD: unknown spell id %u at use action for gameobject (Entry: %u GoType: %u)", spellId, GetEntry(), GetGoType());
         else
             sLog->outDebug("WORLD: %u non-dbc spell was handled by OutdoorPvP", spellId);
         return;

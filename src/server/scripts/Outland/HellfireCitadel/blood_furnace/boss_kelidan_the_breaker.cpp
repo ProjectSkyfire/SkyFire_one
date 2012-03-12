@@ -78,7 +78,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
     {
         pInstance = c->GetInstanceData();
         HeroicMode = me->GetMap()->IsHeroic();
-        for (int i=0; i<5; ++i) Channelers[i] = 0;
+        for (int i = 0; i < 5; ++i) Channelers[i] = 0;
     }
 
     ScriptedInstance* pInstance;
@@ -141,7 +141,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
                 default: DoScriptText(SAY_ADD_AGGRO_3, me); break;
             }
         }
-        for (int i=0; i<5; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (who && channeler && !channeler->isInCombat())
@@ -151,7 +151,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
 
     void ChannelerDied(Unit* killer)
     {
-        for (int i=0; i<5; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (channeler && channeler->isAlive())
@@ -170,7 +170,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         SummonChannelers();
         if (!channeler1) return NULL;
         int i;
-        for (i=0; i<5; ++i)
+        for (i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (channeler && channeler->GetGUID() == channeler1->GetGUID())
@@ -181,7 +181,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
 
     void SummonChannelers()
     {
-        for (int i=0; i<5; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (!channeler || channeler->isDead())

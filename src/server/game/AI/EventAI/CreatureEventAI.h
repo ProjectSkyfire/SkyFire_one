@@ -38,7 +38,7 @@ enum EventAI_Type
     EVENT_T_TIMER                   = 0,                    // InitialMin, InitialMax, RepeatMin, RepeatMax
     EVENT_T_TIMER_OOC               = 1,                    // InitialMin, InitialMax, RepeatMin, RepeatMax
     EVENT_T_HP                      = 2,                    // HPMax%, HPMin%, RepeatMin, RepeatMax
-    EVENT_T_MANA                    = 3,                    // ManaMax%,ManaMin% RepeatMin, RepeatMax
+    EVENT_T_MANA                    = 3,                    // ManaMax%, ManaMin% RepeatMin, RepeatMax
     EVENT_T_AGGRO                   = 4,                    // NONE
     EVENT_T_KILL                    = 5,                    // RepeatMin, RepeatMax
     EVENT_T_DEATH                   = 6,                    // NONE

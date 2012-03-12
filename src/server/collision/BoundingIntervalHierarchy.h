@@ -94,7 +94,7 @@ class BIH
             dat.indices = new uint32[dat.numPrims];
             dat.primBound = new AABox[dat.numPrims];
             getBounds(primitives[0], bounds);
-            for (uint32 i=0; i<dat.numPrims; ++i)
+            for (uint32 i = 0; i < dat.numPrims; ++i)
             {
                 dat.indices[i] = i;
                 AABox tb;
@@ -108,7 +108,7 @@ class BIH
                 stats.printStats();
 
             objects.resize(dat.numPrims);
-            for (uint32 i=0; i<dat.numPrims; ++i)
+            for (uint32 i = 0; i < dat.numPrims; ++i)
                 objects[i] = dat.indices[i];
             //nObjects = dat.numPrims;
             tree = tempTree;
@@ -125,7 +125,7 @@ class BIH
             Vector3 org = r.origin();
             Vector3 dir = r.direction();
             Vector3 invDir;
-            for (int i=0; i<3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 invDir[i] = 1.f / dir[i];
                 if (dir[i] != 0.f)
@@ -156,7 +156,7 @@ class BIH
             uint32 offsetBack3[3];
             // compute custom offsets from direction sign bit
 
-            for (int i=0; i<3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 offsetFront[i] = floatToRawIntBits(dir[i]) >> 31;
                 offsetBack[i] = offsetFront[i] ^ 1;
@@ -376,7 +376,7 @@ class BIH
                 maxObjects(0xFFFFFFFF), sumDepth(0), minDepth(0x0FFFFFFF),
                 maxDepth(0xFFFFFFFF), numBVH2(0)
             {
-                for (int i=0; i<6; ++i) numLeavesN[i] = 0;
+                for (int i = 0; i < 6; ++i) numLeavesN[i] = 0;
             }
 
             void updateInner() { numNodes++; }

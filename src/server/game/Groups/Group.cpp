@@ -108,7 +108,7 @@ bool Group::Create(const uint64 &guid, const char * name)
         CharacterDatabase.PExecute("DELETE FROM groups WHERE leaderGuid ='%u'", GUID_LOPART(m_leaderGuid));
         CharacterDatabase.PExecute("DELETE FROM group_member WHERE leaderGuid ='%u'", GUID_LOPART(m_leaderGuid));
         CharacterDatabase.PExecute("INSERT INTO groups(leaderGuid, mainTank, mainAssistant, lootMethod, looterGuid, lootThreshold, icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, isRaid, difficulty) "
-            "VALUES('%u','%u','%u','%u','%u','%u','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','%u','%u')",
+            "VALUES('%u', '%u', '%u', '%u', '%u', '%u', '" UI64FMTD "', '" UI64FMTD "', '" UI64FMTD "', '" UI64FMTD "', '" UI64FMTD "', '" UI64FMTD "', '" UI64FMTD "', '" UI64FMTD "', '%u', '%u')",
             GUID_LOPART(m_leaderGuid), GUID_LOPART(m_mainTank), GUID_LOPART(m_mainAssistant), uint32(m_lootMethod),
             GUID_LOPART(m_looterGuid), uint32(m_lootThreshold), m_targetIcons[0], m_targetIcons[1], m_targetIcons[2], m_targetIcons[3], m_targetIcons[4], m_targetIcons[5], m_targetIcons[6], m_targetIcons[7], isRaidGroup(), m_difficulty);
     }
@@ -154,7 +154,7 @@ bool Group::LoadGroupFromDB(const uint64 &leaderGuid, QueryResult_AutoPtr result
     m_looterGuid = MAKE_NEW_GUID((*result)[3].GetUInt32(), 0, HIGHGUID_PLAYER);
     m_lootThreshold = (ItemQualities)(*result)[4].GetUInt16();
 
-    for (int i=0; i<TARGETICONCOUNT; i++)
+    for (int i = 0; i < TARGETICONCOUNT; i++)
         m_targetIcons[i] = (*result)[5+i].GetUInt64();
 
     if (loadMembers)
@@ -536,8 +536,8 @@ void Group::GroupLoot(const uint64& playerGUID, Loot *loot, WorldObject* object)
         //roll for over-threshold item if it's one-player loot
         if (item->Quality >= uint32(m_lootThreshold) && !i->freeforall)
         {
-            uint64 newitemGUID = MAKE_NEW_GUID(sObjectMgr.GenerateLowGuid(HIGHGUID_ITEM),0, HIGHGUID_ITEM);
-            Roll* r = new Roll(newitemGUID,*i);
+            uint64 newitemGUID = MAKE_NEW_GUID(sObjectMgr.GenerateLowGuid(HIGHGUID_ITEM), 0, HIGHGUID_ITEM);
+            Roll* r = new Roll(newitemGUID, *i);
 
             //a vector is filled with only near party members
             for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
@@ -585,8 +585,8 @@ void Group::NeedBeforeGreed(const uint64& playerGUID, Loot *loot, WorldObject* o
         //only roll for one-player items, not for ones everyone can get
         if (item->Quality >= uint32(m_lootThreshold) && !i->freeforall)
         {
-            uint64 newitemGUID = MAKE_NEW_GUID(sObjectMgr.GenerateLowGuid(HIGHGUID_ITEM),0, HIGHGUID_ITEM);
-            Roll* r=new Roll(newitemGUID,*i);
+            uint64 newitemGUID = MAKE_NEW_GUID(sObjectMgr.GenerateLowGuid(HIGHGUID_ITEM), 0, HIGHGUID_ITEM);
+            Roll* r=new Roll(newitemGUID, *i);
 
             for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
             {
@@ -841,7 +841,7 @@ void Group::SetTargetIcon(uint8 id, uint64 guid)
 
     // clean other icons
     if (guid != 0)
-        for (int i=0; i<TARGETICONCOUNT; i++)
+        for (int i = 0; i < TARGETICONCOUNT; i++)
             if (m_targetIcons[i] == guid)
                 SetTargetIcon(i, 0);
 
@@ -887,7 +887,7 @@ void Group::SendTargetIconList(WorldSession *session)
     WorldPacket data(MSG_RAID_TARGET_UPDATE, (1+TARGETICONCOUNT*9));
     data << uint8(1);                                       // list targets
 
-    for (int i=0; i<TARGETICONCOUNT; ++i)
+    for (int i = 0; i < TARGETICONCOUNT; ++i)
     {
         if (m_targetIcons[i] == 0)
             continue;
@@ -1070,7 +1070,7 @@ bool Group::_addMember(const uint64 &guid, const char* name, bool isAssistant, u
     if (!isBGGroup())
     {
         // insert into group table
-        CharacterDatabase.PExecute("INSERT INTO group_member(leaderGuid, memberGuid, assistant, subgroup) VALUES('%u','%u','%u','%u')", GUID_LOPART(m_leaderGuid), GUID_LOPART(member.guid), ((member.assistant == 1)?1:0), member.group);
+        CharacterDatabase.PExecute("INSERT INTO group_member(leaderGuid, memberGuid, assistant, subgroup) VALUES('%u', '%u', '%u', '%u')", GUID_LOPART(m_leaderGuid), GUID_LOPART(member.guid), ((member.assistant == 1)?1:0), member.group);
     }
 
     return true;
@@ -1349,7 +1349,7 @@ void Group::UpdateLooterGuid(WorldObject* object, bool ifneed)
                     SetLooterGuid(pl->GetGUID());
                     SendUpdate();
                     if (refresh)                             // update loot for new looter
-                        pl->SendLoot(object->GetGUID(),LOOT_CORPSE);
+                        pl->SendLoot(object->GetGUID(), LOOT_CORPSE);
                     return;
                 }
             }
@@ -1370,7 +1370,7 @@ void Group::UpdateLooterGuid(WorldObject* object, bool ifneed)
                 SetLooterGuid(pl->GetGUID());
                 SendUpdate();
                 if (refresh)                                 // update loot for new looter
-                    pl->SendLoot(object->GetGUID(),LOOT_CORPSE);
+                    pl->SendLoot(object->GetGUID(), LOOT_CORPSE);
                 return;
             }
         }

@@ -97,12 +97,12 @@ void OutdoorPvPEP::HandlePlayerEnterZone(Player * plr, uint32 zone)
     if (plr->GetTeam() == ALLIANCE)
     {
         if (m_AllianceTowersControlled > 0)
-            plr->CastSpell(plr, EP_AllianceBuffs[m_AllianceTowersControlled-1],true);
+            plr->CastSpell(plr, EP_AllianceBuffs[m_AllianceTowersControlled-1], true);
     }
     else
     {
         if (m_HordeTowersControlled > 0)
-            plr->CastSpell(plr, EP_HordeBuffs[m_HordeTowersControlled-1],true);
+            plr->CastSpell(plr, EP_HordeBuffs[m_HordeTowersControlled-1], true);
     }
     OutdoorPvP::HandlePlayerEnterZone(plr, zone);
 }
@@ -157,11 +157,11 @@ void OutdoorPvPEP::SendRemoveWorldStates(Player *plr)
 
     for (uint8 i = 0; i < EP_TOWER_NUM; ++i)
     {
-        plr->SendUpdateWorldState(EP_MAP_N[i],0);
-        plr->SendUpdateWorldState(EP_MAP_A[i],0);
-        plr->SendUpdateWorldState(EP_MAP_H[i],0);
-        plr->SendUpdateWorldState(EP_MAP_N_A[i],0);
-        plr->SendUpdateWorldState(EP_MAP_N_H[i],0);
+        plr->SendUpdateWorldState(EP_MAP_N[i], 0);
+        plr->SendUpdateWorldState(EP_MAP_A[i], 0);
+        plr->SendUpdateWorldState(EP_MAP_H[i], 0);
+        plr->SendUpdateWorldState(EP_MAP_N_A[i], 0);
+        plr->SendUpdateWorldState(EP_MAP_N_H[i], 0);
     }
 }
 
@@ -190,13 +190,13 @@ void OPvPCapturePointEP::ChangeState()
         field = EP_MAP_A[m_TowerType];
         if (((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled)
             ((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled--;
-        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_LOOSE_A[m_TowerType]));
+        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_LOOSE_A[m_TowerType]));
         break;
     case OBJECTIVESTATE_HORDE:
         field = EP_MAP_H[m_TowerType];
         if (((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled)
             ((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled--;
-        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_LOOSE_H[m_TowerType]));
+        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_LOOSE_H[m_TowerType]));
         break;
     case OBJECTIVESTATE_NEUTRAL_ALLIANCE_CHALLENGE:
     case OBJECTIVESTATE_ALLIANCE_HORDE_CHALLENGE:
@@ -226,14 +226,14 @@ void OPvPCapturePointEP::ChangeState()
         artkit = 2;
         if (((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled<4)
             ((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled++;
-        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_CAPTURE_A[m_TowerType]));
+        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_CAPTURE_A[m_TowerType]));
         break;
     case OBJECTIVESTATE_HORDE:
         field = EP_MAP_H[m_TowerType];
         artkit = 1;
         if (((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled<4)
             ((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled++;
-        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_CAPTURE_H[m_TowerType]));
+        sWorld.SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(EP_LANG_CAPTURE_H[m_TowerType]));
         break;
     case OBJECTIVESTATE_NEUTRAL_ALLIANCE_CHALLENGE:
     case OBJECTIVESTATE_ALLIANCE_HORDE_CHALLENGE:
@@ -392,7 +392,7 @@ void OPvPCapturePointEP::LinkGraveYard(uint32 team)
 
 void OPvPCapturePointEP::UnlinkGraveYard()
 {
-    sObjectMgr.RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD],false);
+    sObjectMgr.RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD], false);
     EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD] = 0;
 }
 
@@ -431,7 +431,7 @@ void OPvPCapturePointEP::SummonShrine(uint32 team)
         AddObject(EP_NPT_SHRINE, EP_NPT_LordaeronShrine.entry, 0, EP_NPT_LordaeronShrine.map, EP_NPT_LordaeronShrine.x, EP_NPT_LordaeronShrine.y, EP_NPT_LordaeronShrine.z, EP_NPT_LordaeronShrine.o, EP_NPT_LordaeronShrine.rot0, EP_NPT_LordaeronShrine.rot1, EP_NPT_LordaeronShrine.rot2, EP_NPT_LordaeronShrine.rot3);
         GameObject * go = HashMapHolder<GameObject>::Find(m_Objects[EP_NPT_SHRINE]);
         if (go)
-            go->SetUInt32Value(GAMEOBJECT_FACTION,(team == ALLIANCE ? 84 : 83));
+            go->SetUInt32Value(GAMEOBJECT_FACTION, (team == ALLIANCE ? 84 : 83));
 
         DelObject(EP_NPT_SHRINE_AURA);
         uint32 shrineEntry = (team == ALLIANCE ? EP_NPT_LordaeronShrineAura.entry : EP_NPT_LordaeronShrineAura.entry + 1);

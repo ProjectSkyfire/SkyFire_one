@@ -98,7 +98,7 @@ bool TargetedMovementGenerator<T>::_setTargetLocation(T &owner)
     else
     {
         // to at i_offset distance from target and i_angle from target facing
-        i_target->GetClosePoint(x, y, z, owner.GetObjectSize(),i_offset, i_angle);
+        i_target->GetClosePoint(x, y, z, owner.GetObjectSize(), i_offset, i_angle);
     }
 
     /*
@@ -208,7 +208,7 @@ bool TargetedMovementGenerator<T>::Update(T &owner, const uint32 & time_diff)
 
             owner.StopMoving();
             if (owner.IsWithinMeleeRange(i_target.getTarget()) && !owner.hasUnitState(UNIT_STAT_FOLLOW))
-                owner.Attack(i_target.getTarget(),true);
+                owner.Attack(i_target.getTarget(), true);
         }
     }
 

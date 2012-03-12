@@ -165,7 +165,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
         if (!_player->CanSpeak())
         {
             std::string timeStr = secsToTimeString(m_muteTime - time(NULL));
-            SendNotification(GetTrinityString(LANG_WAIT_BEFORE_SPEAKING),timeStr.c_str());
+            SendNotification(GetTrinityString(LANG_WAIT_BEFORE_SPEAKING), timeStr.c_str());
             return;
         }
 
@@ -436,7 +436,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
 
             WorldPacket data;
             // in battleground, raid warning is sent only to players in battleground - code is ok
-            ChatHandler::FillMessageData(&data, this, CHAT_MSG_RAID_WARNING, lang, "", 0, msg.c_str(),NULL);
+            ChatHandler::FillMessageData(&data, this, CHAT_MSG_RAID_WARNING, lang, "", 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false);
 
             if (sWorld.getConfig(CONFIG_CHATLOG_RAID))
@@ -486,7 +486,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                 return;
 
             WorldPacket data;
-            ChatHandler::FillMessageData(&data, this, CHAT_MSG_BATTLEGROUND_LEADER, lang, "", 0, msg.c_str(),NULL);
+            ChatHandler::FillMessageData(&data, this, CHAT_MSG_BATTLEGROUND_LEADER, lang, "", 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false);
 
             if (sWorld.getConfig(CONFIG_CHATLOG_BGROUND))
@@ -593,7 +593,7 @@ void WorldSession::HandleTextEmoteOpcode(WorldPacket & recv_data)
     if (!GetPlayer()->CanSpeak())
     {
         std::string timeStr = secsToTimeString(m_muteTime - time(NULL));
-        SendNotification(GetTrinityString(LANG_WAIT_BEFORE_SPEAKING),timeStr.c_str());
+        SendNotification(GetTrinityString(LANG_WAIT_BEFORE_SPEAKING), timeStr.c_str());
         return;
     }
 
@@ -643,7 +643,7 @@ void WorldSession::HandleTextEmoteOpcode(WorldPacket & recv_data)
     else
         data << (uint8)0x00;
 
-    GetPlayer()->SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),true);
+    GetPlayer()->SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), true);
 
     //Send scripted event call
     if (unit && unit->GetTypeId() == TYPEID_UNIT && ((Creature*)unit)->AI())

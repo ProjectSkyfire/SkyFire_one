@@ -60,7 +60,7 @@ class ChatHandler
             FillMessageData(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, 0, message);
         }
 
-        static char* LineFromMessage(char*& pos) { char* start = strtok(pos,"\n"); pos = NULL; return start; }
+        static char* LineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = NULL; return start; }
 
         // function with different implementation for chat/console
         virtual const char *GetTrinityString(int32 entry) const;

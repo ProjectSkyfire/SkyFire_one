@@ -448,12 +448,12 @@ class World
         void RemoveWeather(uint32 zone_id);
 
         // Get the active session server limit (or security level limitations)
-        uint32 GetPlayerAmountLimit() const { return m_playerLimit >= 0 ? m_playerLimit : 0; }
         AccountTypes GetPlayerSecurityLimit() const { return m_allowedSecurityLevel < 0 ? SEC_PLAYER : m_allowedSecurityLevel; }
         void SetPlayerSecurityLimit(AccountTypes sec) { m_allowedSecurityLevel = (sec < SEC_PLAYER ? SEC_PLAYER : sec); }
 
-        // Set the active session server limit (or security level limitation)
-        void SetPlayerLimit(int32 limit, bool needUpdate = false);
+        // Active session server limit
+        void SetPlayerAmountLimit(uint32 limit) { m_playerLimit = limit; }
+        uint32 GetPlayerAmountLimit() const { return m_playerLimit; }
 
         //player Queue
         typedef std::list<WorldSession*> Queue;
@@ -635,6 +635,8 @@ class World
         DisconnectMap m_disconnects;
         uint32 m_maxActiveSessionCount;
         uint32 m_maxQueuedSessionCount;
+        uint32 m_PlayerCount;
+        uint32 m_MaxPlayerCount;
 
         std::string m_newCharString;
 

@@ -42,7 +42,7 @@ WorldLog::~WorldLog()
 // Open the log file (if specified so in the configuration file)
 void WorldLog::Initialize()
 {
-    std::string logsDir = ConfigMgr::GetStringDefault("LogsDir","");
+    std::string logsDir = ConfigMgr::GetStringDefault("LogsDir", "");
 
     if (!logsDir.empty())
     {

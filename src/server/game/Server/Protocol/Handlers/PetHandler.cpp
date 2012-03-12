@@ -489,7 +489,7 @@ void WorldSession::HandlePetRename(WorldPacket & recv_data)
 
         std::wstring wname;
         Utf8toWStr(name, wname);
-        if (!ObjectMgr::CheckDeclinedNames(GetMainPartOfName(wname, 0),declinedname))
+        if (!ObjectMgr::CheckDeclinedNames(GetMainPartOfName(wname, 0), declinedname))
         {
             SendPetNameInvalid(PET_NAME_DECLENSION_DOESNT_MATCH_BASE_NAME, name, &declinedname);
             return;
@@ -502,7 +502,7 @@ void WorldSession::HandlePetRename(WorldPacket & recv_data)
         for (int i = 0; i < MAX_DECLINED_NAME_CASES; ++i)
             CharacterDatabase.EscapeString(declinedname.name[i]);
         CharacterDatabase.PExecute("DELETE FROM character_pet_declinedname WHERE owner = '%u' AND id = '%u'", _player->GetGUIDLow(), pet->GetCharmInfo()->GetPetNumber());
-        CharacterDatabase.PExecute("INSERT INTO character_pet_declinedname (id, owner, genitive, dative, accusative, instrumental, prepositional) VALUES ('%u','%u','%s','%s','%s','%s','%s')",
+        CharacterDatabase.PExecute("INSERT INTO character_pet_declinedname (id, owner, genitive, dative, accusative, instrumental, prepositional) VALUES ('%u', '%u', '%s', '%s', '%s', '%s', '%s')",
             pet->GetCharmInfo()->GetPetNumber(), _player->GetGUIDLow(), declinedname.name[0].c_str(), declinedname.name[1].c_str(), declinedname.name[2].c_str(), declinedname.name[3].c_str(), declinedname.name[4].c_str());
     }
 
@@ -531,7 +531,7 @@ void WorldSession::HandlePetAbandon(WorldPacket & recv_data)
             if (pet->GetGUID() == _player->GetPetGUID())
             {
                 uint32 feelty = pet->GetPower(POWER_HAPPINESS);
-                pet->SetPower(POWER_HAPPINESS ,(feelty-50000) > 0 ?(feelty-50000) : 0);
+                pet->SetPower(POWER_HAPPINESS , (feelty-50000) > 0 ?(feelty-50000) : 0);
             }
 
             _player->RemovePet((Pet*)pet, PET_SAVE_AS_DELETED);
@@ -554,7 +554,7 @@ void WorldSession::HandlePetUnlearnOpcode(WorldPacket& recvPacket)
 
     if (guid != pet->GetGUID())
     {
-        sLog->outError("HandlePetUnlearnOpcode.Pet %u isn't pet of player %s .", uint32(GUID_LOPART(guid)),GetPlayer()->GetName());
+        sLog->outError("HandlePetUnlearnOpcode.Pet %u isn't pet of player %s .", uint32(GUID_LOPART(guid)), GetPlayer()->GetName());
         return;
     }
 
@@ -617,7 +617,7 @@ void WorldSession::HandlePetSpellAutocastOpcode(WorldPacket& recvPacket)
 
     if (!pet || (pet != _player->GetGuardianPet() && pet != _player->GetCharm()))
     {
-        sLog->outError("HandlePetSpellAutocastOpcode.Pet %u isn't pet of player %s .", uint32(GUID_LOPART(guid)),GetPlayer()->GetName());
+        sLog->outError("HandlePetSpellAutocastOpcode.Pet %u isn't pet of player %s .", uint32(GUID_LOPART(guid)), GetPlayer()->GetName());
         return;
     }
 
@@ -661,7 +661,7 @@ void WorldSession::HandlePetCastSpellOpcode(WorldPacket& recvPacket)
 
     if (!caster || (caster != _player->GetGuardianPet() && caster != _player->GetCharm()))
     {
-        sLog->outError("HandlePetCastSpellOpcode: Pet %u isn't pet of player %s .", uint32(GUID_LOPART(guid)),GetPlayer()->GetName());
+        sLog->outError("HandlePetCastSpellOpcode: Pet %u isn't pet of player %s .", uint32(GUID_LOPART(guid)), GetPlayer()->GetName());
         return;
     }
 

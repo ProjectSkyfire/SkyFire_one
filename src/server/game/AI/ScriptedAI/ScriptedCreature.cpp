@@ -191,17 +191,17 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget pTarget, uint32 uiPosition)
     {
     case SELECT_TARGET_RANDOM:
         advance (itr , uiPosition +  (rand() % (threatlist.size() - uiPosition)));
-        return Unit::GetUnit((*me),(*itr)->getUnitGuid());
+        return Unit::GetUnit((*me), (*itr)->getUnitGuid());
         break;
 
     case SELECT_TARGET_TOPAGGRO:
         advance (itr , uiPosition);
-        return Unit::GetUnit((*me),(*itr)->getUnitGuid());
+        return Unit::GetUnit((*me), (*itr)->getUnitGuid());
         break;
 
     case SELECT_TARGET_BOTTOMAGGRO:
         advance (ritr , uiPosition);
-        return Unit::GetUnit((*me),(*ritr)->getUnitGuid());
+        return Unit::GetUnit((*me), (*ritr)->getUnitGuid());
         break;
 
     default:

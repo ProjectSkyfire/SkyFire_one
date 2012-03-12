@@ -228,7 +228,7 @@ void BattleGroundWS::RespawnFlagAfterDrop(uint32 team)
     if (obj)
         obj->Delete();
     else
-        sLog->outError("unknown droped flag bg, guid: %u",GUID_LOPART(GetDroppedFlagGUID(team)));
+        sLog->outError("unknown droped flag bg, guid: %u", GUID_LOPART(GetDroppedFlagGUID(team)));
 
     SetDroppedFlagGUID(0, team);
     m_BothFlagsKept = false;

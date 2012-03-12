@@ -317,7 +317,7 @@ hyjalAI::hyjalAI(Creature *c) : npc_escortAI(c), Summons(me)
     pInstance = c->GetInstanceData();
     VeinsSpawned[0] = false;
     VeinsSpawned[1] = false;
-    for (uint8 i=0; i<14; ++i)
+    for (uint8 i = 0; i < 14; ++i)
         VeinGUID[i] = 0;
     InfernalCount = 0;
     TeleportTimer = 1000;
@@ -700,7 +700,7 @@ void hyjalAI::SpawnVeins()
     {
         if (VeinsSpawned[0])//prevent any buggers
             return;
-        for (uint8 i = 0; i<7; ++i)
+        for (uint8 i = 0; i < 7; ++i)
         {
             GameObject* gem = me->SummonGameObject(ANCIENT_VEIN, VeinPos[i][0],VeinPos[i][1],VeinPos[i][2],VeinPos[i][3],VeinPos[i][4],VeinPos[i][5],VeinPos[i][6],VeinPos[i][7],0);
             if (gem)
@@ -710,7 +710,7 @@ void hyjalAI::SpawnVeins()
     } else{
         if (VeinsSpawned[1])
             return;
-        for (uint8 i = 7; i<14; ++i)
+        for (uint8 i = 7; i < 14; ++i)
         {
             GameObject* gem = me->SummonGameObject(ANCIENT_VEIN, VeinPos[i][0],VeinPos[i][1],VeinPos[i][2],VeinPos[i][3],VeinPos[i][4],VeinPos[i][5],VeinPos[i][6],VeinPos[i][7],0);
             if (gem)
@@ -730,7 +730,7 @@ void hyjalAI::DeSpawnVeins()
         if (!pUnit)return;
         hyjalAI* ai = CAST_AI(hyjalAI, pUnit->AI());
         if (!ai)return;
-        for (uint8 i = 0; i<7; ++i)
+        for (uint8 i = 0; i < 7; ++i)
         {
             if (GameObject* gem = GameObject::GetGameObject((*me), ai->VeinGUID[i]))
                 gem->RemoveFromWorld();
@@ -741,7 +741,7 @@ void hyjalAI::DeSpawnVeins()
         if (!pUnit)return;
         hyjalAI* ai = CAST_AI(hyjalAI, pUnit->AI());
         if (!ai)return;
-        for (uint8 i = 7; i<14; ++i)
+        for (uint8 i = 7; i < 14; ++i)
         {
             if (GameObject* gem = GameObject::GetGameObject((*me), ai->VeinGUID[i]))
                 gem->RemoveFromWorld();

@@ -136,7 +136,7 @@ void Bag::DeleteFromDB()
 uint32 Bag::GetFreeSlots() const
 {
     uint32 slots = 0;
-    for (uint32 i=0; i < GetBagSize(); ++i)
+    for (uint32 i = 0; i < GetBagSize(); ++i)
         if (!m_bagslot[i])
             ++slots;
 
@@ -196,7 +196,7 @@ uint32 Bag::GetItemCount(uint32 item, Item* eItem) const
 {
     Item *pItem;
     uint32 count = 0;
-    for (uint32 i=0; i < GetBagSize(); ++i)
+    for (uint32 i = 0; i < GetBagSize(); ++i)
     {
         pItem = m_bagslot[i];
         if (pItem && pItem != eItem && pItem->GetEntry() == item)
@@ -205,7 +205,7 @@ uint32 Bag::GetItemCount(uint32 item, Item* eItem) const
 
     if (eItem && eItem->GetProto()->GemProperties)
     {
-        for (uint32 i=0; i < GetBagSize(); ++i)
+        for (uint32 i = 0; i < GetBagSize(); ++i)
         {
             pItem = m_bagslot[i];
             if (pItem && pItem != eItem && pItem->GetProto()->Socket[0].Color)

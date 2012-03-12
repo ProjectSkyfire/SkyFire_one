@@ -306,7 +306,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
     //Despawn all Inner Demon summoned
     void DespawnDemon()
     {
-        for (uint8 i=0; i<5; ++i)
+        for (uint8 i = 0; i < 5; ++i)
         {
             if (InnderDemon[i])
             {
@@ -325,7 +325,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
 
     void CastConsumingMadness() //remove this once SPELL_INSIDIOUS_WHISPER is supported by core
     {
-        for (uint8 i=0; i<5; ++i)
+        for (uint8 i = 0; i < 5; ++i)
         {
             if (InnderDemon[i] > 0)
             {
@@ -508,7 +508,7 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
                             demon->AI()->AttackStart((*itr));
                             CAST_AI(mob_inner_demonAI, demon->AI())->victimGUID = (*itr)->GetGUID();
 
-                            for (int i=0; i<3; i++)
+                            for (int i = 0; i < 3; i++)
                             {
                                 if (!spell->Effect[i])
                                     continue;

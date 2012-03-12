@@ -65,7 +65,7 @@ bool LoginQueryHolder::Initialize()
     bool res = true;
 
     // NOTE: all fields in `characters` must be read to prevent lost character data at next save in case wrong DB structure.
-    // !!! NOTE: including unused `zone`,`online`
+    // !!! NOTE: including unused `zone`, `online`
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADFROM,
         "SELECT guid, account, data, name, race, class, gender, level, xp, "
         "money, playerBytes, playerBytes2, playerFlags, position_x, "
@@ -84,18 +84,18 @@ bool LoginQueryHolder::Initialize()
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADAURAS,           "SELECT caster_guid, spell, effect_index, stackcount, amount, maxduration, remaintime, remaincharges FROM character_aura WHERE guid = '%u'", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADSPELLS,          "SELECT spell, active, disabled FROM character_spell WHERE guid = '%u'", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADQUESTSTATUS,     "SELECT quest, status, rewarded, explored, timer, mobcount1, mobcount2, mobcount3, mobcount4, itemcount1, itemcount2, itemcount3, itemcount4 FROM character_queststatus WHERE guid = '%u'", GUID_LOPART(m_guid));
-    res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADDAILYQUESTSTATUS,"SELECT quest, time FROM character_queststatus_daily WHERE guid = '%u'", GUID_LOPART(m_guid));
+    res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADDAILYQUESTSTATUS, "SELECT quest, time FROM character_queststatus_daily WHERE guid = '%u'", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADTUTORIALS,       "SELECT tut0, tut1, tut2, tut3, tut4, tut5, tut6, tut7 FROM character_tutorial WHERE account = '%u' AND realmid = '%u'", GetAccountId(), realmID);
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADREPUTATION,      "SELECT faction, standing, flags FROM character_reputation WHERE guid = '%u'", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADINVENTORY,       "SELECT data, bag, slot, item, item_template FROM character_inventory JOIN item_instance ON character_inventory.item = item_instance.guid WHERE character_inventory.guid = '%u' ORDER BY bag, slot", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADACTIONS,         "SELECT button, action, type, misc FROM character_action WHERE guid = '%u' ORDER BY button", GUID_LOPART(m_guid));
-    res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADMAILCOUNT,       "SELECT COUNT(id) FROM mail WHERE receiver = '%u' AND (checked & 1)=0 AND deliver_time <= '" UI64FMTD "'", GUID_LOPART(m_guid),(uint64)time(NULL));
+    res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADMAILCOUNT,       "SELECT COUNT(id) FROM mail WHERE receiver = '%u' AND (checked & 1)=0 AND deliver_time <= '" UI64FMTD "'", GUID_LOPART(m_guid), (uint64)time(NULL));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADMAILDATE,        "SELECT MIN(deliver_time) FROM mail WHERE receiver = '%u' AND (checked & 1)=0", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADSOCIALLIST,      "SELECT friend, flags, note FROM character_social WHERE guid = '%u' LIMIT 255", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADHOMEBIND,        "SELECT map, zone, position_x, position_y, position_z FROM character_homebind WHERE guid = '%u'", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADSPELLCOOLDOWNS,  "SELECT spell, item, time FROM character_spell_cooldown WHERE guid = '%u'", GUID_LOPART(m_guid));
     if (sWorld.getConfig(CONFIG_DECLINED_NAMES_USED))
-        res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADDECLINEDNAMES,   "SELECT genitive, dative, accusative, instrumental, prepositional FROM character_declinedname WHERE guid = '%u'",GUID_LOPART(m_guid));
+        res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADDECLINEDNAMES,   "SELECT genitive, dative, accusative, instrumental, prepositional FROM character_declinedname WHERE guid = '%u'", GUID_LOPART(m_guid));
     // in other case still be dummy query
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADGUILD,           "SELECT guildid, rank FROM guild_member WHERE guid = '%u'", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADARENAINFO,       "SELECT arenateamid, played_week, played_season, personal_rating FROM arena_team_member WHERE guid='%u'", GUID_LOPART(m_guid));
@@ -144,7 +144,7 @@ void WorldSession::HandleCharEnum(QueryResult_AutoPtr result)
         do
         {
             uint32 guidlow = (*result)[0].GetUInt32();
-            sLog->outDetail("Loading char guid %u from account %u.",guidlow, GetAccountId());
+            sLog->outDetail("Loading char guid %u from account %u.", guidlow, GetAccountId());
             if (Player::BuildEnumData(result, &data))
                 ++num;
         }
@@ -235,7 +235,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
     if (raceEntry->addon > Expansion())
     {
         data << (uint8)CHAR_CREATE_EXPANSION;
-        sLog->outError("Not Expansion 1 account:[%d] but tried to Create character with expansion 1 race (%u)",GetAccountId(),race_);
+        sLog->outError("Not Expansion 1 account:[%d] but tried to Create character with expansion 1 race (%u)", GetAccountId(), race_);
         SendPacket(&data);
         return;
     }
@@ -245,7 +245,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
     {
         data << (uint8)CHAR_NAME_INVALID_CHARACTER;
         SendPacket(&data);
-        sLog->outError("Account:[%d] but tried to Create character with empty [name] ",GetAccountId());
+        sLog->outError("Account:[%d] but tried to Create character with empty [name] ", GetAccountId());
         return;
     }
 
@@ -306,7 +306,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
     bool have_same_race = false;
     if (!AllowTwoSideAccounts || skipCinematics == 1)
     {
-        QueryResult_AutoPtr result2 = CharacterDatabase.PQuery("SELECT DISTINCT race FROM characters WHERE account = '%u' %s", GetAccountId(),skipCinematics == 1 ? "" : "LIMIT 1");
+        QueryResult_AutoPtr result2 = CharacterDatabase.PQuery("SELECT DISTINCT race FROM characters WHERE account = '%u' %s", GetAccountId(), skipCinematics == 1 ? "" : "LIMIT 1");
         if (result2)
         {
             uint32 team_= Player::TeamForRace(race_);
@@ -422,13 +422,13 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket & recv_data)
         return;
 
     std::string IP_str = GetRemoteAddress();
-    sLog->outDetail("Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)",GetAccountId(),IP_str.c_str(),name.c_str(),GUID_LOPART(guid));
-    sLog->outChar("Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)",GetAccountId(),IP_str.c_str(),name.c_str(),GUID_LOPART(guid));
+    sLog->outDetail("Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid));
+    sLog->outChar("Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid));
 
     if (sLog->IsOutCharDump())                                // optimize GetPlayerDump call
     {
         std::string dump = PlayerDumpWriter().GetDump(GUID_LOPART(guid));
-        sLog->outCharDump(dump.c_str(),GetAccountId(),GUID_LOPART(guid),name.c_str());
+        sLog->outCharDump(dump.c_str(), GetAccountId(), GUID_LOPART(guid), name.c_str());
     }
 
     Player::DeleteFromDB(guid, GetAccountId());
@@ -442,7 +442,7 @@ void WorldSession::HandlePlayerLoginOpcode(WorldPacket & recv_data)
 {
     if (PlayerLoading() || GetPlayer() != NULL)
     {
-        sLog->outError("Player tryes to login again, AccountId = %d",GetAccountId());
+        sLog->outError("Player tryes to login again, AccountId = %d", GetAccountId());
         return;
     }
 
@@ -519,7 +519,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         std::string::size_type pos, nextpos;
 
         pos = 0;
-        while ((nextpos= str_motd.find('@',pos)) != std::string::npos)
+        while ((nextpos= str_motd.find('@', pos)) != std::string::npos)
         {
             if (nextpos != pos)
             {
@@ -587,7 +587,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         else
         {
             // remove wrong guild data
-            sLog->outError("Player %s (GUID: %u) marked as member of invalid guild (id: %u), removing guild membership for player.",pCurrChar->GetName(),pCurrChar->GetGUIDLow(),pCurrChar->GetGuildId());
+            sLog->outError("Player %s (GUID: %u) marked as member of invalid guild (id: %u), removing guild membership for player.", pCurrChar->GetName(), pCurrChar->GetGUIDLow(), pCurrChar->GetGuildId());
             pCurrChar->SetInGuild(0);
         }
     }
@@ -623,7 +623,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
     }
 
     sObjectAccessor.AddObject(pCurrChar);
-    //sLog->outDebug("Player %s added to Map.",pCurrChar->GetName());
+    //sLog->outDebug("Player %s added to Map.", pCurrChar->GetName());
     pCurrChar->GetSocial()->SendSocialList();
 
     pCurrChar->SendInitialPacketsAfterAddToMap();
@@ -695,41 +695,41 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
     //Reputations if "StartAllReputation" is enabled
     if (sWorld.getConfig(CONFIG_START_ALL_REP))
     {
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(942),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(935),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(936),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1011),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(970),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(967),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(989),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(932),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(934),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1038),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1077),42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(990),42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(942), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(935), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(936), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1011), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(970), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(967), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(989), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(932), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(934), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1038), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1077), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(990), 42999);
 
         // Factions depending on team, like cities and some more stuff
         switch (pCurrChar->GetTeam())
         {
         case ALLIANCE:
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(72),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(47),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(69),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(930),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(730),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(978),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(54),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(946),42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(72), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(47), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(69), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(930), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(730), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(978), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(54), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(946), 42999);
             break;
         case HORDE:
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(76),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(68),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(81),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(911),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(729),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(941),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(530),42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(947),42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(76), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(68), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(81), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(911), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(729), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(941), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(530), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(947), 42999);
             break;
         default:
                 break;
@@ -789,7 +789,7 @@ void WorldSession::HandleTutorialFlag(WorldPacket & recv_data)
     uint32 wInt = (iFlag / 32);
     if (wInt >= 8)
     {
-        //sLog->outError("CHEATER? Account:[%d] Guid[%u] tried to send wrong CMSG_TUTORIAL_FLAG", GetAccountId(),GetGUID());
+        //sLog->outError("CHEATER? Account:[%d] Guid[%u] tried to send wrong CMSG_TUTORIAL_FLAG", GetAccountId(), GetGUID());
         return;
     }
     uint32 rInt = (iFlag % 32);
@@ -1000,7 +1000,7 @@ void WorldSession::HandleDeclinedPlayerNameOpcode(WorldPacket& recv_data)
 
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.PExecute("DELETE FROM character_declinedname WHERE guid = '%u'", GUID_LOPART(guid));
-    CharacterDatabase.PExecute("INSERT INTO character_declinedname (guid, genitive, dative, accusative, instrumental, prepositional) VALUES ('%u','%s','%s','%s','%s','%s')",
+    CharacterDatabase.PExecute("INSERT INTO character_declinedname (guid, genitive, dative, accusative, instrumental, prepositional) VALUES ('%u', '%s', '%s', '%s', '%s', '%s')",
         GUID_LOPART(guid), declinedname.name[0].c_str(), declinedname.name[1].c_str(), declinedname.name[2].c_str(), declinedname.name[3].c_str(), declinedname.name[4].c_str());
     CharacterDatabase.CommitTransaction();
 

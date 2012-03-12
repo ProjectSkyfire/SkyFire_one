@@ -47,7 +47,7 @@ struct instance_uldaman : public ScriptedInstance
         ironayaSealDoorTimer = 26000;
         keystoneCheck = false;
 
-        for (uint8 i=0; i < ENCOUNTERS; ++i)
+        for (uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
     }
 

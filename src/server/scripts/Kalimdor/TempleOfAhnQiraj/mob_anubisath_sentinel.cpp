@@ -123,7 +123,7 @@ struct aqsentinelAI : public ScriptedAI
     {
         if (c == me)
             return;
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (nearby[i] == c)
                 return;
@@ -138,7 +138,7 @@ struct aqsentinelAI : public ScriptedAI
     void GiveBuddyMyList(Creature *c)
     {
         aqsentinelAI *cai = CAST_AI(aqsentinelAI, (c)->AI());
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
             if (nearby[i] && nearby[i] != c)
                 cai->AddBuddyToList(nearby[i]);
         cai->AddBuddyToList(me);
@@ -146,14 +146,14 @@ struct aqsentinelAI : public ScriptedAI
 
     void SendMyListToBuddies()
     {
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
             if (nearby[i])
                 GiveBuddyMyList(nearby[i]);
     }
 
     void CallBuddiesToAttack(Unit *who)
     {
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             Creature *c = nearby[i];
             if (c)
@@ -225,7 +225,7 @@ struct aqsentinelAI : public ScriptedAI
     {
         if (!me->isDead())
         {
-            for (int i=0; i<3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 if (!nearby[i])
                     continue;
@@ -240,7 +240,7 @@ struct aqsentinelAI : public ScriptedAI
     void GainSentinelAbility(uint32 id)
     {
         const SpellEntry *spell = GetSpellStore()->LookupEntry(id);
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (!spell->Effect[i])
                 continue;

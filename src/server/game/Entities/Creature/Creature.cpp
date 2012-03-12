@@ -153,7 +153,7 @@ m_corpseRemoveTime(0), m_respawnTime(0), m_respawnDelay(25), m_corpseDelay(60), 
 m_emoteState(0), m_reactState(REACT_AGGRESSIVE),
 m_regenTimer(2000), m_defaultMovementType(IDLE_MOTION_TYPE), m_equipmentId(0), m_AlreadyCallAssistance(false),
 m_regenHealth(true), m_AI_locked(false), m_isDeadByDefault(false),
-m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL),m_creatureInfo(NULL), m_DBTableGuid(0), m_formation(NULL), m_PlayerDamageReq(0), m_summonMask(SUMMON_MASK_NONE)
+m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL), m_creatureInfo(NULL), m_DBTableGuid(0), m_formation(NULL), m_PlayerDamageReq(0), m_summonMask(SUMMON_MASK_NONE)
 , m_AlreadySearchedAssistance(false)
 , m_creatureData(NULL)
 , m_group(NULL)
@@ -299,7 +299,7 @@ bool Creature::InitEntry(uint32 Entry, uint32 team, const CreatureData *data)
     // Cancel load if no model defined
     if (!(cinfo->GetFirstValidModelId()))
     {
-        sLog->outErrorDb("Creature (Entry: %u) has no model defined in table creature_template, can't load. ",Entry);
+        sLog->outErrorDb("Creature (Entry: %u) has no model defined in table creature_template, can't load. ", Entry);
         return false;
     }
 
@@ -489,11 +489,11 @@ void Creature::Update(uint32 diff)
     {
         case JUST_ALIVED:
             // Don't must be called, see Creature::setDeathState JUST_ALIVED -> ALIVE promoting.
-            sLog->outError("Creature (GUIDLow: %u Entry: %u) in wrong state: JUST_ALIVED (4)",GetGUIDLow(),GetEntry());
+            sLog->outError("Creature (GUIDLow: %u Entry: %u) in wrong state: JUST_ALIVED (4)", GetGUIDLow(), GetEntry());
             break;
         case JUST_DIED:
             // Don't must be called, see Creature::setDeathState JUST_DIED -> CORPSE promoting.
-            sLog->outError("Creature (GUIDLow: %u Entry: %u) in wrong state: JUST_DEAD (1)",GetGUIDLow(),GetEntry());
+            sLog->outError("Creature (GUIDLow: %u Entry: %u) in wrong state: JUST_DEAD (1)", GetGUIDLow(), GetEntry());
             break;
         case DEAD:
         {
@@ -708,7 +708,7 @@ bool Creature::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 team, float
 
     if (!IsPositionValid())
     {
-        sLog->outError("Creature (guidlow %d, entry %d) not loaded. Suggested coordinates isn't valid (X: %f Y: %f)",guidlow, Entry, x, y);
+        sLog->outError("Creature (guidlow %d, entry %d) not loaded. Suggested coordinates isn't valid (X: %f Y: %f)", guidlow, Entry, x, y);
         return false;
     }
 
@@ -764,7 +764,7 @@ bool Creature::isCanTrainingOf(Player* pPlayer, bool msg) const
     if (!trainer_spells || trainer_spells->spellList.empty())
     {
         sLog->outErrorDb("Creature %u (Entry: %u) has UNIT_NPC_FLAG_TRAINER but trainer spell list is empty.",
-            GetGUIDLow(),GetEntry());
+            GetGUIDLow(), GetEntry());
         return false;
     }
 
@@ -986,22 +986,22 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask)
 
     std::ostringstream ss;
     ss << "INSERT INTO creature VALUES ("
-        << m_DBTableGuid << ","
-        << GetEntry() << ","
-        << mapid <<","
-        << (uint32)spawnMask << ","
-        << displayId <<","
-        << GetEquipmentId() <<","
-        << GetPositionX() << ","
-        << GetPositionY() << ","
-        << GetPositionZ() << ","
-        << GetOrientation() << ","
-        << m_respawnDelay << ","                            //respawn time
-        << (float) m_respawnradius << ","                   //spawn distance (float)
-        << (uint32) (0) << ","                              //currentwaypoint
-        << GetHealth() << ","                               //curhealth
-        << GetPower(POWER_MANA) << ","                      //curmana
-        << (m_isDeadByDefault ? 1 : 0) << ","               //is_dead
+        << m_DBTableGuid << ", "
+        << GetEntry() << ", "
+        << mapid <<", "
+        << (uint32)spawnMask << ", "
+        << displayId <<", "
+        << GetEquipmentId() <<", "
+        << GetPositionX() << ", "
+        << GetPositionY() << ", "
+        << GetPositionZ() << ", "
+        << GetOrientation() << ", "
+        << m_respawnDelay << ", "                            //respawn time
+        << (float) m_respawnradius << ", "                   //spawn distance (float)
+        << (uint32) (0) << ", "                              //currentwaypoint
+        << GetHealth() << ", "                               //curhealth
+        << GetPower(POWER_MANA) << ", "                      //curmana
+        << (m_isDeadByDefault ? 1 : 0) << ", "               //is_dead
         << GetDefaultMovementType() << ")";                 //default movement generator type
 
     WorldDatabase.PExecuteLog(ss.str().c_str());
@@ -1152,7 +1152,7 @@ bool Creature::LoadFromDB(uint32 guid, Map *map)
 
     if (!data)
     {
-        sLog->outErrorDb("Creature (GUID: %u) not found in table creature, can't load. ",guid);
+        sLog->outErrorDb("Creature (GUID: %u) not found in table creature, can't load. ", guid);
         return false;
     }
 
@@ -1264,7 +1264,7 @@ void Creature::DeleteFromDB()
         return;
     }
 
-    sObjectMgr.SaveCreatureRespawnTime(m_DBTableGuid, GetInstanceId(),0);
+    sObjectMgr.SaveCreatureRespawnTime(m_DBTableGuid, GetInstanceId(), 0);
     sObjectMgr.DeleteCreatureData(m_DBTableGuid);
 
     WorldDatabase.BeginTransaction();
@@ -1313,7 +1313,7 @@ bool Creature::canSeeOrDetect(Unit const* u, bool detect, bool inVisibleList, bo
     }
 
     // Now check is target visible with LoS
-    //return u->IsWithinLOS(GetPositionX(),GetPositionY(),GetPositionZ());
+    //return u->IsWithinLOS(GetPositionX(), GetPositionY(), GetPositionZ());
     return true;
 }
 
@@ -1469,7 +1469,7 @@ void Creature::Respawn(bool force)
     if (getDeathState() == DEAD)
     {
         if (m_DBTableGuid)
-            sObjectMgr.SaveCreatureRespawnTime(m_DBTableGuid, GetInstanceId(),0);
+            sObjectMgr.SaveCreatureRespawnTime(m_DBTableGuid, GetInstanceId(), 0);
 
         sLog->outDebug("Respawning...");
         m_respawnTime = 0;
@@ -1544,7 +1544,7 @@ SpellEntry const *Creature::reachWithSpellAttack(Unit *pVictim)
     if (!pVictim)
         return NULL;
 
-    for (uint32 i=0; i < CREATURE_MAX_SPELLS; i++)
+    for (uint32 i = 0; i < CREATURE_MAX_SPELLS; i++)
     {
         if (!m_spells[i])
             continue;
@@ -1592,7 +1592,7 @@ SpellEntry const *Creature::reachWithSpellCure(Unit *pVictim)
     if (!pVictim)
         return NULL;
 
-    for (uint32 i=0; i < CREATURE_MAX_SPELLS; i++)
+    for (uint32 i = 0; i < CREATURE_MAX_SPELLS; i++)
     {
         if (!m_spells[i])
             continue;
@@ -1817,7 +1817,7 @@ void Creature::SaveRespawnTime()
     if (isPet() || !m_DBTableGuid || m_creatureData && !m_creatureData->dbData)
         return;
 
-    sObjectMgr.SaveCreatureRespawnTime(m_DBTableGuid, GetInstanceId(),m_respawnTime);
+    sObjectMgr.SaveCreatureRespawnTime(m_DBTableGuid, GetInstanceId(), m_respawnTime);
 }
 
 bool Creature::IsOutOfThreatArea(Unit* pVictim) const
@@ -1899,7 +1899,7 @@ bool Creature::LoadCreaturesAddon(bool reload)
             SpellEntry const *AdditionalSpellInfo = sSpellStore.LookupEntry(cAura->spell_id);
             if (!AdditionalSpellInfo)
             {
-                sLog->outErrorDb("Creature (GUIDLow: %u Entry: %u) has wrong spell %u defined in auras field.",GetGUIDLow(),GetEntry(),cAura->spell_id);
+                sLog->outErrorDb("Creature (GUIDLow: %u Entry: %u) has wrong spell %u defined in auras field.", GetGUIDLow(), GetEntry(), cAura->spell_id);
                 continue;
             }
 
@@ -1907,14 +1907,14 @@ bool Creature::LoadCreaturesAddon(bool reload)
             if (HasAura(cAura->spell_id, cAura->effect_idx))
             {
                 if (!reload)
-                    sLog->outErrorDb("Creature (GUIDLow: %u Entry: %u) has duplicate aura (spell %u effect %u) in auras field.",GetGUIDLow(),GetEntry(),cAura->spell_id, cAura->effect_idx);
+                    sLog->outErrorDb("Creature (GUIDLow: %u Entry: %u) has duplicate aura (spell %u effect %u) in auras field.", GetGUIDLow(), GetEntry(), cAura->spell_id, cAura->effect_idx);
 
                 continue;
             }
 
             Aura* AdditionalAura = CreateAura(AdditionalSpellInfo, cAura->effect_idx, NULL, this, this, 0);
             AddAura(AdditionalAura);
-            sLog->outDebug("Spell: %u with Aura %u added to creature (GUIDLow: %u Entry: %u)", cAura->spell_id, AdditionalSpellInfo->EffectApplyAuraName[0],GetGUIDLow(),GetEntry());
+            sLog->outDebug("Spell: %u with Aura %u added to creature (GUIDLow: %u Entry: %u)", cAura->spell_id, AdditionalSpellInfo->EffectApplyAuraName[0], GetGUIDLow(), GetEntry());
         }
     }
     return true;
@@ -1927,7 +1927,7 @@ void Creature::SendZoneUnderAttackMessage(Player* attacker)
 
     WorldPacket data(SMSG_ZONE_UNDER_ATTACK, 4);
     data << (uint32)GetZoneId();
-    sWorld.SendGlobalMessage(&data, NULL,(enemy_team == ALLIANCE ? HORDE : ALLIANCE));
+    sWorld.SendGlobalMessage(&data, NULL, (enemy_team == ALLIANCE ? HORDE : ALLIANCE));
 }
 
 void Creature::SetInCombatWithZone()

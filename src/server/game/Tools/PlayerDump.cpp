@@ -88,7 +88,7 @@ bool findnth(std::string &str, int n, std::string::size_type &s, std::string::si
 
     do
     {
-        e = str.find("'",s);
+        e = str.find("'", s);
         if (e == std::string::npos) return false;
     } while (str[e-1] == '\\');
 
@@ -97,7 +97,7 @@ bool findnth(std::string &str, int n, std::string::size_type &s, std::string::si
         do
         {
             s = e+4;
-            e = str.find("'",s);
+            e = str.find("'", s);
             if (e == std::string::npos) return false;
         } while (str[e-1] == '\\');
     }
@@ -235,7 +235,7 @@ std::string PlayerDumpWriter::GenerateWhereStr(char const* field, GUIDs const& g
 
         GUIDs::const_iterator itr2 = itr;
         if (++itr2 != guids.end())
-            wherestr << "','";
+            wherestr << "', '";
     }
     wherestr << "')";
     return wherestr.str();
@@ -290,7 +290,7 @@ void PlayerDumpWriter::DumpTable(std::string& dump, uint32 guid, char const*tabl
         std::string wherestr;
 
         if (guids)                                           // set case, get next guids string
-            wherestr = GenerateWhereStr(fieldname,*guids, guids_itr);
+            wherestr = GenerateWhereStr(fieldname, *guids, guids_itr);
         else                                                // not set case, get single guid string
             wherestr = GenerateWhereStr(fieldname, guid);
 
@@ -350,7 +350,7 @@ DumpReturn PlayerDumpWriter::WriteDump(const std::string& file, uint32 guid)
 
     std::string dump = GetDump(guid);
 
-    fprintf(fout,"%s\n",dump.c_str());
+    fprintf(fout, "%s\n", dump.c_str());
     fclose(fout);
     return DUMP_SUCCESS;
 }
@@ -600,7 +600,7 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
                 break;
             }
             default:
-                sLog->outError("Unknown dump table type: %u",type);
+                sLog->outError("Unknown dump table type: %u", type);
                 break;
         }
 

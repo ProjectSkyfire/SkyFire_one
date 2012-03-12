@@ -187,7 +187,7 @@ namespace Trinity
         WorldObject* &i_object;
         Check &i_check;
 
-        WorldObjectSearcher(WorldObject* & result, Check& check) : i_object(result),i_check(check) {}
+        WorldObjectSearcher(WorldObject* & result, Check& check) : i_object(result), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
         void Visit(PlayerMapType &m);
@@ -204,7 +204,7 @@ namespace Trinity
         std::list<WorldObject*> &i_objects;
         Check& i_check;
 
-        WorldObjectListSearcher(std::list<WorldObject*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        WorldObjectListSearcher(std::list<WorldObject*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(PlayerMapType &m);
         void Visit(CreatureMapType &m);
@@ -262,7 +262,7 @@ namespace Trinity
         GameObject* &i_object;
         Check &i_check;
 
-        GameObjectSearcher(GameObject* & result, Check& check) : i_object(result),i_check(check) {}
+        GameObjectSearcher(GameObject* & result, Check& check) : i_object(result), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
 
@@ -276,7 +276,7 @@ namespace Trinity
         GameObject* &i_object;
         Check& i_check;
 
-        GameObjectLastSearcher(GameObject* & result, Check& check) : i_object(result),i_check(check) {}
+        GameObjectLastSearcher(GameObject* & result, Check& check) : i_object(result), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
 
@@ -289,7 +289,7 @@ namespace Trinity
         std::list<GameObject*> &i_objects;
         Check& i_check;
 
-        GameObjectListSearcher(std::list<GameObject*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        GameObjectListSearcher(std::list<GameObject*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
 
@@ -305,7 +305,7 @@ namespace Trinity
         Unit* &i_object;
         Check & i_check;
 
-        UnitSearcher(Unit* & result, Check & check) : i_object(result),i_check(check) {}
+        UnitSearcher(Unit* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
         void Visit(PlayerMapType &m);
@@ -320,7 +320,7 @@ namespace Trinity
         Unit* &i_object;
         Check & i_check;
 
-        UnitLastSearcher(Unit* & result, Check & check) : i_object(result),i_check(check) {}
+        UnitLastSearcher(Unit* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
         void Visit(PlayerMapType &m);
@@ -335,7 +335,7 @@ namespace Trinity
         std::list<Unit*> &i_objects;
         Check& i_check;
 
-        UnitListSearcher(std::list<Unit*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        UnitListSearcher(std::list<Unit*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(PlayerMapType &m);
         void Visit(CreatureMapType &m);
@@ -351,7 +351,7 @@ namespace Trinity
         Creature* &i_object;
         Check & i_check;
 
-        CreatureSearcher(Creature* & result, Check & check) : i_object(result),i_check(check) {}
+        CreatureSearcher(Creature* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
 
@@ -365,7 +365,7 @@ namespace Trinity
         Creature* &i_object;
         Check & i_check;
 
-        CreatureLastSearcher(Creature* & result, Check & check) : i_object(result),i_check(check) {}
+        CreatureLastSearcher(Creature* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
 
@@ -378,7 +378,7 @@ namespace Trinity
         std::list<Creature*> &i_objects;
         Check& i_check;
 
-        CreatureListSearcher(std::list<Creature*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        CreatureListSearcher(std::list<Creature*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(CreatureMapType &m);
 
@@ -410,7 +410,7 @@ namespace Trinity
         Player* &i_object;
         Check & i_check;
 
-        PlayerSearcher(Player* & result, Check & check) : i_object(result),i_check(check) {}
+        PlayerSearcher(Player* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(PlayerMapType &m);
 
@@ -425,7 +425,7 @@ namespace Trinity
         Check& i_check;
 
         PlayerListSearcher(std::list<Player*> &objects, Check & check)
-            : i_objects(objects),i_check(check) {}
+            : i_objects(objects), i_check(check) {}
 
         void Visit(PlayerMapType &m);
 

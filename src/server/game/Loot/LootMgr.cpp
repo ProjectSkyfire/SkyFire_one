@@ -98,7 +98,7 @@ void LootStore::LoadLootTable()
     sLog->outString("%s :", GetName());
 
     //                                                        0      1     2                    3        4              5         6              7                 8
-    QueryResult_AutoPtr result = WorldDatabase.PQuery("SELECT entry, item, ChanceOrQuestChance, groupid, mincountOrRef, maxcount, lootcondition, condition_value1, condition_value2 FROM %s",GetName());
+    QueryResult_AutoPtr result = WorldDatabase.PQuery("SELECT entry, item, ChanceOrQuestChance, groupid, mincountOrRef, maxcount, lootcondition, condition_value1, condition_value2 FROM %s", GetName());
 
     if (result)
     {
@@ -158,7 +158,7 @@ void LootStore::LoadLootTable()
     else
     {
         sLog->outString();
-        sLog->outErrorDb(">> Loaded 0 loot definitions. DB table %s is empty.",GetName());
+        sLog->outErrorDb(">> Loaded 0 loot definitions. DB table %s is empty.", GetName());
     }
 }
 
@@ -366,7 +366,7 @@ void Loot::FillLoot(uint32 loot_id, LootStore const& store, Player* loot_owner)
 
     if (!tab)
     {
-        sLog->outErrorDb("Table '%s' loot id #%u used but it doesn't have records.",store.GetName(),loot_id);
+        sLog->outErrorDb("Table '%s' loot id #%u used but it doesn't have records.", store.GetName(), loot_id);
         return;
     }
 
@@ -771,7 +771,7 @@ LootStoreItem const * LootTemplate::LootGroup::Roll() const
     {
         float Roll = rand_chance();
 
-        for (uint32 i=0; i<ExplicitlyChanced.size(); ++i)    //check each explicitly chanced entry in the template and modify its chance based on quality.
+        for (uint32 i = 0; i < ExplicitlyChanced.size(); ++i)    //check each explicitly chanced entry in the template and modify its chance based on quality.
         {
             if (ExplicitlyChanced[i].chance>=100.f)
                 return &ExplicitlyChanced[i];
@@ -1005,7 +1005,7 @@ bool LootTemplate::HasQuestDropForPlayer(LootTemplateMap const& store, Player co
 void LootTemplate::Verify(LootStore const& lootstore, uint32 id) const
 {
     // Checking group chances
-    for (uint32 i=0; i < Groups.size(); ++i)
+    for (uint32 i = 0; i < Groups.size(); ++i)
         Groups[i].Verify(lootstore, id, i+1);
 
     // TODO: References validity checks

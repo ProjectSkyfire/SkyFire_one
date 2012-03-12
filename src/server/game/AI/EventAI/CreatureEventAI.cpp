@@ -552,7 +552,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
         {
             std::list<HostileReference*>& threatList = me->getThreatManager().getThreatList();
             for (std::list<HostileReference*>::iterator i = threatList.begin(); i != threatList.end(); ++i)
-                if (Unit* Temp = Unit::GetUnit(*me,(*i)->getUnitGuid()))
+                if (Unit* Temp = Unit::GetUnit(*me, (*i)->getUnitGuid()))
                     me->getThreatManager().modifyThreatPercent(Temp, action.threat_all_pct.percent);
             break;
         }
@@ -654,7 +654,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
         {
             std::list<HostileReference*>& threatList = me->getThreatManager().getThreatList();
             for (std::list<HostileReference*>::iterator i = threatList.begin(); i != threatList.end(); ++i)
-                if (Unit* Temp = Unit::GetUnit(*me,(*i)->getUnitGuid()))
+                if (Unit* Temp = Unit::GetUnit(*me, (*i)->getUnitGuid()))
                     if (Temp->GetTypeId() == TYPEID_PLAYER)
                         Temp->ToPlayer()->CastedCreatureOrGO(action.cast_event_all.creatureId, me->GetGUID(), action.cast_event_all.spellId);
             break;
@@ -763,7 +763,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                 sLog->outErrorDb("CreatureEventAI: Event %d ACTION_T_DIE on dead creature. Creature %d", EventId, me->GetEntry());
                 return;
             }
-            me->DealDamage(me, me->GetMaxHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            me->DealDamage(me, me->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             break;
         case ACTION_T_ZONE_COMBAT_PULSE:
         {
@@ -1079,7 +1079,7 @@ void CreatureEventAI::UpdateAI(const uint32 diff)
                     case EVENT_T_RANGE:
                         if (me->getVictim())
                             if (me->IsInMap(me->getVictim()))
-                                if (me->IsInRange(me->getVictim(),(float)(*i).Event.range.minDist,(float)(*i).Event.range.maxDist))
+                                if (me->IsInRange(me->getVictim(), (float)(*i).Event.range.minDist, (float)(*i).Event.range.maxDist))
                                     ProcessEvent(*i);
                         break;
                 }
@@ -1200,13 +1200,13 @@ void CreatureEventAI::DoScriptText(int32 textEntry, WorldObject* pSource, Unit* 
 {
     if (!pSource)
     {
-        sLog->outErrorDb("CreatureEventAI: DoScriptText entry %i, invalid Source pointer.",textEntry);
+        sLog->outErrorDb("CreatureEventAI: DoScriptText entry %i, invalid Source pointer.", textEntry);
         return;
     }
 
     if (textEntry >= 0)
     {
-        sLog->outErrorDb("CreatureEventAI: DoScriptText with source entry %u (TypeId=%u, guid=%u) attempts to process text entry %i, but text entry must be negative.",pSource->GetEntry(),pSource->GetTypeId(),pSource->GetGUIDLow(),textEntry);
+        sLog->outErrorDb("CreatureEventAI: DoScriptText with source entry %u (TypeId=%u, guid=%u) attempts to process text entry %i, but text entry must be negative.", pSource->GetEntry(), pSource->GetTypeId(), pSource->GetGUIDLow(), textEntry);
         return;
     }
 
@@ -1214,18 +1214,18 @@ void CreatureEventAI::DoScriptText(int32 textEntry, WorldObject* pSource, Unit* 
 
     if (i == CreatureEAI_Mgr.GetCreatureEventAITextMap().end())
     {
-        sLog->outErrorDb("CreatureEventAI: DoScriptText with source entry %u (TypeId=%u, guid=%u) could not find text entry %i.",pSource->GetEntry(),pSource->GetTypeId(),pSource->GetGUIDLow(),textEntry);
+        sLog->outErrorDb("CreatureEventAI: DoScriptText with source entry %u (TypeId=%u, guid=%u) could not find text entry %i.", pSource->GetEntry(), pSource->GetTypeId(), pSource->GetGUIDLow(), textEntry);
         return;
     }
 
-    sLog->outDebug("CreatureEventAI: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u",textEntry,(*i).second.SoundId,(*i).second.Type,(*i).second.Language,(*i).second.Emote);
+    sLog->outDebug("CreatureEventAI: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u", textEntry, (*i).second.SoundId, (*i).second.Type, (*i).second.Language, (*i).second.Emote);
 
     if ((*i).second.SoundId)
     {
         if (GetSoundEntriesStore()->LookupEntry((*i).second.SoundId))
             pSource->SendPlaySound((*i).second.SoundId, false);
         else
-            sLog->outErrorDb("CreatureEventAI: DoScriptText entry %i tried to process invalid sound id %u.",textEntry,(*i).second.SoundId);
+            sLog->outErrorDb("CreatureEventAI: DoScriptText entry %i tried to process invalid sound id %u.", textEntry, (*i).second.SoundId);
     }
 
     if ((*i).second.Emote)
@@ -1235,7 +1235,7 @@ void CreatureEventAI::DoScriptText(int32 textEntry, WorldObject* pSource, Unit* 
             ((Unit*)pSource)->HandleEmoteCommand((*i).second.Emote);
         }
         else
-            sLog->outErrorDb("CreatureEventAI: DoScriptText entry %i tried to process emote for invalid TypeId (%u).",textEntry, pSource->GetTypeId());
+            sLog->outErrorDb("CreatureEventAI: DoScriptText entry %i tried to process emote for invalid TypeId (%u).", textEntry, pSource->GetTypeId());
     }
 
     switch ((*i).second.Type)
@@ -1311,7 +1311,7 @@ void CreatureEventAI::ReceiveEmote(Player* pPlayer, uint32 text_emote)
             if ((*itr).Event.receive_emote.emoteId != text_emote)
                 return;
 
-            PlayerCondition pcon((*itr).Event.receive_emote.condition,(*itr).Event.receive_emote.conditionValue1,(*itr).Event.receive_emote.conditionValue2);
+            PlayerCondition pcon((*itr).Event.receive_emote.condition, (*itr).Event.receive_emote.conditionValue1, (*itr).Event.receive_emote.conditionValue2);
             if (pcon.Meets(pPlayer))
             {
                 sLog->outDebug("CreatureEventAI: ReceiveEmote CreatureEventAI: Condition ok, processing");

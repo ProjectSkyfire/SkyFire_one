@@ -53,7 +53,7 @@ struct GameEventQuestToEventConditionNum
 
 struct GameEventData
 {
-    GameEventData() : start(1),end(0),nextstart(0),occurence(0),length(0),state(GAMEEVENT_NORMAL) {}
+    GameEventData() : start(1), end(0), nextstart(0), occurence(0), length(0), state(GAMEEVENT_NORMAL) {}
     time_t start;   // occurs after this time
     time_t end;     // occurs before this time
     time_t nextstart; // after this time the follow-up events count this phase completed

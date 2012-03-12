@@ -66,14 +66,14 @@ struct boss_netherspiteAI : public ScriptedAI
     {
         pInstance = c->GetInstanceData();
 
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             PortalGUID[i] = 0;
             BeamTarget[i] = 0;
             BeamerGUID[i] = 0;
         }
         // need core fix
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             if (SpellEntry *spell = GET_SPELL(PlayerBuff[i]))
                 spell->AttributesEx |= SPELL_ATTR_EX_NEGATIVE;
@@ -138,7 +138,7 @@ struct boss_netherspiteAI : public ScriptedAI
         pos[GREEN_PORTAL] = (r%2 ? 0: (r>1 ? 2: 1));
         pos[BLUE_PORTAL] = (r>1 ? 1: 2); // Blue Portal not on the left side (0)
 
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
             if (Creature *portal = me->SummonCreature(PortalID[i],PortalCoord[pos[i]][0],PortalCoord[pos[i]][1],PortalCoord[pos[i]][2],0, TEMPSUMMON_TIMED_DESPAWN, 60000))
             {
                 PortalGUID[i] = portal->GetGUID();
@@ -148,7 +148,7 @@ struct boss_netherspiteAI : public ScriptedAI
 
     void DestroyPortals()
     {
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             if (Creature *portal = Unit::GetCreature(*me, PortalGUID[i]))
                 portal->DisappearAndDie();
@@ -239,7 +239,7 @@ struct boss_netherspiteAI : public ScriptedAI
         PortalPhase = false;
         DoScriptText(EMOTE_PHASE_BANISH, me);
 
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
             me->RemoveAurasDueToSpell(NetherBuff[i]);
     }
 

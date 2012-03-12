@@ -139,7 +139,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
             SpellEntry const *spellInfo = sSpellStore.LookupEntry(SPELL_ID_GENERIC_LEARN);
             if (!spellInfo)
             {
-                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, SPELL_ID_GENERIC_LEARN);
+                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ", proto->ItemId, SPELL_ID_GENERIC_LEARN);
                 pUser->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
                 return;
             }
@@ -170,7 +170,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
             SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellData.SpellId);
             if (!spellInfo)
             {
-                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, spellData.SpellId);
+                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ", proto->ItemId, spellData.SpellId);
                 continue;
             }
 
@@ -192,14 +192,14 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
 
 void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
 {
-    sLog->outDetail("WORLD: CMSG_OPEN_ITEM packet, data length = %i",recvPacket.size());
+    sLog->outDetail("WORLD: CMSG_OPEN_ITEM packet, data length = %i", recvPacket.size());
 
     Player* pUser = _player;
     uint8 bagIndex, slot;
 
     recvPacket >> bagIndex >> slot;
 
-    sLog->outDetail("bagIndex: %u, slot: %u",bagIndex, slot);
+    sLog->outDetail("bagIndex: %u, slot: %u", bagIndex, slot);
 
     Item *pItem = pUser->GetItemByPos(bagIndex, slot);
     if (!pItem)
@@ -259,7 +259,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
         CharacterDatabase.PExecute("DELETE FROM character_gifts WHERE item_guid = '%u'", pItem->GetGUIDLow());
     }
     else
-        pUser->SendLoot(pItem->GetGUID(),LOOT_CORPSE);
+        pUser->SendLoot(pItem->GetGUID(), LOOT_CORPSE);
 }
 
 void WorldSession::HandleGameObjectUseOpcode(WorldPacket & recv_data)
@@ -397,7 +397,7 @@ void WorldSession::HandlePetCancelAuraOpcode(WorldPacket& recvPacket)
 
     if (pet != GetPlayer()->GetGuardianPet() && pet != GetPlayer()->GetCharm())
     {
-        sLog->outError("HandlePetCancelAura.Pet %u isn't pet of player %s", uint32(GUID_LOPART(guid)),GetPlayer()->GetName());
+        sLog->outError("HandlePetCancelAura.Pet %u isn't pet of player %s", uint32(GUID_LOPART(guid)), GetPlayer()->GetName());
         return;
     }
 

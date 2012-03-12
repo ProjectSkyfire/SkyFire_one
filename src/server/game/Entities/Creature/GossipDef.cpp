@@ -72,7 +72,7 @@ void GossipMenu::AddMenuItem(uint8 Icon, const std::string& Message, bool Coded)
 
 void GossipMenu::AddMenuItem(uint8 Icon, char const* Message, bool Coded)
 {
-    AddMenuItem(Icon, std::string(Message ? Message : ""),Coded);
+    AddMenuItem(Icon, std::string(Message ? Message : ""), Coded);
 }
 
 void GossipMenu::AddMenuItem(uint8 Icon, char const* Message, uint32 dtSender, uint32 dtAction, char const* BoxMessage, uint32 BoxMoney, bool Coded)
@@ -433,7 +433,7 @@ void PlayerMenu::SendQuestGiverQuestDetails(Quest const *pQuest, uint64 npcGUID,
         ItemPrototype const* IProto;
 
         data << uint32(pQuest->GetRewChoiceItemsCount());
-        for (uint32 i=0; i < QUEST_REWARD_CHOICES_COUNT; ++i)
+        for (uint32 i = 0; i < QUEST_REWARD_CHOICES_COUNT; ++i)
         {
             if (!pQuest->RewChoiceItemId[i])
                 continue;
@@ -450,7 +450,7 @@ void PlayerMenu::SendQuestGiverQuestDetails(Quest const *pQuest, uint64 npcGUID,
 
         data << uint32(pQuest->GetRewItemsCount());
 
-        for (uint32 i=0; i < QUEST_REWARDS_COUNT; ++i)
+        for (uint32 i = 0; i < QUEST_REWARDS_COUNT; ++i)
         {
             if (!pQuest->RewItemId[i])
                 continue;
@@ -475,7 +475,7 @@ void PlayerMenu::SendQuestGiverQuestDetails(Quest const *pQuest, uint64 npcGUID,
     data << uint32(pQuest->GetCharTitleId());               // CharTitleId, new 2.4.0, player gets this title (id from CharTitles)
 
     data << uint32(QUEST_EMOTE_COUNT);
-    for (uint32 i=0; i < QUEST_EMOTE_COUNT; ++i)
+    for (uint32 i = 0; i < QUEST_EMOTE_COUNT; ++i)
     {
         data << uint32(pQuest->DetailsEmote[i]);
         data << uint32(0);                                  // DetailsEmoteDelay
@@ -493,7 +493,7 @@ void PlayerMenu::SendQuestQueryResponse(Quest const *pQuest)
     Details = pQuest->GetDetails();
     Objectives = pQuest->GetObjectives();
     EndText = pQuest->GetEndText();
-    for (int i=0; i<QUEST_OBJECTIVES_COUNT; ++i)
+    for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
         ObjectiveText[i]=pQuest->ObjectiveText[i];
 
     int loc_idx = pSession->GetSessionDbLocaleIndex();
@@ -650,7 +650,7 @@ void PlayerMenu::SendQuestGiverOfferReward(Quest const* pQuest, uint64 npcGUID, 
     ItemPrototype const *pItem;
 
     data << uint32(pQuest->GetRewChoiceItemsCount());
-    for (uint32 i=0; i < pQuest->GetRewChoiceItemsCount(); ++i)
+    for (uint32 i = 0; i < pQuest->GetRewChoiceItemsCount(); ++i)
     {
         pItem = sObjectMgr.GetItemPrototype(pQuest->RewChoiceItemId[i]);
 

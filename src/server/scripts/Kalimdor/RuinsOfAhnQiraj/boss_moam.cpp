@@ -49,7 +49,7 @@ struct boss_moamAI : public ScriptedAI
 
     void Reset()
     {
-        i=0;
+        i = 0;
         j=0;
         pTarget = NULL;
         TRAMPLE_Timer = 30000;

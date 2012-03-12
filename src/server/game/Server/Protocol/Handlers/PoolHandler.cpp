@@ -47,7 +47,7 @@ bool PoolGroup<T>::CheckPool(void)
     if (EqualChanced.size() == 0)
     {
         float chance = 0;
-        for (uint32 i=0; i<ExplicitlyChanced.size(); ++i)
+        for (uint32 i = 0; i < ExplicitlyChanced.size(); ++i)
             chance += ExplicitlyChanced[i].chance;
         if (chance != 100 && chance != 0)
             return false;
@@ -59,10 +59,10 @@ bool PoolGroup<T>::CheckPool(void)
 template <class T>
 bool PoolGroup<T>::IsSpawnedObject(uint32 guid)
 {
-    for (uint32 i=0; i<ExplicitlyChanced.size(); ++i)
+    for (uint32 i = 0; i < ExplicitlyChanced.size(); ++i)
         if (ExplicitlyChanced[i].guid == guid)
             return ExplicitlyChanced[i].spawned;
-    for (uint32 i=0; i<EqualChanced.size(); ++i)
+    for (uint32 i = 0; i < EqualChanced.size(); ++i)
         if (EqualChanced[i].guid == guid)
             return EqualChanced[i].spawned;
     return false;
@@ -75,7 +75,7 @@ void PoolGroup<T>::RollOne(int32& index, PoolObjectList** store, uint32 triggerF
     {
         float roll = (float)rand_chance();
 
-        for (uint32 i=0; i<ExplicitlyChanced.size(); ++i)
+        for (uint32 i = 0; i < ExplicitlyChanced.size(); ++i)
         {
             roll -= ExplicitlyChanced[i].chance;
             // Triggering object is marked as spawned at this time and can be also rolled (respawn case)
@@ -109,7 +109,7 @@ void PoolGroup<T>::RollOne(int32& index, PoolObjectList** store, uint32 triggerF
 template<class T>
 void PoolGroup<T>::DespawnObject(uint32 guid)
 {
-    for (size_t i=0; i<EqualChanced.size(); ++i)
+    for (size_t i = 0; i < EqualChanced.size(); ++i)
     {
         if (EqualChanced[i].spawned)
         {
@@ -254,7 +254,7 @@ bool PoolGroup<Creature>::Spawn1Object(uint32 guid)
         if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
         {
             Creature* pCreature = new Creature;
-            //sLog->outDebug("Spawning creature %u",guid);
+            //sLog->outDebug("Spawning creature %u", guid);
             if (!pCreature->LoadFromDB(guid, map))
             {
                 delete pCreature;
@@ -426,7 +426,7 @@ void PoolHandler::LoadFromDB()
             }
             if (pool_id > max_pool_id)
             {
-                sLog->outErrorDb("`pool_creature` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",pool_id);
+                sLog->outErrorDb("`pool_creature` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.", pool_id);
                 continue;
             }
             if (chance < 0 || chance > 100)
@@ -488,7 +488,7 @@ void PoolHandler::LoadFromDB()
             }
             if (pool_id > max_pool_id)
             {
-                sLog->outErrorDb("`pool_gameobject` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",pool_id);
+                sLog->outErrorDb("`pool_gameobject` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.", pool_id);
                 continue;
             }
             if (chance < 0 || chance > 100)
@@ -536,17 +536,17 @@ void PoolHandler::LoadFromDB()
 
             if (mother_pool_id > max_pool_id)
             {
-                sLog->outErrorDb("`pool_pool` mother_pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",mother_pool_id);
+                sLog->outErrorDb("`pool_pool` mother_pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.", mother_pool_id);
                 continue;
             }
             if (child_pool_id > max_pool_id)
             {
-                sLog->outErrorDb("`pool_pool` included pool_id (%i) is out of range compared to max pool id in `pool_template`, skipped.",child_pool_id);
+                sLog->outErrorDb("`pool_pool` included pool_id (%i) is out of range compared to max pool id in `pool_template`, skipped.", child_pool_id);
                 continue;
             }
             if (mother_pool_id == child_pool_id)
             {
-                sLog->outErrorDb("`pool_pool` pool_id (%i) includes itself, dead-lock detected, skipped.",child_pool_id);
+                sLog->outErrorDb("`pool_pool` pool_id (%i) includes itself, dead-lock detected, skipped.", child_pool_id);
                 continue;
             }
             if (chance < 0 || chance > 100)
@@ -566,7 +566,7 @@ void PoolHandler::LoadFromDB()
         } while (result->NextRow());
 
         // Now check for circular reference
-        for (uint16 i=0; i<max_pool_id; ++i)
+        for (uint16 i = 0; i < max_pool_id; ++i)
         {
             std::set<uint16> checkedPools;
             for (SearchMap::iterator poolItr = mPoolSearchMap.find(i); poolItr != mPoolSearchMap.end(); poolItr = mPoolSearchMap.find(poolItr->second))

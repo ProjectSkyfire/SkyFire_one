@@ -1227,20 +1227,20 @@ void WorldSession::HandleSocketOpcode(WorldPacket& recv_data)
 
     //remove ALL enchants
     for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT+3; ++enchant_slot)
-        _player->ApplyEnchantment(itemTarget, EnchantmentSlot(enchant_slot),false);
+        _player->ApplyEnchantment(itemTarget, EnchantmentSlot(enchant_slot), false);
 
     for (int i = 0; i < 3; ++i)
     {
         if (GemEnchants[i])
         {
-            itemTarget->SetEnchantment(EnchantmentSlot(SOCK_ENCHANTMENT_SLOT+i), GemEnchants[i],0, 0);
+            itemTarget->SetEnchantment(EnchantmentSlot(SOCK_ENCHANTMENT_SLOT+i), GemEnchants[i], 0, 0);
             if (Item* guidItem = _player->GetItemByGuid(guids[i + 1]))
                 _player->DestroyItem(guidItem->GetBagSlot(), guidItem->GetSlot(), true);
         }
     }
 
     for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT+3; ++enchant_slot)
-        _player->ApplyEnchantment(itemTarget, EnchantmentSlot(enchant_slot),true);
+        _player->ApplyEnchantment(itemTarget, EnchantmentSlot(enchant_slot), true);
 
     bool SocketBonusToBeActivated = itemTarget->GemsFitSockets();//current socketbonus state
     if (SocketBonusActivated ^ SocketBonusToBeActivated)     //if there was a change...

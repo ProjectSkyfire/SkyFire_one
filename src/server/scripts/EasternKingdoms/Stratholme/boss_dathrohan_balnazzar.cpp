@@ -101,7 +101,7 @@ struct boss_dathrohan_balnazzarAI : public ScriptedAI
     {
         static uint32 uiCount = sizeof(m_aSummonPoint)/sizeof(SummonDef);
 
-        for (uint8 i=0; i<uiCount; ++i)
+        for (uint8 i = 0; i < uiCount; ++i)
             me->SummonCreature(NPC_ZOMBIE,
             m_aSummonPoint[i].m_fX, m_aSummonPoint[i].m_fY, m_aSummonPoint[i].m_fZ, m_aSummonPoint[i].m_fOrient,
             TEMPSUMMON_TIMED_DESPAWN, HOUR*IN_MILLISECONDS);

@@ -320,7 +320,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
         if (m_originalCaster && !m_originalCaster->IsInWorld()) m_originalCaster = NULL;
     }
 
-    for (int i=0; i <3; ++i)
+    for (int i = 0; i <3; ++i)
         m_currentBasePoints[i] = m_spellValue->EffectBasePoints[i];
 
     m_spellState = SPELL_STATE_NULL;
@@ -357,7 +357,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
             if (m_spellInfo->Effect[j] == 0)
                 continue;
 
-            if (!IsPositiveTarget(m_spellInfo->EffectImplicitTargetA[j],m_spellInfo->EffectImplicitTargetB[j]))
+            if (!IsPositiveTarget(m_spellInfo->EffectImplicitTargetA[j], m_spellInfo->EffectImplicitTargetB[j]))
                 m_canReflect = true;
             else
                 m_canReflect = (m_spellInfo->AttributesEx & SPELL_ATTR_EX_NEGATIVE) ? true : false;
@@ -1010,7 +1010,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
                 case 25251: BTAura = 25252; break;
                 case 30335: BTAura = 30339; break;
                 default:
-                    sLog->outError("Spell::EffectSchoolDMG: Spell %u not handled in BTAura",m_spellInfo->Id);
+                    sLog->outError("Spell::EffectSchoolDMG: Spell %u not handled in BTAura", m_spellInfo->Id);
                     break;
             }
             if (BTAura)
@@ -1034,7 +1034,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         // cast at creature (or GO) quest objectives update at successful cast finished (+channel finished)
         // ignore autorepeat/melee casts for speed (not exist quest for spells (hm...)
         if (m_caster->GetTypeId() == TYPEID_PLAYER && !IsAutoRepeat() && !IsNextMeleeSwingSpell() && !IsChannelActive())
-            m_caster->ToPlayer()->CastedCreatureOrGO(unit->GetEntry(),unit->GetGUID(),m_spellInfo->Id);
+            m_caster->ToPlayer()->CastedCreatureOrGO(unit->GetEntry(), unit->GetGUID(), m_spellInfo->Id);
     }
 
     if (!m_caster->IsFriendlyTo(unit) && !IsPositiveSpell(m_spellInfo->Id))
@@ -1062,7 +1062,7 @@ void Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask)
     // Recheck immune (only for delayed spells)
     if (m_spellInfo->speed &&
         !(m_spellInfo->Attributes & SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY)
-        && (unit->IsImmunedToDamage(GetSpellSchoolMask(m_spellInfo),true) ||
+        && (unit->IsImmunedToDamage(GetSpellSchoolMask(m_spellInfo), true) ||
         unit->IsImmunedToSpell(m_spellInfo, true)))
     {
         m_caster->SendSpellMiss(unit, m_spellInfo->Id, SPELL_MISS_IMMUNE);
@@ -1144,7 +1144,7 @@ void Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask)
     {
         if (effectMask & (1<<effectNumber))
         {
-            HandleEffects(unit, NULL, NULL, effectNumber/*,m_damageMultipliers[effectNumber]*/);
+            HandleEffects(unit, NULL, NULL, effectNumber/*, m_damageMultipliers[effectNumber]*/);
             //Only damage and heal spells need this
             /*if (m_applyMultiplierMask & (1 << effectNumber))
             {
@@ -1232,7 +1232,7 @@ void Spell::DoAllEffectOnTarget(GOTargetInfo *target)
     // cast at creature (or GO) quest objectives update at successful cast finished (+channel finished)
     // ignore autorepeat/melee casts for speed (not exist quest for spells (hm...)
     if (m_caster->GetTypeId() == TYPEID_PLAYER && !IsAutoRepeat() && !IsNextMeleeSwingSpell() && !IsChannelActive())
-        m_caster->ToPlayer()->CastedCreatureOrGO(go->GetEntry(),go->GetGUID(),m_spellInfo->Id);
+        m_caster->ToPlayer()->CastedCreatureOrGO(go->GetEntry(), go->GetGUID(), m_spellInfo->Id);
 }
 
 void Spell::DoAllEffectOnTarget(ItemTargetInfo *target)
@@ -2702,7 +2702,7 @@ void Spell::update(uint32 difftime)
                         if (unit == NULL)
                             continue;
 
-                        m_caster->ToPlayer()->CastedCreatureOrGO(unit->GetEntry(),unit->GetGUID(),m_spellInfo->Id);
+                        m_caster->ToPlayer()->CastedCreatureOrGO(unit->GetEntry(), unit->GetGUID(), m_spellInfo->Id);
                     }
 
                     for (std::list<GOTargetInfo>::iterator ihit= m_UniqueGOTargetInfo.begin();ihit != m_UniqueGOTargetInfo.end();++ihit)
@@ -2716,7 +2716,7 @@ void Spell::update(uint32 difftime)
                         if (!go)
                             continue;
 
-                        m_caster->ToPlayer()->CastedCreatureOrGO(go->GetEntry(),go->GetGUID(),m_spellInfo->Id);
+                        m_caster->ToPlayer()->CastedCreatureOrGO(go->GetEntry(), go->GetGUID(), m_spellInfo->Id);
                     }
                 }
 
@@ -3219,14 +3219,14 @@ void Spell::TakeCastItem()
     {
         // This code is to avoid a crash
         // I'm not sure, if this is really an error, but I guess every item needs a prototype
-        sLog->outError("Cast item has no item prototype highId=%d, lowId=%d",m_CastItem->GetGUIDHigh(), m_CastItem->GetGUIDLow());
+        sLog->outError("Cast item has no item prototype highId=%d, lowId=%d", m_CastItem->GetGUIDHigh(), m_CastItem->GetGUIDLow());
         return;
     }
 
     bool expendable = false;
     bool withoutCharges = false;
 
-    for (int i = 0; i<5; i++)
+    for (int i = 0; i < 5; i++)
     {
         if (proto->Spells[i].SpellId)
         {
@@ -3514,7 +3514,7 @@ uint8 Spell::CanCast(bool strict)
             // this case can be triggered if rank not found (too low-level target for first rank)
             if (m_caster->GetTypeId() == TYPEID_PLAYER && !IsPassiveSpell(m_spellInfo->Id) && !m_CastItem)
             {
-                for (int i=0;i<3;i++)
+                for (int i = 0;i < 3;i++)
                 {
                     if (IsPositiveEffect(m_spellInfo->Id, i) && m_spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA)
                         if (target->getLevel() + 10 < m_spellInfo->spellLevel)
@@ -3613,7 +3613,7 @@ uint8 Spell::CanCast(bool strict)
                 return SPELL_FAILED_NOT_IN_ARENA;
 
     // zone check
-    if (!IsSpellAllowedInLocation(m_spellInfo, m_caster->GetMapId(),m_caster->GetZoneId(),m_caster->GetAreaId()))
+    if (!IsSpellAllowedInLocation(m_spellInfo, m_caster->GetMapId(), m_caster->GetZoneId(), m_caster->GetAreaId()))
         return SPELL_FAILED_REQUIRES_AREA;
 
     // not let players cast spells at mount (and let do it to creatures)
@@ -3644,7 +3644,7 @@ uint8 Spell::CanCast(bool strict)
                 SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(m_spellInfo->Id);
                 SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(m_spellInfo->Id);
                 if (lower == upper)
-                    sLog->outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = TARGET_UNIT_NEARBY_ENTRY or TARGET_DST_NEARBY_ENTRY, but does not have record in spell_script_target",m_spellInfo->Id);
+                    sLog->outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = TARGET_UNIT_NEARBY_ENTRY or TARGET_DST_NEARBY_ENTRY, but does not have record in spell_script_target", m_spellInfo->Id);
 
                 SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(m_spellInfo->rangeIndex);
                 float range = GetSpellMaxRange(srange);
@@ -3727,7 +3727,7 @@ uint8 Spell::CanCast(bool strict)
                     if (m_spellInfo->EffectImplicitTargetA[j] == TARGET_DST_NEARBY_ENTRY ||
                         m_spellInfo->EffectImplicitTargetB[j] == TARGET_DST_NEARBY_ENTRY)
                     {
-                        m_targets.setDst(creatureScriptTarget->GetPositionX(),creatureScriptTarget->GetPositionY(),creatureScriptTarget->GetPositionZ());
+                        m_targets.setDst(creatureScriptTarget->GetPositionX(), creatureScriptTarget->GetPositionY(), creatureScriptTarget->GetPositionZ());
 
                         if (m_spellInfo->EffectImplicitTargetA[j] == TARGET_DST_NEARBY_ENTRY && m_spellInfo->EffectImplicitTargetB[j] == 0 && m_spellInfo->Effect[j] != SPELL_EFFECT_PERSISTENT_AREA_AURA)
                             AddUnitTarget(creatureScriptTarget, j);
@@ -3742,7 +3742,7 @@ uint8 Spell::CanCast(bool strict)
                     if (m_spellInfo->EffectImplicitTargetA[j] == TARGET_DST_NEARBY_ENTRY ||
                         m_spellInfo->EffectImplicitTargetB[j] == TARGET_DST_NEARBY_ENTRY)
                     {
-                        m_targets.setDst(goScriptTarget->GetPositionX(),goScriptTarget->GetPositionY(),goScriptTarget->GetPositionZ());
+                        m_targets.setDst(goScriptTarget->GetPositionX(), goScriptTarget->GetPositionY(), goScriptTarget->GetPositionZ());
 
                         if (m_spellInfo->EffectImplicitTargetA[j] == TARGET_DST_NEARBY_ENTRY && m_spellInfo->EffectImplicitTargetB[j] == 0 && m_spellInfo->Effect[j] != SPELL_EFFECT_PERSISTENT_AREA_AURA)
                             AddGOTarget(goScriptTarget, j);
@@ -4311,7 +4311,7 @@ uint8 Spell::CanCast(bool strict)
                 if (m_caster->GetTypeId() == TYPEID_PLAYER)
                 {
                     if (!m_caster->ToPlayer()->isGameMaster() &&
-                        GetVirtualMapForMapAndZone(m_caster->GetMapId(),m_caster->GetZoneId()) != 530)
+                        GetVirtualMapForMapAndZone(m_caster->GetMapId(), m_caster->GetZoneId()) != 530)
                         return SPELL_FAILED_NOT_HERE;
                 }
                 break;
@@ -4645,7 +4645,7 @@ uint8 Spell::CheckItems()
             if (!proto)
                 return SPELL_FAILED_ITEM_NOT_READY;
 
-            for (int i = 0; i<5; i++)
+            for (int i = 0; i < 5; i++)
             {
                 if (proto->Spells[i].SpellCharges)
                 {
@@ -4748,7 +4748,7 @@ uint8 Spell::CheckItems()
     if (!(m_spellInfo->AttributesEx5 & SPELL_ATTR_EX5_NO_REAGENT_WHILE_PREP &&
         m_caster->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PREPARATION)))
     {
-        for (uint32 i=0;i<8;i++)
+        for (uint32 i = 0;i < 8;i++)
         {
             if (m_spellInfo->Reagent[i] <= 0)
                 continue;
@@ -4779,11 +4779,11 @@ uint8 Spell::CheckItems()
     }
 
     uint32 totems = 2;
-    for (int i=0;i<2;++i)
+    for (int i = 0;i < 2;++i)
     {
         if (m_spellInfo->Totem[i] != 0)
         {
-            if (p_caster->HasItemCount(m_spellInfo->Totem[i],1))
+            if (p_caster->HasItemCount(m_spellInfo->Totem[i], 1))
             {
                 totems -= 1;
                 continue;
@@ -4796,7 +4796,7 @@ uint8 Spell::CheckItems()
 
     //Check items for TotemCategory
     uint32 TotemCategory = 2;
-    for (int i=0;i<2;++i)
+    for (int i = 0;i < 2;++i)
     {
         if (m_spellInfo->TotemCategory[i] != 0)
         {
@@ -5021,7 +5021,7 @@ void Spell::Delayed() // only called in DealDamage()
     else
         m_timer += delaytime;
 
-    sLog->outDetail("Spell %u partially interrupted for (%d) ms at damage",m_spellInfo->Id, delaytime);
+    sLog->outDetail("Spell %u partially interrupted for (%d) ms at damage", m_spellInfo->Id, delaytime);
 
     WorldPacket data(SMSG_SPELL_DELAYED, 8+4);
     data << m_caster->GetPackGUID();
@@ -5332,7 +5332,7 @@ SpellEvent::~SpellEvent()
     else
     {
         sLog->outError("~SpellEvent: %s %u tried to delete non-deletable spell %u. Was not deleted, causes memory leak.",
-            (m_Spell->GetCaster()->GetTypeId() == TYPEID_PLAYER?"Player":"Creature"), m_Spell->GetCaster()->GetGUIDLow(),m_Spell->m_spellInfo->Id);
+            (m_Spell->GetCaster()->GetTypeId() == TYPEID_PLAYER?"Player":"Creature"), m_Spell->GetCaster()->GetGUIDLow(), m_Spell->m_spellInfo->Id);
     }
 }
 

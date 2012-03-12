@@ -49,8 +49,8 @@ class MapManager : public Trinity::Singleton<MapManager, Trinity::ClassLevelLock
             Map const* m = CreateBaseMap(mapid);
             return m->GetAreaFlag(x, y, z);
         }
-        uint32 GetAreaId(uint32 mapid, float x, float y, float z) { return Map::GetAreaId(GetAreaFlag(mapid, x, y, z),mapid); }
-        uint32 GetZoneId(uint32 mapid, float x, float y, float z) { return Map::GetZoneId(GetAreaFlag(mapid, x, y, z),mapid); }
+        uint32 GetAreaId(uint32 mapid, float x, float y, float z) { return Map::GetAreaId(GetAreaFlag(mapid, x, y, z), mapid); }
+        uint32 GetZoneId(uint32 mapid, float x, float y, float z) { return Map::GetZoneId(GetAreaFlag(mapid, x, y, z), mapid); }
 
         void Initialize(void);
         void Update(time_t);

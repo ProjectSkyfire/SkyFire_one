@@ -514,7 +514,7 @@ namespace VMAP
             //chunkSize = sizeof(uint32)+ sizeof(GroupModel)*count;
             //if (result && fwrite(&chunkSize, sizeof(uint32), 1, wf) != 1) result = false;
             if (result && fwrite(&count, sizeof(uint32), 1, wf) != 1) result = false;
-            for (uint32 i=0; i<groupModels.size() && result; ++i)
+            for (uint32 i = 0; i < groupModels.size() && result; ++i)
                 result = groupModels[i].writeToFile(wf);
 
             // write group BIH
@@ -549,7 +549,7 @@ namespace VMAP
             if (result && fread(&count, sizeof(uint32), 1, rf) != 1) result = false;
             if (result) groupModels.resize(count);
             //if (result && fread(&groupModels[0], sizeof(GroupModel), count, rf) != count) result = false;
-            for (uint32 i=0; i<count && result; ++i)
+            for (uint32 i = 0; i < count && result; ++i)
                 result = groupModels[i].readFromFile(rf);
 
             // read group BIH

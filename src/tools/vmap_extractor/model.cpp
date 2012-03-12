@@ -49,7 +49,7 @@ bool Model::open()
         origVertices = (ModelVertex*)(f.getBuffer() + header.ofsVertices);
         vertices = new Vec3D[header.nVertices];
 
-        for (size_t i=0; i<header.nVertices; i++)
+        for (size_t i = 0; i < header.nVertices; i++)
         {
             vertices[i] = fixCoordSystem(origVertices[i].pos);
         }
@@ -61,7 +61,7 @@ bool Model::open()
 
         nIndices = view->nTris;
         indices = new uint16[nIndices];
-        for (size_t i = 0; i<nIndices; i++)
+        for (size_t i = 0; i < nIndices; i++)
         {
             indices[i] = indexLookup[triangles[i]];
         }
@@ -200,13 +200,13 @@ ModelInstance::ModelInstance(MPQFile &f, const char* ModelInstName, uint32 mapID
     int realy2 = (int) ((float) pos.z / 533.333333f);
 
     fprintf(pDirfile,"%s/%s %f,%f,%f_%f,%f,%f %f %d %d %d,%d %d\n",
-        MapName, 
-        ModelInstName, 
-        (float) pos.x, (float) pos.y, (float) pos.z, 
-        (float) rot.x, (float) rot.y, (float) rot.z, 
-        sc, 
-        nVertices, 
-        realx1, realy1, 
+        MapName,
+        ModelInstName,
+        (float) pos.x, (float) pos.y, (float) pos.z,
+        (float) rot.x, (float) rot.y, (float) rot.z,
+        sc,
+        nVertices,
+        realx1, realy1,
         realx2, realy2
         ); */
 }

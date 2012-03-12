@@ -181,7 +181,6 @@ bool WMOGroup::open()
             f.read(&fogIdx, 4);
             f.read(&liquidType, 4);
             f.read(&groupWMOID, 4);
-
         }
         else if (!strcmp(fourcc,"MOPY"))
         {
@@ -248,7 +247,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
         int k = 0;
         int moba_batch = moba_size/12;
         MobaEx = new int[moba_batch*4];
-        for (int i=8; i<moba_size; i+=12)
+        for (int i=8; i < moba_size; i+=12)
         {
             MobaEx[k++] = MOBA[i];
         }
@@ -319,7 +318,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
         int k = 0;
         int moba_batch = moba_size/12;
         MobaEx = new int[moba_batch*4];
-        for (int i=8; i<moba_size; i+=12)
+        for (int i=8; i < moba_size; i+=12)
         {
             MobaEx[k++] = MOBA[i];
         }
@@ -335,7 +334,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
         MoviEx = new uint16[nTriangles*3]; // "worst case" size...
         int *IndexRenum = new int[nVertices];
         memset(IndexRenum, 0xFF, nVertices*sizeof(int));
-        for (int i=0; i<nTriangles; ++i)
+        for (int i = 0; i < nTriangles; ++i)
         {
             // Skip no collision triangles
             if (MOPY[2*i]&WMO_MATERIAL_NO_COLLISION ||
@@ -352,7 +351,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
 
         // assign new vertex index numbers
         int nColVertices = 0;
-        for (uint32 i=0; i<nVertices; ++i)
+        for (uint32 i = 0; i < nVertices; ++i)
         {
             if (IndexRenum[i] == 1)
             {
@@ -362,7 +361,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
         }
 
         // translate triangle indices to new numbers
-        for (int i=0; i<3*nColTriangles; ++i)
+        for (int i = 0; i < 3*nColTriangles; ++i)
         {
             assert(MoviEx[i] < nVertices);
             MoviEx[i] = IndexRenum[MoviEx[i]];
@@ -377,7 +376,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
         int VERT[] = {0x54524556, nColVertices*3*sizeof(float)+4, nColVertices};// "VERT"
         int check = 3*nColVertices;
         fwrite(VERT, 4, 3, output);
-        for (uint32 i=0; i<nVertices; ++i)
+        for (uint32 i = 0; i < nVertices; ++i)
             if (IndexRenum[i] >= 0)
                 check -= fwrite(MOVT+3*i, sizeof(float), 3, output);
 
@@ -402,7 +401,7 @@ int WMOGroup::ConvertToVMAPGroupWmo(FILE *output, WMORoot *rootWMO, bool pPrecis
 
         fwrite(hlq, sizeof(WMOLiquidHeader), 1, output);
         // only need height values, the other values are unknown anyway
-        for (uint32 i = 0; i<LiquEx_size/sizeof(WMOLiquidVert); ++i)
+        for (uint32 i = 0; i < LiquEx_size/sizeof(WMOLiquidVert); ++i)
             fwrite(&LiquEx[i].height, sizeof(float), 1, output);
         // todo: compress to bit field
         fwrite(LiquBytes, 1, hlq->xtiles*hlq->ytiles, output);
@@ -513,12 +512,12 @@ WMOInstance::WMOInstance(MPQFile &f, const char* WmoInstName, uint32 mapID, uint
     fwrite(WmoInstName, sizeof(char), nlen, pDirfile);
 
     /* fprintf(pDirfile,"%s/%s %f,%f,%f_%f,%f,%f 1.0 %d %d %d,%d %d\n",
-        MapName, 
-        WmoInstName, 
-        (float) x, (float) pos.y, (float) z, 
-        (float) rot.x, (float) rot.y, (float) rot.z, 
-        nVertices, 
-        realx1, realy1, 
+        MapName,
+        WmoInstName,
+        (float) x, (float) pos.y, (float) z,
+        (float) rot.x, (float) rot.y, (float) rot.z,
+        nVertices,
+        realx1, realy1,
         realx2, realy2
         ); */
 

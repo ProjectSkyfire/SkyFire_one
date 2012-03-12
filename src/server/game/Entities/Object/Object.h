@@ -225,7 +225,7 @@ class Object
         void SetFloatValue( uint16 index,       float   value);
         void SetByteValue(  uint16 index, uint8 offset, uint8 value);
         void SetUInt16Value(uint16 index, uint8 offset, uint16 value);
-        void SetInt16Value( uint16 index, uint8 offset, int16 value) { SetUInt16Value(index, offset,(uint16)value); }
+        void SetInt16Value( uint16 index, uint8 offset, int16 value) { SetUInt16Value(index, offset, (uint16)value); }
         void SetStatFloatValue(uint16 index, float value);
         void SetStatInt32Value(uint16 index, int32 value);
 
@@ -589,7 +589,7 @@ class WorldObject : public Object, public WorldLocation
         void GetContactPoint(const WorldObject* obj, float &x, float &y, float &z, float distance2d = CONTACT_DISTANCE) const
         {
             // angle to face `obj` to `this` using distance includes size of `obj`
-            GetNearPoint(obj, x, y, z, obj->GetObjectSize(),distance2d, GetAngle(obj));
+            GetNearPoint(obj, x, y, z, obj->GetObjectSize(), distance2d, GetAngle(obj));
         }
 
         float GetObjectSize() const

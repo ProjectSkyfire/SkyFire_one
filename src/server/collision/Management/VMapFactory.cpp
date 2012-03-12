@@ -63,7 +63,7 @@ namespace VMAP
     {
         bool result = false;
         unsigned int i;
-        for (i=pStartPos;i<pString.size(); ++i)
+        for (i=pStartPos;i < pString.size(); ++i)
         {
             if (pString[i] == ',')
             {

@@ -78,8 +78,8 @@ class WorldSession
         void SizeError(WorldPacket const& packet, uint32 size) const;
 
         void SendPacket(WorldPacket const* packet);
-        void SendNotification(const char *format,...) ATTR_PRINTF(2, 3);
-        void SendNotification(int32 string_id,...);
+        void SendNotification(const char *format, ...) ATTR_PRINTF(2, 3);
+        void SendNotification(int32 string_id, ...);
         void SendPetNameInvalid(uint32 error, const std::string& name, DeclinedName *declinedName);
         void SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type);
         void SendPartyResult(PartyOperation operation, const std::string& member, PartyResult res);
@@ -671,7 +671,7 @@ class WorldSession
         int m_sessionDbLocaleIndex;
         uint32 m_latency;
 
-        ACE_Based::LockedQueue<WorldPacket*,ACE_Thread_Mutex> _recvQueue;
+        ACE_Based::LockedQueue<WorldPacket*, ACE_Thread_Mutex> _recvQueue;
 };
 #endif
 

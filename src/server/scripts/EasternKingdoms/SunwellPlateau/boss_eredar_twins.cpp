@@ -295,7 +295,7 @@ struct boss_sacrolashAI : public ScriptedAI
         {
             Unit *pTarget = NULL;
             Creature* temp = NULL;
-            for (uint8 i = 0; i<3; ++i)
+            for (uint8 i = 0; i < 3; ++i)
             {
                 pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 temp = DoSpawnCreature(MOB_SHADOW_IMAGE, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 10000);

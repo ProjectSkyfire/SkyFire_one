@@ -155,7 +155,7 @@ void OutdoorPvPMgr::HandlePlayerLeaveZone(Player *plr, uint32 zoneid)
         return;
 
     itr->second->HandlePlayerLeaveZone(plr, zoneid);
-    sLog->outDebug("Player %u left outdoorpvp id %u",plr->GetGUIDLow(), itr->second->GetTypeId());
+    sLog->outDebug("Player %u left outdoorpvp id %u", plr->GetGUIDLow(), itr->second->GetTypeId());
 }
 
 OutdoorPvP * OutdoorPvPMgr::GetOutdoorPvPToZoneId(uint32 zoneid)

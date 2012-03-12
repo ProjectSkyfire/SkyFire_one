@@ -522,9 +522,9 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
         return;
     }
 
-    CharacterDatabase.PExecute("INSERT INTO petition_sign (ownerguid, petitionguid, playerguid, player_account) VALUES ('%u', '%u', '%u','%u')", GUID_LOPART(ownerguid),GUID_LOPART(petitionguid), plguidlo, GetAccountId());
+    CharacterDatabase.PExecute("INSERT INTO petition_sign (ownerguid, petitionguid, playerguid, player_account) VALUES ('%u', '%u', '%u', '%u')", GUID_LOPART(ownerguid), GUID_LOPART(petitionguid), plguidlo, GetAccountId());
 
-    sLog->outDebug("PETITION SIGN: GUID %u by player: %s (GUID: %u Account: %u)", GUID_LOPART(petitionguid), _player->GetName(),plguidlo, GetAccountId());
+    sLog->outDebug("PETITION SIGN: GUID %u by player: %s (GUID: %u Account: %u)", GUID_LOPART(petitionguid), _player->GetName(), plguidlo, GetAccountId());
 
     WorldPacket data(SMSG_PETITION_SIGN_RESULTS, (8+8+4));
     data << petitionguid;
@@ -775,7 +775,7 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket & recv_data)
     // OK!
 
     // delete charter item
-    _player->DestroyItem(item->GetBagSlot(),item->GetSlot(), true);
+    _player->DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
 
     if (type == 9)                                           // create guild
     {

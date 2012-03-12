@@ -148,7 +148,7 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
     }
     void DeSummonBeams()
     {
-        for (uint8 i=0; i<2; ++i)
+        for (uint8 i = 0; i < 2; ++i)
         {
             Creature* mob = Unit::GetCreature(*me, beams[i]);
             if (mob)

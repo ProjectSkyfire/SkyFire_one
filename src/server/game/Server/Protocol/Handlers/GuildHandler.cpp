@@ -60,7 +60,7 @@ void WorldSession::HandleGuildCreateOpcode(WorldPacket& recvPacket)
         return;
 
     Guild *guild = new Guild;
-    if (!guild->Create(GetPlayer(),gname))
+    if (!guild->Create(GetPlayer(), gname))
     {
         delete guild;
         return;
@@ -202,7 +202,7 @@ void WorldSession::HandleGuildAcceptOpcode(WorldPacket& /*recvPacket*/)
     if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD) && player->GetTeam() != sObjectMgr.GetPlayerTeamByGUID(guild->GetLeader()))
         return;
 
-    if (!guild->AddMember(GetPlayer()->GetGUID(),guild->GetLowestRank()))
+    if (!guild->AddMember(GetPlayer()->GetGUID(), guild->GetLowestRank()))
         return;
     // Put record into guildlog
     guild->LogGuildEvent(GUILD_EVENT_LOG_JOIN_GUILD, GetPlayer()->GetGUIDLow(), 0, 0);
@@ -950,8 +950,8 @@ void WorldSession::HandleGuildBankDeposit(WorldPacket & recv_data)
     // logging money
     if (_player->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
     {
-        sLog->outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit money (Amount: %u) to guild bank (Guild ID %u)",
-            _player->GetName(),_player->GetSession()->GetAccountId(),money, GuildId);
+        sLog->outCommand(_player->GetSession()->GetAccountId(), "GM %s (Account: %u) deposit money (Amount: %u) to guild bank (Guild ID %u)",
+            _player->GetName(), _player->GetSession()->GetAccountId(), money, GuildId);
     }
 
     // log
@@ -1137,7 +1137,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
         else                                                // non split
         {
             GuildItemPosCountVec gDest;
-            uint8 msg = pGuild->CanStoreItem(BankTabDst, BankTabSlotDst, gDest, pItemSrc->GetCount(),pItemSrc, false);
+            uint8 msg = pGuild->CanStoreItem(BankTabDst, BankTabSlotDst, gDest, pItemSrc->GetCount(), pItemSrc, false);
             if (msg == EQUIP_ERR_OK)                       // merge to
             {
                 CharacterDatabase.BeginTransaction();
@@ -1150,7 +1150,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             else                                            // swap
             {
                 gDest.clear();
-                uint8 msg = pGuild->CanStoreItem(BankTabDst, BankTabSlotDst, gDest, pItemSrc->GetCount(),pItemSrc, true);
+                uint8 msg = pGuild->CanStoreItem(BankTabDst, BankTabSlotDst, gDest, pItemSrc->GetCount(), pItemSrc, true);
                 if (msg != EQUIP_ERR_OK)
                 {
                     pl->SendEquipError(msg, pItemSrc, NULL);
@@ -1158,7 +1158,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                 }
 
                 GuildItemPosCountVec gSrc;
-                msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gSrc, pItemDst->GetCount(),pItemDst, true);
+                msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gSrc, pItemDst->GetCount(), pItemDst, true);
                 if (msg != EQUIP_ERR_OK)
                 {
                     pl->SendEquipError(msg, pItemDst, NULL);
@@ -1316,7 +1316,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                 GuildItemPosCountVec gDest;
                 if (pItemChar)
                 {
-                    msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gDest, pItemChar->GetCount(),pItemChar, true);
+                    msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gDest, pItemChar->GetCount(), pItemChar, true);
                     if (msg != EQUIP_ERR_OK)
                     {
                         pl->SendEquipError(msg, pItemChar, NULL);
@@ -1334,9 +1334,9 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
                     // logging item move to bank
                     if (_player->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
                     {
-                        sLog->outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
-                            _player->GetName(),_player->GetSession()->GetAccountId(),
-                            pItemChar->GetProto()->Name1, pItemChar->GetEntry(),pItemChar->GetCount(),
+                        sLog->outCommand(_player->GetSession()->GetAccountId(), "GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
+                            _player->GetName(), _player->GetSession()->GetAccountId(),
+                            pItemChar->GetProto()->Name1, pItemChar->GetEntry(), pItemChar->GetCount(),
                             GuildId);
                     }
                 }
@@ -1403,9 +1403,9 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
         // logging item move to bank (before items merge
         if (_player->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
         {
-            sLog->outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
-                _player->GetName(),_player->GetSession()->GetAccountId(),
-                pItemChar->GetProto()->Name1, pItemChar->GetEntry(),SplitedAmount, GuildId);
+            sLog->outCommand(_player->GetSession()->GetAccountId(), "GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
+                _player->GetName(), _player->GetSession()->GetAccountId(),
+                pItemChar->GetProto()->Name1, pItemChar->GetEntry(), SplitedAmount, GuildId);
         }
 
         CharacterDatabase.BeginTransaction();
@@ -1423,15 +1423,15 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
     else                                                    // Char -> Bank swap with empty or non-empty (move)
     {
         GuildItemPosCountVec dest;
-        uint8 msg = pGuild->CanStoreItem(BankTab, BankTabSlot, dest, pItemChar->GetCount(),pItemChar, false);
+        uint8 msg = pGuild->CanStoreItem(BankTab, BankTabSlot, dest, pItemChar->GetCount(), pItemChar, false);
         if (msg == EQUIP_ERR_OK)                           // merge
         {
             // logging item move to bank
             if (_player->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
             {
-                sLog->outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
-                    _player->GetName(),_player->GetSession()->GetAccountId(),
-                    pItemChar->GetProto()->Name1, pItemChar->GetEntry(),pItemChar->GetCount(),
+                sLog->outCommand(_player->GetSession()->GetAccountId(), "GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
+                    _player->GetName(), _player->GetSession()->GetAccountId(),
+                    pItemChar->GetProto()->Name1, pItemChar->GetEntry(), pItemChar->GetCount(),
                     GuildId);
             }
 
@@ -1461,7 +1461,7 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             }
 
             GuildItemPosCountVec gDest;
-            msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gDest, pItemChar->GetCount(),pItemChar, true);
+            msg = pGuild->CanStoreItem(BankTab, BankTabSlot, gDest, pItemChar->GetCount(), pItemChar, true);
             if (msg != EQUIP_ERR_OK)
             {
                 pl->SendEquipError(msg, pItemChar, NULL);
@@ -1479,9 +1479,9 @@ void WorldSession::HandleGuildBankDepositItem(WorldPacket & recv_data)
             // logging item move to bank
             if (_player->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
             {
-                sLog->outCommand(_player->GetSession()->GetAccountId(),"GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
-                    _player->GetName(),_player->GetSession()->GetAccountId(),
-                    pItemChar->GetProto()->Name1, pItemChar->GetEntry(),pItemChar->GetCount(),
+                sLog->outCommand(_player->GetSession()->GetAccountId(), "GM %s (Account: %u) deposit item: %s (Entry: %d Count: %u) to guild bank (Guild ID: %u)",
+                    _player->GetName(), _player->GetSession()->GetAccountId(),
+                    pItemChar->GetProto()->Name1, pItemChar->GetEntry(), pItemChar->GetCount(),
                     GuildId);
             }
 

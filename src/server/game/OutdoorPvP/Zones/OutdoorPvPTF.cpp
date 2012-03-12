@@ -89,17 +89,17 @@ void OutdoorPvPTF::SendRemoveWorldStates(Player * plr)
 
     for (int i = 0; i < TF_TOWER_NUM; ++i)
     {
-        plr->SendUpdateWorldState(uint32(TFTowerWorldStates[i].n),uint32(0));
-        plr->SendUpdateWorldState(uint32(TFTowerWorldStates[i].h),uint32(0));
-        plr->SendUpdateWorldState(uint32(TFTowerWorldStates[i].a),uint32(0));
+        plr->SendUpdateWorldState(uint32(TFTowerWorldStates[i].n), uint32(0));
+        plr->SendUpdateWorldState(uint32(TFTowerWorldStates[i].h), uint32(0));
+        plr->SendUpdateWorldState(uint32(TFTowerWorldStates[i].a), uint32(0));
     }
 }
 
 void OPvPCapturePointTF::UpdateTowerState()
 {
-    m_PvP->SendUpdateWorldState(uint32(TFTowerWorldStates[m_TowerType].n),uint32(bool(m_TowerState & TF_TOWERSTATE_N)));
-    m_PvP->SendUpdateWorldState(uint32(TFTowerWorldStates[m_TowerType].h),uint32(bool(m_TowerState & TF_TOWERSTATE_H)));
-    m_PvP->SendUpdateWorldState(uint32(TFTowerWorldStates[m_TowerType].a),uint32(bool(m_TowerState & TF_TOWERSTATE_A)));
+    m_PvP->SendUpdateWorldState(uint32(TFTowerWorldStates[m_TowerType].n), uint32(bool(m_TowerState & TF_TOWERSTATE_N)));
+    m_PvP->SendUpdateWorldState(uint32(TFTowerWorldStates[m_TowerType].h), uint32(bool(m_TowerState & TF_TOWERSTATE_H)));
+    m_PvP->SendUpdateWorldState(uint32(TFTowerWorldStates[m_TowerType].a), uint32(bool(m_TowerState & TF_TOWERSTATE_A)));
 }
 
 bool OPvPCapturePointTF::HandlePlayerEnter(Player *plr)
@@ -252,14 +252,14 @@ void OPvPCapturePointTF::ChangeState()
     {
         if (((OutdoorPvPTF*)m_PvP)->m_AllianceTowersControlled)
             ((OutdoorPvPTF*)m_PvP)->m_AllianceTowersControlled--;
-        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_LOOSE_A));
+        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_LOOSE_A));
     }
     // if changing from controlling horde to alliance
     else if (m_OldState == OBJECTIVESTATE_HORDE)
     {
         if (((OutdoorPvPTF*)m_PvP)->m_HordeTowersControlled)
             ((OutdoorPvPTF*)m_PvP)->m_HordeTowersControlled--;
-        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_LOOSE_H));
+        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_LOOSE_H));
     }
 
     uint32 artkit = 21;
@@ -271,7 +271,7 @@ void OPvPCapturePointTF::ChangeState()
         artkit = 2;
         if (((OutdoorPvPTF*)m_PvP)->m_AllianceTowersControlled<TF_TOWER_NUM)
             ((OutdoorPvPTF*)m_PvP)->m_AllianceTowersControlled++;
-        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_CAPTURE_A));
+        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_CAPTURE_A));
         for (PlayerSet::iterator itr = m_activePlayers[0].begin(); itr != m_activePlayers[0].end(); ++itr)
             (*itr)->AreaExploredOrEventHappens(TF_ALLY_QUEST);
         break;
@@ -280,7 +280,7 @@ void OPvPCapturePointTF::ChangeState()
         artkit = 1;
         if (((OutdoorPvPTF*)m_PvP)->m_HordeTowersControlled<TF_TOWER_NUM)
             ((OutdoorPvPTF*)m_PvP)->m_HordeTowersControlled++;
-        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0],sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_CAPTURE_H));
+        sWorld.SendZoneText(OutdoorPvPTFBuffZones[0], sObjectMgr.GetTrinityStringForDBCLocale(LANG_OPVP_TF_CAPTURE_H));
         for (PlayerSet::iterator itr = m_activePlayers[1].begin(); itr != m_activePlayers[1].end(); ++itr)
             (*itr)->AreaExploredOrEventHappens(TF_HORDE_QUEST);
         break;

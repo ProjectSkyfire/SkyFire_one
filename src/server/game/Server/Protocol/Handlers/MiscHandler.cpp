@@ -763,18 +763,18 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
     uint32 Trigger_ID;
 
     recv_data >> Trigger_ID;
-    sLog->outDebug("Trigger ID:%u",Trigger_ID);
+    sLog->outDebug("Trigger ID:%u", Trigger_ID);
 
     if (GetPlayer()->isInFlight())
     {
-        sLog->outDebug("Player '%s' (GUID: %u) in flight, ignore Area Trigger ID:%u",GetPlayer()->GetName(),GetPlayer()->GetGUIDLow(), Trigger_ID);
+        sLog->outDebug("Player '%s' (GUID: %u) in flight, ignore Area Trigger ID:%u", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow(), Trigger_ID);
         return;
     }
 
     AreaTriggerEntry const* atEntry = sAreaTriggerStore.LookupEntry(Trigger_ID);
     if (!atEntry)
     {
-        sLog->outDebug("Player '%s' (GUID: %u) send unknown (by DBC) Area Trigger ID:%u",GetPlayer()->GetName(),GetPlayer()->GetGUIDLow(), Trigger_ID);
+        sLog->outDebug("Player '%s' (GUID: %u) send unknown (by DBC) Area Trigger ID:%u", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow(), Trigger_ID);
         return;
     }
 
@@ -1008,7 +1008,7 @@ void WorldSession::HandleSetActionBar(WorldPacket& recv_data)
     if (!GetPlayer())                                        // ignore until not logged (check needed because STATUS_AUTHED)
     {
         if (ActionBar != 0)
-            sLog->outError("WorldSession::HandleSetActionBar in not logged state with value: %u, ignored",uint32(ActionBar));
+            sLog->outError("WorldSession::HandleSetActionBar in not logged state with value: %u, ignored", uint32(ActionBar));
         return;
     }
 
@@ -1022,7 +1022,7 @@ void WorldSession::HandleWardenDataOpcode(WorldPacket& recv_data)
     /*
         uint8 tmp;
         recv_data >> tmp;
-        sLog->outDebug("Received opcode CMSG_WARDEN_DATA, not resolve.uint8 = %u",tmp);
+        sLog->outDebug("Received opcode CMSG_WARDEN_DATA, not resolve.uint8 = %u", tmp);
     */
 }
 
@@ -1168,7 +1168,7 @@ void WorldSession::HandleWorldTeleportOpcode(WorldPacket& recv_data)
 
     if (GetPlayer()->isInFlight())
     {
-        sLog->outDebug("Player '%s' (GUID: %u) in flight, ignore worldport command.",GetPlayer()->GetName(),GetPlayer()->GetGUIDLow());
+        sLog->outDebug("Player '%s' (GUID: %u) in flight, ignore worldport command.", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow());
         return;
     }
 

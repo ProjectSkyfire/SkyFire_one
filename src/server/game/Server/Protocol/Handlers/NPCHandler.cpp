@@ -132,7 +132,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 
     if (!ci)
     {
-        sLog->outDebug("WORLD: SendTrainerList - (GUID: %u) NO CREATUREINFO!",GUID_LOPART(guid));
+        sLog->outDebug("WORLD: SendTrainerList - (GUID: %u) NO CREATUREINFO!", GUID_LOPART(guid));
         return;
     }
 
@@ -195,7 +195,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket & recv_data)
     uint32 spellId = 0;
 
     recv_data >> guid >> spellId;
-    sLog->outDebug("WORLD: Received CMSG_TRAINER_BUY_SPELL NpcGUID=%u, learn spell id is: %u",uint32(GUID_LOPART(guid)), spellId);
+    sLog->outDebug("WORLD: Received CMSG_TRAINER_BUY_SPELL NpcGUID=%u, learn spell id is: %u", uint32(GUID_LOPART(guid)), spellId);
 
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
     if (!unit)
@@ -482,7 +482,7 @@ void WorldSession::SendStablePet(uint64 guid)
     }
 
     //                                                            0      1     2   3      4      5        6
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id, entry, level, loyalty, name FROM character_pet WHERE owner = '%u' AND slot > 0 AND slot < 3",_player->GetGUIDLow());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id, entry, level, loyalty, name FROM character_pet WHERE owner = '%u' AND slot > 0 AND slot < 3", _player->GetGUIDLow());
 
     if (result)
     {
@@ -540,7 +540,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
 
     uint32 free_slot = 1;
 
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id FROM character_pet WHERE owner = '%u'  AND slot > 0 AND slot < 3 ORDER BY slot ",_player->GetGUIDLow());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id FROM character_pet WHERE owner = '%u'  AND slot > 0 AND slot < 3 ORDER BY slot ", _player->GetGUIDLow());
     if (result)
     {
         do
@@ -601,7 +601,7 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
 
     Pet *newpet = NULL;
 
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT entry FROM character_pet WHERE owner = '%u' AND id = '%u' AND slot > 0 AND slot < 3",_player->GetGUIDLow(),petnumber);
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT entry FROM character_pet WHERE owner = '%u' AND id = '%u' AND slot > 0 AND slot < 3", _player->GetGUIDLow(), petnumber);
     if (result)
     {
         Field *fields = result->Fetch();
@@ -692,7 +692,7 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
         return;
 
     // find swapped pet slot in stable
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT slot, entry FROM character_pet WHERE owner = '%u' AND id = '%u'",_player->GetGUIDLow(),pet_number);
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT slot, entry FROM character_pet WHERE owner = '%u' AND id = '%u'", _player->GetGUIDLow(), pet_number);
     if (!result)
         return;
 
@@ -748,7 +748,7 @@ void WorldSession::HandleRepairItemOpcode(WorldPacket & recv_data)
         Item* item = _player->GetItemByGuid(itemGUID);
 
         if (item)
-            TotalCost= _player->DurabilityRepair(item->GetPos(),true, discountMod, guildBank>0?true:false);
+            TotalCost= _player->DurabilityRepair(item->GetPos(), true, discountMod, guildBank>0?true:false);
     }
     else
     {

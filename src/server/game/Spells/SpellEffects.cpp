@@ -586,7 +586,7 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
                 // Steady Shot
                 else if (m_spellInfo->SpellFamilyFlags & 0x100000000LL)
                 {
-                    int32 base = irand((int32)m_caster->GetWeaponDamageRange(RANGED_ATTACK, MINDAMAGE),(int32)m_caster->GetWeaponDamageRange(RANGED_ATTACK, MAXDAMAGE));
+                    int32 base = irand((int32)m_caster->GetWeaponDamageRange(RANGED_ATTACK, MINDAMAGE), (int32)m_caster->GetWeaponDamageRange(RANGED_ATTACK, MAXDAMAGE));
                     damage += int32(float(base)/m_caster->GetAttackTime(RANGED_ATTACK)*2800 + m_caster->GetTotalAttackPowerValue(RANGED_ATTACK)*0.2f);
 
                     bool found = false;
@@ -774,7 +774,7 @@ void Spell::EffectDummy(uint32 i)
                         case 12850: damage *= 0.4f; break; // Rank 2
                         case 12868: damage *= 0.6f; break; // Rank 3
                         default:
-                            sLog->outError("Spell::EffectDummy: Spell %u not handled in DW",m_spellInfo->Id);
+                            sLog->outError("Spell::EffectDummy: Spell %u not handled in DW", m_spellInfo->Id);
                             return;
                     };
 
@@ -831,7 +831,7 @@ void Spell::EffectDummy(uint32 i)
                             m_caster->CastCustomSpell(unitTarget, 26470, &damage, NULL, NULL, true);
                             break;
                         default:
-                            sLog->outError("EffectDummy: Non-handled case for spell 13567 for triggered aura %u",m_triggeredByAuraSpell->Id);
+                            sLog->outError("EffectDummy: Non-handled case for spell 13567 for triggered aura %u", m_triggeredByAuraSpell->Id);
                             break;
                     }
                     return;
@@ -1475,13 +1475,13 @@ void Spell::EffectDummy(uint32 i)
                             mana = ((*itr)->GetModifier()->m_amount + 100)* mana / 100;
                     }
 
-                    m_caster->CastCustomSpell(m_caster, 31818,&mana, NULL, NULL, true, NULL);
+                    m_caster->CastCustomSpell(m_caster, 31818, &mana, NULL, NULL, true, NULL);
 
                     // Mana Feed
-                    int32 manaFeedVal = m_caster->CalculateSpellDamage(m_spellInfo, 1, m_spellInfo->EffectBasePoints[1],m_caster);
+                    int32 manaFeedVal = m_caster->CalculateSpellDamage(m_spellInfo, 1, m_spellInfo->EffectBasePoints[1], m_caster);
                     manaFeedVal = manaFeedVal * mana / 100;
                     if (manaFeedVal > 0)
-                        m_caster->CastCustomSpell(m_caster, 32553,&manaFeedVal, NULL, NULL, true, NULL);
+                        m_caster->CastCustomSpell(m_caster, 32553, &manaFeedVal, NULL, NULL, true, NULL);
                 }
                 else
                     SendCastResult(SPELL_FAILED_FIZZLE);
@@ -1507,7 +1507,7 @@ void Spell::EffectDummy(uint32 i)
                         case 19266: spellid = 19254; break; // Rank 6
                         case 25461: spellid = 25460; break; // Rank 7
                         default:
-                            sLog->outError("Spell::EffectDummy: Spell 28598 triggered by unhandled spell %u",m_triggeredByAuraSpell->Id);
+                            sLog->outError("Spell::EffectDummy: Spell 28598 triggered by unhandled spell %u", m_triggeredByAuraSpell->Id);
                             return;
                     }
                     m_caster->CastSpell(unitTarget, spellid, true, NULL);
@@ -1522,7 +1522,7 @@ void Spell::EffectDummy(uint32 i)
                 {
                     // Tree of Life area effect
                     int32 health_mod = int32(m_caster->GetStat(STAT_SPIRIT)/4);
-                    m_caster->CastCustomSpell(m_caster, 34123,&health_mod, NULL, NULL, true, NULL);
+                    m_caster->CastCustomSpell(m_caster, 34123, &health_mod, NULL, NULL, true, NULL);
                     return;
                 }
             }
@@ -1590,7 +1590,7 @@ void Spell::EffectDummy(uint32 i)
                 {
                     case 34026: spell_id = 34027; break;    // rank 1
                     default:
-                        sLog->outError("Spell::EffectDummy: Spell %u not handled in KC",m_spellInfo->Id);
+                        sLog->outError("Spell::EffectDummy: Spell %u not handled in KC", m_spellInfo->Id);
                         return;
                 }
 
@@ -1649,7 +1649,7 @@ void Spell::EffectDummy(uint32 i)
                         case 27174: hurt = 27176; heal = 27175; break;
                         case 33072: hurt = 33073; heal = 33074; break;
                         default:
-                            sLog->outError("Spell::EffectDummy: Spell %u not handled in HS",m_spellInfo->Id);
+                            sLog->outError("Spell::EffectDummy: Spell %u not handled in HS", m_spellInfo->Id);
                             return;
                     }
 
@@ -1785,7 +1785,7 @@ void Spell::EffectDummy(uint32 i)
                     case 25479: spell_id = 36775; break;    // Rank 8
                     case 25485: spell_id = 36499; break;    // Rank 9
                     default:
-                        sLog->outError("Spell::EffectDummy: Spell %u not handled in RW",m_spellInfo->Id);
+                        sLog->outError("Spell::EffectDummy: Spell %u not handled in RW", m_spellInfo->Id);
                         return;
                 }
 
@@ -1879,7 +1879,7 @@ void Spell::EffectTriggerSpellWithValue(uint32 i)
     }
 
     int32 bp = damage;
-    m_caster->CastCustomSpell(unitTarget, triggered_spell_id,&bp,&bp,&bp, true, NULL, NULL, m_originalCasterGUID);
+    m_caster->CastCustomSpell(unitTarget, triggered_spell_id, &bp, &bp, &bp, true, NULL, NULL, m_originalCasterGUID);
 }
 
 void Spell::EffectTriggerRitualOfSummoning(uint32 i)
@@ -1985,7 +1985,7 @@ void Spell::EffectTriggerSpell(uint32 i)
             if (!spell)
                 return;
 
-            for (int i=0; i < spell->StackAmount; ++i)
+            for (int i = 0; i < spell->StackAmount; ++i)
                 m_caster->CastSpell(unitTarget, spell->Id, true, m_CastItem, NULL, m_originalCasterGUID);
             return;
         }
@@ -1996,7 +1996,7 @@ void Spell::EffectTriggerSpell(uint32 i)
             if (!spell)
                 return;
 
-            for (int i=0; i < spell->StackAmount; ++i)
+            for (int i = 0; i < spell->StackAmount; ++i)
                 m_caster->CastSpell(unitTarget, spell->Id, true, m_CastItem, NULL, m_originalCasterGUID);
             return;
         }
@@ -2363,7 +2363,7 @@ void Spell::EffectPowerDrain(uint32 i)
     uint32 curPower = unitTarget->GetPower(drain_power);
 
     //add spell damage bonus
-    damage=m_caster->SpellDamageBonus(unitTarget, m_spellInfo, uint32(damage),SPELL_DIRECT_DAMAGE);
+    damage=m_caster->SpellDamageBonus(unitTarget, m_spellInfo, uint32(damage), SPELL_DIRECT_DAMAGE);
 
     // resilience reduce mana draining effect at spell crit damage reduction (added in 2.4)
     uint32 power = damage;
@@ -2376,7 +2376,7 @@ void Spell::EffectPowerDrain(uint32 i)
     else
         new_damage = power;
 
-    unitTarget->ModifyPower(drain_power,-new_damage);
+    unitTarget->ModifyPower(drain_power, -new_damage);
 
     if (drain_power == POWER_MANA)
     {
@@ -2864,7 +2864,7 @@ void Spell::EffectEnergize(uint32 i)
         {
             // cast random elixir on target
           uint32 rand_spell = urand(0, elixirs.size()-1);
-            m_caster->CastSpell(unitTarget, elixirs[rand_spell],true, m_CastItem);
+            m_caster->CastSpell(unitTarget, elixirs[rand_spell], true, m_CastItem);
         }
     }
     switch (m_spellInfo->Id)
@@ -3175,7 +3175,7 @@ void Spell::EffectSummonChangeItem(uint32 i)
         uint8 msg = player->CanStoreItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), dest, pNewItem, true);
         if (msg == EQUIP_ERR_OK)
         {
-            player->DestroyItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(),true);
+            player->DestroyItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), true);
 
             // prevent crash at access and unexpected charges counting with item update queue corrupt
             if (m_CastItem == m_targets.getItemTarget())
@@ -3193,7 +3193,7 @@ void Spell::EffectSummonChangeItem(uint32 i)
         uint8 msg = player->CanBankItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), dest, pNewItem, true);
         if (msg == EQUIP_ERR_OK)
         {
-            player->DestroyItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(),true);
+            player->DestroyItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), true);
 
             // prevent crash at access and unexpected charges counting with item update queue corrupt
             if (m_CastItem == m_targets.getItemTarget())
@@ -3211,7 +3211,7 @@ void Spell::EffectSummonChangeItem(uint32 i)
         uint8 msg = player->CanEquipItem(m_CastItem->GetSlot(), dest, pNewItem, true);
         if (msg == EQUIP_ERR_OK)
         {
-            player->DestroyItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(),true);
+            player->DestroyItem(m_CastItem->GetBagSlot(), m_CastItem->GetSlot(), true);
 
             // prevent crash at access and unexpected charges counting with item update queue corrupt
             if (m_CastItem == m_targets.getItemTarget())
@@ -3244,12 +3244,12 @@ void Spell::EffectProficiency(uint32 /*i*/)
     if (m_spellInfo->EquippedItemClass == 2 && !(p_target->GetWeaponProficiency() & subClassMask))
     {
         p_target->AddWeaponProficiency(subClassMask);
-        p_target->SendProficiency(uint8(0x02),p_target->GetWeaponProficiency());
+        p_target->SendProficiency(uint8(0x02), p_target->GetWeaponProficiency());
     }
     if (m_spellInfo->EquippedItemClass == 4 && !(p_target->GetArmorProficiency() & subClassMask))
     {
         p_target->AddArmorProficiency(subClassMask);
-        p_target->SendProficiency(uint8(0x04),p_target->GetArmorProficiency());
+        p_target->SendProficiency(uint8(0x04), p_target->GetArmorProficiency());
     }
 }
 
@@ -3474,7 +3474,7 @@ void Spell::EffectDispel(uint32 i)
             if (roll_chance_i(miss_chance))
                 fail_list.push_back(aur->GetId());
             else
-                success_list.push_back(std::pair<uint32, uint64>(aur->GetId(),aur->GetCasterGUID()));
+                success_list.push_back(std::pair<uint32, uint64>(aur->GetId(), aur->GetCasterGUID()));
             // Remove buff from list for prevent doubles
             for (std::vector<Aura *>::iterator j = dispel_list.begin(); j != dispel_list.end();)
             {
@@ -3610,7 +3610,7 @@ void Spell::EffectPickPocket(uint32 /*i*/)
         {
             // Stealing successful
             //sLog->outDebug("Sending loot from pickpocket");
-            m_caster->ToPlayer()->SendLoot(unitTarget->GetGUID(),LOOT_PICKPOCKETING);
+            m_caster->ToPlayer()->SendLoot(unitTarget->GetGUID(), LOOT_PICKPOCKETING);
         }
         else
         {
@@ -3725,10 +3725,10 @@ void Spell::EffectEnchantItemPerm(uint32 i)
 
     if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
     {
-        sLog->outCommand(p_caster->GetSession()->GetAccountId(),"GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
-            p_caster->GetName(),p_caster->GetSession()->GetAccountId(),
+        sLog->outCommand(p_caster->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
+            p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
             itemTarget->GetProto()->Name1, itemTarget->GetEntry(),
-            item_owner->GetName(),item_owner->GetSession()->GetAccountId());
+            item_owner->GetName(), item_owner->GetSession()->GetAccountId());
     }
 
     // remove old enchanting before applying new if equipped
@@ -3805,21 +3805,21 @@ void Spell::EffectEnchantItemTmp(uint32 i)
             case 70: enchant_id = 3019; break;              // 14%
             case 74: enchant_id = 3020; break;              // 20%
             default:
-                sLog->outError("Spell::EffectEnchantItemTmp: Damage %u not handled in S'RW",enchnting_damage);
+                sLog->outError("Spell::EffectEnchantItemTmp: Damage %u not handled in S'RW", enchnting_damage);
                 return;
         }
     }
 
     if (!enchant_id)
     {
-        sLog->outError("Spell %u Effect %u (SPELL_EFFECT_ENCHANT_ITEM_TEMPORARY) has 0 as enchanting id",m_spellInfo->Id, i);
+        sLog->outError("Spell %u Effect %u (SPELL_EFFECT_ENCHANT_ITEM_TEMPORARY) has 0 as enchanting id", m_spellInfo->Id, i);
         return;
     }
 
     SpellItemEnchantmentEntry const *pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
     if (!pEnchant)
     {
-        sLog->outError("Spell %u Effect %u (SPELL_EFFECT_ENCHANT_ITEM_TEMPORARY) has invalid enchanting id %u ",m_spellInfo->Id, i, enchant_id);
+        sLog->outError("Spell %u Effect %u (SPELL_EFFECT_ENCHANT_ITEM_TEMPORARY) has invalid enchanting id %u ", m_spellInfo->Id, i, enchant_id);
         return;
     }
 
@@ -3859,7 +3859,7 @@ void Spell::EffectEnchantItemTmp(uint32 i)
 
     if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
     {
-        sLog->outCommand(p_caster->GetSession()->GetAccountId(),"GM %s (Account: %u) enchanting(temp): %s (Entry: %d) for player: %s (Account: %u)",
+        sLog->outCommand(p_caster->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(temp): %s (Entry: %d) for player: %s (Account: %u)",
             p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
             itemTarget->GetProto()->Name1, itemTarget->GetEntry(),
             item_owner->GetName(), item_owner->GetSession()->GetAccountId());
@@ -3961,7 +3961,7 @@ void Spell::EffectSummonPet(uint32 i)
 
             ASSERT(OldSummon->GetMap() == owner->GetMap());
 
-            //OldSummon->GetMap()->Remove(OldSummon->ToCreature(),false);
+            //OldSummon->GetMap()->Remove(OldSummon->ToCreature(), false);
 
             float px, py, pz;
             owner->GetClosePoint(px, py, pz, OldSummon->GetObjectSize());
@@ -3978,7 +3978,7 @@ void Spell::EffectSummonPet(uint32 i)
         }
 
         if (owner->GetTypeId() == TYPEID_PLAYER)
-            owner->ToPlayer()->RemovePet(OldSummon,(OldSummon->getPetType() == HUNTER_PET ? PET_SAVE_AS_DELETED : PET_SAVE_NOT_IN_SLOT),false);
+            owner->ToPlayer()->RemovePet(OldSummon, (OldSummon->getPetType() == HUNTER_PET ? PET_SAVE_AS_DELETED : PET_SAVE_NOT_IN_SLOT), false);
         else
             return;
     }
@@ -4196,7 +4196,7 @@ void Spell::SpellDamageWeaponDmg(uint32 i)
                     // Stormstrike AP Buff
                     if ((*i)->GetModifier()->m_miscvalue == 5634)
                     {
-                        m_caster->CastSpell(m_caster, 38430, true, NULL,*i);
+                        m_caster->CastSpell(m_caster, 38430, true, NULL, *i);
                         break;
                     }
                 }
@@ -4440,7 +4440,7 @@ void Spell::EffectSummonObjectWild(uint32 i)
                     if (pl->GetTeam() == team)
                         team = HORDE;
 
-                    ((BattleGroundWS*)bg)->SetDroppedFlagGUID(pGameObj->GetGUID(),team);
+                    ((BattleGroundWS*)bg)->SetDroppedFlagGUID(pGameObj->GetGUID(), team);
                 }
                 break;
             }
@@ -4609,7 +4609,7 @@ void Spell::EffectScriptEffect(uint32 effIndex)
 
                     // check presence
                     for (uint8 j = 0; j < 4; ++j)
-                        if (unitTarget->HasAura(spells[j],0))
+                        if (unitTarget->HasAura(spells[j], 0))
                             return;
 
                     // select spell
@@ -5100,7 +5100,7 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                                 if (Player* modOwner = m_caster->GetSpellModOwner())
                                     modOwner->ApplySpellMod(spellInfo->Id, SPELLMOD_COST, mana);
                                 mana = int32(mana* 0.8f);
-                                m_caster->CastCustomSpell(m_caster, 31930,&mana, NULL, NULL, true, NULL,*i);
+                                m_caster->CastCustomSpell(m_caster, 31930, &mana, NULL, NULL, true, NULL, *i);
                             }
                             break;
                         }
@@ -5340,7 +5340,7 @@ void Spell::EffectSummonPlayer(uint32 /*i*/)
     float x, y, z;
     m_caster->GetClosePoint(x, y, z, unitTarget->GetObjectSize());
 
-    unitTarget->ToPlayer()->SetSummonPoint(m_caster->GetMapId(),x, y, z);
+    unitTarget->ToPlayer()->SetSummonPoint(m_caster->GetMapId(), x, y, z);
 
     WorldPacket data(SMSG_SUMMON_REQUEST, 8+4+4);
     data << uint64(m_caster->GetGUID());                    // summoner guid
@@ -5421,7 +5421,7 @@ void Spell::EffectDisEnchant(uint32 /*i*/)
 
     p_caster->UpdateCraftSkill(m_spellInfo->Id);
 
-    m_caster->ToPlayer()->SendLoot(itemTarget->GetGUID(),LOOT_DISENCHANTING);
+    m_caster->ToPlayer()->SendLoot(itemTarget->GetGUID(), LOOT_DISENCHANTING);
 
     // item will be removed at disenchanting end
 }
@@ -5466,7 +5466,7 @@ void Spell::EffectFeedPet(uint32 i)
     _player->DestroyItemCount(itemTarget, count, true);
     // TODO: fix crash when a spell has two effects, both pointed at the same item target
 
-    m_caster->CastCustomSpell(m_caster, m_spellInfo->EffectTriggerSpell[i],&benefit, NULL, NULL, true);
+    m_caster->CastCustomSpell(m_caster, m_spellInfo->EffectTriggerSpell[i], &benefit, NULL, NULL, true);
 }
 
 void Spell::EffectDismissPet(uint32 /*i*/)
@@ -5643,7 +5643,7 @@ void Spell::EffectMomentMove(uint32 i)
     floor = unitTarget->GetMap()->GetHeight(destx, desty, z, true);
     destz = fabs(ground - z) <= fabs(floor - z) ? ground : floor;
 
-    bool col = VMAP::VMapFactory::createOrGetVMapManager()->getObjectHitPos(mapid, x, y, z+0.5f, destx, desty, destz+0.5f, destx, desty, destz,-0.5f);
+    bool col = VMAP::VMapFactory::createOrGetVMapManager()->getObjectHitPos(mapid, x, y, z+0.5f, destx, desty, destz+0.5f, destx, desty, destz, -0.5f);
 
     // collision occured
     if (col)
@@ -5756,7 +5756,7 @@ void Spell::EffectSkinning(uint32 /*i*/)
 
     uint32 skill = creature->GetCreatureInfo()->GetRequiredLootSkill();
 
-    m_caster->ToPlayer()->SendLoot(creature->GetGUID(),LOOT_SKINNING);
+    m_caster->ToPlayer()->SendLoot(creature->GetGUID(), LOOT_SKINNING);
     creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
 
     int32 reqValue = targetLevel < 10 ? 0 : targetLevel < 20 ? (targetLevel-10)*10 : targetLevel*5;
@@ -6037,7 +6037,7 @@ void Spell::EffectTransmitted(uint32 effIndex)
 
     if (!goinfo)
     {
-        sLog->outErrorDb("Gameobject (Entry: %u) not exist and not created at spell (ID: %u) cast",name_id, m_spellInfo->Id);
+        sLog->outErrorDb("Gameobject (Entry: %u) not exist and not created at spell (ID: %u) cast", name_id, m_spellInfo->Id);
         return;
     }
 
@@ -6271,7 +6271,7 @@ void Spell::EffectStealBeneficialBuff(uint32 i)
             if (roll_chance_i(miss_chance))
                 fail_list.push_back(aur->GetId());
             else
-                success_list.push_back( std::pair<uint32, uint64>(aur->GetId(),aur->GetCasterGUID()));
+                success_list.push_back( std::pair<uint32, uint64>(aur->GetId(), aur->GetCasterGUID()));
 
             // Remove buff from list for prevent doubles
             for (std::vector<Aura *>::iterator j = steal_list.begin(); j != steal_list.end();)

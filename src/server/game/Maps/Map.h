@@ -344,12 +344,12 @@ class Map : public GridRefManager<NGridType>, public Trinity::ObjectLevelLockabl
 
         uint32 GetAreaId(float x, float y, float z) const
         {
-            return GetAreaId(GetAreaFlag(x, y, z),GetId());
+            return GetAreaId(GetAreaFlag(x, y, z), GetId());
         }
 
         uint32 GetZoneId(float x, float y, float z) const
         {
-            return GetZoneId(GetAreaFlag(x, y, z),GetId());
+            return GetZoneId(GetAreaFlag(x, y, z), GetId());
         }
 
         void MoveAllCreaturesInMoveList();

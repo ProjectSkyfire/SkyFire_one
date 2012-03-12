@@ -609,7 +609,7 @@ struct mob_enchanted_elementalAI : public ScriptedAI
 
         VashjGUID = 0;
 
-        for (int i = 0; i<8; ++i)//search for nearest waypoint (up on stairs)
+        for (int i = 0; i < 8; ++i)//search for nearest waypoint (up on stairs)
         {
             if (!x || !y || !z)
             {
