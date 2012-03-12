@@ -23,7 +23,6 @@
 
 #include "ace/Singleton.h"
 #include "SharedDefines.h"
-#include "AuctionHouseBot.h"
 
 class Item;
 class Player;

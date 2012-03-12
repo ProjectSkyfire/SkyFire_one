@@ -24,7 +24,6 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 
-#include "AuctionHouseBot.h"
 #include "AuctionHouseMgr.h"
 #include "Log.h"
 #include "Opcodes.h"
@@ -123,9 +122,6 @@ void WorldSession::SendAuctionOutbiddedMail(AuctionEntry *auction, uint32 newPri
         std::ostringstream msgAuctionOutbiddedSubject;
         msgAuctionOutbiddedSubject << auction->item_template << ":0:" << AUCTION_OUTBIDDED;
 
-        if (oldBidder && !_player)
-            oldBidder->GetSession()->SendAuctionBidderNotification(auction->GetHouseId(), auction->Id, auctionbot.GetAHBplayerGUID(), newPrice, auction->GetAuctionOutBid(), auction->item_template);
-
         if (oldBidder && _player)
             oldBidder->GetSession()->SendAuctionBidderNotification(auction->GetHouseId(), auction->Id, _player->GetGUID(), newPrice, auction->GetAuctionOutBid(), auction->item_template);
 
@@ -135,7 +131,7 @@ void WorldSession::SendAuctionOutbiddedMail(AuctionEntry *auction, uint32 newPri
     }
 }
 
-// this function sends mail, when auction is cancelled to old bidder
+// this function sends mail, when auction is canceled to old bidder
 void WorldSession::SendAuctionCancelledToBidderMail(AuctionEntry* auction)
 {
     uint64 bidder_guid = MAKE_NEW_GUID(auction->bidder, 0, HIGHGUID_PLAYER);

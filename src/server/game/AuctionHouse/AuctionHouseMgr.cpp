@@ -236,9 +236,9 @@ void AuctionHouseMgr::SendAuctionSuccessfulMail(AuctionEntry * auction)
 
         uint32 profit = auction->bid + auction->deposit - auctionCut;
 
-        if (owner && owner->GetGUIDLow() != auctionbot.GetAHBplayerGUID())
+        if (owner)
         {
-            // send auction owner notification, bidder must be current!
+            //send auction owner notification, bidder must be current!
             owner->GetSession()->SendAuctionOwnerNotification(auction);
         }
 
@@ -264,7 +264,7 @@ void AuctionHouseMgr::SendAuctionExpiredMail(AuctionEntry * auction)
         std::ostringstream subject;
         subject << auction->item_template << ":0:" << AUCTION_EXPIRED;
 
-        if (owner && owner->GetGUIDLow() != auctionbot.GetAHBplayerGUID())
+        if (owner)
             owner->GetSession()->SendAuctionOwnerNotification(auction);
 
         MailDraft(subject.str())
@@ -478,12 +478,10 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(uint32 factionTem
     {
         ASSERT(ah);
         AuctionsMap[ah->Id] = ah;
-        auctionbot.IncrementItemCounts(ah);
     }
 
     bool AuctionHouseObject::RemoveAuction(AuctionEntry *auction, uint32 item_template)
     {
-        auctionbot.DecrementItemCounts(auction, item_template);
         bool wasInMap = AuctionsMap.erase(auction->Id) ? true : false;
 
         // we need to delete the entry, it is not referenced any more

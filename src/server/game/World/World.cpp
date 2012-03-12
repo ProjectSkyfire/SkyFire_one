@@ -44,7 +44,6 @@
 #include "BattlegroundMgr.h"
 #include "OutdoorPvPMgr.h"
 #include "TemporarySummon.h"
-#include "AuctionHouseBot.h"
 #include "WaypointMovementGenerator.h"
 #include "VMapFactory.h"
 #include "GameEventMgr.h"
@@ -1501,9 +1500,6 @@ void World::SetInitialWorldSettings()
     sLog->outString("Calculate next daily quest reset time...");
     InitDailyQuestResetTime();
 
-    sLog->outString("Initialize AuctionHouseBot...");
-    auctionbot.Initialize();
-
     // possibly enable db logging; avoid massive startup spam by doing it here.
     if (sLog->GetLogDBLater())
     {
@@ -1671,7 +1667,6 @@ void World::Update(time_t diff)
     // Handle auctions when the timer has passed
     if (m_timers[WUPDATE_AUCTIONS].Passed())
     {
-        auctionbot.Update();
         m_timers[WUPDATE_AUCTIONS].Reset();
 
         // Update mails (return old mails with item, or delete them)

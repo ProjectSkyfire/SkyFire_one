@@ -1,1 +1,0 @@
-this is where any character.sql updates go.

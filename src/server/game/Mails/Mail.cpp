@@ -31,7 +31,6 @@
 #include "Language.h"
 #include "DBCStores.h"
 #include "BattlegroundMgr.h"
-#include "AuctionHouseBot.h"
 #include "AuctionHouseMgr.h"
 #include "Item.h"
 #include "ScriptMgr.h"
@@ -403,11 +402,7 @@ void WorldSession::HandleReturnToSender(WorldPacket & recv_data)
                 pl->RemoveMItem(itr2->item_guid);
             }
         }
-
-        if (m->sender == auctionbot.GetAHBplayerGUID())
-            draft.AddMoney(m->money).SendReturnToSender(GetAccountId(), m->receiver, auctionbot.GetAHBplayerGUID());
-        else
-            draft.AddMoney(m->money).SendReturnToSender(GetAccountId(), m->receiver, m->sender);
+        draft.AddMoney(m->money).SendReturnToSender(GetAccountId(), m->receiver, m->sender);
     }
 
     delete m;                                               // we can deallocate old mail
@@ -989,14 +984,6 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
     if (pReceiver)
         prepareItems(pReceiver);                            // generate mail template items
 
-    if (receiver.GetPlayerGUIDLow() == auctionbot.GetAHBplayerGUID())
-    {
-        if (sender.GetMailMessageType() == MAIL_AUCTION && !m_items.empty())        // auction mail with items
-        {
-            deleteIncludedItems(true);
-        }
-        return;
-    }
     uint32 mailId = sObjectMgr.GenerateMailID();
 
     time_t deliver_time = time(NULL) + deliver_delay;
