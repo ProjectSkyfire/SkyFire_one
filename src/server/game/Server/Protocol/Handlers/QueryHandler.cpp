@@ -90,7 +90,7 @@ void WorldSession::SendNameQueryOpcodeFromDBCallBack(QueryResult_AutoPtr result,
     std::string name = fields[1].GetCppString();
     uint32 field     = 0;
     if (name == "")
-        name         = session->GetTrinityString(LANG_NON_EXIST_CHARACTER);
+        name         = session->GetSkyFireString(LANG_NON_EXIST_CHARACTER);
     else
         field        = fields[2].GetUInt32();
 

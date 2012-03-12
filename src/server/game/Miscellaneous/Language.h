@@ -21,7 +21,7 @@
 #ifndef __TRINITY_LANGUAGE_H
 #define __TRINITY_LANGUAGE_H
 
-enum TrinityStrings
+enum SkyFireStrings
 {
     // for chat commands
     LANG_SELECT_CHAR_OR_CREATURE        = 1,
