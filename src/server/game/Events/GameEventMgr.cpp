@@ -21,7 +21,7 @@
 #include "GameEventMgr.h"
 #include "World.h"
 #include "ObjectMgr.h"
-#include "PoolHandler.h"
+#include "PoolMgr.h"
 
 #include "Language.h"
 #include "Log.h"
@@ -815,7 +815,7 @@ void GameEventMgr::LoadFromDB()
                 continue;
             }
 
-            if (!poolhandler.CheckPool(entry))
+            if (!sPoolMgr.CheckPool(entry))
             {
                 sLog->outErrorDb("Pool Id (%u) has all creatures or gameobjects with explicit chance sum <>100 and no equal chance defined. The pool system cannot pick one to spawn.", entry);
                 continue;
@@ -1084,16 +1084,12 @@ void GameEventMgr::GameEventSpawn(int16 event_id)
 
     if (internal_event_id < 0 || internal_event_id >= mGameEventPoolIds.size())
     {
-        sLog->outError("GameEventMgr::GameEventSpawn attempt access to out of range mGameEventPoolIds element %i (size: %u)", internal_event_id, mGameEventPoolIds.size());
+        sLog->outError("GameEventMgr::GameEventSpawn attempt access to out of range mGameEventPoolIds element %i (size: " SIZEFMTD ")",internal_event_id,mGameEventPoolIds.size());
         return;
     }
 
     for (IdList::iterator itr = mGameEventPoolIds[internal_event_id].begin(); itr != mGameEventPoolIds[internal_event_id].end(); ++itr)
-    {
-        poolhandler.SpawnPool(*itr, 0, 0);
-        poolhandler.SpawnPool(*itr, 0, TYPEID_GAMEOBJECT);
-        poolhandler.SpawnPool(*itr, 0, TYPEID_UNIT);
-    }
+        sPoolMgr.SpawnPool(*itr);
 }
 
 void GameEventMgr::GameEventUnspawn(int16 event_id)
@@ -1149,7 +1145,7 @@ void GameEventMgr::GameEventUnspawn(int16 event_id)
     }
 
     for (IdList::iterator itr = mGameEventPoolIds[internal_event_id].begin(); itr != mGameEventPoolIds[internal_event_id].end(); ++itr)
-        poolhandler.DespawnPool(*itr);
+        sPoolMgr.DespawnPool(*itr);
 }
 
 void GameEventMgr::ChangeEquipOrModel(int16 event_id, bool activate)

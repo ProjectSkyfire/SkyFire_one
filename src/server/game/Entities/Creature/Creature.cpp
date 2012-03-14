@@ -29,7 +29,7 @@
 #include "QuestDef.h"
 #include "GossipDef.h"
 #include "Player.h"
-#include "PoolHandler.h"
+#include "PoolMgr.h"
 #include "Opcodes.h"
 #include "Log.h"
 #include "LootMgr.h"
@@ -1482,9 +1482,9 @@ void Creature::Respawn(bool force)
         //Call AI respawn virtual function
         AI()->JustRespawned();
 
-        uint16 poolid = poolhandler.IsPartOfAPool(GetGUIDLow(), GetTypeId());
+        uint16 poolid = GetDBTableGUIDLow() ? sPoolMgr.IsPartOfAPool<Creature>(GetDBTableGUIDLow()) : 0;
         if (poolid)
-            poolhandler.UpdatePool(poolid, GetGUIDLow(), TYPEID_UNIT);
+            sPoolMgr.UpdatePool<Creature>(poolid, GetDBTableGUIDLow());
     }
 
     UpdateObjectVisibility();
