@@ -26,12 +26,9 @@
 #include "Language.h"
 #include "Log.h"
 #include "MapManager.h"
-#include "Policies/SingletonImp.h"
 #include "GossipDef.h"
 #include "Player.h"
 #include "BattlegroundMgr.h"
-
-INSTANTIATE_SINGLETON_1(GameEventMgr);
 
 bool GameEventMgr::CheckOneGameEvent(uint16 entry) const
 {

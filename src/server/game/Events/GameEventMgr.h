@@ -24,6 +24,7 @@
 #include "Define.h"
 #include "Creature.h"
 #include "GameObject.h"
+#include "ace/Singleton.h"
 
 #define max_ge_check_delay 86400                            // 1 day in seconds
 
@@ -87,8 +88,9 @@ struct NPCVendorEntry
 class Player;
 class GameEventMgr
 {
+    friend class ACE_Singleton<GameEventMgr, ACE_Null_Mutex>;
+    GameEventMgr();
     public:
-        GameEventMgr();
         ~GameEventMgr() {};
         typedef std::set<uint16> ActiveEvents;
         typedef std::vector<GameEventData> GameEventDataMap;
@@ -160,8 +162,8 @@ class GameEventMgr
         bool isSystemInit;
 };
 
-#define gameeventmgr Trinity::Singleton<GameEventMgr>::Instance()
+#define gameeventmgr (*ACE_Singleton<GameEventMgr, ACE_Null_Mutex>::instance())
 #endif
 
-bool isGameEventActive(uint16 event_id);
+bool isGameEventActive(uint16 event_id);  // wtf is this outside of /EOF??
 
