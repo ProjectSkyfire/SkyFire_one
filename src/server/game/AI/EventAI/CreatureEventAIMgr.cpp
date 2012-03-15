@@ -25,12 +25,8 @@
 #include "CreatureEventAI.h"
 #include "CreatureEventAIMgr.h"
 #include "ObjectMgr.h"
-
-#include "Policies/SingletonImp.h"
 #include "ObjectGuid.h"
 #include "GridDefines.h"
-
-INSTANTIATE_SINGLETON_1(CreatureEventAIMgr);
 
 // -------------------
 void CreatureEventAIMgr::LoadCreatureEventAI_Texts(bool check_entry_use)
