@@ -19,13 +19,8 @@
  */
 
 #include "WorldLog.h"
-#include "Policies/SingletonImp.h"
 #include "Config.h"
 #include "Log.h"
-
-#define CLASS_LOCK Trinity::ClassLevelLockable<WorldLog, ACE_Thread_Mutex>
-INSTANTIATE_SINGLETON_2(WorldLog, CLASS_LOCK);
-INSTANTIATE_CLASS_MUTEX(WorldLog, ACE_Thread_Mutex);
 
 WorldLog::WorldLog() : i_file(NULL)
 {
@@ -63,7 +58,7 @@ void WorldLog::outTimestampLog(char const *fmt, ...)
 {
     if (LogWorld())
     {
-        Guard guard(*this);
+        ACE_GUARD(ACE_Thread_Mutex, Guard, Lock);
         ASSERT(i_file);
 
         Log::outTimestamp(i_file);
@@ -91,7 +86,7 @@ void WorldLog::outLog(char const *fmt, ...)
 {
     if (LogWorld())
     {
-        Guard guard(*this);
+        ACE_GUARD(ACE_Thread_Mutex, Guard, Lock);
         ASSERT(i_file);
 
         va_list args;
@@ -113,6 +108,3 @@ void WorldLog::outLog(char const *fmt, ...)
         va_end(ap2);
     }
 }
-
-#define sWorldLog WorldLog::Instance()
-
