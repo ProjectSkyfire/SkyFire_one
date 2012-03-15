@@ -844,7 +844,10 @@ enum SkyFireStrings
     LANG_INSTANCE_MUST_RAID_GRP         = 5007,
     LANG_INSTANCE_NOT_AS_GHOST          = 5008,
     LANG_COMMAND_PLAYED_TO_ALL          = 5009,
-    // Room for more Trinity strings       5010-9999
+    LANG_CHANNEL_NOT_PUBLIC             = 5010,
+    LANG_CHANNEL_PUBLIC_CHANGED         = 5011,
+    // Room for more Trinity strings       5012-9999
+
     // Used for GM Announcements
     LANG_GM_BROADCAST                    = 6613,
     LANG_GM_NOTIFY                       = 6614,

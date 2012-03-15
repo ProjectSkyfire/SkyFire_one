@@ -518,8 +518,8 @@ class WorldSession
         void HandleResurrectResponseOpcode(WorldPacket& recvPacket);
         void HandleSummonResponseOpcode(WorldPacket& recv_data);
 
-        void HandleChannelJoin(WorldPacket& recvPacket);
-        void HandleChannelLeave(WorldPacket& recvPacket);
+        void HandleJoinChannel(WorldPacket& recvPacket);
+        void HandleLeaveChannel(WorldPacket& recvPacket);
         void HandleChannelList(WorldPacket& recvPacket);
         void HandleChannelPassword(WorldPacket& recvPacket);
         void HandleChannelSetOwner(WorldPacket& recvPacket);
@@ -532,11 +532,12 @@ class WorldSession
         void HandleChannelKick(WorldPacket& recvPacket);
         void HandleChannelBan(WorldPacket& recvPacket);
         void HandleChannelUnban(WorldPacket& recvPacket);
-        void HandleChannelAnnounce(WorldPacket& recvPacket);
+        void HandleChannelAnnouncements(WorldPacket& recvPacket);
         void HandleChannelModerate(WorldPacket& recvPacket);
-        void HandleChannelRosterQuery(WorldPacket& recvPacket);
-        void HandleChannelInfoQuery(WorldPacket& recvPacket);
-        void HandleChannelJoinNotify(WorldPacket& recvPacket);
+        void HandleChannelDeclineInvite(WorldPacket& recvPacket);
+        void HandleChannelDisplayListQuery(WorldPacket& recvPacket);
+        void HandleGetChannelMemberCount(WorldPacket& recvPacket);
+        void HandleSetChannelWatch(WorldPacket& recvPacket);
 
         void HandleCompleteCinema(WorldPacket& recvPacket);
         void HandleNextCinematicCamera(WorldPacket& recvPacket);
