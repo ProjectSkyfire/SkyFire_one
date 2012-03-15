@@ -22,10 +22,10 @@
 #define __InstanceSaveMgr_H
 
 #include "Define.h"
-#include "Policies/Singleton.h"
 #include "UnorderedMap.h"
 #include "Database/DatabaseEnv.h"
 
+#include <ace/Singleton.h>
 #include <ace/Thread_Mutex.h>
 #include <list>
 #include <map>
@@ -113,18 +113,19 @@ class InstanceSave
         bool m_canReset;
 };
 
-class InstanceSaveManager : public Trinity::Singleton<InstanceSaveManager, Trinity::ClassLevelLockable<InstanceSaveManager, ACE_Thread_Mutex> >
+class InstanceSaveManager
 {
+    friend class ACE_Singleton<InstanceSaveManager, ACE_Null_Mutex>;
     friend class InstanceSave;
-    public:
-        InstanceSaveManager();
-        ~InstanceSaveManager();
+public:
+    InstanceSaveManager() : lock_instLists(false) {};
+    ~InstanceSaveManager();
 
         typedef std::map<uint32 /*InstanceId*/, InstanceSave*> InstanceSaveMap;
         typedef UNORDERED_MAP<uint32 /*InstanceId*/, InstanceSave*> InstanceSaveHashMap;
         typedef std::map<uint32 /*mapId*/, InstanceSaveMap> InstanceSaveMapMap;
 
-        /* resetTime is a global propery of each (raid/heroic) map
+        /* resetTime is a global property of each (raid/heroic) map
            all instances of that map reset at the same time */
         struct InstResetEvent
         {
@@ -171,6 +172,6 @@ class InstanceSaveManager : public Trinity::Singleton<InstanceSaveManager, Trini
         ResetTimeQueue m_resetTimeQueue;
 };
 
-#define sInstanceSaveManager Trinity::Singleton<InstanceSaveManager>::Instance()
+#define sInstanceSaveMgr (*ACE_Singleton<InstanceSaveManager, ACE_Thread_Mutex>::instance())
 #endif
 

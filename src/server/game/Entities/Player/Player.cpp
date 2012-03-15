@@ -14917,7 +14917,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     }
 
     // if the player is in an instance (not a bg) and it has been reset in the meantime teleport him to the entrance
-    if (instanceId && !m_bgData.bgInstanceID && !sInstanceSaveManager.GetInstanceSave(instanceId))
+    if (instanceId && !m_bgData.bgInstanceID && !sInstanceSaveMgr.GetInstanceSave(instanceId))
     {
         AreaTrigger const* at = sObjectMgr.GetMapEntranceTrigger(mapId);
         if (at)
@@ -15940,7 +15940,7 @@ void Player::_LoadBoundInstances(QueryResult_AutoPtr result)
             }
 
             // since non permanent binds are always solo bind, they can always be reset
-            if (InstanceSave *save = sInstanceSaveManager.AddInstanceSave(mapId, instanceId, difficulty, resetTime, !perm, true))
+            if (InstanceSave *save = sInstanceSaveMgr.AddInstanceSave(mapId, instanceId, difficulty, resetTime, !perm, true))
                 BindToInstance(save, perm, true);
         } while (result->NextRow());
     }

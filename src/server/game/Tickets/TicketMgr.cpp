@@ -19,14 +19,12 @@
  */
 
 #include "TicketMgr.h"
-#include "Policies/SingletonImp.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "Language.h"
 #include "Player.h"
 #include "Common.h"
 #include "ObjectAccessor.h"
-INSTANTIATE_SINGLETON_1(TicketMgr);
 
 GM_Ticket* TicketMgr::GetGMTicket(uint64 ticketGuid)
 {

@@ -6289,9 +6289,9 @@ bool ChatHandler::HandleInstanceStatsCommand(const char* /*args*/)
 {
     PSendSysMessage("instances loaded: %d", sMapMgr.GetNumInstances());
     PSendSysMessage("players in instances: %d", sMapMgr.GetNumPlayersInInstances());
-    PSendSysMessage("instance saves: %d", sInstanceSaveManager.GetNumInstanceSaves());
-    PSendSysMessage("players bound: %d", sInstanceSaveManager.GetNumBoundPlayersTotal());
-    PSendSysMessage("groups bound: %d", sInstanceSaveManager.GetNumBoundGroupsTotal());
+    PSendSysMessage("instance saves: %d", sInstanceSaveMgr.GetNumInstanceSaves());
+    PSendSysMessage("players bound: %d", sInstanceSaveMgr.GetNumBoundPlayersTotal());
+    PSendSysMessage("groups bound: %d", sInstanceSaveMgr.GetNumBoundGroupsTotal());
     return true;
 }
 

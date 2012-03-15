@@ -11669,7 +11669,7 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
                     // the reset time is set but not added to the scheduler
                     // until the players leave the instance
                     time_t resettime = creature->GetRespawnTimeEx() + 2 * HOUR;
-                    if (InstanceSave *save = sInstanceSaveManager.GetInstanceSave(creature->GetInstanceId()))
+                    if (InstanceSave *save = sInstanceSaveMgr.GetInstanceSave(creature->GetInstanceId()))
                         if (save->GetResetTime() < resettime) save->SetResetTime(resettime);
                 }
             }

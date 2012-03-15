@@ -21,7 +21,7 @@
 #ifndef _TICKETMGR_H
 #define _TICKETMGR_H
 
-#include "Policies/Singleton.h"
+#include "ace/Singleton.h"
 #include "Database/DatabaseEnv.h"
 #include "Util.h"
 #include "Config.h"
@@ -90,5 +90,5 @@ class TicketMgr
 };
 
 #endif
-#define ticketmgr Trinity::Singleton<TicketMgr>::Instance()
+#define ticketmgr (*ACE_Singleton<TicketMgr, ACE_Thread_Mutex>::instance())
 

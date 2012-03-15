@@ -19,7 +19,7 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Config.h"
 #include "SystemConfig.h"
 #include "Log.h"
@@ -48,7 +48,7 @@
 #include "VMapFactory.h"
 #include "GameEventMgr.h"
 #include "PoolMgr.h"
-#include "Database/DatabaseImpl.h"
+#include "DatabaseImpl.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "InstanceSaveMgr.h"
@@ -1147,10 +1147,10 @@ void World::SetInitialWorldSettings()
 
     // Clean up and pack instances
     sLog->outString("Cleaning up instances...");
-    sInstanceSaveManager.CleanupInstances();                // must be called before `creature_respawn`/`gameobject_respawn` tables
+    sInstanceSaveMgr.CleanupInstances();                // must be called before `creature_respawn`/`gameobject_respawn` tables
 
     sLog->outString("Packing instances...");
-    sInstanceSaveManager.PackInstances();
+    sInstanceSaveMgr.PackInstances();
 
     sLog->outString("Loading Localization strings...");
     sObjectMgr.LoadCreatureLocales();
@@ -1772,7 +1772,7 @@ void World::Update(time_t diff)
     }
 
     // update the instance reset times
-    sInstanceSaveManager.Update();
+    sInstanceSaveMgr.Update();
 
     // And last, but not least handle the issued cli commands
     ProcessCliCommands();
