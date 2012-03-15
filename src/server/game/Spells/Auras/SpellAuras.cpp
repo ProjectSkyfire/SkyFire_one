@@ -37,7 +37,6 @@
 #include "UpdateData.h"
 #include "MapManager.h"
 #include "ObjectAccessor.h"
-#include "Policies/SingletonImp.h"
 #include "Totem.h"
 #include "Creature.h"
 #include "Formulas.h"
