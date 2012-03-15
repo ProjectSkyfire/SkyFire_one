@@ -250,10 +250,10 @@ void Channel::Leave(uint64 p, bool send)
 
 void Channel::KickOrBan(uint64 good, const char *badname, bool ban)
 {
-    AccountTypes sec = SEC_PLAYER;
+    uint32 sec = 0;
     Player *gplr = sObjectMgr.GetPlayer(good);
     if (gplr)
-        uint32 sec = 0;
+        sec = gplr->GetSession()->GetSecurity();
 
     if (!IsOn(good))
     {
