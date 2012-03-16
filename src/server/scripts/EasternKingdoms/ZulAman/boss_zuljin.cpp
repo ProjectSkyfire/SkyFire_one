@@ -289,7 +289,7 @@ struct boss_zuljinAI : public ScriptedAI
 
     void SpawnAdds()
     {
-        Creature *creature = NULL;
+        Creature* creature = NULL;
         for (uint8 i = 0; i < 4; ++i)
         {
             creature = me->SummonCreature(SpiritInfo[i].entry, SpiritInfo[i].x, SpiritInfo[i].y, SpiritInfo[i].z, SpiritInfo[i].orient, TEMPSUMMON_DEAD_DESPAWN, 0);

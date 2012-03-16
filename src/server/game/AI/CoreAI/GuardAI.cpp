@@ -25,7 +25,7 @@
 #include "World.h"
 #include "CreatureAIImpl.h"
 
-int GuardAI::Permissible(const Creature *creature)
+int GuardAI::Permissible(const Creature* creature)
 {
     if (creature->isGuard())
         return PERMIT_BASE_SPECIAL;

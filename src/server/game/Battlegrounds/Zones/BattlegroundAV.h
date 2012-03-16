@@ -1473,9 +1473,9 @@ class BattleGroundAV : public BattleGround
 
         /*handle stuff*/ // these are functions which get called from extern scripts
         virtual void EventPlayerClickedOnFlag(Player *source, GameObject* target_obj);
-        void HandleKillPlayer(Player* player, Player *killer);
-        void HandleKillUnit(Creature *unit, Player *killer);
-        void HandleQuestComplete(uint32 questid, Player *player);
+        void HandleKillPlayer(Player* player, Player* killer);
+        void HandleKillUnit(Creature *unit, Player* killer);
+        void HandleQuestComplete(uint32 questid, Player* player);
         bool PlayerCanDoMineQuest(int32 GOId, uint32 team);
 
         void EndBattleGround(uint32 winner);

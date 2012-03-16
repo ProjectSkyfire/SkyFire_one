@@ -74,10 +74,10 @@ struct npc_mistAI : public FollowerAI
         {
             if (me->IsWithinDistInMap(pWho, INTERACTION_DISTANCE))
             {
-                if (Player* pPlayer = GetLeaderForFollower())
+                if (Player* player = GetLeaderForFollower())
                 {
-                    if (pPlayer->GetQuestStatus(QUEST_MIST) == QUEST_STATUS_INCOMPLETE)
-                        pPlayer->GroupEventHappens(QUEST_MIST, me);
+                    if (player->GetQuestStatus(QUEST_MIST) == QUEST_STATUS_INCOMPLETE)
+                        player->GroupEventHappens(QUEST_MIST, me);
                 }
 
                 AryniaGUID = pWho->GetGUID();
@@ -143,12 +143,12 @@ CreatureAI* GetAI_npc_mist(Creature* creature)
     return new npc_mistAI(creature);
 }
 
-bool QuestAccept_npc_mist(Player* pPlayer, Creature* creature, Quest const* pQuest)
+bool QuestAccept_npc_mist(Player* player, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MIST)
     {
         if (npc_mistAI* pMistAI = CAST_AI(npc_mistAI, creature->AI()))
-            pMistAI->StartFollow(pPlayer, FACTION_DARNASSUS, pQuest);
+            pMistAI->StartFollow(player, FACTION_DARNASSUS, pQuest);
     }
 
     return true;

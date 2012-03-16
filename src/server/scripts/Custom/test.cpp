@@ -168,41 +168,41 @@ CreatureAI* GetAI_test(Creature* creature)
     return (CreatureAI*)testAI;
 }
 
-bool GossipHello_npc_test(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_test(Player* player, Creature* creature)
 {
-    pPlayer->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
-    pPlayer->PrepareGossipMenu(creature, 0);
+    player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
+    player->PrepareGossipMenu(creature, 0);
 
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
 
-    pPlayer->SendPreparedGossip(creature);
+    player->SendPreparedGossip(creature);
     return true;
 }
 
-bool GossipSelect_npc_test(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_test(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        ((npc_escortAI*)(creature->AI()))->Start(true, true, pPlayer->GetGUID());
+        player->CLOSE_GOSSIP_MENU();
+        ((npc_escortAI*)(creature->AI()))->Start(true, true, player->GetGUID());
 
         return true;                                        // prevent TRINITY core handling
     }
 
     if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        ((npc_escortAI*)(creature->AI()))->Start(false, false, pPlayer->GetGUID());
+        player->CLOSE_GOSSIP_MENU();
+        ((npc_escortAI*)(creature->AI()))->Start(false, false, player->GetGUID());
 
         return true;                                        // prevent TRINITY core handling
     }
 
     if (uiAction == GOSSIP_ACTION_INFO_DEF+3)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        ((npc_escortAI*)(creature->AI()))->Start(false, false, pPlayer->GetGUID());
+        player->CLOSE_GOSSIP_MENU();
+        ((npc_escortAI*)(creature->AI()))->Start(false, false, player->GetGUID());
 
         return true;                                        // prevent TRINITY core handling
     }

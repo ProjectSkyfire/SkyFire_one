@@ -160,7 +160,7 @@ struct boss_moroesAI : public ScriptedAI
         DeSpawnAdds();
         if (isAddlistEmpty())
         {
-            Creature *creature = NULL;
+            Creature* creature = NULL;
             std::vector<uint32> AddList;
 
             for (uint8 i = 0; i < 6; ++i)
@@ -186,7 +186,7 @@ struct boss_moroesAI : public ScriptedAI
         {
             for (uint8 i = 0; i < 4; ++i)
             {
-                Creature *creature = me->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                Creature* creature = me->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
                 if (creature)
                 {
                     AddGUID[i] = creature->GetGUID();

@@ -68,8 +68,8 @@ struct npc_galen_goodwardAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        if (!pPlayer)
+        Player* player = GetPlayerForEscort();
+        if (!player)
             return;
 
         switch (uiPointId)
@@ -79,13 +79,13 @@ struct npc_galen_goodwardAI : public npc_escortAI
             break;
         case 16:
             m_uiPostEventTimer = 10000;
-            DoScriptText(GILAN_SAY_END, me, pPlayer);
+            DoScriptText(GILAN_SAY_END, me, player);
             SetRun(true);
-            if (Player* pPlayer = GetPlayerForEscort())
-                pPlayer->GroupEventHappens(QUEST_GALENS_ESCAPE, me);
+            if (Player* player = GetPlayerForEscort())
+                player->GroupEventHappens(QUEST_GALENS_ESCAPE, me);
             break;
         case 17:
-            DoScriptText(GILAN_EMOTE_END_2, me, pPlayer);
+            DoScriptText(GILAN_EMOTE_END_2, me, player);
             break;
         }
     }
@@ -98,9 +98,9 @@ struct npc_galen_goodwardAI : public npc_escortAI
             {
                 if (!me->getVictim() && me->isAlive())
                 {
-                    Player* pPlayer = GetPlayerForEscort();
+                    Player* player = GetPlayerForEscort();
 
-                    DoScriptText(GILAN_EMOTE_END_1, me, pPlayer);
+                    DoScriptText(GILAN_EMOTE_END_1, me, player);
                     Reset();
                     return;
                 }
@@ -113,7 +113,7 @@ struct npc_galen_goodwardAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_galen_goodward(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_galen_goodward(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_GALENS_ESCAPE)
     {
@@ -125,11 +125,11 @@ bool QuestAccept_npc_galen_goodward(Player* pPlayer, Creature* creature, const Q
             pGo->UseDoorOrButton();
 
         if (npc_galen_goodwardAI* pEscortAI = CAST_AI(npc_galen_goodwardAI, creature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
     }
     return true;
 }
-CreatureAI* GetAI_npc_galen_goodward(Creature *creature)
+CreatureAI* GetAI_npc_galen_goodward(Creature* creature)
 {
     return new npc_galen_goodwardAI(creature);
 }

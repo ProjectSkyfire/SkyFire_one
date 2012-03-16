@@ -1956,7 +1956,7 @@ bool ChatHandler::HandleLearnAllLangCommand(const char* /*args*/)
 bool ChatHandler::HandleLearnAllDefaultCommand(const char *args)
 {
     char* pName = strtok((char*)args, "");
-    Player *player = NULL;
+    Player* player = NULL;
     if (pName)
     {
         std::string name = pName;
@@ -3397,7 +3397,7 @@ bool ChatHandler::HandleAddWeaponCommand(const char* /*args*/)
         return true;
     }
 
-    Creature *creature = ObjectAccessor::GetCreature(*m_session->GetPlayer(), guid);
+    Creature* creature = ObjectAccessor::GetCreature(*m_session->GetPlayer(), guid);
 
     if (!creature)
     {
@@ -3928,7 +3928,7 @@ bool ChatHandler::HandleWaterwalkCommand(const char *args)
     if (!*args)
         return false;
 
-    Player *player = getSelectedPlayer();
+    Player* player = getSelectedPlayer();
     if (!player)
     {
         PSendSysMessage(LANG_NO_CHAR_SELECTED);
@@ -4199,7 +4199,7 @@ bool ChatHandler::HandleChangeWeather(const char *args)
     uint32 type = (uint32)atoi(px);                         //0 to 3, 0: fine, 1: rain, 2: snow, 3: sand
     float grade = (float)atof(py);                          //0 to 1, sending -1 is instand good weather
 
-    Player *player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     uint32 zoneid = player->GetZoneId();
 
     Weather* wth = sWorld.FindWeather(zoneid);
@@ -4379,7 +4379,7 @@ bool ChatHandler::HandleAddTeleCommand(const char * args)
     if (!*args)
         return false;
 
-    Player *player=m_session->GetPlayer();
+    Player* player=m_session->GetPlayer();
     if (!player)
         return false;
 
@@ -4475,7 +4475,7 @@ bool ChatHandler::HandleListAurasCommand (const char * /*args*/)
 bool ChatHandler::HandleResetHonorCommand (const char * args)
 {
     char* pName = strtok((char*)args, "");
-    Player *player = NULL;
+    Player* player = NULL;
     if (pName)
     {
         std::string name = pName;
@@ -4580,7 +4580,7 @@ static bool HandleResetStatsOrLevelHelper(Player* player)
 bool ChatHandler::HandleResetLevelCommand(const char * args)
 {
     char* pName = strtok((char*)args, "");
-    Player *player = NULL;
+    Player* player = NULL;
     if (pName)
     {
         std::string name = pName;
@@ -4624,7 +4624,7 @@ bool ChatHandler::HandleResetLevelCommand(const char * args)
 bool ChatHandler::HandleResetStatsCommand(const char * args)
 {
     char* pName = strtok((char*)args, "");
-    Player *player = NULL;
+    Player* player = NULL;
     if (pName)
     {
         std::string name = pName;
@@ -4661,7 +4661,7 @@ bool ChatHandler::HandleResetStatsCommand(const char * args)
 bool ChatHandler::HandleResetSpellsCommand(const char * args)
 {
     char* pName = strtok((char*)args, "");
-    Player *player = NULL;
+    Player* player = NULL;
     uint64 playerGUID = 0;
     if (pName)
     {
@@ -4709,7 +4709,7 @@ bool ChatHandler::HandleResetSpellsCommand(const char * args)
 bool ChatHandler::HandleResetTalentsCommand(const char * args)
 {
     char* pName = strtok((char*)args, "");
-    Player *player = NULL;
+    Player* player = NULL;
     uint64 playerGUID = 0;
     if (pName)
     {
@@ -6694,7 +6694,7 @@ bool ChatHandler::HandleModifyGenderCommand(const char *args)
     if (!*args)
         return false;
 
-    Player *player = getSelectedPlayer();
+    Player* player = getSelectedPlayer();
 
     if (!player)
     {
@@ -6780,7 +6780,7 @@ bool ChatHandler::HandlePlayAllCommand(const char *args)
 bool ChatHandler::HandleFreezeCommand(const char *args)
 {
     std::string name;
-    Player *player;
+    Player* player;
     char *TargetName = strtok((char*)args, " "); //get entered name
     if (!TargetName) //if no name entered use target
     {
@@ -6862,7 +6862,7 @@ bool ChatHandler::HandleFreezeCommand(const char *args)
 bool ChatHandler::HandleUnFreezeCommand(const char *args)
 {
     std::string name;
-    Player *player;
+    Player* player;
     char *TargetName = strtok((char*)args, " "); //get entered name
     if (!TargetName) //if no name entered use target
     {

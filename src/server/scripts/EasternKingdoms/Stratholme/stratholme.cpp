@@ -39,7 +39,7 @@ EndContentData */
 ## go_gauntlet_gate (this is the _first_ of the gauntlet gates, two exist)
 ######*/
 
-bool GOHello_go_gauntlet_gate(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_gauntlet_gate(Player* player, GameObject* pGo)
 {
     ScriptedInstance* pInstance = pGo->GetInstanceData();
 
@@ -49,7 +49,7 @@ bool GOHello_go_gauntlet_gate(Player* pPlayer, GameObject* pGo)
     if (pInstance->GetData(TYPE_BARON_RUN) != NOT_STARTED)
         return false;
 
-    if (Group *pGroup = pPlayer->GetGroup())
+    if (Group *pGroup = player->GetGroup())
     {
         for (GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
         {
@@ -62,10 +62,10 @@ bool GOHello_go_gauntlet_gate(Player* pPlayer, GameObject* pGo)
                 pGroupie->GetMap() == pGo->GetMap())
                 pGroupie->CastSpell(pGroupie, SPELL_BARON_ULTIMATUM, true);
         }
-    } else if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
-                !pPlayer->HasAura(SPELL_BARON_ULTIMATUM, 0) &&
-                pPlayer->GetMap() == pGo->GetMap())
-                pPlayer->CastSpell(pPlayer, SPELL_BARON_ULTIMATUM, true);
+    } else if (player->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
+                !player->HasAura(SPELL_BARON_ULTIMATUM, 0) &&
+                player->GetMap() == pGo->GetMap())
+                player->CastSpell(player, SPELL_BARON_ULTIMATUM, true);
 
     pInstance->SetData(TYPE_BARON_RUN, IN_PROGRESS);
     return false;
@@ -228,7 +228,7 @@ struct mobs_spectral_ghostly_citizenAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 
-    void ReceiveEmote(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* player, uint32 emote)
     {
         switch (emote)
         {
@@ -236,8 +236,8 @@ struct mobs_spectral_ghostly_citizenAI : public ScriptedAI
                 EnterEvadeMode();
                 break;
             case TEXTEMOTE_RUDE:
-                if (me->IsWithinDistInMap(pPlayer, 5))
-                    DoCast(pPlayer, SPELL_SLAP, false);
+                if (me->IsWithinDistInMap(player, 5))
+                    DoCast(player, SPELL_SLAP, false);
                 else
                     me->HandleEmoteCommand(EMOTE_ONESHOT_RUDE);
                 break;

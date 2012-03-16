@@ -575,9 +575,9 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     CheckTimer = 5000;
 }
 
-void hyjalAI::StartEvent(Player* pPlayer)
+void hyjalAI::StartEvent(Player* player)
 {
-    if (!pPlayer || IsDummy)
+    if (!player || IsDummy)
         return;
 
     Talk(BEGIN);
@@ -587,7 +587,7 @@ void hyjalAI::StartEvent(Player* pPlayer)
 
     NextWaveTimer = 15000;
     CheckTimer = 5000;
-    PlayerGUID = pPlayer->GetGUID();
+    PlayerGUID = player->GetGUID();
 
     me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 

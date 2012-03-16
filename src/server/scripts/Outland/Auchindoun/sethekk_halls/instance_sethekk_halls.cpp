@@ -77,11 +77,11 @@ struct instance_sethekk_halls : public ScriptedInstance
         return false;
     }
 
-    void OnPlayerEnter(Player* pPlayer)
+    void OnPlayerEnter(Player* player)
     {
-        if ((CAST_PLR(pPlayer)->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE) && !SummonLakka)
+        if ((CAST_PLR(player)->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE) && !SummonLakka)
         {
-            pPlayer->SummonCreature(NPC_LAKKA, SpawnLocation[0].fLocX, SpawnLocation[0].fLocY, SpawnLocation[0].fLocZ, SpawnLocation[0].fOrient, TEMPSUMMON_DEAD_DESPAWN, 0);
+            player->SummonCreature(NPC_LAKKA, SpawnLocation[0].fLocX, SpawnLocation[0].fLocY, SpawnLocation[0].fLocZ, SpawnLocation[0].fOrient, TEMPSUMMON_DEAD_DESPAWN, 0);
             SummonLakka = true;
         }
     }
@@ -202,7 +202,7 @@ InstanceData* GetInstanceData_instance_sethekk_halls(Map* map)
 // this is not escort quest !
 struct npc_lakkaAI : public npc_escortAI
 {
-    npc_lakkaAI(Creature *creature) : npc_escortAI(creature) {}
+    npc_lakkaAI(Creature* creature) : npc_escortAI(creature) {}
 
     void Reset() { }
 
@@ -229,13 +229,13 @@ CreatureAI* GetAI_npc_lakka(Creature* creature)
 ## go_lakka_cage
 #####*/
 
-bool GOHello_go_lakka_cage(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_lakka_cage(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE)
     {
         if (Creature* pLakka = pGo->FindNearestCreature( NPC_LAKKA, 5, true))
         {
-            ((npc_lakkaAI*)pLakka->AI())->Start(false, false, pPlayer->GetGUID());
+            ((npc_lakkaAI*)pLakka->AI())->Start(false, false, player->GetGUID());
         }
     }
 

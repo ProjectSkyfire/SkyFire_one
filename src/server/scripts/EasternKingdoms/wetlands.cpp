@@ -75,9 +75,9 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void EnterCombat(Unit* /*pWho*/)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_bFriendSummoned && pPlayer)
+        if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_bFriendSummoned && player)
         {
             for (uint8 i = 0; i < 3; ++i)
                 DoCast(me, SPELL_CALL_FRIENDS, true);
@@ -88,8 +88,8 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (Player* pPlayer = GetPlayerForEscort())
-            pSummoned->AI()->AttackStart(pPlayer);
+        if (Player* player = GetPlayerForEscort())
+            pSummoned->AI()->AttackStart(player);
     }
 
     void AttackedBy(Unit* pAttacker)
@@ -107,10 +107,10 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
     {
         if (me->GetHealth()*100 < me->GetMaxHealth()*20)
         {
-            if (Player* pPlayer = GetPlayerForEscort())
+            if (Player* player = GetPlayerForEscort())
             {
-                if (pPlayer->GetTypeId() == TYPEID_PLAYER)
-                    CAST_PLR(pPlayer)->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, me);
+                if (player->GetTypeId() == TYPEID_PLAYER)
+                    CAST_PLR(player)->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, me);
 
                 uiDamage = 0;
 
@@ -134,7 +134,7 @@ CreatureAI* GetAI_npc_tapoke_slim_jahn(Creature* creature)
 ## npc_mikhail
 ######*/
 
-bool QuestAccept_npc_mikhail(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_mikhail(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT11)
     {
@@ -147,7 +147,7 @@ bool QuestAccept_npc_mikhail(Player* pPlayer, Creature* creature, const Quest* p
             pSlim->CastSpell(pSlim, SPELL_STEALTH, true);
 
         if (npc_tapoke_slim_jahnAI* pEscortAI = CAST_AI(npc_tapoke_slim_jahnAI, pSlim->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
     }
     return false;
 }

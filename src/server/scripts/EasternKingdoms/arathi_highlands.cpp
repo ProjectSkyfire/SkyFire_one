@@ -59,15 +59,15 @@ struct npc_professor_phizzlethorpeAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (uiPointId)
         {
-        case 4:DoScriptText(SAY_PROGRESS_2, me, pPlayer);break;
-        case 5:DoScriptText(SAY_PROGRESS_3, me, pPlayer);break;
+        case 4:DoScriptText(SAY_PROGRESS_2, me, player);break;
+        case 5:DoScriptText(SAY_PROGRESS_3, me, player);break;
         case 8:DoScriptText(EMOTE_PROGRESS_4, me);break;
         case 9:
             {
@@ -75,17 +75,17 @@ struct npc_professor_phizzlethorpeAI : public npc_escortAI
             me->SummonCreature(MOB_VENGEFUL_SURGE, -2052.96f, -2142.49f, 20.15f, 1.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
             break;
             }
-        case 10:DoScriptText(SAY_PROGRESS_5, me, pPlayer);break;
+        case 10:DoScriptText(SAY_PROGRESS_5, me, player);break;
         case 11:
-            DoScriptText(SAY_PROGRESS_6, me, pPlayer);
+            DoScriptText(SAY_PROGRESS_6, me, player);
             SetRun();
             break;
-        case 19:DoScriptText(SAY_PROGRESS_7, me, pPlayer); break;
+        case 19:DoScriptText(SAY_PROGRESS_7, me, player); break;
         case 20:
             DoScriptText(EMOTE_PROGRESS_8, me);
-            DoScriptText(SAY_PROGRESS_9, me, pPlayer);
-            if (pPlayer)
-                CAST_PLR(pPlayer)->GroupEventHappens(QUEST_SUNKEN_TREASURE, me);
+            DoScriptText(SAY_PROGRESS_9, me, player);
+            if (player)
+                CAST_PLR(player)->GroupEventHappens(QUEST_SUNKEN_TREASURE, me);
             break;
         }
     }
@@ -106,13 +106,13 @@ struct npc_professor_phizzlethorpeAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* creature, Quest const* pQuest)
+bool QuestAccept_npc_professor_phizzlethorpe(Player* player, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_SUNKEN_TREASURE)
     {
-        DoScriptText(SAY_PROGRESS_1, creature, pPlayer);
+        DoScriptText(SAY_PROGRESS_1, creature, player);
         if (npc_escortAI* pEscortAI = CAST_AI(npc_professor_phizzlethorpeAI, (creature->AI())))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
 
         creature->setFaction(113);
     }

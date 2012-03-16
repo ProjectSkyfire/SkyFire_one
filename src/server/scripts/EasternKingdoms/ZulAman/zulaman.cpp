@@ -117,8 +117,8 @@ struct npc_zulaman_hostageAI : public ScriptedAI
     void EnterCombat(Unit * /*who*/) {}
     void JustDied(Unit* /*who*/)
     {
-        Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
-        if (pPlayer) pPlayer->SendLoot(me->GetGUID(), LOOT_CORPSE);
+        Player* player = Unit::GetPlayer(*me, PlayerGUID);
+        if (player) player->SendLoot(me->GetGUID(), LOOT_CORPSE);
     }
     void UpdateAI(const uint32 /*diff*/)
     {
@@ -127,17 +127,17 @@ struct npc_zulaman_hostageAI : public ScriptedAI
     }
 };
 
-bool GossipHello_npc_zulaman_hostage(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_zulaman_hostage(Player* player, Creature* creature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HOSTAGE1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HOSTAGE1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_zulaman_hostage(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_zulaman_hostage(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-        pPlayer->CLOSE_GOSSIP_MENU();
+        player->CLOSE_GOSSIP_MENU();
 
     if (!creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP))
         return true;
@@ -162,7 +162,7 @@ bool GossipSelect_npc_zulaman_hostage(Player* pPlayer, Creature* creature, uint3
         /*Creature* summon = creature->SummonCreature(HostageInfo[progress], x-2, y, z, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
         if (summon)
         {
-            CAST_AI(npc_zulaman_hostageAI, summon->AI())->PlayerGUID = pPlayer->GetGUID();
+            CAST_AI(npc_zulaman_hostageAI, summon->AI())->PlayerGUID = player->GetGUID();
             CAST_AI(npc_zulaman_hostageAI, summon->AI())->IsLoot = true;
             summon->SetDisplayId(10056);
             summon->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);

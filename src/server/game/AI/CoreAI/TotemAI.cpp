@@ -32,7 +32,7 @@
 #include "CellImpl.h"
 
 int
-TotemAI::Permissible(const Creature *creature)
+TotemAI::Permissible(const Creature* creature)
 {
     if (creature->isTotem())
         return PERMIT_BASE_PROACTIVE;

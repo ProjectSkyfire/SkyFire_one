@@ -287,7 +287,7 @@ void WorldSession::HandleArenaTeamRemoveFromTeamOpcode(WorldPacket & recv_data)
         return;
     }
 
-    Player *player = ObjectAccessor::FindPlayer(member->guid);
+    Player* player = ObjectAccessor::FindPlayer(member->guid);
     if (player && player->InArena())
         return;
 

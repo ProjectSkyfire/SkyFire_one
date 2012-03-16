@@ -319,7 +319,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
     {
         for (uint8 i = 0; i < 4; ++i)
         {
-            Creature *creature = (Unit::GetCreature((*me), AddGUID[i]));
+            Creature* creature = (Unit::GetCreature((*me), AddGUID[i]));
             if (!creature || !creature->isAlive())
             {
                 if (creature) creature->setDeathState(DEAD);

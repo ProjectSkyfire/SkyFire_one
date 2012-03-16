@@ -73,7 +73,7 @@ bool ChatHandler::HandleDebugSpellFailCommand(const char* args)
 
 bool ChatHandler::HandleSetPoiCommand(const char* args)
 {
-    Player *pPlayer = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     Unit* target = getSelectedUnit();
     if (!target)
     {
@@ -96,7 +96,7 @@ bool ChatHandler::HandleSetPoiCommand(const char* args)
     uint32 flags = atol(flags_text);
 
     sLog->outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon, flags);
-    pPlayer->PlayerTalkClass->SendPointOfInterest(target->GetPositionX(), target->GetPositionY(), Poi_Icon(icon), flags, 30, "Test POI");
+    player->PlayerTalkClass->SendPointOfInterest(target->GetPositionX(), target->GetPositionY(), Poi_Icon(icon), flags, 30, "Test POI");
     return true;
 }
 
@@ -133,7 +133,7 @@ bool ChatHandler::HandleBuyErrorCommand(const char* args)
 bool ChatHandler::HandleSendOpcodeCommand(const char* /*args*/)
 {
     Unit *unit = getSelectedUnit();
-    Player *player = NULL;
+    Player* player = NULL;
     if (!unit || (unit->GetTypeId() != TYPEID_PLAYER))
         player = m_session->GetPlayer();
     else

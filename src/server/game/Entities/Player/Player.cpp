@@ -7769,7 +7769,7 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
     }
     else
     {
-        Creature *creature = GetMap()->GetCreature(guid);
+        Creature* creature = GetMap()->GetCreature(guid);
 
         // must be in range and creature must be alive for pickpocket and must be dead for another loot
         if (!creature || creature->isAlive() != (loot_type == LOOT_PICKPOCKETING) || !creature->IsWithinDistInMap(this, INTERACTION_DISTANCE))
@@ -12431,7 +12431,7 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
 
         if (pSource->GetTypeId() == TYPEID_UNIT)
         {
-            Creature *creature = pSource->ToCreature();
+            Creature* creature = pSource->ToCreature();
             uint32 npcflags = creature->GetUInt32Value(UNIT_NPC_FLAGS);
 
             if (!(itr->second.npc_option_npcflag & npcflags))
@@ -12788,7 +12788,7 @@ void Player::PrepareQuestMenu(uint64 guid)
     QuestRelations* pObjectQR;
     QuestRelations* pObjectQIR;
 
-    if (Creature *creature = GetMap()->GetCreature(guid))
+    if (Creature* creature = GetMap()->GetCreature(guid))
     {
         pObject = (Object*)creature;
         pObjectQR  = &sObjectMgr.mCreatureQuestRelations;
@@ -12877,7 +12877,7 @@ void Player::SendPreparedQuest(uint64 guid)
         qe._Emote = 0;
         std::string title = "";
 
-        if (Creature *creature = GetMap()->GetCreature(guid))
+        if (Creature* creature = GetMap()->GetCreature(guid))
         {
             uint32 textid = GetGossipTextId(creature);
 
@@ -12941,7 +12941,7 @@ Quest const * Player::GetNextQuest(uint64 guid, Quest const *pQuest)
     QuestRelations* pObjectQR;
     QuestRelations* pObjectQIR;
 
-    if (Creature *creature = GetMap()->GetCreature(guid))
+    if (Creature* creature = GetMap()->GetCreature(guid))
     {
         pObject = (Object*)creature;
         pObjectQR  = &sObjectMgr.mCreatureQuestRelations;
@@ -14400,12 +14400,12 @@ void Player::SendQuestConfirmAccept(const Quest* pQuest, Player* pReceiver)
     }
 }
 
-void Player::SendPushToPartyResponse(Player *pPlayer, uint32 msg)
+void Player::SendPushToPartyResponse(Player* player, uint32 msg)
 {
-    if (pPlayer)
+    if (player)
     {
         WorldPacket data(MSG_QUEST_PUSH_RESULT, (8+1));
-        data << uint64(pPlayer->GetGUID());
+        data << uint64(player->GetGUID());
         data << uint8(msg);                                 // valid values: 0-8
         GetSession()->SendPacket(&data);
         sLog->outDebug("WORLD: Sent MSG_QUEST_PUSH_RESULT");
@@ -16094,7 +16094,7 @@ void Player::SendSavedInstances()
 }
 
 // convert the player's binds to the group
-void Player::ConvertInstancesToGroup(Player *player, Group *group, uint64 player_guid)
+void Player::ConvertInstancesToGroup(Player* player, Group *group, uint64 player_guid)
 {
     bool has_binds = false;
     bool has_solo = false;
@@ -18064,7 +18064,7 @@ bool Player::BuyItemFromVendor(uint64 vendorguid, uint32 item, uint8 count, uint
         return false;
     }
 
-    Creature *creature = GetNPCIfCanInteractWith(vendorguid, UNIT_NPC_FLAG_VENDOR);
+    Creature* creature = GetNPCIfCanInteractWith(vendorguid, UNIT_NPC_FLAG_VENDOR);
     if (!creature)
     {
         sLog->outDebug("WORLD: BuyItemFromVendor - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(vendorguid)));

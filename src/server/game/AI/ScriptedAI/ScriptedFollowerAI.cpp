@@ -137,9 +137,9 @@ void FollowerAI::JustDied(Unit* /*pKiller*/)
         return;
 
     //TODO: need a better check for quests with time limit.
-    if (Player* pPlayer = GetLeaderForFollower())
+    if (Player* player = GetLeaderForFollower())
     {
-        if (Group* pGroup = pPlayer->GetGroup())
+        if (Group* pGroup = player->GetGroup())
         {
             for (GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
             {
@@ -152,8 +152,8 @@ void FollowerAI::JustDied(Unit* /*pKiller*/)
         }
         else
         {
-            if (pPlayer->GetQuestStatus(m_pQuestForFollow->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
-                pPlayer->FailQuest(m_pQuestForFollow->GetQuestId());
+            if (player->GetQuestStatus(m_pQuestForFollow->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
+                player->FailQuest(m_pQuestForFollow->GetQuestId());
         }
     }
 }
@@ -213,18 +213,18 @@ void FollowerAI::UpdateAI(const uint32 uiDiff)
 
             bool bIsMaxRangeExceeded = true;
 
-            if (Player* pPlayer = GetLeaderForFollower())
+            if (Player* player = GetLeaderForFollower())
             {
                 if (HasFollowState(STATE_FOLLOW_RETURNING))
                 {
                     sLog->outDebug("TSCR: FollowerAI is returning to leader.");
 
                     RemoveFollowState(STATE_FOLLOW_RETURNING);
-                    me->GetMotionMaster()->MoveFollow(pPlayer, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+                    me->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
                     return;
                 }
 
-                if (Group* pGroup = pPlayer->GetGroup())
+                if (Group* pGroup = player->GetGroup())
                 {
                     for (GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
                     {
@@ -239,7 +239,7 @@ void FollowerAI::UpdateAI(const uint32 uiDiff)
                 }
                 else
                 {
-                    if (me->IsWithinDistInMap(pPlayer, MAX_PLAYER_DISTANCE))
+                    if (me->IsWithinDistInMap(player, MAX_PLAYER_DISTANCE))
                         bIsMaxRangeExceeded = false;
                 }
             }

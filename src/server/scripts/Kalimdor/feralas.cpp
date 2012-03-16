@@ -34,27 +34,27 @@ EndScriptData */
 
 #define GOSSIP_HELLO "Buy somethin', will ya?"
 
-bool GossipHello_npc_gregan_brewspewer(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_gregan_brewspewer(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(creature->GetGUID());
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (creature->isVendor() && pPlayer->GetQuestStatus(3909) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (creature->isVendor() && player->GetQuestStatus(3909) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(2433, creature->GetGUID());
+    player->SEND_GOSSIP_MENU(2433, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_gregan_brewspewer(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_gregan_brewspewer(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(2434, creature->GetGUID());
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->SEND_GOSSIP_MENU(2434, creature->GetGUID());
     }
     if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(creature->GetGUID());
+        player->SEND_VENDORLIST(creature->GetGUID());
     return true;
 }
 
@@ -112,8 +112,8 @@ struct npc_oox22feAI : public npc_escortAI
                 break;
             case 37:
                 DoScriptText(SAY_OOX_END, me);
-                if (Player* pPlayer = GetPlayerForEscort())
-                    pPlayer->GroupEventHappens(QUEST_RESCUE_OOX22FE, me);
+                if (Player* player = GetPlayerForEscort())
+                    player->GroupEventHappens(QUEST_RESCUE_OOX22FE, me);
                 break;
         }
     }
@@ -143,7 +143,7 @@ CreatureAI* GetAI_npc_oox22fe(Creature* creature)
     return new npc_oox22feAI(creature);
 }
 
-bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_oox22fe(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_RESCUE_OOX22FE)
     {
@@ -154,7 +154,7 @@ bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* creature, const Quest* p
         DoScriptText(SAY_OOX_START, creature);
 
         if (npc_escortAI* pEscortAI = CAST_AI(npc_oox22feAI, creature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID());
+            pEscortAI->Start(true, false, player->GetGUID());
     }
     return true;
 }
@@ -163,10 +163,10 @@ bool QuestAccept_npc_oox22fe(Player* pPlayer, Creature* creature, const Quest* p
 ## npc_screecher_spirit
 ######*/
 
-bool GossipHello_npc_screecher_spirit(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_screecher_spirit(Player* player, Creature* creature)
 {
-    pPlayer->SEND_GOSSIP_MENU(2039, creature->GetGUID());
-    pPlayer->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
+    player->SEND_GOSSIP_MENU(2039, creature->GetGUID());
+    player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
     creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
     return true;

@@ -49,7 +49,7 @@ EndScriptData */
 5 - Lady Vashj Event
 */
 
-bool GOHello_go_bridge_console(Player* /*pPlayer*/, GameObject* pGo)
+bool GOHello_go_bridge_console(Player* /*player*/, GameObject* pGo)
 {
     ScriptedInstance* pInstance = pGo->GetInstanceData();
 
@@ -155,32 +155,32 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
                 return;
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             {
-                if (Player* pPlayer = i->getSource())
+                if (Player* player = i->getSource())
                 {
-                    if (pPlayer->isAlive() && /*i->getSource()->GetPositionZ() <= -21.434931f*/pPlayer->IsInWater())
+                    if (player->isAlive() && /*i->getSource()->GetPositionZ() <= -21.434931f*/player->IsInWater())
                     {
                         if (Water == WATERSTATE_SCALDING)
                         {
-                            if (!pPlayer->HasAura(SPELL_SCALDINGWATER, 0))
+                            if (!player->HasAura(SPELL_SCALDINGWATER, 0))
                             {
-                                pPlayer->CastSpell(pPlayer, SPELL_SCALDINGWATER, true);
+                                player->CastSpell(player, SPELL_SCALDINGWATER, true);
                             }
                         } else if (Water == WATERSTATE_FRENZY)
                         {
                             //spawn frenzy
                             if (DoSpawnFrenzy)
                             {
-                                if (Creature* frenzy = pPlayer->SummonCreature(MOB_COILFANG_FRENZY, pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ(),pPlayer->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 2000))
+                                if (Creature* frenzy = player->SummonCreature(MOB_COILFANG_FRENZY, player->GetPositionX(),player->GetPositionY(),player->GetPositionZ(),player->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 2000))
                                 {
-                                    frenzy->Attack(pPlayer, false);
+                                    frenzy->Attack(player, false);
                                     frenzy->AddUnitMovementFlag(MOVEFLAG_SWIMMING | MOVEFLAG_LEVITATING);
                                 }
                                 DoSpawnFrenzy = false;
                             }
                         }
                     }
-                    if (!pPlayer->IsInWater())
-                        pPlayer->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
+                    if (!player->IsInWater())
+                        player->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
                 }
             }
             WaterCheckTimer = 500;//remove stress from core

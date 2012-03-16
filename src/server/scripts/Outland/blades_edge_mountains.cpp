@@ -281,7 +281,7 @@ CreatureAI* GetAI_npc_daranelle(Creature* creature)
 
 #define GOSSIP_HON "Overseer, I am here to negotiate on behalf of the Cenarion Expedition."
 
-bool GossipHello_npc_overseer_nuaar(Player *player, Creature* creature)
+bool GossipHello_npc_overseer_nuaar(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(10682) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -291,7 +291,7 @@ bool GossipHello_npc_overseer_nuaar(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_overseer_nuaar(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_overseer_nuaar(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -308,7 +308,7 @@ bool GossipSelect_npc_overseer_nuaar(Player *player, Creature* creature, uint32 
 #define GOSSIP_HSTE "Yes... yes, it's me."
 #define GOSSIP_SSTE "Yes elder. Tell me more of the book."
 
-bool GossipHello_npc_saikkal_the_elder(Player *player, Creature* creature)
+bool GossipHello_npc_saikkal_the_elder(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HSTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -318,7 +318,7 @@ bool GossipHello_npc_saikkal_the_elder(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_saikkal_the_elder(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_saikkal_the_elder(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
@@ -397,7 +397,7 @@ struct npc_ogre_bruteAI : public ScriptedAI
 
     void MovementInform(uint32 /*uiMotionType*/, uint32 uiPointId)
     {
-        if (Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID))
+        if (Player* player = Unit::GetPlayer(*me, PlayerGUID))
         {
             if (uiPointId == 1)
             {
@@ -407,7 +407,7 @@ struct npc_ogre_bruteAI : public ScriptedAI
                 me->SetReactState(REACT_AGGRESSIVE);
                 me->GetMotionMaster()->MoveTargetedHome();
                 if (Creature* pCredit = me->FindNearestCreature(NPC_QUEST_CREDIT, 50, true))
-                    pPlayer->KilledMonsterCredit(NPC_QUEST_CREDIT, pCredit->GetGUID());
+                    player->KilledMonsterCredit(NPC_QUEST_CREDIT, pCredit->GetGUID());
             }
         }
     }
@@ -433,7 +433,7 @@ CreatureAI* GetAI_npc_ogre_brute(Creature* creature)
 #define Q_THE_THUNDERSPIKE 10526
 #define GOR_GRIMGUT_ENTRY  21319
 
-bool GOUse_go_thunderspike(Player *player, GameObject* _GO)
+bool GOUse_go_thunderspike(Player* player, GameObject* _GO)
 {
     if (player->GetQuestStatus(Q_THE_THUNDERSPIKE) == QUEST_STATUS_INCOMPLETE)
     {

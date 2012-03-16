@@ -264,7 +264,7 @@ CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature* creature)
     return new npc_engineer_spark_overgrindAI (creature);
 }
 
-bool GossipHello_npc_engineer_spark_overgrind(Player *player, Creature* creature)
+bool GossipHello_npc_engineer_spark_overgrind(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(9537) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -273,7 +273,7 @@ bool GossipHello_npc_engineer_spark_overgrind(Player *player, Creature* creature
     return true;
 }
 
-bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_engineer_spark_overgrind(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
@@ -341,26 +341,26 @@ struct npc_magwinAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (i)
         {
         case 0:
-            DoScriptText(SAY_START, me, pPlayer);
+            DoScriptText(SAY_START, me, player);
             break;
         case 17:
-            DoScriptText(SAY_PROGRESS, me, pPlayer);
+            DoScriptText(SAY_PROGRESS, me, player);
             break;
         case 28:
-            DoScriptText(SAY_END1, me, pPlayer);
+            DoScriptText(SAY_END1, me, player);
             break;
         case 29:
-            DoScriptText(EMOTE_HUG, me, pPlayer);
-            DoScriptText(SAY_END2, me, pPlayer);
-            pPlayer->GroupEventHappens(QUEST_A_CRY_FOR_SAY_HELP, me);
+            DoScriptText(EMOTE_HUG, me, player);
+            DoScriptText(SAY_END2, me, player);
+            player->GroupEventHappens(QUEST_A_CRY_FOR_SAY_HELP, me);
             break;
         }
     }
@@ -373,13 +373,13 @@ struct npc_magwinAI : public npc_escortAI
     void Reset() { }
 };
 
-bool QuestAccept_npc_magwin(Player* pPlayer, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_magwin(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_A_CRY_FOR_SAY_HELP)
     {
         creature->setFaction(113);
         if (npc_escortAI* pEscortAI = CAST_AI(npc_escortAI, creature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID());
+            pEscortAI->Start(true, false, player->GetGUID());
     }
     return true;
 }
@@ -583,15 +583,15 @@ enum eRavegerCage
     QUEST_STRENGTH_ONE      = 9582
 };
 
-bool go_ravager_cage(Player* pPlayer, GameObject* pGo)
+bool go_ravager_cage(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_STRENGTH_ONE) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_STRENGTH_ONE) == QUEST_STATUS_INCOMPLETE)
     {
         if (Creature* ravager = pGo->FindNearestCreature(NPC_DEATH_RAVAGER, 5.0f, true))
         {
             ravager->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             ravager->SetReactState(REACT_AGGRESSIVE);
-            ravager->AI()->AttackStart(pPlayer);
+            ravager->AI()->AttackStart(player);
         }
     }
     return true ;
@@ -686,16 +686,16 @@ CreatureAI* GetAI_npc_stillpine_capitiveAI(Creature* creature)
     return new npc_stillpine_capitiveAI(creature);
 }
 
-bool go_bristlelimb_cage(Player* pPlayer, GameObject* pGo)
+bool go_bristlelimb_cage(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_THE_PROPHECY_OF_AKIDA) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_THE_PROPHECY_OF_AKIDA) == QUEST_STATUS_INCOMPLETE)
     {
         Creature* creature = pGo->FindNearestCreature(NPC_STILLPINE_CAPITIVE, 5.0f, true);
         if (creature)
         {
-            DoScriptText(RAND(CAPITIVE_SAY_1, CAPITIVE_SAY_2, CAPITIVE_SAY_3), creature, pPlayer);
-            creature->GetMotionMaster()->MoveFleeing(pPlayer, 3500);
-            pPlayer->KilledMonsterCredit(creature->GetEntry(), creature->GetGUID());
+            DoScriptText(RAND(CAPITIVE_SAY_1, CAPITIVE_SAY_2, CAPITIVE_SAY_3), creature, player);
+            creature->GetMotionMaster()->MoveFleeing(player, 3500);
+            player->KilledMonsterCredit(creature->GetEntry(), creature->GetGUID());
             CAST_AI(npc_stillpine_capitiveAI, creature->AI())->FleeTimer = 3500;
             return false;
         }

@@ -155,13 +155,13 @@ Quest::Quest(Field * questRecord)
     }
 }
 
-uint32 Quest::XPValue (Player *pPlayer) const
+uint32 Quest::XPValue (Player* player) const
 {
-    if (pPlayer)
+    if (player)
     {
         if (RewMoneyMaxLevel > 0)
         {
-            uint32 pLevel = pPlayer->getLevel();
+            uint32 pLevel = player->getLevel();
             uint32 qLevel = (QuestLevel > 0) ? QuestLevel : pLevel;
             float fullxp = 0;
             if (qLevel >= 65)

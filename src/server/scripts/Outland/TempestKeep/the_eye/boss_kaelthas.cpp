@@ -369,7 +369,7 @@ struct boss_kaelthasAI : public ScriptedAI
 
     void PrepareAdvisors()
     {
-        Creature *creature;
+        Creature* creature;
         for (uint8 i = 0; i < 4; ++i)
         {
             creature = (Creature*)(Unit::GetUnit((*me), AdvisorGuid[i]));
@@ -460,7 +460,7 @@ struct boss_kaelthasAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, DONE);
 
-        Creature *creature;
+        Creature* creature;
         for (uint8 i = 0; i < 4; ++i)
         {
             creature = (Unit::GetCreature((*me), AdvisorGuid[i]));

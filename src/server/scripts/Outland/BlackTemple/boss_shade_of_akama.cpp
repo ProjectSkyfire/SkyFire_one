@@ -849,18 +849,18 @@ CreatureAI* GetAI_npc_akama_shade(Creature* creature)
     return new npc_akamaAI (creature);
 }
 
-bool GossipSelect_npc_akama(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_akama(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        CAST_AI(npc_akamaAI, creature->AI())->BeginEvent(pPlayer);
+        player->CLOSE_GOSSIP_MENU();
+        CAST_AI(npc_akamaAI, creature->AI())->BeginEvent(player);
     }
 
     return true;
 }
 
-bool GossipHello_npc_akama(Player *player, Creature* creature)
+bool GossipHello_npc_akama(Player* player, Creature* creature)
 {
     ScriptedInstance* pInstance = (creature->GetInstanceData());
 

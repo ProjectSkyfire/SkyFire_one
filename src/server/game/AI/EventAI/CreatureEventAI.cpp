@@ -49,7 +49,7 @@ bool CreatureEventAIHolder::UpdateRepeatTimer(Creature* creature, uint32 repeatM
     return true;
 }
 
-int CreatureEventAI::Permissible(const Creature *creature)
+int CreatureEventAI::Permissible(const Creature* creature)
 {
     if (creature->GetAIName() == "EventAI")
         return PERMIT_BASE_SPECIAL;
@@ -707,8 +707,8 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
         }
         case ACTION_T_KILLED_MONSTER:
             //first attempt player who tapped creature
-            if (Player* pPlayer = me->GetLootRecipient())
-                pPlayer->RewardPlayerAndGroupAtEvent(action.killed_monster.creatureId, me);
+            if (Player* player = me->GetLootRecipient())
+                player->RewardPlayerAndGroupAtEvent(action.killed_monster.creatureId, me);
             else
             {
                 //if not available, use pActionInvoker
@@ -1299,7 +1299,7 @@ bool CreatureEventAI::CanCast(Unit* Target, SpellEntry const *Spell, bool Trigge
     return true;
 }
 
-void CreatureEventAI::ReceiveEmote(Player* pPlayer, uint32 text_emote)
+void CreatureEventAI::ReceiveEmote(Player* player, uint32 text_emote)
 {
     if (bEmptyList)
         return;
@@ -1312,10 +1312,10 @@ void CreatureEventAI::ReceiveEmote(Player* pPlayer, uint32 text_emote)
                 return;
 
             PlayerCondition pcon((*itr).Event.receive_emote.condition, (*itr).Event.receive_emote.conditionValue1, (*itr).Event.receive_emote.conditionValue2);
-            if (pcon.Meets(pPlayer))
+            if (pcon.Meets(player))
             {
                 sLog->outDebug("CreatureEventAI: ReceiveEmote CreatureEventAI: Condition ok, processing");
-                ProcessEvent(*itr, pPlayer);
+                ProcessEvent(*itr, player);
             }
         }
     }

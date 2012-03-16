@@ -503,7 +503,7 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float fRange, uint32 
 
 Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
 {
-    Player* pPlayer = NULL;
+    Player* player = NULL;
 
     CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(pair);
@@ -511,12 +511,12 @@ Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
     cell.SetNoCreate();
 
     Trinity::PlayerAtMinimumRangeAway check(me, fMinimumRange);
-    Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway> searcher(pPlayer, check);
+    Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway> searcher(player, check);
     TypeContainerVisitor<Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(me->GetMap()));
 
-    return pPlayer;
+    return player;
 }
 
 void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 uiOffHand, int32 uiRanged)

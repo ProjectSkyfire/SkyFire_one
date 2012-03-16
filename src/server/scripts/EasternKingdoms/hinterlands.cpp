@@ -59,8 +59,8 @@ struct npc_00x09hlAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        if (!pPlayer)
+        Player* player = GetPlayerForEscort();
+        if (!player)
             return;
 
         switch (uiPointId)
@@ -77,8 +77,8 @@ struct npc_00x09hlAI : public npc_escortAI
                 break;
             case 64:
                 DoScriptText(SAY_OOX_END, me);
-                if (Player* pPlayer = GetPlayerForEscort())
-                    pPlayer->GroupEventHappens(QUEST_RESQUE_OOX_09, me);
+                if (Player* player = GetPlayerForEscort())
+                    player->GroupEventHappens(QUEST_RESQUE_OOX_09, me);
                 break;
         }
     }
@@ -97,7 +97,7 @@ struct npc_00x09hlAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_00x09hl(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_RESQUE_OOX_09)
     {
@@ -109,7 +109,7 @@ bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* creature, const Quest* p
         DoScriptText(SAY_OOX_START, creature);
 
         if (npc_00x09hlAI* pEscortAI = CAST_AI(npc_00x09hlAI, creature->AI()))
-            pEscortAI->Start(false, true, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, true, player->GetGUID(), pQuest);
     }
     return true;
 }
@@ -226,15 +226,15 @@ struct npc_rinjiAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (uiPointId)
         {
             case 1:
-                DoScriptText(SAY_RIN_FREE, me, pPlayer);
+                DoScriptText(SAY_RIN_FREE, me, player);
                 break;
             case 7:
                 DoSpawnAmbush(true);
@@ -243,8 +243,8 @@ struct npc_rinjiAI : public npc_escortAI
                 DoSpawnAmbush(false);
                 break;
             case 17:
-                DoScriptText(SAY_RIN_COMPLETE, me, pPlayer);
-                pPlayer->GroupEventHappens(QUEST_RINJI_TRAPPED, me);
+                DoScriptText(SAY_RIN_COMPLETE, me, player);
+                player->GroupEventHappens(QUEST_RINJI_TRAPPED, me);
                 SetRun();
                 m_uiPostEventCount = 1;
                 break;
@@ -262,16 +262,16 @@ struct npc_rinjiAI : public npc_escortAI
                 {
                     m_uiPostEventTimer = 3000;
 
-                    if (Unit* pPlayer = GetPlayerForEscort())
+                    if (Unit* player = GetPlayerForEscort())
                     {
                         switch (m_uiPostEventCount)
                         {
                             case 1:
-                                DoScriptText(SAY_RIN_PROGRESS_1, me, pPlayer);
+                                DoScriptText(SAY_RIN_PROGRESS_1, me, player);
                                 ++m_uiPostEventCount;
                                 break;
                             case 2:
-                                DoScriptText(SAY_RIN_PROGRESS_2, me, pPlayer);
+                                DoScriptText(SAY_RIN_PROGRESS_2, me, player);
                                 m_uiPostEventCount = 0;
                                 break;
                         }
@@ -293,7 +293,7 @@ struct npc_rinjiAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_rinji(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_rinji(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_RINJI_TRAPPED)
     {
@@ -301,7 +301,7 @@ bool QuestAccept_npc_rinji(Player* pPlayer, Creature* creature, const Quest* pQu
             pGo->UseDoorOrButton();
 
         if (npc_rinjiAI* pEscortAI = CAST_AI(npc_rinjiAI, creature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
     }
     return true;
 }

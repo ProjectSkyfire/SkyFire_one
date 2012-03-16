@@ -360,7 +360,7 @@ struct boss_akilzonAI : public ScriptedAI
                         if (z > 95)
                             z = 95 - urand(0, 5);
                     }
-                    Creature *creature = me->SummonCreature(MOB_SOARING_EAGLE, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    Creature* creature = me->SummonCreature(MOB_SOARING_EAGLE, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
                     if (creature)
                     {
                         creature->AddThreat(me->getVictim(), 1.0f);

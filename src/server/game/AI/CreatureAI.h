@@ -133,7 +133,7 @@ class CreatureAI : public UnitAI
 
         void OnCharmed(bool apply);
 
-        //virtual void SpellClick(Player *player) {}
+        //virtual void SpellClick(Player* player) {}
 
         // Called at reaching home after evade
         virtual void JustReachedHome() {}
@@ -141,7 +141,7 @@ class CreatureAI : public UnitAI
         void DoZoneInCombat(Creature* pUnit = NULL);
 
         // Called at text emote receive from player
-        virtual void ReceiveEmote(Player* /*pPlayer*/, uint32 /*text_emote*/) {}
+        virtual void ReceiveEmote(Player* /*player*/, uint32 /*text_emote*/) {}
 
         // == Triggered Actions Requested ==================
 

@@ -132,17 +132,17 @@ bool EffectDummyCreature_npc_aged_dying_ancient_kodo(Unit *pCaster, uint32 spell
     return false;
 }
 
-bool GossipHello_npc_aged_dying_ancient_kodo(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_aged_dying_ancient_kodo(Player* player, Creature* creature)
 {
-    if (pPlayer->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) && creature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
+    if (player->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) && creature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
     {
-        pPlayer->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_PLAYER_BUFF);
-        pPlayer->CastSpell(creature, SPELL_KODO_KOMBO_GOSSIP, true);
+        player->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_PLAYER_BUFF);
+        player->CastSpell(creature, SPELL_KODO_KOMBO_GOSSIP, true);
 
         creature->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_DESPAWN_BUFF);
         creature->GetMotionMaster()->MoveIdle();
 
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_KODO_HOME, creature->GetGUID());
+        player->SEND_GOSSIP_MENU(GOSSIP_MENU_KODO_HOME, creature->GetGUID());
 
         return true;
     }
@@ -167,15 +167,15 @@ struct npc_dalindaAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
         switch (i)
         {
             case 1:
                 me->IsStandState();
                 break;
             case 15:
-                if (pPlayer)
-                pPlayer->GroupEventHappens(QUEST_RETURN_TO_VAHLARRIEL, me);
+                if (player)
+                player->GroupEventHappens(QUEST_RETURN_TO_VAHLARRIEL, me);
                 break;
         }
     }
@@ -186,9 +186,9 @@ struct npc_dalindaAI : public npc_escortAI
 
     void JustDied(Unit* /*pKiller*/)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        if (pPlayer)
-            pPlayer->FailQuest(QUEST_RETURN_TO_VAHLARRIEL);
+        Player* player = GetPlayerForEscort();
+        if (player)
+            player->FailQuest(QUEST_RETURN_TO_VAHLARRIEL);
         return;
     }
 
@@ -206,13 +206,13 @@ CreatureAI* GetAI_npc_dalinda(Creature* creature)
     return new npc_dalindaAI(creature);
 }
 
-bool QuestAccept_npc_dalinda(Player* pPlayer, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_dalinda(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_RETURN_TO_VAHLARRIEL)
    {
         if (npc_escortAI* pEscortAI = CAST_AI(npc_dalindaAI, creature->AI()))
         {
-            pEscortAI->Start(true, false, pPlayer->GetGUID());
+            pEscortAI->Start(true, false, player->GetGUID());
             creature->setFaction(113);
         }
     }
@@ -261,13 +261,13 @@ struct npc_melizza_brimbuzzleAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        if (Player* pPlayer = GetPlayerForEscort())
+        if (Player* player = GetPlayerForEscort())
         {
             switch (uiPointId)
             {
             case 1:
                 me->setFaction(113);
-                DoScriptText(SAY_START, me, pPlayer);
+                DoScriptText(SAY_START, me, player);
                 break;
             case 7:
                  me->SummonCreature(NPC_MARAUDINE_SCOUT, m_afAmbushSpawn[0][0], m_afAmbushSpawn[0][1], m_afAmbushSpawn[0][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
@@ -279,7 +279,7 @@ struct npc_melizza_brimbuzzleAI : public npc_escortAI
                 DoScriptText(SAY_COMPLETE, me);
                 me->RestoreFaction();
                 SetRun();
-                pPlayer->GroupEventHappens(QUEST_GET_ME_OUT_OF_HERE, me);
+                player->GroupEventHappens(QUEST_GET_ME_OUT_OF_HERE, me);
                 break;
             case 15:
                 m_uiPostEventCount = 1;
@@ -300,7 +300,7 @@ struct npc_melizza_brimbuzzleAI : public npc_escortAI
                 {
                     m_uiPostEventTimer = 3000;
 
-                    if (Unit* pPlayer = GetPlayerForEscort())
+                    if (Unit* player = GetPlayerForEscort())
                     {
                         switch (m_uiPostEventCount)
                         {
@@ -341,7 +341,7 @@ CreatureAI* GetAI_npc_melizza_brimbuzzle(Creature* creature)
     return new npc_melizza_brimbuzzleAI(creature);
 }
 
-bool QuestAccept_npc_melizza_brimbuzzle(Player* pPlayer, Creature* creature, Quest const* pQuest)
+bool QuestAccept_npc_melizza_brimbuzzle(Player* player, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_GET_ME_OUT_OF_HERE)
     {
@@ -349,7 +349,7 @@ bool QuestAccept_npc_melizza_brimbuzzle(Player* pPlayer, Creature* creature, Que
             pGo->UseDoorOrButton();
 
         if (npc_melizza_brimbuzzleAI* pEscortAI = CAST_AI(npc_melizza_brimbuzzleAI, creature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
     }
     return true;
 }

@@ -595,7 +595,7 @@ bool ChatHandler::HandleGMTicketUnAssignCommand(const char* args)
     SendGlobalGMSysMessage(ss.str().c_str());
 
     ticket->escalated = false;
-    Player *player = sObjectMgr.GetPlayer(ticket->playerGuid);
+    Player* player = sObjectMgr.GetPlayer(ticket->playerGuid);
     if (player && player->IsInWorld())
     {
         // tell client to update display of ticket status
@@ -2450,7 +2450,7 @@ bool ChatHandler::HandleGroupTeleCommand(const char * args)
     if (!*args)
         return false;
 
-    Player *player = getSelectedPlayer();
+    Player* player = getSelectedPlayer();
     if (!player)
     {
         SendSysMessage(LANG_NO_CHAR_SELECTED);
@@ -2530,7 +2530,7 @@ bool ChatHandler::HandleGroupgoCommand(const char* args)
         return false;
     }
 
-    Player *player = sObjectMgr.GetPlayer(name.c_str());
+    Player* player = sObjectMgr.GetPlayer(name.c_str());
     if (!player)
     {
         PSendSysMessage(LANG_NO_PLAYER, args);

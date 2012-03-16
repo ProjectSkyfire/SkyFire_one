@@ -35,14 +35,14 @@ enum eSpells
 
 const Position HomePosition = {-815.817,-145.299,-25.870, 0};
 
-bool GoHello_blackfathom_altar(Player *pPlayer, GameObject* /*pGo*/)
+bool GoHello_blackfathom_altar(Player* player, GameObject* /*pGo*/)
 {
-    if (!pPlayer->HasAura(SPELL_BLESSING_OF_BLACKFATHOM, 0))
-        pPlayer->AddAura(SPELL_BLESSING_OF_BLACKFATHOM, pPlayer);
+    if (!player->HasAura(SPELL_BLESSING_OF_BLACKFATHOM, 0))
+        player->AddAura(SPELL_BLESSING_OF_BLACKFATHOM, player);
     return true;
 }
 
-bool GoHello_blackfathom_fire(Player * /*pPlayer*/, GameObject* pGo)
+bool GoHello_blackfathom_fire(Player * /*player*/, GameObject* pGo)
 {
     ScriptedInstance *pInstance = pGo->GetInstanceData();
 
@@ -96,16 +96,16 @@ struct npc_blackfathom_deeps_eventAI : public ScriptedAI
 
         for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
         {
-            if (Player* pPlayer = i->getSource())
+            if (Player* player = i->getSource())
             {
-                if (pPlayer->isGameMaster())
+                if (player->isGameMaster())
                     continue;
 
-                if (pPlayer->isAlive())
+                if (player->isAlive())
                 {
-                    me->SetInCombatWith(pPlayer);
-                    pPlayer->SetInCombatWith(me);
-                    me->AddThreat(pPlayer, 0.0f);
+                    me->SetInCombatWith(player);
+                    player->SetInCombatWith(me);
+                    me->AddThreat(player, 0.0f);
                 }
             }
         }
@@ -209,21 +209,21 @@ CreatureAI* GetAI_npc_morridune(Creature* creature)
     return new npc_morriduneAI (creature);
 }
 
-bool GossipHello_npc_morridune(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_morridune(Player* player, Creature* creature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MORRIDUNE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MORRIDUNE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_morridune(Player* pPlayer, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_morridune(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->TeleportTo(1, 9952.239, 2284.277, 1341.394, 1.595);
-            pPlayer->CLOSE_GOSSIP_MENU();
+            player->TeleportTo(1, 9952.239, 2284.277, 1341.394, 1.595);
+            player->CLOSE_GOSSIP_MENU();
             break;
     }
     return true;

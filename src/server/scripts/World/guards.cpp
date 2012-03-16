@@ -87,7 +87,7 @@ EndContentData */
  * guard_azuremyst start
  *******************************************************/
 
-bool GossipHello_guard_azuremyst(Player *player, Creature* creature)
+bool GossipHello_guard_azuremyst(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -100,7 +100,7 @@ bool GossipHello_guard_azuremyst(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_azuremyst(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_azuremyst(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -153,7 +153,7 @@ void SendDefaultMenu_guard_azuremyst(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendClassTrainerMenu_guard_azuremyst(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_azuremyst(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -188,7 +188,7 @@ void SendClassTrainerMenu_guard_azuremyst(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_azuremyst(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_azuremyst(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -246,7 +246,7 @@ void SendProfTrainerMenu_guard_azuremyst(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_azuremyst(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_azuremyst(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -270,7 +270,7 @@ CreatureAI* GetAI_guard_azuremyst(Creature* creature)
  * guard_bluffwatcher start
  *******************************************************/
 
-bool GossipHello_guard_bluffwatcher(Player *player, Creature* creature)
+bool GossipHello_guard_bluffwatcher(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -287,7 +287,7 @@ bool GossipHello_guard_bluffwatcher(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_bluffwatcher(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_bluffwatcher(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -355,7 +355,7 @@ void SendDefaultMenu_guard_bluffwatcher(Player *player, Creature* creature, uint
     }
 }
 
-void SendBattleMasterMenu_guard_bluffwatcher(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_bluffwatcher(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -374,7 +374,7 @@ void SendBattleMasterMenu_guard_bluffwatcher(Player *player, Creature* creature,
     }
 }
 
-void SendClassTrainerMenu_guard_bluffwatcher(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_bluffwatcher(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -405,7 +405,7 @@ void SendClassTrainerMenu_guard_bluffwatcher(Player *player, Creature* creature,
     }
 }
 
-void SendProfTrainerMenu_guard_bluffwatcher(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_bluffwatcher(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -456,7 +456,7 @@ void SendProfTrainerMenu_guard_bluffwatcher(Player *player, Creature* creature, 
     }
 }
 
-bool GossipSelect_guard_bluffwatcher(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_bluffwatcher(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -493,7 +493,7 @@ CreatureAI* GetAI_guard_contested(Creature* creature)
  * guard_darnassus start
  *******************************************************/
 
-bool GossipHello_guard_darnassus(Player *player, Creature* creature)
+bool GossipHello_guard_darnassus(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -510,7 +510,7 @@ bool GossipHello_guard_darnassus(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_darnassus(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_darnassus(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -575,7 +575,7 @@ void SendDefaultMenu_guard_darnassus(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendBattleMasterMenu_guard_darnassus(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_darnassus(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -594,7 +594,7 @@ void SendBattleMasterMenu_guard_darnassus(Player *player, Creature* creature, ui
     }
 }
 
-void SendClassTrainerMenu_guard_darnassus(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_darnassus(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -621,7 +621,7 @@ void SendClassTrainerMenu_guard_darnassus(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_darnassus(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_darnassus(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -664,7 +664,7 @@ void SendProfTrainerMenu_guard_darnassus(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_darnassus(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_darnassus(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -689,7 +689,7 @@ CreatureAI* GetAI_guard_darnassus(Creature* creature)
  * guard_dunmorogh start
  *******************************************************/
 
-bool GossipHello_guard_dunmorogh(Player *player, Creature* creature)
+bool GossipHello_guard_dunmorogh(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK             , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -703,7 +703,7 @@ bool GossipHello_guard_dunmorogh(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_dunmorogh(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_dunmorogh(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -752,7 +752,7 @@ void SendDefaultMenu_guard_dunmorogh(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendClassTrainerMenu_guard_dunmorogh(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_dunmorogh(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -787,7 +787,7 @@ void SendClassTrainerMenu_guard_dunmorogh(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_dunmorogh(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_dunmorogh(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -836,7 +836,7 @@ void SendProfTrainerMenu_guard_dunmorogh(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_dunmorogh(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_dunmorogh(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -860,7 +860,7 @@ CreatureAI* GetAI_guard_dunmorogh(Creature* creature)
  * guard_durotar start
  *******************************************************/
 
-bool GossipHello_guard_durotar(Player *player, Creature* creature)
+bool GossipHello_guard_durotar(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -872,7 +872,7 @@ bool GossipHello_guard_durotar(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_durotar(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_durotar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -918,7 +918,7 @@ void SendDefaultMenu_guard_durotar(Player *player, Creature* creature, uint32 ac
     }
 }
 
-void SendClassTrainerMenu_guard_durotar(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_durotar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -953,7 +953,7 @@ void SendClassTrainerMenu_guard_durotar(Player *player, Creature* creature, uint
     }
 }
 
-void SendProfTrainerMenu_guard_durotar(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_durotar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1003,7 +1003,7 @@ void SendProfTrainerMenu_guard_durotar(Player *player, Creature* creature, uint3
     }
 }
 
-bool GossipSelect_guard_durotar(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_durotar(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -1027,7 +1027,7 @@ CreatureAI* GetAI_guard_durotar(Creature* creature)
  * guard_elwynnforest start
  *******************************************************/
 
-bool GossipHello_guard_elwynnforest(Player *player, Creature* creature)
+bool GossipHello_guard_elwynnforest(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GRYPHON       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -1040,7 +1040,7 @@ bool GossipHello_guard_elwynnforest(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_elwynnforest(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_elwynnforest(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1090,7 +1090,7 @@ void SendDefaultMenu_guard_elwynnforest(Player *player, Creature* creature, uint
     }
 }
 
-void SendClassTrainerMenu_guard_elwynnforest(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_elwynnforest(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1127,7 +1127,7 @@ void SendClassTrainerMenu_guard_elwynnforest(Player *player, Creature* creature,
     }
 }
 
-void SendProfTrainerMenu_guard_elwynnforest(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_elwynnforest(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1179,7 +1179,7 @@ void SendProfTrainerMenu_guard_elwynnforest(Player *player, Creature* creature, 
     }
 }
 
-bool GossipSelect_guard_elwynnforest(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_elwynnforest(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -1203,7 +1203,7 @@ CreatureAI* GetAI_guard_elwynnforest(Creature* creature)
  * guard_eversong start
  *******************************************************/
 
-bool GossipHello_guard_eversong(Player *player, Creature* creature)
+bool GossipHello_guard_eversong(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -1215,7 +1215,7 @@ bool GossipHello_guard_eversong(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_eversong(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_eversong(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1262,7 +1262,7 @@ void SendDefaultMenu_guard_eversong(Player *player, Creature* creature, uint32 a
     }
 }
 
-void SendClassTrainerMenu_guard_eversong(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_eversong(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1296,7 +1296,7 @@ void SendClassTrainerMenu_guard_eversong(Player *player, Creature* creature, uin
     }
 }
 
-void SendProfTrainerMenu_guard_eversong(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_eversong(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1348,7 +1348,7 @@ void SendProfTrainerMenu_guard_eversong(Player *player, Creature* creature, uint
     }
 }
 
-bool GossipSelect_guard_eversong(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_eversong(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -1372,7 +1372,7 @@ CreatureAI* GetAI_guard_eversong(Creature* creature)
  * guard_exodar start
  *******************************************************/
 
-bool GossipHello_guard_exodar(Player *player, Creature* creature)
+bool GossipHello_guard_exodar(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -1389,7 +1389,7 @@ bool GossipHello_guard_exodar(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_exodar(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_exodar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1462,7 +1462,7 @@ void SendDefaultMenu_guard_exodar(Player *player, Creature* creature, uint32 act
     }
 }
 
-void SendBattleMasterMenu_guard_exodar(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_exodar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1489,7 +1489,7 @@ void SendBattleMasterMenu_guard_exodar(Player *player, Creature* creature, uint3
     }
 }
 
-void SendClassTrainerMenu_guard_exodar(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_exodar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1524,7 +1524,7 @@ void SendClassTrainerMenu_guard_exodar(Player *player, Creature* creature, uint3
     }
 }
 
-void SendProfTrainerMenu_guard_exodar(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_exodar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1583,7 +1583,7 @@ void SendProfTrainerMenu_guard_exodar(Player *player, Creature* creature, uint32
     }
 }
 
-bool GossipSelect_guard_exodar(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_exodar(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -1608,7 +1608,7 @@ CreatureAI* GetAI_guard_exodar(Creature* creature)
  * guard_ironforge start
  *******************************************************/
 
-bool GossipHello_guard_ironforge(Player *player, Creature* creature)
+bool GossipHello_guard_ironforge(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_IRONFORGE_BANK    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -1626,7 +1626,7 @@ bool GossipHello_guard_ironforge(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_ironforge(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_ironforge(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1701,7 +1701,7 @@ void SendDefaultMenu_guard_ironforge(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendBattleMasterMenu_guard_ironforge(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_ironforge(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1720,7 +1720,7 @@ void SendBattleMasterMenu_guard_ironforge(Player *player, Creature* creature, ui
     }
 }
 
-void SendClassTrainerMenu_guard_ironforge(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_ironforge(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1760,7 +1760,7 @@ void SendClassTrainerMenu_guard_ironforge(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_ironforge(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_ironforge(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1815,7 +1815,7 @@ void SendProfTrainerMenu_guard_ironforge(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_ironforge(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_ironforge(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -1840,7 +1840,7 @@ CreatureAI* GetAI_guard_ironforge(Creature* creature)
  * guard_mulgore start
  *******************************************************/
 
-bool GossipHello_guard_mulgore(Player *player, Creature* creature)
+bool GossipHello_guard_mulgore(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -1852,7 +1852,7 @@ bool GossipHello_guard_mulgore(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_mulgore(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_mulgore(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1894,7 +1894,7 @@ void SendDefaultMenu_guard_mulgore(Player *player, Creature* creature, uint32 ac
     }
 }
 
-void SendClassTrainerMenu_guard_mulgore(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_mulgore(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1917,7 +1917,7 @@ void SendClassTrainerMenu_guard_mulgore(Player *player, Creature* creature, uint
     }
 }
 
-void SendProfTrainerMenu_guard_mulgore(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_mulgore(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -1962,7 +1962,7 @@ void SendProfTrainerMenu_guard_mulgore(Player *player, Creature* creature, uint3
     }
 }
 
-bool GossipSelect_guard_mulgore(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_mulgore(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -1986,7 +1986,7 @@ CreatureAI* GetAI_guard_mulgore(Creature* creature)
  * guard_orgrimmar start
  *******************************************************/
 
-bool GossipHello_guard_orgrimmar(Player *player, Creature* creature)
+bool GossipHello_guard_orgrimmar(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -2006,7 +2006,7 @@ bool GossipHello_guard_orgrimmar(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_orgrimmar(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_orgrimmar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2085,7 +2085,7 @@ void SendDefaultMenu_guard_orgrimmar(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendBattleMasterMenu_guard_orgrimmar(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_orgrimmar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2104,7 +2104,7 @@ void SendBattleMasterMenu_guard_orgrimmar(Player *player, Creature* creature, ui
     }
 }
 
-void SendClassTrainerMenu_guard_orgrimmar(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_orgrimmar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2143,7 +2143,7 @@ void SendClassTrainerMenu_guard_orgrimmar(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_orgrimmar(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_orgrimmar(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2198,7 +2198,7 @@ void SendProfTrainerMenu_guard_orgrimmar(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_orgrimmar(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_orgrimmar(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -2223,7 +2223,7 @@ CreatureAI* GetAI_guard_orgrimmar(Creature* creature)
  * guard_shattrath start
  *******************************************************/
 
-bool GossipHello_guard_shattrath(Player *player, Creature* creature)
+bool GossipHello_guard_shattrath(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -2241,7 +2241,7 @@ bool GossipHello_guard_shattrath(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2308,7 +2308,7 @@ void SendDefaultMenu_guard_shattrath(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendBankMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendBankMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -2322,7 +2322,7 @@ void SendBankMenu_guard_shattrath(Player *player, Creature* creature, uint32 act
     }
 }
 
-void SendInnMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendInnMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -2336,7 +2336,7 @@ void SendInnMenu_guard_shattrath(Player *player, Creature* creature, uint32 acti
     }
 }
 
-void SendMailboxMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendMailboxMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2359,7 +2359,7 @@ void SendMailboxMenu_guard_shattrath(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendStableMasterMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendStableMasterMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -2373,7 +2373,7 @@ void SendStableMasterMenu_guard_shattrath(Player *player, Creature* creature, ui
     }
 }
 
-void SendBattleMasterMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2392,7 +2392,7 @@ void SendBattleMasterMenu_guard_shattrath(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2431,7 +2431,7 @@ void SendProfTrainerMenu_guard_shattrath(Player *player, Creature* creature, uin
     }
 }
 
-void SendGemMerchantMenu_guard_shattrath(Player *player, Creature* creature, uint32 action)
+void SendGemMerchantMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -2445,7 +2445,7 @@ void SendGemMerchantMenu_guard_shattrath(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_shattrath(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_shattrath(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -2534,7 +2534,7 @@ struct guard_shattrath_aldorAI : public guardAI
     }
 };
 
-bool GossipHello_guard_shattrath_aldor(Player *player, Creature* creature)
+bool GossipHello_guard_shattrath_aldor(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -2551,7 +2551,7 @@ bool GossipHello_guard_shattrath_aldor(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_shattrath_aldor(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_shattrath_aldor(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2612,7 +2612,7 @@ void SendDefaultMenu_guard_shattrath_aldor(Player *player, Creature* creature, u
     }
 }
 
-void SendProfTrainerMenu_guard_shattrath_aldor(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_shattrath_aldor(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2651,7 +2651,7 @@ void SendProfTrainerMenu_guard_shattrath_aldor(Player *player, Creature* creatur
     }
 }
 
-bool GossipSelect_guard_shattrath_aldor(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_shattrath_aldor(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -2730,7 +2730,7 @@ struct guard_shattrath_scryerAI : public guardAI
     }
 };
 
-bool GossipHello_guard_shattrath_scryer(Player *player, Creature* creature)
+bool GossipHello_guard_shattrath_scryer(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -2747,7 +2747,7 @@ bool GossipHello_guard_shattrath_scryer(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_shattrath_scryer(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_shattrath_scryer(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2807,7 +2807,7 @@ void SendDefaultMenu_guard_shattrath_scryer(Player *player, Creature* creature, 
     }
 }
 
-void SendProfTrainerMenu_guard_shattrath_scryer(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_shattrath_scryer(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2846,7 +2846,7 @@ void SendProfTrainerMenu_guard_shattrath_scryer(Player *player, Creature* creatu
     }
 }
 
-bool GossipSelect_guard_shattrath_scryer(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_shattrath_scryer(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -2870,7 +2870,7 @@ CreatureAI* GetAI_guard_shattrath_scryer(Creature* creature)
  * guard_silvermoon start
  *******************************************************/
 
-bool GossipHello_guard_silvermoon(Player *player, Creature* creature)
+bool GossipHello_guard_silvermoon(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -2887,7 +2887,7 @@ bool GossipHello_guard_silvermoon(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_silvermoon(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_silvermoon(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -2962,7 +2962,7 @@ void SendDefaultMenu_guard_silvermoon(Player *player, Creature* creature, uint32
     }
 }
 
-void SendAuctionhouseMenu_guard_silvermoon(Player *player, Creature* creature, uint32 action)
+void SendAuctionhouseMenu_guard_silvermoon(Player* player, Creature* creature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -2976,7 +2976,7 @@ void SendAuctionhouseMenu_guard_silvermoon(Player *player, Creature* creature, u
     }
 }
 
-void SendInnMenu_guard_silvermoon(Player *player, Creature* creature, uint32 action)
+void SendInnMenu_guard_silvermoon(Player* player, Creature* creature, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -2990,7 +2990,7 @@ void SendInnMenu_guard_silvermoon(Player *player, Creature* creature, uint32 act
     }
 }
 
-void SendBattleMasterMenu_guard_silvermoon(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_silvermoon(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3017,7 +3017,7 @@ void SendBattleMasterMenu_guard_silvermoon(Player *player, Creature* creature, u
     }
 }
 
-void SendClassTrainerMenu_guard_silvermoon(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_silvermoon(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3052,7 +3052,7 @@ void SendClassTrainerMenu_guard_silvermoon(Player *player, Creature* creature, u
     }
 }
 
-void SendProfTrainerMenu_guard_silvermoon(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_silvermoon(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3111,7 +3111,7 @@ void SendProfTrainerMenu_guard_silvermoon(Player *player, Creature* creature, ui
     }
 }
 
-bool GossipSelect_guard_silvermoon(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_silvermoon(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -3138,7 +3138,7 @@ CreatureAI* GetAI_guard_silvermoon(Creature* creature)
  * guard_stormwind start
  *******************************************************/
 
-bool GossipHello_guard_stormwind(Player *player, Creature* creature)
+bool GossipHello_guard_stormwind(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STORMWIND_BANK    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -3157,7 +3157,7 @@ bool GossipHello_guard_stormwind(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_stormwind(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_stormwind(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3237,7 +3237,7 @@ void SendDefaultMenu_guard_stormwind(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendBattleMasterMenu_guard_stormwind(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_stormwind(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3256,7 +3256,7 @@ void SendBattleMasterMenu_guard_stormwind(Player *player, Creature* creature, ui
     }
 }
 
-void SendClassTrainerMenu_guard_stormwind(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_stormwind(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3300,7 +3300,7 @@ void SendClassTrainerMenu_guard_stormwind(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_stormwind(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_stormwind(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3355,7 +3355,7 @@ void SendProfTrainerMenu_guard_stormwind(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_stormwind(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_stormwind(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -3380,7 +3380,7 @@ CreatureAI* GetAI_guard_stormwind(Creature* creature)
  * guard_teldrassil start
  *******************************************************/
 
-bool GossipHello_guard_teldrassil(Player *player, Creature* creature)
+bool GossipHello_guard_teldrassil(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FERRY        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -3393,7 +3393,7 @@ bool GossipHello_guard_teldrassil(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_teldrassil(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_teldrassil(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3437,7 +3437,7 @@ void SendDefaultMenu_guard_teldrassil(Player *player, Creature* creature, uint32
     }
 }
 
-void SendClassTrainerMenu_guard_teldrassil(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_teldrassil(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3464,7 +3464,7 @@ void SendClassTrainerMenu_guard_teldrassil(Player *player, Creature* creature, u
     }
 }
 
-void SendProfTrainerMenu_guard_teldrassil(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_teldrassil(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3505,7 +3505,7 @@ void SendProfTrainerMenu_guard_teldrassil(Player *player, Creature* creature, ui
     }
 }
 
-bool GossipSelect_guard_teldrassil(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_teldrassil(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -3529,7 +3529,7 @@ CreatureAI* GetAI_guard_teldrassil(Creature* creature)
  * guard_tirisfal start
  *******************************************************/
 
-bool GossipHello_guard_tirisfal(Player *player, Creature* creature)
+bool GossipHello_guard_tirisfal(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -3541,7 +3541,7 @@ bool GossipHello_guard_tirisfal(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_tirisfal(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_tirisfal(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3585,7 +3585,7 @@ void SendDefaultMenu_guard_tirisfal(Player *player, Creature* creature, uint32 a
     }
 }
 
-void SendClassTrainerMenu_guard_tirisfal(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_tirisfal(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3612,7 +3612,7 @@ void SendClassTrainerMenu_guard_tirisfal(Player *player, Creature* creature, uin
     }
 }
 
-void SendProfTrainerMenu_guard_tirisfal(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_tirisfal(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3663,7 +3663,7 @@ void SendProfTrainerMenu_guard_tirisfal(Player *player, Creature* creature, uint
     }
 }
 
-bool GossipSelect_guard_tirisfal(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_tirisfal(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -3687,7 +3687,7 @@ CreatureAI* GetAI_guard_tirisfal(Creature* creature)
  * guard_undercity start
  *******************************************************/
 
-bool GossipHello_guard_undercity(Player *player, Creature* creature)
+bool GossipHello_guard_undercity(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -3705,7 +3705,7 @@ bool GossipHello_guard_undercity(Player *player, Creature* creature)
     return true;
 }
 
-void SendDefaultMenu_guard_undercity(Player *player, Creature* creature, uint32 action)
+void SendDefaultMenu_guard_undercity(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3777,7 +3777,7 @@ void SendDefaultMenu_guard_undercity(Player *player, Creature* creature, uint32 
     }
 }
 
-void SendBattleMasterMenu_guard_undercity(Player *player, Creature* creature, uint32 action)
+void SendBattleMasterMenu_guard_undercity(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3796,7 +3796,7 @@ void SendBattleMasterMenu_guard_undercity(Player *player, Creature* creature, ui
     }
 }
 
-void SendClassTrainerMenu_guard_undercity(Player *player, Creature* creature, uint32 action)
+void SendClassTrainerMenu_guard_undercity(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3823,7 +3823,7 @@ void SendClassTrainerMenu_guard_undercity(Player *player, Creature* creature, ui
     }
 }
 
-void SendProfTrainerMenu_guard_undercity(Player *player, Creature* creature, uint32 action)
+void SendProfTrainerMenu_guard_undercity(Player* player, Creature* creature, uint32 action)
 {
     switch (action)
     {
@@ -3878,7 +3878,7 @@ void SendProfTrainerMenu_guard_undercity(Player *player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_undercity(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_guard_undercity(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (sender)
     {

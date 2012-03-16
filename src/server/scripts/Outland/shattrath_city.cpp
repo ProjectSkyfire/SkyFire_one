@@ -84,7 +84,7 @@ CreatureAI* GetAI_npc_raliq_the_drunk(Creature* creature)
     return new npc_raliq_the_drunkAI (creature);
 }
 
-bool GossipHello_npc_raliq_the_drunk(Player *player, Creature* creature)
+bool GossipHello_npc_raliq_the_drunk(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(1, GOSSIP_RALIQ, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -93,7 +93,7 @@ bool GossipHello_npc_raliq_the_drunk(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_raliq_the_drunk(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_raliq_the_drunk(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -158,7 +158,7 @@ CreatureAI* GetAI_npc_salsalabim(Creature* creature)
     return new npc_salsalabimAI (creature);
 }
 
-bool GossipHello_npc_salsalabim(Player *player, Creature* creature)
+bool GossipHello_npc_salsalabim(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(QUEST_10004) == QUEST_STATUS_INCOMPLETE)
     {
@@ -185,7 +185,7 @@ Purchase requires exalted reputation with Scryers/Aldor, Cenarion Expedition and
 ##################################################
 */
 
-bool GossipHello_npc_shattrathflaskvendors(Player *player, Creature* creature)
+bool GossipHello_npc_shattrathflaskvendors(Player* player, Creature* creature)
 {
     if (creature->GetEntry() == 23484)
     {
@@ -218,7 +218,7 @@ bool GossipHello_npc_shattrathflaskvendors(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_shattrathflaskvendors(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_shattrathflaskvendors(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_TRADE)
         player->SEND_VENDORLIST(creature->GetGUID());
@@ -232,7 +232,7 @@ bool GossipSelect_npc_shattrathflaskvendors(Player *player, Creature* creature, 
 
 #define GOSSIP_HZ "Take me to the Caverns of Time."
 
-bool GossipHello_npc_zephyr(Player *player, Creature* creature)
+bool GossipHello_npc_zephyr(Player* player, Creature* creature)
 {
     if (player->GetReputationRank(989) >= REP_REVERED)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HZ, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -242,7 +242,7 @@ bool GossipHello_npc_zephyr(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_zephyr(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_zephyr(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
         player->CastSpell(player, 37778, false);
@@ -320,18 +320,18 @@ struct npc_khadgars_servantAI : public npc_escortAI
             switch (pWho->GetEntry())
             {
                 case NPC_HAGGARD:
-                    if (Player* pPlayer = GetPlayerForEscort())
-                        DoScriptText(SAY_KHAD_HAGGARD, pWho, pPlayer);
+                    if (Player* player = GetPlayerForEscort())
+                        DoScriptText(SAY_KHAD_HAGGARD, pWho, player);
                     m_uiRandomTalkCooldown = 7500;
                     break;
                 case NPC_ANCHORITE:
-                    if (Player* pPlayer = GetPlayerForEscort())
-                        DoScriptText(SAY_KHAD_ALDOR_GREET, pWho, pPlayer);
+                    if (Player* player = GetPlayerForEscort())
+                        DoScriptText(SAY_KHAD_ALDOR_GREET, pWho, player);
                     m_uiRandomTalkCooldown = 7500;
                     break;
                 case NPC_ARCANIST:
-                    if (Player* pPlayer = GetPlayerForEscort())
-                        DoScriptText(SAY_KHAD_SCRYER_GREET, pWho, pPlayer);
+                    if (Player* player = GetPlayerForEscort())
+                        DoScriptText(SAY_KHAD_SCRYER_GREET, pWho, player);
                     m_uiRandomTalkCooldown = 7500;
                     break;
             }
@@ -400,8 +400,8 @@ struct npc_khadgars_servantAI : public npc_escortAI
 
         if (HasEscortState(STATE_ESCORT_PAUSED))
         {
-            Player* pPlayer = GetPlayerForEscort();
-            if (!pPlayer)
+            Player* player = GetPlayerForEscort();
+            if (!player)
                 return;
 
             if (m_uiTalkTimer <= uiDiff)
@@ -415,16 +415,16 @@ struct npc_khadgars_servantAI : public npc_escortAI
                         switch (m_uiTalkCount)
                         {
                             case 1:
-                                DoScriptText(SAY_KHAD_SERV_1, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_1, me, player);
                                 break;
                             case 2:
-                                DoScriptText(SAY_KHAD_SERV_2, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_2, me, player);
                                 break;
                             case 3:
-                                DoScriptText(SAY_KHAD_SERV_3, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_3, me, player);
                                 break;
                             case 4:
-                                DoScriptText(SAY_KHAD_SERV_4, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_4, me, player);
                                 SetEscortPaused(false);
                                 break;
                         }
@@ -436,15 +436,15 @@ struct npc_khadgars_servantAI : public npc_escortAI
                         {
                             case 5:
                                 if (Creature* pShanir = me->FindNearestCreature(NPC_SHANIR, 10.0f))
-                                    DoScriptText(SAY_KHAD_INJURED, pShanir, pPlayer);
+                                    DoScriptText(SAY_KHAD_INJURED, pShanir, player);
 
-                                DoScriptText(SAY_KHAD_SERV_5, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_5, me, player);
                                 break;
                             case 6:
-                                DoScriptText(SAY_KHAD_SERV_6, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_6, me, player);
                                 break;
                             case 7:
-                                DoScriptText(SAY_KHAD_SERV_7, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_7, me, player);
                                 SetEscortPaused(false);
                                 break;
                         }
@@ -455,16 +455,16 @@ struct npc_khadgars_servantAI : public npc_escortAI
                         switch (m_uiTalkCount)
                         {
                             case 8:
-                                DoScriptText(SAY_KHAD_SERV_8, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_8, me, player);
                                 break;
                             case 9:
-                                DoScriptText(SAY_KHAD_SERV_9, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_9, me, player);
                                 break;
                             case 10:
-                                DoScriptText(SAY_KHAD_SERV_10, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_10, me, player);
                                 break;
                             case 11:
-                                DoScriptText(SAY_KHAD_SERV_11, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_11, me, player);
                                 SetEscortPaused(false);
                                 break;
                         }
@@ -475,10 +475,10 @@ struct npc_khadgars_servantAI : public npc_escortAI
                         switch (m_uiTalkCount)
                         {
                             case 12:
-                                DoScriptText(SAY_KHAD_SERV_12, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_12, me, player);
                                 break;
                             case 13:
-                                DoScriptText(SAY_KHAD_SERV_13, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_13, me, player);
                                 SetEscortPaused(false);
                                 break;
                         }
@@ -489,16 +489,16 @@ struct npc_khadgars_servantAI : public npc_escortAI
                         switch (m_uiTalkCount)
                         {
                             case 14:
-                                DoScriptText(SAY_KHAD_SERV_14, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_14, me, player);
                                 break;
                             case 15:
-                                DoScriptText(SAY_KHAD_SERV_15, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_15, me, player);
                                 break;
                             case 16:
-                                DoScriptText(SAY_KHAD_SERV_16, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_16, me, player);
                                 break;
                             case 17:
-                                DoScriptText(SAY_KHAD_SERV_17, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_17, me, player);
                                 SetEscortPaused(false);
                                 break;
                         }
@@ -509,17 +509,17 @@ struct npc_khadgars_servantAI : public npc_escortAI
                         switch (m_uiTalkCount)
                         {
                             case 18:
-                                DoScriptText(SAY_KHAD_SERV_18, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_18, me, player);
                                 break;
                             case 19:
-                                DoScriptText(SAY_KHAD_SERV_19, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_19, me, player);
                                 break;
                             case 20:
-                                DoScriptText(SAY_KHAD_SERV_20, me, pPlayer);
+                                DoScriptText(SAY_KHAD_SERV_20, me, player);
                                 break;
                             case 21:
-                                DoScriptText(SAY_KHAD_SERV_21, me, pPlayer);
-                                pPlayer->AreaExploredOrEventHappens(QUEST_CITY_LIGHT);
+                                DoScriptText(SAY_KHAD_SERV_21, me, player);
+                                player->AreaExploredOrEventHappens(QUEST_CITY_LIGHT);
                                 SetEscortPaused(false);
                                 break;
                         }
@@ -603,11 +603,11 @@ struct npc_dirty_larryAI : public ScriptedAI
 
     uint32 NextStep(uint32 Step)
     {
-        Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
+        Player* player = Unit::GetPlayer(*me, PlayerGUID);
 
         switch (Step)
         {
-        case 0:{ me->SetInFront(pPlayer);
+        case 0:{ me->SetInFront(player);
             Unit* Creepjack = me->FindNearestCreature(NPC_CREEPJACK, 20);
             if (Creepjack)
                 Creepjack->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
@@ -615,11 +615,11 @@ struct npc_dirty_larryAI : public ScriptedAI
             if (Malone)
                 Malone->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
             me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP); }return 2000;
-        case 1: DoScriptText(SAY_1, me, pPlayer); return 3000;
-        case 2: DoScriptText(SAY_2, me, pPlayer); return 5000;
-        case 3: DoScriptText(SAY_3, me, pPlayer); return 2000;
-        case 4: DoScriptText(SAY_4, me, pPlayer); return 2000;
-        case 5: DoScriptText(SAY_5, me, pPlayer); return 2000;
+        case 1: DoScriptText(SAY_1, me, player); return 3000;
+        case 2: DoScriptText(SAY_2, me, player); return 5000;
+        case 3: DoScriptText(SAY_3, me, player); return 2000;
+        case 4: DoScriptText(SAY_4, me, player); return 2000;
+        case 5: DoScriptText(SAY_5, me, player); return 2000;
         case 6: Attack = true; return 2000;
         default: return 0;
         }
@@ -637,29 +637,29 @@ struct npc_dirty_larryAI : public ScriptedAI
 
         if (Attack)
         {
-            Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
+            Player* player = Unit::GetPlayer(*me, PlayerGUID);
             me->setFaction(14);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            if (pPlayer)
+            if (player)
             {
             Unit* Creepjack = me->FindNearestCreature(NPC_CREEPJACK, 20);
             if (Creepjack)
             {
-                Creepjack->Attack(pPlayer, true);
+                Creepjack->Attack(player, true);
                 Creepjack->setFaction(14);
-                Creepjack->GetMotionMaster()->MoveChase(pPlayer);
+                Creepjack->GetMotionMaster()->MoveChase(player);
                 Creepjack->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
             Unit* Malone = me->FindNearestCreature(NPC_MALONE, 20);
             if (Malone)
             {
-                Malone->Attack(pPlayer, true);
+                Malone->Attack(player, true);
                 Malone->setFaction(14);
-                Malone->GetMotionMaster()->MoveChase(pPlayer);
+                Malone->GetMotionMaster()->MoveChase(player);
                 Malone->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
-                DoStartMovement(pPlayer);
-                AttackStart(pPlayer);
+                DoStartMovement(player);
+                AttackStart(player);
             }
             Attack = false;
         }
@@ -697,7 +697,7 @@ struct npc_dirty_larryAI : public ScriptedAI
     }
 };
 
-bool GossipHello_npc_dirty_larry(Player *player, Creature *creature)
+bool GossipHello_npc_dirty_larry(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
         player->PrepareQuestMenu(creature->GetGUID());
@@ -709,7 +709,7 @@ bool GossipHello_npc_dirty_larry(Player *player, Creature *creature)
     return true;
 }
 
-bool GossipSelect_npc_dirty_larry(Player *player, Creature *creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_dirty_larry(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -733,7 +733,7 @@ CreatureAI* GetAI_npc_dirty_larryAI(Creature* creature)
 #define ISANAH_GOSSIP_1 "Who are the Sha'tar?"
 #define ISANAH_GOSSIP_2 "Isn't Shattrath a draenei city? Why do you allow others here?"
 
-bool GossipHello_npc_ishanah(Player *player, Creature* creature)
+bool GossipHello_npc_ishanah(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
         player->PrepareQuestMenu(creature->GetGUID());
@@ -746,7 +746,7 @@ bool GossipHello_npc_ishanah(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_ishanah(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_ishanah(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
         player->SEND_GOSSIP_MENU(9458, creature->GetGUID());
@@ -767,7 +767,7 @@ bool GossipSelect_npc_ishanah(Player *player, Creature* creature, uint32 sender,
 #define KHADGAR_GOSSIP_5    "What happened next?"
 #define KHADGAR_GOSSIP_7    "There was something else I wanted to ask you."
 
-bool GossipHello_npc_khadgar(Player *player, Creature *creature)
+bool GossipHello_npc_khadgar(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
         player->PrepareQuestMenu(creature->GetGUID());
@@ -780,7 +780,7 @@ bool GossipHello_npc_khadgar(Player *player, Creature *creature)
     return true;
 }
 
-bool GossipSelect_npc_khadgar(Player *player, Creature *creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_khadgar(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {

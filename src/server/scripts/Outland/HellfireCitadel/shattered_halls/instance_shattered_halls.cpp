@@ -127,17 +127,17 @@ struct instance_shattered_halls : public ScriptedInstance
         return false;
     }
 
-    void OnPlayerEnter(Player* pPlayer)
+    void OnPlayerEnter(Player* player)
     {
         if (!instance->IsHeroic() || uiTeam)
             return;
 
-        uiTeam = pPlayer->GetTeam();
+        uiTeam = player->GetTeam();
 
         if (uiTeam == ALLIANCE)
-            pPlayer->SummonCreature(aSoldiersLocs[1].uiAllianceEntry, aSoldiersLocs[1].m_fX, aSoldiersLocs[1].m_fY, aSoldiersLocs[1].m_fZ, aSoldiersLocs[1].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            player->SummonCreature(aSoldiersLocs[1].uiAllianceEntry, aSoldiersLocs[1].m_fX, aSoldiersLocs[1].m_fY, aSoldiersLocs[1].m_fZ, aSoldiersLocs[1].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
         else
-            pPlayer->SummonCreature(aSoldiersLocs[0].uiHordeEntry, aSoldiersLocs[0].m_fX, aSoldiersLocs[0].m_fY, aSoldiersLocs[0].m_fZ, aSoldiersLocs[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+            player->SummonCreature(aSoldiersLocs[0].uiHordeEntry, aSoldiersLocs[0].m_fX, aSoldiersLocs[0].m_fY, aSoldiersLocs[0].m_fZ, aSoldiersLocs[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
@@ -225,12 +225,12 @@ struct instance_shattered_halls : public ScriptedInstance
             case TYPE_EXECUTION:
                 if (data == IN_PROGRESS && !instance->GetCreature(executionerGUID))
                 {
-                    if (Player* pPlayer = GetPlayerInMap())
+                    if (Player* player = GetPlayerInMap())
                     {
                         for (uint8 i = 2; i < 5; ++i)
-                            Creature* pVictim = pPlayer->SummonCreature(uiTeam == ALLIANCE ? aSoldiersLocs[i].uiAllianceEntry : aSoldiersLocs[i].uiHordeEntry, aSoldiersLocs[i].m_fX, aSoldiersLocs[i].m_fY, aSoldiersLocs[i].m_fZ, aSoldiersLocs[i].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
+                            Creature* pVictim = player->SummonCreature(uiTeam == ALLIANCE ? aSoldiersLocs[i].uiAllianceEntry : aSoldiersLocs[i].uiHordeEntry, aSoldiersLocs[i].m_fX, aSoldiersLocs[i].m_fY, aSoldiersLocs[i].m_fZ, aSoldiersLocs[i].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
 
-                        if (Creature* pExecutioner = pPlayer->SummonCreature(NPC_EXECUTIONER, afExecutionerLoc[0], afExecutionerLoc[1], afExecutionerLoc[2], afExecutionerLoc[3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80*MINUTE*IN_MILLISECONDS))
+                        if (Creature* pExecutioner = player->SummonCreature(NPC_EXECUTIONER, afExecutionerLoc[0], afExecutionerLoc[1], afExecutionerLoc[2], afExecutionerLoc[3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80*MINUTE*IN_MILLISECONDS))
                             pExecutioner->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
                         DoCastGroupDebuff(SPELL_KARGATH_EXECUTIONER_1);
@@ -368,9 +368,9 @@ struct instance_shattered_halls : public ScriptedInstance
 
         for (Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
         {
-            Player* pPlayer = itr->getSource();
-            if (pPlayer && !pPlayer->HasAura(uiSpellId, 0))
-                pPlayer->CastSpell(pPlayer, uiSpellId, true);
+            Player* player = itr->getSource();
+            if (player && !player->HasAura(uiSpellId, 0))
+                player->CastSpell(player, uiSpellId, true);
         }
     }
 };
@@ -380,12 +380,12 @@ InstanceData* GetInstanceData_instance_shattered_halls(Map* map)
     return new instance_shattered_halls(map);
 }
 
-bool AreaTrigger_at_shattered_halls(Player* pPlayer, AreaTriggerEntry const* pAt)
+bool AreaTrigger_at_shattered_halls(Player* player, AreaTriggerEntry const* pAt)
 {
-    if (pPlayer->isGameMaster() || pPlayer->isDead())
+    if (player->isGameMaster() || player->isDead())
         return false;
 
-    instance_shattered_halls* pInstance = (instance_shattered_halls*)pPlayer->GetInstanceData();
+    instance_shattered_halls* pInstance = (instance_shattered_halls*)player->GetInstanceData();
 
     if (!pInstance)
         return false;

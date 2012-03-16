@@ -444,7 +444,7 @@ InstanceData* GetInstanceData_instance_blood_furnace(Map* map)
     return new instance_blood_furnace(map);
 }
 
-bool GOHello_go_prison_cell_lever(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_prison_cell_lever(Player* player, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 

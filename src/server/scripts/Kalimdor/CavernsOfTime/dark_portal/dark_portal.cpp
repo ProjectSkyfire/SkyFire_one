@@ -346,7 +346,7 @@ CreatureAI* GetAI_npc_time_rift(Creature* creature)
 #define SPELL_CHRONO_BEACON     34975
 #define ITEM_CHRONO_BEACON      24289
 
-bool GossipHello_npc_saat(Player *player, Creature* creature)
+bool GossipHello_npc_saat(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
         player->PrepareQuestMenu(creature->GetGUID());
@@ -368,7 +368,7 @@ bool GossipHello_npc_saat(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_saat(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_saat(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {

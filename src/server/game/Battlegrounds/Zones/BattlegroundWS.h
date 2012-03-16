@@ -182,7 +182,7 @@ class BattleGroundWS : public BattleGround
 
         void RemovePlayer(Player *plr, uint64 guid);
         void HandleAreaTrigger(Player *Source, uint32 Trigger);
-        void HandleKillPlayer(Player *player, Player *killer);
+        void HandleKillPlayer(Player* player, Player* killer);
         bool SetupBattleGround();
         virtual void ResetBGSubclass();
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* player);

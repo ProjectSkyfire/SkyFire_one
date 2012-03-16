@@ -818,9 +818,9 @@ struct mob_pulsing_pumpkinAI : public ScriptedAI
     }
 };
 
-bool GOHello_go_loosely_turned_soil(Player* pPlayer, GameObject* soil)
+bool GOHello_go_loosely_turned_soil(Player* player, GameObject* soil)
 {
-    ScriptedInstance* pInstance = pPlayer->GetInstanceData();
+    ScriptedInstance* pInstance = player->GetInstanceData();
     if (pInstance)
     {
         if (pInstance->GetData(DATA_HORSEMAN_EVENT) != NOT_STARTED)
@@ -834,10 +834,10 @@ bool GOHello_go_loosely_turned_soil(Player* pPlayer, GameObject* soil)
     }
     if (plr->GetQuestStatus(11405) == QUEST_STATUS_INCOMPLETE && plr->getLevel() > 64)
     { */
-        pPlayer->AreaExploredOrEventHappens(11405);
+        player->AreaExploredOrEventHappens(11405);
         if (Creature *horseman = soil->SummonCreature(HH_MOUNTED, FlightPoint[20].x, FlightPoint[20].y, FlightPoint[20].z, 0, TEMPSUMMON_MANUAL_DESPAWN, 0))
         {
-            CAST_AI(boss_headless_horsemanAI, horseman->AI())->PlayerGUID = pPlayer->GetGUID();
+            CAST_AI(boss_headless_horsemanAI, horseman->AI())->PlayerGUID = player->GetGUID();
             CAST_AI(boss_headless_horsemanAI, horseman->AI())->FlyMode();
         }
     //}

@@ -312,7 +312,7 @@ CreatureAI* GetAI_npc_floon(Creature* creature)
     return new npc_floonAI (creature);
 }
 
-bool GossipHello_npc_floon(Player *player, Creature* creature)
+bool GossipHello_npc_floon(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -321,7 +321,7 @@ bool GossipHello_npc_floon(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_floon(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_floon(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
@@ -361,9 +361,9 @@ struct npc_isla_starmaneAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (i)
@@ -375,18 +375,18 @@ struct npc_isla_starmaneAI : public npc_escortAI
                 Cage->SetGoState(GO_STATE_ACTIVE);
             }
             break;
-        case 2: DoScriptText(SAY_PROGRESS_1, me, pPlayer); break;
-        case 5: DoScriptText(SAY_PROGRESS_2, me, pPlayer); break;
-        case 6: DoScriptText(SAY_PROGRESS_3, me, pPlayer); break;
-        case 29:DoScriptText(SAY_PROGRESS_4, me, pPlayer);
-            if (pPlayer)
+        case 2: DoScriptText(SAY_PROGRESS_1, me, player); break;
+        case 5: DoScriptText(SAY_PROGRESS_2, me, player); break;
+        case 6: DoScriptText(SAY_PROGRESS_3, me, player); break;
+        case 29:DoScriptText(SAY_PROGRESS_4, me, player);
+            if (player)
             {
-                if (pPlayer->GetTeam() == ALLIANCE)
-                    pPlayer->GroupEventHappens(QUEST_EFTW_A, me);
-                else if (pPlayer->GetTeam() == HORDE)
-                    pPlayer->GroupEventHappens(QUEST_EFTW_H, me);
+                if (player->GetTeam() == ALLIANCE)
+                    player->GroupEventHappens(QUEST_EFTW_A, me);
+                else if (player->GetTeam() == HORDE)
+                    player->GroupEventHappens(QUEST_EFTW_H, me);
             }
-            me->SetInFront(pPlayer); break;
+            me->SetInFront(player); break;
         case 30: me->HandleEmoteCommand(EMOTE_ONESHOT_WAVE); break;
         case 31: DoCast(me, SPELL_CAT);
             me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE); break;
@@ -400,21 +400,21 @@ struct npc_isla_starmaneAI : public npc_escortAI
 
     void JustDied(Unit* killer)
     {
-        if (Player* pPlayer = GetPlayerForEscort())
+        if (Player* player = GetPlayerForEscort())
         {
-            if (pPlayer->GetTeam() == ALLIANCE)
-                pPlayer->FailQuest(QUEST_EFTW_A);
-            else if (pPlayer->GetTeam() == HORDE)
-                pPlayer->FailQuest(QUEST_EFTW_H);
+            if (player->GetTeam() == ALLIANCE)
+                player->FailQuest(QUEST_EFTW_A);
+            else if (player->GetTeam() == HORDE)
+                player->FailQuest(QUEST_EFTW_H);
         }
     }
 };
 
-bool QuestAccept_npc_isla_starmane(Player* pPlayer, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_isla_starmane(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_EFTW_H || quest->GetQuestId() == QUEST_EFTW_A)
     {
-        CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, pPlayer->GetGUID());
+        CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, player->GetGUID());
         creature->setFaction(113);
     }
     return true;
@@ -433,7 +433,7 @@ CreatureAI* GetAI_npc_isla_starmaneAI(Creature* creature)
 #define GOSSIP_S_GEZZARAK_THE_HUNTRESS   "Summon Gezzarak the Huntress"
 #define GOSSIP_S_VAKKIZ_THE_WINDRAGER    "Summon Vakkiz the Windrager"
 
-bool GossipHello_go_skull_pile(Player *player, GameObject* _GO)
+bool GossipHello_go_skull_pile(Player* player, GameObject* _GO)
 {
     if ((player->GetQuestStatus(11885) == QUEST_STATUS_INCOMPLETE) || player->GetQuestRewardStatus(11885))
     {
@@ -447,7 +447,7 @@ bool GossipHello_go_skull_pile(Player *player, GameObject* _GO)
     return true;
 }
 
-void SendActionMenu_go_skull_pile(Player *player, GameObject* _GO, uint32 action)
+void SendActionMenu_go_skull_pile(Player* player, GameObject* _GO, uint32 action)
 {
     switch (action)
     {
@@ -466,7 +466,7 @@ void SendActionMenu_go_skull_pile(Player *player, GameObject* _GO, uint32 action
     }
 }
 
-bool GossipSelect_go_skull_pile(Player *player, GameObject* _GO, uint32 sender, uint32 action)
+bool GossipSelect_go_skull_pile(Player* player, GameObject* _GO, uint32 sender, uint32 action)
 {
     switch (sender)
     {
@@ -492,8 +492,8 @@ struct npc_skywingAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        if (!pPlayer)
+        Player* player = GetPlayerForEscort();
+        if (!player)
             return;
 
         switch (i)
@@ -502,7 +502,7 @@ struct npc_skywingAI : public npc_escortAI
             me->SummonCreature(NPC_LUANGA_IMPRISONER, -3399.274658, 4055.948975, 18.603474, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
             break;
         case 8:
-            pPlayer->AreaExploredOrEventHappens(10898);
+            player->AreaExploredOrEventHappens(10898);
             break;
         }
     }
@@ -527,12 +527,12 @@ CreatureAI* GetAI_npc_skywingAI(Creature* creature)
     return new npc_skywingAI(creature);
 }
 
-bool QuestAccept_npc_skywing(Player* pPlayer, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_skywing(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_SKYWING)
     {
         if (npc_skywingAI* pEscortAI = CAST_AI(npc_skywingAI, creature->AI()))
-            pEscortAI->Start(false, true, pPlayer->GetGUID(), quest);
+            pEscortAI->Start(false, true, player->GetGUID(), quest);
     }
 
     return true;
@@ -547,23 +547,23 @@ enum eSlim
     FACTION_CONSORTIUM  = 933
 };
 
-bool GossipHello_npc_slim(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_slim(Player* player, Creature* creature)
 {
-    if (creature->isVendor() && pPlayer->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
+    if (creature->isVendor() && player->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(9896, creature->GetGUID());
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+        player->SEND_GOSSIP_MENU(9896, creature->GetGUID());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(9895, creature->GetGUID());
+        player->SEND_GOSSIP_MENU(9895, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_slim(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_slim(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(creature->GetGUID());
+        player->SEND_VENDORLIST(creature->GetGUID());
 
     return true;
 }
@@ -622,8 +622,8 @@ struct npc_akunoAI : public npc_escortAI
             case 18:
                 DoScriptText(SAY_AKU_COMPLETE, me);
 
-                if (Player* pPlayer = GetPlayerForEscort())
-                    pPlayer->GroupEventHappens(QUEST_ESCAPING_TOMB, me);
+                if (Player* player = GetPlayerForEscort())
+                    player->GroupEventHappens(QUEST_ESCAPING_TOMB, me);
 
                 break;
         }
@@ -651,7 +651,7 @@ struct npc_akunoAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_akuno(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_akuno(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ESCAPING_TOMB)
     {
@@ -661,7 +661,7 @@ bool QuestAccept_npc_akuno(Player* pPlayer, Creature* creature, const Quest* pQu
             creature->setFaction(FACTION_ESCORT_N_NEUTRAL_ACTIVE);
 
             DoScriptText(SAY_AKU_START, creature);
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
         }
     }
     return true;
@@ -678,25 +678,25 @@ CreatureAI* GetAI_npc_akuno(Creature* creature)
 
 #define GOSSIP_SKYGUARD "Fly me to Ogri'la please"
 
-bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_skyguard_handler_deesak(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(creature->GetGUID());
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (player->GetReputationRank(1031) >= REP_HONORED)
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_skyguard_handler_deesak(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->CastSpell(pPlayer, 41279, true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
+        player->CLOSE_GOSSIP_MENU();
+        player->CastSpell(player, 41279, true);               //TaxiPath 705 (Taxi - Skettis to Skyguard Outpost)
     }
     return true;
 }
@@ -815,8 +815,8 @@ struct npc_letollAI : public npc_escortAI
                 {
                     (*itr)->SetUnitMovementFlags(MOVEFLAG_WALK_MODE);
                 }
-                if (Player* pPlayer = GetPlayerForEscort())
-                    DoScriptText(SAY_LE_KEEP_SAFE, me, pPlayer);
+                if (Player* player = GetPlayerForEscort())
+                    DoScriptText(SAY_LE_KEEP_SAFE, me, player);
                 break;
             case 1:
                 DoScriptText(SAY_LE_NORTH, me);
@@ -846,10 +846,10 @@ struct npc_letollAI : public npc_escortAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (pPlayer && pPlayer->isAlive())
-            pSummoned->AI()->AttackStart(pPlayer);
+        if (player && player->isAlive())
+            pSummoned->AI()->AttackStart(player);
         else
             pSummoned->AI()->AttackStart(me);
     }
@@ -916,10 +916,10 @@ struct npc_letollAI : public npc_escortAI
                         case 13:
                             DoScriptText(EMOTE_LE_PICK_UP, me);
 
-                            if (Player* pPlayer = GetPlayerForEscort())
+                            if (Player* player = GetPlayerForEscort())
                             {
-                                DoScriptText(SAY_LE_THANKS, me, pPlayer);
-                                pPlayer->GroupEventHappens(QUEST_DIGGING_BONES, me);
+                                DoScriptText(SAY_LE_THANKS, me, player);
+                                player->GroupEventHappens(QUEST_DIGGING_BONES, me);
                             }
 
                             SetEscortPaused(false);
@@ -944,7 +944,7 @@ CreatureAI* GetAI_npc_letoll(Creature* creature)
     return new npc_letollAI(creature);
 }
 
-bool QuestAccept_npc_letoll(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_letoll(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_DIGGING_BONES)
     {
@@ -953,7 +953,7 @@ bool QuestAccept_npc_letoll(Player* pPlayer, Creature* creature, const Quest* pQ
             DoScriptText(SAY_LE_START, creature);
             creature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
 
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest, true);
         }
     }
 
@@ -997,14 +997,14 @@ struct npc_mana_bomb_exp_triggerAI : public ScriptedAI
         m_uiEventCounter = 0;
     }
 
-    void DoTrigger(Player* pPlayer, GameObject* pGo)
+    void DoTrigger(Player* player, GameObject* pGo)
     {
         if (m_bIsActivated)
             return;
 
         m_bIsActivated = true;
 
-        pPlayer->KilledMonsterCredit(NPC_MANA_BOMB_KILL_TRIGGER, me->GetGUID());
+        player->KilledMonsterCredit(NPC_MANA_BOMB_KILL_TRIGGER, me->GetGUID());
 
         pManaBomb = pGo;
     }
@@ -1068,12 +1068,12 @@ CreatureAI* GetAI_npc_mana_bomb_exp_trigger(Creature* creature)
 ## go_mana_bomb
 ######*/
 
-bool GOHello_go_mana_bomb(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_mana_bomb(Player* player, GameObject* pGo)
 {
     if (Creature* creature = GetClosestCreatureWithEntry(pGo, NPC_MANA_BOMB_EXPL_TRIGGER, INTERACTION_DISTANCE))
     {
         if (npc_mana_bomb_exp_triggerAI* pBombAI = dynamic_cast<npc_mana_bomb_exp_triggerAI*>(creature->AI()))
-            pBombAI->DoTrigger(pPlayer, pGo);
+            pBombAI->DoTrigger(player, pGo);
     }
 
     return true;
@@ -1093,13 +1093,13 @@ enum
     SAY_THANKS_4              = -1000593
 };
 
-bool GOHello_veil_skith_cage(Player* pPlayer, GameObject* pGo)
+bool GOHello_veil_skith_cage(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_MISSING_FRIENDS) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_MISSING_FRIENDS) == QUEST_STATUS_INCOMPLETE)
     {
         if (Creature* pChild = pGo->FindNearestCreature( NPC_CAPTIVE_CHILD, 5, true))
         {
-            pPlayer->KilledMonsterCredit(NPC_CAPTIVE_CHILD, pChild->GetGUID());
+            player->KilledMonsterCredit(NPC_CAPTIVE_CHILD, pChild->GetGUID());
 
             switch (urand(0, 3))
             {
@@ -1183,7 +1183,7 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
         }
     }
 
-    void StartEvent(Player* pPlayer, const Quest* pQuest)
+    void StartEvent(Player* player, const Quest* pQuest)
     {
         switch (CalculateWaypointID())
         {
@@ -1196,7 +1196,7 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
             AddWaypoint(5, -4173.70, 3047.37, 343.888);
             AddWaypoint(6, -4183.47, 3060.62, 344.157, 3000);
             AddWaypoint(7, -4179.13, 3090.20, 323.971, 30000);
-            Start(false, false, pPlayer->GetGUID(), pQuest);
+            Start(false, false, player->GetGUID(), pQuest);
             break;
         case 2:
             AddWaypoint(0, -3718.81, 3787.24, 302.890, 3000);
@@ -1207,7 +1207,7 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
             AddWaypoint(5, -3656.07, 3757.31, 301.985);
             AddWaypoint(6, -3648.83, 3743.07, 302.173, 3000);
             AddWaypoint(7, -3659.16, 3714.94, 281.576, 30000);
-            Start(false, false, pPlayer->GetGUID(), pQuest);
+            Start(false, false, player->GetGUID(), pQuest);
             break;
         case 3:
             AddWaypoint(0, -3671.51, 3385.36, 312.956, 3000);
@@ -1218,7 +1218,7 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
             AddWaypoint(5, -3692.93, 3318.69, 312.081);
             AddWaypoint(6, -3704.08, 3309.56, 312.233, 3000);
             AddWaypoint(7, -3733.99, 3315.77, 292.093, 30000);
-            Start(false, false, pPlayer->GetGUID(), pQuest);
+            Start(false, false, player->GetGUID(), pQuest);
             break;
         }
         return;
@@ -1226,7 +1226,7 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        if (Player* pPlayer = GetPlayerForEscort())
+        if (Player* player = GetPlayerForEscort())
         {
             switch (uiPointId)
             {
@@ -1238,8 +1238,8 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
                 break;
             case 7:
                 DoScriptText(SAY_COMPLETE, me);
-                if (Player* pPlayer = GetPlayerForEscort())
-                    pPlayer->GroupEventHappens(QUEST_ESCAPE_FROM_SKETTIS, me);
+                if (Player* player = GetPlayerForEscort())
+                    player->GroupEventHappens(QUEST_ESCAPE_FROM_SKETTIS, me);
                 break;
             }
         }
@@ -1256,7 +1256,7 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_skyguard_prisoner(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_skyguard_prisoner(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ESCAPE_FROM_SKETTIS)
     {
@@ -1264,7 +1264,7 @@ bool QuestAccept_npc_skyguard_prisoner(Player* pPlayer, Creature* creature, cons
             pGo->UseDoorOrButton();
 
         if (npc_skyguard_prisonerAI* pEscortAI = CAST_AI(npc_skyguard_prisonerAI, creature->AI()))
-            pEscortAI->StartEvent(pPlayer, pQuest);
+            pEscortAI->StartEvent(player, pQuest);
     }
     return true;
 }

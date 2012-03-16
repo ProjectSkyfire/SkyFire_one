@@ -385,7 +385,7 @@ CreatureAI* GetAI_mob_dragonmaw_peon(Creature* creature)
 ## npc_drake_dealer_hurlunk
 ######*/
 
-bool GossipHello_npc_drake_dealer_hurlunk(Player *player, Creature* creature)
+bool GossipHello_npc_drake_dealer_hurlunk(Player* player, Creature* creature)
 {
     if (creature->isVendor() && player->GetReputationRank(1015) == REP_EXALTED)
         player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
@@ -395,7 +395,7 @@ bool GossipHello_npc_drake_dealer_hurlunk(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_drake_dealer_hurlunk(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_drake_dealer_hurlunk(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_TRADE)
         player->SEND_VENDORLIST(creature->GetGUID());
@@ -410,7 +410,7 @@ bool GossipSelect_npc_drake_dealer_hurlunk(Player *player, Creature* creature, u
 #define GOSSIP_HSK1 "Take Flanis's Pack"
 #define GOSSIP_HSK2 "Take Kagrosh's Pack"
 
-bool GossipHello_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature* creature)
+bool GossipHello_npcs_flanis_swiftwing_and_kagrosh(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(10583) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(30658, 1, true))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HSK1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -422,7 +422,7 @@ bool GossipHello_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature* cre
     return true;
 }
 
-bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -460,7 +460,7 @@ bool GossipSelect_npcs_flanis_swiftwing_and_kagrosh(Player *player, Creature* cr
 #define GOSSIP_SMO4 "Who are these bidders?"
 #define GOSSIP_SMO5 "Well... yes."
 
-bool GossipHello_npc_murkblood_overseer(Player *player, Creature* creature)
+bool GossipHello_npc_murkblood_overseer(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(QUEST_11082) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HMO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -469,7 +469,7 @@ bool GossipHello_npc_murkblood_overseer(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_murkblood_overseer(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_murkblood_overseer(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
@@ -517,7 +517,7 @@ bool GossipSelect_npc_murkblood_overseer(Player *player, Creature* creature, uin
 #define GOSSIP_SN2 "Your mate?"
 #define GOSSIP_SN3 "I have battled many beasts, dragon. I will help you."
 
-bool GossipHello_npc_neltharaku(Player *player, Creature* creature)
+bool GossipHello_npc_neltharaku(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
         player->PrepareQuestMenu(creature->GetGUID());
@@ -530,7 +530,7 @@ bool GossipHello_npc_neltharaku(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_neltharaku(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_neltharaku(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
@@ -566,7 +566,7 @@ bool GossipSelect_npc_neltharaku(Player *player, Creature* creature, uint32 send
 #define GOSSIP_ORONOK6 "So what of the cipher now? And your boys?"
 #define GOSSIP_ORONOK7 "I will find your boys and the cipher, Oronok."
 
-bool GossipHello_npc_oronok_tornheart(Player *player, Creature* creature)
+bool GossipHello_npc_oronok_tornheart(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
         player->PrepareQuestMenu(creature->GetGUID());
@@ -583,7 +583,7 @@ bool GossipHello_npc_oronok_tornheart(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_oronok_tornheart(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_oronok_tornheart(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
@@ -848,7 +848,7 @@ CreatureAI* GetAI_npc_overlord_morghorAI(Creature* creature)
 return new npc_overlord_morghorAI(creature);
 }
 
-bool QuestAccept_npc_overlord_morghor(Player *player, Creature* creature, const Quest *_Quest)
+bool QuestAccept_npc_overlord_morghor(Player* player, Creature* creature, const Quest *_Quest)
 {
     if (_Quest->GetQuestId() == QUEST_LORD_ILLIDAN_STORMRAGE)
     {
@@ -1229,13 +1229,13 @@ struct mob_torlothAI : public ScriptedAI
 
     void JustDied(Unit* pKiller)
     {
-        if (Player* pPlayer = pKiller->GetCharmerOrOwnerPlayerOrPlayerItself())
+        if (Player* player = pKiller->GetCharmerOrOwnerPlayerOrPlayerItself())
         {
-            pPlayer->GroupEventHappens(QUEST_BATTLE_OF_THE_CRIMSON_WATCH, me);
+            player->GroupEventHappens(QUEST_BATTLE_OF_THE_CRIMSON_WATCH, me);
 
             if (Creature* pLordIllidan = me->GetMap()->GetCreature(m_uiLordIllidanGUID))
             {
-                DoScriptText(SAY_EVENT_COMPLETED, pLordIllidan, pPlayer);
+                DoScriptText(SAY_EVENT_COMPLETED, pLordIllidan, player);
                 pLordIllidan->AI()->EnterEvadeMode();
             }
         }
@@ -1324,10 +1324,10 @@ struct npc_lord_illidan_stormrageAI : public Scripted_NoMovementAI
         m_bWaveAnnounced = false;
     }
 
-    void StartEvent(Player* pPlayer)
+    void StartEvent(Player* player)
     {
         m_bEventStarted = true;
-        m_uiPlayerGUID = pPlayer->GetGUID();
+        m_uiPlayerGUID = player->GetGUID();
     }
 
     void SummonWave()
@@ -1411,12 +1411,12 @@ struct npc_lord_illidan_stormrageAI : public Scripted_NoMovementAI
 
     void CheckEventFail()
     {
-        Player* pPlayer = Unit::GetPlayer(*me, m_uiPlayerGUID);
+        Player* player = Unit::GetPlayer(*me, m_uiPlayerGUID);
 
-        if (!pPlayer)
+        if (!player)
             return;
 
-        if (Group* pEventGroup = pPlayer->GetGroup())
+        if (Group* pEventGroup = player->GetGroup())
         {
             uint8 uiDeadMemberCount = 0;
             uint8 uiFailedMemberCount = 0;
@@ -1464,9 +1464,9 @@ struct npc_lord_illidan_stormrageAI : public Scripted_NoMovementAI
                 m_bEventFailed = true;
             }
         }
-        else if (pPlayer->isDead() || !pPlayer->IsWithinDistInMap(me, EVENT_AREA_RADIUS))
+        else if (player->isDead() || !player->IsWithinDistInMap(me, EVENT_AREA_RADIUS))
         {
-            pPlayer->FailQuest(QUEST_BATTLE_OF_THE_CRIMSON_WATCH);
+            player->FailQuest(QUEST_BATTLE_OF_THE_CRIMSON_WATCH);
             m_bEventFailed = true;
         }
     }
@@ -1513,13 +1513,13 @@ CreatureAI* GetAI_npc_lord_illidan_stormrage(Creature* (creature))
 /*#####
 # go_crystal_prison : GameObject that begins the event and hands out quest
 ######*/
-bool GOQuestAccept_GO_crystal_prison(Player* pPlayer, GameObject* pGo, Quest const* pQuest)
+bool GOQuestAccept_GO_crystal_prison(Player* player, GameObject* pGo, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_BATTLE_OF_THE_CRIMSON_WATCH )
-        if (Creature* pLordIllidan = GetClosestCreatureWithEntry(pPlayer, NPC_LORD_ILLIDAN, 50.0))
+        if (Creature* pLordIllidan = GetClosestCreatureWithEntry(player, NPC_LORD_ILLIDAN, 50.0))
             if (npc_lord_illidan_stormrageAI* pIllidanAI = dynamic_cast<npc_lord_illidan_stormrageAI*>(pLordIllidan->AI()))
                 if (!pIllidanAI->m_bEventStarted)
-                    pIllidanAI->StartEvent(pPlayer);
+                    pIllidanAI->StartEvent(player);
 
     return true;
 }
@@ -1721,8 +1721,8 @@ struct npc_jovaanAI : public ScriptedAI
             case 9:DoScriptText(SAY_WARBRINGER3, pWarbringer, 0);return 6800;
             case 10:DoScriptText(SAY_JOVAAN4, me, 0);return 6800;
             case 11:DoScriptText(SAY_WARBRINGER4, pWarbringer, 0);return 6000;
-            case 12:if (Player* pPlayer = Unit::GetPlayer(*me, uiPlayerGUID))
-                        {pPlayer->KilledMonsterCredit(NPC_WARBRINGER, pWarbringer->GetGUID());};return 2000;
+            case 12:if (Player* player = Unit::GetPlayer(*me, uiPlayerGUID))
+                        {player->KilledMonsterCredit(NPC_WARBRINGER, pWarbringer->GetGUID());};return 2000;
             case 13:Reset();
         default: return 0;
         }

@@ -50,7 +50,7 @@ const uint16 BattleGroundAV::GetBonusHonor(uint8 kills) //TODO: move this functi
     return Trinity::Honor::hk_honor_at_level(m_MaxLevel, kills);
 }
 
-void BattleGroundAV::HandleKillPlayer(Player *player, Player *killer)
+void BattleGroundAV::HandleKillPlayer(Player* player, Player* killer)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -59,7 +59,7 @@ void BattleGroundAV::HandleKillPlayer(Player *player, Player *killer)
     UpdateScore(player->GetTeam(), -1);
 }
 
-void BattleGroundAV::HandleKillUnit(Creature *unit, Player *killer)
+void BattleGroundAV::HandleKillUnit(Creature *unit, Player* killer)
 {
     sLog->outDebug("bg_av HandleKillUnit %i", unit->GetEntry());
     if (GetStatus() != STATUS_IN_PROGRESS)
@@ -121,7 +121,7 @@ void BattleGroundAV::HandleKillUnit(Creature *unit, Player *killer)
         ChangeMineOwner(BG_AV_SOUTH_MINE, killer->GetTeam());
 }
 
-void BattleGroundAV::HandleQuestComplete(uint32 questid, Player *player)
+void BattleGroundAV::HandleQuestComplete(uint32 questid, Player* player)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;//maybe we should log this, cause this must be a cheater or a big bug

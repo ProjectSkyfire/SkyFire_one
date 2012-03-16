@@ -367,9 +367,9 @@ struct boss_kalecgosAI : public ScriptedAI
             {
                 for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                 {
-                    Player* pPlayer = itr->getSource();
-                    if (pPlayer)
-                        ((InstanceMap*)me->GetMap())->PermBindAllPlayers(pPlayer);
+                    Player* player = itr->getSource();
+                    if (player)
+                        ((InstanceMap*)me->GetMap())->PermBindAllPlayers(player);
                 }
             }
         }
@@ -739,7 +739,7 @@ struct boss_kalecAI : public ScriptedAI
     }
 };
 
-bool GOkalecgos_teleporter(Player* pPlayer, GameObject* pGo)
+bool GOkalecgos_teleporter(Player* player, GameObject* pGo)
 {
     uint32 SpectralPlayers = 0;
     Map* pMap = pGo->GetMap();
@@ -750,10 +750,10 @@ bool GOkalecgos_teleporter(Player* pPlayer, GameObject* pGo)
         if (i->getSource() && i->getSource()->GetPositionZ() < DEMON_REALM_Z + 5)
             ++SpectralPlayers;
     }
-    if (pPlayer->HasAura(AURA_SPECTRAL_EXHAUSTION, 0) || (MAX_PLAYERS_IN_SPECTRAL_REALM && SpectralPlayers >= MAX_PLAYERS_IN_SPECTRAL_REALM))
-        pPlayer->GetSession()->SendNotification(GO_FAILED);
+    if (player->HasAura(AURA_SPECTRAL_EXHAUSTION, 0) || (MAX_PLAYERS_IN_SPECTRAL_REALM && SpectralPlayers >= MAX_PLAYERS_IN_SPECTRAL_REALM))
+        player->GetSession()->SendNotification(GO_FAILED);
     else
-        pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_SPECTRAL, true);
+        player->CastSpell(player, SPELL_TELEPORT_SPECTRAL, true);
     return true;
 }
 

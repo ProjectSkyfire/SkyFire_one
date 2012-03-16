@@ -296,7 +296,7 @@ EndScriptData */
 uint64 altarOfArchaedasCount[5];
 int32 altarOfArchaedasCounter=0;
 
-bool GOHello_go_altar_of_archaedas(Player *player, GameObject* go)
+bool GOHello_go_altar_of_archaedas(Player* player, GameObject* go)
 {
     bool alreadyUsed;
     go->AddUse ();
@@ -406,9 +406,9 @@ EndScriptData */
 static uint64 altarOfTheKeeperCount[5];
 static uint32 altarOfTheKeeperCounter=0;
 
-bool GOHello_go_altar_of_the_keepers(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_altar_of_the_keepers(Player* player, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = pPlayer->GetInstanceData();
+    ScriptedInstance* pInstance = player->GetInstanceData();
     if (!pInstance)
         return true;
 
@@ -419,12 +419,12 @@ bool GOHello_go_altar_of_the_keepers(Player* pPlayer, GameObject* pGo)
     alreadyUsed = false;
     for (uint32 loop=0; loop<5; ++loop)
     {
-        if (altarOfTheKeeperCount[loop] == pPlayer->GetGUID())
+        if (altarOfTheKeeperCount[loop] == player->GetGUID())
             alreadyUsed = true;
     }
     if (!alreadyUsed && altarOfTheKeeperCounter < 5)
-        altarOfTheKeeperCount[altarOfTheKeeperCounter++] = pPlayer->GetGUID();
-    pPlayer->CastSpell (pPlayer, SPELL_BOSS_OBJECT_VISUAL, false);
+        altarOfTheKeeperCount[altarOfTheKeeperCounter++] = player->GetGUID();
+    player->CastSpell (player, SPELL_BOSS_OBJECT_VISUAL, false);
 
     if (altarOfTheKeeperCounter < NUMBER_NEEDED_TO_ACTIVATE)
     {
@@ -437,7 +437,7 @@ bool GOHello_go_altar_of_the_keepers(Player* pPlayer, GameObject* pGo)
     Unit *pTarget;
     for (uint8 x = 0; x < 5; ++x)
     {
-        pTarget = Unit::GetUnit(*pPlayer, altarOfTheKeeperCount[x]);
+        pTarget = Unit::GetUnit(*player, altarOfTheKeeperCount[x]);
         //sLog->outError("number of people currently activating it: %d", x+1);
         if (!pTarget)
             continue;

@@ -1405,7 +1405,7 @@ void WorldObject::MonsterTextEmote(const char* text, uint64 TargetGuid, bool IsB
 
 void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossWhisper)
 {
-    Player *player = sObjectMgr.GetPlayer(receiver);
+    Player* player = sObjectMgr.GetPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 
@@ -1522,7 +1522,7 @@ void WorldObject::MonsterTextEmote(int32 textId, uint64 TargetGuid, bool IsBossE
 
 void WorldObject::MonsterWhisper(int32 textId, uint64 receiver, bool IsBossWhisper)
 {
-    Player *player = sObjectMgr.GetPlayer(receiver);
+    Player* player = sObjectMgr.GetPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 
@@ -1710,16 +1710,16 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
 
     if (mask == SUMMON_MASK_TOTEM && spellInfo)
     {
-        if (Player *pPlayer = summoner->ToPlayer())
+        if (Player* player = summoner->ToPlayer())
         {
             if (properties->Slot >= SUMMON_SLOT_TOTEM && properties->Slot < MAX_TOTEM_SLOT)
             {
                 WorldPacket data(SMSG_TOTEM_CREATED, 1+8+4+4);
                 data << uint8(properties->Slot-1);
-                data << uint64(pPlayer->GetGUID());
+                data << uint64(player->GetGUID());
                 data << uint32(duration);
                 data << uint32(spellInfo->Id);
-                pPlayer->SendDirectMessage(&data);
+                player->SendDirectMessage(&data);
             }
         }
     }
@@ -1914,7 +1914,7 @@ Creature* WorldObject::SummonTrigger(float x, float y, float z, float ang, uint3
 
 Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive)
 {
-    Creature *creature = NULL;
+    Creature* creature = NULL;
     Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck checker(*this, entry, alive, range);
     Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, checker);
     VisitNearbyObject(range, searcher);

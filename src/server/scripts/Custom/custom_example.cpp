@@ -212,7 +212,7 @@ struct custom_exampleAI : public ScriptedAI
     }
 
     //Our Recive emote function
-    void ReceiveEmote(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* player, uint32 emote)
     {
         me->HandleEmoteCommand(emote);
 
@@ -232,31 +232,31 @@ CreatureAI* GetAI_custom_example(Creature* creature)
 }
 
 //This function is called when the player clicks an option on the gossip menu
-void SendDefaultMenu_custom_example(Player* pPlayer, Creature* creature, uint32 uiAction)
+void SendDefaultMenu_custom_example(Player* player, Creature* creature, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
         //Set our faction to hostile twoards all
         creature->setFaction(24);
-        creature->Attack(pPlayer, true);
-        pPlayer->PlayerTalkClass->CloseGossip();
+        creature->Attack(player, true);
+        player->PlayerTalkClass->CloseGossip();
     }
 }
 
 //This function is called when the player clicks an option on the gossip menu
-bool GossipSelect_custom_example(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_custom_example(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiSender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_custom_example(pPlayer, creature, uiAction);
+        SendDefaultMenu_custom_example(player, creature, uiAction);
 
     return true;
 }
 
 //This function is called when the player opens the gossip menu
-bool GossipHello_custom_example(Player* pPlayer, Creature* creature)
+bool GossipHello_custom_example(Player* player, Creature* creature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 
     return true;
 }

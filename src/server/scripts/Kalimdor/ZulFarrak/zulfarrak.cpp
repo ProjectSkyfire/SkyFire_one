@@ -104,28 +104,28 @@ CreatureAI* GetAI_npc_sergeant_bly(Creature* creature)
     return new npc_sergeant_blyAI (creature);
 }
 
-bool GossipHello_npc_sergeant_bly(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_sergeant_bly(Player* player, Creature* creature)
 {
     /*if (pInstance->GetData(0) == DONE)
     {*/
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->SEND_GOSSIP_MENU(1517, creature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    player->SEND_GOSSIP_MENU(1517, creature->GetGUID());
     /*}
     else if (pInstance->GetData(0) == IN_PROGRESS)
-        pPlayer->SEND_GOSSIP_MENU(1516, creature->GetGUID());
+        player->SEND_GOSSIP_MENU(1516, creature->GetGUID());
     else
-        pPlayer->SEND_GOSSIP_MENU(1515, creature->GetGUID());*/
+        player->SEND_GOSSIP_MENU(1515, creature->GetGUID());*/
 
     return true;
 }
 
-bool GossipSelect_npc_sergeant_bly(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_sergeant_bly(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
+        player->CLOSE_GOSSIP_MENU();
         creature->setFaction(FACTION_HOSTILE);
-        CAST_AI(npc_sergeant_blyAI, creature->AI())->AttackStart(pPlayer);
+        CAST_AI(npc_sergeant_blyAI, creature->AI())->AttackStart(player);
     }
     return true;
 }
@@ -181,26 +181,26 @@ CreatureAI* GetAI_npc_weegli_blastfuse(Creature* creature)
     return new npc_weegli_blastfuseAI (creature);
 }
 
-bool GossipHello_npc_weegli_blastfuse(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_weegli_blastfuse(Player* player, Creature* creature)
 {
     //event not implemented yet, this is only placeholder for future developement
     /*if (pInstance->GetData(0) == DONE)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(1514, creature->GetGUID());//if event can proceed to end
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->SEND_GOSSIP_MENU(1514, creature->GetGUID());//if event can proceed to end
     }
     else if (pInstance->GetData(0) == IN_PROGRESS)
-        pPlayer->SEND_GOSSIP_MENU(1513, creature->GetGUID());//if event are in progress
+        player->SEND_GOSSIP_MENU(1513, creature->GetGUID());//if event are in progress
     else*/
-    pPlayer->SEND_GOSSIP_MENU(1511, creature->GetGUID());   //if event not started
+    player->SEND_GOSSIP_MENU(1511, creature->GetGUID());   //if event not started
     return true;
 }
 
-bool GossipSelect_npc_weegli_blastfuse(Player* pPlayer, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_weegli_blastfuse(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
+        player->CLOSE_GOSSIP_MENU();
         //here we make him run to door, set the charge and run away off to nowhere
     }
     return true;
@@ -217,7 +217,7 @@ enum {
     DEAD_HERO_CHANCE = 10
 };
 
-bool GOHello_go_shallow_grave(Player* /*pPlayer*/, GameObject* pGo)
+bool GOHello_go_shallow_grave(Player* /*player*/, GameObject* pGo)
 {
     // randomly summon a zombie or dead hero the first time a grave is used
     if (pGo->GetUseCount() == 0)
@@ -241,9 +241,9 @@ enum {
     ZUMRAH_HOSTILE_FACTION = 37
 };
 
-bool AreaTrigger_at_zumrah(Player* pPlayer, const AreaTriggerEntry * /*at*/)
+bool AreaTrigger_at_zumrah(Player* player, const AreaTriggerEntry * /*at*/)
 {
-    Creature* Zumrah = pPlayer->FindNearestCreature(ZUMRAH_ID, 30.0f);
+    Creature* Zumrah = player->FindNearestCreature(ZUMRAH_ID, 30.0f);
 
     if (!Zumrah)
         return false;

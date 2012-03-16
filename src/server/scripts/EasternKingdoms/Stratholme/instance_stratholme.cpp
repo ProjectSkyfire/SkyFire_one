@@ -299,13 +299,13 @@ struct instance_stratholme : public ScriptedInstance
                     {
                         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                         {
-                            if (Player* pPlayer = itr->getSource())
+                            if (Player* player = itr->getSource())
                             {
-                                if (pPlayer->HasAura(SPELL_BARON_ULTIMATUM, 0))
-                                    pPlayer->RemoveAurasDueToSpell(SPELL_BARON_ULTIMATUM);
+                                if (player->HasAura(SPELL_BARON_ULTIMATUM, 0))
+                                    player->RemoveAurasDueToSpell(SPELL_BARON_ULTIMATUM);
 
-                                if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE)
-                                    pPlayer->AreaExploredOrEventHappens(QUEST_DEAD_MAN_PLEA);
+                                if (player->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE)
+                                    player->AreaExploredOrEventHappens(QUEST_DEAD_MAN_PLEA);
                             }
                         }
                     }

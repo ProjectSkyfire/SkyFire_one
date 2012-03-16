@@ -593,7 +593,7 @@ class CreatureEventAI : public CreatureAI
         void SpellHit(Unit* pUnit, const SpellEntry* pSpell);
         void DamageTaken(Unit* done_by, uint32& damage);
         void UpdateAI(const uint32 diff);
-        void ReceiveEmote(Player* pPlayer, uint32 text_emote);
+        void ReceiveEmote(Player* player, uint32 text_emote);
         static int Permissible(const Creature *);
 
         bool ProcessEvent(CreatureEventAIHolder& pHolder, Unit* pActionInvoker = NULL);

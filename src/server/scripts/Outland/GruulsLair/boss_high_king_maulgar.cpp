@@ -141,7 +141,7 @@ struct boss_high_king_maulgarAI : public ScriptedAI
 
         Phase2 = false;
 
-        Creature *creature = NULL;
+        Creature* creature = NULL;
         for (uint8 i = 0; i < 4; i++)
         {
             if (Council[i])

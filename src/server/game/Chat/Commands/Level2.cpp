@@ -1469,7 +1469,7 @@ bool ChatHandler::HandleNpcSetModelCommand(const char* args)
 
     uint32 displayId = (uint32) atoi((char*)args);
 
-    Creature *creature = getSelectedCreature();
+    Creature* creature = getSelectedCreature();
 
     if (!creature || creature->isPet())
     {
@@ -1544,7 +1544,7 @@ bool ChatHandler::HandleNpcSpawnDistCommand(const char* args)
     if (option >0.0f)
         mtype = RANDOM_MOTION_TYPE;
 
-    Creature *creature = getSelectedCreature();
+    Creature* creature = getSelectedCreature();
     uint32 u_guidlow = 0;
 
     if (creature)
@@ -1585,7 +1585,7 @@ bool ChatHandler::HandleNpcSpawnTimeCommand(const char* args)
         return false;
     }
 
-    Creature *creature = getSelectedCreature();
+    Creature* creature = getSelectedCreature();
     uint32 u_guidlow = 0;
 
     if (creature)
@@ -1602,8 +1602,8 @@ bool ChatHandler::HandleNpcSpawnTimeCommand(const char* args)
 
 bool ChatHandler::HandleNpcFollowCommand(const char* /*args*/)
 {
-    Player *player = m_session->GetPlayer();
-    Creature *creature = getSelectedCreature();
+    Player* player = m_session->GetPlayer();
+    Creature* creature = getSelectedCreature();
 
     if (!creature)
     {
@@ -1621,8 +1621,8 @@ bool ChatHandler::HandleNpcFollowCommand(const char* /*args*/)
 
 bool ChatHandler::HandleNpcUnFollowCommand(const char* /*args*/)
 {
-    Player *player = m_session->GetPlayer();
-    Creature *creature = getSelectedCreature();
+    Player* player = m_session->GetPlayer();
+    Creature* creature = getSelectedCreature();
 
     if (!creature)
     {
@@ -3464,7 +3464,7 @@ bool ChatHandler::HandleEventStopCommand(const char* args)
 
 bool ChatHandler::HandleCombatStopCommand(const char* args)
 {
-    Player *player;
+    Player* player;
 
     if (*args)
     {
@@ -3737,7 +3737,7 @@ bool ChatHandler::HandleRepairitemsCommand(const char* /*args*/)
 
 bool ChatHandler::HandleCreatePetCommand(const char* /*args*/)
 {
-    Player *player = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     Creature *creatureTarget = getSelectedCreature();
 
     if (!creatureTarget || creatureTarget->isPet() || creatureTarget->GetTypeId() == TYPEID_PLAYER)
@@ -3998,7 +3998,7 @@ bool ChatHandler::HandleNpcAddFormationCommand(const char* args)
         return false;
 
     uint32 leaderGUID = (uint32) atoi((char*)args);
-    Creature *creature = getSelectedCreature();
+    Creature* creature = getSelectedCreature();
 
     if (!creature || !creature->GetDBTableGUIDLow())
     {

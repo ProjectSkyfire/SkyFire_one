@@ -124,7 +124,7 @@ CreatureAI* GetAI_npc_lady_sylvanas_windrunner(Creature* creature)
     return new npc_lady_sylvanas_windrunnerAI (creature);
 }
 
-bool ChooseReward_npc_lady_sylvanas_windrunner(Player* /*pPlayer*/, Creature* creature, const Quest *_Quest, uint32 /*slot*/)
+bool ChooseReward_npc_lady_sylvanas_windrunner(Player* /*player*/, Creature* creature, const Quest *_Quest, uint32 /*slot*/)
 {
     if (_Quest->GetQuestId() == 9180)
     {
@@ -199,35 +199,35 @@ CreatureAI* GetAI_npc_highborne_lamenter(Creature* creature)
 #define GOSSIP_HPF2 "Kel'Thuzad"
 #define GOSSIP_HPF3 "Ner'zhul"
 
-bool GossipHello_npc_parqual_fintallas(Player* pPlayer, Creature* creature)
+bool GossipHello_npc_parqual_fintallas(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(creature->GetGUID());
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(6628) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasAura(SPELL_MARK_OF_SHAME, 0))
+    if (player->GetQuestStatus(6628) == QUEST_STATUS_INCOMPLETE && !player->HasAura(SPELL_MARK_OF_SHAME, 0))
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        pPlayer->SEND_GOSSIP_MENU(5822, creature->GetGUID());
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        player->SEND_GOSSIP_MENU(5822, creature->GetGUID());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(5821, creature->GetGUID());
+        player->SEND_GOSSIP_MENU(5821, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_parqual_fintallas(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_parqual_fintallas(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        creature->CastSpell(pPlayer, SPELL_MARK_OF_SHAME, false);
+        player->CLOSE_GOSSIP_MENU();
+        creature->CastSpell(player, SPELL_MARK_OF_SHAME, false);
     }
     if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->AreaExploredOrEventHappens(6628);
+        player->CLOSE_GOSSIP_MENU();
+        player->AreaExploredOrEventHappens(6628);
     }
     return true;
 }

@@ -411,7 +411,7 @@ struct boss_lady_vashjAI : public ScriptedAI
                     me->GetMotionMaster()->Clear();
                     DoTeleportTo(MIDDLE_X, MIDDLE_Y, MIDDLE_Z);
 
-                    Creature *creature;
+                    Creature* creature;
                     for (uint8 i = 0; i < 4; ++i)
                     {
                         creature = me->SummonCreature(SHIED_GENERATOR_CHANNEL, ShieldGeneratorChannelPos[i][0], ShieldGeneratorChannelPos[i][1], ShieldGeneratorChannelPos[i][2], ShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
@@ -904,7 +904,7 @@ struct mob_coilfang_striderAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_coilfang_strider(Creature *creature)
+CreatureAI* GetAI_mob_coilfang_strider(Creature* creature)
 {
     return new mob_coilfang_striderAI (creature);
 }
@@ -956,18 +956,18 @@ struct mob_shield_generator_channelAI : public ScriptedAI
     }
 };
 
-bool ItemUse_item_tainted_core(Player* pPlayer, Item* /*_Item*/, SpellCastTargets const& targets)
+bool ItemUse_item_tainted_core(Player* player, Item* /*_Item*/, SpellCastTargets const& targets)
 {
-    ScriptedInstance *pInstance = pPlayer->GetInstanceData();
+    ScriptedInstance *pInstance = player->GetInstanceData();
 
     if (!pInstance)
     {
-        pPlayer->GetSession()->SendNotification(TEXT_NOT_INITIALIZED);
+        player->GetSession()->SendNotification(TEXT_NOT_INITIALIZED);
         return true;
     }
 
     Creature *Vashj = NULL;
-    Vashj = (Unit::GetCreature((*pPlayer), pInstance->GetData64(DATA_LADYVASHJ)));
+    Vashj = (Unit::GetCreature((*player), pInstance->GetData64(DATA_LADYVASHJ)));
     if (Vashj && CAST_AI(boss_lady_vashjAI, Vashj->AI())->Phase == 2)
     {
         if (targets.getGOTarget() && targets.getGOTarget()->GetTypeId() == TYPEID_GAMEOBJECT)
@@ -998,7 +998,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* /*_Item*/, SpellCastTarget
 
             if (pInstance->GetData(identifier))
             {
-                pPlayer->GetSession()->SendNotification(TEXT_ALREADY_DEACTIVATED);
+                player->GetSession()->SendNotification(TEXT_ALREADY_DEACTIVATED);
                 return true;
             }
 
@@ -1014,15 +1014,15 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* /*_Item*/, SpellCastTarget
             pInstance->SetData(identifier, 1);
 
             //remove this item
-            pPlayer->DestroyItemCount(31088, 1, true);
+            player->DestroyItemCount(31088, 1, true);
             return true;
         }
         else if (targets.getUnitTarget()->GetTypeId() == TYPEID_UNIT)
             return false;
         else if (targets.getUnitTarget()->GetTypeId() == TYPEID_PLAYER)
         {
-            pPlayer->DestroyItemCount(31088, 1, true);
-            pPlayer->CastSpell(targets.getUnitTarget(), 38134, true);
+            player->DestroyItemCount(31088, 1, true);
+            player->CastSpell(targets.getUnitTarget(), 38134, true);
             return true;
         }
     }

@@ -220,27 +220,27 @@ struct boss_vaelAI : public ScriptedAI
     }
 };
 
-void SendDefaultMenu_boss_vael(Player* pPlayer, Creature* creature, uint32 uiAction)
+void SendDefaultMenu_boss_vael(Player* player, Creature* creature, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        CAST_AI(boss_vaelAI, creature->AI())->BeginSpeech(pPlayer);
+        player->CLOSE_GOSSIP_MENU();
+        CAST_AI(boss_vaelAI, creature->AI())->BeginSpeech(player);
     }
 }
 
-bool GossipSelect_boss_vael(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_boss_vael(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiSender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_boss_vael(pPlayer, creature, uiAction);
+        SendDefaultMenu_boss_vael(player, creature, uiAction);
 
     return true;
 }
 
-bool GossipHello_boss_vael(Player* pPlayer, Creature* creature)
+bool GossipHello_boss_vael(Player* player, Creature* creature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(907, creature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->SEND_GOSSIP_MENU(907, creature->GetGUID());
 
     return true;
 }

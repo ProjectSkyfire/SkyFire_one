@@ -144,7 +144,7 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
         }
     }
 
-    void DoWaveSpawnForCreature(Creature *creature)
+    void DoWaveSpawnForCreature(Creature* creature)
     {
         switch (creature->GetEntry())
         {
@@ -198,7 +198,7 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
                 break;
         }
     }
-    void DoFinalSpawnForCreature(Creature *creature)
+    void DoFinalSpawnForCreature(Creature* creature)
     {
         switch (creature->GetEntry())
         {
@@ -302,7 +302,7 @@ CreatureAI* GetAI_npc_manaforge_control_console(Creature* creature)
 ######*/
 
 //TODO: clean up this workaround when Trinity adds support to do it properly (with gossip selections instead of instant summon)
-bool GOHello_go_manaforge_control_console(Player *player, GameObject* _GO)
+bool GOHello_go_manaforge_control_console(Player* player, GameObject* _GO)
 {
     if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
     {
@@ -435,7 +435,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
     {
         Creature *ardonis = Unit::GetCreature(*me, ardonisGUID);
         Creature *pathaleon = Unit::GetCreature(*me, pathaleonGUID);
-        Player *player = Unit::GetPlayer(*me, playerGUID);
+        Player* player = Unit::GetPlayer(*me, playerGUID);
 
         if (!ardonis || !pathaleon || !player)
             return;
@@ -461,7 +461,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
     {
         if (Unit *ardonis = Unit::GetUnit(*me, ardonisGUID))
         {
-            Player *player = Unit::GetPlayer(*me, playerGUID);
+            Player* player = Unit::GetPlayer(*me, playerGUID);
 
             if (!player)
                 return;
@@ -482,7 +482,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
         }
     }
 
-    bool CanStartEvent(Player *player)
+    bool CanStartEvent(Player* player)
     {
         if (!isEvent)
         {
@@ -518,7 +518,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
 
         Unit *ardonis = Unit::GetUnit(*me, ardonisGUID);
         Unit *pathaleon = Unit::GetUnit(*me, pathaleonGUID);
-        Player *player = Unit::GetPlayer(*me, playerGUID);
+        Player* player = Unit::GetPlayer(*me, playerGUID);
 
         if (!ardonis || !player)
         {
@@ -657,7 +657,7 @@ Creature* SearchDawnforge(Player *source, uint32 entry, float range)
     return creature;
 }
 
-bool AreaTrigger_at_commander_dawnforge(Player *player, const AreaTriggerEntry *at)
+bool AreaTrigger_at_commander_dawnforge(Player* player, const AreaTriggerEntry *at)
 {
     //if player lost aura or not have at all, we should not try start event.
     if (!player->HasAura(SPELL_SUNFURY_DISGUISE, 0))
@@ -687,7 +687,7 @@ bool AreaTrigger_at_commander_dawnforge(Player *player, const AreaTriggerEntry *
 #define QUEST_DIMENSIUS 10439
 #define QUEST_ON_NETHERY_WINGS 10438
 
-bool GossipHello_npc_professor_dabiri(Player *player, Creature* creature)
+bool GossipHello_npc_professor_dabiri(Player* player, Creature* creature)
 {
     if (creature->isQuestGiver())
         player->PrepareQuestMenu(creature->GetGUID());
@@ -700,7 +700,7 @@ bool GossipHello_npc_professor_dabiri(Player *player, Creature* creature)
     return true;
 }
 
-bool GossipSelect_npc_professor_dabiri(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_npc_professor_dabiri(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -711,7 +711,7 @@ bool GossipSelect_npc_professor_dabiri(Player *player, Creature* creature, uint3
     return true;
 }
 
-bool QuestAccept_npc_professor_dabiri(Player *player, Creature *creature, Quest const *quest)
+bool QuestAccept_npc_professor_dabiri(Player* player, Creature* creature, Quest const *quest)
 {
     if (quest->GetQuestId() == QUEST_DIMENSIUS)
         DoScriptText(WHISPER_DABIRI, creature, player);
@@ -760,7 +760,7 @@ struct mob_phase_hunterAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        if (Player *player = who->GetCharmerOrOwnerPlayerOrPlayerItself())
+        if (Player* player = who->GetCharmerOrOwnerPlayerOrPlayerItself())
             PlayerGUID = player->GetGUID();
     }
 
@@ -854,15 +854,15 @@ struct npc_bessyAI : public npc_escortAI
 
     void JustDied(Unit* killer)
     {
-        if (Player* pPlayer = GetPlayerForEscort())
-            pPlayer->FailQuest(Q_ALMABTRIEB);
+        if (Player* player = GetPlayerForEscort())
+            player->FailQuest(Q_ALMABTRIEB);
     }
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (i)
@@ -879,13 +879,13 @@ struct npc_bessyAI : public npc_escortAI
                 break;
 
             case 12:
-                if (pPlayer)
-                    pPlayer->GroupEventHappens(Q_ALMABTRIEB, me);
+                if (player)
+                    player->GroupEventHappens(Q_ALMABTRIEB, me);
                 if (Unit* Thadell = me->FindNearestCreature(N_THADELL, 30))
                     DoScriptText(SAY_THADELL_1, me); break;
             case 13:
                 if (Unit* Thadell = me->FindNearestCreature(N_THADELL, 30))
-                    DoScriptText(SAY_THADELL_2, me, pPlayer); break;
+                    DoScriptText(SAY_THADELL_2, me, player); break;
         }
     }
 
@@ -902,13 +902,13 @@ struct npc_bessyAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_bessy(Player* pPlayer, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_bessy(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == Q_ALMABTRIEB)
     {
         creature->setFaction(113);
         creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, pPlayer->GetGUID());
+        CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, player->GetGUID());
     }
     return true;
 }
@@ -943,9 +943,9 @@ struct npc_maxx_a_million_escortAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (i)
@@ -963,8 +963,8 @@ struct npc_maxx_a_million_escortAI : public npc_escortAI
             }
             break;
         case 36: //return and quest_complete
-            if (pPlayer)
-                pPlayer->CompleteQuest(QUEST_MARK_V_IS_ALIVE);
+            if (player)
+                player->CompleteQuest(QUEST_MARK_V_IS_ALIVE);
             break;
         }
     }
@@ -998,14 +998,14 @@ CreatureAI* GetAI_npc_maxx_a_million_escort(Creature* creature)
     return new npc_maxx_a_million_escortAI(creature);
 }
 
-bool QuestAccept_npc_maxx_a_million_escort(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_maxx_a_million_escort(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MARK_V_IS_ALIVE)
     {
         if (npc_maxx_a_million_escortAI* pEscortAI = CAST_AI(npc_maxx_a_million_escortAI, creature->AI()))
         {
             creature->setFaction(113);
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
         }
     }
     return true;
@@ -1026,7 +1026,7 @@ enum
 
 struct npc_zeppitAI : public ScriptedAI
 {
-    npc_zeppitAI(Creature *creature) : ScriptedAI(creature) {}
+    npc_zeppitAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiCheckTimer;
     uint64 uiWarpGUID;
@@ -1140,7 +1140,7 @@ CreatureAI* GetAI_npc_dr_boom(Creature* creature)
 
 struct npc_boom_botAI : public ScriptedAI
 {
-    npc_boom_botAI(Creature *creature) : ScriptedAI(creature) {}
+    npc_boom_botAI(Creature* creature) : ScriptedAI(creature) {}
 
     bool Boom;
 
@@ -1276,20 +1276,20 @@ struct npc_drijyaAI : public npc_escortAI
     {
         if (pSummoned->GetEntry() == NPC_IMP)
         {
-            if (Player* pPlayer = GetPlayerForEscort())
-                pSummoned->AI()->AttackStart(pPlayer);
+            if (Player* player = GetPlayerForEscort())
+                pSummoned->AI()->AttackStart(player);
         }
         if (pSummoned->GetEntry() == NPC_TROOPER)
         {
-            if (Player* pPlayer = GetPlayerForEscort())
-                pSummoned->AI()->AttackStart(pPlayer);
+            if (Player* player = GetPlayerForEscort())
+                pSummoned->AI()->AttackStart(player);
         }
         else
         {
             if (pSummoned->GetEntry() == NPC_DESTROYER)
             {
-                if (Player* pPlayer = GetPlayerForEscort())
-                    pSummoned->AI()->AttackStart(pPlayer);
+                if (Player* player = GetPlayerForEscort())
+                    pSummoned->AI()->AttackStart(player);
             }
         }
      }
@@ -1348,10 +1348,10 @@ struct npc_drijyaAI : public npc_escortAI
                 SetRun(false);
                 break;
             case 26:
-                if (Player* pPlayer = GetPlayerForEscort())
+                if (Player* player = GetPlayerForEscort())
                 {
-                    DoScriptText(SAY_DR_COMPLETE, me, pPlayer);
-                    pPlayer->GroupEventHappens(QUEST_WARP_GATE, me);
+                    DoScriptText(SAY_DR_COMPLETE, me, player);
+                    player->GroupEventHappens(QUEST_WARP_GATE, me);
                 }
                 break;
         }
@@ -1433,14 +1433,14 @@ CreatureAI* GetAI_npc_drijya(Creature* creature)
     return new npc_drijyaAI(creature);
 }
 
-bool QuestAccept_npc_drijya(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_drijya(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_WARP_GATE)
     {
         if (npc_drijyaAI* pEscortAI = dynamic_cast<npc_drijyaAI*>(creature->AI()))
         {
             creature->setFaction(113);
-            pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(true, false, player->GetGUID(), pQuest);
         }
     }
     return true;

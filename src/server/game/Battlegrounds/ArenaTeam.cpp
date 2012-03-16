@@ -276,7 +276,7 @@ void ArenaTeam::DelMember(uint64 guid)
             break;
         }
 
-    if (Player *player = sObjectMgr.GetPlayer(guid))
+    if (Player* player = sObjectMgr.GetPlayer(guid))
     {
         player->SetInArenaTeam(0, GetSlot());
         player->GetSession()->SendArenaTeamCommandResult(ERR_ARENA_TEAM_QUIT_S, GetName(), "", 0);
@@ -300,7 +300,7 @@ void ArenaTeam::Disband(WorldSession *session)
         DelMember(m_members.front().guid);
 
     if (session)
-        if (Player *player = session->GetPlayer())
+        if (Player* player = session->GetPlayer())
             sLog->outArena("Player: %s [GUID: %u] disbanded arena team type: %u [Id: %u].", player->GetName(), player->GetGUIDLow(), GetType(), GetId());
 
     CharacterDatabase.BeginTransaction();
@@ -448,7 +448,7 @@ void ArenaTeam::BroadcastPacket(WorldPacket *packet)
 {
     for (MemberList::const_iterator itr = m_members.begin(); itr != m_members.end(); ++itr)
     {
-        Player *player = sObjectMgr.GetPlayer(itr->guid);
+        Player* player = sObjectMgr.GetPlayer(itr->guid);
         if (player)
             player->GetSession()->SendPacket(packet);
     }

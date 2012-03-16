@@ -29,7 +29,7 @@ EndScriptData */
 #include <cstring>
 
 //This function is called when the player opens the gossip menubool
-bool GossipHello_custom_gossip_codebox(Player *player, Creature* creature)
+bool GossipHello_custom_gossip_codebox(Player* player, Creature* creature)
 {
     player->ADD_GOSSIP_ITEM_EXTENDED(0, "A quiz: what's your name?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1, "", 0, true);
     player->ADD_GOSSIP_ITEM(0, "I'm not interested", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
@@ -39,7 +39,7 @@ bool GossipHello_custom_gossip_codebox(Player *player, Creature* creature)
 }
 
 //This function is called when the player clicks an option on the gossip menubool
-bool GossipSelect_custom_gossip_codebox(Player *player, Creature* creature, uint32 sender, uint32 action)
+bool GossipSelect_custom_gossip_codebox(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+2)
     {
@@ -49,7 +49,7 @@ bool GossipSelect_custom_gossip_codebox(Player *player, Creature* creature, uint
     return true;
 }
 
-bool GossipSelectWithCode_custom_gossip_codebox(Player *player, Creature* creature, uint32 sender, uint32 action, const char* sCode)
+bool GossipSelectWithCode_custom_gossip_codebox(Player* player, Creature* creature, uint32 sender, uint32 action, const char* sCode)
 {
     if (sender == GOSSIP_SENDER_MAIN)
     {

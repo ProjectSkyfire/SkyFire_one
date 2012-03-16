@@ -241,13 +241,13 @@ struct boss_najentusAI : public ScriptedAI
     }
 };
 
-bool GOHello_go_najentus_spine(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_najentus_spine(Player* player, GameObject* pGo)
 {
     if (ScriptedInstance* pInstance = pGo->GetInstanceData())
         if (Creature* Najentus = Unit::GetCreature(*pGo, pInstance->GetData64(DATA_HIGHWARLORDNAJENTUS)))
             if (CAST_AI(boss_najentusAI, Najentus->AI())->RemoveImpalingSpine())
             {
-                pPlayer->CastSpell(pPlayer, SPELL_CREATE_NAJENTUS_SPINE, true);
+                player->CastSpell(player, SPELL_CREATE_NAJENTUS_SPINE, true);
                 pGo->AddObjectToRemoveList();
             }
     return true;

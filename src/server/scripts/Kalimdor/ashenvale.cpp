@@ -115,8 +115,8 @@ struct npc_muglashAI : public npc_escortAI
             if (urand(0, 1))
                 return;
 
-            if (Player* pPlayer = GetPlayerForEscort())
-                DoScriptText(SAY_MUG_ON_GUARD, me, pPlayer);
+            if (Player* player = GetPlayerForEscort())
+                DoScriptText(SAY_MUG_ON_GUARD, me, player);
         }
     }
 
@@ -125,12 +125,12 @@ struct npc_muglashAI : public npc_escortAI
         switch (uiPointId)
         {
             case 0:
-                if (Player* pPlayer = GetPlayerForEscort())
-                    DoScriptText(SAY_MUG_START2, me, pPlayer);
+                if (Player* player = GetPlayerForEscort())
+                    DoScriptText(SAY_MUG_START2, me, player);
                 break;
             case 24:
-                if (Player* pPlayer = GetPlayerForEscort())
-                    DoScriptText(SAY_MUG_BRAZIER, me, pPlayer);
+                if (Player* player = GetPlayerForEscort())
+                    DoScriptText(SAY_MUG_BRAZIER, me, player);
 
                 if (GameObject* pGo = me->FindNearestGameObject(GO_NAGA_BRAZIER, INTERACTION_DISTANCE*2))
                 {
@@ -142,8 +142,8 @@ struct npc_muglashAI : public npc_escortAI
             case 25:
                 DoScriptText(SAY_MUG_GRATITUDE, me);
 
-                if (Player* pPlayer = GetPlayerForEscort())
-                    pPlayer->GroupEventHappens(QUEST_VORSHA, me);
+                if (Player* player = GetPlayerForEscort())
+                    player->GroupEventHappens(QUEST_VORSHA, me);
                 break;
             case 26:
                 DoScriptText(SAY_MUG_PATROL, me);
@@ -206,7 +206,7 @@ struct npc_muglashAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_muglash(Player* pPlayer, Creature* creature, const Quest* pQuest)
+bool QuestAccept_npc_muglash(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_VORSHA)
     {
@@ -215,7 +215,7 @@ bool QuestAccept_npc_muglash(Player* pPlayer, Creature* creature, const Quest* p
             DoScriptText(SAY_MUG_START1, creature);
             creature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
         }
     }
 
@@ -227,7 +227,7 @@ CreatureAI* GetAI_npc_muglash(Creature* creature)
     return new npc_muglashAI(creature);
 }
 
-bool GOHello_go_naga_brazier(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_naga_brazier(Player* player, GameObject* pGo)
 {
     if (Creature* creature = GetClosestCreatureWithEntry(pGo, NPC_MUGLASH, INTERACTION_DISTANCE*2))
     {
@@ -276,18 +276,18 @@ struct npc_torekAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (i)
         {
         case 1:
-            DoScriptText(SAY_MOVE, me, pPlayer);
+            DoScriptText(SAY_MOVE, me, player);
             break;
         case 8:
-            DoScriptText(SAY_PREPARE, me, pPlayer);
+            DoScriptText(SAY_PREPARE, me, player);
             break;
         case 19:
             //TODO: verify location and creatures amount.
@@ -296,13 +296,13 @@ struct npc_torekAI : public npc_escortAI
             me->SummonCreature(ENTRY_SILVERWING_WARRIOR, 1778.73f,-2049.50f, 109.83f, 1.67f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
             break;
         case 20:
-            DoScriptText(SAY_WIN, me, pPlayer);
+            DoScriptText(SAY_WIN, me, player);
             Completed = true;
-            if (pPlayer)
-                pPlayer->GroupEventHappens(QUEST_TOREK_ASSULT, me);
+            if (player)
+                player->GroupEventHappens(QUEST_TOREK_ASSULT, me);
             break;
         case 21:
-            DoScriptText(SAY_END, me, pPlayer);
+            DoScriptText(SAY_END, me, player);
             break;
         }
     }
@@ -342,16 +342,16 @@ struct npc_torekAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_torek(Player* pPlayer, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_torek(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_TOREK_ASSULT)
     {
         //TODO: find companions, make them follow Torek, at any time (possibly done by mangos/database in future?)
-        DoScriptText(SAY_READY, creature, pPlayer);
+        DoScriptText(SAY_READY, creature, player);
         creature->setFaction(113);
 
         if (npc_escortAI* pEscortAI = CAST_AI(npc_torekAI, creature->AI()))
-            pEscortAI->Start(true, true, pPlayer->GetGUID());
+            pEscortAI->Start(true, true, player->GetGUID());
     }
 
     return true;
@@ -375,9 +375,9 @@ struct npc_ruul_snowhoofAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         switch (i)
@@ -400,8 +400,8 @@ struct npc_ruul_snowhoofAI : public npc_escortAI
                 break;
 
         case 21:{
-                if (pPlayer)
-                    pPlayer->GroupEventHappens(QUEST_FREEDOM_TO_RUUL, me);
+                if (player)
+                    player->GroupEventHappens(QUEST_FREEDOM_TO_RUUL, me);
 
                 break;  }
         }
@@ -427,14 +427,14 @@ struct npc_ruul_snowhoofAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_ruul_snowhoof(Player* pPlayer, Creature* creature, Quest const* quest)
+bool QuestAccept_npc_ruul_snowhoof(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_FREEDOM_TO_RUUL)
     {
         creature->setFaction(113);
 
         if (npc_escortAI* pEscortAI = CAST_AI(npc_ruul_snowhoofAI, (creature->AI())))
-            pEscortAI->Start(true, false, pPlayer->GetGUID());
+            pEscortAI->Start(true, false, player->GetGUID());
     }
     return true;
 }
