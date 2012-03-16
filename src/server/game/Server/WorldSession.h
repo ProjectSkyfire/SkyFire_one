@@ -82,6 +82,7 @@ class WorldSession
         void SendNotification(int32 string_id, ...);
         void SendPetNameInvalid(uint32 error, const std::string& name, DeclinedName *declinedName);
         void SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type);
+        void SendLfgUpdate(uint8 unk1, uint8 unk2, uint8 unk3);
         void SendPartyResult(PartyOperation operation, const std::string& member, PartyResult res);
         void SendAreaTriggerMessage(const char* Text, ...) ATTR_PRINTF(2, 3);
 
@@ -588,14 +589,14 @@ class WorldSession
         void HandleSetLfgOpcode(WorldPacket& recv_data);
         void HandleDungeonDifficultyOpcode(WorldPacket& recv_data);
         void HandleMoveFlyModeChangeAckOpcode(WorldPacket& recv_data);
-        void HandleLfgAutoJoinOpcode(WorldPacket& recv_data);
-        void HandleLfgCancelAutoJoinOpcode(WorldPacket& recv_data);
-        void HandleLfmAutoAddMembersOpcode(WorldPacket& recv_data);
-        void HandleLfmCancelAutoAddmembersOpcode(WorldPacket& recv_data);
+        void HandleLfgSetAutoJoinOpcode(WorldPacket& recv_data);
+        void HandleLfgClearAutoJoinOpcode(WorldPacket& recv_data);
+        void HandleLfmSetAutoFillOpcode(WorldPacket& recv_data);
+        void HandleLfmClearAutoFillOpcode(WorldPacket& recv_data);
         void HandleLfgClearOpcode(WorldPacket& recv_data);
-        void HandleLfmSetNoneOpcode(WorldPacket& recv_data);
-        void HandleLfmSetOpcode(WorldPacket& recv_data);
-        void HandleLfgSetCommentOpcode(WorldPacket& recv_data);
+        void HandleLfmClearOpcode(WorldPacket& recv_data);
+        void HandleSetLfmOpcode(WorldPacket& recv_data);
+        void HandleSetLfgCommentOpcode(WorldPacket& recv_data);
         void HandleChooseTitleOpcode(WorldPacket& recv_data);
         void HandleRealmStateRequestOpcode(WorldPacket& recv_data);
         void HandleTimeSyncResp(WorldPacket& recv_data);

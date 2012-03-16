@@ -149,9 +149,9 @@ static void AttemptAddMore(Player* _player)
     }
 }
 
-void WorldSession::HandleLfgAutoJoinOpcode(WorldPacket & /*recv_data*/)
+void WorldSession::HandleLfgSetAutoJoinOpcode(WorldPacket & /*recv_data*/)
 {
-    sLog->outDebug("CMSG_SET_LFG_AUTO_JOIN");
+    sLog->outDebug("CMSG_LFG_SET_AUTOJOIN");
     LookingForGroup_auto_join = true;
 
     if (!_player)                                            // needed because STATUS_AUTHED
@@ -160,15 +160,15 @@ void WorldSession::HandleLfgAutoJoinOpcode(WorldPacket & /*recv_data*/)
     AttemptJoin(_player);
 }
 
-void WorldSession::HandleLfgCancelAutoJoinOpcode(WorldPacket & /*recv_data*/)
+void WorldSession::HandleLfgClearAutoJoinOpcode(WorldPacket & /*recv_data*/)
 {
-    sLog->outDebug("CMSG_UNSET_LFG_AUTO_JOIN");
+    sLog->outDebug("CMSG_UNSET_LFG_AUTOJOIN");
     LookingForGroup_auto_join = false;
 }
 
-void WorldSession::HandleLfmAutoAddMembersOpcode(WorldPacket & /*recv_data*/)
+void WorldSession::HandleLfmSetAutoFillOpcode(WorldPacket & /*recv_data*/)
 {
-    sLog->outDebug("CMSG_SET_LFM_AUTOADD");
+    sLog->outDebug("CMSG_LFM_SET_AUTOFILL");
     LookingForGroup_auto_add = true;
 
     if (!_player)                                            // needed because STATUS_AUTHED
@@ -177,36 +177,45 @@ void WorldSession::HandleLfmAutoAddMembersOpcode(WorldPacket & /*recv_data*/)
     AttemptAddMore(_player);
 }
 
-void WorldSession::HandleLfmCancelAutoAddmembersOpcode(WorldPacket & /*recv_data*/)
+void WorldSession::HandleLfmClearAutoFillOpcode(WorldPacket & /*recv_data*/)
 {
-    sLog->outDebug("CMSG_UNSET_LFM_AUTOADD");
+    sLog->outDebug("CMSG_LFM_CLEAR_AUTOFILL");
     LookingForGroup_auto_add = false;
 }
 
 void WorldSession::HandleLfgClearOpcode(WorldPacket & /*recv_data */)
 {
-    sLog->outDebug("CMSG_LOOKING_FOR_GROUP_CLEAR");
+    // empty packet
+    sLog->outDebug("CMSG_CLEAR_LOOKING_FOR_GROUP");
 
     for (int i = 0; i < MAX_LOOKING_FOR_GROUP_SLOT; ++i)
         _player->m_lookingForGroup.slots[i].Clear();
 
     if (sWorld.getConfig(CONFIG_RESTRICTED_LFG_CHANNEL) && _player->GetSession()->GetSecurity() == SEC_PLAYER)
         _player->LeaveLFGChannel();
+
+    SendLfgUpdate(0, 0, 0);
 }
 
-void WorldSession::HandleLfmSetNoneOpcode(WorldPacket & /*recv_data */)
+void WorldSession::HandleLfmClearOpcode(WorldPacket & /*recv_data */)
 {
-    sLog->outDebug("CMSG_SET_LOOKING_FOR_NONE");
+    // empty packet
+    sLog->outDebug("CMSG_CLEAR_LOOKING_FOR_MORE");
 
     _player->m_lookingForGroup.more.Clear();
 }
 
-void WorldSession::HandleLfmSetOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetLfmOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug("CMSG_SET_LOOKING_FOR_MORE");
 
+    //recv_data.hexlike();
     uint32 temp, entry, type;
     recv_data >> temp;
+    //uint8 unk1;
+    //uint8 unk2[3];
+
+    //recv_data >> temp >> unk1 >> unk2[0] >> unk2[1] >> unk2[2];
 
     entry = (temp & 0xFFFF);
     type = ((temp >> 24) & 0xFFFF);
@@ -220,9 +229,9 @@ void WorldSession::HandleLfmSetOpcode(WorldPacket & recv_data)
     SendLfgResult(type, entry, 1);
 }
 
-void WorldSession::HandleLfgSetCommentOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetLfgCommentOpcode(WorldPacket & recv_data)
 {
-    sLog->outDebug("CMSG_SET_COMMENTARY");
+    sLog->outDebug("CMSG_SET_LFG_COMMENT");
     //recv_data.hexlike();
 
     std::string comment;
@@ -248,6 +257,7 @@ void WorldSession::HandleLookingForGroup(WorldPacket& recv_data)
         AttemptJoin(_player);
 
     SendLfgResult(type, entry, 0);
+    SendLfgUpdate(0, 1, 0);
 }
 
 void WorldSession::SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type)
@@ -282,6 +292,11 @@ void WorldSession::SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type)
         data << plr->getLevel();                            // level
         data << plr->GetZoneId();                           // current zone
         data << lfg_type;                                   // 0x00 - LFG, 0x01 - LFM
+        //data << uint64(plr->GetGUID());                     // guid
+
+        //for (uint8 j = 0; j < MAX_LOOKING_FOR_GROUP_SLOT; ++j)
+        //uint32 flags = 0x1FF;
+        //data << uint32(flags);                              // flags
 
         for (uint8 j = 0; j < MAX_LOOKING_FOR_GROUP_SLOT; ++j)
         {
@@ -336,6 +351,15 @@ void WorldSession::HandleSetLfgOpcode(WorldPacket & recv_data)
     if (LookingForGroup_auto_join)
         AttemptJoin(_player);
 
-    SendLfgResult(type, entry, 0);
+    SendLfgUpdate(0, 1, 0);
+    //SendLfgResult(type, entry, 0);
 }
 
+void WorldSession::SendLfgUpdate(uint8 unk1, uint8 unk2, uint8 unk3)
+{
+   WorldPacket data(SMSG_LFG_UPDATE, 3);
+   data << uint8(unk1);
+   data << uint8(unk2);
+   data << uint8(unk3);
+   SendPacket(&data);
+}
