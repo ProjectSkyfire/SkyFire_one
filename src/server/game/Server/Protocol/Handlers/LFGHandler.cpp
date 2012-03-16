@@ -119,7 +119,7 @@ static void AttemptAddMore(Player* _player)
             if (!group->Create(_player->GetGUID(), _player->GetName()))
             {
                 delete group;
-                return;                                     // can't create group (??)
+                return;  // can't create group (??)
             }
 
             sObjectMgr.AddGroup(group);
@@ -205,17 +205,13 @@ void WorldSession::HandleLfmClearOpcode(WorldPacket & /*recv_data */)
     _player->m_lookingForGroup.more.Clear();
 }
 
-void WorldSession::HandleSetLfmOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetLfmOpcode(WorldPacket &recv_data)
 {
     sLog->outDebug("CMSG_SET_LOOKING_FOR_MORE");
 
     //recv_data.hexlike();
     uint32 temp, entry, type;
     recv_data >> temp;
-    //uint8 unk1;
-    //uint8 unk2[3];
-
-    //recv_data >> temp >> unk1 >> unk2[0] >> unk2[1] >> unk2[2];
 
     entry = (temp & 0xFFFF);
     type = ((temp >> 24) & 0xFFFF);
@@ -292,11 +288,6 @@ void WorldSession::SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type)
         data << plr->getLevel();                            // level
         data << plr->GetZoneId();                           // current zone
         data << lfg_type;                                   // 0x00 - LFG, 0x01 - LFM
-        //data << uint64(plr->GetGUID());                     // guid
-
-        //for (uint8 j = 0; j < MAX_LOOKING_FOR_GROUP_SLOT; ++j)
-        //uint32 flags = 0x1FF;
-        //data << uint32(flags);                              // flags
 
         for (uint8 j = 0; j < MAX_LOOKING_FOR_GROUP_SLOT; ++j)
         {
