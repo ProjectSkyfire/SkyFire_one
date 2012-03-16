@@ -230,9 +230,9 @@ struct boss_anetheronAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_boss_anetheron(Creature* pCreature)
+CreatureAI* GetAI_boss_anetheron(Creature* creature)
 {
-    return new boss_anetheronAI (pCreature);
+    return new boss_anetheronAI (creature);
 }
 
 #define SPELL_IMMOLATION     31303
@@ -308,9 +308,9 @@ struct mob_towering_infernalAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_towering_infernal(Creature* pCreature)
+CreatureAI* GetAI_mob_towering_infernal(Creature* creature)
 {
-    return new mob_towering_infernalAI (pCreature);
+    return new mob_towering_infernalAI (creature);
 }
 
 void AddSC_boss_anetheron()

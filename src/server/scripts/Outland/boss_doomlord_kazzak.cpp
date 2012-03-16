@@ -173,9 +173,9 @@ struct boss_doomlordkazzakAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_doomlordkazzak(Creature* pCreature)
+CreatureAI* GetAI_boss_doomlordkazzak(Creature* creature)
 {
-    return new boss_doomlordkazzakAI (pCreature);
+    return new boss_doomlordkazzakAI (creature);
 }
 
 void AddSC_boss_doomlordkazzak()

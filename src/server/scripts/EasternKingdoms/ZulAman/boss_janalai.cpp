@@ -442,9 +442,9 @@ struct boss_janalaiAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_janalaiAI(Creature* pCreature)
+CreatureAI* GetAI_boss_janalaiAI(Creature* creature)
 {
-    return new boss_janalaiAI(pCreature);
+    return new boss_janalaiAI(creature);
 }
 
 struct mob_janalai_firebombAI : public ScriptedAI
@@ -468,9 +468,9 @@ struct mob_janalai_firebombAI : public ScriptedAI
     void UpdateAI(const uint32 /*diff*/) {}
 };
 
-CreatureAI* GetAI_mob_janalai_firebombAI(Creature* pCreature)
+CreatureAI* GetAI_mob_janalai_firebombAI(Creature* creature)
 {
-    return new mob_janalai_firebombAI(pCreature);
+    return new mob_janalai_firebombAI(creature);
 }
 
 struct mob_amanishi_hatcherAI : public ScriptedAI
@@ -587,9 +587,9 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* pCreature)
+CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* creature)
 {
-    return new mob_amanishi_hatcherAI(pCreature);
+    return new mob_amanishi_hatcherAI(creature);
 }
 
 struct mob_hatchlingAI : public ScriptedAI
@@ -636,9 +636,9 @@ struct mob_hatchlingAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_hatchlingAI(Creature* pCreature)
+CreatureAI* GetAI_mob_hatchlingAI(Creature* creature)
 {
-    return new mob_hatchlingAI(pCreature);
+    return new mob_hatchlingAI(creature);
 }
 
 struct mob_eggAI : public ScriptedAI
@@ -660,9 +660,9 @@ struct mob_eggAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_eggAI(Creature* pCreature)
+CreatureAI* GetAI_mob_eggAI(Creature* creature)
 {
-    return new mob_eggAI(pCreature);
+    return new mob_eggAI(creature);
 }
 
 void AddSC_boss_janalai()

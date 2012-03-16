@@ -205,9 +205,9 @@ struct boss_dathrohan_balnazzarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_dathrohan_balnazzar(Creature* pCreature)
+CreatureAI* GetAI_boss_dathrohan_balnazzar(Creature* creature)
 {
-    return new boss_dathrohan_balnazzarAI (pCreature);
+    return new boss_dathrohan_balnazzarAI (creature);
 }
 
 void AddSC_boss_dathrohan_balnazzar()

@@ -57,17 +57,17 @@ struct instance_zulgurub : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 11347: m_uiLorKhanGUID = pCreature->GetGUID(); break;
-            case 11348: m_uiZathGUID = pCreature->GetGUID(); break;
-            case 14509: m_uiThekalGUID = pCreature->GetGUID(); break;
-            case 11380: m_uiJindoGUID = pCreature->GetGUID(); break;
+            case 11347: m_uiLorKhanGUID = creature->GetGUID(); break;
+            case 11348: m_uiZathGUID = creature->GetGUID(); break;
+            case 14509: m_uiThekalGUID = creature->GetGUID(); break;
+            case 11380: m_uiJindoGUID = creature->GetGUID(); break;
             case 14515:
             if (m_auiEncounter[0] >= IN_PROGRESS)
-                pCreature->DisappearAndDie();
+                creature->DisappearAndDie();
             else
                 m_auiEncounter[0] = IN_PROGRESS;
             break;

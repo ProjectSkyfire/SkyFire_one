@@ -80,9 +80,9 @@ struct boss_aku_maiAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_aku_mai(Creature* pCreature)
+CreatureAI* GetAI_boss_aku_mai(Creature* creature)
 {
-    return new boss_aku_maiAI (pCreature);
+    return new boss_aku_maiAI (creature);
 }
 
 void AddSC_boss_aku_mai()

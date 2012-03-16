@@ -226,37 +226,37 @@ struct custom_exampleAI : public ScriptedAI
 
 //This is the GetAI method used by all scripts that involve AI
 //It is called every time a new creature using this script is created
-CreatureAI* GetAI_custom_example(Creature* pCreature)
+CreatureAI* GetAI_custom_example(Creature* creature)
 {
-    return new custom_exampleAI (pCreature);
+    return new custom_exampleAI (creature);
 }
 
 //This function is called when the player clicks an option on the gossip menu
-void SendDefaultMenu_custom_example(Player* pPlayer, Creature* pCreature, uint32 uiAction)
+void SendDefaultMenu_custom_example(Player* pPlayer, Creature* creature, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
         //Set our faction to hostile twoards all
-        pCreature->setFaction(24);
-        pCreature->Attack(pPlayer, true);
+        creature->setFaction(24);
+        creature->Attack(pPlayer, true);
         pPlayer->PlayerTalkClass->CloseGossip();
     }
 }
 
 //This function is called when the player clicks an option on the gossip menu
-bool GossipSelect_custom_example(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_custom_example(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiSender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_custom_example(pPlayer, pCreature, uiAction);
+        SendDefaultMenu_custom_example(pPlayer, creature, uiAction);
 
     return true;
 }
 
 //This function is called when the player opens the gossip menu
-bool GossipHello_custom_example(Player* pPlayer, Creature* pCreature)
+bool GossipHello_custom_example(Player* pPlayer, Creature* creature)
 {
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
+    pPlayer->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 
     return true;
 }

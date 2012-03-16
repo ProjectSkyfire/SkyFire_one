@@ -94,8 +94,8 @@ void SummonList::DespawnAll()
     }
 }
 
-ScriptedAI::ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
-    me(pCreature),
+ScriptedAI::ScriptedAI(Creature* creature) : CreatureAI(creature),
+    me(creature),
     IsFleeing(false),
     m_bCombatMovement(true),
     m_uiEvadeCheckCooldown(2500)

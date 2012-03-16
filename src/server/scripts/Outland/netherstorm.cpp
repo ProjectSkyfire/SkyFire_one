@@ -292,9 +292,9 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_npc_manaforge_control_console(Creature* pCreature)
+CreatureAI* GetAI_npc_manaforge_control_console(Creature* creature)
 {
-    return new npc_manaforge_control_consoleAI (pCreature);
+    return new npc_manaforge_control_consoleAI (creature);
 }
 
 /*######
@@ -410,7 +410,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
     //Select any creature in a grid
     Creature* SelectCreatureInGrid(uint32 entry, float range)
     {
-        Creature* pCreature = NULL;
+        Creature* creature = NULL;
 
         CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(pair);
@@ -418,11 +418,11 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
         cell.SetNoCreate();
 
         Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
-        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
         TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
         cell.Visit(pair, creature_searcher,*(me->GetMap()));
 
-        return pCreature;
+        return creature;
     }
 
     void JustSummoned(Creature *summoned)
@@ -635,14 +635,14 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
      }
 };
 
-CreatureAI* GetAI_npc_commander_dawnforge(Creature* pCreature)
+CreatureAI* GetAI_npc_commander_dawnforge(Creature* creature)
 {
-    return new npc_commander_dawnforgeAI(pCreature);
+    return new npc_commander_dawnforgeAI(creature);
 }
 
 Creature* SearchDawnforge(Player *source, uint32 entry, float range)
 {
-    Creature* pCreature = NULL;
+    Creature* creature = NULL;
 
     CellPair pair(Trinity::ComputeCellPair(source->GetPositionX(), source->GetPositionY()));
     Cell cell(pair);
@@ -650,11 +650,11 @@ Creature* SearchDawnforge(Player *source, uint32 entry, float range)
     cell.SetNoCreate();
 
     Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*source, entry, true, range);
-    Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+    Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
     TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
     cell.Visit(pair, creature_searcher,*(source->GetMap()));
 
-    return pCreature;
+    return creature;
 }
 
 bool AreaTrigger_at_commander_dawnforge(Player *player, const AreaTriggerEntry *at)
@@ -687,24 +687,24 @@ bool AreaTrigger_at_commander_dawnforge(Player *player, const AreaTriggerEntry *
 #define QUEST_DIMENSIUS 10439
 #define QUEST_ON_NETHERY_WINGS 10438
 
-bool GossipHello_npc_professor_dabiri(Player *player, Creature* pCreature)
+bool GossipHello_npc_professor_dabiri(Player *player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        player->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
     if (player->GetQuestStatus(QUEST_ON_NETHERY_WINGS) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(29778, 1))
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_professor_dabiri(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_professor_dabiri(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pCreature->CastSpell(player, SPELL_PHASE_DISTRUPTOR, false);
+        creature->CastSpell(player, SPELL_PHASE_DISTRUPTOR, false);
         player->CLOSE_GOSSIP_MENU();
     }
 
@@ -832,9 +832,9 @@ struct mob_phase_hunterAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_phase_hunter(Creature* pCreature)
+CreatureAI* GetAI_mob_phase_hunter(Creature* creature)
 {
-    return new mob_phase_hunterAI (pCreature);
+    return new mob_phase_hunterAI (creature);
 }
 
 /*######
@@ -902,20 +902,20 @@ struct npc_bessyAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_bessy(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_bessy(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == Q_ALMABTRIEB)
     {
-        pCreature->setFaction(113);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+        creature->setFaction(113);
+        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+        CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, pPlayer->GetGUID());
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_bessy(Creature* pCreature)
+CreatureAI* GetAI_npc_bessy(Creature* creature)
 {
-    return new npc_bessyAI(pCreature);
+    return new npc_bessyAI(creature);
 }
 
 /*######
@@ -930,7 +930,7 @@ enum
 
 struct npc_maxx_a_million_escortAI : public npc_escortAI
 {
-    npc_maxx_a_million_escortAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+    npc_maxx_a_million_escortAI(Creature* creature) : npc_escortAI(creature) {}
 
     bool bTake;
     uint32 uiTakeTimer;
@@ -993,18 +993,18 @@ struct npc_maxx_a_million_escortAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_maxx_a_million_escort(Creature* pCreature)
+CreatureAI* GetAI_npc_maxx_a_million_escort(Creature* creature)
 {
-    return new npc_maxx_a_million_escortAI(pCreature);
+    return new npc_maxx_a_million_escortAI(creature);
 }
 
-bool QuestAccept_npc_maxx_a_million_escort(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_maxx_a_million_escort(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MARK_V_IS_ALIVE)
     {
-        if (npc_maxx_a_million_escortAI* pEscortAI = CAST_AI(npc_maxx_a_million_escortAI, pCreature->AI()))
+        if (npc_maxx_a_million_escortAI* pEscortAI = CAST_AI(npc_maxx_a_million_escortAI, creature->AI()))
         {
-            pCreature->setFaction(113);
+            creature->setFaction(113);
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
         }
     }
@@ -1026,7 +1026,7 @@ enum
 
 struct npc_zeppitAI : public ScriptedAI
 {
-    npc_zeppitAI(Creature *pCreature) : ScriptedAI(pCreature) {}
+    npc_zeppitAI(Creature *creature) : ScriptedAI(creature) {}
 
     uint32 uiCheckTimer;
     uint64 uiWarpGUID;
@@ -1056,9 +1056,9 @@ struct npc_zeppitAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_zeppit(Creature* pCreature)
+CreatureAI* GetAI_npc_zeppit(Creature* creature)
 {
-    return new npc_zeppitAI (pCreature);
+    return new npc_zeppitAI (creature);
 }
 
 /*######
@@ -1127,9 +1127,9 @@ struct npc_dr_boomAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_dr_boom(Creature* pCreature)
+CreatureAI* GetAI_npc_dr_boom(Creature* creature)
 {
-    return new npc_dr_boomAI (pCreature);
+    return new npc_dr_boomAI (creature);
 }
 
 /*######
@@ -1140,7 +1140,7 @@ CreatureAI* GetAI_npc_dr_boom(Creature* pCreature)
 
 struct npc_boom_botAI : public ScriptedAI
 {
-    npc_boom_botAI(Creature *pCreature) : ScriptedAI(pCreature) {}
+    npc_boom_botAI(Creature *creature) : ScriptedAI(creature) {}
 
     bool Boom;
 
@@ -1190,9 +1190,9 @@ struct npc_boom_botAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_boom_bot(Creature* pCreature)
+CreatureAI* GetAI_npc_boom_bot(Creature* creature)
 {
-    return new npc_boom_botAI (pCreature);
+    return new npc_boom_botAI (creature);
 }
 
 /*######
@@ -1228,7 +1228,7 @@ enum
 
 struct npc_drijyaAI : public npc_escortAI
 {
-    npc_drijyaAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+    npc_drijyaAI(Creature* creature) : npc_escortAI(creature) {}
 
     bool Destroy;
     bool SummonImp;
@@ -1428,18 +1428,18 @@ struct npc_drijyaAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_drijya(Creature* pCreature)
+CreatureAI* GetAI_npc_drijya(Creature* creature)
 {
-    return new npc_drijyaAI(pCreature);
+    return new npc_drijyaAI(creature);
 }
 
-bool QuestAccept_npc_drijya(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_drijya(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_WARP_GATE)
     {
-        if (npc_drijyaAI* pEscortAI = dynamic_cast<npc_drijyaAI*>(pCreature->AI()))
+        if (npc_drijyaAI* pEscortAI = dynamic_cast<npc_drijyaAI*>(creature->AI()))
         {
-            pCreature->setFaction(113);
+            creature->setFaction(113);
             pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
         }
     }

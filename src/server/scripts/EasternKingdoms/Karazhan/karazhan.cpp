@@ -295,11 +295,11 @@ struct npc_barnesAI : public npc_escortAI
             uint32 entry = ((uint32)Spawns[index][0]);
             float PosX = Spawns[index][1];
 
-            if (Creature* pCreature = me->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
+            if (Creature* creature = me->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
             {
                 // In case database has bad flags
-                pCreature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                creature->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
         }
 
@@ -366,14 +366,14 @@ struct npc_barnesAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_barnesAI(Creature* pCreature)
+CreatureAI* GetAI_npc_barnesAI(Creature* creature)
 {
-    return new npc_barnesAI(pCreature);
+    return new npc_barnesAI(creature);
 }
 
-bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_barnes(Player* pPlayer, Creature* creature)
 {
-    if (ScriptedInstance* pInstance = pCreature->GetInstanceData())
+    if (ScriptedInstance* pInstance = creature->GetInstanceData())
     {
         // Check for death of Moroes and if opera event is not done already
         if (pInstance->GetData(TYPE_MOROES) == DONE && pInstance->GetData(TYPE_OPERA) != DONE)
@@ -387,31 +387,31 @@ bool GossipHello_npc_barnes(Player* pPlayer, Creature* pCreature)
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
             }
 
-            if (npc_barnesAI* pBarnesAI = CAST_AI(npc_barnesAI, pCreature->AI()))
+            if (npc_barnesAI* pBarnesAI = CAST_AI(npc_barnesAI, creature->AI()))
             {
                 if (!pBarnesAI->RaidWiped)
-                    pPlayer->SEND_GOSSIP_MENU(8970, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(8970, creature->GetGUID());
                 else
-                    pPlayer->SEND_GOSSIP_MENU(8975, pCreature->GetGUID());
+                    pPlayer->SEND_GOSSIP_MENU(8975, creature->GetGUID());
 
                 return true;
             }
         }
     }
 
-    pPlayer->SEND_GOSSIP_MENU(8978, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(8978, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_barnes(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_barnes(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    npc_barnesAI* pBarnesAI = CAST_AI(npc_barnesAI, pCreature->AI());
+    npc_barnesAI* pBarnesAI = CAST_AI(npc_barnesAI, creature->AI());
 
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(8971, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(8971, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -448,20 +448,20 @@ enum eBerthold
 
 #define GOSSIP_ITEM_TELEPORT    "Teleport me to the Guardian's Library"
 
-bool GossipHello_npc_berthold(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_berthold(Player* pPlayer, Creature* creature)
 {
-    if (ScriptedInstance* pInstance = pCreature->GetInstanceData())
+    if (ScriptedInstance* pInstance = creature->GetInstanceData())
     {
         // Check if Shade of Aran event is done
         if (pInstance->GetData(TYPE_ARAN) == DONE)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_berthold(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_berthold(Player* pPlayer, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
         pPlayer->CastSpell(pPlayer, SPELL_TELEPORT, true);
@@ -663,9 +663,9 @@ struct npc_image_of_medivhAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_image_of_medivh(Creature* pCreature)
+CreatureAI* GetAI_npc_image_of_medivh(Creature* creature)
 {
-    return new npc_image_of_medivhAI(pCreature);
+    return new npc_image_of_medivhAI(creature);
 }
 
 void AddSC_karazhan()

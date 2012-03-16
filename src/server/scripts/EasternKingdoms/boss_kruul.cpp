@@ -143,9 +143,9 @@ struct boss_kruulAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_kruul(Creature* pCreature)
+CreatureAI* GetAI_boss_kruul(Creature* creature)
 {
-    return new boss_kruulAI (pCreature);
+    return new boss_kruulAI (creature);
 }
 
 void AddSC_boss_kruul()

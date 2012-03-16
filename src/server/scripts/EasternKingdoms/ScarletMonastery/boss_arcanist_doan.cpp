@@ -116,9 +116,9 @@ struct boss_arcanist_doanAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_arcanist_doan(Creature* pCreature)
+CreatureAI* GetAI_boss_arcanist_doan(Creature* creature)
 {
-    return new boss_arcanist_doanAI (pCreature);
+    return new boss_arcanist_doanAI (creature);
 }
 
 void AddSC_boss_arcanist_doan()

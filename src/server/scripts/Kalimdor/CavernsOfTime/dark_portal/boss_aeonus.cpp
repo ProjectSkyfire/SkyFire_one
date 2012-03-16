@@ -136,9 +136,9 @@ struct boss_aeonusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_aeonus(Creature* pCreature)
+CreatureAI* GetAI_boss_aeonus(Creature* creature)
 {
-    return new boss_aeonusAI (pCreature);
+    return new boss_aeonusAI (creature);
 }
 
 void AddSC_boss_aeonus()

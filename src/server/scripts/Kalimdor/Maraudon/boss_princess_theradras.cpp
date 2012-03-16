@@ -97,9 +97,9 @@ struct boss_ptheradrasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ptheradras(Creature* pCreature)
+CreatureAI* GetAI_boss_ptheradras(Creature* creature)
 {
-    return new boss_ptheradrasAI (pCreature);
+    return new boss_ptheradrasAI (creature);
 }
 
 void AddSC_boss_ptheradras()

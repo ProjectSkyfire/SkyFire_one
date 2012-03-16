@@ -296,14 +296,14 @@ struct mob_spawn_of_marliAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_marli(Creature* pCreature)
+CreatureAI* GetAI_boss_marli(Creature* creature)
 {
-    return new boss_marliAI (pCreature);
+    return new boss_marliAI (creature);
 }
 
-CreatureAI* GetAI_mob_spawn_of_marli(Creature* pCreature)
+CreatureAI* GetAI_mob_spawn_of_marli(Creature* creature)
 {
-    return new mob_spawn_of_marliAI (pCreature);
+    return new mob_spawn_of_marliAI (creature);
 }
 
 void AddSC_boss_marli()

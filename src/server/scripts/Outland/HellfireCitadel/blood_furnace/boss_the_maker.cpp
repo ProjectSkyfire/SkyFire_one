@@ -117,9 +117,9 @@ struct boss_the_makerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_the_makerAI(Creature* pCreature)
+CreatureAI* GetAI_boss_the_makerAI(Creature* creature)
 {
-    return new boss_the_makerAI (pCreature);
+    return new boss_the_makerAI (creature);
 }
 
 void AddSC_boss_the_maker()

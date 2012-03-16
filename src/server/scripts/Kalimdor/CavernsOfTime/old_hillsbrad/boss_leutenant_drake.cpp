@@ -178,9 +178,9 @@ struct boss_lieutenant_drakeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_lieutenant_drake(Creature* pCreature)
+CreatureAI* GetAI_boss_lieutenant_drake(Creature* creature)
 {
-    return new boss_lieutenant_drakeAI (pCreature);
+    return new boss_lieutenant_drakeAI (creature);
 }
 
 void AddSC_boss_lieutenant_drake()

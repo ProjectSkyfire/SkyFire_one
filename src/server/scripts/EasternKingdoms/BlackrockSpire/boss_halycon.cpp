@@ -84,9 +84,9 @@ struct boss_halyconAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_halycon(Creature* pCreature)
+CreatureAI* GetAI_boss_halycon(Creature* creature)
 {
-    return new boss_halyconAI (pCreature);
+    return new boss_halyconAI (creature);
 }
 
 void AddSC_boss_halycon()

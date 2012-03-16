@@ -37,7 +37,7 @@ enum eFollowState
 class FollowerAI : public ScriptedAI
 {
     public:
-        explicit FollowerAI(Creature* pCreature);
+        explicit FollowerAI(Creature* creature);
         ~FollowerAI() {}
 
         //virtual void WaypointReached(uint32 uiPointId) = 0;

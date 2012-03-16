@@ -86,15 +86,15 @@ struct instance_blackfathom_deeps : public ScriptedInstance
         uiDeathTimes = 0;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
             case NPC_TWILIGHT_LORD_KELRIS:
-                m_uiTwilightLordKelrisGUID = pCreature->GetGUID();
+                m_uiTwilightLordKelrisGUID = creature->GetGUID();
                 break;
             case NPC_LORGUS_JETT:
-                pCreature->SetHomePosition(LorgusPosition[urand(0, 3)]);
+                creature->SetHomePosition(LorgusPosition[urand(0, 3)]);
                 break;
         }
     }

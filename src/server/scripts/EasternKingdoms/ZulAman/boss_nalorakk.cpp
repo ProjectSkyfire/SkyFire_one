@@ -444,9 +444,9 @@ struct boss_nalorakkAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nalorakk(Creature* pCreature)
+CreatureAI* GetAI_boss_nalorakk(Creature* creature)
 {
-    return new boss_nalorakkAI (pCreature);
+    return new boss_nalorakkAI (creature);
 }
 
 void AddSC_boss_nalorakk()

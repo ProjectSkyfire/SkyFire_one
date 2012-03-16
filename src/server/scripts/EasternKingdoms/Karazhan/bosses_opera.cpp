@@ -90,16 +90,16 @@ EndScriptData */
 #define CREATURE_CYCLONE        18412
 #define CREATURE_CRONE          18168
 
-void SummonCroneIfReady(ScriptedInstance* pInstance, Creature* pCreature)
+void SummonCroneIfReady(ScriptedInstance* pInstance, Creature* creature)
 {
     pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, SPECIAL);  // Increment DeathCount
 
     if (pInstance->GetData(DATA_OPERA_OZ_DEATHCOUNT) == 4)
     {
-        if (Creature* pCrone = pCreature->SummonCreature(CREATURE_CRONE, -10891.96f, -1755.95f, pCreature->GetPositionZ(), 4.64f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
+        if (Creature* pCrone = creature->SummonCreature(CREATURE_CRONE, -10891.96f, -1755.95f, creature->GetPositionZ(), 4.64f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
         {
-            if (pCreature->getVictim())
-                pCrone->AI()->AttackStart(pCreature->getVictim());
+            if (creature->getVictim())
+                pCrone->AI()->AttackStart(creature->getVictim());
         }
     }
 };
@@ -655,39 +655,39 @@ struct mob_cycloneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_dorothee(Creature* pCreature)
+CreatureAI* GetAI_boss_dorothee(Creature* creature)
 {
-    return new boss_dorotheeAI(pCreature);
+    return new boss_dorotheeAI(creature);
 }
 
-CreatureAI* GetAI_boss_strawman(Creature* pCreature)
+CreatureAI* GetAI_boss_strawman(Creature* creature)
 {
-    return new boss_strawmanAI(pCreature);
+    return new boss_strawmanAI(creature);
 }
 
-CreatureAI* GetAI_boss_tinhead(Creature* pCreature)
+CreatureAI* GetAI_boss_tinhead(Creature* creature)
 {
-    return new boss_tinheadAI(pCreature);
+    return new boss_tinheadAI(creature);
 }
 
-CreatureAI* GetAI_boss_roar(Creature* pCreature)
+CreatureAI* GetAI_boss_roar(Creature* creature)
 {
-    return new boss_roarAI(pCreature);
+    return new boss_roarAI(creature);
 }
 
-CreatureAI* GetAI_boss_crone(Creature* pCreature)
+CreatureAI* GetAI_boss_crone(Creature* creature)
 {
-    return new boss_croneAI(pCreature);
+    return new boss_croneAI(creature);
 }
 
-CreatureAI* GetAI_mob_tito(Creature* pCreature)
+CreatureAI* GetAI_mob_tito(Creature* creature)
 {
-    return new mob_titoAI(pCreature);
+    return new mob_titoAI(creature);
 }
 
-CreatureAI* GetAI_mob_cyclone(Creature* pCreature)
+CreatureAI* GetAI_mob_cyclone(Creature* creature)
 {
-    return new mob_cycloneAI(pCreature);
+    return new mob_cycloneAI(creature);
 }
 
 /**************************************/
@@ -710,22 +710,22 @@ CreatureAI* GetAI_mob_cyclone(Creature* pCreature)
 /**** The Wolf's Entry ****/
 #define CREATURE_BIG_BAD_WOLF           17521
 
-bool GossipHello_npc_grandmother(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_grandmother(Player* pPlayer, Creature* creature)
 {
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_GRANDMA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    pPlayer->SEND_GOSSIP_MENU(8990, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(8990, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_grandmother(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_grandmother(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
-        if (Creature* pBigBadWolf = pCreature->SummonCreature(CREATURE_BIG_BAD_WOLF, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
+        if (Creature* pBigBadWolf = creature->SummonCreature(CREATURE_BIG_BAD_WOLF, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
             pBigBadWolf->AI()->AttackStart(pPlayer);
 
-        pCreature->ForcedDespawn();
+        creature->ForcedDespawn();
     }
 
     return true;
@@ -844,9 +844,9 @@ struct boss_bigbadwolfAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_bigbadwolf(Creature* pCreature)
+CreatureAI* GetAI_boss_bigbadwolf(Creature* creature)
 {
-    return new boss_bigbadwolfAI(pCreature);
+    return new boss_bigbadwolfAI(creature);
 }
 
 /**********************************************/
@@ -896,15 +896,15 @@ enum RAJPhase
     PHASE_BOTH          = 2,
 };
 
-void PretendToDie(Creature* pCreature)
+void PretendToDie(Creature* creature)
 {
-    pCreature->InterruptNonMeleeSpells(true);
-    pCreature->RemoveAllAuras();
-    pCreature->SetHealth(0);
-    pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    pCreature->GetMotionMaster()->MovementExpired(false);
-    pCreature->GetMotionMaster()->MoveIdle();
-    pCreature->SetStandState(UNIT_STAND_STATE_DEAD);
+    creature->InterruptNonMeleeSpells(true);
+    creature->RemoveAllAuras();
+    creature->SetHealth(0);
+    creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    creature->GetMotionMaster()->MovementExpired(false);
+    creature->GetMotionMaster()->MoveIdle();
+    creature->SetStandState(UNIT_STAND_STATE_DEAD);
 };
 
 void Resurrect(Creature *pTarget)
@@ -1414,14 +1414,14 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
     DoMeleeAttackIfReady();
 }
 
-CreatureAI* GetAI_boss_julianne(Creature* pCreature)
+CreatureAI* GetAI_boss_julianne(Creature* creature)
 {
-    return new boss_julianneAI(pCreature);
+    return new boss_julianneAI(creature);
 }
 
-CreatureAI* GetAI_boss_romulo(Creature* pCreature)
+CreatureAI* GetAI_boss_romulo(Creature* creature)
 {
-    return new boss_romuloAI(pCreature);
+    return new boss_romuloAI(creature);
 }
 
 void AddSC_bosses_opera()

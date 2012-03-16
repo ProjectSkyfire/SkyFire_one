@@ -75,15 +75,15 @@ struct instance_gruuls_lair : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 18835: KigglerTheCrazed = pCreature->GetGUID(); break;
-            case 18836: BlindeyeTheSeer = pCreature->GetGUID();  break;
-            case 18834: OlmTheSummoner = pCreature->GetGUID();   break;
-            case 18832: KroshFirehand = pCreature->GetGUID();    break;
-            case 18831: Maulgar = pCreature->GetGUID();          break;
+            case 18835: KigglerTheCrazed = creature->GetGUID(); break;
+            case 18836: BlindeyeTheSeer = creature->GetGUID();  break;
+            case 18834: OlmTheSummoner = creature->GetGUID();   break;
+            case 18832: KroshFirehand = creature->GetGUID();    break;
+            case 18831: Maulgar = creature->GetGUID();          break;
         }
     }
 

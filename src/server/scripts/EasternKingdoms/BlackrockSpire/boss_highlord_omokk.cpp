@@ -120,9 +120,9 @@ struct boss_highlordomokkAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_highlordomokk(Creature* pCreature)
+CreatureAI* GetAI_boss_highlordomokk(Creature* creature)
 {
-    return new boss_highlordomokkAI (pCreature);
+    return new boss_highlordomokkAI (creature);
 }
 
 void AddSC_boss_highlordomokk()

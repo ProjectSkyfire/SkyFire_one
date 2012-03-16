@@ -165,9 +165,9 @@ struct boss_blackheart_the_inciterAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_blackheart_the_inciter(Creature* pCreature)
+CreatureAI* GetAI_boss_blackheart_the_inciter(Creature* creature)
 {
-    return new boss_blackheart_the_inciterAI (pCreature);
+    return new boss_blackheart_the_inciterAI (creature);
 }
 
 void AddSC_boss_blackheart_the_inciter()

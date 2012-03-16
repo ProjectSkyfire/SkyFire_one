@@ -55,9 +55,9 @@ struct mobs_mana_tappedAI : public ScriptedAI
         return;
     }
 };
-CreatureAI* GetAI_mobs_mana_tapped(Creature* pCreature)
+CreatureAI* GetAI_mobs_mana_tapped(Creature* creature)
 {
-    return new mobs_mana_tappedAI (pCreature);
+    return new mobs_mana_tappedAI (creature);
 }
 
 /*######
@@ -106,31 +106,31 @@ struct npc_prospector_anvilwardAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_prospector_anvilward(Creature* pCreature)
+CreatureAI* GetAI_npc_prospector_anvilward(Creature* creature)
 {
-    return new npc_prospector_anvilwardAI(pCreature);
+    return new npc_prospector_anvilwardAI(creature);
 }
 
-bool GossipHello_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_prospector_anvilward(Player* pPlayer, Creature* creature)
 {
     if (pPlayer->GetQuestStatus(QUEST_THE_DWARVEN_SPY) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(8239, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(8239, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(8240, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(8240, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->CLOSE_GOSSIP_MENU();
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_prospector_anvilwardAI, pCreature->AI()))
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_prospector_anvilwardAI, creature->AI()))
                 pEscortAI->Start(true, false, pPlayer->GetGUID());
             break;
     }
@@ -415,28 +415,28 @@ struct master_kelerun_bloodmournAI : public ScriptedAI
     void SummonedCreatureDespawn(Creature* /*c*/) {}
 };
 
-bool GossipHello_master_kelerun_bloodmourn(Player* pPlayer, Creature* pCreature)
+bool GossipHello_master_kelerun_bloodmourn(Player* pPlayer, Creature* creature)
 {
     // quest only available if not already started
     // Quest_template flag is set to : QUEST_FLAGS_EVENT
     // Escort quests or any other event-driven quests. If player in party, all players that can accept this quest will receive confirmation box to accept quest.
     // !not sure if this really works!
 
-    if (CAST_AI(master_kelerun_bloodmournAI, pCreature->AI())->questPhase == 0)
+    if (CAST_AI(master_kelerun_bloodmournAI, creature->AI())->questPhase == 0)
     {
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-        pPlayer->SendPreparedQuest(pCreature->GetGUID());
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
+        pPlayer->SendPreparedQuest(creature->GetGUID());
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pCreature->GetEntry(), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(creature->GetEntry(), creature->GetGUID());
     return true;
 }
 
-bool QuestAccept_master_kelerun_bloodmourn(Player* /*pPlayer*/, Creature* pCreature, Quest const *quest)
+bool QuestAccept_master_kelerun_bloodmourn(Player* /*pPlayer*/, Creature* creature, Quest const *quest)
 {
     // One Player exclusive quest, wait for user go activation
     if (quest->GetQuestId() == QUEST_SECOND_TRIAL)
-        CAST_AI(master_kelerun_bloodmournAI, pCreature->AI())->questPhase = 1;
+        CAST_AI(master_kelerun_bloodmournAI, creature->AI())->questPhase = 1;
 
     return true;
 }
@@ -494,14 +494,14 @@ void npc_secondTrialAI::Activate(uint64 summonerguid)
       summonerGuid = summonerguid;
 }
 
-CreatureAI* GetAI_master_kelerun_bloodmourn(Creature* pCreature)
+CreatureAI* GetAI_master_kelerun_bloodmourn(Creature* creature)
 {
-    return new master_kelerun_bloodmournAI (pCreature);
+    return new master_kelerun_bloodmournAI (creature);
 }
 
-CreatureAI* GetAI_npc_secondTrial(Creature* pCreature)
+CreatureAI* GetAI_npc_secondTrial(Creature* creature)
 {
-    return new npc_secondTrialAI (pCreature);
+    return new npc_secondTrialAI (creature);
 }
 
 /*######
@@ -511,8 +511,8 @@ CreatureAI* GetAI_npc_secondTrial(Creature* pCreature)
 bool GOHello_go_second_trial(Player* /*pPlayer*/, GameObject* pGO)
 {
     // find spawn :: master_kelerun_bloodmourn
-    if (Creature *pCreature = pGO->FindNearestCreature(MASTER_KELERUN_BLOODMOURN, 30.0f))
-       CAST_AI(master_kelerun_bloodmournAI, pCreature->AI())->StartEvent();
+    if (Creature *creature = pGO->FindNearestCreature(MASTER_KELERUN_BLOODMOURN, 30.0f))
+       CAST_AI(master_kelerun_bloodmournAI, creature->AI())->StartEvent();
 
     return true;
 }
@@ -582,19 +582,19 @@ struct npc_apprentice_mirvedaAI : public ScriptedAI
     }
 };
 
-bool QuestAccept_npc_apprentice_mirveda(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_apprentice_mirveda(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_UNEXPECTED_RESULT)
     {
-        CAST_AI(npc_apprentice_mirvedaAI, pCreature->AI())->Summon = true;
-        CAST_AI(npc_apprentice_mirvedaAI, pCreature->AI())->PlayerGUID = pPlayer->GetGUID();
+        CAST_AI(npc_apprentice_mirvedaAI, creature->AI())->Summon = true;
+        CAST_AI(npc_apprentice_mirvedaAI, creature->AI())->PlayerGUID = pPlayer->GetGUID();
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_apprentice_mirvedaAI(Creature* pCreature)
+CreatureAI* GetAI_npc_apprentice_mirvedaAI(Creature* creature)
 {
-    return new npc_apprentice_mirvedaAI (pCreature);
+    return new npc_apprentice_mirvedaAI (creature);
 }
 
 /*######
@@ -697,9 +697,9 @@ struct npc_infused_crystalAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_npc_infused_crystalAI(Creature* pCreature)
+CreatureAI* GetAI_npc_infused_crystalAI(Creature* creature)
 {
-    return new npc_infused_crystalAI (pCreature);
+    return new npc_infused_crystalAI (creature);
 }
 
 void AddSC_eversong_woods()

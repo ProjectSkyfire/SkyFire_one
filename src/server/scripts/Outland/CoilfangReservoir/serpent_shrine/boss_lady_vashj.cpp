@@ -411,12 +411,12 @@ struct boss_lady_vashjAI : public ScriptedAI
                     me->GetMotionMaster()->Clear();
                     DoTeleportTo(MIDDLE_X, MIDDLE_Y, MIDDLE_Z);
 
-                    Creature *pCreature;
+                    Creature *creature;
                     for (uint8 i = 0; i < 4; ++i)
                     {
-                        pCreature = me->SummonCreature(SHIED_GENERATOR_CHANNEL, ShieldGeneratorChannelPos[i][0], ShieldGeneratorChannelPos[i][1], ShieldGeneratorChannelPos[i][2], ShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
-                        if (pCreature)
-                            ShieldGeneratorChannel[i] = pCreature->GetGUID();
+                        creature = me->SummonCreature(SHIED_GENERATOR_CHANNEL, ShieldGeneratorChannelPos[i][0], ShieldGeneratorChannelPos[i][1], ShieldGeneratorChannelPos[i][2], ShieldGeneratorChannelPos[i][3], TEMPSUMMON_CORPSE_DESPAWN, 0);
+                        if (creature)
+                            ShieldGeneratorChannel[i] = creature->GetGUID();
                     }
                     DoScriptText(SAY_PHASE2, me);
                 }
@@ -849,9 +849,9 @@ struct mob_toxic_sporebatAI : public ScriptedAI
 
 //Coilfang Elite
 //It's an elite Naga mob with 170, 000 HP. It does about 5000 damage on plate, and has a nasty cleave hitting for about 7500 damage
-CreatureAI* GetAI_mob_coilfang_elite(Creature* pCreature)
+CreatureAI* GetAI_mob_coilfang_elite(Creature* creature)
 {
-    SimpleAI* ai = new SimpleAI (pCreature);
+    SimpleAI* ai = new SimpleAI (creature);
 
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = 31345;                          //Cleave
@@ -904,9 +904,9 @@ struct mob_coilfang_striderAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_coilfang_strider(Creature *pCreature)
+CreatureAI* GetAI_mob_coilfang_strider(Creature *creature)
 {
-    return new mob_coilfang_striderAI (pCreature);
+    return new mob_coilfang_striderAI (creature);
 }
 
 struct mob_shield_generator_channelAI : public ScriptedAI
@@ -1029,29 +1029,29 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* /*_Item*/, SpellCastTarget
     return true;
 }
 
-CreatureAI* GetAI_boss_lady_vashj(Creature* pCreature)
+CreatureAI* GetAI_boss_lady_vashj(Creature* creature)
 {
-    return new boss_lady_vashjAI (pCreature);
+    return new boss_lady_vashjAI (creature);
 }
 
-CreatureAI* GetAI_mob_enchanted_elemental(Creature* pCreature)
+CreatureAI* GetAI_mob_enchanted_elemental(Creature* creature)
 {
-    return new mob_enchanted_elementalAI (pCreature);
+    return new mob_enchanted_elementalAI (creature);
 }
 
-CreatureAI* GetAI_mob_tainted_elemental(Creature* pCreature)
+CreatureAI* GetAI_mob_tainted_elemental(Creature* creature)
 {
-    return new mob_tainted_elementalAI (pCreature);
+    return new mob_tainted_elementalAI (creature);
 }
 
-CreatureAI* GetAI_mob_toxic_sporebat(Creature* pCreature)
+CreatureAI* GetAI_mob_toxic_sporebat(Creature* creature)
 {
-    return new mob_toxic_sporebatAI (pCreature);
+    return new mob_toxic_sporebatAI (creature);
 }
 
-CreatureAI* GetAI_mob_shield_generator_channel(Creature* pCreature)
+CreatureAI* GetAI_mob_shield_generator_channel(Creature* creature)
 {
-    return new mob_shield_generator_channelAI (pCreature);
+    return new mob_shield_generator_channelAI (creature);
 }
 
 void AddSC_boss_lady_vashj()

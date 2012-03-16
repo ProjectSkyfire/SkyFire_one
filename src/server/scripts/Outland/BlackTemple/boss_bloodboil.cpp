@@ -328,9 +328,9 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gurtogg_bloodboil(Creature* pCreature)
+CreatureAI* GetAI_boss_gurtogg_bloodboil(Creature* creature)
 {
-    return new boss_gurtogg_bloodboilAI (pCreature);
+    return new boss_gurtogg_bloodboilAI (creature);
 }
 
 void AddSC_boss_gurtogg_bloodboil()

@@ -296,9 +296,9 @@ struct boss_onyxiaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_onyxiaAI(Creature* pCreature)
+CreatureAI* GetAI_boss_onyxiaAI(Creature* creature)
 {
-    return new boss_onyxiaAI (pCreature);
+    return new boss_onyxiaAI (creature);
 }
 
 void AddSC_boss_onyxia()

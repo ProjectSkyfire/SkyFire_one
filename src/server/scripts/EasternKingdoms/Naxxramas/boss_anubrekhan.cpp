@@ -138,9 +138,9 @@ struct boss_anubrekhanAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_anubrekhan(Creature* pCreature)
+CreatureAI* GetAI_boss_anubrekhan(Creature* creature)
 {
-    return new boss_anubrekhanAI (pCreature);
+    return new boss_anubrekhanAI (creature);
 }
 
 void AddSC_boss_anubrekhan()

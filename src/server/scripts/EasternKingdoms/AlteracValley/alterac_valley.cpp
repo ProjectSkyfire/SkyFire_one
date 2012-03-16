@@ -175,9 +175,9 @@ struct mob_av_marshal_or_warmasterAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_av_marshal_or_warmaster(Creature* pCreature)
+CreatureAI* GetAI_mob_av_marshal_or_warmaster(Creature* creature)
 {
-    return new mob_av_marshal_or_warmasterAI (pCreature);
+    return new mob_av_marshal_or_warmasterAI (creature);
 }
 
 void AddSC_alterac_valley()

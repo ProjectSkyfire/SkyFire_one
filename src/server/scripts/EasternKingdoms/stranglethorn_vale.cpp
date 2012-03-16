@@ -106,9 +106,9 @@ struct mob_yennikuAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mob_yenniku(Creature* pCreature)
+CreatureAI* GetAI_mob_yenniku(Creature* creature)
 {
-    return new mob_yennikuAI (pCreature);
+    return new mob_yennikuAI (creature);
 }
 
 /*######

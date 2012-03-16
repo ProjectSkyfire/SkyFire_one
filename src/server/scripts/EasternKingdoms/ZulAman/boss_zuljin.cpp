@@ -289,17 +289,17 @@ struct boss_zuljinAI : public ScriptedAI
 
     void SpawnAdds()
     {
-        Creature *pCreature = NULL;
+        Creature *creature = NULL;
         for (uint8 i = 0; i < 4; ++i)
         {
-            pCreature = me->SummonCreature(SpiritInfo[i].entry, SpiritInfo[i].x, SpiritInfo[i].y, SpiritInfo[i].z, SpiritInfo[i].orient, TEMPSUMMON_DEAD_DESPAWN, 0);
-            if (pCreature)
+            creature = me->SummonCreature(SpiritInfo[i].entry, SpiritInfo[i].x, SpiritInfo[i].y, SpiritInfo[i].z, SpiritInfo[i].orient, TEMPSUMMON_DEAD_DESPAWN, 0);
+            if (creature)
             {
-                pCreature->CastSpell(pCreature, SPELL_SPIRIT_AURA, true);
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                pCreature->addUnitState(UNIT_STAT_STUNNED);
-                SpiritGUID[i] = pCreature->GetGUID();
+                creature->CastSpell(creature, SPELL_SPIRIT_AURA, true);
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                creature->addUnitState(UNIT_STAT_STUNNED);
+                SpiritGUID[i] = creature->GetGUID();
             }
         }
     }
@@ -580,9 +580,9 @@ struct boss_zuljinAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_zuljin(Creature* pCreature)
+CreatureAI* GetAI_boss_zuljin(Creature* creature)
 {
-    return new boss_zuljinAI (pCreature);
+    return new boss_zuljinAI (creature);
 }
 
 struct feather_vortexAI : public ScriptedAI
@@ -645,9 +645,9 @@ struct feather_vortexAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_feather_vortexAI(Creature* pCreature)
+CreatureAI* GetAI_feather_vortexAI(Creature* creature)
 {
-    return new feather_vortexAI (pCreature);
+    return new feather_vortexAI (creature);
 }
 
 void AddSC_boss_zuljin()

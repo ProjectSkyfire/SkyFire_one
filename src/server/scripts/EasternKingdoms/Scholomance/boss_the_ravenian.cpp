@@ -105,9 +105,9 @@ struct boss_theravenianAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_theravenian(Creature* pCreature)
+CreatureAI* GetAI_boss_theravenian(Creature* creature)
 {
-    return new boss_theravenianAI (pCreature);
+    return new boss_theravenianAI (creature);
 }
 
 void AddSC_boss_theravenian()

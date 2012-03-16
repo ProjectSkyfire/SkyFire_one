@@ -33,12 +33,12 @@ struct instance_zulfarrak : public ScriptedInstance
         GahzRillaEncounter = NOT_STARTED;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        if (pCreature->GetEntry() == NPC_GAHZRILLA)
+        if (creature->GetEntry() == NPC_GAHZRILLA)
         {
             if (GahzRillaEncounter >= IN_PROGRESS)
-                pCreature->DisappearAndDie();
+                creature->DisappearAndDie();
             else
                 GahzRillaEncounter = IN_PROGRESS;
         }

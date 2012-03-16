@@ -108,9 +108,9 @@ struct boss_moamAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_moam(Creature* pCreature)
+CreatureAI* GetAI_boss_moam(Creature* creature)
 {
-    return new boss_moamAI (pCreature);
+    return new boss_moamAI (creature);
 }
 
 void AddSC_boss_moam()

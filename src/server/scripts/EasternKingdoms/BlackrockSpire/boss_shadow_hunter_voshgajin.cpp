@@ -81,9 +81,9 @@ struct boss_shadowvoshAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_shadowvosh(Creature* pCreature)
+CreatureAI* GetAI_boss_shadowvosh(Creature* creature)
 {
-    return new boss_shadowvoshAI (pCreature);
+    return new boss_shadowvoshAI (creature);
 }
 
 void AddSC_boss_shadowvosh()

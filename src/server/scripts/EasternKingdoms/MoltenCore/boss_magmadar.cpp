@@ -88,9 +88,9 @@ struct boss_magmadarAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_magmadar(Creature* pCreature)
+CreatureAI* GetAI_boss_magmadar(Creature* creature)
 {
-    return new boss_magmadarAI (pCreature);
+    return new boss_magmadarAI (creature);
 }
 
 void AddSC_boss_magmadar()

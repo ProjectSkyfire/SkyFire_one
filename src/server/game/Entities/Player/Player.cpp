@@ -11838,11 +11838,11 @@ void Player::SendEquipError(uint8 msg, Item* pItem, Item *pItem2)
     GetSession()->SendPacket(&data);
 }
 
-void Player::SendBuyError(uint8 msg, Creature* pCreature, uint32 item, uint32 param)
+void Player::SendBuyError(uint8 msg, Creature* creature, uint32 item, uint32 param)
 {
     sLog->outDebug("WORLD: Sent SMSG_BUY_FAILED");
     WorldPacket data(SMSG_BUY_FAILED, (8+4+4+1));
-    data << uint64(pCreature ? pCreature->GetGUID() : 0);
+    data << uint64(creature ? creature->GetGUID() : 0);
     data << uint32(item);
     if (param > 0)
         data << uint32(param);
@@ -11850,11 +11850,11 @@ void Player::SendBuyError(uint8 msg, Creature* pCreature, uint32 item, uint32 pa
     GetSession()->SendPacket(&data);
 }
 
-void Player::SendSellError(uint8 msg, Creature* pCreature, uint64 guid, uint32 param)
+void Player::SendSellError(uint8 msg, Creature* creature, uint64 guid, uint32 param)
 {
     sLog->outDebug("WORLD: Sent SMSG_SELL_ITEM");
     WorldPacket data(SMSG_SELL_ITEM, (8+8+(param?4:0)+1));  // last check 2.0.10
-    data << uint64(pCreature ? pCreature->GetGUID() : 0);
+    data << uint64(creature ? creature->GetGUID() : 0);
     data << uint64(guid);
     if (param > 0)
         data << uint32(param);
@@ -12431,8 +12431,8 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
 
         if (pSource->GetTypeId() == TYPEID_UNIT)
         {
-            Creature *pCreature = pSource->ToCreature();
-            uint32 npcflags = pCreature->GetUInt32Value(UNIT_NPC_FLAGS);
+            Creature *creature = pSource->ToCreature();
+            uint32 npcflags = creature->GetUInt32Value(UNIT_NPC_FLAGS);
 
             if (!(itr->second.npc_option_npcflag & npcflags))
                 continue;
@@ -12456,32 +12456,32 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
                     break;
                 case GOSSIP_OPTION_VENDOR:
                 {
-                    VendorItemData const* vItems = pCreature->GetVendorItems();
+                    VendorItemData const* vItems = creature->GetVendorItems();
                     if (!vItems || vItems->Empty())
                     {
-                        sLog->outErrorDb("Creature %u (Entry: %u) has UNIT_NPC_FLAG_VENDOR but has empty trading item list.", pCreature->GetGUIDLow(), pCreature->GetEntry());
+                        sLog->outErrorDb("Creature %u (Entry: %u) has UNIT_NPC_FLAG_VENDOR but has empty trading item list.", creature->GetGUIDLow(), creature->GetEntry());
                         hasMenuItem = false;
                     }
                     break;
                 }
                 case GOSSIP_OPTION_TRAINER:
-                    if (!pCreature->isCanTrainingOf(this, false))
+                    if (!creature->isCanTrainingOf(this, false))
                         hasMenuItem = false;
                     break;
                 case GOSSIP_OPTION_UNLEARNTALENTS:
-                    if (!pCreature->isCanTrainingAndResetTalentsOf(this))
+                    if (!creature->isCanTrainingAndResetTalentsOf(this))
                         hasMenuItem = false;
                     break;
                 case GOSSIP_OPTION_UNLEARNPETSKILLS:
-                    if (!GetPet() || GetPet()->getPetType() != HUNTER_PET || GetPet()->m_spells.size() <= 1 || pCreature->GetCreatureInfo()->trainer_type != TRAINER_TYPE_PETS || pCreature->GetCreatureInfo()->classNum != CLASS_HUNTER)
+                    if (!GetPet() || GetPet()->getPetType() != HUNTER_PET || GetPet()->m_spells.size() <= 1 || creature->GetCreatureInfo()->trainer_type != TRAINER_TYPE_PETS || creature->GetCreatureInfo()->classNum != CLASS_HUNTER)
                         hasMenuItem = false;
                     break;
                 case GOSSIP_OPTION_TAXIVENDOR:
-                    if (GetSession()->SendLearnNewTaxiNode(pCreature))
+                    if (GetSession()->SendLearnNewTaxiNode(creature))
                         return;
                     break;
                 case GOSSIP_OPTION_BATTLEFIELD:
-                    if (!pCreature->isCanInteractWithBattleMaster(this, false))
+                    if (!creature->isCanInteractWithBattleMaster(this, false))
                         hasMenuItem = false;
                     break;
                 case GOSSIP_OPTION_STABLEPET:
@@ -12496,11 +12496,11 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
                 case GOSSIP_OPTION_AUCTIONEER:
                     break;                                  // no checks
                 case GOSSIP_OPTION_OUTDOORPVP:
-                    if (!sOutdoorPvPMgr.CanTalkTo(this, pCreature, itr->second))
+                    if (!sOutdoorPvPMgr.CanTalkTo(this, creature, itr->second))
                         hasMenuItem = false;
                     break;
                 default:
-                    sLog->outErrorDb("Creature entry %u has unknown gossip option %u for menu %u", pCreature->GetEntry(), itr->second.option_id, itr->second.menu_id);
+                    sLog->outErrorDb("Creature entry %u has unknown gossip option %u for menu %u", creature->GetEntry(), itr->second.option_id, itr->second.menu_id);
                     hasMenuItem = false;
                     break;
             }
@@ -12561,16 +12561,16 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
     // some gossips aren't handled in normal way ... so we need to do it this way .. TODO: handle it in normal way ;-)
     /*if (pMenu->Empty())
     {
-        if (pCreature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_TRAINER))
+        if (creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_TRAINER))
         {
             // output error message if need
-            pCreature->isCanTrainingOf(this, true);
+            creature->isCanTrainingOf(this, true);
         }
 
-        if (pCreature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_BATTLEMASTER))
+        if (creature->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_BATTLEMASTER))
         {
             // output error message if need
-            pCreature->isCanInteractWithBattleMaster(this, true);
+            creature->isCanInteractWithBattleMaster(this, true);
         }
     }*/
 }
@@ -12788,9 +12788,9 @@ void Player::PrepareQuestMenu(uint64 guid)
     QuestRelations* pObjectQR;
     QuestRelations* pObjectQIR;
 
-    if (Creature *pCreature = GetMap()->GetCreature(guid))
+    if (Creature *creature = GetMap()->GetCreature(guid))
     {
-        pObject = (Object*)pCreature;
+        pObject = (Object*)creature;
         pObjectQR  = &sObjectMgr.mCreatureQuestRelations;
         pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
     }
@@ -12877,9 +12877,9 @@ void Player::SendPreparedQuest(uint64 guid)
         qe._Emote = 0;
         std::string title = "";
 
-        if (Creature *pCreature = GetMap()->GetCreature(guid))
+        if (Creature *creature = GetMap()->GetCreature(guid))
         {
-            uint32 textid = GetGossipTextId(pCreature);
+            uint32 textid = GetGossipTextId(creature);
 
             GossipText * gossiptext = sObjectMgr.GetGossipText(textid);
             if (!gossiptext)
@@ -12941,9 +12941,9 @@ Quest const * Player::GetNextQuest(uint64 guid, Quest const *pQuest)
     QuestRelations* pObjectQR;
     QuestRelations* pObjectQIR;
 
-    if (Creature *pCreature = GetMap()->GetCreature(guid))
+    if (Creature *creature = GetMap()->GetCreature(guid))
     {
-        pObject = (Object*)pCreature;
+        pObject = (Object*)creature;
         pObjectQR  = &sObjectMgr.mCreatureQuestRelations;
         pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
     }
@@ -18064,25 +18064,25 @@ bool Player::BuyItemFromVendor(uint64 vendorguid, uint32 item, uint8 count, uint
         return false;
     }
 
-    Creature *pCreature = GetNPCIfCanInteractWith(vendorguid, UNIT_NPC_FLAG_VENDOR);
-    if (!pCreature)
+    Creature *creature = GetNPCIfCanInteractWith(vendorguid, UNIT_NPC_FLAG_VENDOR);
+    if (!creature)
     {
         sLog->outDebug("WORLD: BuyItemFromVendor - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(vendorguid)));
         SendBuyError(BUY_ERR_DISTANCE_TOO_FAR, NULL, item, 0);
         return false;
     }
 
-    VendorItemData const* vItems = pCreature->GetVendorItems();
+    VendorItemData const* vItems = creature->GetVendorItems();
     if (!vItems || vItems->Empty())
     {
-        SendBuyError(BUY_ERR_CANT_FIND_ITEM, pCreature, item, 0);
+        SendBuyError(BUY_ERR_CANT_FIND_ITEM, creature, item, 0);
         return false;
     }
 
     size_t vendorslot = vItems->FindItemSlot(item);
     if (vendorslot >= vItems->GetItemCount())
     {
-        SendBuyError(BUY_ERR_CANT_FIND_ITEM, pCreature, item, 0);
+        SendBuyError(BUY_ERR_CANT_FIND_ITEM, creature, item, 0);
         return false;
     }
 
@@ -18090,23 +18090,23 @@ bool Player::BuyItemFromVendor(uint64 vendorguid, uint32 item, uint8 count, uint
     // store diff item (cheating)
     if (!crItem || crItem->item != item)
     {
-        SendBuyError(BUY_ERR_CANT_FIND_ITEM, pCreature, item, 0);
+        SendBuyError(BUY_ERR_CANT_FIND_ITEM, creature, item, 0);
         return false;
     }
 
     // check current item amount if it limited
     if (crItem->maxcount != 0)
     {
-        if (pCreature->GetVendorItemCurrentCount(crItem) < pProto->BuyCount * count)
+        if (creature->GetVendorItemCurrentCount(crItem) < pProto->BuyCount * count)
         {
-            SendBuyError(BUY_ERR_ITEM_ALREADY_SOLD, pCreature, item, 0);
+            SendBuyError(BUY_ERR_ITEM_ALREADY_SOLD, creature, item, 0);
             return false;
         }
     }
 
     if (uint32(GetReputationRank(pProto->RequiredReputationFaction)) < pProto->RequiredReputationRank)
     {
-        SendBuyError(BUY_ERR_REPUTATION_REQUIRE, pCreature, item, 0);
+        SendBuyError(BUY_ERR_REPUTATION_REQUIRE, creature, item, 0);
         return false;
     }
 
@@ -18155,11 +18155,11 @@ bool Player::BuyItemFromVendor(uint64 vendorguid, uint32 item, uint8 count, uint
     uint32 price  = pProto->BuyPrice * count;
 
     // reputation discount
-    price = uint32(floor(price * GetReputationPriceDiscount(pCreature)));
+    price = uint32(floor(price * GetReputationPriceDiscount(creature)));
 
     if (GetMoney() < price)
     {
-        SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, item, 0);
+        SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, item, 0);
         return false;
     }
 
@@ -18193,10 +18193,10 @@ bool Player::BuyItemFromVendor(uint64 vendorguid, uint32 item, uint8 count, uint
 
         if (Item *it = StoreNewItem(dest, item, true))
         {
-            uint32 new_count = pCreature->UpdateVendorItemCurrentCount(crItem, pProto->BuyCount * count);
+            uint32 new_count = creature->UpdateVendorItemCurrentCount(crItem, pProto->BuyCount * count);
 
             WorldPacket data(SMSG_BUY_ITEM, (8+4+4+4));
-            data << uint64(pCreature->GetGUID());
+            data << uint64(creature->GetGUID());
             data << uint32(vendorslot+1);                   // numbered from 1 at client
             data << uint32(crItem->maxcount > 0 ? new_count : 0xFFFFFFFF);
             data << uint32(count);
@@ -18239,10 +18239,10 @@ bool Player::BuyItemFromVendor(uint64 vendorguid, uint32 item, uint8 count, uint
 
         if (Item *it = EquipNewItem(dest, item, true))
         {
-            uint32 new_count = pCreature->UpdateVendorItemCurrentCount(crItem, pProto->BuyCount * count);
+            uint32 new_count = creature->UpdateVendorItemCurrentCount(crItem, pProto->BuyCount * count);
 
             WorldPacket data(SMSG_BUY_ITEM, (8+4+4+4));
-            data << uint64(pCreature->GetGUID());
+            data << uint64(creature->GetGUID());
             data << uint32(vendorslot + 1);                 // numbered from 1 at client
             data << uint32(crItem->maxcount > 0 ? new_count : 0xFFFFFFFF);
             data << uint32(count);
@@ -19551,9 +19551,9 @@ uint32 Player::GetBattleGroundQueueIdFromLevel() const
     return (getLevel() - bg->GetMinLevel()) / 10;*/
 }
 
-float Player::GetReputationPriceDiscount(Creature const* pCreature) const
+float Player::GetReputationPriceDiscount(Creature const* creature) const
 {
-    FactionTemplateEntry const* vendor_faction = pCreature->getFactionTemplateEntry();
+    FactionTemplateEntry const* vendor_faction = creature->getFactionTemplateEntry();
     if (!vendor_faction)
         return 1.0f;
 

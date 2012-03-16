@@ -55,9 +55,9 @@ enum eEnums
 
 struct boss_arlokkAI : public ScriptedAI
 {
-    boss_arlokkAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_arlokkAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance *pInstance;
@@ -287,9 +287,9 @@ struct mob_prowlerAI : public ScriptedAI
     uint32 m_uiThrash_Timer;
     uint32 m_uiUpdateTarget_Timer;
 
-    mob_prowlerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    mob_prowlerAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance *pInstance;
@@ -328,14 +328,14 @@ struct mob_prowlerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_arlokk(Creature* pCreature)
+CreatureAI* GetAI_boss_arlokk(Creature* creature)
 {
-    return new boss_arlokkAI (pCreature);
+    return new boss_arlokkAI (creature);
 }
 
-CreatureAI* GetAI_mob_prowler(Creature* pCreature)
+CreatureAI* GetAI_mob_prowler(Creature* creature)
 {
-    return new mob_prowlerAI (pCreature);
+    return new mob_prowlerAI (creature);
 }
 
 void AddSC_boss_arlokk()

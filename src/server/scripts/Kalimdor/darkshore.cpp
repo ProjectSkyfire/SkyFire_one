@@ -69,7 +69,7 @@ enum eKerlonian
 //TODO: make concept similar as "ringo" -escort. Find a way to run the scripted attacks, _if_ player are choosing road.
 struct npc_kerlonianAI : public FollowerAI
 {
-    npc_kerlonianAI(Creature* pCreature) : FollowerAI(pCreature) { }
+    npc_kerlonianAI(Creature* creature) : FollowerAI(creature) { }
 
     uint32 m_uiFallAsleepTimer;
 
@@ -152,19 +152,19 @@ struct npc_kerlonianAI : public FollowerAI
     }
 };
 
-CreatureAI* GetAI_npc_kerlonian(Creature* pCreature)
+CreatureAI* GetAI_npc_kerlonian(Creature* creature)
 {
-    return new npc_kerlonianAI(pCreature);
+    return new npc_kerlonianAI(creature);
 }
 
-bool QuestAccept_npc_kerlonian(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_kerlonian(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_SLEEPER_AWAKENED)
     {
-        if (npc_kerlonianAI* pKerlonianAI = CAST_AI(npc_kerlonianAI, pCreature->AI()))
+        if (npc_kerlonianAI* pKerlonianAI = CAST_AI(npc_kerlonianAI, creature->AI()))
         {
-            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-            DoScriptText(SAY_KER_START, pCreature, pPlayer);
+            creature->SetStandState(UNIT_STAND_STATE_STAND);
+            DoScriptText(SAY_KER_START, creature, pPlayer);
             pKerlonianAI->StartFollow(pPlayer, FACTION_KER_ESCORTEE, pQuest);
         }
     }
@@ -201,7 +201,7 @@ enum eRemtravel
 
 struct npc_prospector_remtravelAI : public npc_escortAI
 {
-    npc_prospector_remtravelAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+    npc_prospector_remtravelAI(Creature* creature) : npc_escortAI(creature) {}
 
     void WaypointReached(uint32 i)
     {
@@ -275,19 +275,19 @@ struct npc_prospector_remtravelAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_prospector_remtravel(Creature* pCreature)
+CreatureAI* GetAI_npc_prospector_remtravel(Creature* creature)
 {
-    return new npc_prospector_remtravelAI(pCreature);
+    return new npc_prospector_remtravelAI(creature);
 }
 
-bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_prospector_remtravel(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ABSENT_MINDED_PT2)
     {
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_prospector_remtravelAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_prospector_remtravelAI, creature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID());
 
-        pCreature->setFaction(FACTION_ESCORTEE);
+        creature->setFaction(FACTION_ESCORTEE);
     }
 
     return true;
@@ -310,7 +310,7 @@ enum eThreshwackonator
 
 struct npc_threshwackonatorAI : public FollowerAI
 {
-    npc_threshwackonatorAI(Creature* pCreature) : FollowerAI(pCreature) { }
+    npc_threshwackonatorAI(Creature* creature) : FollowerAI(creature) { }
 
     void Reset() { }
 
@@ -337,29 +337,29 @@ struct npc_threshwackonatorAI : public FollowerAI
     }
 };
 
-CreatureAI* GetAI_npc_threshwackonator(Creature* pCreature)
+CreatureAI* GetAI_npc_threshwackonator(Creature* creature)
 {
-    return new npc_threshwackonatorAI(pCreature);
+    return new npc_threshwackonatorAI(creature);
 }
 
-bool GossipHello_npc_threshwackonator(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_threshwackonator(Player* pPlayer, Creature* creature)
 {
     if (pPlayer->GetQuestStatus(QUEST_GYROMAST_REV) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_INSERT_KEY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_threshwackonator(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_threshwackonator(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
 
-        if (npc_threshwackonatorAI* pThreshAI = CAST_AI(npc_threshwackonatorAI, pCreature->AI()))
+        if (npc_threshwackonatorAI* pThreshAI = CAST_AI(npc_threshwackonatorAI, creature->AI()))
         {
-            DoScriptText(EMOTE_START, pCreature);
+            DoScriptText(EMOTE_START, creature);
             pThreshAI->StartFollow(pPlayer);
         }
     }

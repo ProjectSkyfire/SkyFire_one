@@ -106,12 +106,12 @@ struct instance_blood_furnace : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case NPC_BROGGOK: BroggokGUID = pCreature->GetGUID(); break;
-            case NPC_NASCENT_FEL_ORC: NascentOrcGuids.push_back(pCreature->GetGUID()); break;
+            case NPC_BROGGOK: BroggokGUID = creature->GetGUID(); break;
+            case NPC_NASCENT_FEL_ORC: NascentOrcGuids.push_back(creature->GetGUID()); break;
         }
     }
 
@@ -357,9 +357,9 @@ struct instance_blood_furnace : public ScriptedInstance
         }
     }
 
-    void OnCreatureDeath(Creature* pCreature)
+    void OnCreatureDeath(Creature* creature)
     {
-        if (pCreature->GetEntry() == NPC_NASCENT_FEL_ORC)
+        if (creature->GetEntry() == NPC_NASCENT_FEL_ORC)
         {
             uint8 uiClearedCells = 0;
             for (uint8 i = 0; i < std::min<uint32>(BroggokEventPhase, MAX_ORC_WAVES); ++i)
@@ -370,7 +370,7 @@ struct instance_blood_furnace : public ScriptedInstance
                     continue;
                 }
 
-               if (BroggokEvent[i].SortedOrcGuids.find(pCreature->GetGUID()) != BroggokEvent[i].SortedOrcGuids.end())
+               if (BroggokEvent[i].SortedOrcGuids.find(creature->GetGUID()) != BroggokEvent[i].SortedOrcGuids.end())
                    BroggokEvent[i].KilledOrcCount++;
 
                if (BroggokEvent[i].SortedOrcGuids.size() == BroggokEvent[i].KilledOrcCount)

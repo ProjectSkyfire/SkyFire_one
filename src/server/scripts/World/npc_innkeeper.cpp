@@ -42,11 +42,11 @@ bool isEventActive()
     return isGameEventActive(HALLOWEEN_EVENTID);
 }
 
-bool GossipHello_npc_innkeeper(Player *pPlayer, Creature *pCreature)
+bool GossipHello_npc_innkeeper(Player *pPlayer, Creature *creature)
 {
-    pPlayer->TalkedToCreature(pCreature->GetEntry(),pCreature->GetGUID());
+    pPlayer->TalkedToCreature(creature->GetEntry(),creature->GetGUID());
 
-    pPlayer->PrepareGossipMenu(pCreature, 0); //send innkeeper menu too
+    pPlayer->PrepareGossipMenu(creature, 0); //send innkeeper menu too
 
     if (isEventActive()&& !pPlayer->HasAura(SPELL_TRICK_OR_TREATED, 0))
     {
@@ -72,11 +72,11 @@ bool GossipHello_npc_innkeeper(Player *pPlayer, Creature *pCreature)
         pPlayer->ADD_GOSSIP_ITEM(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID && isEventActive() && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED, 0))
     {
@@ -125,12 +125,12 @@ bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* pCreature, uint32 /*u
     //Trininty Gossip core handling dont work...
     else if (uiAction == GOSSIP_OPTION_VENDOR)
     {
-        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+        pPlayer->SEND_VENDORLIST(creature->GetGUID());
     }
     else if (uiAction == GOSSIP_OPTION_INNKEEPER)
     {
         pPlayer->PlayerTalkClass->CloseGossip();
-        pPlayer->SetBindPoint(pCreature->GetGUID());
+        pPlayer->SetBindPoint(creature->GetGUID());
     }
 
     return true;

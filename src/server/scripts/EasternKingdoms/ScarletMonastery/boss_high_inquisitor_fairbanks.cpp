@@ -121,9 +121,9 @@ struct boss_high_inquisitor_fairbanksAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_high_inquisitor_fairbanks(Creature* pCreature)
+CreatureAI* GetAI_boss_high_inquisitor_fairbanks(Creature* creature)
 {
-    return new boss_high_inquisitor_fairbanksAI (pCreature);
+    return new boss_high_inquisitor_fairbanksAI (creature);
 }
 
 void AddSC_boss_high_inquisitor_fairbanks()

@@ -132,9 +132,9 @@ struct boss_emerissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_emeriss(Creature* pCreature)
+CreatureAI* GetAI_boss_emeriss(Creature* creature)
 {
-    return new boss_emerissAI (pCreature);
+    return new boss_emerissAI (creature);
 }
 
 void AddSC_boss_emeriss()

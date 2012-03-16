@@ -109,13 +109,13 @@ struct instance_steam_vault : public ScriptedInstance
         return NULL;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 17797: ThespiaGUID = pCreature->GetGUID(); break;
-            case 17796: MekgineerGUID = pCreature->GetGUID(); break;
-            case 17798: KalithreshGUID = pCreature->GetGUID(); break;
+            case 17797: ThespiaGUID = creature->GetGUID(); break;
+            case 17796: MekgineerGUID = creature->GetGUID(); break;
+            case 17798: KalithreshGUID = creature->GetGUID(); break;
         }
     }
 

@@ -89,9 +89,9 @@ struct boss_scornAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_scorn(Creature* pCreature)
+CreatureAI* GetAI_boss_scorn(Creature* creature)
 {
-    return new boss_scornAI (pCreature);
+    return new boss_scornAI (creature);
 }
 
 void AddSC_boss_scorn()

@@ -47,9 +47,9 @@ enum eCalvin
 
 struct npc_calvin_montagueAI : public ScriptedAI
 {
-    npc_calvin_montagueAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_calvin_montagueAI(Creature* creature) : ScriptedAI(creature)
     {
-        m_uiNormFaction = pCreature->getFaction();
+        m_uiNormFaction = creature->getFaction();
         Reset();
     }
 
@@ -132,17 +132,17 @@ struct npc_calvin_montagueAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_calvin_montague(Creature* pCreature)
+CreatureAI* GetAI_npc_calvin_montague(Creature* creature)
 {
-    return new npc_calvin_montagueAI(pCreature);
+    return new npc_calvin_montagueAI(creature);
 }
 
-bool QuestAccept_npc_calvin_montague(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_calvin_montague(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_590)
     {
-        pCreature->setFaction(FACTION_HOSTILE);
-        pCreature->AI()->AttackStart(pPlayer);
+        creature->setFaction(FACTION_HOSTILE);
+        creature->AI()->AttackStart(pPlayer);
     }
     return true;
 }

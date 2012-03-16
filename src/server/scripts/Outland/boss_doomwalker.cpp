@@ -170,9 +170,9 @@ struct boss_doomwalkerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_doomwalker(Creature* pCreature)
+CreatureAI* GetAI_boss_doomwalker(Creature* creature)
 {
-    return new boss_doomwalkerAI (pCreature);
+    return new boss_doomwalkerAI (creature);
 }
 
 void AddSC_boss_doomwalker()

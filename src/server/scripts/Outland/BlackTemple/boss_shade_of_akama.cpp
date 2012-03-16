@@ -829,46 +829,46 @@ struct npc_akamaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_shade_of_akama(Creature* pCreature)
+CreatureAI* GetAI_boss_shade_of_akama(Creature* creature)
 {
-    return new boss_shade_of_akamaAI (pCreature);
+    return new boss_shade_of_akamaAI (creature);
 }
 
-CreatureAI* GetAI_mob_ashtongue_channeler(Creature* pCreature)
+CreatureAI* GetAI_mob_ashtongue_channeler(Creature* creature)
 {
-    return new mob_ashtongue_channelerAI (pCreature);
+    return new mob_ashtongue_channelerAI (creature);
 }
 
-CreatureAI* GetAI_mob_ashtongue_sorcerer(Creature* pCreature)
+CreatureAI* GetAI_mob_ashtongue_sorcerer(Creature* creature)
 {
-    return new mob_ashtongue_sorcererAI (pCreature);
+    return new mob_ashtongue_sorcererAI (creature);
 }
 
-CreatureAI* GetAI_npc_akama_shade(Creature* pCreature)
+CreatureAI* GetAI_npc_akama_shade(Creature* creature)
 {
-    return new npc_akamaAI (pCreature);
+    return new npc_akamaAI (creature);
 }
 
-bool GossipSelect_npc_akama(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_akama(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        CAST_AI(npc_akamaAI, pCreature->AI())->BeginEvent(pPlayer);
+        CAST_AI(npc_akamaAI, creature->AI())->BeginEvent(pPlayer);
     }
 
     return true;
 }
 
-bool GossipHello_npc_akama(Player *player, Creature* pCreature)
+bool GossipHello_npc_akama(Player *player, Creature* creature)
 {
-    ScriptedInstance* pInstance = (pCreature->GetInstanceData());
+    ScriptedInstance* pInstance = (creature->GetInstanceData());
 
     if (pInstance && pInstance->GetData(DATA_SHADEOFAKAMAEVENT) == NOT_STARTED)
     {
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
-    player->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(907, creature->GetGUID());
     return true;
 }
 

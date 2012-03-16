@@ -337,9 +337,9 @@ struct boss_brutallusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_brutallus(Creature* pCreature)
+CreatureAI* GetAI_boss_brutallus(Creature* creature)
 {
-    return new boss_brutallusAI (pCreature);
+    return new boss_brutallusAI (creature);
 }
 
 void AddSC_boss_brutallus()

@@ -192,9 +192,9 @@ struct boss_lajAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_laj(Creature* pCreature)
+CreatureAI* GetAI_boss_laj(Creature* creature)
 {
-    return new boss_lajAI (pCreature);
+    return new boss_lajAI (creature);
 }
 
 void AddSC_boss_laj()

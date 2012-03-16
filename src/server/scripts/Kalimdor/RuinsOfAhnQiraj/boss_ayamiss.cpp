@@ -96,9 +96,9 @@ struct boss_ayamissAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ayamiss(Creature* pCreature)
+CreatureAI* GetAI_boss_ayamiss(Creature* creature)
 {
-    return new boss_ayamissAI (pCreature);
+    return new boss_ayamissAI (creature);
 }
 
 void AddSC_boss_ayamiss()

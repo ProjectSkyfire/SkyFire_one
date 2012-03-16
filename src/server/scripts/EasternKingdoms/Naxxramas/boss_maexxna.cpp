@@ -230,14 +230,14 @@ struct boss_maexxnaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_webwrap(Creature* pCreature)
+CreatureAI* GetAI_mob_webwrap(Creature* creature)
 {
-    return new mob_webwrapAI (pCreature);
+    return new mob_webwrapAI (creature);
 }
 
-CreatureAI* GetAI_boss_maexxna(Creature* pCreature)
+CreatureAI* GetAI_boss_maexxna(Creature* creature)
 {
-    return new boss_maexxnaAI (pCreature);
+    return new boss_maexxnaAI (creature);
 }
 
 void AddSC_boss_maexxna()

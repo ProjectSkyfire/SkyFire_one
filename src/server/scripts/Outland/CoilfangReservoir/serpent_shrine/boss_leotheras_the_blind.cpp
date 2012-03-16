@@ -311,10 +311,10 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
             if (InnderDemon[i])
             {
                     //delete creature
-                    Creature* pCreature = Unit::GetCreature((*me), InnderDemon[i]);
-                    if (pCreature && pCreature->isAlive())
+                    Creature* creature = Unit::GetCreature((*me), InnderDemon[i]);
+                    if (creature && creature->isAlive())
                     {
-                        pCreature->ForcedDespawn();
+                        creature->ForcedDespawn();
                     }
                     InnderDemon[i] = 0;
             }
@@ -762,24 +762,24 @@ struct mob_greyheart_spellbinderAI : public ScriptedAI
 
     void JustDied(Unit * /*killer*/) {}
 };
-CreatureAI* GetAI_boss_leotheras_the_blind(Creature* pCreature)
+CreatureAI* GetAI_boss_leotheras_the_blind(Creature* creature)
 {
-    return new boss_leotheras_the_blindAI (pCreature);
+    return new boss_leotheras_the_blindAI (creature);
 }
 
-CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature* pCreature)
+CreatureAI* GetAI_boss_leotheras_the_blind_demonform(Creature* creature)
 {
-    return new boss_leotheras_the_blind_demonformAI (pCreature);
+    return new boss_leotheras_the_blind_demonformAI (creature);
 }
 
-CreatureAI* GetAI_mob_greyheart_spellbinder(Creature* pCreature)
+CreatureAI* GetAI_mob_greyheart_spellbinder(Creature* creature)
 {
-    return new mob_greyheart_spellbinderAI (pCreature);
+    return new mob_greyheart_spellbinderAI (creature);
 }
 
-CreatureAI* GetAI_mob_inner_demon(Creature* pCreature)
+CreatureAI* GetAI_mob_inner_demon(Creature* creature)
 {
-    return new mob_inner_demonAI (pCreature);
+    return new mob_inner_demonAI (creature);
 }
 void AddSC_boss_leotheras_the_blind()
 {

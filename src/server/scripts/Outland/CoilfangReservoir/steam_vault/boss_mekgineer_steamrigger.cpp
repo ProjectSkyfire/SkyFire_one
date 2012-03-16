@@ -187,9 +187,9 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature* pCreature)
+CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature* creature)
 {
-    return new boss_mekgineer_steamriggerAI (pCreature);
+    return new boss_mekgineer_steamriggerAI (creature);
 }
 
 #define SPELL_DISPEL_MAGIC          17201
@@ -261,9 +261,9 @@ struct mob_steamrigger_mechanicAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_steamrigger_mechanic(Creature* pCreature)
+CreatureAI* GetAI_mob_steamrigger_mechanic(Creature* creature)
 {
-    return new mob_steamrigger_mechanicAI (pCreature);
+    return new mob_steamrigger_mechanicAI (creature);
 }
 
 void AddSC_boss_mekgineer_steamrigger()

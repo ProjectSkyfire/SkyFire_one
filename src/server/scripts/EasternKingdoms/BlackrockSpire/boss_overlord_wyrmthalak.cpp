@@ -114,9 +114,9 @@ struct boss_overlordwyrmthalakAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_overlordwyrmthalak(Creature* pCreature)
+CreatureAI* GetAI_boss_overlordwyrmthalak(Creature* creature)
 {
-    return new boss_overlordwyrmthalakAI (pCreature);
+    return new boss_overlordwyrmthalakAI (creature);
 }
 
 void AddSC_boss_overlordwyrmthalak()

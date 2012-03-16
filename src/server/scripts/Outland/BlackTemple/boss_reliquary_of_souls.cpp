@@ -605,29 +605,29 @@ void npc_enslaved_soulAI::JustDied(Unit * /*killer*/)
     DoCast(me, SPELL_SOUL_RELEASE, true);
 }
 
-CreatureAI* GetAI_boss_reliquary_of_souls(Creature* pCreature)
+CreatureAI* GetAI_boss_reliquary_of_souls(Creature* creature)
 {
-    return new boss_reliquary_of_soulsAI (pCreature);
+    return new boss_reliquary_of_soulsAI (creature);
 }
 
-CreatureAI* GetAI_boss_essence_of_suffering(Creature* pCreature)
+CreatureAI* GetAI_boss_essence_of_suffering(Creature* creature)
 {
-    return new boss_essence_of_sufferingAI (pCreature);
+    return new boss_essence_of_sufferingAI (creature);
 }
 
-CreatureAI* GetAI_boss_essence_of_desire(Creature* pCreature)
+CreatureAI* GetAI_boss_essence_of_desire(Creature* creature)
 {
-    return new boss_essence_of_desireAI (pCreature);
+    return new boss_essence_of_desireAI (creature);
 }
 
-CreatureAI* GetAI_boss_essence_of_anger(Creature* pCreature)
+CreatureAI* GetAI_boss_essence_of_anger(Creature* creature)
 {
-    return new boss_essence_of_angerAI (pCreature);
+    return new boss_essence_of_angerAI (creature);
 }
 
-CreatureAI* GetAI_npc_enslaved_soul(Creature* pCreature)
+CreatureAI* GetAI_npc_enslaved_soul(Creature* creature)
 {
-    return new npc_enslaved_soulAI (pCreature);
+    return new npc_enslaved_soulAI (creature);
 }
 
 void AddSC_boss_reliquary_of_souls()

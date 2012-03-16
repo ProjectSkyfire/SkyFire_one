@@ -331,9 +331,9 @@ struct boss_netherspiteAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_netherspite(Creature *pCreature)
+CreatureAI* GetAI_boss_netherspite(Creature *creature)
 {
-    return new boss_netherspiteAI(pCreature);
+    return new boss_netherspiteAI(creature);
 }
 
 void AddSC_boss_netherspite()

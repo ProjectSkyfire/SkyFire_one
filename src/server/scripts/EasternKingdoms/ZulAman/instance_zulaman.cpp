@@ -109,9 +109,9 @@ struct instance_zulaman : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
         case 23578://janalai
         case 23863://zuljin

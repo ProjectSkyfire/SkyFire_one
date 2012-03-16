@@ -616,14 +616,14 @@ struct boss_veklorAI : public boss_twinemperorsAI
     }
 };
 
-CreatureAI* GetAI_boss_veknilash(Creature* pCreature)
+CreatureAI* GetAI_boss_veknilash(Creature* creature)
 {
-    return new boss_veknilashAI (pCreature);
+    return new boss_veknilashAI (creature);
 }
 
-CreatureAI* GetAI_boss_veklor(Creature* pCreature)
+CreatureAI* GetAI_boss_veklor(Creature* creature)
 {
-    return new boss_veklorAI (pCreature);
+    return new boss_veklorAI (creature);
 }
 
 void AddSC_boss_twinemperors()

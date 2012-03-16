@@ -139,7 +139,7 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
 
     Creature* SelectCreatureInGrid(uint32 entry, float range)
     {
-        Creature* pCreature = NULL;
+        Creature* creature = NULL;
 
         CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(pair);
@@ -147,11 +147,11 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
         cell.SetNoCreate();
 
         Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
-        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
         TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
         cell.Visit(pair, creature_searcher,*(me->GetMap()));
 
-        return pCreature;
+        return creature;
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -208,14 +208,14 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_naga_distiller(Creature* pCreature)
+CreatureAI* GetAI_mob_naga_distiller(Creature* creature)
 {
-    return new mob_naga_distillerAI (pCreature);
+    return new mob_naga_distillerAI (creature);
 }
 
-CreatureAI* GetAI_boss_warlord_kalithresh(Creature* pCreature)
+CreatureAI* GetAI_boss_warlord_kalithresh(Creature* creature)
 {
-    return new boss_warlord_kalithreshAI (pCreature);
+    return new boss_warlord_kalithreshAI (creature);
 }
 
 void AddSC_boss_warlord_kalithresh()

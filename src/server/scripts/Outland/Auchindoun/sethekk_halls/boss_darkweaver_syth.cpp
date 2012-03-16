@@ -212,9 +212,9 @@ struct boss_darkweaver_sythAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_darkweaver_syth(Creature* pCreature)
+CreatureAI* GetAI_boss_darkweaver_syth(Creature* creature)
 {
-    return new boss_darkweaver_sythAI (pCreature);
+    return new boss_darkweaver_sythAI (creature);
 }
 
 /* ELEMENTALS */
@@ -265,9 +265,9 @@ struct mob_syth_fireAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_fire(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_fire(Creature* creature)
 {
-    return new mob_syth_fireAI (pCreature);
+    return new mob_syth_fireAI (creature);
 }
 
 struct mob_syth_arcaneAI : public ScriptedAI
@@ -316,9 +316,9 @@ struct mob_syth_arcaneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_arcane(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_arcane(Creature* creature)
 {
-    return new mob_syth_arcaneAI (pCreature);
+    return new mob_syth_arcaneAI (creature);
 }
 
 struct mob_syth_frostAI : public ScriptedAI
@@ -367,9 +367,9 @@ struct mob_syth_frostAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_frost(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_frost(Creature* creature)
 {
-    return new mob_syth_frostAI (pCreature);
+    return new mob_syth_frostAI (creature);
 }
 
 struct mob_syth_shadowAI : public ScriptedAI
@@ -418,9 +418,9 @@ struct mob_syth_shadowAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_shadow(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_shadow(Creature* creature)
 {
-    return new mob_syth_shadowAI (pCreature);
+    return new mob_syth_shadowAI (creature);
 }
 
 void AddSC_boss_darkweaver_syth()

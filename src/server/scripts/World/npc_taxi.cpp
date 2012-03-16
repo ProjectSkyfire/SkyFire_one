@@ -49,12 +49,12 @@ EndScriptData
 #define GOSSIP_WILLIAMKEILAR2   "Take me to Eastwall Tower."
 #define GOSSIP_WILLIAMKEILAR3   "Take me to Crown Guard Tower."
 
-bool GossipHello_npc_taxi(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_taxi(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
-    switch (pCreature->GetEntry()) {
+    switch (creature->GetEntry()) {
     case 17435: // Azuremyst Isle - Susurrus
         if (pPlayer->HasItemCount(23843, 1, true))
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SUSURRUS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -132,11 +132,11 @@ bool GossipHello_npc_taxi(Player* pPlayer, Creature* pCreature)
         break;
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_taxi(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_taxi(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     std::vector<uint32> nodes;
 
@@ -156,7 +156,7 @@ bool GossipSelect_npc_taxi(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         break;
     case GOSSIP_ACTION_INFO_DEF + 2:
         if (!pPlayer->HasItemCount(25853, 1)) {
-            pPlayer->SEND_GOSSIP_MENU(9780, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9780, creature->GetGUID());
         } else {
             pPlayer->CLOSE_GOSSIP_MENU();
 

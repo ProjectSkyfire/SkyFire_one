@@ -182,14 +182,14 @@ struct mob_flamewaker_priestAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sulfuron(Creature* pCreature)
+CreatureAI* GetAI_boss_sulfuron(Creature* creature)
 {
-    return new boss_sulfuronAI (pCreature);
+    return new boss_sulfuronAI (creature);
 }
 
-CreatureAI* GetAI_mob_flamewaker_priest(Creature* pCreature)
+CreatureAI* GetAI_mob_flamewaker_priest(Creature* creature)
 {
-    return new mob_flamewaker_priestAI (pCreature);
+    return new mob_flamewaker_priestAI (creature);
 }
 
 void AddSC_boss_sulfuron()

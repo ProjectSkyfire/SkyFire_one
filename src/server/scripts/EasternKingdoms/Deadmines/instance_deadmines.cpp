@@ -152,10 +152,10 @@ struct instance_deadmines : public ScriptedInstance
         MoveCreatureInside(pDefiasCompanion);
     }
 
-    void MoveCreatureInside(Creature* pCreature)
+    void MoveCreatureInside(Creature* creature)
     {
-        pCreature->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
-        pCreature->GetMotionMaster()->MovePoint(0, -102.7,-655.9, pCreature->GetPositionZ());
+        creature->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
+        creature->GetMotionMaster()->MovePoint(0, -102.7,-655.9, creature->GetPositionZ());
     }
 
     void ShootCannon()

@@ -423,9 +423,9 @@ struct boss_alarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_alar(Creature* pCreature)
+CreatureAI* GetAI_boss_alar(Creature* creature)
 {
-    return new boss_alarAI(pCreature);
+    return new boss_alarAI(creature);
 }
 
 struct mob_ember_of_alarAI : public ScriptedAI
@@ -483,9 +483,9 @@ struct mob_ember_of_alarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_ember_of_alar(Creature* pCreature)
+CreatureAI* GetAI_mob_ember_of_alar(Creature* creature)
 {
-    return new mob_ember_of_alarAI(pCreature);
+    return new mob_ember_of_alarAI(creature);
 }
 
 struct mob_flame_patch_alarAI : public ScriptedAI
@@ -498,9 +498,9 @@ struct mob_flame_patch_alarAI : public ScriptedAI
     void UpdateAI(const uint32 /*diff*/) {}
 };
 
-CreatureAI* GetAI_mob_flame_patch_alar(Creature* pCreature)
+CreatureAI* GetAI_mob_flame_patch_alar(Creature* creature)
 {
-    return new mob_flame_patch_alarAI(pCreature);
+    return new mob_flame_patch_alarAI(creature);
 }
 
 void AddSC_boss_alar()

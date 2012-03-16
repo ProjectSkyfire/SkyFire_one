@@ -65,9 +65,9 @@ struct boss_houndmaster_lokseyAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_houndmaster_loksey(Creature* pCreature)
+CreatureAI* GetAI_boss_houndmaster_loksey(Creature* creature)
 {
-    return new boss_houndmaster_lokseyAI (pCreature);
+    return new boss_houndmaster_lokseyAI (creature);
 }
 
 void AddSC_boss_houndmaster_loksey()

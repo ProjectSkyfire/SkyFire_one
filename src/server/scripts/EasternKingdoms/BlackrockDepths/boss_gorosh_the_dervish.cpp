@@ -73,9 +73,9 @@ struct boss_gorosh_the_dervishAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gorosh_the_dervish(Creature* pCreature)
+CreatureAI* GetAI_boss_gorosh_the_dervish(Creature* creature)
 {
-    return new boss_gorosh_the_dervishAI (pCreature);
+    return new boss_gorosh_the_dervishAI (creature);
 }
 
 void AddSC_boss_gorosh_the_dervish()

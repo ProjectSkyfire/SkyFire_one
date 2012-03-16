@@ -153,9 +153,9 @@ struct boss_midnightAI : public ScriptedAI
     void SetMidnight(Creature *, uint64);                   //Below ..
 };
 
-CreatureAI* GetAI_boss_midnight(Creature* pCreature)
+CreatureAI* GetAI_boss_midnight(Creature* creature)
 {
-    return new boss_midnightAI(pCreature);
+    return new boss_midnightAI(creature);
 }
 
 struct boss_attumenAI : public ScriptedAI
@@ -289,9 +289,9 @@ void boss_midnightAI::SetMidnight(Creature *pAttumen, uint64 value)
     CAST_AI(boss_attumenAI, pAttumen->AI())->Midnight = value;
 }
 
-CreatureAI* GetAI_boss_attumen(Creature* pCreature)
+CreatureAI* GetAI_boss_attumen(Creature* creature)
 {
-    return new boss_attumenAI (pCreature);
+    return new boss_attumenAI (creature);
 }
 
 void AddSC_boss_attumen()

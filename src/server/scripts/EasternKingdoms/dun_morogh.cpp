@@ -88,9 +88,9 @@ struct npc_narm_faulkAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_npc_narm_faulk(Creature* pCreature)
+CreatureAI* GetAI_npc_narm_faulk(Creature* creature)
 {
-    return new npc_narm_faulkAI (pCreature);
+    return new npc_narm_faulkAI (creature);
 }
 
 void AddSC_dun_morogh()

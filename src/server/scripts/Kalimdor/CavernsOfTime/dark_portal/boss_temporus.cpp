@@ -123,9 +123,9 @@ struct boss_temporusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_temporus(Creature* pCreature)
+CreatureAI* GetAI_boss_temporus(Creature* creature)
 {
-    return new boss_temporusAI (pCreature);
+    return new boss_temporusAI (creature);
 }
 
 void AddSC_boss_temporus()

@@ -138,9 +138,9 @@ struct boss_epoch_hunterAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_epoch_hunter(Creature* pCreature)
+CreatureAI* GetAI_boss_epoch_hunter(Creature* creature)
 {
-    return new boss_epoch_hunterAI (pCreature);
+    return new boss_epoch_hunterAI (creature);
 }
 
 void AddSC_boss_epoch_hunter()

@@ -129,13 +129,13 @@ struct instance_magisters_terrace : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 24723: SelinGUID = pCreature->GetGUID(); break;
-            case 24560: DelrissaGUID = pCreature->GetGUID(); break;
-            case 24722: FelCrystals.push_back(pCreature->GetGUID()); break;
+            case 24723: SelinGUID = creature->GetGUID(); break;
+            case 24560: DelrissaGUID = creature->GetGUID(); break;
+            case 24722: FelCrystals.push_back(creature->GetGUID()); break;
         }
     }
 

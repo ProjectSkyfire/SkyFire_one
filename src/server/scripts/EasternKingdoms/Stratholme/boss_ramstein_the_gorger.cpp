@@ -90,9 +90,9 @@ struct boss_ramstein_the_gorgerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ramstein_the_gorger(Creature* pCreature)
+CreatureAI* GetAI_boss_ramstein_the_gorger(Creature* creature)
 {
-    return new boss_ramstein_the_gorgerAI (pCreature);
+    return new boss_ramstein_the_gorgerAI (creature);
 }
 
 void AddSC_boss_ramstein_the_gorger()

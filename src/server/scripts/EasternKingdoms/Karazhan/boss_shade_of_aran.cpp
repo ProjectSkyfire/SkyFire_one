@@ -525,21 +525,21 @@ struct water_elementalAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_aran(Creature* pCreature)
+CreatureAI* GetAI_boss_aran(Creature* creature)
 {
-    return new boss_aranAI (pCreature);
+    return new boss_aranAI (creature);
 }
 
-CreatureAI* GetAI_water_elemental(Creature* pCreature)
+CreatureAI* GetAI_water_elemental(Creature* creature)
 {
-    return new water_elementalAI (pCreature);
+    return new water_elementalAI (creature);
 }
 
 // CONVERT TO ACID
-CreatureAI* GetAI_shadow_of_aran(Creature* pCreature)
+CreatureAI* GetAI_shadow_of_aran(Creature* creature)
 {
-    sLog->outString("TSCR: Convert simpleAI script for Creature Entry %u to ACID", pCreature->GetEntry());
-    SimpleAI* ai = new SimpleAI (pCreature);
+    sLog->outString("TSCR: Convert simpleAI script for Creature Entry %u to ACID", creature->GetEntry());
+    SimpleAI* ai = new SimpleAI (creature);
 
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = SPELL_SHADOW_PYRO;

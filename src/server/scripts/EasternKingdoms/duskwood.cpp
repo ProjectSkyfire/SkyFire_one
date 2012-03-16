@@ -135,9 +135,9 @@ struct boss_twilight_corrupterAI : public ScriptedAI
     };
 };
 
-CreatureAI* GetAI_boss_twilight_corrupter(Creature* pCreature)
+CreatureAI* GetAI_boss_twilight_corrupter(Creature* creature)
 {
-    return new boss_twilight_corrupterAI (pCreature);
+    return new boss_twilight_corrupterAI (creature);
 }
 
 void AddSC_duskwood()

@@ -391,14 +391,14 @@ struct boss_spiritlynxAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_halazziAI(Creature* pCreature)
+CreatureAI* GetAI_boss_halazziAI(Creature* creature)
 {
-    return new boss_halazziAI (pCreature);
+    return new boss_halazziAI (creature);
 }
 
-CreatureAI* GetAI_boss_spiritlynxAI(Creature* pCreature)
+CreatureAI* GetAI_boss_spiritlynxAI(Creature* creature)
 {
-    return new boss_spiritlynxAI (pCreature);
+    return new boss_spiritlynxAI (creature);
 }
 
 void AddSC_boss_halazzi()

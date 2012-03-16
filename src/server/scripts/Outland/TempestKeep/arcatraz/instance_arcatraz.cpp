@@ -110,10 +110,10 @@ struct instance_arcatraz : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        if (pCreature->GetEntry() == MELLICHAR)
-            MellicharGUID = pCreature->GetGUID();
+        if (creature->GetEntry() == MELLICHAR)
+            MellicharGUID = creature->GetGUID();
     }
 
     void SetData(uint32 type, uint32 data)

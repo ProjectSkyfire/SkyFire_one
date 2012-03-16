@@ -338,9 +338,9 @@ struct boss_sacrolashAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sacrolash(Creature* pCreature)
+CreatureAI* GetAI_boss_sacrolash(Creature* creature)
 {
-    return new boss_sacrolashAI (pCreature);
+    return new boss_sacrolashAI (creature);
 };
 
 struct boss_alythessAI : public Scripted_NoMovementAI
@@ -663,9 +663,9 @@ struct boss_alythessAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_boss_alythess(Creature* pCreature)
+CreatureAI* GetAI_boss_alythess(Creature* creature)
 {
-    return new boss_alythessAI (pCreature);
+    return new boss_alythessAI (creature);
 };
 
 struct mob_shadow_imageAI : public ScriptedAI
@@ -737,9 +737,9 @@ struct mob_shadow_imageAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_shadow_image(Creature* pCreature)
+CreatureAI* GetAI_mob_shadow_image(Creature* creature)
 {
-    return new mob_shadow_imageAI (pCreature);
+    return new mob_shadow_imageAI (creature);
 };
 
 void AddSC_boss_eredar_twins()

@@ -83,9 +83,9 @@ struct boss_grizzleAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_grizzle(Creature* pCreature)
+CreatureAI* GetAI_boss_grizzle(Creature* creature)
 {
-    return new boss_grizzleAI (pCreature);
+    return new boss_grizzleAI (creature);
 }
 
 void AddSC_boss_grizzle()

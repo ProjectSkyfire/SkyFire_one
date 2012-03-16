@@ -94,9 +94,9 @@ struct npc_blood_knight_stillbladeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_blood_knight_stillblade(Creature* pCreature)
+CreatureAI* GetAI_npc_blood_knight_stillblade(Creature* creature)
 {
-    return new npc_blood_knight_stillbladeAI (pCreature);
+    return new npc_blood_knight_stillbladeAI (creature);
 }
 
 void AddSC_silvermoon_city()

@@ -132,9 +132,9 @@ struct boss_drektharAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_drekthar(Creature* pCreature)
+CreatureAI* GetAI_boss_drekthar(Creature* creature)
 {
-    return new boss_drektharAI (pCreature);
+    return new boss_drektharAI (creature);
 }
 
 void AddSC_boss_drekthar()

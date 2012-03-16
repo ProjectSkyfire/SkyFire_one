@@ -159,9 +159,9 @@ struct generic_creatureAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_generic_creature(Creature* pCreature)
+CreatureAI* GetAI_generic_creature(Creature* creature)
 {
-    return new generic_creatureAI (pCreature);
+    return new generic_creatureAI (creature);
 }
 
 void AddSC_generic_creature()

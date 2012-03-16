@@ -189,9 +189,9 @@ struct boss_archaedasAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_archaedas(Creature* pCreature)
+CreatureAI* GetAI_boss_archaedas(Creature* creature)
 {
-    return new boss_archaedasAI (pCreature);
+    return new boss_archaedasAI (creature);
 }
 
 /* ScriptData
@@ -275,9 +275,9 @@ struct mob_archaedas_minionsAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_archaedas_minions(Creature* pCreature)
+CreatureAI* GetAI_mob_archaedas_minions(Creature* creature)
 {
-    return new mob_archaedas_minionsAI (pCreature);
+    return new mob_archaedas_minionsAI (creature);
 }
 
 /* ScriptData
@@ -387,9 +387,9 @@ struct mob_stonekeepersAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_stonekeepers(Creature* pCreature)
+CreatureAI* GetAI_mob_stonekeepers(Creature* creature)
 {
-    return new mob_stonekeepersAI (pCreature);
+    return new mob_stonekeepersAI (creature);
 }
 
 /* ScriptData

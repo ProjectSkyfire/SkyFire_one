@@ -133,9 +133,9 @@ struct boss_broggokAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_broggokAI(Creature* pCreature)
+CreatureAI* GetAI_boss_broggokAI(Creature* creature)
 {
-    return new boss_broggokAI (pCreature);
+    return new boss_broggokAI (creature);
 }
 
 /*######
@@ -209,9 +209,9 @@ struct mob_nascent_orcAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_nascent_orc(Creature* pCreature)
+CreatureAI* GetAI_mob_nascent_orc(Creature* creature)
 {
-    return new mob_nascent_orcAI (pCreature);
+    return new mob_nascent_orcAI (creature);
 }
 
 /*######
@@ -240,9 +240,9 @@ struct mob_broggok_poisoncloudAI : public ScriptedAI
     void AttackStart(Unit *who) {}
 };
 
-CreatureAI* GetAI_mob_broggok_poisoncloud(Creature* pCreature)
+CreatureAI* GetAI_mob_broggok_poisoncloud(Creature* creature)
 {
-    return new mob_broggok_poisoncloudAI (pCreature);
+    return new mob_broggok_poisoncloudAI (creature);
 }
 
 void AddSC_boss_broggok()

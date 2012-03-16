@@ -75,8 +75,8 @@ void WorldSession::HandlePetitionBuyOpcode(WorldPacket & recv_data)
     sLog->outDebug("Petitioner with GUID %u tried sell petition: name %s", GUID_LOPART(guidNPC), name.c_str());
 
     // prevent cheating
-    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(guidNPC, UNIT_NPC_FLAG_PETITIONER);
-    if (!pCreature)
+    Creature *creature = GetPlayer()->GetNPCIfCanInteractWith(guidNPC, UNIT_NPC_FLAG_PETITIONER);
+    if (!creature)
     {
         sLog->outDebug("WORLD: HandlePetitionBuyOpcode - Unit (GUID: %u) not found or you can't interact with him.", GUID_LOPART(guidNPC));
         return;
@@ -89,7 +89,7 @@ void WorldSession::HandlePetitionBuyOpcode(WorldPacket & recv_data)
     uint32 charterid = 0;
     uint32 cost = 0;
     uint32 type = 0;
-    if (pCreature->isTabardDesigner())
+    if (creature->isTabardDesigner())
     {
         // if tabard designer, then trying to buy a guild charter.
         // do not let if already in guild.
@@ -174,7 +174,7 @@ void WorldSession::HandlePetitionBuyOpcode(WorldPacket & recv_data)
 
     if (_player->GetMoney() < cost)
     {                                                       //player hasn't got enough money
-        _player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, pCreature, charterid, 0);
+        _player->SendBuyError(BUY_ERR_NOT_ENOUGHT_MONEY, creature, charterid, 0);
         return;
     }
 
@@ -182,7 +182,7 @@ void WorldSession::HandlePetitionBuyOpcode(WorldPacket & recv_data)
     uint8 msg = _player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, charterid, pProto->BuyCount);
     if (msg != EQUIP_ERR_OK)
     {
-        _player->SendBuyError(msg, pCreature, charterid, 0);
+        _player->SendBuyError(msg, creature, charterid, 0);
         return;
     }
 
@@ -853,8 +853,8 @@ void WorldSession::HandlePetitionShowListOpcode(WorldPacket & recv_data)
 
 void WorldSession::SendPetitionShowList(uint64 guid)
 {
-    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_PETITIONER);
-    if (!pCreature)
+    Creature *creature = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_PETITIONER);
+    if (!creature)
     {
         sLog->outDebug("WORLD: HandlePetitionShowListOpcode - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(guid)));
         return;
@@ -865,7 +865,7 @@ void WorldSession::SendPetitionShowList(uint64 guid)
         GetPlayer()->RemoveSpellsCausingAura(SPELL_AURA_FEIGN_DEATH);
 
     uint8 count = 0;
-    if (pCreature->isTabardDesigner())
+    if (creature->isTabardDesigner())
         count = 1;
     else
         count = 3;

@@ -79,17 +79,17 @@ void WorldSession::HandleAutostoreLootItemOpcode(WorldPacket & recv_data)
     }
     else
     {
-        Creature* pCreature = GetPlayer()->GetMap()->GetCreature(lguid);
+        Creature* creature = GetPlayer()->GetMap()->GetCreature(lguid);
 
-        bool ok_loot = pCreature && pCreature->isAlive() == (player->getClass() == CLASS_ROGUE && pCreature->lootForPickPocketed);
+        bool ok_loot = creature && creature->isAlive() == (player->getClass() == CLASS_ROGUE && creature->lootForPickPocketed);
 
-        if (!ok_loot || !pCreature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
+        if (!ok_loot || !creature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
         {
             player->SendLootRelease(lguid);
             return;
         }
 
-        loot = &pCreature->loot;
+        loot = &creature->loot;
     }
 
     QuestItem *qitem = NULL;
@@ -195,12 +195,12 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket & /*recv_data*/)
         }
         case HIGHGUID_UNIT:
         {
-            Creature* pCreature = GetPlayer()->GetMap()->GetCreature(guid);
+            Creature* creature = GetPlayer()->GetMap()->GetCreature(guid);
 
-            bool ok_loot = pCreature && pCreature->isAlive() == (player->getClass() == CLASS_ROGUE && pCreature->lootForPickPocketed);
+            bool ok_loot = creature && creature->isAlive() == (player->getClass() == CLASS_ROGUE && creature->lootForPickPocketed);
 
-            if (ok_loot && pCreature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
-                pLoot = &pCreature->loot ;
+            if (ok_loot && creature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
+                pLoot = &creature->loot ;
 
             break;
         }
@@ -398,27 +398,27 @@ void WorldSession::DoLootRelease(uint64 lguid)
     }
     else
     {
-        Creature* pCreature = GetPlayer()->GetMap()->GetCreature(lguid);
+        Creature* creature = GetPlayer()->GetMap()->GetCreature(lguid);
 
-        bool ok_loot = pCreature && pCreature->isAlive() == (player->getClass() == CLASS_ROGUE && pCreature->lootForPickPocketed);
-        if (!ok_loot || !pCreature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
+        bool ok_loot = creature && creature->isAlive() == (player->getClass() == CLASS_ROGUE && creature->lootForPickPocketed);
+        if (!ok_loot || !creature->IsWithinDistInMap(_player, INTERACTION_DISTANCE))
             return;
 
-        loot = &pCreature->loot;
+        loot = &creature->loot;
 
         // update next looter
-        if (Player *recipient = pCreature->GetLootRecipient())
+        if (Player *recipient = creature->GetLootRecipient())
             if (Group* group = recipient->GetGroup())
                 if (group->GetLooterGuid() == player->GetGUID())
-                    group->UpdateLooterGuid(pCreature);
+                    group->UpdateLooterGuid(creature);
 
         if (loot->isLooted())
         {
             // skip pickpocketing loot for speed, skinning timer redunction is no-op in fact
-            if (!pCreature->isAlive())
-                pCreature->AllLootRemovedFromCorpse();
+            if (!creature->isAlive())
+                creature->AllLootRemovedFromCorpse();
 
-            pCreature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+            creature->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
             loot->clear();
         }
     }
@@ -457,11 +457,11 @@ void WorldSession::HandleLootMasterGiveOpcode(WorldPacket & recv_data)
 
     if (IS_CREATURE_GUID(GetPlayer()->GetLootGUID()))
     {
-        Creature *pCreature = GetPlayer()->GetMap()->GetCreature(lootguid);
-        if (!pCreature)
+        Creature *creature = GetPlayer()->GetMap()->GetCreature(lootguid);
+        if (!creature)
             return;
 
-        pLoot = &pCreature->loot;
+        pLoot = &creature->loot;
     }
     else if (IS_GAMEOBJECT_GUID(GetPlayer()->GetLootGUID()))
     {

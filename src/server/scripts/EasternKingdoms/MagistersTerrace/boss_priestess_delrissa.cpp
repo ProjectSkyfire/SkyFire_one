@@ -324,9 +324,9 @@ struct boss_priestess_delrissaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_priestess_delrissa(Creature* pCreature)
+CreatureAI* GetAI_boss_priestess_delrissa(Creature* creature)
 {
-    return new boss_priestess_delrissaAI(pCreature);
+    return new boss_priestess_delrissaAI(creature);
 }
 
 enum eHealingPotion
@@ -560,9 +560,9 @@ struct boss_kagani_nightstrikeAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_boss_kagani_nightstrike(Creature* pCreature)
+CreatureAI* GetAI_boss_kagani_nightstrike(Creature* creature)
 {
-    return new boss_kagani_nightstrikeAI(pCreature);
+    return new boss_kagani_nightstrikeAI(creature);
 }
 
 enum eWarlockSpells
@@ -650,9 +650,9 @@ struct boss_ellris_duskhallowAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_ellris_duskhallow(Creature* pCreature)
+CreatureAI* GetAI_ellris_duskhallow(Creature* creature)
 {
-    return new boss_ellris_duskhallowAI(pCreature);
+    return new boss_ellris_duskhallowAI(creature);
 }
 
 enum eKickDown
@@ -700,9 +700,9 @@ struct boss_eramas_brightblazeAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_eramas_brightblaze(Creature* pCreature)
+CreatureAI* GetAI_eramas_brightblaze(Creature* creature)
 {
-    return new boss_eramas_brightblazeAI(pCreature);
+    return new boss_eramas_brightblazeAI(creature);
 }
 
 enum eMageSpells
@@ -824,9 +824,9 @@ struct boss_yazzaiAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_yazzai(Creature* pCreature)
+CreatureAI* GetAI_yazzai(Creature* creature)
 {
-    return new boss_yazzaiAI(pCreature);
+    return new boss_yazzaiAI(creature);
 }
 
 enum eWarriorSpells
@@ -937,9 +937,9 @@ struct boss_warlord_salarisAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_warlord_salaris(Creature* pCreature)
+CreatureAI* GetAI_warlord_salaris(Creature* creature)
 {
-    return new boss_warlord_salarisAI(pCreature);
+    return new boss_warlord_salarisAI(creature);
 }
 
 enum eHunterSpells
@@ -1051,9 +1051,9 @@ struct boss_garaxxasAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_garaxxas(Creature* pCreature)
+CreatureAI* GetAI_garaxxas(Creature* creature)
 {
-    return new boss_garaxxasAI(pCreature);
+    return new boss_garaxxasAI(creature);
 }
 
 enum Spells
@@ -1144,9 +1144,9 @@ struct boss_apokoAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_apoko(Creature* pCreature)
+CreatureAI* GetAI_apoko(Creature* creature)
 {
-    return new boss_apokoAI(pCreature);
+    return new boss_apokoAI(creature);
 }
 
 enum eEngineerSpells
@@ -1232,9 +1232,9 @@ struct boss_zelfanAI : public boss_priestess_lackey_commonAI
     }
 };
 
-CreatureAI* GetAI_zelfan(Creature* pCreature)
+CreatureAI* GetAI_zelfan(Creature* creature)
 {
-    return new boss_zelfanAI(pCreature);
+    return new boss_zelfanAI(creature);
 }
 
 //struct mob_high_explosive_sheepAI : public ScriptedAI
@@ -1262,9 +1262,9 @@ CreatureAI* GetAI_zelfan(Creature* pCreature)
 //    }
 //};
 
-//CreatureAI* GetAI_mob_high_explosive_sheep(Creature* pCreature)
+//CreatureAI* GetAI_mob_high_explosive_sheep(Creature* creature)
 //{
-//    return new mob_high_explosive_sheepAI (pCreature);
+//    return new mob_high_explosive_sheepAI (creature);
 //};
 
 void AddSC_boss_priestess_delrissa()

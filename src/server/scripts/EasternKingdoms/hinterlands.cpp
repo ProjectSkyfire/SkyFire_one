@@ -53,7 +53,7 @@ enum eOOX
 
 struct npc_00x09hlAI : public npc_escortAI
 {
-    npc_00x09hlAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+    npc_00x09hlAI(Creature* creature) : npc_escortAI(creature) { }
 
     void Reset() { }
 
@@ -97,26 +97,26 @@ struct npc_00x09hlAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_00x09hl(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_RESQUE_OOX_09)
     {
-        pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-        pCreature->setFaction(113);
-        pCreature->SetHealth(pCreature->GetMaxHealth());
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        creature->SetStandState(UNIT_STAND_STATE_STAND);
+        creature->setFaction(113);
+        creature->SetHealth(creature->GetMaxHealth());
+        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
-        DoScriptText(SAY_OOX_START, pCreature);
+        DoScriptText(SAY_OOX_START, creature);
 
-        if (npc_00x09hlAI* pEscortAI = CAST_AI(npc_00x09hlAI, pCreature->AI()))
+        if (npc_00x09hlAI* pEscortAI = CAST_AI(npc_00x09hlAI, creature->AI()))
             pEscortAI->Start(false, true, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_00x09hl(Creature* pCreature)
+CreatureAI* GetAI_npc_00x09hl(Creature* creature)
 {
-    return new npc_00x09hlAI(pCreature);
+    return new npc_00x09hlAI(creature);
 }
 
 /*######
@@ -158,7 +158,7 @@ Location m_afAmbushMoveTo[] =
 
 struct npc_rinjiAI : public npc_escortAI
 {
-    npc_rinjiAI(Creature* pCreature) : npc_escortAI(pCreature)
+    npc_rinjiAI(Creature* creature) : npc_escortAI(creature)
     {
         m_bIsByOutrunner = false;
         m_iSpawnId = 0;
@@ -293,22 +293,22 @@ struct npc_rinjiAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_rinji(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_rinji(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_RINJI_TRAPPED)
     {
-        if (GameObject* pGo = pCreature->FindNearestGameObject(GO_RINJI_CAGE, INTERACTION_DISTANCE))
+        if (GameObject* pGo = creature->FindNearestGameObject(GO_RINJI_CAGE, INTERACTION_DISTANCE))
             pGo->UseDoorOrButton();
 
-        if (npc_rinjiAI* pEscortAI = CAST_AI(npc_rinjiAI, pCreature->AI()))
+        if (npc_rinjiAI* pEscortAI = CAST_AI(npc_rinjiAI, creature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_rinji(Creature* pCreature)
+CreatureAI* GetAI_npc_rinji(Creature* creature)
 {
-    return new npc_rinjiAI(pCreature);
+    return new npc_rinjiAI(creature);
 }
 
 void AddSC_hinterlands()

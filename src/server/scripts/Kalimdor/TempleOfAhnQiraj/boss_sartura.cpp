@@ -258,14 +258,14 @@ struct mob_sartura_royal_guardAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sartura(Creature* pCreature)
+CreatureAI* GetAI_boss_sartura(Creature* creature)
 {
-    return new boss_sarturaAI (pCreature);
+    return new boss_sarturaAI (creature);
 }
 
-CreatureAI* GetAI_mob_sartura_royal_guard(Creature* pCreature)
+CreatureAI* GetAI_mob_sartura_royal_guard(Creature* creature)
 {
-    return new mob_sartura_royal_guardAI (pCreature);
+    return new mob_sartura_royal_guardAI (creature);
 }
 
 void AddSC_boss_sartura()

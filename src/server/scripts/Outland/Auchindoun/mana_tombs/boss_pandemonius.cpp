@@ -125,9 +125,9 @@ struct boss_pandemoniusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_pandemonius(Creature* pCreature)
+CreatureAI* GetAI_boss_pandemonius(Creature* creature)
 {
-    return new boss_pandemoniusAI (pCreature);
+    return new boss_pandemoniusAI (creature);
 }
 
 void AddSC_boss_pandemonius()

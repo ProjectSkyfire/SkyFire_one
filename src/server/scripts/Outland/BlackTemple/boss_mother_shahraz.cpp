@@ -329,9 +329,9 @@ struct boss_shahrazAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_shahraz(Creature* pCreature)
+CreatureAI* GetAI_boss_shahraz(Creature* creature)
 {
-    return new boss_shahrazAI (pCreature);
+    return new boss_shahrazAI (creature);
 }
 
 void AddSC_boss_mother_shahraz()

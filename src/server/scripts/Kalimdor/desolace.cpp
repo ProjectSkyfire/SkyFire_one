@@ -57,7 +57,7 @@ enum eDyingKodo
 
 struct npc_aged_dying_ancient_kodoAI : public ScriptedAI
 {
-    npc_aged_dying_ancient_kodoAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_aged_dying_ancient_kodoAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
 
     uint32 m_uiDespawnTimer;
 
@@ -132,17 +132,17 @@ bool EffectDummyCreature_npc_aged_dying_ancient_kodo(Unit *pCaster, uint32 spell
     return false;
 }
 
-bool GossipHello_npc_aged_dying_ancient_kodo(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_aged_dying_ancient_kodo(Player* pPlayer, Creature* creature)
 {
-    if (pPlayer->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) && pCreature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
+    if (pPlayer->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) && creature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
     {
         pPlayer->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_PLAYER_BUFF);
-        pPlayer->CastSpell(pCreature, SPELL_KODO_KOMBO_GOSSIP, true);
+        pPlayer->CastSpell(creature, SPELL_KODO_KOMBO_GOSSIP, true);
 
-        pCreature->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_DESPAWN_BUFF);
-        pCreature->GetMotionMaster()->MoveIdle();
+        creature->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_DESPAWN_BUFF);
+        creature->GetMotionMaster()->MoveIdle();
 
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_KODO_HOME, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_KODO_HOME, creature->GetGUID());
 
         return true;
     }
@@ -150,9 +150,9 @@ bool GossipHello_npc_aged_dying_ancient_kodo(Player* pPlayer, Creature* pCreatur
     return false;
 }
 
-CreatureAI* GetAI_npc_aged_dying_ancient_kodo(Creature* pCreature)
+CreatureAI* GetAI_npc_aged_dying_ancient_kodo(Creature* creature)
 {
-    return new npc_aged_dying_ancient_kodoAI(pCreature);
+    return new npc_aged_dying_ancient_kodoAI(creature);
 }
 
 /*######
@@ -163,7 +163,7 @@ CreatureAI* GetAI_npc_aged_dying_ancient_kodo(Creature* pCreature)
 
 struct npc_dalindaAI : public npc_escortAI
 {
-    npc_dalindaAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+    npc_dalindaAI(Creature* creature) : npc_escortAI(creature) { }
 
     void WaypointReached(uint32 i)
     {
@@ -201,19 +201,19 @@ struct npc_dalindaAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_dalinda(Creature* pCreature)
+CreatureAI* GetAI_npc_dalinda(Creature* creature)
 {
-    return new npc_dalindaAI(pCreature);
+    return new npc_dalindaAI(creature);
 }
 
-bool QuestAccept_npc_dalinda(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_dalinda(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_RETURN_TO_VAHLARRIEL)
    {
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_dalindaAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_dalindaAI, creature->AI()))
         {
             pEscortAI->Start(true, false, pPlayer->GetGUID());
-            pCreature->setFaction(113);
+            creature->setFaction(113);
         }
     }
     return true;
@@ -248,7 +248,7 @@ static float m_afAmbushSpawn[4][3]=
 
 struct npc_melizza_brimbuzzleAI : public npc_escortAI
 {
-    npc_melizza_brimbuzzleAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+    npc_melizza_brimbuzzleAI(Creature* creature) : npc_escortAI(creature) { }
 
     uint32 m_uiPostEventCount;
     uint64 m_uiPostEventTimer;
@@ -336,19 +336,19 @@ struct npc_melizza_brimbuzzleAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_melizza_brimbuzzle(Creature* pCreature)
+CreatureAI* GetAI_npc_melizza_brimbuzzle(Creature* creature)
 {
-    return new npc_melizza_brimbuzzleAI(pCreature);
+    return new npc_melizza_brimbuzzleAI(creature);
 }
 
-bool QuestAccept_npc_melizza_brimbuzzle(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_melizza_brimbuzzle(Player* pPlayer, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_GET_ME_OUT_OF_HERE)
     {
-        if (GameObject* pGo = pCreature->FindNearestGameObject(GO_MELIZZAS_CAGE, INTERACTION_DISTANCE))
+        if (GameObject* pGo = creature->FindNearestGameObject(GO_MELIZZAS_CAGE, INTERACTION_DISTANCE))
             pGo->UseDoorOrButton();
 
-        if (npc_melizza_brimbuzzleAI* pEscortAI = CAST_AI(npc_melizza_brimbuzzleAI, pCreature->AI()))
+        if (npc_melizza_brimbuzzleAI* pEscortAI = CAST_AI(npc_melizza_brimbuzzleAI, creature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
     }
     return true;

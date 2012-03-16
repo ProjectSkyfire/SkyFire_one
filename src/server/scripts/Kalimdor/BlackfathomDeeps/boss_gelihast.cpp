@@ -71,9 +71,9 @@ struct boss_gelihastAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gelihast(Creature* pCreature)
+CreatureAI* GetAI_boss_gelihast(Creature* creature)
 {
-    return new boss_gelihastAI (pCreature);
+    return new boss_gelihastAI (creature);
 }
 
 void AddSC_boss_gelihast()

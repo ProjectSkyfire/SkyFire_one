@@ -133,9 +133,9 @@ struct boss_nothAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_noth(Creature* pCreature)
+CreatureAI* GetAI_boss_noth(Creature* creature)
 {
-    return new boss_nothAI (pCreature);
+    return new boss_nothAI (creature);
 }
 
 void AddSC_boss_noth()

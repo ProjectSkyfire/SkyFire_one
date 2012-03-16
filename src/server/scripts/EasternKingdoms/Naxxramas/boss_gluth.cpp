@@ -163,9 +163,9 @@ struct boss_gluthAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gluth(Creature* pCreature)
+CreatureAI* GetAI_boss_gluth(Creature* creature)
 {
-    return new boss_gluthAI (pCreature);
+    return new boss_gluthAI (creature);
 }
 
 void AddSC_boss_gluth()

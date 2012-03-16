@@ -360,12 +360,12 @@ struct boss_akilzonAI : public ScriptedAI
                         if (z > 95)
                             z = 95 - urand(0, 5);
                     }
-                    Creature *pCreature = me->SummonCreature(MOB_SOARING_EAGLE, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                    if (pCreature)
+                    Creature *creature = me->SummonCreature(MOB_SOARING_EAGLE, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    if (creature)
                     {
-                        pCreature->AddThreat(me->getVictim(), 1.0f);
-                        pCreature->AI()->AttackStart(me->getVictim());
-                        BirdGUIDs[i] = pCreature->GetGUID();
+                        creature->AddThreat(me->getVictim(), 1.0f);
+                        creature->AI()->AttackStart(me->getVictim());
+                        BirdGUIDs[i] = creature->GetGUID();
                     }
                 }
             }
@@ -446,14 +446,14 @@ struct mob_soaring_eagleAI : public ScriptedAI
 };
 
 //Soaring Eagle
-CreatureAI* GetAI_mob_soaring_eagle(Creature* pCreature)
+CreatureAI* GetAI_mob_soaring_eagle(Creature* creature)
 {
-    return new mob_soaring_eagleAI(pCreature);
+    return new mob_soaring_eagleAI(creature);
 }
 
-CreatureAI* GetAI_boss_akilzon(Creature* pCreature)
+CreatureAI* GetAI_boss_akilzon(Creature* creature)
 {
-    return new boss_akilzonAI(pCreature);
+    return new boss_akilzonAI(creature);
 }
 
 void AddSC_boss_akilzon()

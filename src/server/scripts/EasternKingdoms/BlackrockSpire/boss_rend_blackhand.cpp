@@ -80,9 +80,9 @@ struct boss_rend_blackhandAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_rend_blackhand(Creature* pCreature)
+CreatureAI* GetAI_boss_rend_blackhand(Creature* creature)
 {
-    return new boss_rend_blackhandAI (pCreature);
+    return new boss_rend_blackhandAI (creature);
 }
 
 void AddSC_boss_rend_blackhand()

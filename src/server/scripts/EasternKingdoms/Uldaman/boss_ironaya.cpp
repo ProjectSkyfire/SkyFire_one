@@ -94,9 +94,9 @@ struct boss_ironayaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_ironaya(Creature* pCreature)
+CreatureAI* GetAI_boss_ironaya(Creature* creature)
 {
-    return new boss_ironayaAI (pCreature);
+    return new boss_ironayaAI (creature);
 }
 
 void AddSC_boss_ironaya()

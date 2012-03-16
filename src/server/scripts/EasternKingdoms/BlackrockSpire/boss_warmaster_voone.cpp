@@ -110,9 +110,9 @@ struct boss_warmastervooneAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_warmastervoone(Creature* pCreature)
+CreatureAI* GetAI_boss_warmastervoone(Creature* creature)
 {
-    return new boss_warmastervooneAI (pCreature);
+    return new boss_warmastervooneAI (creature);
 }
 
 void AddSC_boss_warmastervoone()

@@ -89,10 +89,10 @@ const Position SpawnPosition[] =
 
 struct npc_blastmaster_emi_shortfuseAI : public npc_escortAI
 {
-    npc_blastmaster_emi_shortfuseAI(Creature* pCreature) : npc_escortAI(pCreature)
+    npc_blastmaster_emi_shortfuseAI(Creature* creature) : npc_escortAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
-        pCreature->RestoreFaction();
+        pInstance = creature->GetInstanceData();
+        creature->RestoreFaction();
         Reset();
     }
 
@@ -505,32 +505,32 @@ struct npc_blastmaster_emi_shortfuseAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_blastmaster_emi_shortfuse(Creature* pCreature)
+CreatureAI* GetAI_npc_blastmaster_emi_shortfuse(Creature* creature)
 {
-    return new npc_blastmaster_emi_shortfuseAI(pCreature);
+    return new npc_blastmaster_emi_shortfuseAI(creature);
 }
 
-bool GossipHello_npc_blastmaster_emi_shortfuse(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_blastmaster_emi_shortfuse(Player* pPlayer, Creature* creature)
 {
-    ScriptedInstance* pInstance = pCreature->GetInstanceData();
+    ScriptedInstance* pInstance = creature->GetInstanceData();
 
     if (pInstance && pInstance->GetData(TYPE_EVENT) == NOT_STARTED)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_EMI, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_EMI, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_blastmaster_emi_shortfuse(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_blastmaster_emi_shortfuse(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_blastmaster_emi_shortfuseAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_blastmaster_emi_shortfuseAI, creature->AI()))
             pEscortAI->Start(true, false, pPlayer->GetGUID());
 
-        pCreature->setFaction(pPlayer->getFaction());
-        pCreature->AI()->SetData(1, 0);
+        creature->setFaction(pPlayer->getFaction());
+        creature->AI()->SetData(1, 0);
 
         pPlayer->CLOSE_GOSSIP_MENU();
     }
@@ -539,7 +539,7 @@ bool GossipSelect_npc_blastmaster_emi_shortfuse(Player* pPlayer, Creature* pCrea
 
 struct boss_grubbisAI : public ScriptedAI
 {
-    boss_grubbisAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_grubbisAI(Creature* creature) : ScriptedAI(creature)
     {
         SetDataSummoner();
     }
@@ -571,9 +571,9 @@ struct boss_grubbisAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_grubbis(Creature* pCreature)
+CreatureAI* GetAI_boss_grubbis(Creature* creature)
 {
-    return new boss_grubbisAI(pCreature);
+    return new boss_grubbisAI(creature);
 }
 
 void AddSC_gnomeregan()

@@ -81,9 +81,9 @@ struct boss_thebeastAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_thebeast(Creature* pCreature)
+CreatureAI* GetAI_boss_thebeast(Creature* creature)
 {
-    return new boss_thebeastAI (pCreature);
+    return new boss_thebeastAI (creature);
 }
 
 void AddSC_boss_thebeast()

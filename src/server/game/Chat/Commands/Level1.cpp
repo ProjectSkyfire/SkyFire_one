@@ -46,23 +46,23 @@ bool ChatHandler::HandleNpcSayCommand(const char* args)
     if (!*args)
         return false;
 
-    Creature* pCreature = getSelectedCreature();
-    if (!pCreature)
+    Creature* creature = getSelectedCreature();
+    if (!creature)
     {
         SendSysMessage(LANG_SELECT_CREATURE);
         SetSentErrorMessage(true);
         return false;
     }
 
-    pCreature->Say(args, LANG_UNIVERSAL, 0);
+    creature->Say(args, LANG_UNIVERSAL, 0);
 
     // make some emotes
     char lastchar = args[strlen(args) - 1];
     switch (lastchar)
     {
-        case '?':   pCreature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);      break;
-        case '!':   pCreature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);   break;
-        default:    pCreature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);          break;
+        case '?':   creature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);      break;
+        case '!':   creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);   break;
+        default:    creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);          break;
     }
 
     return true;
@@ -73,18 +73,18 @@ bool ChatHandler::HandleNpcYellCommand(const char* args)
     if (!*args)
         return false;
 
-    Creature* pCreature = getSelectedCreature();
-    if (!pCreature)
+    Creature* creature = getSelectedCreature();
+    if (!creature)
     {
         SendSysMessage(LANG_SELECT_CREATURE);
         SetSentErrorMessage(true);
         return false;
     }
 
-    pCreature->Yell(args, LANG_UNIVERSAL, 0);
+    creature->Yell(args, LANG_UNIVERSAL, 0);
 
     // make an emote
-    pCreature->HandleEmoteCommand(EMOTE_ONESHOT_SHOUT);
+    creature->HandleEmoteCommand(EMOTE_ONESHOT_SHOUT);
 
     return true;
 }
@@ -95,16 +95,16 @@ bool ChatHandler::HandleNpcTextEmoteCommand(const char* args)
     if (!*args)
         return false;
 
-    Creature* pCreature = getSelectedCreature();
+    Creature* creature = getSelectedCreature();
 
-    if (!pCreature)
+    if (!creature)
     {
         SendSysMessage(LANG_SELECT_CREATURE);
         SetSentErrorMessage(true);
         return false;
     }
 
-    pCreature->TextEmote(args, 0);
+    creature->TextEmote(args, 0);
 
     return true;
 }
@@ -119,16 +119,16 @@ bool ChatHandler::HandleNpcWhisperCommand(const char* args)
     char* text = strtok(NULL, "");
 
     uint64 guid = m_session->GetPlayer()->GetSelection();
-    Creature* pCreature = m_session->GetPlayer()->GetMap()->GetCreature(guid);
+    Creature* creature = m_session->GetPlayer()->GetMap()->GetCreature(guid);
 
-    if (!pCreature || !receiver_str || !text)
+    if (!creature || !receiver_str || !text)
     {
         return false;
     }
 
     uint64 receiver_guid= atol(receiver_str);
 
-    pCreature->Whisper(text, receiver_guid);
+    creature->Whisper(text, receiver_guid);
 
     return true;
 }

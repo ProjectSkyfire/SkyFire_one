@@ -109,13 +109,13 @@ struct instance_karazhan : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 17229:   m_uiKilrekGUID = pCreature->GetGUID();      break;
-            case 15688:   m_uiTerestianGUID = pCreature->GetGUID();   break;
-            case 15687:   m_uiMoroesGUID = pCreature->GetGUID();      break;
+            case 17229:   m_uiKilrekGUID = creature->GetGUID();      break;
+            case 15688:   m_uiTerestianGUID = creature->GetGUID();   break;
+            case 15687:   m_uiMoroesGUID = creature->GetGUID();      break;
         }
     }
 

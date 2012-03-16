@@ -127,9 +127,9 @@ struct mob_voidtravelerAI : public ScriptedAI
         } else move -= diff;
     }
 };
-CreatureAI* GetAI_mob_voidtraveler(Creature* pCreature)
+CreatureAI* GetAI_mob_voidtraveler(Creature* creature)
 {
-    return new mob_voidtravelerAI (pCreature);
+    return new mob_voidtravelerAI (creature);
 }
 
 struct boss_grandmaster_vorpilAI : public ScriptedAI
@@ -310,9 +310,9 @@ struct boss_grandmaster_vorpilAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_grandmaster_vorpil(Creature* pCreature)
+CreatureAI* GetAI_boss_grandmaster_vorpil(Creature* creature)
 {
-    return new boss_grandmaster_vorpilAI (pCreature);
+    return new boss_grandmaster_vorpilAI (creature);
 }
 
 void AddSC_boss_grandmaster_vorpil()

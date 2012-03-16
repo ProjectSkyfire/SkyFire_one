@@ -132,9 +132,9 @@ struct boss_postmaster_malownAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_postmaster_malown(Creature* pCreature)
+CreatureAI* GetAI_boss_postmaster_malown(Creature* creature)
 {
-    return new boss_postmaster_malownAI (pCreature);
+    return new boss_postmaster_malownAI (creature);
 }
 
 void AddSC_boss_postmaster_malown()

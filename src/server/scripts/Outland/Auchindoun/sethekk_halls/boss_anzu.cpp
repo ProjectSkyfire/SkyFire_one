@@ -174,9 +174,9 @@ struct boss_anzuAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_anzu(Creature* pCreature)
+CreatureAI* GetAI_boss_anzu(Creature* creature)
 {
-    return new boss_anzuAI (pCreature);
+    return new boss_anzuAI (creature);
 }
 
 void AddSC_boss_anzu()

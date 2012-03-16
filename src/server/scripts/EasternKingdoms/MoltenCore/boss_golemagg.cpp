@@ -43,9 +43,9 @@ enum eEnums
 
 struct boss_golemaggAI : public ScriptedAI
 {
-    boss_golemaggAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_golemaggAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance *pInstance;
@@ -175,14 +175,14 @@ struct mob_core_ragerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_golemagg(Creature* pCreature)
+CreatureAI* GetAI_boss_golemagg(Creature* creature)
 {
-    return new boss_golemaggAI (pCreature);
+    return new boss_golemaggAI (creature);
 }
 
-CreatureAI* GetAI_mob_core_rager(Creature* pCreature)
+CreatureAI* GetAI_mob_core_rager(Creature* creature)
 {
-    return new mob_core_ragerAI (pCreature);
+    return new mob_core_ragerAI (creature);
 }
 
 void AddSC_boss_golemagg()

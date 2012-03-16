@@ -96,9 +96,9 @@ struct boss_maleki_the_pallidAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_maleki_the_pallid(Creature* pCreature)
+CreatureAI* GetAI_boss_maleki_the_pallid(Creature* creature)
 {
-    return new boss_maleki_the_pallidAI (pCreature);
+    return new boss_maleki_the_pallidAI (creature);
 }
 
 void AddSC_boss_maleki_the_pallid()

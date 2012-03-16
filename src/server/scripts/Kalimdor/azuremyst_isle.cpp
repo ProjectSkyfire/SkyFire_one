@@ -198,9 +198,9 @@ struct npc_draenei_survivorAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_npc_draenei_survivor(Creature* pCreature)
+CreatureAI* GetAI_npc_draenei_survivor(Creature* creature)
 {
-    return new npc_draenei_survivorAI (pCreature);
+    return new npc_draenei_survivorAI (creature);
 }
 
 /*######
@@ -259,28 +259,28 @@ struct npc_engineer_spark_overgrindAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature* pCreature)
+CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature* creature)
 {
-    return new npc_engineer_spark_overgrindAI (pCreature);
+    return new npc_engineer_spark_overgrindAI (creature);
 }
 
-bool GossipHello_npc_engineer_spark_overgrind(Player *player, Creature* pCreature)
+bool GossipHello_npc_engineer_spark_overgrind(Player *player, Creature* creature)
 {
     if (player->GetQuestStatus(9537) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
         player->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(14);
-        DoScriptText(ATTACK_YELL, pCreature, player);
-        ((npc_engineer_spark_overgrindAI*)pCreature->AI())->AttackStart(player);
+        creature->setFaction(14);
+        DoScriptText(ATTACK_YELL, creature, player);
+        ((npc_engineer_spark_overgrindAI*)creature->AI())->AttackStart(player);
     }
     return true;
 }
@@ -314,9 +314,9 @@ struct npc_injured_draeneiAI : public ScriptedAI
     {
     }
 };
-CreatureAI* GetAI_npc_injured_draenei(Creature* pCreature)
+CreatureAI* GetAI_npc_injured_draenei(Creature* creature)
 {
-    return new npc_injured_draeneiAI (pCreature);
+    return new npc_injured_draeneiAI (creature);
 }
 
 /*######
@@ -373,20 +373,20 @@ struct npc_magwinAI : public npc_escortAI
     void Reset() { }
 };
 
-bool QuestAccept_npc_magwin(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_magwin(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_A_CRY_FOR_SAY_HELP)
     {
-        pCreature->setFaction(113);
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_escortAI, pCreature->AI()))
+        creature->setFaction(113);
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_escortAI, creature->AI()))
             pEscortAI->Start(true, false, pPlayer->GetGUID());
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_magwinAI(Creature* pCreature)
+CreatureAI* GetAI_npc_magwinAI(Creature* creature)
 {
-    return new npc_magwinAI(pCreature);
+    return new npc_magwinAI(creature);
 }
 
 /*######
@@ -513,9 +513,9 @@ struct npc_geezleAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_geezleAI(Creature* pCreature)
+CreatureAI* GetAI_npc_geezleAI(Creature* creature)
 {
-    return new npc_geezleAI(pCreature);
+    return new npc_geezleAI(creature);
 }
 
 /*######
@@ -568,9 +568,9 @@ struct mob_nestlewood_owlkinAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_nestlewood_owlkinAI(Creature* pCreature)
+CreatureAI* GetAI_mob_nestlewood_owlkinAI(Creature* creature)
 {
-    return new mob_nestlewood_owlkinAI (pCreature);
+    return new mob_nestlewood_owlkinAI (creature);
 }
 
 enum eRavegerCage
@@ -636,9 +636,9 @@ struct npc_death_ravagerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_death_ravagerAI(Creature* pCreature)
+CreatureAI* GetAI_npc_death_ravagerAI(Creature* creature)
 {
-    return new npc_death_ravagerAI(pCreature);
+    return new npc_death_ravagerAI(creature);
 }
 
 /*########
@@ -681,22 +681,22 @@ struct npc_stillpine_capitiveAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_stillpine_capitiveAI(Creature* pCreature)
+CreatureAI* GetAI_npc_stillpine_capitiveAI(Creature* creature)
 {
-    return new npc_stillpine_capitiveAI(pCreature);
+    return new npc_stillpine_capitiveAI(creature);
 }
 
 bool go_bristlelimb_cage(Player* pPlayer, GameObject* pGo)
 {
     if (pPlayer->GetQuestStatus(QUEST_THE_PROPHECY_OF_AKIDA) == QUEST_STATUS_INCOMPLETE)
     {
-        Creature* pCreature = pGo->FindNearestCreature(NPC_STILLPINE_CAPITIVE, 5.0f, true);
-        if (pCreature)
+        Creature* creature = pGo->FindNearestCreature(NPC_STILLPINE_CAPITIVE, 5.0f, true);
+        if (creature)
         {
-            DoScriptText(RAND(CAPITIVE_SAY_1, CAPITIVE_SAY_2, CAPITIVE_SAY_3), pCreature, pPlayer);
-            pCreature->GetMotionMaster()->MoveFleeing(pPlayer, 3500);
-            pPlayer->KilledMonsterCredit(pCreature->GetEntry(), pCreature->GetGUID());
-            CAST_AI(npc_stillpine_capitiveAI, pCreature->AI())->FleeTimer = 3500;
+            DoScriptText(RAND(CAPITIVE_SAY_1, CAPITIVE_SAY_2, CAPITIVE_SAY_3), creature, pPlayer);
+            creature->GetMotionMaster()->MoveFleeing(pPlayer, 3500);
+            pPlayer->KilledMonsterCredit(creature->GetEntry(), creature->GetGUID());
+            CAST_AI(npc_stillpine_capitiveAI, creature->AI())->FleeTimer = 3500;
             return false;
         }
     }

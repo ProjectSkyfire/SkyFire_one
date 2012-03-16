@@ -86,9 +86,9 @@ struct celebras_the_cursedAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_celebras_the_cursed(Creature* pCreature)
+CreatureAI* GetAI_celebras_the_cursed(Creature* creature)
 {
-    return new celebras_the_cursedAI (pCreature);
+    return new celebras_the_cursedAI (creature);
 }
 
 void AddSC_boss_celebras_the_cursed()

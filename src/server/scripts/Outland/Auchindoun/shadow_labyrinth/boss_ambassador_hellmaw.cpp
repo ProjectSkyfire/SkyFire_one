@@ -198,9 +198,9 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* pCreature)
+CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* creature)
 {
-    return new boss_ambassador_hellmawAI (pCreature);
+    return new boss_ambassador_hellmawAI (creature);
 }
 
 void AddSC_boss_ambassador_hellmaw()

@@ -86,9 +86,9 @@ struct boss_moira_bronzebeardAI : public ScriptedAI
         } else Smite_Timer -= diff;
     }
 };
-CreatureAI* GetAI_boss_moira_bronzebeard(Creature* pCreature)
+CreatureAI* GetAI_boss_moira_bronzebeard(Creature* creature)
 {
-    return new boss_moira_bronzebeardAI (pCreature);
+    return new boss_moira_bronzebeardAI (creature);
 }
 
 void AddSC_boss_moira_bronzebeard()

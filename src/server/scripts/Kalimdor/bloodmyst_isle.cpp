@@ -72,9 +72,9 @@ struct mob_webbed_creatureAI : public ScriptedAI
             DoSpawnCreature(spawnCreatureID, 0, 0, 0, me->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
     }
 };
-CreatureAI* GetAI_mob_webbed_creature(Creature* pCreature)
+CreatureAI* GetAI_mob_webbed_creature(Creature* creature)
 {
-    return new mob_webbed_creatureAI (pCreature);
+    return new mob_webbed_creatureAI (creature);
 }
 
 /*######
@@ -90,46 +90,46 @@ CreatureAI* GetAI_mob_webbed_creature(Creature* pCreature)
 #define GOSSIP_SELECT_CSA4   "[PH] "
 #define GOSSIP_SELECT_CSA5   "[PH] "
 
-bool GossipHello_npc_captured_sunhawk_agent(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_captured_sunhawk_agent(Player* pPlayer, Creature* creature)
 {
     if (pPlayer->HasAura(31609, 1) && pPlayer->GetQuestStatus(9756) == QUEST_STATUS_INCOMPLETE)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_CSA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(9136, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9136, creature->GetGUID());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(9134, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9134, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_captured_sunhawk_agent(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_captured_sunhawk_agent(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(9137, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9137, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            pPlayer->SEND_GOSSIP_MENU(9138, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9138, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            pPlayer->SEND_GOSSIP_MENU(9139, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9139, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            pPlayer->SEND_GOSSIP_MENU(9140, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9140, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            pPlayer->SEND_GOSSIP_MENU(9141, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(9141, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
             pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->TalkedToCreature(C_SUNHAWK_TRIGGER, pCreature->GetGUID());
+            pPlayer->TalkedToCreature(C_SUNHAWK_TRIGGER, creature->GetGUID());
             break;
     }
     return true;

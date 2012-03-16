@@ -178,9 +178,9 @@ struct boss_the_black_stalkerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_the_black_stalker(Creature* pCreature)
+CreatureAI* GetAI_boss_the_black_stalker(Creature* creature)
 {
-    return new boss_the_black_stalkerAI (pCreature);
+    return new boss_the_black_stalkerAI (creature);
 }
 
 void AddSC_boss_the_black_stalker()

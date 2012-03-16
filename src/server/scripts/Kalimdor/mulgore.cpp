@@ -39,23 +39,23 @@ EndContentData */
 
 #define GOSSIP_SW "Tell me a story, Skorn."
 
-bool GossipHello_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_skorn_whitecloud(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
     if (!pPlayer->GetQuestRewardStatus(770))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SW, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(522, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(522, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_skorn_whitecloud(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
-        pPlayer->SEND_GOSSIP_MENU(523, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(523, creature->GetGUID());
 
     return true;
 }
@@ -74,7 +74,7 @@ enum eKyle
 
 struct npc_kyle_the_frenziedAI : public ScriptedAI
 {
-    npc_kyle_the_frenziedAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_kyle_the_frenziedAI(Creature* creature) : ScriptedAI(creature) {Reset();}
 
     bool m_bEvent;
     bool m_bIsMovingToLunch;
@@ -175,9 +175,9 @@ struct npc_kyle_the_frenziedAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_kyle_the_frenzied(Creature* pCreature)
+CreatureAI* GetAI_npc_kyle_the_frenzied(Creature* creature)
 {
-    return new npc_kyle_the_frenziedAI(pCreature);
+    return new npc_kyle_the_frenziedAI(creature);
 }
 
 /*#####
@@ -282,9 +282,9 @@ struct npc_plains_visionAI  : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_plains_vision(Creature* pCreature)
+CreatureAI* GetAI_npc_plains_vision(Creature* creature)
 {
-      return new npc_plains_visionAI (pCreature);
+      return new npc_plains_visionAI (creature);
 }
 
 /*#####

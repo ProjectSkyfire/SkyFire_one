@@ -105,9 +105,9 @@ struct boss_theolenkrastinovAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_theolenkrastinov(Creature* pCreature)
+CreatureAI* GetAI_boss_theolenkrastinov(Creature* creature)
 {
-    return new boss_theolenkrastinovAI (pCreature);
+    return new boss_theolenkrastinovAI (creature);
 }
 
 void AddSC_boss_theolenkrastinov()

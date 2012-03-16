@@ -83,9 +83,9 @@ struct boss_landslideAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_landslide(Creature* pCreature)
+CreatureAI* GetAI_boss_landslide(Creature* creature)
 {
-    return new boss_landslideAI (pCreature);
+    return new boss_landslideAI (creature);
 }
 
 void AddSC_boss_landslide()

@@ -100,18 +100,18 @@ struct instance_old_hillsbrad : public ScriptedInstance
             sLog->outDebug("TSCR: Instance Old Hillsbrad: UpdateOHWorldState, but PlayerList is empty!");
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
             case THRALL_ENTRY:
-                ThrallGUID = pCreature->GetGUID();
+                ThrallGUID = creature->GetGUID();
                 break;
             case TARETHA_ENTRY:
-                TarethaGUID = pCreature->GetGUID();
+                TarethaGUID = creature->GetGUID();
                 break;
         case EPOCH_ENTRY:
-        EpochGUID = pCreature->GetGUID();
+        EpochGUID = creature->GetGUID();
         break;
         }
     }

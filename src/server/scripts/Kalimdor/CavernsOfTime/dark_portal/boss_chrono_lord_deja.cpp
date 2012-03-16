@@ -124,9 +124,9 @@ struct boss_chrono_lord_dejaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_chrono_lord_deja(Creature* pCreature)
+CreatureAI* GetAI_boss_chrono_lord_deja(Creature* creature)
 {
-    return new boss_chrono_lord_dejaAI (pCreature);
+    return new boss_chrono_lord_dejaAI (creature);
 }
 
 void AddSC_boss_chrono_lord_deja()

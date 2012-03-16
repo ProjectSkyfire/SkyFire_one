@@ -79,17 +79,17 @@ struct instance_the_eye : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 20064: ThaladredTheDarkener = pCreature->GetGUID(); break;
-            case 20063: MasterEngineerTelonicus = pCreature->GetGUID(); break;
-            case 20062: GrandAstromancerCapernian = pCreature->GetGUID(); break;
-            case 20060: LordSanguinar = pCreature->GetGUID(); break;
-            case 19622: Kaelthas = pCreature->GetGUID(); break;
-            case 18805: Astromancer = pCreature->GetGUID(); break;
-            case 19514: Alar = pCreature->GetGUID(); break;
+            case 20064: ThaladredTheDarkener = creature->GetGUID(); break;
+            case 20063: MasterEngineerTelonicus = creature->GetGUID(); break;
+            case 20062: GrandAstromancerCapernian = creature->GetGUID(); break;
+            case 20060: LordSanguinar = creature->GetGUID(); break;
+            case 19622: Kaelthas = creature->GetGUID(); break;
+            case 18805: Astromancer = creature->GetGUID(); break;
+            case 19514: Alar = creature->GetGUID(); break;
         }
     }
 

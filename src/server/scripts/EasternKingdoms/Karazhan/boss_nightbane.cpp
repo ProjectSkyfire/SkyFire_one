@@ -455,9 +455,9 @@ struct boss_nightbaneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nightbane(Creature* pCreature)
+CreatureAI* GetAI_boss_nightbane(Creature* creature)
 {
-    return new boss_nightbaneAI (pCreature);
+    return new boss_nightbaneAI (creature);
 }
 
 void AddSC_boss_nightbane()

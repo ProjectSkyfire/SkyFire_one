@@ -74,9 +74,9 @@ struct boss_quatermasterzigrisAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_quatermasterzigris(Creature* pCreature)
+CreatureAI* GetAI_boss_quatermasterzigris(Creature* creature)
 {
-    return new boss_quatermasterzigrisAI (pCreature);
+    return new boss_quatermasterzigrisAI (creature);
 }
 
 void AddSC_boss_quatermasterzigris()

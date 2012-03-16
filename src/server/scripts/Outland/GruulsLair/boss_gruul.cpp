@@ -287,9 +287,9 @@ struct boss_gruulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gruul(Creature* pCreature)
+CreatureAI* GetAI_boss_gruul(Creature* creature)
 {
-    return new boss_gruulAI (pCreature);
+    return new boss_gruulAI (creature);
 }
 
 void AddSC_boss_gruul()

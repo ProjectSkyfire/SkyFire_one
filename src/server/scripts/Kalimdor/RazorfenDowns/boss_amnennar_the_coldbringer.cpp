@@ -118,9 +118,9 @@ struct boss_amnennar_the_coldbringerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_amnennar_the_coldbringer(Creature* pCreature)
+CreatureAI* GetAI_boss_amnennar_the_coldbringer(Creature* creature)
 {
-    return new boss_amnennar_the_coldbringerAI (pCreature);
+    return new boss_amnennar_the_coldbringerAI (creature);
 }
 
 void AddSC_boss_amnennar_the_coldbringer()

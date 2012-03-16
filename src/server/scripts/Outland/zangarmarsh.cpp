@@ -45,75 +45,75 @@ EndContentData */
 #define GOSSIP_REWARD_BLESS       -1000207
 //#define TEXT_BLESSINGS        "<You need higher standing with Cenarion Expedition to recive a blessing.>"
 
-bool GossipHello_npcs_ashyen_and_keleth(Player *player, Creature* pCreature)
+bool GossipHello_npcs_ashyen_and_keleth(Player *player, Creature* creature)
 {
     if (player->GetReputationRank(942) > REP_NEUTRAL)
     {
-        if (pCreature->GetEntry() == 17900)
+        if (creature->GetEntry() == 17900)
             player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_BLESS_ASH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        if (pCreature->GetEntry() == 17901)
+        if (creature->GetEntry() == 17901)
             player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_BLESS_KEL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     }
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npcs_ashyen_and_keleth(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pCreature->setPowerType(POWER_MANA);
-        pCreature->SetMaxPower(POWER_MANA, 200);             //set a "fake" mana value, we can't depend on database doing it in this case
-        pCreature->SetPower(POWER_MANA, 200);
+        creature->setPowerType(POWER_MANA);
+        creature->SetMaxPower(POWER_MANA, 200);             //set a "fake" mana value, we can't depend on database doing it in this case
+        creature->SetPower(POWER_MANA, 200);
 
-        if (pCreature->GetEntry() == 17900)                //check which creature we are dealing with
+        if (creature->GetEntry() == 17900)                //check which creature we are dealing with
         {
             switch (player->GetReputationRank(942))
             {                                               //mark of lore
                 case REP_FRIENDLY:
-                    pCreature->CastSpell(player, 31808, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31808, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
                 case REP_HONORED:
-                    pCreature->CastSpell(player, 31810, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31810, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
                 case REP_REVERED:
-                    pCreature->CastSpell(player, 31811, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31811, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
                 case REP_EXALTED:
-                    pCreature->CastSpell(player, 31815, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31815, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
             }
         }
 
-        if (pCreature->GetEntry() == 17901)
+        if (creature->GetEntry() == 17901)
         {
             switch (player->GetReputationRank(942))         //mark of war
             {
                 case REP_FRIENDLY:
-                    pCreature->CastSpell(player, 31807, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31807, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
                 case REP_HONORED:
-                    pCreature->CastSpell(player, 31812, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31812, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
                 case REP_REVERED:
-                    pCreature->CastSpell(player, 31813, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31813, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
                 case REP_EXALTED:
-                    pCreature->CastSpell(player, 31814, true);
-                    DoScriptText(GOSSIP_REWARD_BLESS, pCreature);
+                    creature->CastSpell(player, 31814, true);
+                    DoScriptText(GOSSIP_REWARD_BLESS, creature);
                     break;
             }
         }
         player->CLOSE_GOSSIP_MENU();
-        player->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
+        player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
     }
     return true;
 }
@@ -157,27 +157,27 @@ struct npc_cooshcooshAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_npc_cooshcoosh(Creature* pCreature)
+CreatureAI* GetAI_npc_cooshcoosh(Creature* creature)
 {
-    return new npc_cooshcooshAI (pCreature);
+    return new npc_cooshcooshAI (creature);
 }
 
-bool GossipHello_npc_cooshcoosh(Player *player, Creature* pCreature)
+bool GossipHello_npc_cooshcoosh(Player *player, Creature* creature)
 {
     if (player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(1, GOSSIP_COOSH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9441, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(9441, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_cooshcoosh(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_cooshcoosh(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
         player->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(FACTION_HOSTILE_CO);
-        ((npc_cooshcooshAI*)pCreature->AI())->AttackStart(player);
+        creature->setFaction(FACTION_HOSTILE_CO);
+        ((npc_cooshcooshAI*)creature->AI())->AttackStart(player);
     }
     return true;
 }
@@ -190,27 +190,27 @@ bool GossipSelect_npc_cooshcoosh(Player *player, Creature* pCreature, uint32 sen
 #define GOSSIP_ITEM_KUR2 "Im a messenger for Draenei"
 #define GOSSIP_ITEM_KUR3 "Get message"
 
-bool GossipHello_npc_elder_kuruti(Player *player, Creature* pCreature)
+bool GossipHello_npc_elder_kuruti(Player *player, Creature* creature)
 {
     if (player->GetQuestStatus(9803) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KUR1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9226, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(9226, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_elder_kuruti(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_elder_kuruti(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KUR2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(9227, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9227, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 1:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_KUR3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(9229, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9229, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
         {
@@ -225,7 +225,7 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature* pCreature, uint32 s
                 else
                     player->SendEquipError(msg, NULL, NULL);
             }
-            player->SEND_GOSSIP_MENU(9231, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9231, creature->GetGUID());
             break;
         }
     }
@@ -236,21 +236,21 @@ bool GossipSelect_npc_elder_kuruti(Player *player, Creature* pCreature, uint32 s
 ## npc_mortog_steamhead
 ######*/
 
-bool GossipHello_npc_mortog_steamhead(Player *player, Creature* pCreature)
+bool GossipHello_npc_mortog_steamhead(Player *player, Creature* creature)
 {
-    if (pCreature->isVendor() && player->GetReputationRank(942) == REP_EXALTED)
+    if (creature->isVendor() && player->GetReputationRank(942) == REP_EXALTED)
         player->ADD_GOSSIP_ITEM(1, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_mortog_steamhead(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_mortog_steamhead(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_TRADE)
     {
-        player->SEND_VENDORLIST(pCreature->GetGUID());
+        player->SEND_VENDORLIST(creature->GetGUID());
     }
     return true;
 }
@@ -311,21 +311,21 @@ struct npc_kayra_longmaneAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_kayra_longmane(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_kayra_longmane(Player* pPlayer, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ESCAPE_FROM)
     {
-        DoScriptText(SAY_START, pCreature, pPlayer);
+        DoScriptText(SAY_START, creature, pPlayer);
 
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_kayra_longmaneAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_kayra_longmaneAI, creature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID());
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_kayra_longmaneAI(Creature* pCreature)
+CreatureAI* GetAI_npc_kayra_longmaneAI(Creature* creature)
 {
-    return new npc_kayra_longmaneAI(pCreature);
+    return new npc_kayra_longmaneAI(creature);
 }
 
 /*######
@@ -340,29 +340,29 @@ enum eTimothy
     GOSSIP_TEXTID_TIMOTHY_DANIELS1      = 9239
 };
 
-bool GossipHello_npc_timothy_daniels(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_timothy_daniels(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
-    if (pCreature->isVendor())
+    if (creature->isVendor())
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_POISONS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TIMOTHY_DANIELS_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_timothy_daniels(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_timothy_daniels(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     pPlayer->PlayerTalkClass->ClearMenus();
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TIMOTHY_DANIELS1, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TIMOTHY_DANIELS1, creature->GetGUID());
             break;
         case GOSSIP_ACTION_TRADE:
-            pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+            pPlayer->SEND_VENDORLIST(creature->GetGUID());
             break;
     }
 

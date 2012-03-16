@@ -206,9 +206,9 @@ struct boss_venoxisAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_venoxis(Creature* pCreature)
+CreatureAI* GetAI_boss_venoxis(Creature* creature)
 {
-    return new boss_venoxisAI (pCreature);
+    return new boss_venoxisAI (creature);
 }
 
 void AddSC_boss_venoxis()

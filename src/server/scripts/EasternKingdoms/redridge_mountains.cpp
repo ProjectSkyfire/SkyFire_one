@@ -43,7 +43,7 @@ enum eCorporalKeeshan
 
 struct npc_corporal_keeshanAI : public npc_escortAI
 {
-    npc_corporal_keeshanAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+    npc_corporal_keeshanAI(Creature* creature) : npc_escortAI(creature) {}
 
     uint32 uiPhase;
     uint32 uiTimer;
@@ -147,20 +147,20 @@ struct npc_corporal_keeshanAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_corporal_keeshan(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
+bool QuestAccept_npc_corporal_keeshan(Player* pPlayer, Creature* creature, Quest const *pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_IN_ACTION)
     {
-        CAST_AI(npc_corporal_keeshanAI, pCreature->AI())->Start(true, false, pPlayer->GetGUID(),pQuest);
-        DoScriptText(SAY_CORPORAL_1, pCreature);
+        CAST_AI(npc_corporal_keeshanAI, creature->AI())->Start(true, false, pPlayer->GetGUID(),pQuest);
+        DoScriptText(SAY_CORPORAL_1, creature);
     }
 
     return false;
 }
 
-CreatureAI* GetAI_npc_corporal_keeshan(Creature* pCreature)
+CreatureAI* GetAI_npc_corporal_keeshan(Creature* creature)
 {
-    return new npc_corporal_keeshanAI(pCreature);
+    return new npc_corporal_keeshanAI(creature);
 }
 
 void AddSC_redridge_mountains()

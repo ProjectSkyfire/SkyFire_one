@@ -205,9 +205,9 @@ struct boss_loathebAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_loatheb(Creature* pCreature)
+CreatureAI* GetAI_boss_loatheb(Creature* creature)
 {
-    return new boss_loathebAI (pCreature);
+    return new boss_loathebAI (creature);
 }
 
 void AddSC_boss_loatheb()

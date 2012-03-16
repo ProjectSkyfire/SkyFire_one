@@ -281,9 +281,9 @@ struct boss_ragnarosAI : public Scripted_NoMovementAI
         }
     }
 };
-CreatureAI* GetAI_boss_ragnaros(Creature* pCreature)
+CreatureAI* GetAI_boss_ragnaros(Creature* creature)
 {
-    return new boss_ragnarosAI (pCreature);
+    return new boss_ragnarosAI (creature);
 }
 
 void AddSC_boss_ragnaros()

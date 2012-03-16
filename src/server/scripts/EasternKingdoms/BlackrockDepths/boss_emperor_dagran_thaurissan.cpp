@@ -100,9 +100,9 @@ struct boss_draganthaurissanAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_draganthaurissan(Creature* pCreature)
+CreatureAI* GetAI_boss_draganthaurissan(Creature* creature)
 {
-    return new boss_draganthaurissanAI (pCreature);
+    return new boss_draganthaurissanAI (creature);
 }
 
 void AddSC_boss_draganthaurissan()

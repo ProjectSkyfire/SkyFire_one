@@ -143,9 +143,9 @@ struct boss_silver_hand_bossesAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature* pCreature)
+CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature* creature)
 {
-    return new boss_silver_hand_bossesAI (pCreature);
+    return new boss_silver_hand_bossesAI (creature);
 }
 
 void AddSC_boss_order_of_silver_hand()

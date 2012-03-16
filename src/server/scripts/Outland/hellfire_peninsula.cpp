@@ -133,9 +133,9 @@ struct npc_aeranasAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_aeranas(Creature* pCreature)
+CreatureAI* GetAI_npc_aeranas(Creature* creature)
 {
-    return new npc_aeranasAI (pCreature);
+    return new npc_aeranasAI (creature);
 }
 
 /*######
@@ -155,7 +155,7 @@ enum
 
 struct npc_ancestral_wolfAI : public npc_escortAI
 {
-    npc_ancestral_wolfAI(Creature* pCreature) : npc_escortAI(pCreature)  {}
+    npc_ancestral_wolfAI(Creature* creature) : npc_escortAI(creature)  {}
 
     void Reset()
     {
@@ -209,9 +209,9 @@ struct npc_ancestral_wolfAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_ancestral_wolf(Creature* pCreature)
+CreatureAI* GetAI_npc_ancestral_wolf(Creature* creature)
 {
-    return new npc_ancestral_wolfAI(pCreature);
+    return new npc_ancestral_wolfAI(creature);
 }
 
 /*######
@@ -235,20 +235,20 @@ enum eNaladu
     GOSSIP_TEXTID_NALADU1   = 9788
 };
 
-bool GossipHello_npc_naladu(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_naladu(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_NALADU_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_naladu(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_naladu(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_NALADU1, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_NALADU1, creature->GetGUID());
 
     return true;
 }
@@ -267,34 +267,34 @@ enum eTracy
     QUEST_DIGGING_FOR_PRAYER_BEADS       = 10916
 };
 
-bool GossipHello_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_tracy_proudwell(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
-    if (pCreature->isVendor())
+    if (creature->isVendor())
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_REDEEM_MARKS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
     if (pPlayer->GetQuestStatus(QUEST_DIGGING_FOR_PRAYER_BEADS) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TRACY_PROUDWELL_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_tracy_proudwell(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TRACY_PROUDWELL_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TRACY_PROUDWELL1, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TRACY_PROUDWELL1, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_TRADE:
-            pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+            pPlayer->SEND_VENDORLIST(creature->GetGUID());
             break;
     }
 
@@ -316,30 +316,30 @@ enum eTrollbane
     GOSSIP_TEXTID_TROLLBANE3        = 8772
 };
 
-bool GossipHello_npc_trollbane(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_trollbane(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TROLLBANE_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TROLLBANE_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_trollbane(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_trollbane(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TROLLBANE_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TROLLBANE1, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TROLLBANE1, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TROLLBANE2, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TROLLBANE2, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TROLLBANE3, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_TROLLBANE3, creature->GetGUID());
             break;
     }
 
@@ -359,7 +359,7 @@ enum eFelGuard
 
 struct npc_fel_guard_houndAI : public ScriptedAI
 {
-    npc_fel_guard_houndAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_fel_guard_houndAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiCheckTimer;
     uint64 uiHelboarGUID;
@@ -407,9 +407,9 @@ struct npc_fel_guard_houndAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_fel_guard_hound(Creature* pCreature)
+CreatureAI* GetAI_npc_fel_guard_hound(Creature* creature)
 {
-    return new npc_fel_guard_houndAI(pCreature);
+    return new npc_fel_guard_houndAI(creature);
 }
 
 /*######
@@ -419,10 +419,10 @@ CreatureAI* GetAI_npc_fel_guard_hound(Creature* pCreature)
 #define GOSSIP_ITEM1_DAB "Fly me to Murketh and Shaadraz Gateways"
 #define GOSSIP_ITEM2_DAB "Fly me to Shatter Point"
 
-bool GossipHello_npc_wing_commander_dabiree(Player *player, Creature* pCreature)
+bool GossipHello_npc_wing_commander_dabiree(Player *player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        player->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
     //Mission: The Murketh and Shaadraz Gateways
     if (player->GetQuestStatus(10146) == QUEST_STATUS_INCOMPLETE)
@@ -432,12 +432,12 @@ bool GossipHello_npc_wing_commander_dabiree(Player *player, Creature* pCreature)
     if (!player->GetQuestRewardStatus(10340))
         player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM2_DAB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_wing_commander_dabiree(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF + 1)
     {
@@ -463,17 +463,17 @@ enum
 
 #define GOSSIP_ITEM1_LEAF       "Fly me to Shatter Point"
 
-bool GossipHello_npc_gryphoneer_leafbeard(Player *player, Creature* pCreature)
+bool GossipHello_npc_gryphoneer_leafbeard(Player *player, Creature* creature)
 {
     //Go back to Shatter Point if player has completed the quest 10340 - Shatter Point
     if (player->GetQuestStatus(10340) == QUEST_STATUS_COMPLETE)
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1_LEAF, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_gryphoneer_leafbeard(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_gryphoneer_leafbeard(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -492,10 +492,10 @@ bool GossipSelect_npc_gryphoneer_leafbeard(Player *player, Creature* pCreature, 
 #define GOSSIP_ITEM2_BRA "Fly me to The Abyssal Shelf"
 #define GOSSIP_ITEM3_BRA "Fly me to Spinebreaker Post"
 
-bool GossipHello_npc_wing_commander_brack(Player *player, Creature* pCreature)
+bool GossipHello_npc_wing_commander_brack(Player *player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        player->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
     //Mission: The Murketh and Shaadraz Gateways
     if (player->GetQuestStatus(10129) == QUEST_STATUS_INCOMPLETE)
@@ -509,12 +509,12 @@ bool GossipHello_npc_wing_commander_brack(Player *player, Creature* pCreature)
     if (player->GetQuestStatus(10242) == QUEST_STATUS_COMPLETE && !player->GetQuestRewardStatus(10242))
         player->ADD_GOSSIP_ITEM(2, GOSSIP_ITEM3_BRA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_wing_commander_brack(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_wing_commander_brack(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
@@ -603,20 +603,20 @@ struct npc_wounded_blood_elfAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_wounded_blood_elf(Creature* pCreature)
+CreatureAI* GetAI_npc_wounded_blood_elf(Creature* creature)
 {
-    return new npc_wounded_blood_elfAI(pCreature);
+    return new npc_wounded_blood_elfAI(creature);
 }
 
-bool QuestAccept_npc_wounded_blood_elf(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_wounded_blood_elf(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_ROAD_TO_FALCON_WATCH)
     {
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_wounded_blood_elfAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_wounded_blood_elfAI, creature->AI()))
             pEscortAI->Start(true, false, pPlayer->GetGUID());
 
         // Change faction so mobs attack
-        pCreature->setFaction(775);
+        creature->setFaction(775);
     }
 
     return true;
@@ -640,7 +640,7 @@ enum
 
 struct npc_hand_berserkerAI : public ScriptedAI
 {
-    npc_hand_berserkerAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_hand_berserkerAI(Creature* creature) : ScriptedAI(creature) {}
 
     void Reset() {}
 
@@ -687,9 +687,9 @@ struct npc_hand_berserkerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_hand_berserker(Creature* pCreature)
+CreatureAI* GetAI_npc_hand_berserker(Creature* creature)
 {
-    return new npc_hand_berserkerAI(pCreature);
+    return new npc_hand_berserkerAI(creature);
 }
 
 /*######
@@ -705,7 +705,7 @@ enum
 
 struct npc_anchorite_relic_bunnyAI : public ScriptedAI
 {
-    npc_anchorite_relic_bunnyAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_anchorite_relic_bunnyAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiChTimer;
     uint32 uiEndTimer;
@@ -745,9 +745,9 @@ struct npc_anchorite_relic_bunnyAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_anchorite_relic_bunny(Creature* pCreature)
+CreatureAI* GetAI_npc_anchorite_relic_bunny(Creature* creature)
 {
-    return new npc_anchorite_relic_bunnyAI(pCreature);
+    return new npc_anchorite_relic_bunnyAI(creature);
 }
 
 /*######
@@ -791,7 +791,7 @@ enum
 
 struct npc_anchorite_baradaAI : public ScriptedAI
 {
-    npc_anchorite_baradaAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_anchorite_baradaAI(Creature* creature) : ScriptedAI(creature) {}
 
     bool Exorcim;
 
@@ -948,24 +948,24 @@ struct npc_anchorite_baradaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_anchorite_barada(Creature* pCreature)
+CreatureAI* GetAI_npc_anchorite_barada(Creature* creature)
 {
-    return new npc_anchorite_baradaAI(pCreature);
+    return new npc_anchorite_baradaAI(creature);
 }
 
-bool GossipHello_npc_anchorite_barada(Player *pPlayer, Creature *pCreature)
+bool GossipHello_npc_anchorite_barada(Player *pPlayer, Creature *creature)
 {
     if (pPlayer->GetQuestStatus(QUEST_THE_EXORCIM) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_anchorite_barada(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_anchorite_barada(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        ((npc_anchorite_baradaAI*)pCreature->AI())->Exorcim = true;
+        ((npc_anchorite_baradaAI*)creature->AI())->Exorcim = true;
         pPlayer->CLOSE_GOSSIP_MENU();
     }
     return true;
@@ -984,7 +984,7 @@ enum
 
 struct npc_darkness_releasedAI : public ScriptedAI
 {
-    npc_darkness_releasedAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_darkness_releasedAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiAtTimer;
     uint32 uiChTimer;
@@ -1047,9 +1047,9 @@ struct npc_darkness_releasedAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_darkness_released(Creature* pCreature)
+CreatureAI* GetAI_npc_darkness_released(Creature* creature)
 {
-    return new npc_darkness_releasedAI(pCreature);
+    return new npc_darkness_releasedAI(creature);
 }
 
 /*######
@@ -1058,7 +1058,7 @@ CreatureAI* GetAI_npc_darkness_released(Creature* pCreature)
 
 struct npc_foul_purgeAI : public ScriptedAI
 {
-    npc_foul_purgeAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_foul_purgeAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiChTimer;
 
@@ -1097,9 +1097,9 @@ struct npc_foul_purgeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_foul_purge(Creature* pCreature)
+CreatureAI* GetAI_npc_foul_purge(Creature* creature)
 {
-    return new npc_foul_purgeAI(pCreature);
+    return new npc_foul_purgeAI(creature);
 }
 
 /*######
@@ -1114,7 +1114,7 @@ enum
 
 struct npc_sedai_quest_credit_markerAI : public ScriptedAI
 {
-    npc_sedai_quest_credit_markerAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_sedai_quest_credit_markerAI(Creature* creature) : ScriptedAI(creature) {}
 
     void Reset()
     {
@@ -1137,9 +1137,9 @@ struct npc_sedai_quest_credit_markerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_sedai_quest_credit_marker(Creature* pCreature)
+CreatureAI* GetAI_npc_sedai_quest_credit_marker(Creature* creature)
 {
-    return new npc_sedai_quest_credit_markerAI(pCreature);
+    return new npc_sedai_quest_credit_markerAI(creature);
 }
 
 /*######
@@ -1163,7 +1163,7 @@ enum
 
 struct npc_vindicator_sedaiAI : public ScriptedAI
 {
-    npc_vindicator_sedaiAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_vindicator_sedaiAI(Creature* creature) : ScriptedAI(creature) {}
 
     bool Vision;
 
@@ -1287,9 +1287,9 @@ struct npc_vindicator_sedaiAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_vindicator_sedai(Creature* pCreature)
+CreatureAI* GetAI_npc_vindicator_sedai(Creature* creature)
 {
-    return new npc_vindicator_sedaiAI(pCreature);
+    return new npc_vindicator_sedaiAI(creature);
 }
 
 /*######
@@ -1321,7 +1321,7 @@ enum
 
 struct npc_demoniac_scryerAI : public ScriptedAI
 {
-    npc_demoniac_scryerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_demoniac_scryerAI(Creature* creature) : ScriptedAI(creature)
     {
         IfIsComplete = false;
         uiSpawnDemonTimer = 15000;
@@ -1453,33 +1453,33 @@ struct npc_demoniac_scryerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_demoniac_scryer(Creature* pCreature)
+CreatureAI* GetAI_npc_demoniac_scryer(Creature* creature)
 {
-    return new npc_demoniac_scryerAI(pCreature);
+    return new npc_demoniac_scryerAI(creature);
 }
 
-bool GossipHello_npc_demoniac_scryer(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_demoniac_scryer(Player* pPlayer, Creature* creature)
 {
-    if (npc_demoniac_scryerAI* pScryerAI = dynamic_cast<npc_demoniac_scryerAI*>(pCreature->AI()))
+    if (npc_demoniac_scryerAI* pScryerAI = dynamic_cast<npc_demoniac_scryerAI*>(creature->AI()))
     {
         if (pScryerAI->IfIsComplete)
         {
             if (pPlayer->GetQuestStatus(QUEST_DEMONIAC) == QUEST_STATUS_INCOMPLETE)
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ATTUNE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ATTUNED, pCreature->GetGUID());
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ATTUNED, creature->GetGUID());
             return true;
         }
     }
-    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_PROTECT, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_PROTECT, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_demoniac_scryer(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_demoniac_scryer(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, SPELL_DEMONIAC_VISITATION, false);
+        creature->CastSpell(pPlayer, SPELL_DEMONIAC_VISITATION, false);
     }
     return true;
 }
@@ -1497,7 +1497,7 @@ enum
 
 struct npc_magic_sucker_device_spawnerAI : public ScriptedAI
 {
-    npc_magic_sucker_device_spawnerAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_magic_sucker_device_spawnerAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiCastTimer;
     uint32 uiCheckTimer;
@@ -1534,9 +1534,9 @@ struct npc_magic_sucker_device_spawnerAI : public ScriptedAI
         else uiCheckTimer -= uiDiff;
     }
 };
-CreatureAI* GetAI_npc_magic_sucker_device_spawner(Creature* pCreature)
+CreatureAI* GetAI_npc_magic_sucker_device_spawner(Creature* creature)
 {
-    return new npc_magic_sucker_device_spawnerAI(pCreature);
+    return new npc_magic_sucker_device_spawnerAI(creature);
 }
 
 /*######
@@ -1557,7 +1557,7 @@ enum
 
 struct npc_living_flareAI : public ScriptedAI
 {
-    npc_living_flareAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_living_flareAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiCheckTimer;
     uint64 uiSparkGUID;
@@ -1603,9 +1603,9 @@ struct npc_living_flareAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_living_flare(Creature* pCreature)
+CreatureAI* GetAI_npc_living_flare(Creature* creature)
 {
-    return new npc_living_flareAI(pCreature);
+    return new npc_living_flareAI(creature);
 }
 
 /*######
@@ -1631,7 +1631,7 @@ enum
 
 struct npc_pathaleon_imageAI : public ScriptedAI
 {
-    npc_pathaleon_imageAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_pathaleon_imageAI(Creature* creature) : ScriptedAI(creature) {}
 
     bool Event;
     bool SummonTrigger;
@@ -1747,9 +1747,9 @@ struct npc_pathaleon_imageAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_pathaleon_image(Creature* pCreature)
+CreatureAI* GetAI_npc_pathaleon_image(Creature* creature)
 {
-    return new npc_pathaleon_imageAI(pCreature);
+    return new npc_pathaleon_imageAI(creature);
 }
 
 void AddSC_hellfire_peninsula()

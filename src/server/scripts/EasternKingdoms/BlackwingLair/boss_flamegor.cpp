@@ -86,9 +86,9 @@ struct boss_flamegorAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_flamegor(Creature* pCreature)
+CreatureAI* GetAI_boss_flamegor(Creature* creature)
 {
-    return new boss_flamegorAI (pCreature);
+    return new boss_flamegorAI (creature);
 }
 
 void AddSC_boss_flamegor()

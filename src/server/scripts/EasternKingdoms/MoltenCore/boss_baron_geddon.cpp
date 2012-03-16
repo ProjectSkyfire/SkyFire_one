@@ -95,9 +95,9 @@ struct boss_baron_geddonAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_baron_geddon(Creature* pCreature)
+CreatureAI* GetAI_boss_baron_geddon(Creature* creature)
 {
-    return new boss_baron_geddonAI (pCreature);
+    return new boss_baron_geddonAI (creature);
 }
 
 void AddSC_boss_baron_geddon()

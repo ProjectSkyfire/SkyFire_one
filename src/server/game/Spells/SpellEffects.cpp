@@ -1286,14 +1286,14 @@ void Spell::EffectDummy(uint32 i)
 
                     tempSummon->UnSummon();
 
-                    Creature* pCreature = m_caster->SummonCreature(entry_list[urand(0, 2)], x, y, z, o, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 180000);
-                    if (!pCreature)
+                    Creature* creature = m_caster->SummonCreature(entry_list[urand(0, 2)], x, y, z, o, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 180000);
+                    if (!creature)
                         return;
 
-                    pCreature->SetHealth(health);
+                    creature->SetHealth(health);
 
-                    if (pCreature->IsAIEnabled)
-                        pCreature->AI()->AttackStart(m_caster);
+                    if (creature->IsAIEnabled)
+                        creature->AI()->AttackStart(m_caster);
 
                     return;
                 }

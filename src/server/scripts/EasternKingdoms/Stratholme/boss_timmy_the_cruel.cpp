@@ -71,9 +71,9 @@ struct boss_timmy_the_cruelAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_timmy_the_cruel(Creature* pCreature)
+CreatureAI* GetAI_boss_timmy_the_cruel(Creature* creature)
 {
-    return new boss_timmy_the_cruelAI (pCreature);
+    return new boss_timmy_the_cruelAI (creature);
 }
 
 void AddSC_boss_timmy_the_cruel()

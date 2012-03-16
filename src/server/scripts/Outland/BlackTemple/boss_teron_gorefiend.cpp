@@ -484,19 +484,19 @@ struct boss_teron_gorefiendAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_doom_blossom(Creature* pCreature)
+CreatureAI* GetAI_mob_doom_blossom(Creature* creature)
 {
-    return new mob_doom_blossomAI(pCreature);
+    return new mob_doom_blossomAI(creature);
 }
 
-CreatureAI* GetAI_mob_shadowy_construct(Creature* pCreature)
+CreatureAI* GetAI_mob_shadowy_construct(Creature* creature)
 {
-    return new mob_shadowy_constructAI(pCreature);
+    return new mob_shadowy_constructAI(creature);
 }
 
-CreatureAI* GetAI_boss_teron_gorefiend(Creature* pCreature)
+CreatureAI* GetAI_boss_teron_gorefiend(Creature* creature)
 {
-    return new boss_teron_gorefiendAI (pCreature);
+    return new boss_teron_gorefiendAI (creature);
 }
 
 void AddSC_boss_teron_gorefiend()

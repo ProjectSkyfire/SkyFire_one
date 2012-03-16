@@ -90,13 +90,13 @@ struct instance_shadowfang_keep : public ScriptedInstance
         uiTimer = 0;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case NPC_ASH: uiAshGUID = pCreature->GetGUID(); break;
-            case NPC_ADA: uiAdaGUID = pCreature->GetGUID(); break;
-            case NPC_ARCHMAGE_ARUGAL: uiArchmageArugalGUID = pCreature->GetGUID(); break;
+            case NPC_ASH: uiAshGUID = creature->GetGUID(); break;
+            case NPC_ADA: uiAdaGUID = creature->GetGUID(); break;
+            case NPC_ARCHMAGE_ARUGAL: uiArchmageArugalGUID = creature->GetGUID(); break;
         }
     }
 

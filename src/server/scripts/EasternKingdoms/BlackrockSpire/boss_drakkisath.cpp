@@ -90,9 +90,9 @@ struct boss_drakkisathAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_drakkisath(Creature* pCreature)
+CreatureAI* GetAI_boss_drakkisath(Creature* creature)
 {
-    return new boss_drakkisathAI (pCreature);
+    return new boss_drakkisathAI (creature);
 }
 
 void AddSC_boss_drakkisath()

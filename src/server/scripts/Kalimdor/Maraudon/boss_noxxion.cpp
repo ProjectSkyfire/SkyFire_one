@@ -119,9 +119,9 @@ struct boss_noxxionAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_noxxion(Creature* pCreature)
+CreatureAI* GetAI_boss_noxxion(Creature* creature)
 {
-    return new boss_noxxionAI (pCreature);
+    return new boss_noxxionAI (creature);
 }
 
 void AddSC_boss_noxxion()

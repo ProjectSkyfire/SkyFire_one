@@ -83,9 +83,9 @@ struct mob_shattered_rumblerAI : public ScriptedAI
         return;
     }
 };
-CreatureAI* GetAI_mob_shattered_rumbler(Creature* pCreature)
+CreatureAI* GetAI_mob_shattered_rumbler(Creature* creature)
 {
-    return new mob_shattered_rumblerAI (pCreature);
+    return new mob_shattered_rumblerAI (creature);
 }
 
 /*######
@@ -194,40 +194,40 @@ struct mob_lumpAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_lump(Creature* pCreature)
+CreatureAI* GetAI_mob_lump(Creature* creature)
 {
-    return new mob_lumpAI(pCreature);
+    return new mob_lumpAI(creature);
 }
 
-bool GossipHello_mob_lump(Player *player, Creature* pCreature)
+bool GossipHello_mob_lump(Player *player, Creature* creature)
 {
     if (player->GetQuestStatus(9918) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9352, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(9352, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_mob_lump(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_mob_lump(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SL1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(9353, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9353, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SL2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(9354, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9354, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SL3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(9355, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9355, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
-            player->SEND_GOSSIP_MENU(9356, pCreature->GetGUID());
-            player->TalkedToCreature(18354, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9356, creature->GetGUID());
+            player->TalkedToCreature(18354, creature->GetGUID());
             break;
     }
     return true;
@@ -258,9 +258,9 @@ struct mob_sunspring_villagerAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_mob_sunspring_villager(Creature* pCreature)
+CreatureAI* GetAI_mob_sunspring_villager(Creature* creature)
 {
-    return new mob_sunspring_villagerAI (pCreature);
+    return new mob_sunspring_villagerAI (creature);
 }
 
 /*######
@@ -278,10 +278,10 @@ CreatureAI* GetAI_mob_sunspring_villager(Creature* pCreature)
 #define GOSSIP_SATS5 "Ok."
 #define GOSSIP_SATS6 "[PH] Story done"
 
-bool GossipHello_npc_altruis_the_sufferer(Player *player, Creature* pCreature)
+bool GossipHello_npc_altruis_the_sufferer(Player *player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        player->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
     //gossip before obtaining Survey the Land
     if (player->GetQuestStatus(9991) == QUEST_STATUS_NONE)
@@ -295,38 +295,38 @@ bool GossipHello_npc_altruis_the_sufferer(Player *player, Creature* pCreature)
     if (player->GetQuestStatus(10646) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HATS3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+30);
 
-    player->SEND_GOSSIP_MENU(9419, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(9419, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+10:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SATS1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(9420, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9420, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+11:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SATS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-            player->SEND_GOSSIP_MENU(9421, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9421, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+12:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SATS3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-            player->SEND_GOSSIP_MENU(9422, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9422, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+13:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SATS4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
-            player->SEND_GOSSIP_MENU(9423, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9423, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+14:
-            player->SEND_GOSSIP_MENU(9424, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9424, creature->GetGUID());
             break;
 
         case GOSSIP_ACTION_INFO_DEF+20:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SATS5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 21);
-            player->SEND_GOSSIP_MENU(9427, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9427, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+21:
             player->CLOSE_GOSSIP_MENU();
@@ -335,7 +335,7 @@ bool GossipSelect_npc_altruis_the_sufferer(Player *player, Creature* pCreature, 
 
         case GOSSIP_ACTION_INFO_DEF+30:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SATS6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 31);
-            player->SEND_GOSSIP_MENU(384, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(384, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+31:
             player->CLOSE_GOSSIP_MENU();
@@ -381,55 +381,55 @@ bool QuestAccept_npc_altruis_the_sufferer(Player *player, Creature *creature, Qu
 #define GOSSIP_SGG11 "I will return to Azeroth at once, Greatmother."
 
 //all the textId's for the below is unknown, but i do believe the gossip item texts are proper.
-bool GossipHello_npc_greatmother_geyah(Player *player, Creature* pCreature)
+bool GossipHello_npc_greatmother_geyah(Player *player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        player->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
     if (player->GetQuestStatus(10044) == QUEST_STATUS_INCOMPLETE)
     {
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HGG1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature),pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature),creature->GetGUID());
     }
     else if (player->GetQuestStatus(10172) == QUEST_STATUS_INCOMPLETE)
     {
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HGG2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature),pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature),creature->GetGUID());
     }
     else
 
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature),pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature),creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_greatmother_geyah(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_greatmother_geyah(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 3:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 4:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 5:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 6:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 7:
             player->AreaExploredOrEventHappens(10044);
@@ -438,23 +438,23 @@ bool GossipSelect_npc_greatmother_geyah(Player *player, Creature* pCreature, uin
 
         case GOSSIP_ACTION_INFO_DEF + 10:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 11:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG8, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 12:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG9, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 13:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 14:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SGG11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 15);
-            player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 15:
             player->AreaExploredOrEventHappens(10172);
@@ -477,53 +477,53 @@ bool GossipSelect_npc_greatmother_geyah(Player *player, Creature* pCreature, uin
 #define GOSSIP_SLB6 "We will fight you until the end, then, Lantresor. We will not stand idly by as you pillage our towns and kill our people."
 #define GOSSIP_SLB7 "What do I need to do?"
 
-bool GossipHello_npc_lantresor_of_the_blade(Player *player, Creature* pCreature)
+bool GossipHello_npc_lantresor_of_the_blade(Player *player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        player->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
     if (player->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HLB, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9361, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(9361, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_lantresor_of_the_blade(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_lantresor_of_the_blade(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SLB1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(9362, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9362, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SLB2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(9363, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9363, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SLB3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(9364, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9364, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SLB4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(9365, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9365, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+4:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SLB5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            player->SEND_GOSSIP_MENU(9366, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9366, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+5:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SLB6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            player->SEND_GOSSIP_MENU(9367, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9367, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+6:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SLB7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            player->SEND_GOSSIP_MENU(9368, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9368, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+7:
-            player->SEND_GOSSIP_MENU(9369, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(9369, creature->GetGUID());
             if (player->GetQuestStatus(10107) == QUEST_STATUS_INCOMPLETE)
                 player->AreaExploredOrEventHappens(10107);
             if (player->GetQuestStatus(10108) == QUEST_STATUS_INCOMPLETE)
@@ -565,7 +565,7 @@ static float m_afAmbushB[]= {-1491.554321, 8506.483398, 1.248};
 
 struct npc_maghar_captiveAI : public npc_escortAI
 {
-    npc_maghar_captiveAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+    npc_maghar_captiveAI(Creature* creature) : npc_escortAI(creature) { Reset(); }
 
     uint32 m_uiChainLightningTimer;
     uint32 m_uiHealTimer;
@@ -666,27 +666,27 @@ struct npc_maghar_captiveAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_maghar_captive(Creature* pCreature)
+CreatureAI* GetAI_npc_maghar_captive(Creature* creature)
 {
-    return new npc_maghar_captiveAI(pCreature);
+    return new npc_maghar_captiveAI(creature);
 }
 
-bool QuestAccept_npc_maghar_captive(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_maghar_captive(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_TOTEM_KARDASH_H)
     {
-        if (npc_maghar_captiveAI* pEscortAI = dynamic_cast<npc_maghar_captiveAI*>(pCreature->AI()))
+        if (npc_maghar_captiveAI* pEscortAI = dynamic_cast<npc_maghar_captiveAI*>(creature->AI()))
         {
-            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-            pCreature->setFaction(232);
+            creature->SetStandState(UNIT_STAND_STATE_STAND);
+            creature->setFaction(232);
 
             pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
 
-            DoScriptText(SAY_MAG_START, pCreature);
+            DoScriptText(SAY_MAG_START, creature);
 
-            pCreature->SummonCreature(NPC_MURK_RAIDER, m_afAmbushA[0]+2.5f, m_afAmbushA[1]-2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-            pCreature->SummonCreature(NPC_MURK_PUTRIFIER, m_afAmbushA[0]-2.5f, m_afAmbushA[1]+2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-            pCreature->SummonCreature(NPC_MURK_BRUTE, m_afAmbushA[0], m_afAmbushA[1], m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            creature->SummonCreature(NPC_MURK_RAIDER, m_afAmbushA[0]+2.5f, m_afAmbushA[1]-2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            creature->SummonCreature(NPC_MURK_PUTRIFIER, m_afAmbushA[0]-2.5f, m_afAmbushA[1]+2.5f, m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            creature->SummonCreature(NPC_MURK_BRUTE, m_afAmbushA[0], m_afAmbushA[1], m_afAmbushA[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
         }
     }
     return true;
@@ -725,9 +725,9 @@ struct npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature* pCreature)
+CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature* creature)
 {
-    return new npc_creditmarker_visit_with_ancestorsAI (pCreature);
+    return new npc_creditmarker_visit_with_ancestorsAI (creature);
 }
 
 /*######
@@ -826,9 +826,9 @@ struct mob_sparrowhawkAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_sparrowhawk(Creature* pCreature)
+CreatureAI* GetAI_mob_sparrowhawk(Creature* creature)
 {
-    return new mob_sparrowhawkAI (pCreature);
+    return new mob_sparrowhawkAI (creature);
 }
 
 /*#####
@@ -852,7 +852,7 @@ enum
 
 struct npc_maghar_prisonerAI : public npc_escortAI
 {
-    npc_maghar_prisonerAI(Creature *pCreature) : npc_escortAI(pCreature) {}
+    npc_maghar_prisonerAI(Creature *creature) : npc_escortAI(creature) {}
 
     uint64 uiPlayerGUID;
 
@@ -1022,9 +1022,9 @@ struct npc_maghar_prisonerAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_maghar_prisoner(Creature* pCreature)
+CreatureAI* GetAI_npc_maghar_prisoner(Creature* creature)
 {
-    return new npc_maghar_prisonerAI(pCreature);
+    return new npc_maghar_prisonerAI(creature);
 }
 
 bool GOHello_maghar_prison(Player* pPlayer, GameObject* pGo)
@@ -1077,7 +1077,7 @@ enum
 
 struct npc_corki1AI : public npc_escortAI
 {
-    npc_corki1AI(Creature *pCreature) : npc_escortAI(pCreature) {}
+    npc_corki1AI(Creature *creature) : npc_escortAI(creature) {}
 
     uint64 uiPlayerGUID;
 
@@ -1132,9 +1132,9 @@ struct npc_corki1AI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_corki1(Creature* pCreature)
+CreatureAI* GetAI_npc_corki1(Creature* creature)
 {
-    return new npc_corki1AI(pCreature);
+    return new npc_corki1AI(creature);
 }
 
 bool GOHello_corkis_prison1(Player* pPlayer, GameObject* pGo)
@@ -1165,7 +1165,7 @@ enum
 
 struct npc_corki2AI : public npc_escortAI
 {
-    npc_corki2AI(Creature *pCreature) : npc_escortAI(pCreature) {}
+    npc_corki2AI(Creature *creature) : npc_escortAI(creature) {}
 
     uint64 uiPlayerGUID;
 
@@ -1220,9 +1220,9 @@ struct npc_corki2AI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_corki2(Creature* pCreature)
+CreatureAI* GetAI_npc_corki2(Creature* creature)
 {
-    return new npc_corki2AI(pCreature);
+    return new npc_corki2AI(creature);
 }
 
 bool GOHello_corkis_prison2(Player* pPlayer, GameObject* pGo)
@@ -1251,7 +1251,7 @@ enum
 
 struct npc_corki3AI : public npc_escortAI
 {
-    npc_corki3AI(Creature *pCreature) : npc_escortAI(pCreature) {}
+    npc_corki3AI(Creature *creature) : npc_escortAI(creature) {}
 
     uint64 uiPlayerGUID;
 
@@ -1306,9 +1306,9 @@ struct npc_corki3AI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_corki3(Creature* pCreature)
+CreatureAI* GetAI_npc_corki3(Creature* creature)
 {
-    return new npc_corki3AI(pCreature);
+    return new npc_corki3AI(creature);
 }
 
 bool GOHello_corkis_prison3(Player* pPlayer, GameObject* pGo)
@@ -1356,7 +1356,7 @@ static float m_afAmbushD[]= {-1442.524780, 8500.364258, 6.381};
 
 struct npc_kurenai_captiveAI : public npc_escortAI
 {
-    npc_kurenai_captiveAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+    npc_kurenai_captiveAI(Creature* creature) : npc_escortAI(creature) { Reset(); }
 
     uint32 m_uiChainLightningTimer;
     uint32 m_uiHealTimer;
@@ -1449,26 +1449,26 @@ struct npc_kurenai_captiveAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_kurenai_captive(Creature* pCreature)
+CreatureAI* GetAI_npc_kurenai_captive(Creature* creature)
 {
-    return new npc_kurenai_captiveAI(pCreature);
+    return new npc_kurenai_captiveAI(creature);
 }
 
-bool QuestAccept_npc_kurenai_captive(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_kurenai_captive(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_TOTEM_KARDASH_A)
     {
-        if (npc_kurenai_captiveAI* pEscortAI = dynamic_cast<npc_kurenai_captiveAI*>(pCreature->AI()))
+        if (npc_kurenai_captiveAI* pEscortAI = dynamic_cast<npc_kurenai_captiveAI*>(creature->AI()))
         {
-            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-            pCreature->setFaction(231);
+            creature->SetStandState(UNIT_STAND_STATE_STAND);
+            creature->setFaction(231);
 
             pEscortAI->Start(true, false, pPlayer->GetGUID(), pQuest);
-            DoScriptText(SAY_KUR_START, pCreature);
+            DoScriptText(SAY_KUR_START, creature);
 
-            pCreature->SummonCreature(MURK_RAIDER, m_afAmbushC[0]+2.5f, m_afAmbushC[1]-2.5f, m_afAmbushC[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-            pCreature->SummonCreature(MURK_PUTRIFIER, m_afAmbushC[0]-2.5f, m_afAmbushC[1]+2.5f, m_afAmbushC[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-            pCreature->SummonCreature(MURK_BRUTE, m_afAmbushC[0], m_afAmbushC[1], m_afAmbushC[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            creature->SummonCreature(MURK_RAIDER, m_afAmbushC[0]+2.5f, m_afAmbushC[1]-2.5f, m_afAmbushC[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            creature->SummonCreature(MURK_PUTRIFIER, m_afAmbushC[0]-2.5f, m_afAmbushC[1]+2.5f, m_afAmbushC[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+            creature->SummonCreature(MURK_BRUTE, m_afAmbushC[0], m_afAmbushC[1], m_afAmbushC[2], 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
         }
     }
     return true;

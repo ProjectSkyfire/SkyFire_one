@@ -81,9 +81,9 @@ struct boss_gahzrankaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gahzranka(Creature* pCreature)
+CreatureAI* GetAI_boss_gahzranka(Creature* creature)
 {
-    return new boss_gahzrankaAI (pCreature);
+    return new boss_gahzrankaAI (creature);
 }
 
 void AddSC_boss_gahzranka()

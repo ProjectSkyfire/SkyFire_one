@@ -194,9 +194,9 @@ struct boss_fankrissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_fankriss(Creature* pCreature)
+CreatureAI* GetAI_boss_fankriss(Creature* creature)
 {
-    return new boss_fankrissAI (pCreature);
+    return new boss_fankrissAI (creature);
 }
 
 void AddSC_boss_fankriss()

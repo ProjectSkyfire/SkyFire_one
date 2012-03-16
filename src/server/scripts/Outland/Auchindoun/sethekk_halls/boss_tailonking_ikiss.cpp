@@ -214,9 +214,9 @@ struct boss_talon_king_ikissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_talon_king_ikiss(Creature* pCreature)
+CreatureAI* GetAI_boss_talon_king_ikiss(Creature* creature)
 {
-    return new boss_talon_king_ikissAI (pCreature);
+    return new boss_talon_king_ikissAI (creature);
 }
 
 void AddSC_boss_talon_king_ikiss()

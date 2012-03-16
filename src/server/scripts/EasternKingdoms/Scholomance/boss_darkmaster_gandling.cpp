@@ -213,9 +213,9 @@ struct boss_darkmaster_gandlingAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_darkmaster_gandling(Creature* pCreature)
+CreatureAI* GetAI_boss_darkmaster_gandling(Creature* creature)
 {
-    return new boss_darkmaster_gandlingAI (pCreature);
+    return new boss_darkmaster_gandlingAI (creature);
 }
 
 void AddSC_boss_darkmaster_gandling()

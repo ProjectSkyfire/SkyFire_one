@@ -94,9 +94,9 @@ struct boss_kelrisAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kelris(Creature* pCreature)
+CreatureAI* GetAI_boss_kelris(Creature* creature)
 {
-    return new boss_kelrisAI (pCreature);
+    return new boss_kelrisAI (creature);
 }
 
 void AddSC_boss_kelris()

@@ -81,9 +81,9 @@ struct boss_gehennasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gehennas(Creature* pCreature)
+CreatureAI* GetAI_boss_gehennas(Creature* creature)
 {
-    return new boss_gehennasAI (pCreature);
+    return new boss_gehennasAI (creature);
 }
 
 void AddSC_boss_gehennas()

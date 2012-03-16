@@ -167,9 +167,9 @@ struct boss_highlord_mograineAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_highlord_mograine(Creature* pCreature)
+CreatureAI* GetAI_boss_highlord_mograine(Creature* creature)
 {
-    return new boss_highlord_mograineAI (pCreature);
+    return new boss_highlord_mograineAI (creature);
 }
 
 void AddSC_boss_highlord_mograine()

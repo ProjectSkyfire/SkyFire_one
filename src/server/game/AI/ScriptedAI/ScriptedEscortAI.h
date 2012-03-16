@@ -54,7 +54,7 @@ enum eEscortState
 struct npc_escortAI : public ScriptedAI
 {
     public:
-        explicit npc_escortAI(Creature* pCreature);
+        explicit npc_escortAI(Creature* creature);
         ~npc_escortAI() {}
 
         // CreatureAI functions

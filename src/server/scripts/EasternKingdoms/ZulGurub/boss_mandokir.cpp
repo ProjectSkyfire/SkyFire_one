@@ -337,14 +337,14 @@ struct mob_ohganAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_mandokir(Creature* pCreature)
+CreatureAI* GetAI_boss_mandokir(Creature* creature)
 {
-    return new boss_mandokirAI (pCreature);
+    return new boss_mandokirAI (creature);
 }
 
-CreatureAI* GetAI_mob_ohgan(Creature* pCreature)
+CreatureAI* GetAI_mob_ohgan(Creature* creature)
 {
-    return new mob_ohganAI (pCreature);
+    return new mob_ohganAI (creature);
 }
 
 void AddSC_boss_mandokir()

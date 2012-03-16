@@ -119,13 +119,13 @@ struct instance_uldaman : public ScriptedInstance
         }
     }
 
-    void SetFrozenState(Creature* pCreature)
+    void SetFrozenState(Creature* creature)
     {
-        pCreature->setFaction(35);
-        pCreature->RemoveAllAuras();
+        creature->setFaction(35);
+        creature->RemoveAllAuras();
         //creature->RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_ANIMATION_FROZEN);
-        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+        creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
     }
 
     void SetDoor(uint64 guid, bool open)
@@ -369,39 +369,39 @@ struct instance_uldaman : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry()) {
+        switch (creature->GetEntry()) {
             case 4857:    // Stone Keeper
-                SetFrozenState (pCreature);
-                stoneKeeper.push_back(pCreature->GetGUID());
+                SetFrozenState (creature);
+                stoneKeeper.push_back(creature->GetGUID());
                 break;
 
             case 7309:    // Earthen Custodian
-                archaedasWallMinions.push_back(pCreature->GetGUID());
+                archaedasWallMinions.push_back(creature->GetGUID());
                 break;
 
             case 7077:    // Earthen Hallshaper
-                archaedasWallMinions.push_back(pCreature->GetGUID());
+                archaedasWallMinions.push_back(creature->GetGUID());
                 break;
 
             case 7076:    // Earthen Guardian
-                earthenGuardian.push_back(pCreature->GetGUID());
+                earthenGuardian.push_back(creature->GetGUID());
                 break;
 
             case 7228:    // Ironaya
-                ironayaGUID = pCreature->GetGUID();
+                ironayaGUID = creature->GetGUID();
 
                 if (Encounters[2] != DONE)
-                    SetFrozenState(pCreature);
+                    SetFrozenState(creature);
                 break;
 
             case 10120:   // Vault Walker
-                vaultWalker.push_back(pCreature->GetGUID());
+                vaultWalker.push_back(creature->GetGUID());
                 break;
 
             case 2748:    // Archaedas
-                archaedasGUID = pCreature->GetGUID();
+                archaedasGUID = creature->GetGUID();
                 break;
         } // end switch
     } // end OnCreatureCreate

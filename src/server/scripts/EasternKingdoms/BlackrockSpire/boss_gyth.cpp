@@ -193,9 +193,9 @@ struct boss_gythAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gyth(Creature* pCreature)
+CreatureAI* GetAI_boss_gyth(Creature* creature)
 {
-    return new boss_gythAI (pCreature);
+    return new boss_gythAI (creature);
 }
 
 void AddSC_boss_gyth()

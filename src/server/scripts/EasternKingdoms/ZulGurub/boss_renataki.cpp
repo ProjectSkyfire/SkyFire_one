@@ -142,9 +142,9 @@ struct boss_renatakiAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_renataki(Creature* pCreature)
+CreatureAI* GetAI_boss_renataki(Creature* creature)
 {
-    return new boss_renatakiAI (pCreature);
+    return new boss_renatakiAI (creature);
 }
 
 void AddSC_boss_renataki()

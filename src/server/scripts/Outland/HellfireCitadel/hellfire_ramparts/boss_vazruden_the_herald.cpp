@@ -484,24 +484,24 @@ struct mob_hellfire_sentryAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_vazruden_the_herald(Creature* pCreature)
+CreatureAI* GetAI_boss_vazruden_the_herald(Creature* creature)
 {
-    return new boss_vazruden_the_heraldAI (pCreature);
+    return new boss_vazruden_the_heraldAI (creature);
 }
 
-CreatureAI* GetAI_boss_vazruden(Creature* pCreature)
+CreatureAI* GetAI_boss_vazruden(Creature* creature)
 {
-    return new boss_vazrudenAI (pCreature);
+    return new boss_vazrudenAI (creature);
 }
 
-CreatureAI* GetAI_boss_nazan(Creature* pCreature)
+CreatureAI* GetAI_boss_nazan(Creature* creature)
 {
-    return new boss_nazanAI (pCreature);
+    return new boss_nazanAI (creature);
 }
 
-CreatureAI* GetAI_mob_hellfire_sentry(Creature* pCreature)
+CreatureAI* GetAI_mob_hellfire_sentry(Creature* creature)
 {
-    return new mob_hellfire_sentryAI (pCreature);
+    return new mob_hellfire_sentryAI (creature);
 }
 
 void AddSC_boss_vazruden_the_herald()

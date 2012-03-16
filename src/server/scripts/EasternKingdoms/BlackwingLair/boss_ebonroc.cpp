@@ -92,9 +92,9 @@ struct boss_ebonrocAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ebonroc(Creature* pCreature)
+CreatureAI* GetAI_boss_ebonroc(Creature* creature)
 {
-    return new boss_ebonrocAI (pCreature);
+    return new boss_ebonrocAI (creature);
 }
 
 void AddSC_boss_ebonroc()

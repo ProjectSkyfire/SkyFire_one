@@ -301,9 +301,9 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_warchief_kargath_bladefist(Creature* pCreature)
+CreatureAI* GetAI_boss_warchief_kargath_bladefist(Creature* creature)
 {
-    return new boss_warchief_kargath_bladefistAI (pCreature);
+    return new boss_warchief_kargath_bladefistAI (creature);
 }
 
 void AddSC_boss_warchief_kargath_bladefist()

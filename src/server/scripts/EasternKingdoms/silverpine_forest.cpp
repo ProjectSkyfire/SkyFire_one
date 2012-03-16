@@ -60,34 +60,34 @@ struct npc_astor_hadrenAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_astor_hadren(Creature* pCreature)
+CreatureAI* GetAI_npc_astor_hadren(Creature* creature)
 {
-    return new npc_astor_hadrenAI(pCreature);
+    return new npc_astor_hadrenAI(creature);
 }
 
-bool GossipHello_npc_astor_hadren(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_astor_hadren(Player* pPlayer, Creature* creature)
 {
     if (pPlayer->GetQuestStatus(1886) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HAH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    pPlayer->SEND_GOSSIP_MENU(623, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(623, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_astor_hadren(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_astor_hadren(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SAH, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(624, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(624, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF + 2:
             pPlayer->CLOSE_GOSSIP_MENU();
-            pCreature->setFaction(21);
+            creature->setFaction(21);
             if (pPlayer)
-                CAST_AI(npc_astor_hadrenAI, pCreature->AI())->AttackStart(pPlayer);
+                CAST_AI(npc_astor_hadrenAI, creature->AI())->AttackStart(pPlayer);
             break;
     }
     return true;
@@ -163,22 +163,22 @@ struct npc_deathstalker_erlandAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_deathstalker_erland(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_deathstalker_erland(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_ESCORTING)
     {
-        DoScriptText(SAY_QUESTACCEPT, pCreature, pPlayer);
+        DoScriptText(SAY_QUESTACCEPT, creature, pPlayer);
 
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_deathstalker_erlandAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_deathstalker_erlandAI, creature->AI()))
             pEscortAI->Start(true, false, pPlayer->GetGUID());
     }
 
     return true;
 }
 
-CreatureAI* GetAI_npc_deathstalker_erlandAI(Creature* pCreature)
+CreatureAI* GetAI_npc_deathstalker_erlandAI(Creature* creature)
 {
-    return new npc_deathstalker_erlandAI(pCreature);
+    return new npc_deathstalker_erlandAI(creature);
 }
 
 /*######
@@ -336,19 +336,19 @@ struct pyrewood_ambushAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_pyrewood_ambush(Creature *pCreature)
+CreatureAI* GetAI_pyrewood_ambush(Creature *creature)
 {
-    return new pyrewood_ambushAI (pCreature);
+    return new pyrewood_ambushAI (creature);
 }
 
-bool QuestAccept_pyrewood_ambush(Player *pPlayer, Creature *pCreature, const Quest *pQuest)
+bool QuestAccept_pyrewood_ambush(Player *pPlayer, Creature *creature, const Quest *pQuest)
 {
-    if (pQuest->GetQuestId() == QUEST_PYREWOOD_AMBUSH && !CAST_AI(pyrewood_ambushAI, pCreature->AI())->QuestInProgress)
+    if (pQuest->GetQuestId() == QUEST_PYREWOOD_AMBUSH && !CAST_AI(pyrewood_ambushAI, creature->AI())->QuestInProgress)
     {
-        CAST_AI(pyrewood_ambushAI, pCreature->AI())->QuestInProgress = true;
-        CAST_AI(pyrewood_ambushAI, pCreature->AI())->Phase = 0;
-        CAST_AI(pyrewood_ambushAI, pCreature->AI())->KillCount = 0;
-        CAST_AI(pyrewood_ambushAI, pCreature->AI())->PlayerGUID = pPlayer->GetGUID();
+        CAST_AI(pyrewood_ambushAI, creature->AI())->QuestInProgress = true;
+        CAST_AI(pyrewood_ambushAI, creature->AI())->Phase = 0;
+        CAST_AI(pyrewood_ambushAI, creature->AI())->KillCount = 0;
+        CAST_AI(pyrewood_ambushAI, creature->AI())->PlayerGUID = pPlayer->GetGUID();
     }
 
     return true;

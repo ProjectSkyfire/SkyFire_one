@@ -289,9 +289,9 @@ struct boss_chromaggusAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_chromaggus(Creature* pCreature)
+CreatureAI* GetAI_boss_chromaggus(Creature* creature)
 {
-    return new boss_chromaggusAI (pCreature);
+    return new boss_chromaggusAI (creature);
 }
 
 void AddSC_boss_chromaggus()

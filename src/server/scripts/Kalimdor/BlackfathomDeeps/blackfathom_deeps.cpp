@@ -58,16 +58,16 @@ bool GoHello_blackfathom_fire(Player * /*pPlayer*/, GameObject* pGo)
 
 struct npc_blackfathom_deeps_eventAI : public ScriptedAI
 {
-    npc_blackfathom_deeps_eventAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_blackfathom_deeps_eventAI(Creature* creature) : ScriptedAI(creature)
     {
-        //if (pCreature->isSummon())
-        if (pCreature->isPet()) //TODO: Use line above
+        //if (creature->isSummon())
+        if (creature->isPet()) //TODO: Use line above
         {
-            pCreature->SetHomePosition(HomePosition);
+            creature->SetHomePosition(HomePosition);
             AttackPlayer();
         }
 
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance* pInstance;
@@ -169,9 +169,9 @@ struct npc_blackfathom_deeps_eventAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_blackfathom_deeps_event(Creature* pCreature)
+CreatureAI* GetAI_npc_blackfathom_deeps_event(Creature* creature)
 {
-    return new npc_blackfathom_deeps_eventAI (pCreature);
+    return new npc_blackfathom_deeps_eventAI (creature);
 }
 
 enum eMorridune
@@ -182,9 +182,9 @@ enum eMorridune
 
 struct npc_morriduneAI : public npc_escortAI
 {
-    npc_morriduneAI(Creature* pCreature) : npc_escortAI(pCreature)
+    npc_morriduneAI(Creature* creature) : npc_escortAI(creature)
     {
-        DoScriptText(SAY_MORRIDUNE_1, pCreature);
+        DoScriptText(SAY_MORRIDUNE_1, creature);
         me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         Start(false, false, NULL);
     }
@@ -204,20 +204,20 @@ struct npc_morriduneAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_morridune(Creature* pCreature)
+CreatureAI* GetAI_npc_morridune(Creature* creature)
 {
-    return new npc_morriduneAI (pCreature);
+    return new npc_morriduneAI (creature);
 }
 
-bool GossipHello_npc_morridune(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_morridune(Player* pPlayer, Creature* creature)
 {
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MORRIDUNE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_morridune(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_morridune(Player* pPlayer, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {

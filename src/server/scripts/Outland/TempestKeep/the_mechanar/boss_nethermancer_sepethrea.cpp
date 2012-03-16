@@ -157,9 +157,9 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature* pCreature)
+CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature* creature)
 {
-    return new boss_nethermancer_sepethreaAI (pCreature);
+    return new boss_nethermancer_sepethreaAI (creature);
 }
 
 #define SPELL_INFERNO                   35268
@@ -241,9 +241,9 @@ struct mob_ragin_flamesAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mob_ragin_flames(Creature* pCreature)
+CreatureAI* GetAI_mob_ragin_flames(Creature* creature)
 {
-    return new mob_ragin_flamesAI (pCreature);
+    return new mob_ragin_flamesAI (creature);
 }
 void AddSC_boss_nethermancer_sepethrea()
 {

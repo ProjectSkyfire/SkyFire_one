@@ -80,9 +80,9 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ambassador_flamelash(Creature* pCreature)
+CreatureAI* GetAI_boss_ambassador_flamelash(Creature* creature)
 {
-    return new boss_ambassador_flamelashAI (pCreature);
+    return new boss_ambassador_flamelashAI (creature);
 }
 
 void AddSC_boss_ambassador_flamelash()

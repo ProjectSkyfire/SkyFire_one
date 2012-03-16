@@ -155,22 +155,22 @@ struct instance_blackrock_depths : public ScriptedInstance
             TombBossGUIDs[i] = 0;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-        case NPC_EMPEROR: EmperorGUID = pCreature->GetGUID(); break;
-        case NPC_PHALANX: PhalanxGUID = pCreature->GetGUID(); break;
-        case NPC_DOOMREL: TombBossGUIDs[0] = pCreature->GetGUID(); break;
-        case NPC_DOPEREL: TombBossGUIDs[1] = pCreature->GetGUID(); break;
-        case NPC_HATEREL: TombBossGUIDs[2] = pCreature->GetGUID(); break;
-        case NPC_VILEREL: TombBossGUIDs[3] = pCreature->GetGUID(); break;
-        case NPC_SEETHREL: TombBossGUIDs[4] = pCreature->GetGUID(); break;
-        case NPC_GLOOMREL: TombBossGUIDs[5] = pCreature->GetGUID(); break;
-        case NPC_ANGERREL: TombBossGUIDs[6] = pCreature->GetGUID(); break;
+        case NPC_EMPEROR: EmperorGUID = creature->GetGUID(); break;
+        case NPC_PHALANX: PhalanxGUID = creature->GetGUID(); break;
+        case NPC_DOOMREL: TombBossGUIDs[0] = creature->GetGUID(); break;
+        case NPC_DOPEREL: TombBossGUIDs[1] = creature->GetGUID(); break;
+        case NPC_HATEREL: TombBossGUIDs[2] = creature->GetGUID(); break;
+        case NPC_VILEREL: TombBossGUIDs[3] = creature->GetGUID(); break;
+        case NPC_SEETHREL: TombBossGUIDs[4] = creature->GetGUID(); break;
+        case NPC_GLOOMREL: TombBossGUIDs[5] = creature->GetGUID(); break;
+        case NPC_ANGERREL: TombBossGUIDs[6] = creature->GetGUID(); break;
         case NPC_MAGMUS:
-            MagmusGUID = pCreature->GetGUID();
-            if (!pCreature->isAlive())
+            MagmusGUID = creature->GetGUID();
+            if (!creature->isAlive())
                 HandleGameObject(GetData64(DATA_THRONE_DOOR), true); // if Magmus is dead open door to last boss
             break;
         }

@@ -73,9 +73,9 @@ struct boss_wushoolayAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_wushoolay(Creature* pCreature)
+CreatureAI* GetAI_boss_wushoolay(Creature* creature)
 {
-    return new boss_wushoolayAI (pCreature);
+    return new boss_wushoolayAI (creature);
 }
 
 void AddSC_boss_wushoolay()

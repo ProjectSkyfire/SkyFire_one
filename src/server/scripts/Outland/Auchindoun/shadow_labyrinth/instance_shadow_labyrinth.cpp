@@ -82,15 +82,15 @@ struct instance_shadow_labyrinth : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
             case 18732:
-                GrandmasterVorpil = pCreature->GetGUID();
+                GrandmasterVorpil = creature->GetGUID();
                 break;
             case 18796:
-                if (pCreature->isAlive())
+                if (creature->isAlive())
                 {
                     ++FelOverseerCount;
                     sLog->outDebug("TSCR: Shadow Labyrinth: counting %u Fel Overseers.",FelOverseerCount);
@@ -252,9 +252,9 @@ struct mob_fel_overseerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_fel_overseer(Creature* pCreature)
+CreatureAI* GetAI_mob_fel_overseer(Creature* creature)
 {
-    return new mob_fel_overseerAI (pCreature);
+    return new mob_fel_overseerAI (creature);
 }
 
 void AddSC_instance_shadow_labyrinth()

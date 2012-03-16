@@ -113,9 +113,9 @@ struct boss_razorgoreAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_razorgore(Creature* pCreature)
+CreatureAI* GetAI_boss_razorgore(Creature* creature)
 {
-    return new boss_razorgoreAI (pCreature);
+    return new boss_razorgoreAI (creature);
 }
 
 void AddSC_boss_razorgore()

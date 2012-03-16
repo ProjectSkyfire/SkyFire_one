@@ -69,11 +69,11 @@ struct instance_gnomeregan : public ScriptedInstance
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*bAdd*/)
+    void OnCreatureCreate(Creature* creature, bool /*bAdd*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case NPC_BLASTMASTER_EMI_SHORTFUSE: uiBastmasterEmiShortfuseGUID = pCreature->GetGUID(); break;
+            case NPC_BLASTMASTER_EMI_SHORTFUSE: uiBastmasterEmiShortfuseGUID = creature->GetGUID(); break;
         }
     }
 

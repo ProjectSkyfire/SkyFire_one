@@ -115,9 +115,9 @@ struct boss_baroness_anastariAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_baroness_anastari(Creature* pCreature)
+CreatureAI* GetAI_boss_baroness_anastari(Creature* creature)
 {
-    return new boss_baroness_anastariAI (pCreature);
+    return new boss_baroness_anastariAI (creature);
 }
 
 void AddSC_boss_baroness_anastari()

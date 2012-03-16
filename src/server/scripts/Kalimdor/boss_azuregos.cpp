@@ -143,9 +143,9 @@ struct boss_azuregosAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_azuregos(Creature* pCreature)
+CreatureAI* GetAI_boss_azuregos(Creature* creature)
 {
-    return new boss_azuregosAI (pCreature);
+    return new boss_azuregosAI (creature);
 }
 
 void AddSC_boss_azuregos()

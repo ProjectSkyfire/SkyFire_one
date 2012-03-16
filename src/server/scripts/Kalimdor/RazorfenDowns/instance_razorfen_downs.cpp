@@ -150,7 +150,7 @@ struct instance_razorfen_downs : public ScriptedInstance
                             break;
                     }
 
-                    if (Creature* pCreature = pGo->SummonCreature(uiCreature, 2502.635f, 844.140f, 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                    if (Creature* creature = pGo->SummonCreature(uiCreature, 2502.635f, 844.140f, 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
                     {
                         if (uiGongWaves == 10 || uiGongWaves == 1)
                         {
@@ -160,7 +160,7 @@ struct instance_razorfen_downs : public ScriptedInstance
                                     pSummon->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
                             }
                         }
-                        pCreature->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
+                        creature->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
                     }
                     break;
                 }

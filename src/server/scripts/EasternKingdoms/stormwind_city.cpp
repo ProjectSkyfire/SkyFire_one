@@ -47,25 +47,25 @@ EndContentData */
 
 #define GOSSIP_ITEM_MALIN "Can you send me to Theramore? I have an urgent message for Lady Jaina from Highlord Bolvar."
 
-bool GossipHello_npc_archmage_malin(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_archmage_malin(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
     if (pPlayer->GetQuestStatus(11223) == QUEST_STATUS_COMPLETE && !pPlayer->GetQuestRewardStatus(11223))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MALIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_archmage_malin(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_archmage_malin(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, 42711, true);
+        creature->CastSpell(pPlayer, 42711, true);
     }
 
     return true;
@@ -112,20 +112,20 @@ struct npc_bartlebyAI : public ScriptedAI
     }
 };
 
-bool QuestAccept_npc_bartleby(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_bartleby(Player* pPlayer, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == 1640)
     {
-        pCreature->setFaction(168);
-        ((npc_bartlebyAI*)pCreature->AI())->PlayerGUID = pPlayer->GetGUID();
-        pCreature->AI()->AttackStart(pPlayer);
+        creature->setFaction(168);
+        ((npc_bartlebyAI*)creature->AI())->PlayerGUID = pPlayer->GetGUID();
+        creature->AI()->AttackStart(pPlayer);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_bartleby(Creature* pCreature)
+CreatureAI* GetAI_npc_bartleby(Creature* creature)
 {
-    return new npc_bartlebyAI(pCreature);
+    return new npc_bartlebyAI(creature);
 }
 
 /*######
@@ -159,19 +159,19 @@ struct npc_dashel_stonefistAI : public ScriptedAI
     }
 };
 
-bool QuestAccept_npc_dashel_stonefist(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_dashel_stonefist(Player* pPlayer, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == 1447)
     {
-        pCreature->setFaction(168);
-        CAST_AI(npc_dashel_stonefistAI, pCreature->AI())->AttackStart(pPlayer);
+        creature->setFaction(168);
+        CAST_AI(npc_dashel_stonefistAI, creature->AI())->AttackStart(pPlayer);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_dashel_stonefist(Creature* pCreature)
+CreatureAI* GetAI_npc_dashel_stonefist(Creature* creature)
 {
-    return new npc_dashel_stonefistAI(pCreature);
+    return new npc_dashel_stonefistAI(creature);
 }
 
 /*######
@@ -199,9 +199,9 @@ struct npc_general_marcus_jonathanAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_general_marcus_jonathan(Creature* pCreature)
+CreatureAI* GetAI_npc_general_marcus_jonathan(Creature* creature)
 {
-    return new npc_general_marcus_jonathanAI(pCreature);
+    return new npc_general_marcus_jonathanAI(creature);
 }
 
 /*######
@@ -213,34 +213,34 @@ CreatureAI* GetAI_npc_general_marcus_jonathan(Creature* pCreature)
 #define GOSSIP_ITEM_KAT_3 "Begging your pardon, Lady Prestor. That was not my intent."
 #define GOSSIP_ITEM_KAT_4 "Thank you for your time, Lady Prestor."
 
-bool GossipHello_npc_lady_katrana_prestor(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_lady_katrana_prestor(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
     if (pPlayer->GetQuestStatus(4185) == QUEST_STATUS_INCOMPLETE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAT_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(2693, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(2693, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_lady_katrana_prestor(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_lady_katrana_prestor(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAT_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(2694, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(2694, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAT_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(2695, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(2695, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_KAT_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(2696, pCreature->GetGUID());
+            pPlayer->SEND_GOSSIP_MENU(2696, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+3:
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -310,7 +310,7 @@ Point P2[] =
 
 struct npc_stormwind_royal_guardAI : public ScriptedAI
 {
-    npc_stormwind_royal_guardAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    npc_stormwind_royal_guardAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 uiSpybotTimer;
     uint32 uiSpybotPhase;
@@ -397,9 +397,9 @@ struct npc_stormwind_royal_guardAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_stormwind_royal_guard(Creature* pCreature)
+CreatureAI* GetAI_npc_stormwind_royal_guard(Creature* creature)
 {
-    return new npc_stormwind_royal_guardAI(pCreature);
+    return new npc_stormwind_royal_guardAI(creature);
 }
 
 /*######
@@ -408,9 +408,9 @@ CreatureAI* GetAI_npc_stormwind_royal_guard(Creature* pCreature)
 
 struct npc_lord_gregor_lescovarAI : public npc_escortAI
 {
-    npc_lord_gregor_lescovarAI(Creature* pCreature) : npc_escortAI(pCreature)
+    npc_lord_gregor_lescovarAI(Creature* creature) : npc_escortAI(creature)
     {
-        pCreature->RestoreFaction();
+        creature->RestoreFaction();
     }
 
     uint32 uiTimer;
@@ -560,9 +560,9 @@ struct npc_lord_gregor_lescovarAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_lord_gregor_lescovar(Creature* pCreature)
+CreatureAI* GetAI_npc_lord_gregor_lescovar(Creature* creature)
 {
-    return new npc_lord_gregor_lescovarAI(pCreature);
+    return new npc_lord_gregor_lescovarAI(creature);
 }
 
 /*######
@@ -571,7 +571,7 @@ CreatureAI* GetAI_npc_lord_gregor_lescovar(Creature* pCreature)
 
 struct npc_marzon_silent_bladeAI : public ScriptedAI
 {
-    npc_marzon_silent_bladeAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_marzon_silent_bladeAI(Creature* creature) : ScriptedAI(creature)
     {
         me->AddUnitMovementFlag(MOVEFLAG_WALK_MODE);
     }
@@ -612,9 +612,9 @@ struct npc_marzon_silent_bladeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_marzon_silent_blade(Creature* pCreature)
+CreatureAI* GetAI_npc_marzon_silent_blade(Creature* creature)
 {
-    return new npc_marzon_silent_bladeAI(pCreature);
+    return new npc_marzon_silent_bladeAI(creature);
 }
 
 /*######
@@ -623,7 +623,7 @@ CreatureAI* GetAI_npc_marzon_silent_blade(Creature* pCreature)
 
 struct npc_tyrion_spybotAI : public npc_escortAI
 {
-    npc_tyrion_spybotAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+    npc_tyrion_spybotAI(Creature* creature) : npc_escortAI(creature) {}
 
     uint32 uiTimer;
     uint32 uiPhase;
@@ -783,22 +783,22 @@ struct npc_tyrion_spybotAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_tyrion_spybot(Creature* pCreature)
+CreatureAI* GetAI_npc_tyrion_spybot(Creature* creature)
 {
-    return new npc_tyrion_spybotAI(pCreature);
+    return new npc_tyrion_spybotAI(creature);
 }
 
 /*######
 ## npc_tyrion
 ######*/
 
-bool QuestAccept_npc_tyrion(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
+bool QuestAccept_npc_tyrion(Player* pPlayer, Creature* creature, Quest const *pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_THE_ATTACK)
     {
-        if (Creature* pSpybot = pCreature->FindNearestCreature(NPC_TYRION_SPYBOT, 5.0f, true))
+        if (Creature* pSpybot = creature->FindNearestCreature(NPC_TYRION_SPYBOT, 5.0f, true))
         {
-            pCreature->SetFacingToObject(pSpybot);
+            creature->SetFacingToObject(pSpybot);
             CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->Start(false, false, pPlayer->GetGUID());
             CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->SetEscortPaused(true);
             CAST_AI(npc_tyrion_spybotAI, pSpybot->AI())->uiPhase = 1;

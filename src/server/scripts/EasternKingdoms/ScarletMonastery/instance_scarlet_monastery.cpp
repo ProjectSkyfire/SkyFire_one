@@ -75,16 +75,16 @@ struct instance_scarlet_monastery : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case ENTRY_HORSEMAN:    HorsemanGUID = pCreature->GetGUID(); break;
-            case ENTRY_HEAD:        HeadGUID = pCreature->GetGUID(); break;
-            case ENTRY_PUMPKIN:     HorsemanAdds.insert(pCreature->GetGUID());break;
-            case 3976: MograineGUID = pCreature->GetGUID(); break;
-            case 3977: WhitemaneGUID = pCreature->GetGUID(); break;
-            case 3981: VorrelGUID = pCreature->GetGUID(); break;
+            case ENTRY_HORSEMAN:    HorsemanGUID = creature->GetGUID(); break;
+            case ENTRY_HEAD:        HeadGUID = creature->GetGUID(); break;
+            case ENTRY_PUMPKIN:     HorsemanAdds.insert(creature->GetGUID());break;
+            case 3976: MograineGUID = creature->GetGUID(); break;
+            case 3977: WhitemaneGUID = creature->GetGUID(); break;
+            case 3981: VorrelGUID = creature->GetGUID(); break;
         }
     }
 

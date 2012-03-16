@@ -3397,9 +3397,9 @@ bool ChatHandler::HandleAddWeaponCommand(const char* /*args*/)
         return true;
     }
 
-    Creature *pCreature = ObjectAccessor::GetCreature(*m_session->GetPlayer(), guid);
+    Creature *creature = ObjectAccessor::GetCreature(*m_session->GetPlayer(), guid);
 
-    if (!pCreature)
+    if (!creature)
     {
         SendSysMessage(LANG_SELECT_CREATURE);
         return true;
@@ -3424,15 +3424,15 @@ bool ChatHandler::HandleAddWeaponCommand(const char* /*args*/)
         switch (SlotID)
         {
             case 1:
-                pCreature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, ItemID);
+                creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, ItemID);
                 added = true;
                 break;
             case 2:
-                pCreature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01, ItemID);
+                creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_01, ItemID);
                 added = true;
                 break;
             case 3:
-                pCreature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_02, ItemID);
+                creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY_02, ItemID);
                 added = true;
                 break;
             default:

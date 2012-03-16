@@ -225,17 +225,17 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 21212: LadyVashj = pCreature->GetGUID();            break;
-            case 21214: Karathress = pCreature->GetGUID();           break;
-            case 21966: Sharkkis = pCreature->GetGUID();             break;
-            case 21217: LurkerBelow = pCreature->GetGUID();          break;
-            case 21965: Tidalvess = pCreature->GetGUID();            break;
-            case 21964: Caribdis = pCreature->GetGUID();             break;
-            case 21215: LeotherasTheBlind = pCreature->GetGUID();    break;
+            case 21212: LadyVashj = creature->GetGUID();            break;
+            case 21214: Karathress = creature->GetGUID();           break;
+            case 21966: Sharkkis = creature->GetGUID();             break;
+            case 21217: LurkerBelow = creature->GetGUID();          break;
+            case 21965: Tidalvess = creature->GetGUID();            break;
+            case 21964: Caribdis = creature->GetGUID();             break;
+            case 21215: LeotherasTheBlind = creature->GetGUID();    break;
         }
     }
 

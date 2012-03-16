@@ -86,9 +86,9 @@ struct boss_azshir_the_sleeplessAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_azshir_the_sleepless(Creature* pCreature)
+CreatureAI* GetAI_boss_azshir_the_sleepless(Creature* creature)
 {
-    return new boss_azshir_the_sleeplessAI (pCreature);
+    return new boss_azshir_the_sleeplessAI (creature);
 }
 
 void AddSC_boss_azshir_the_sleepless()

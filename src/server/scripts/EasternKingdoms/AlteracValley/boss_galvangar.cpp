@@ -122,9 +122,9 @@ struct boss_galvangarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_galvangar(Creature* pCreature)
+CreatureAI* GetAI_boss_galvangar(Creature* creature)
 {
-    return new boss_galvangarAI (pCreature);
+    return new boss_galvangarAI (creature);
 }
 
 void AddSC_boss_galvangar()

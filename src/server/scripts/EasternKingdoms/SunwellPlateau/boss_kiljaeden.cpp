@@ -213,7 +213,7 @@ float ShieldOrbLocations[4][2]=
 struct Speech
 {
     int32 textid;
-    uint32 pCreature, timer;
+    uint32 creature, timer;
 };
 
 // Timers
@@ -360,9 +360,9 @@ struct boss_kalecgos_kjAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kalecgos_kj(Creature* pCreature)
+CreatureAI* GetAI_boss_kalecgos_kj(Creature* creature)
 {
-    return new boss_kalecgos_kjAI (pCreature);
+    return new boss_kalecgos_kjAI (creature);
 }
 
 bool GOHello_go_orb_of_the_blue_flight(Player* pPlayer, GameObject* pGo)
@@ -470,9 +470,9 @@ struct mob_kiljaeden_controllerAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_mob_kiljaeden_controller(Creature* pCreature)
+CreatureAI* GetAI_mob_kiljaeden_controller(Creature* creature)
 {
-    return new mob_kiljaeden_controllerAI (pCreature);
+    return new mob_kiljaeden_controllerAI (creature);
 }
 
 //AI for Kil'jaeden
@@ -692,7 +692,7 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
                         {
                             SpeechTimer = 0;
                             if (pInstance)
-                                if (Creature* pSpeechCreature = Unit::GetCreature(*me, pInstance->GetData64(Speeches[speechCount].pCreature)))
+                                if (Creature* pSpeechCreature = Unit::GetCreature(*me, pInstance->GetData64(Speeches[speechCount].creature)))
                                     DoScriptText(Speeches[speechCount].textid, pSpeechCreature);
                             if (speechCount == 12)
                                 if (Creature* pAnveena =  Unit::GetCreature(*me, pInstance->GetData64(DATA_ANVEENA)))
@@ -874,9 +874,9 @@ struct boss_kiljaedenAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_boss_kiljaeden(Creature* pCreature)
+CreatureAI* GetAI_boss_kiljaeden(Creature* creature)
 {
-    return new boss_kiljaedenAI (pCreature);
+    return new boss_kiljaedenAI (creature);
 }
 
 //AI for Hand of the Deceiver
@@ -968,9 +968,9 @@ struct mob_hand_of_the_deceiverAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_hand_of_the_deceiver(Creature* pCreature)
+CreatureAI* GetAI_mob_hand_of_the_deceiver(Creature* creature)
 {
-    return new mob_hand_of_the_deceiverAI (pCreature);
+    return new mob_hand_of_the_deceiverAI (creature);
 }
 
 //AI for Felfire Portal
@@ -1006,9 +1006,9 @@ struct mob_felfire_portalAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_mob_felfire_portal(Creature* pCreature)
+CreatureAI* GetAI_mob_felfire_portal(Creature* creature)
 {
-    return new mob_felfire_portalAI (pCreature);
+    return new mob_felfire_portalAI (creature);
 }
 
 //AI for Felfire Fiend
@@ -1057,9 +1057,9 @@ struct mob_volatile_felfire_fiendAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_volatile_felfire_fiend(Creature* pCreature)
+CreatureAI* GetAI_mob_volatile_felfire_fiend(Creature* creature)
 {
-    return new mob_volatile_felfire_fiendAI (pCreature);
+    return new mob_volatile_felfire_fiendAI (creature);
 }
 
 //AI for Armageddon target
@@ -1105,9 +1105,9 @@ struct mob_armageddonAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_mob_armageddon(Creature* pCreature)
+CreatureAI* GetAI_mob_armageddon(Creature* creature)
 {
-    return new mob_armageddonAI (pCreature);
+    return new mob_armageddonAI (creature);
 }
 
 //AI for Shield Orbs
@@ -1186,9 +1186,9 @@ struct mob_shield_orbAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_shield_orb(Creature* pCreature)
+CreatureAI* GetAI_mob_shield_orb(Creature* creature)
 {
-    return new mob_shield_orbAI (pCreature);
+    return new mob_shield_orbAI (creature);
 }
 
 //AI for Sinister Reflection
@@ -1349,9 +1349,9 @@ struct mob_sinster_reflectionAI : public ScriptedAI
         }
 };
 
-CreatureAI* GetAI_mob_sinster_reflection(Creature* pCreature)
+CreatureAI* GetAI_mob_sinster_reflection(Creature* creature)
 {
-    return new mob_sinster_reflectionAI (pCreature);
+    return new mob_sinster_reflectionAI (creature);
 }
 
 void AddSC_boss_kiljaeden()

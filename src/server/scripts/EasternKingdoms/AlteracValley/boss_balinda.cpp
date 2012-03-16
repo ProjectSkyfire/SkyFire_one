@@ -187,9 +187,9 @@ struct boss_balindaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_balinda(Creature* pCreature)
+CreatureAI* GetAI_boss_balinda(Creature* creature)
 {
-    return new boss_balindaAI (pCreature);
+    return new boss_balindaAI (creature);
 }
 
 CreatureAI* GetAI_mob_water_elemental(Creature *_Creature)

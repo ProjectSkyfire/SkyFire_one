@@ -208,9 +208,9 @@ struct boss_cannon_master_willeyAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_cannon_master_willey(Creature* pCreature)
+CreatureAI* GetAI_boss_cannon_master_willey(Creature* creature)
 {
-    return new boss_cannon_master_willeyAI (pCreature);
+    return new boss_cannon_master_willeyAI (creature);
 }
 
 void AddSC_boss_cannon_master_willey()

@@ -52,7 +52,7 @@ enum eGalen
 
 struct npc_galen_goodwardAI : public npc_escortAI
 {
-    npc_galen_goodwardAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+    npc_galen_goodwardAI(Creature* creature) : npc_escortAI(creature) { }
 
     uint32 m_uiPostEventTimer;
 
@@ -113,25 +113,25 @@ struct npc_galen_goodwardAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_galen_goodward(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_galen_goodward(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_GALENS_ESCAPE)
     {
-        pCreature->setFaction(113);
-        DoScriptText(GILAN_SAY_START_1, pCreature);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        creature->setFaction(113);
+        DoScriptText(GILAN_SAY_START_1, creature);
+        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
-        if (GameObject* pGo = pCreature->FindNearestGameObject(GO_GALENS_CAGE, INTERACTION_DISTANCE))
+        if (GameObject* pGo = creature->FindNearestGameObject(GO_GALENS_CAGE, INTERACTION_DISTANCE))
             pGo->UseDoorOrButton();
 
-        if (npc_galen_goodwardAI* pEscortAI = CAST_AI(npc_galen_goodwardAI, pCreature->AI()))
+        if (npc_galen_goodwardAI* pEscortAI = CAST_AI(npc_galen_goodwardAI, creature->AI()))
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
     }
     return true;
 }
-CreatureAI* GetAI_npc_galen_goodward(Creature *pCreature)
+CreatureAI* GetAI_npc_galen_goodward(Creature *creature)
 {
-    return new npc_galen_goodwardAI(pCreature);
+    return new npc_galen_goodwardAI(creature);
 }
 
 void AddSC_swamp_of_sorrows()

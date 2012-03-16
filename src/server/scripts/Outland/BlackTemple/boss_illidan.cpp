@@ -244,7 +244,7 @@ struct Yells
 {
     uint32 sound;
     char* text;
-    uint32 pCreature, timer, emote;
+    uint32 creature, timer, emote;
     bool Talk;
 };
 
@@ -516,22 +516,22 @@ struct boss_illidan_stormrageAI : public ScriptedAI
     {
         Timer[EVENT_TALK_SEQUENCE] = Conversation[count].timer;
 
-        Creature* pCreature = NULL;
-        if (Conversation[count].pCreature == ILLIDAN_STORMRAGE)
-            pCreature = me;
-        else if (Conversation[count].pCreature == AKAMA)
-            pCreature = (Unit::GetCreature((*me), AkamaGUID));
-        else if (Conversation[count].pCreature == MAIEV_SHADOWSONG)
-            pCreature = (Unit::GetCreature((*me), MaievGUID));
+        Creature* creature = NULL;
+        if (Conversation[count].creature == ILLIDAN_STORMRAGE)
+            creature = me;
+        else if (Conversation[count].creature == AKAMA)
+            creature = (Unit::GetCreature((*me), AkamaGUID));
+        else if (Conversation[count].creature == MAIEV_SHADOWSONG)
+            creature = (Unit::GetCreature((*me), MaievGUID));
 
-        if (pCreature)
+        if (creature)
         {
             if (Conversation[count].emote)
-                pCreature->HandleEmoteCommand(Conversation[count].emote); // Make the creature do some animation!
+                creature->HandleEmoteCommand(Conversation[count].emote); // Make the creature do some animation!
             if (Conversation[count].text)
-                pCreature->MonsterYell(Conversation[count].text, LANG_UNIVERSAL, 0); // Have the creature yell out some text
+                creature->MonsterYell(Conversation[count].text, LANG_UNIVERSAL, 0); // Have the creature yell out some text
             if (Conversation[count].sound)
-                DoPlaySoundToSet(pCreature, Conversation[count].sound); // Play some sound on the creature
+                DoPlaySoundToSet(creature, Conversation[count].sound); // Play some sound on the creature
         }
     }
 
@@ -1609,20 +1609,20 @@ struct boss_maievAI : public ScriptedAI
     }
 };
 
-bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF) // Time to begin the Event
     {
         pPlayer->CLOSE_GOSSIP_MENU();
-        CAST_AI(npc_akama_illidanAI, pCreature->AI())->EnterPhase(PHASE_CHANNEL);
+        CAST_AI(npc_akama_illidanAI, creature->AI())->EnterPhase(PHASE_CHANNEL);
     }
     return true;
 }
 
-bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* creature)
 {
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    pPlayer->SEND_GOSSIP_MENU(10465, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(10465, creature->GetGUID());
 
     return true;
 }
@@ -2158,44 +2158,44 @@ void boss_illidan_stormrageAI::EnterPhase(PhaseIllidan NextPhase)
     Event = EVENT_NULL;
 }
 
-CreatureAI* GetAI_boss_illidan_stormrage(Creature* pCreature)
+CreatureAI* GetAI_boss_illidan_stormrage(Creature* creature)
 {
-    return new boss_illidan_stormrageAI (pCreature);
+    return new boss_illidan_stormrageAI (creature);
 }
 
-CreatureAI* GetAI_npc_akama_at_illidan(Creature* pCreature)
+CreatureAI* GetAI_npc_akama_at_illidan(Creature* creature)
 {
-    return new npc_akama_illidanAI(pCreature);
+    return new npc_akama_illidanAI(creature);
 }
 
-CreatureAI* GetAI_boss_maiev(Creature* pCreature)
+CreatureAI* GetAI_boss_maiev(Creature* creature)
 {
-    return new boss_maievAI (pCreature);
+    return new boss_maievAI (creature);
 }
 
-CreatureAI* GetAI_mob_flame_of_azzinoth(Creature* pCreature)
+CreatureAI* GetAI_mob_flame_of_azzinoth(Creature* creature)
 {
-    return new flame_of_azzinothAI (pCreature);
+    return new flame_of_azzinothAI (creature);
 }
 
-CreatureAI* GetAI_cage_trap_trigger(Creature* pCreature)
+CreatureAI* GetAI_cage_trap_trigger(Creature* creature)
 {
-    return new cage_trap_triggerAI (pCreature);
+    return new cage_trap_triggerAI (creature);
 }
 
-CreatureAI* GetAI_shadow_demon(Creature* pCreature)
+CreatureAI* GetAI_shadow_demon(Creature* creature)
 {
-    return new shadow_demonAI (pCreature);
+    return new shadow_demonAI (creature);
 }
 
-CreatureAI* GetAI_blade_of_azzinoth(Creature* pCreature)
+CreatureAI* GetAI_blade_of_azzinoth(Creature* creature)
 {
-    return new blade_of_azzinothAI (pCreature);
+    return new blade_of_azzinothAI (creature);
 }
 
-CreatureAI* GetAI_parasitic_shadowfiend(Creature* pCreature)
+CreatureAI* GetAI_parasitic_shadowfiend(Creature* creature)
 {
-    return new mob_parasitic_shadowfiendAI (pCreature);
+    return new mob_parasitic_shadowfiendAI (creature);
 }
 
 void AddSC_boss_illidan()

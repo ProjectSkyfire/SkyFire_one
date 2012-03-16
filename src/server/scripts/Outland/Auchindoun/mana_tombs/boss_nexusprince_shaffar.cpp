@@ -241,9 +241,9 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nexusprince_shaffar(Creature* pCreature)
+CreatureAI* GetAI_boss_nexusprince_shaffar(Creature* creature)
 {
-    return new boss_nexusprince_shaffarAI (pCreature);
+    return new boss_nexusprince_shaffarAI (creature);
 }
 
 #define SPELL_ARCANE_BOLT               15254
@@ -333,9 +333,9 @@ struct mob_ethereal_beaconAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_ethereal_beacon(Creature* pCreature)
+CreatureAI* GetAI_mob_ethereal_beacon(Creature* creature)
 {
-    return new mob_ethereal_beaconAI (pCreature);
+    return new mob_ethereal_beaconAI (creature);
 }
 
 #define SPELL_ETHEREAL_APPRENTICE_FIREBOLT          32369
@@ -377,9 +377,9 @@ struct mob_ethereal_apprenticeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_ethereal_apprentice(Creature* pCreature)
+CreatureAI* GetAI_mob_ethereal_apprentice(Creature* creature)
 {
-    return new mob_ethereal_apprenticeAI (pCreature);
+    return new mob_ethereal_apprenticeAI (creature);
 }
 
 void AddSC_boss_nexusprince_shaffar()

@@ -106,22 +106,22 @@ struct npc_professor_phizzlethorpeAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_professor_phizzlethorpe(Player* pPlayer, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_SUNKEN_TREASURE)
     {
-        DoScriptText(SAY_PROGRESS_1, pCreature, pPlayer);
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_professor_phizzlethorpeAI, (pCreature->AI())))
+        DoScriptText(SAY_PROGRESS_1, creature, pPlayer);
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_professor_phizzlethorpeAI, (creature->AI())))
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
 
-        pCreature->setFaction(113);
+        creature->setFaction(113);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_professor_phizzlethorpeAI(Creature* pCreature)
+CreatureAI* GetAI_npc_professor_phizzlethorpeAI(Creature* creature)
 {
-    return new npc_professor_phizzlethorpeAI(pCreature);
+    return new npc_professor_phizzlethorpeAI(creature);
 }
 
 void AddSC_arathi_highlands()

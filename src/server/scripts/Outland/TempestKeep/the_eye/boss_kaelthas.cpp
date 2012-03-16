@@ -369,16 +369,16 @@ struct boss_kaelthasAI : public ScriptedAI
 
     void PrepareAdvisors()
     {
-        Creature *pCreature;
+        Creature *creature;
         for (uint8 i = 0; i < 4; ++i)
         {
-            pCreature = (Creature*)(Unit::GetUnit((*me), AdvisorGuid[i]));
-            if (pCreature)
+            creature = (Creature*)(Unit::GetUnit((*me), AdvisorGuid[i]));
+            if (creature)
             {
-                pCreature->Respawn();
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                pCreature->setFaction(me->getFaction());
-                pCreature->AI()->EnterEvadeMode();
+                creature->Respawn();
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                creature->setFaction(me->getFaction());
+                creature->AI()->EnterEvadeMode();
             }
         }
     }
@@ -460,13 +460,13 @@ struct boss_kaelthasAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_KAELTHASEVENT, DONE);
 
-        Creature *pCreature;
+        Creature *creature;
         for (uint8 i = 0; i < 4; ++i)
         {
-            pCreature = (Unit::GetCreature((*me), AdvisorGuid[i]));
-            if (pCreature)
+            creature = (Unit::GetCreature((*me), AdvisorGuid[i]));
+            if (creature)
             {
-                pCreature->setDeathState(JUST_DIED);
+                creature->setDeathState(JUST_DIED);
             }
         }
     }
@@ -1516,44 +1516,44 @@ struct mob_phoenix_egg_tkAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kaelthas(Creature* pCreature)
+CreatureAI* GetAI_boss_kaelthas(Creature* creature)
 {
-    return new boss_kaelthasAI (pCreature);
+    return new boss_kaelthasAI (creature);
 }
 
-CreatureAI* GetAI_boss_thaladred_the_darkener(Creature* pCreature)
+CreatureAI* GetAI_boss_thaladred_the_darkener(Creature* creature)
 {
-    return new boss_thaladred_the_darkenerAI (pCreature);
+    return new boss_thaladred_the_darkenerAI (creature);
 }
 
-CreatureAI* GetAI_boss_lord_sanguinar(Creature* pCreature)
+CreatureAI* GetAI_boss_lord_sanguinar(Creature* creature)
 {
-    return new boss_lord_sanguinarAI (pCreature);
+    return new boss_lord_sanguinarAI (creature);
 }
 
-CreatureAI* GetAI_boss_grand_astromancer_capernian(Creature* pCreature)
+CreatureAI* GetAI_boss_grand_astromancer_capernian(Creature* creature)
 {
-    return new boss_grand_astromancer_capernianAI (pCreature);
+    return new boss_grand_astromancer_capernianAI (creature);
 }
 
-CreatureAI* GetAI_boss_master_engineer_telonicus(Creature* pCreature)
+CreatureAI* GetAI_boss_master_engineer_telonicus(Creature* creature)
 {
-    return new boss_master_engineer_telonicusAI (pCreature);
+    return new boss_master_engineer_telonicusAI (creature);
 }
 
-CreatureAI* GetAI_mob_kael_flamestrike(Creature* pCreature)
+CreatureAI* GetAI_mob_kael_flamestrike(Creature* creature)
 {
-    return new mob_kael_flamestrikeAI (pCreature);
+    return new mob_kael_flamestrikeAI (creature);
 }
 
-CreatureAI* GetAI_mob_phoenix_tk(Creature* pCreature)
+CreatureAI* GetAI_mob_phoenix_tk(Creature* creature)
 {
-    return new mob_phoenix_tkAI (pCreature);
+    return new mob_phoenix_tkAI (creature);
 }
 
-CreatureAI* GetAI_mob_phoenix_egg_tk(Creature* pCreature)
+CreatureAI* GetAI_mob_phoenix_egg_tk(Creature* creature)
 {
-    return new mob_phoenix_egg_tkAI (pCreature);
+    return new mob_phoenix_egg_tkAI (creature);
 }
 void AddSC_boss_kaelthas()
 {

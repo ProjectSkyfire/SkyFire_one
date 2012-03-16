@@ -121,9 +121,9 @@ struct boss_general_angerforgeAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_general_angerforge(Creature* pCreature)
+CreatureAI* GetAI_boss_general_angerforge(Creature* creature)
 {
-    return new boss_general_angerforgeAI (pCreature);
+    return new boss_general_angerforgeAI (creature);
 }
 
 void AddSC_boss_general_angerforge()

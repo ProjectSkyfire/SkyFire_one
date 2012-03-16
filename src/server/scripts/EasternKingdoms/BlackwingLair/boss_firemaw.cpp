@@ -83,9 +83,9 @@ struct boss_firemawAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_firemaw(Creature* pCreature)
+CreatureAI* GetAI_boss_firemaw(Creature* creature)
 {
-    return new boss_firemawAI (pCreature);
+    return new boss_firemawAI (creature);
 }
 
 void AddSC_boss_firemaw()

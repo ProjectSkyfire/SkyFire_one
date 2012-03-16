@@ -214,9 +214,9 @@ struct npc_millhouse_manastormAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_millhouse_manastorm(Creature* pCreature)
+CreatureAI* GetAI_npc_millhouse_manastorm(Creature* creature)
 {
-    return new npc_millhouse_manastormAI (pCreature);
+    return new npc_millhouse_manastormAI (creature);
 }
 
 /*#####
@@ -474,9 +474,9 @@ struct npc_warden_mellicharAI : public ScriptedAI
         } else EventProgress_Timer -= diff;
     }
 };
-CreatureAI* GetAI_npc_warden_mellichar(Creature* pCreature)
+CreatureAI* GetAI_npc_warden_mellichar(Creature* creature)
 {
-    return new npc_warden_mellicharAI (pCreature);
+    return new npc_warden_mellicharAI (creature);
 }
 
 /*#####
@@ -500,9 +500,9 @@ struct mob_zerekethvoidzoneAI : public ScriptedAI
 
     void EnterCombat(Unit* who) {}
 };
-CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature* pCreature)
+CreatureAI* GetAI_mob_zerekethvoidzoneAI(Creature* creature)
 {
-    return new mob_zerekethvoidzoneAI (pCreature);
+    return new mob_zerekethvoidzoneAI (creature);
 }
 
 void AddSC_arcatraz()

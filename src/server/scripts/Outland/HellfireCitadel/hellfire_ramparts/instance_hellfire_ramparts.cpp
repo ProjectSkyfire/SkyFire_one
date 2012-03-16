@@ -51,7 +51,7 @@ struct instance_ramparts : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/) { }
+    void OnCreatureCreate(Creature* creature, bool /*add*/) { }
 
     void OnGameObjectCreate(GameObject* pGo, bool add) { }
 

@@ -237,9 +237,9 @@ struct boss_hakkarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_hakkar(Creature* pCreature)
+CreatureAI* GetAI_boss_hakkar(Creature* creature)
 {
-    return new boss_hakkarAI (pCreature);
+    return new boss_hakkarAI (creature);
 }
 
 void AddSC_boss_hakkar()

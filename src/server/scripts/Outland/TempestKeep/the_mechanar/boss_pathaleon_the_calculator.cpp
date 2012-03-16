@@ -173,9 +173,9 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* pCreature)
+CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* creature)
 {
-    return new boss_pathaleon_the_calculatorAI (pCreature);
+    return new boss_pathaleon_the_calculatorAI (creature);
 }
 
 struct mob_nether_wraithAI : public ScriptedAI
@@ -237,9 +237,9 @@ struct mob_nether_wraithAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mob_nether_wraith(Creature* pCreature)
+CreatureAI* GetAI_mob_nether_wraith(Creature* creature)
 {
-    return new mob_nether_wraithAI (pCreature);
+    return new mob_nether_wraithAI (creature);
 }
 
 void AddSC_boss_pathaleon_the_calculator()

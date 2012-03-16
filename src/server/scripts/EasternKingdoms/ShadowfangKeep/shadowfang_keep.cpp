@@ -106,30 +106,30 @@ struct npc_shadowfang_prisonerAI : public npc_escortAI
     void EnterCombat(Unit* /*who*/) {}
 };
 
-CreatureAI* GetAI_npc_shadowfang_prisoner(Creature* pCreature)
+CreatureAI* GetAI_npc_shadowfang_prisoner(Creature* creature)
 {
-    return new npc_shadowfang_prisonerAI(pCreature);
+    return new npc_shadowfang_prisonerAI(creature);
 }
 
-bool GossipHello_npc_shadowfang_prisoner(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_shadowfang_prisoner(Player* pPlayer, Creature* creature)
 {
-    ScriptedInstance* pInstance = pCreature->GetInstanceData();
+    ScriptedInstance* pInstance = creature->GetInstanceData();
 
     if (pInstance && pInstance->GetData(TYPE_FREE_NPC) != DONE && pInstance->GetData(TYPE_RETHILGORE) == DONE)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DOOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_shadowfang_prisoner(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_shadowfang_prisoner(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
         pPlayer->CLOSE_GOSSIP_MENU();
 
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_shadowfang_prisonerAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_shadowfang_prisonerAI, creature->AI()))
             pEscortAI->Start(false, false);
     }
     return true;
@@ -137,9 +137,9 @@ bool GossipSelect_npc_shadowfang_prisoner(Player* pPlayer, Creature* pCreature, 
 
 struct npc_arugal_voidwalkerAI : public ScriptedAI
 {
-    npc_arugal_voidwalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_arugal_voidwalkerAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance* pInstance;
@@ -178,9 +178,9 @@ struct npc_arugal_voidwalkerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_arugal_voidwalker(Creature* pCreature)
+CreatureAI* GetAI_npc_arugal_voidwalker(Creature* creature)
 {
-    return new npc_arugal_voidwalkerAI(pCreature);
+    return new npc_arugal_voidwalkerAI(creature);
 }
 
 void AddSC_shadowfang_keep()

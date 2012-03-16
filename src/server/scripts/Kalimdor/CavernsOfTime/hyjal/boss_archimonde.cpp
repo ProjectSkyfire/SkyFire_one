@@ -689,24 +689,24 @@ struct boss_archimondeAI : public hyjal_trashAI
     void WaypointReached(uint32 /*i*/){}
 };
 
-CreatureAI* GetAI_boss_archimonde(Creature* pCreature)
+CreatureAI* GetAI_boss_archimonde(Creature* creature)
 {
-    return new boss_archimondeAI (pCreature);
+    return new boss_archimondeAI (creature);
 }
 
-CreatureAI* GetAI_mob_doomfire(Creature* pCreature)
+CreatureAI* GetAI_mob_doomfire(Creature* creature)
 {
-    return new mob_doomfireAI(pCreature);
+    return new mob_doomfireAI(creature);
 }
 
-CreatureAI* GetAI_mob_doomfire_targetting(Creature* pCreature)
+CreatureAI* GetAI_mob_doomfire_targetting(Creature* creature)
 {
-    return new mob_doomfire_targettingAI(pCreature);
+    return new mob_doomfire_targettingAI(creature);
 }
 
-CreatureAI* GetAI_mob_ancient_wisp(Creature* pCreature)
+CreatureAI* GetAI_mob_ancient_wisp(Creature* creature)
 {
-    return new mob_ancient_wispAI(pCreature);
+    return new mob_ancient_wispAI(creature);
 }
 
 void AddSC_boss_archimonde()

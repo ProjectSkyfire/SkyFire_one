@@ -186,9 +186,9 @@ struct boss_vexallusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_vexallus(Creature* pCreature)
+CreatureAI* GetAI_boss_vexallus(Creature* creature)
 {
-    return new boss_vexallusAI (pCreature);
+    return new boss_vexallusAI (creature);
 };
 
 struct mob_pure_energyAI : public ScriptedAI
@@ -211,9 +211,9 @@ struct mob_pure_energyAI : public ScriptedAI
     void AttackStart(Unit * /*who*/) {}
 };
 
-CreatureAI* GetAI_mob_pure_energy(Creature* pCreature)
+CreatureAI* GetAI_mob_pure_energy(Creature* creature)
 {
-    return new mob_pure_energyAI (pCreature);
+    return new mob_pure_energyAI (creature);
 };
 
 void AddSC_boss_vexallus()

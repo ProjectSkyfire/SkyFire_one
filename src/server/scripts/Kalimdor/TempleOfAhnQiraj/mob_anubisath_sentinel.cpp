@@ -287,9 +287,9 @@ struct aqsentinelAI : public ScriptedAI
         return NULL;
     }
 };
-CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature* pCreature)
+CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature* creature)
 {
-    return new aqsentinelAI (pCreature);
+    return new aqsentinelAI (creature);
 }
 
 void AddSC_mob_anubisath_sentinel()

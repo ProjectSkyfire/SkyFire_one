@@ -192,9 +192,9 @@ struct boss_entropiusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_entropius(Creature* pCreature)
+CreatureAI* GetAI_boss_entropius(Creature* creature)
 {
-    return new boss_entropiusAI (pCreature);
+    return new boss_entropiusAI (creature);
 }
 
 struct boss_muruAI : public Scripted_NoMovementAI
@@ -349,9 +349,9 @@ struct boss_muruAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_boss_muru(Creature* pCreature)
+CreatureAI* GetAI_boss_muru(Creature* creature)
 {
-    return new boss_muruAI (pCreature);
+    return new boss_muruAI (creature);
 }
 
 struct npc_muru_portalAI : public Scripted_NoMovementAI
@@ -426,9 +426,9 @@ struct npc_muru_portalAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_npc_muru_portal(Creature* pCreature)
+CreatureAI* GetAI_npc_muru_portal(Creature* creature)
 {
-    return new npc_muru_portalAI (pCreature);
+    return new npc_muru_portalAI (creature);
 }
 
 struct npc_dark_fiendAI : public ScriptedAI
@@ -481,9 +481,9 @@ struct npc_dark_fiendAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_dark_fiend(Creature* pCreature)
+CreatureAI* GetAI_npc_dark_fiend(Creature* creature)
 {
-    return new npc_dark_fiendAI (pCreature);
+    return new npc_dark_fiendAI (creature);
 }
 
 struct npc_void_sentinelAI : public ScriptedAI
@@ -530,9 +530,9 @@ struct npc_void_sentinelAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_void_sentinel(Creature* pCreature)
+CreatureAI* GetAI_npc_void_sentinel(Creature* creature)
 {
-    return new npc_void_sentinelAI (pCreature);
+    return new npc_void_sentinelAI (creature);
 }
 
 struct npc_blackholeAI : public ScriptedAI
@@ -602,9 +602,9 @@ struct npc_blackholeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_blackhole(Creature* pCreature)
+CreatureAI* GetAI_npc_blackhole(Creature* creature)
 {
-    return new npc_blackholeAI (pCreature);
+    return new npc_blackholeAI (creature);
 }
 
 void AddSC_boss_muru()

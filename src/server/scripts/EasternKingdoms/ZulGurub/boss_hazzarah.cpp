@@ -92,9 +92,9 @@ struct boss_hazzarahAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hazzarah(Creature* pCreature)
+CreatureAI* GetAI_boss_hazzarah(Creature* creature)
 {
-    return new boss_hazzarahAI (pCreature);
+    return new boss_hazzarahAI (creature);
 }
 
 void AddSC_boss_hazzarah()

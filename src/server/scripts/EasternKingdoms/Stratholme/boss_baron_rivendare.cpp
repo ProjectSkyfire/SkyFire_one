@@ -178,9 +178,9 @@ struct boss_baron_rivendareAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_baron_rivendare(Creature* pCreature)
+CreatureAI* GetAI_boss_baron_rivendare(Creature* creature)
 {
-    return new boss_baron_rivendareAI (pCreature);
+    return new boss_baron_rivendareAI (creature);
 }
 
 void AddSC_boss_baron_rivendare()

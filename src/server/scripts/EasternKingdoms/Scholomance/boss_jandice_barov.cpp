@@ -178,14 +178,14 @@ struct mob_illusionofjandicebarovAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_jandicebarov(Creature* pCreature)
+CreatureAI* GetAI_boss_jandicebarov(Creature* creature)
 {
-    return new boss_jandicebarovAI (pCreature);
+    return new boss_jandicebarovAI (creature);
 }
 
-CreatureAI* GetAI_mob_illusionofjandicebarov(Creature* pCreature)
+CreatureAI* GetAI_mob_illusionofjandicebarov(Creature* creature)
 {
-    return new mob_illusionofjandicebarovAI (pCreature);
+    return new mob_illusionofjandicebarovAI (creature);
 }
 
 void AddSC_boss_jandicebarov()

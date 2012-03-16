@@ -749,8 +749,8 @@ void WorldSession::HandleGuildSaveEmblemOpcode(WorldPacket& recvPacket)
 
     recvPacket >> vendorGuid;
 
-    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(vendorGuid, UNIT_NPC_FLAG_TABARDDESIGNER);
-    if (!pCreature)
+    Creature *creature = GetPlayer()->GetNPCIfCanInteractWith(vendorGuid, UNIT_NPC_FLAG_TABARDDESIGNER);
+    if (!creature)
     {
         //"That's not an emblem vendor!"
         SendSaveGuildEmblem(ERR_GUILDEMBLEM_INVALIDVENDOR);

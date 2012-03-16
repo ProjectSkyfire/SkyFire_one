@@ -100,9 +100,9 @@ struct boss_broodlordAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_broodlord(Creature* pCreature)
+CreatureAI* GetAI_boss_broodlord(Creature* creature)
 {
-    return new boss_broodlordAI (pCreature);
+    return new boss_broodlordAI (creature);
 }
 
 void AddSC_boss_broodlord()

@@ -429,9 +429,9 @@ struct boss_kelthuzadAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kelthuzadAI(Creature* pCreature)
+CreatureAI* GetAI_boss_kelthuzadAI(Creature* creature)
 {
-    return new boss_kelthuzadAI (pCreature);
+    return new boss_kelthuzadAI (creature);
 }
 
 void AddSC_boss_kelthuzad()

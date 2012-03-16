@@ -51,7 +51,7 @@ const float m_afToForestLoc[] = {10648.7f, 1790.63f, 1324.08f};
 
 struct npc_mistAI : public FollowerAI
 {
-    npc_mistAI(Creature* pCreature) : FollowerAI(pCreature) { }
+    npc_mistAI(Creature* creature) : FollowerAI(creature) { }
 
     uint32 m_uiPostEventTimer;
     uint32 m_uiPhasePostEvent;
@@ -138,16 +138,16 @@ struct npc_mistAI : public FollowerAI
     }
 };
 
-CreatureAI* GetAI_npc_mist(Creature* pCreature)
+CreatureAI* GetAI_npc_mist(Creature* creature)
 {
-    return new npc_mistAI(pCreature);
+    return new npc_mistAI(creature);
 }
 
-bool QuestAccept_npc_mist(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_mist(Player* pPlayer, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MIST)
     {
-        if (npc_mistAI* pMistAI = CAST_AI(npc_mistAI, pCreature->AI()))
+        if (npc_mistAI* pMistAI = CAST_AI(npc_mistAI, creature->AI()))
             pMistAI->StartFollow(pPlayer, FACTION_DARNASSUS, pQuest);
     }
 

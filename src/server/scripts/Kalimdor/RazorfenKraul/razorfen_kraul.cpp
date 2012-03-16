@@ -123,13 +123,13 @@ struct npc_willixAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_willix(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_willix(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_WILLIX_THE_IMPORTER)
     {
-        CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-        DoScriptText(SAY_READY, pCreature, pPlayer);
-        pCreature->setFaction(113);
+        CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, pPlayer->GetGUID());
+        DoScriptText(SAY_READY, creature, pPlayer);
+        creature->setFaction(113);
     }
 
     return true;
@@ -168,14 +168,14 @@ struct npc_deaths_head_ward_keeperAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_deaths_head_ward_keeper(Creature* pCreature)
+CreatureAI* GetAI_npc_deaths_head_ward_keeper(Creature* creature)
 {
-    return new npc_deaths_head_ward_keeperAI(pCreature);
+    return new npc_deaths_head_ward_keeperAI(creature);
 }
 
-CreatureAI* GetAI_npc_willix(Creature* pCreature)
+CreatureAI* GetAI_npc_willix(Creature* creature)
 {
-    return new npc_willixAI(pCreature);
+    return new npc_willixAI(creature);
 }
 
 void AddSC_razorfen_kraul()

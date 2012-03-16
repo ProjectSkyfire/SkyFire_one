@@ -1658,24 +1658,24 @@ void Creature::DoFleeToGetAssistance()
     float radius = sWorld.getConfig(CONFIG_CREATURE_FAMILY_FLEE_ASSISTANCE_RADIUS);
     if (radius >0)
     {
-        Creature* pCreature = NULL;
+        Creature* creature = NULL;
 
         CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
         Trinity::NearestAssistCreatureInCreatureRangeCheck u_check(this, getVictim(), radius);
-        Trinity::CreatureLastSearcher<Trinity::NearestAssistCreatureInCreatureRangeCheck> searcher(pCreature, u_check);
+        Trinity::CreatureLastSearcher<Trinity::NearestAssistCreatureInCreatureRangeCheck> searcher(creature, u_check);
 
         TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestAssistCreatureInCreatureRangeCheck>, GridTypeMapContainer > grid_creature_searcher(searcher);
 
         cell.Visit(p, grid_creature_searcher, *GetMap(), *this, radius);
 
         SetNoSearchAssistance(true);
-        if (!pCreature)
+        if (!creature)
             SetControlled(true, UNIT_STAT_FLEEING);
         else
-            GetMotionMaster()->MoveSeekAssistance(pCreature->GetPositionX(), pCreature->GetPositionY(), pCreature->GetPositionZ());
+            GetMotionMaster()->MoveSeekAssistance(creature->GetPositionX(), creature->GetPositionY(), creature->GetPositionZ());
     }
 }
 

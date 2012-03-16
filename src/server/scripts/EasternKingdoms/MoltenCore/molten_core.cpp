@@ -43,9 +43,9 @@ EndContentData */
 #define SPELL_ANCIENT_DESPAIR       19369
 #define SPELL_ANCIENT_HYSTERIA      19372
 
-CreatureAI* GetAI_mob_ancient_core_hound(Creature* pCreature)
+CreatureAI* GetAI_mob_ancient_core_hound(Creature* creature)
 {
-    SimpleAI *ai = new SimpleAI(pCreature);
+    SimpleAI *ai = new SimpleAI(creature);
 
     ai->Spell[0].Enabled          = true;
     ai->Spell[0].Spell_Id         = SPELL_CONE_OF_FIRE;

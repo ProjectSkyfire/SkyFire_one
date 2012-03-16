@@ -75,9 +75,9 @@ struct boss_mothersmolderwebAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_mothersmolderweb(Creature* pCreature)
+CreatureAI* GetAI_boss_mothersmolderweb(Creature* creature)
 {
-    return new boss_mothersmolderwebAI (pCreature);
+    return new boss_mothersmolderwebAI (creature);
 }
 
 void AddSC_boss_mothersmolderweb()

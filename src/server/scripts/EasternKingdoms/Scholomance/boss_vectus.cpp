@@ -93,9 +93,9 @@ struct boss_vectusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_vectus(Creature* pCreature)
+CreatureAI* GetAI_boss_vectus(Creature* creature)
 {
-    return new boss_vectusAI (pCreature);
+    return new boss_vectusAI (creature);
 }
 
 void AddSC_boss_vectus()

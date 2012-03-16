@@ -102,9 +102,9 @@ struct boss_lorekeeperpolkeltAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_lorekeeperpolkelt(Creature* pCreature)
+CreatureAI* GetAI_boss_lorekeeperpolkelt(Creature* creature)
 {
-    return new boss_lorekeeperpolkeltAI (pCreature);
+    return new boss_lorekeeperpolkeltAI (creature);
 }
 
 void AddSC_boss_lorekeeperpolkelt()

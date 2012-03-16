@@ -136,9 +136,9 @@ struct boss_huhuranAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_huhuran(Creature* pCreature)
+CreatureAI* GetAI_boss_huhuran(Creature* creature)
 {
-    return new boss_huhuranAI (pCreature);
+    return new boss_huhuranAI (creature);
 }
 
 void AddSC_boss_huhuran()

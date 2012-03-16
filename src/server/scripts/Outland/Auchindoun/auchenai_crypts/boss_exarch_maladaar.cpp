@@ -115,9 +115,9 @@ struct mob_stolen_soulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_stolen_soul(Creature* pCreature)
+CreatureAI* GetAI_mob_stolen_soul(Creature* creature)
 {
-    return new mob_stolen_soulAI (pCreature);
+    return new mob_stolen_soulAI (creature);
 }
 
 #define SAY_INTRO                   -1558000
@@ -295,9 +295,9 @@ struct boss_exarch_maladaarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_exarch_maladaar(Creature* pCreature)
+CreatureAI* GetAI_boss_exarch_maladaar(Creature* creature)
 {
-    return new boss_exarch_maladaarAI (pCreature);
+    return new boss_exarch_maladaarAI (creature);
 }
 
 #define SPELL_AV_MORTAL_STRIKE          16856
@@ -333,9 +333,9 @@ struct mob_avatar_of_martyredAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_avatar_of_martyred(Creature* pCreature)
+CreatureAI* GetAI_mob_avatar_of_martyred(Creature* creature)
 {
-    return new mob_avatar_of_martyredAI (pCreature);
+    return new mob_avatar_of_martyredAI (creature);
 }
 
 void AddSC_boss_exarch_maladaar()

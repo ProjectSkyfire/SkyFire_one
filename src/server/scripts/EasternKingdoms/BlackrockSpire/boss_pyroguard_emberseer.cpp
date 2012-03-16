@@ -81,9 +81,9 @@ struct boss_pyroguard_emberseerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_pyroguard_emberseer(Creature* pCreature)
+CreatureAI* GetAI_boss_pyroguard_emberseer(Creature* creature)
 {
-    return new boss_pyroguard_emberseerAI (pCreature);
+    return new boss_pyroguard_emberseerAI (creature);
 }
 
 void AddSC_boss_pyroguard_emberseer()

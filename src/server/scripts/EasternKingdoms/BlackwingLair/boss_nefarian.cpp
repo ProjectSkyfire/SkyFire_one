@@ -219,9 +219,9 @@ struct boss_nefarianAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_nefarian(Creature* pCreature)
+CreatureAI* GetAI_boss_nefarian(Creature* creature)
 {
-    return new boss_nefarianAI (pCreature);
+    return new boss_nefarianAI (creature);
 }
 
 void AddSC_boss_nefarian()

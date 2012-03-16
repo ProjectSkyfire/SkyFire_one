@@ -193,9 +193,9 @@ struct boss_azgalorAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_boss_azgalor(Creature* pCreature)
+CreatureAI* GetAI_boss_azgalor(Creature* creature)
 {
-    return new boss_azgalorAI (pCreature);
+    return new boss_azgalorAI (creature);
 }
 
 #define SPELL_THRASH 12787
@@ -287,9 +287,9 @@ struct mob_lesser_doomguardAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_mob_lesser_doomguard(Creature* pCreature)
+CreatureAI* GetAI_mob_lesser_doomguard(Creature* creature)
 {
-    return new mob_lesser_doomguardAI (pCreature);
+    return new mob_lesser_doomguardAI (creature);
 }
 
 void AddSC_boss_azgalor()

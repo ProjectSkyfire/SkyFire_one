@@ -34,7 +34,7 @@ enum ePoints
     POINT_HOME          = 0xFFFFFE
 };
 
-npc_escortAI::npc_escortAI(Creature* pCreature) : ScriptedAI(pCreature),
+npc_escortAI::npc_escortAI(Creature* creature) : ScriptedAI(creature),
     m_uiPlayerGUID(0),
     MaxPlayerDistance(DEFAULT_MAX_PLAYER_DISTANCE),
     m_uiPlayerCheckTimer(1000),

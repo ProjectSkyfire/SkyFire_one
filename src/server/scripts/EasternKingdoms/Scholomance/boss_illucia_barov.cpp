@@ -105,9 +105,9 @@ struct boss_illuciabarovAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_illuciabarov(Creature* pCreature)
+CreatureAI* GetAI_boss_illuciabarov(Creature* creature)
 {
-    return new boss_illuciabarovAI (pCreature);
+    return new boss_illuciabarovAI (creature);
 }
 
 void AddSC_boss_illuciabarov()

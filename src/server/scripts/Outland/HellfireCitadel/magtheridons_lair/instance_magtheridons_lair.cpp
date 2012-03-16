@@ -75,15 +75,15 @@ struct instance_magtheridons_lair : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
         case 17257:
-            MagtheridonGUID = pCreature->GetGUID();
+            MagtheridonGUID = creature->GetGUID();
             break;
         case 17256:
-            ChannelerGUID.insert(pCreature->GetGUID());
+            ChannelerGUID.insert(creature->GetGUID());
             break;
         }
     }

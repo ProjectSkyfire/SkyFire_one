@@ -109,9 +109,9 @@ struct boss_nerubenkanAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_nerubenkan(Creature* pCreature)
+CreatureAI* GetAI_boss_nerubenkan(Creature* creature)
 {
-    return new boss_nerubenkanAI (pCreature);
+    return new boss_nerubenkanAI (creature);
 }
 
 void AddSC_boss_nerubenkan()

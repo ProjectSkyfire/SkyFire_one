@@ -104,9 +104,9 @@ struct npc_lazy_peonAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_lazy_peon(Creature* pCreature)
+CreatureAI* GetAI_npc_lazy_peon(Creature* creature)
 {
-    return new npc_lazy_peonAI(pCreature);
+    return new npc_lazy_peonAI(creature);
 }
 
 void AddSC_durotar()

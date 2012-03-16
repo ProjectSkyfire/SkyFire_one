@@ -271,9 +271,9 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_harbinger_skyriss(Creature* pCreature)
+CreatureAI* GetAI_boss_harbinger_skyriss(Creature* creature)
 {
-    return new boss_harbinger_skyrissAI (pCreature);
+    return new boss_harbinger_skyrissAI (creature);
 }
 
 #define SPELL_MIND_REND_IMAGE   36929
@@ -295,9 +295,9 @@ struct boss_harbinger_skyriss_illusionAI : public ScriptedAI
     void EnterCombat(Unit *who) { }
 };
 
-CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature* pCreature)
+CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature* creature)
 {
-    return new boss_harbinger_skyriss_illusionAI (pCreature);
+    return new boss_harbinger_skyriss_illusionAI (creature);
 }
 
 void AddSC_boss_harbinger_skyriss()

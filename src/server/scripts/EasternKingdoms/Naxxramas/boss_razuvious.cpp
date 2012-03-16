@@ -156,9 +156,9 @@ struct boss_razuviousAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_razuvious(Creature* pCreature)
+CreatureAI* GetAI_boss_razuvious(Creature* creature)
 {
-    return new boss_razuviousAI (pCreature);
+    return new boss_razuviousAI (creature);
 }
 
 void AddSC_boss_razuvious()

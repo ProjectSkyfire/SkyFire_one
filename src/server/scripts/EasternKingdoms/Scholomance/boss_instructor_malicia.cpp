@@ -141,9 +141,9 @@ struct boss_instructormaliciaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_instructormalicia(Creature* pCreature)
+CreatureAI* GetAI_boss_instructormalicia(Creature* creature)
 {
-    return new boss_instructormaliciaAI (pCreature);
+    return new boss_instructormaliciaAI (creature);
 }
 
 void AddSC_boss_instructormalicia()

@@ -111,9 +111,9 @@ struct boss_rasfrostAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_rasfrost(Creature* pCreature)
+CreatureAI* GetAI_boss_rasfrost(Creature* creature)
 {
-    return new boss_rasfrostAI (pCreature);
+    return new boss_rasfrostAI (creature);
 }
 
 void AddSC_boss_rasfrost()

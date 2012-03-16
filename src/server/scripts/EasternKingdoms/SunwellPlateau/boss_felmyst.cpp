@@ -546,19 +546,19 @@ struct mob_felmyst_trailAI : public ScriptedAI
     void UpdateAI(const uint32 /*diff*/) {}
 };
 
-CreatureAI* GetAI_boss_felmyst(Creature* pCreature)
+CreatureAI* GetAI_boss_felmyst(Creature* creature)
 {
-    return new boss_felmystAI(pCreature);
+    return new boss_felmystAI(creature);
 }
 
-CreatureAI* GetAI_mob_felmyst_vapor(Creature* pCreature)
+CreatureAI* GetAI_mob_felmyst_vapor(Creature* creature)
 {
-    return new mob_felmyst_vaporAI(pCreature);
+    return new mob_felmyst_vaporAI(creature);
 }
 
-CreatureAI* GetAI_mob_felmyst_trail(Creature* pCreature)
+CreatureAI* GetAI_mob_felmyst_trail(Creature* creature)
 {
-    return new mob_felmyst_trailAI(pCreature);
+    return new mob_felmyst_trailAI(creature);
 }
 
 void AddSC_boss_felmyst()

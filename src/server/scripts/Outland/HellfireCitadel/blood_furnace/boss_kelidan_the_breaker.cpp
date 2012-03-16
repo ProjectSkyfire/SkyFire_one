@@ -266,9 +266,9 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kelidan_the_breaker(Creature* pCreature)
+CreatureAI* GetAI_boss_kelidan_the_breaker(Creature* creature)
 {
-    return new boss_kelidan_the_breakerAI (pCreature);
+    return new boss_kelidan_the_breakerAI (creature);
 }
 
 /*######
@@ -355,9 +355,9 @@ struct mob_shadowmoon_channelerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_shadowmoon_channeler(Creature* pCreature)
+CreatureAI* GetAI_mob_shadowmoon_channeler(Creature* creature)
 {
-    return new mob_shadowmoon_channelerAI (pCreature);
+    return new mob_shadowmoon_channelerAI (creature);
 }
 
 void AddSC_boss_kelidan_the_breaker()

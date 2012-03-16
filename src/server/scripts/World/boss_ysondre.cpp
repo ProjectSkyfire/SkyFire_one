@@ -46,7 +46,7 @@ enum eEnums
 // Ysondre script
 struct boss_ysondreAI : public ScriptedAI
 {
-    boss_ysondreAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+    boss_ysondreAI(Creature* creature) : ScriptedAI(creature) {}
 
     uint32 m_uiSleep_Timer;
     uint32 m_uiNoxiousBreath_Timer;
@@ -178,14 +178,14 @@ struct mob_dementeddruidsAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_ysondre(Creature* pCreature)
+CreatureAI* GetAI_boss_ysondre(Creature* creature)
 {
-    return new boss_ysondreAI (pCreature);
+    return new boss_ysondreAI (creature);
 }
 
-CreatureAI* GetAI_mob_dementeddruids(Creature* pCreature)
+CreatureAI* GetAI_mob_dementeddruids(Creature* creature)
 {
-    return new mob_dementeddruidsAI (pCreature);
+    return new mob_dementeddruidsAI (creature);
 }
 
 void AddSC_boss_ysondre()

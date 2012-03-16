@@ -122,9 +122,9 @@ struct boss_majordomoAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_majordomo(Creature* pCreature)
+CreatureAI* GetAI_boss_majordomo(Creature* creature)
 {
-    return new boss_majordomoAI (pCreature);
+    return new boss_majordomoAI (creature);
 }
 
 void AddSC_boss_majordomo()

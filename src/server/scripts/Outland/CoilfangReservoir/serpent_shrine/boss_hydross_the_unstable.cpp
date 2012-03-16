@@ -375,9 +375,9 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hydross_the_unstable(Creature* pCreature)
+CreatureAI* GetAI_boss_hydross_the_unstable(Creature* creature)
 {
-    return new boss_hydross_the_unstableAI (pCreature);
+    return new boss_hydross_the_unstableAI (creature);
 }
 
 void AddSC_boss_hydross_the_unstable()

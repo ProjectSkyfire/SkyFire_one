@@ -54,7 +54,7 @@ class SummonList : public std::list<uint64>
 
 struct ScriptedAI : public CreatureAI
 {
-    explicit ScriptedAI(Creature* pCreature);
+    explicit ScriptedAI(Creature* creature);
     virtual ~ScriptedAI() {}
 
     //*************

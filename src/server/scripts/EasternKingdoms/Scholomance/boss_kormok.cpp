@@ -108,9 +108,9 @@ struct boss_kormokAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_kormok(Creature* pCreature)
+CreatureAI* GetAI_boss_kormok(Creature* creature)
 {
-    return new boss_kormokAI (pCreature);
+    return new boss_kormokAI (creature);
 }
 
 void AddSC_boss_kormok()

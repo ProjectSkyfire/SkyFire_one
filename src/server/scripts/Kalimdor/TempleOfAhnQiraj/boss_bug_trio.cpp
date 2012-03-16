@@ -314,19 +314,19 @@ struct boss_yaujAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_yauj(Creature* pCreature)
+CreatureAI* GetAI_boss_yauj(Creature* creature)
 {
-    return new boss_yaujAI (pCreature);
+    return new boss_yaujAI (creature);
 }
 
-CreatureAI* GetAI_boss_vem(Creature* pCreature)
+CreatureAI* GetAI_boss_vem(Creature* creature)
 {
-    return new boss_vemAI (pCreature);
+    return new boss_vemAI (creature);
 }
 
-CreatureAI* GetAI_boss_kri(Creature* pCreature)
+CreatureAI* GetAI_boss_kri(Creature* creature)
 {
-    return new boss_kriAI (pCreature);
+    return new boss_kriAI (creature);
 }
 
 void AddSC_bug_trio()

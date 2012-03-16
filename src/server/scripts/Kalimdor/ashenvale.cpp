@@ -85,7 +85,7 @@ static float m_fVorshaCoord[] = {3633.056885f, 1172.924072f, -5.388f};
 
 struct npc_muglashAI : public npc_escortAI
 {
-    npc_muglashAI(Creature* pCreature) : npc_escortAI(pCreature)
+    npc_muglashAI(Creature* creature) : npc_escortAI(creature)
     {
         m_uiWaveId = 0;
         m_bIsBrazierExtinguished = false;
@@ -206,14 +206,14 @@ struct npc_muglashAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_muglash(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_muglash(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_VORSHA)
     {
-        if (npc_muglashAI* pEscortAI = dynamic_cast<npc_muglashAI*>(pCreature->AI()))
+        if (npc_muglashAI* pEscortAI = dynamic_cast<npc_muglashAI*>(creature->AI()))
         {
-            DoScriptText(SAY_MUG_START1, pCreature);
-            pCreature->setFaction(FACTION_ESCORT_H_PASSIVE);
+            DoScriptText(SAY_MUG_START1, creature);
+            creature->setFaction(FACTION_ESCORT_H_PASSIVE);
 
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
         }
@@ -222,18 +222,18 @@ bool QuestAccept_npc_muglash(Player* pPlayer, Creature* pCreature, const Quest* 
     return true;
 }
 
-CreatureAI* GetAI_npc_muglash(Creature* pCreature)
+CreatureAI* GetAI_npc_muglash(Creature* creature)
 {
-    return new npc_muglashAI(pCreature);
+    return new npc_muglashAI(creature);
 }
 
 bool GOHello_go_naga_brazier(Player* pPlayer, GameObject* pGo)
 {
-    if (Creature* pCreature = GetClosestCreatureWithEntry(pGo, NPC_MUGLASH, INTERACTION_DISTANCE*2))
+    if (Creature* creature = GetClosestCreatureWithEntry(pGo, NPC_MUGLASH, INTERACTION_DISTANCE*2))
     {
-        if (npc_muglashAI* pEscortAI = dynamic_cast<npc_muglashAI*>(pCreature->AI()))
+        if (npc_muglashAI* pEscortAI = dynamic_cast<npc_muglashAI*>(creature->AI()))
         {
-            DoScriptText(SAY_MUG_BRAZIER_WAIT, pCreature);
+            DoScriptText(SAY_MUG_BRAZIER_WAIT, creature);
 
             pEscortAI->m_bIsBrazierExtinguished = true;
             return false;
@@ -342,24 +342,24 @@ struct npc_torekAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_torek(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_torek(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_TOREK_ASSULT)
     {
         //TODO: find companions, make them follow Torek, at any time (possibly done by mangos/database in future?)
-        DoScriptText(SAY_READY, pCreature, pPlayer);
-        pCreature->setFaction(113);
+        DoScriptText(SAY_READY, creature, pPlayer);
+        creature->setFaction(113);
 
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_torekAI, pCreature->AI()))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_torekAI, creature->AI()))
             pEscortAI->Start(true, true, pPlayer->GetGUID());
     }
 
     return true;
 }
 
-CreatureAI* GetAI_npc_torek(Creature* pCreature)
+CreatureAI* GetAI_npc_torek(Creature* creature)
 {
-    return new npc_torekAI(pCreature);
+    return new npc_torekAI(creature);
 }
 
 /*####
@@ -427,21 +427,21 @@ struct npc_ruul_snowhoofAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_ruul_snowhoof(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_ruul_snowhoof(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_FREEDOM_TO_RUUL)
     {
-        pCreature->setFaction(113);
+        creature->setFaction(113);
 
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_ruul_snowhoofAI, (pCreature->AI())))
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_ruul_snowhoofAI, (creature->AI())))
             pEscortAI->Start(true, false, pPlayer->GetGUID());
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_ruul_snowhoofAI(Creature* pCreature)
+CreatureAI* GetAI_npc_ruul_snowhoofAI(Creature* creature)
 {
-    return new npc_ruul_snowhoofAI(pCreature);
+    return new npc_ruul_snowhoofAI(creature);
 }
 
 void AddSC_ashenvale()

@@ -145,9 +145,9 @@ struct mob_unkor_the_ruthlessAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_unkor_the_ruthless(Creature* pCreature)
+CreatureAI* GetAI_mob_unkor_the_ruthless(Creature* creature)
 {
-    return new mob_unkor_the_ruthlessAI (pCreature);
+    return new mob_unkor_the_ruthlessAI (creature);
 }
 
 /*######
@@ -170,9 +170,9 @@ struct mob_infested_root_walkerAI : public ScriptedAI
                     me->CastSpell(me, 39130, true);
     }
 };
-CreatureAI* GetAI_mob_infested_root_walker(Creature* pCreature)
+CreatureAI* GetAI_mob_infested_root_walker(Creature* creature)
 {
-    return new mob_infested_root_walkerAI (pCreature);
+    return new mob_infested_root_walkerAI (creature);
 }
 
 /*######
@@ -195,9 +195,9 @@ struct mob_rotting_forest_ragerAI : public ScriptedAI
                     me->CastSpell(me, 39134, true);
     }
 };
-CreatureAI* GetAI_mob_rotting_forest_rager(Creature* pCreature)
+CreatureAI* GetAI_mob_rotting_forest_rager(Creature* creature)
 {
-    return new mob_rotting_forest_ragerAI (pCreature);
+    return new mob_rotting_forest_ragerAI (creature);
 }
 
 /*######
@@ -239,9 +239,9 @@ struct mob_netherweb_victimAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_mob_netherweb_victim(Creature* pCreature)
+CreatureAI* GetAI_mob_netherweb_victim(Creature* creature)
 {
-    return new mob_netherweb_victimAI (pCreature);
+    return new mob_netherweb_victimAI (creature);
 }
 
 /*######
@@ -307,33 +307,33 @@ struct npc_floonAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_npc_floon(Creature* pCreature)
+CreatureAI* GetAI_npc_floon(Creature* creature)
 {
-    return new npc_floonAI (pCreature);
+    return new npc_floonAI (creature);
 }
 
-bool GossipHello_npc_floon(Player *player, Creature* pCreature)
+bool GossipHello_npc_floon(Player *player, Creature* creature)
 {
     if (player->GetQuestStatus(10009) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(9442, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(9442, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_floon(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_floon(Player *player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
         player->ADD_GOSSIP_ITEM(1, GOSSIP_FLOON2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(9443, pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(9443, creature->GetGUID());
     }
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
         player->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(FACTION_HOSTILE_FL);
-        DoScriptText(SAY_FLOON_ATTACK, pCreature, player);
-        ((npc_floonAI*)pCreature->AI())->AttackStart(player);
+        creature->setFaction(FACTION_HOSTILE_FL);
+        DoScriptText(SAY_FLOON_ATTACK, creature, player);
+        ((npc_floonAI*)creature->AI())->AttackStart(player);
     }
     return true;
 }
@@ -410,19 +410,19 @@ struct npc_isla_starmaneAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_isla_starmane(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_isla_starmane(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_EFTW_H || quest->GetQuestId() == QUEST_EFTW_A)
     {
-        CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-        pCreature->setFaction(113);
+        CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, pPlayer->GetGUID());
+        creature->setFaction(113);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_isla_starmaneAI(Creature* pCreature)
+CreatureAI* GetAI_npc_isla_starmaneAI(Creature* creature)
 {
-    return  new npc_isla_starmaneAI(pCreature);
+    return  new npc_isla_starmaneAI(creature);
 }
 
 /*######
@@ -522,16 +522,16 @@ struct npc_skywingAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_skywingAI(Creature* pCreature)
+CreatureAI* GetAI_npc_skywingAI(Creature* creature)
 {
-    return new npc_skywingAI(pCreature);
+    return new npc_skywingAI(creature);
 }
 
-bool QuestAccept_npc_skywing(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_skywing(Player* pPlayer, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_SKYWING)
     {
-        if (npc_skywingAI* pEscortAI = CAST_AI(npc_skywingAI, pCreature->AI()))
+        if (npc_skywingAI* pEscortAI = CAST_AI(npc_skywingAI, creature->AI()))
             pEscortAI->Start(false, true, pPlayer->GetGUID(), quest);
     }
 
@@ -547,23 +547,23 @@ enum eSlim
     FACTION_CONSORTIUM  = 933
 };
 
-bool GossipHello_npc_slim(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_slim(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isVendor() && pPlayer->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
+    if (creature->isVendor() && pPlayer->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        pPlayer->SEND_GOSSIP_MENU(9896, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9896, creature->GetGUID());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(9895, pCreature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(9895, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_slim(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_slim(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_TRADE)
-        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+        pPlayer->SEND_VENDORLIST(creature->GetGUID());
 
     return true;
 }
@@ -591,7 +591,7 @@ static float m_afAmbushB2[]= {-2890.604980f, 5331.938965f, -11.282f};
 
 struct npc_akunoAI : public npc_escortAI
 {
-    npc_akunoAI(Creature* pCreature) : npc_escortAI(pCreature) { Reset(); }
+    npc_akunoAI(Creature* creature) : npc_escortAI(creature) { Reset(); }
 
     uint32 m_uiChainLightningTimer;
 
@@ -651,25 +651,25 @@ struct npc_akunoAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_akuno(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_akuno(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ESCAPING_TOMB)
     {
-        if (npc_akunoAI* pEscortAI = CAST_AI(npc_akunoAI, pCreature->AI()))
+        if (npc_akunoAI* pEscortAI = CAST_AI(npc_akunoAI, creature->AI()))
         {
-            pCreature->SetStandState(UNIT_STAND_STATE_STAND);
-            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_ACTIVE);
+            creature->SetStandState(UNIT_STAND_STATE_STAND);
+            creature->setFaction(FACTION_ESCORT_N_NEUTRAL_ACTIVE);
 
-            DoScriptText(SAY_AKU_START, pCreature);
+            DoScriptText(SAY_AKU_START, creature);
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
         }
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_akuno(Creature* pCreature)
+CreatureAI* GetAI_npc_akuno(Creature* creature)
 {
-    return new npc_akunoAI(pCreature);
+    return new npc_akunoAI(creature);
 }
 
 /*######
@@ -678,20 +678,20 @@ CreatureAI* GetAI_npc_akuno(Creature* pCreature)
 
 #define GOSSIP_SKYGUARD "Fly me to Ogri'la please"
 
-bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_skyguard_handler_deesak(Player* pPlayer, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        pPlayer->PrepareQuestMenu(creature->GetGUID());
 
     if (pPlayer->GetReputationRank(1031) >= REP_HONORED)
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SKYGUARD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_npc_skyguard_handler_deesak(Player* pPlayer, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
@@ -740,7 +740,7 @@ enum
 //Some details still missing from here, and will also have issues if followers evade for any reason.
 struct npc_letollAI : public npc_escortAI
 {
-    npc_letollAI(Creature* pCreature) : npc_escortAI(pCreature)
+    npc_letollAI(Creature* creature) : npc_escortAI(creature)
     {
         m_uiEventTimer = 5000;
         m_uiEventCount = 0;
@@ -939,19 +939,19 @@ struct npc_letollAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_letoll(Creature* pCreature)
+CreatureAI* GetAI_npc_letoll(Creature* creature)
 {
-    return new npc_letollAI(pCreature);
+    return new npc_letollAI(creature);
 }
 
-bool QuestAccept_npc_letoll(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_letoll(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_DIGGING_BONES)
     {
-        if (npc_letollAI* pEscortAI = dynamic_cast<npc_letollAI*>(pCreature->AI()))
+        if (npc_letollAI* pEscortAI = dynamic_cast<npc_letollAI*>(creature->AI()))
         {
-            DoScriptText(SAY_LE_START, pCreature);
-            pCreature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
+            DoScriptText(SAY_LE_START, creature);
+            creature->setFaction(FACTION_ESCORT_N_NEUTRAL_PASSIVE);
 
             pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest, true);
         }
@@ -981,7 +981,7 @@ enum
 
 struct npc_mana_bomb_exp_triggerAI : public ScriptedAI
 {
-    npc_mana_bomb_exp_triggerAI(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_mana_bomb_exp_triggerAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
 
     GameObject* pManaBomb;
 
@@ -1059,9 +1059,9 @@ struct npc_mana_bomb_exp_triggerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_mana_bomb_exp_trigger(Creature* pCreature)
+CreatureAI* GetAI_npc_mana_bomb_exp_trigger(Creature* creature)
 {
-    return new npc_mana_bomb_exp_triggerAI(pCreature);
+    return new npc_mana_bomb_exp_triggerAI(creature);
 }
 
 /*######
@@ -1070,9 +1070,9 @@ CreatureAI* GetAI_npc_mana_bomb_exp_trigger(Creature* pCreature)
 
 bool GOHello_go_mana_bomb(Player* pPlayer, GameObject* pGo)
 {
-    if (Creature* pCreature = GetClosestCreatureWithEntry(pGo, NPC_MANA_BOMB_EXPL_TRIGGER, INTERACTION_DISTANCE))
+    if (Creature* creature = GetClosestCreatureWithEntry(pGo, NPC_MANA_BOMB_EXPL_TRIGGER, INTERACTION_DISTANCE))
     {
-        if (npc_mana_bomb_exp_triggerAI* pBombAI = dynamic_cast<npc_mana_bomb_exp_triggerAI*>(pCreature->AI()))
+        if (npc_mana_bomb_exp_triggerAI* pBombAI = dynamic_cast<npc_mana_bomb_exp_triggerAI*>(creature->AI()))
             pBombAI->DoTrigger(pPlayer, pGo);
     }
 
@@ -1118,7 +1118,7 @@ bool GOHello_veil_skith_cage(Player* pPlayer, GameObject* pGo)
 
 struct npc_captive_child : public ScriptedAI
 {
-    npc_captive_child(Creature* pCreature) : ScriptedAI(pCreature) { Reset(); }
+    npc_captive_child(Creature* creature) : ScriptedAI(creature) { Reset(); }
 
     void Reset() {}
 
@@ -1129,9 +1129,9 @@ struct npc_captive_child : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_captive_child(Creature* pCreature)
+CreatureAI* GetAI_npc_captive_child(Creature* creature)
 {
-    return new npc_captive_child(pCreature);
+    return new npc_captive_child(creature);
 }
 
 /*######
@@ -1151,7 +1151,7 @@ enum SPrisoner
 
 struct npc_skyguard_prisonerAI : public npc_escortAI
 {
-    npc_skyguard_prisonerAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+    npc_skyguard_prisonerAI(Creature* creature) : npc_escortAI(creature) {}
 
     void Reset() {}
 
@@ -1256,22 +1256,22 @@ struct npc_skyguard_prisonerAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_skyguard_prisoner(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_skyguard_prisoner(Player* pPlayer, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_ESCAPE_FROM_SKETTIS)
     {
-        if (GameObject* pGo = pCreature->FindNearestGameObject(GO_PRISONER_CAGE, 10.0f))
+        if (GameObject* pGo = creature->FindNearestGameObject(GO_PRISONER_CAGE, 10.0f))
             pGo->UseDoorOrButton();
 
-        if (npc_skyguard_prisonerAI* pEscortAI = CAST_AI(npc_skyguard_prisonerAI, pCreature->AI()))
+        if (npc_skyguard_prisonerAI* pEscortAI = CAST_AI(npc_skyguard_prisonerAI, creature->AI()))
             pEscortAI->StartEvent(pPlayer, pQuest);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_skyguard_prisoner(Creature* pCreature)
+CreatureAI* GetAI_npc_skyguard_prisoner(Creature* creature)
 {
-    return new npc_skyguard_prisonerAI(pCreature);
+    return new npc_skyguard_prisonerAI(creature);
 }
 
 void AddSC_terokkar_forest()

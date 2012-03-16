@@ -129,9 +129,9 @@ struct boss_ouroAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_ouro(Creature* pCreature)
+CreatureAI* GetAI_boss_ouro(Creature* creature)
 {
-    return new boss_ouroAI (pCreature);
+    return new boss_ouroAI (creature);
 }
 
 void AddSC_boss_ouro()

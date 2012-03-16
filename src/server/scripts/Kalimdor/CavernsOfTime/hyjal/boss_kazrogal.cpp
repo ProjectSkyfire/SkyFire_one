@@ -201,9 +201,9 @@ struct boss_kazrogalAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_boss_kazrogal(Creature* pCreature)
+CreatureAI* GetAI_boss_kazrogal(Creature* creature)
 {
-    return new boss_kazrogalAI (pCreature);
+    return new boss_kazrogalAI (creature);
 }
 
 void AddSC_boss_kazrogal()

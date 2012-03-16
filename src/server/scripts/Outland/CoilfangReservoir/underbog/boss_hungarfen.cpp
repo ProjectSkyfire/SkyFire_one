@@ -87,9 +87,9 @@ struct boss_hungarfenAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hungarfen(Creature* pCreature)
+CreatureAI* GetAI_boss_hungarfen(Creature* creature)
 {
-    return new boss_hungarfenAI (pCreature);
+    return new boss_hungarfenAI (creature);
 }
 
 #define SPELL_SPORE_CLOUD       34168
@@ -138,9 +138,9 @@ struct mob_underbog_mushroomAI : public ScriptedAI
         } else Shrink_Timer -= diff;
     }
 };
-CreatureAI* GetAI_mob_underbog_mushroom(Creature* pCreature)
+CreatureAI* GetAI_mob_underbog_mushroom(Creature* creature)
 {
-    return new mob_underbog_mushroomAI (pCreature);
+    return new mob_underbog_mushroomAI (creature);
 }
 
 void AddSC_boss_hungarfen()

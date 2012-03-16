@@ -142,9 +142,9 @@ struct boss_patchwerkAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_patchwerk(Creature* pCreature)
+CreatureAI* GetAI_boss_patchwerk(Creature* creature)
 {
-    return new boss_patchwerkAI (pCreature);
+    return new boss_patchwerkAI (creature);
 }
 
 void AddSC_boss_patchwerk()

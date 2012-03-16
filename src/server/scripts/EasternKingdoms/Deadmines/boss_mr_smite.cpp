@@ -47,9 +47,9 @@ enum eSpels
 
 struct boss_mr_smiteAI : public ScriptedAI
 {
-    boss_mr_smiteAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_mr_smiteAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance* pInstance;
@@ -197,9 +197,9 @@ struct boss_mr_smiteAI : public ScriptedAI
         uiPhase = 3;
     }
 };
-CreatureAI* GetAI_boss_mr_smite(Creature* pCreature)
+CreatureAI* GetAI_boss_mr_smite(Creature* creature)
 {
-    return new boss_mr_smiteAI (pCreature);
+    return new boss_mr_smiteAI (creature);
 }
 
 void AddSC_boss_mr_smite()

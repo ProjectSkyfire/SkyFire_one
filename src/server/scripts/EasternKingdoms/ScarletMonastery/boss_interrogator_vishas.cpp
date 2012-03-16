@@ -106,9 +106,9 @@ struct boss_interrogator_vishasAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_interrogator_vishas(Creature* pCreature)
+CreatureAI* GetAI_boss_interrogator_vishas(Creature* creature)
 {
-    return new boss_interrogator_vishasAI (pCreature);
+    return new boss_interrogator_vishasAI (creature);
 }
 
 void AddSC_boss_interrogator_vishas()

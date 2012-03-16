@@ -149,20 +149,20 @@ struct instance_shattered_halls : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 16807: nethekurseGUID = pCreature->GetGUID(); break;
-            case 16809: warbringerGUID = pCreature->GetGUID(); break;
-            case 16808: kargathGUID = pCreature->GetGUID(); break;
-            case NPC_EXECUTIONER: executionerGUID = pCreature->GetGUID(); break;
-            case NPC_SOLDIER_ALLIANCE_2: soldiera2GUID = pCreature->GetGUID(); break;
-            case NPC_SOLDIER_ALLIANCE_3: soldiera3GUID = pCreature->GetGUID(); break;
-            case NPC_OFFICER_ALLIANCE: officeraGUID = pCreature->GetGUID(); break;
-            case NPC_SOLDIER_HORDE_2: soldierh2GUID = pCreature->GetGUID(); break;
-            case NPC_SOLDIER_HORDE_3: soldierh3GUID = pCreature->GetGUID(); break;
-            case NPC_OFFICER_HORDE: officerhGUID = pCreature->GetGUID(); break;
+            case 16807: nethekurseGUID = creature->GetGUID(); break;
+            case 16809: warbringerGUID = creature->GetGUID(); break;
+            case 16808: kargathGUID = creature->GetGUID(); break;
+            case NPC_EXECUTIONER: executionerGUID = creature->GetGUID(); break;
+            case NPC_SOLDIER_ALLIANCE_2: soldiera2GUID = creature->GetGUID(); break;
+            case NPC_SOLDIER_ALLIANCE_3: soldiera3GUID = creature->GetGUID(); break;
+            case NPC_OFFICER_ALLIANCE: officeraGUID = creature->GetGUID(); break;
+            case NPC_SOLDIER_HORDE_2: soldierh2GUID = creature->GetGUID(); break;
+            case NPC_SOLDIER_HORDE_3: soldierh3GUID = creature->GetGUID(); break;
+            case NPC_OFFICER_HORDE: officerhGUID = creature->GetGUID(); break;
         }
     }
 
@@ -318,9 +318,9 @@ struct instance_shattered_halls : public ScriptedInstance
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 
-    void OnCreatureDeath(Creature* pCreature)
+    void OnCreatureDeath(Creature* creature)
     {
-        if (pCreature->GetEntry() == NPC_EXECUTIONER)
+        if (creature->GetEntry() == NPC_EXECUTIONER)
             SetData(TYPE_EXECUTION, DONE);
     }
 

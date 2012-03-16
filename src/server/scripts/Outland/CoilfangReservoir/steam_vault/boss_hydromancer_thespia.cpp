@@ -174,14 +174,14 @@ struct mob_coilfang_waterelementalAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_thespiaAI(Creature* pCreature)
+CreatureAI* GetAI_boss_thespiaAI(Creature* creature)
 {
-    return new boss_thespiaAI (pCreature);
+    return new boss_thespiaAI (creature);
 }
 
-CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* pCreature)
+CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* creature)
 {
-    return new mob_coilfang_waterelementalAI (pCreature);
+    return new mob_coilfang_waterelementalAI (creature);
 }
 
 void AddSC_boss_hydromancer_thespia()

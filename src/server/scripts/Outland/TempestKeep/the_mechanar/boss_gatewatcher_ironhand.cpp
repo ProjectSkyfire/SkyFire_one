@@ -135,9 +135,9 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature* pCreature)
+CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature* creature)
 {
-    return new boss_gatewatcher_iron_handAI (pCreature);
+    return new boss_gatewatcher_iron_handAI (creature);
 }
 
 void AddSC_boss_gatewatcher_iron_hand()

@@ -138,9 +138,9 @@ struct boss_kurinnaxxAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_kurinnaxx(Creature* pCreature)
+CreatureAI* GetAI_boss_kurinnaxx(Creature* creature)
 {
-    return new boss_kurinnaxxAI (pCreature);
+    return new boss_kurinnaxxAI (creature);
 }
 
 void AddSC_boss_kurinnaxx()

@@ -87,9 +87,9 @@ struct mob_crystalcore_devastatorAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_crystalcore_devastator(Creature* pCreature)
+CreatureAI* GetAI_mob_crystalcore_devastator(Creature* creature)
 {
-    return new mob_crystalcore_devastatorAI (pCreature);
+    return new mob_crystalcore_devastatorAI (creature);
 }
 
 void AddSC_the_eye()

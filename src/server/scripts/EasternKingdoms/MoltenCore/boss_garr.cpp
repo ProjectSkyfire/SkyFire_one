@@ -120,14 +120,14 @@ struct mob_fireswornAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_garr(Creature* pCreature)
+CreatureAI* GetAI_boss_garr(Creature* creature)
 {
-    return new boss_garrAI (pCreature);
+    return new boss_garrAI (creature);
 }
 
-CreatureAI* GetAI_mob_firesworn(Creature* pCreature)
+CreatureAI* GetAI_mob_firesworn(Creature* creature)
 {
-    return new mob_fireswornAI (pCreature);
+    return new mob_fireswornAI (creature);
 }
 
 void AddSC_boss_garr()

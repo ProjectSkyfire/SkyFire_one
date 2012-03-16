@@ -47,9 +47,9 @@ EndContentData */
 
 #define GOSSIP_ITEM_GM1             "[GM] Toggle Debug Timers"
 
-CreatureAI* GetAI_npc_jaina_proudmoore(Creature* pCreature)
+CreatureAI* GetAI_npc_jaina_proudmoore(Creature* creature)
 {
-    hyjalAI* ai = new hyjalAI(pCreature);
+    hyjalAI* ai = new hyjalAI(creature);
 
     ai->Reset();
     ai->EnterEvadeMode();
@@ -69,9 +69,9 @@ CreatureAI* GetAI_npc_jaina_proudmoore(Creature* pCreature)
     return ai;
 }
 
-bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* creature)
 {
-    hyjalAI* ai = CAST_AI(hyjalAI, pCreature->AI());
+    hyjalAI* ai = CAST_AI(hyjalAI, creature->AI());
     if (ai->EventBegun)
         return false;
 
@@ -87,13 +87,13 @@ bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
     if (pPlayer->isGameMaster())
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_ITEM_GM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(907, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_jaina_proudmoore(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    hyjalAI* ai = CAST_AI(hyjalAI, pCreature->AI());
+    hyjalAI* ai = CAST_AI(hyjalAI, creature->AI());
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
@@ -115,9 +115,9 @@ bool GossipSelect_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature, uin
     return true;
 }
 
-CreatureAI* GetAI_npc_thrall(Creature* pCreature)
+CreatureAI* GetAI_npc_thrall(Creature* creature)
 {
-    hyjalAI* ai = new hyjalAI(pCreature);
+    hyjalAI* ai = new hyjalAI(creature);
 
     ai->Reset();
     ai->EnterEvadeMode();
@@ -133,9 +133,9 @@ CreatureAI* GetAI_npc_thrall(Creature* pCreature)
     return ai;
 }
 
-bool GossipHello_npc_thrall(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_thrall(Player* pPlayer, Creature* creature)
 {
-    hyjalAI* ai = CAST_AI(hyjalAI, pCreature->AI());
+    hyjalAI* ai = CAST_AI(hyjalAI, creature->AI());
     if (ai->EventBegun)
         return false;
 
@@ -156,13 +156,13 @@ bool GossipHello_npc_thrall(Player* pPlayer, Creature* pCreature)
     if (pPlayer->isGameMaster())
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_ITEM_GM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(907, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_thrall(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_thrall(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    hyjalAI* ai = CAST_AI(hyjalAI, pCreature->AI());
+    hyjalAI* ai = CAST_AI(hyjalAI, creature->AI());
     ai->DeSpawnVeins();//despawn the alliance veins
     switch (uiAction)
     {
@@ -185,27 +185,27 @@ bool GossipSelect_npc_thrall(Player* pPlayer, Creature* pCreature, uint32 /*uiSe
     return true;
 }
 
-CreatureAI* GetAI_npc_tyrande_whisperwind(Creature* pCreature)
+CreatureAI* GetAI_npc_tyrande_whisperwind(Creature* creature)
 {
-    hyjalAI* ai = new hyjalAI(pCreature);
+    hyjalAI* ai = new hyjalAI(creature);
     ai->Reset();
     ai->EnterEvadeMode();
     return ai;
 }
 
-bool GossipHello_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_tyrande_whisperwind(Player* pPlayer, Creature* creature)
 {
-    hyjalAI* ai = CAST_AI(hyjalAI, pCreature->AI());
+    hyjalAI* ai = CAST_AI(hyjalAI, creature->AI());
     uint32 AzgalorEvent = ai->GetInstanceData(DATA_AZGALOREVENT);
 
     // Only let them get item if Azgalor is dead.
     if (AzgalorEvent == DONE && !pPlayer->HasItemCount(ITEM_TEAR_OF_GODDESS, 1))
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TYRANDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    pPlayer->SEND_GOSSIP_MENU(907, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_tyrande_whisperwind(Player* pPlayer, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
@@ -217,8 +217,8 @@ bool GossipSelect_npc_tyrande_whisperwind(Player* pPlayer, Creature* pCreature, 
                  if (item && pPlayer)
                      pPlayer->SendNewItem(item, 1, true, false, true);
             }
-            pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
-            CAST_AI(hyjalAI, pCreature->AI());
+            pPlayer->SEND_GOSSIP_MENU(907, creature->GetGUID());
+            CAST_AI(hyjalAI, creature->AI());
     }
     return true;
 }

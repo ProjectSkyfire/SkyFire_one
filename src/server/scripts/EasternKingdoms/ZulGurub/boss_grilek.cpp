@@ -80,9 +80,9 @@ struct boss_grilekAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_grilek(Creature* pCreature)
+CreatureAI* GetAI_boss_grilek(Creature* creature)
 {
-    return new boss_grilekAI (pCreature);
+    return new boss_grilekAI (creature);
 }
 
 void AddSC_boss_grilek()

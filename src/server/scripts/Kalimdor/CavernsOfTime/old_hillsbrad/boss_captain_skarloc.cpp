@@ -144,9 +144,9 @@ struct boss_captain_skarlocAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_captain_skarloc(Creature* pCreature)
+CreatureAI* GetAI_boss_captain_skarloc(Creature* creature)
 {
-    return new boss_captain_skarlocAI (pCreature);
+    return new boss_captain_skarlocAI (creature);
 }
 
 void AddSC_boss_captain_skarloc()

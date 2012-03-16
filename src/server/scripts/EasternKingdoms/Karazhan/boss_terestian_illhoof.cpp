@@ -365,29 +365,29 @@ struct mob_fiendish_impAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_kilrek(Creature* pCreature)
+CreatureAI* GetAI_mob_kilrek(Creature* creature)
 {
-    return new mob_kilrekAI (pCreature);
+    return new mob_kilrekAI (creature);
 }
 
-CreatureAI* GetAI_mob_fiendish_imp(Creature* pCreature)
+CreatureAI* GetAI_mob_fiendish_imp(Creature* creature)
 {
-    return new mob_fiendish_impAI (pCreature);
+    return new mob_fiendish_impAI (creature);
 }
 
-CreatureAI* GetAI_mob_fiendish_portal(Creature* pCreature)
+CreatureAI* GetAI_mob_fiendish_portal(Creature* creature)
 {
-    return new mob_fiendish_portalAI (pCreature);
+    return new mob_fiendish_portalAI (creature);
 }
 
-CreatureAI* GetAI_boss_terestian_illhoof(Creature* pCreature)
+CreatureAI* GetAI_boss_terestian_illhoof(Creature* creature)
 {
-    return new boss_terestianAI (pCreature);
+    return new boss_terestianAI (creature);
 }
 
-CreatureAI* GetAI_mob_demon_chain(Creature* pCreature)
+CreatureAI* GetAI_mob_demon_chain(Creature* creature)
 {
-    return new mob_demon_chainAI(pCreature);
+    return new mob_demon_chainAI(creature);
 }
 
 void AddSC_boss_terestian_illhoof()

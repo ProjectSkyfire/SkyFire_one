@@ -202,7 +202,7 @@ InstanceData* GetInstanceData_instance_sethekk_halls(Map* map)
 // this is not escort quest !
 struct npc_lakkaAI : public npc_escortAI
 {
-    npc_lakkaAI(Creature *pCreature) : npc_escortAI(pCreature) {}
+    npc_lakkaAI(Creature *creature) : npc_escortAI(creature) {}
 
     void Reset() { }
 
@@ -220,9 +220,9 @@ struct npc_lakkaAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_lakka(Creature* pCreature)
+CreatureAI* GetAI_npc_lakka(Creature* creature)
 {
-    return new npc_lakkaAI(pCreature);
+    return new npc_lakkaAI(creature);
 }
 
 /*#####

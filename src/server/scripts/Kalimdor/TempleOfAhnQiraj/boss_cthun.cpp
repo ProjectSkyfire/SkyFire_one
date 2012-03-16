@@ -1255,39 +1255,39 @@ void flesh_tentacleAI::JustDied(Unit* killer)
 }
 
 //GetAIs
-CreatureAI* GetAI_eye_of_cthun(Creature* pCreature)
+CreatureAI* GetAI_eye_of_cthun(Creature* creature)
 {
-    return new eye_of_cthunAI (pCreature);
+    return new eye_of_cthunAI (creature);
 }
 
-CreatureAI* GetAI_cthun(Creature* pCreature)
+CreatureAI* GetAI_cthun(Creature* creature)
 {
-    return new cthunAI (pCreature);
+    return new cthunAI (creature);
 }
 
-CreatureAI* GetAI_eye_tentacle(Creature* pCreature)
+CreatureAI* GetAI_eye_tentacle(Creature* creature)
 {
-    return new eye_tentacleAI (pCreature);
+    return new eye_tentacleAI (creature);
 }
 
-CreatureAI* GetAI_claw_tentacle(Creature* pCreature)
+CreatureAI* GetAI_claw_tentacle(Creature* creature)
 {
-    return new claw_tentacleAI (pCreature);
+    return new claw_tentacleAI (creature);
 }
 
-CreatureAI* GetAI_giant_claw_tentacle(Creature* pCreature)
+CreatureAI* GetAI_giant_claw_tentacle(Creature* creature)
 {
-    return new giant_claw_tentacleAI (pCreature);
+    return new giant_claw_tentacleAI (creature);
 }
 
-CreatureAI* GetAI_giant_eye_tentacle(Creature* pCreature)
+CreatureAI* GetAI_giant_eye_tentacle(Creature* creature)
 {
-    return new giant_eye_tentacleAI (pCreature);
+    return new giant_eye_tentacleAI (creature);
 }
 
-CreatureAI* GetAI_flesh_tentacle(Creature* pCreature)
+CreatureAI* GetAI_flesh_tentacle(Creature* creature)
 {
-    return new flesh_tentacleAI (pCreature);
+    return new flesh_tentacleAI (creature);
 }
 
 void AddSC_boss_cthun()

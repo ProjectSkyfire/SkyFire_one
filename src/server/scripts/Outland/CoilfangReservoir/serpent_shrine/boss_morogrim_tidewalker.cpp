@@ -360,13 +360,13 @@ struct mob_water_globuleAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_morogrim_tidewalker(Creature* pCreature)
+CreatureAI* GetAI_boss_morogrim_tidewalker(Creature* creature)
 {
-    return new boss_morogrim_tidewalkerAI (pCreature);
+    return new boss_morogrim_tidewalkerAI (creature);
 }
-CreatureAI* GetAI_mob_water_globule(Creature* pCreature)
+CreatureAI* GetAI_mob_water_globule(Creature* creature)
 {
-    return new mob_water_globuleAI (pCreature);
+    return new mob_water_globuleAI (creature);
 }
 
 void AddSC_boss_morogrim_tidewalker()

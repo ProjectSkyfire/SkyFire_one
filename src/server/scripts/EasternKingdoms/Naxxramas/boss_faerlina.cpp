@@ -124,9 +124,9 @@ struct boss_faerlinaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_faerlina(Creature* pCreature)
+CreatureAI* GetAI_boss_faerlina(Creature* creature)
 {
-    return new boss_faerlinaAI (pCreature);
+    return new boss_faerlinaAI (creature);
 }
 
 void AddSC_boss_faerlina()

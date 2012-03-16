@@ -352,9 +352,9 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
     }
  };
 
-CreatureAI* GetAI_mob_coilfang_guardian(Creature* pCreature)
+CreatureAI* GetAI_mob_coilfang_guardian(Creature* creature)
 {
-    SimpleAI* ai = new SimpleAI (pCreature);
+    SimpleAI* ai = new SimpleAI (creature);
 
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = SPELL_ARCINGSMASH;
@@ -427,14 +427,14 @@ struct mob_coilfang_ambusherAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_mob_coilfang_ambusher(Creature* pCreature)
+CreatureAI* GetAI_mob_coilfang_ambusher(Creature* creature)
 {
-    return new mob_coilfang_ambusherAI (pCreature);
+    return new mob_coilfang_ambusherAI (creature);
 }
 
-CreatureAI* GetAI_boss_the_lurker_below(Creature* pCreature)
+CreatureAI* GetAI_boss_the_lurker_below(Creature* creature)
 {
-    return new boss_the_lurker_belowAI (pCreature);
+    return new boss_the_lurker_belowAI (creature);
 }
 
 void AddSC_boss_the_lurker_below()

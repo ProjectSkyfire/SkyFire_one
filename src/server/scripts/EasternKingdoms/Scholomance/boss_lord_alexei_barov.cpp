@@ -87,9 +87,9 @@ struct boss_lordalexeibarovAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_lordalexeibarov(Creature* pCreature)
+CreatureAI* GetAI_boss_lordalexeibarov(Creature* creature)
 {
-    return new boss_lordalexeibarovAI (pCreature);
+    return new boss_lordalexeibarovAI (creature);
 }
 
 void AddSC_boss_lordalexeibarov()

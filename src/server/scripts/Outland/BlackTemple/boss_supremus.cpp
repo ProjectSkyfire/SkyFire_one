@@ -287,19 +287,19 @@ struct npc_volcanoAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_supremus(Creature* pCreature)
+CreatureAI* GetAI_boss_supremus(Creature* creature)
 {
-    return new boss_supremusAI (pCreature);
+    return new boss_supremusAI (creature);
 }
 
-CreatureAI* GetAI_molten_flame(Creature* pCreature)
+CreatureAI* GetAI_molten_flame(Creature* creature)
 {
-    return new molten_flameAI (pCreature);
+    return new molten_flameAI (creature);
 }
 
-CreatureAI* GetAI_npc_volcano(Creature* pCreature)
+CreatureAI* GetAI_npc_volcano(Creature* creature)
 {
-    return new npc_volcanoAI (pCreature);
+    return new npc_volcanoAI (creature);
 }
 
 void AddSC_boss_supremus()

@@ -87,8 +87,8 @@ void WorldSession::HandleQuestgiverHelloOpcode(WorldPacket & recv_data)
 
     sLog->outDebug ("WORLD: Received CMSG_QUESTGIVER_HELLO npc = %u", GUID_LOPART(guid));
 
-    Creature *pCreature = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_NONE);
-    if (!pCreature)
+    Creature *creature = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_NONE);
+    if (!creature)
     {
         sLog->outDebug ("WORLD: HandleQuestgiverHelloOpcode - Unit (GUID: %u) not found or you can't interact with him.", GUID_LOPART(guid));
         return;
@@ -98,13 +98,13 @@ void WorldSession::HandleQuestgiverHelloOpcode(WorldPacket & recv_data)
     if (GetPlayer()->hasUnitState(UNIT_STAT_DIED))
         GetPlayer()->RemoveSpellsCausingAura(SPELL_AURA_FEIGN_DEATH);
     // Stop the npc if moving
-    pCreature->StopMoving();
+    creature->StopMoving();
 
-    if (sScriptMgr->GossipHello(_player, pCreature))
+    if (sScriptMgr->GossipHello(_player, creature))
         return;
 
-    _player->PrepareGossipMenu(pCreature, pCreature->GetCreatureInfo()->GossipMenuId);
-    _player->SendPreparedGossip(pCreature);
+    _player->PrepareGossipMenu(creature, creature->GetCreatureInfo()->GossipMenuId);
+    _player->SendPreparedGossip(creature);
 }
 
 void WorldSession::HandleQuestgiverAcceptQuestOpcode(WorldPacket & recv_data)

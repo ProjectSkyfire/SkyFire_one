@@ -116,9 +116,9 @@ struct boss_magistrate_barthilasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_magistrate_barthilas(Creature* pCreature)
+CreatureAI* GetAI_boss_magistrate_barthilas(Creature* creature)
 {
-    return new boss_magistrate_barthilasAI (pCreature);
+    return new boss_magistrate_barthilasAI (creature);
 }
 
 void AddSC_boss_magistrate_barthilas()

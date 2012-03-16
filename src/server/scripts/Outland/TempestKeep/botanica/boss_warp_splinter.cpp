@@ -203,14 +203,14 @@ struct boss_warp_splinterAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_warp_splinter(Creature* pCreature)
+CreatureAI* GetAI_boss_warp_splinter(Creature* creature)
 {
-    return new boss_warp_splinterAI (pCreature);
+    return new boss_warp_splinterAI (creature);
 }
 
-CreatureAI* GetAI_mob_treant(Creature* pCreature)
+CreatureAI* GetAI_mob_treant(Creature* creature)
 {
-    return new mob_treantAI (pCreature);
+    return new mob_treantAI (creature);
 }
 
 void AddSC_boss_warp_splinter()

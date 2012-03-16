@@ -122,9 +122,9 @@ struct boss_vanndarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_vanndar(Creature* pCreature)
+CreatureAI* GetAI_boss_vanndar(Creature* creature)
 {
-    return new boss_vanndarAI (pCreature);
+    return new boss_vanndarAI (creature);
 }
 
 void AddSC_boss_vanndar()

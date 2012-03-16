@@ -45,9 +45,9 @@ struct boss_death_knight_darkreaverAI : public ScriptedAI
     {
     }
 };
-CreatureAI* GetAI_boss_death_knight_darkreaver(Creature* pCreature)
+CreatureAI* GetAI_boss_death_knight_darkreaver(Creature* creature)
 {
-    return new boss_death_knight_darkreaverAI (pCreature);
+    return new boss_death_knight_darkreaverAI (creature);
 }
 
 void AddSC_boss_death_knight_darkreaver()

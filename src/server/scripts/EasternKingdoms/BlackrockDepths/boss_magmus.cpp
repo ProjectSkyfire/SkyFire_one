@@ -87,9 +87,9 @@ struct boss_magmusAI : public ScriptedAI
             pInstance->HandleGameObject(pInstance->GetData64(DATA_THRONE_DOOR), true);
     }
 };
-CreatureAI* GetAI_boss_magmus(Creature* pCreature)
+CreatureAI* GetAI_boss_magmus(Creature* creature)
 {
-    return new boss_magmusAI (pCreature);
+    return new boss_magmusAI (creature);
 }
 
 void AddSC_boss_magmus()

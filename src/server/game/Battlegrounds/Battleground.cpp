@@ -1546,22 +1546,22 @@ Creature* BattleGround::AddCreature(uint32 entry, uint32 type, uint32 teamval, f
     if (!map)
         return NULL;
 
-    Creature* pCreature = new Creature;
-    if (!pCreature->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_UNIT), map, entry, teamval, x, y, z, o))
+    Creature* creature = new Creature;
+    if (!creature->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_UNIT), map, entry, teamval, x, y, z, o))
     {
         sLog->outError("Can't create creature entry: %u", entry);
-        delete pCreature;
+        delete creature;
         return NULL;
     }
 
-    pCreature->SetHomePosition(x, y, z, o);
+    creature->SetHomePosition(x, y, z, o);
 
-    //pCreature->SetDungeonDifficulty(0);
+    //creature->SetDungeonDifficulty(0);
 
-    map->Add(pCreature);
-    m_BgCreatures[type] = pCreature->GetGUID();
+    map->Add(creature);
+    m_BgCreatures[type] = creature->GetGUID();
 
-    return  pCreature;
+    return  creature;
 }
 /*
 void BattleGround::SpawnBGCreature(uint32 type, uint32 respawntime)
@@ -1637,28 +1637,28 @@ bool BattleGround::AddSpiritGuide(uint32 type, float x, float y, float z, float 
     else
         entry = 13117;
 
-    Creature* pCreature = AddCreature(entry, type, team, x, y, z, o);
-    if (!pCreature)
+    Creature* creature = AddCreature(entry, type, team, x, y, z, o);
+    if (!creature)
     {
         sLog->outError("Can't create Spirit guide. BattleGround not created!");
         EndNow();
         return false;
     }
 
-    pCreature->setDeathState(DEAD);
+    creature->setDeathState(DEAD);
 
-    pCreature->SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, pCreature->GetGUID());
+    creature->SetUInt64Value(UNIT_FIELD_CHANNEL_OBJECT, creature->GetGUID());
     // aura
-    pCreature->SetUInt32Value(UNIT_FIELD_AURA, SPELL_SPIRIT_HEAL_CHANNEL);
-    pCreature->SetUInt32Value(UNIT_FIELD_AURAFLAGS, 0x00000009);
-    pCreature->SetUInt32Value(UNIT_FIELD_AURALEVELS, 0x0000003C);
-    pCreature->SetUInt32Value(UNIT_FIELD_AURAAPPLICATIONS, 0x000000FF);
+    creature->SetUInt32Value(UNIT_FIELD_AURA, SPELL_SPIRIT_HEAL_CHANNEL);
+    creature->SetUInt32Value(UNIT_FIELD_AURAFLAGS, 0x00000009);
+    creature->SetUInt32Value(UNIT_FIELD_AURALEVELS, 0x0000003C);
+    creature->SetUInt32Value(UNIT_FIELD_AURAAPPLICATIONS, 0x000000FF);
     // casting visual effect
-    pCreature->SetUInt32Value(UNIT_CHANNEL_SPELL, SPELL_SPIRIT_HEAL_CHANNEL);
+    creature->SetUInt32Value(UNIT_CHANNEL_SPELL, SPELL_SPIRIT_HEAL_CHANNEL);
     // correct cast speed
-    pCreature->SetFloatValue(UNIT_MOD_CAST_SPEED, 1.0f);
+    creature->SetFloatValue(UNIT_MOD_CAST_SPEED, 1.0f);
 
-    //pCreature->CastSpell(pCreature, SPELL_SPIRIT_HEAL_CHANNEL, true);
+    //creature->CastSpell(creature, SPELL_SPIRIT_HEAL_CHANNEL, true);
 
     return true;
 }

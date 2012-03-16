@@ -79,9 +79,9 @@ struct boss_lucifronAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_lucifron(Creature* pCreature)
+CreatureAI* GetAI_boss_lucifron(Creature* creature)
 {
-    return new boss_lucifronAI (pCreature);
+    return new boss_lucifronAI (creature);
 }
 
 void AddSC_boss_lucifron()

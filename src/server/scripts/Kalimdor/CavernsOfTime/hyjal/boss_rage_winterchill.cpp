@@ -196,9 +196,9 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_boss_rage_winterchill(Creature* pCreature)
+CreatureAI* GetAI_boss_rage_winterchill(Creature* creature)
 {
-    return new boss_rage_winterchillAI (pCreature);
+    return new boss_rage_winterchillAI (creature);
 }
 
 void AddSC_boss_rage_winterchill()

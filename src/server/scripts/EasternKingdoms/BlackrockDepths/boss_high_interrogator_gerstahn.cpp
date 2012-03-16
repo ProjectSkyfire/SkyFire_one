@@ -95,9 +95,9 @@ struct boss_high_interrogator_gerstahnAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_high_interrogator_gerstahn(Creature* pCreature)
+CreatureAI* GetAI_boss_high_interrogator_gerstahn(Creature* creature)
 {
-    return new boss_high_interrogator_gerstahnAI (pCreature);
+    return new boss_high_interrogator_gerstahnAI (creature);
 }
 
 void AddSC_boss_high_interrogator_gerstahn()
