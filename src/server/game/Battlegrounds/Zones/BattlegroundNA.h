@@ -71,7 +71,7 @@ class BattleGroundNA : public BattleGround
         bool SetupBattleGround();
         virtual void ResetBGSubclass();
         virtual void FillInitialWorldStates(WorldPacket &d);
-        void HandleKillPlayer(Player* player, Player *killer);
+        void HandleKillPlayer(Player* player, Player* killer);
         bool HandlePlayerUnderMap(Player * plr);
 };
 #endif

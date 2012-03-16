@@ -70,7 +70,7 @@ class BattleGroundBE : public BattleGround
         bool SetupBattleGround();
         void ResetBGSubclass();
         virtual void FillInitialWorldStates(WorldPacket &d);
-        void HandleKillPlayer(Player* player, Player *killer);
+        void HandleKillPlayer(Player* player, Player* killer);
         bool HandlePlayerUnderMap(Player * plr);
 
         /* Scorekeeping */
