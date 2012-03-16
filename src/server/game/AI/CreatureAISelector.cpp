@@ -39,7 +39,7 @@ namespace FactorySelector
 
         //scriptname in db
         if (!ai_factory)
-            if (CreatureAI* scriptedAI = sScriptMgr.GetAI(creature))
+            if (CreatureAI* scriptedAI = sScriptMgr->GetAI(creature))
                 return scriptedAI;
 
         // AIname in db

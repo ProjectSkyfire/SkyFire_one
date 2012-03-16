@@ -2452,7 +2452,7 @@ void InstanceMap::CreateInstanceData(bool load)
     if (mInstance)
     {
         i_script_id = mInstance->script_id;
-        i_data = sScriptMgr.CreateInstanceData(this);
+        i_data = sScriptMgr->CreateInstanceData(this);
     }
 
     if (!i_data)

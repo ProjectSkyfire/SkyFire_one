@@ -146,8 +146,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Packets
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Policies   
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities 
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Accounts
   ${CMAKE_CURRENT_SOURCE_DIR}/Addons

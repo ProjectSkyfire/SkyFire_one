@@ -23,10 +23,10 @@
 
 #include "Common.h"
 #include "Timer.h"
-#include "Policies/Singleton.h"
 #include "SharedDefines.h"
 #include "QueryResult.h"
 
+#include <ace/Singleton.h>
 #include <ace/Atomic_Op.h>
 #include <map>
 #include <set>

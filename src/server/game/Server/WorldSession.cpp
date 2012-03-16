@@ -430,7 +430,7 @@ void WorldSession::LogoutPlayer(bool Save)
     }
 
     //Hook for OnLogout Event
-    sScriptMgr.OnLogout(_player);
+    sScriptMgr->OnLogout(_player);
 
     m_playerLogout = false;
     m_playerSave = false;
