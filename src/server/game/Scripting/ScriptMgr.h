@@ -25,6 +25,9 @@
 #include "CompilerDefs.h"
 #include "DBCStructure.h"
 
+#include <ace/Singleton.h>
+//#include <ace/Atomic_Op.h>
+
 class Player;
 class Creature;
 class CreatureAI;
@@ -87,9 +90,15 @@ struct Script
 
 class ScriptMgr
 {
-    public:
-        ScriptMgr();
-        ~ScriptMgr();
+    friend class ACE_Singleton<ScriptMgr, ACE_Null_Mutex>;
+    friend class ScriptObject;
+
+private:
+
+    ScriptMgr();
+    virtual ~ScriptMgr();
+
+public: /* Initialization */
 
         void ScriptsInit();
         void LoadDatabase();
@@ -131,6 +140,6 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
 #define FUNC_PTR(name, callconvention, returntype, parameters)    typedef returntype(callconvention *name)parameters;
 #endif
 
-#define sScriptMgr Trinity::Singleton<ScriptMgr>::Instance()
+#define sScriptMgr (*ACE_Singleton<ScriptMgr, ACE_Null_Mutex>::instance())
 #endif
 
