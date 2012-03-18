@@ -1097,7 +1097,7 @@ uint32 ObjectMgr::AddGOData(uint32 entry, uint32 artKit, uint32 mapId, float x, 
     if (!goinfo)
         return 0;
 
-    Map* map = const_cast<Map*>(sMapMgr.CreateBaseMap(mapId));
+    Map* map = const_cast<Map*>(sMapMgr->CreateBaseMap(mapId));
     if (!map)
         return 0;
 
@@ -1168,7 +1168,7 @@ uint32 ObjectMgr::AddCreData(uint32 entry, uint32 /*team*/, uint32 mapId, float 
     AddCreatureToGrid(guid, &data);
 
     // Spawn if necessary (loaded grids only)
-    if (Map* map = const_cast<Map*>(sMapMgr.CreateBaseMap(mapId)))
+    if (Map* map = const_cast<Map*>(sMapMgr->CreateBaseMap(mapId)))
     {
         // We use spawn coords to spawn
         if (!map->Instanceable() && !map->IsRemovalGrid(x, y))
@@ -1259,7 +1259,7 @@ void ObjectMgr::LoadGameobjects()
             continue;
         }
 
-        if (!sMapMgr.IsValidMapCoord(data.mapid, data.posX, data.posY, data.posZ, data.orientation))
+        if (!sMapMgr->IsValidMapCoord(data.mapid, data.posX, data.posY, data.posZ, data.orientation))
         {
             sLog->outErrorDb("Table `gameobject` have gameobject (GUID: %u Entry: %u) with invalid coordinates, skip", guid, data.id);
             continue;
@@ -1973,7 +1973,7 @@ void ObjectMgr::LoadPlayerInfo()
             }
 
             // accept DB data only for valid position (and non instanceable)
-            if (!sMapMgr.IsValidMapCoord(mapId, positionX, positionY, positionZ, orientation))
+            if (!sMapMgr->IsValidMapCoord(mapId, positionX, positionY, positionZ, orientation))
             {
                 sLog->outErrorDb("Wrong home position for class %u race %u pair in playercreateinfo table, ignoring.", current_class, current_race);
                 continue;
@@ -2681,7 +2681,7 @@ void ObjectMgr::LoadGroups()
                 continue;
             }
 
-            InstanceSave *save = sInstanceSaveMgr.AddInstanceSave(mapEntry->MapID, fields[2].GetUInt32(), fields[4].GetUInt8(), (time_t)fields[5].GetUInt64(), (fields[6].GetUInt32() == 0), true);
+            InstanceSave *save = sInstanceSaveMgr->AddInstanceSave(mapEntry->MapID, fields[2].GetUInt32(), fields[4].GetUInt8(), (time_t)fields[5].GetUInt64(), (fields[6].GetUInt32() == 0), true);
             group->BindToInstance(save, fields[3].GetBool(), true);
         }while (result->NextRow());
     }
@@ -4708,7 +4708,7 @@ void ObjectMgr::LoadGraveyardZones()
 WorldSafeLocsEntry const *ObjectMgr::GetClosestGraveYard(float x, float y, float z, uint32 MapId, uint32 team)
 {
     // search for zone associated closest graveyard
-    uint32 zoneId = sMapMgr.GetZoneId(MapId, x, y, z);
+    uint32 zoneId = sMapMgr->GetZoneId(MapId, x, y, z);
 
     // Simulate std. algorithm:
     //   found some graveyard associated to (ghost_zone, ghost_map)
@@ -6706,7 +6706,7 @@ void ObjectMgr::LoadGameTele()
         gt.mapId          = fields[5].GetUInt32();
         gt.name           = fields[6].GetCppString();
 
-        if (!sMapMgr.IsValidMapCoord(gt.mapId, gt.position_x, gt.position_y, gt.position_z, gt.orientation))
+        if (!sMapMgr->IsValidMapCoord(gt.mapId, gt.position_x, gt.position_y, gt.position_z, gt.orientation))
         {
             sLog->outErrorDb("Wrong position for id %u (name: %s) in game_tele table, ignoring.", id, gt.name.c_str());
             continue;

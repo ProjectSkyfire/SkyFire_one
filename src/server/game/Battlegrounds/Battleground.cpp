@@ -1566,7 +1566,7 @@ Creature* BattleGround::AddCreature(uint32 entry, uint32 type, uint32 teamval, f
 /*
 void BattleGround::SpawnBGCreature(uint32 type, uint32 respawntime)
 {
-    Map * map = sMapMgr.FindMap(GetMapId(), GetInstanceId());
+    Map * map = sMapMgr->FindMap(GetMapId(), GetInstanceId());
     if (!map)
         return false;
 

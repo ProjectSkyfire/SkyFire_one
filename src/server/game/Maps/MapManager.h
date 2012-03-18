@@ -160,6 +160,6 @@ class MapManager
         MapUpdater m_updater;
 };
 
-#define sMapMgr (*ACE_Singleton<MapManager, ACE_Thread_Mutex>::instance())
+#define sMapMgr ACE_Singleton<MapManager, ACE_Thread_Mutex>::instance()
 
 #endif

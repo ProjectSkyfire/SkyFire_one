@@ -172,6 +172,6 @@ public:
         ResetTimeQueue m_resetTimeQueue;
 };
 
-#define sInstanceSaveMgr (*ACE_Singleton<InstanceSaveManager, ACE_Thread_Mutex>::instance())
+#define sInstanceSaveMgr ACE_Singleton<InstanceSaveManager, ACE_Thread_Mutex>::instance()
 #endif
 

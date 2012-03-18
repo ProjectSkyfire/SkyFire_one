@@ -84,7 +84,7 @@ void MapManager::checkAndCorrectGridStatesArray()
     {
         if (i_GridStates[i] != si_GridStates[i])
         {
-            sLog->outError("sMapMgr.checkGridStates(), GridState: si_GridStates is currupt !!!");
+            sLog->outError("sMapMgr->checkGridStates(), GridState: si_GridStates is currupt !!!");
             ok = false;
             si_GridStates[i] = i_GridStates[i];
         }

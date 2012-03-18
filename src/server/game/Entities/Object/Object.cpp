@@ -1334,13 +1334,13 @@ bool Position::HasInArc(float arc, const Position *obj) const
         return true;
 
     // move arc to range 0.. 2*pi
-    arc = sMapMgr.NormalizeOrientation(arc);
+    arc = sMapMgr->NormalizeOrientation(arc);
 
     float angle = GetAngle(obj);
     angle -= m_orientation;
 
     // move angle to range -pi ... +pi
-    angle = sMapMgr.NormalizeOrientation(angle);
+    angle = sMapMgr->NormalizeOrientation(angle);
     if (angle > M_PI)
         angle -= 2.0f * M_PI;
 

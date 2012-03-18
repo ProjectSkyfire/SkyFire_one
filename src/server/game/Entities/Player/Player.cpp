@@ -516,7 +516,7 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
         return false;
     }
 
-    SetMap(sMapMgr.CreateMap(info->mapId, this, 0));
+    SetMap(sMapMgr->CreateMap(info->mapId, this, 0));
 
     uint8 powertype = cEntry->powerType;
 
@@ -1530,7 +1530,7 @@ uint8 Player::chatTag() const
 
 bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientation, uint32 options)
 {
-    if (!sMapMgr.IsValidMapCoord(mapid, x, y, z, orientation))
+    if (!sMapMgr->IsValidMapCoord(mapid, x, y, z, orientation))
     {
         sLog->outError("TeleportTo: invalid map %d or absent instance template.", mapid);
         return false;
@@ -1657,12 +1657,12 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
 
         // Check enter rights before map getting to avoid creating instance copy for player
         // this check not dependent from map instance copy and same for all instance copies of selected map
-        if (!sMapMgr.CanPlayerEnter(mapid, this))
+        if (!sMapMgr->CanPlayerEnter(mapid, this))
             return false;
 
         // If the map is not created, assume it is possible to enter it.
         // It will be created in the WorldPortAck.
-        Map *map = sMapMgr.FindMap(mapid);
+        Map *map = sMapMgr->FindMap(mapid);
         if (!map ||  map->CanEnter(this))
         {
             //lets reset near teleport flag if it wasn't reset during chained teleports
@@ -6568,7 +6568,7 @@ uint32 Player::GetZoneIdFromDB(uint64 guid)
         float posy = fields[2].GetFloat();
         float posz = fields[3].GetFloat();
 
-        zone = sMapMgr.GetZoneId(map, posx, posy, posz);
+        zone = sMapMgr->GetZoneId(map, posx, posy, posz);
 
         ss.str("");
         ss << "UPDATE characters SET zone='"<<zone<<"' WHERE guid='"<<GUID_LOPART(guid)<<"'";
@@ -12798,7 +12798,7 @@ void Player::PrepareQuestMenu(uint64 guid)
     {
         //we should obtain map pointer from GetMap() in 99% of cases. Special case
         //only for quests which cast teleport spells on player
-        Map * _map = IsInWorld() ? GetMap() : sMapMgr.FindMap(GetMapId(), GetInstanceId());
+        Map * _map = IsInWorld() ? GetMap() : sMapMgr->FindMap(GetMapId(), GetInstanceId());
         ASSERT(_map);
         GameObject *pGameObject = _map->GetGameObject(guid);
         if (pGameObject)
@@ -12951,7 +12951,7 @@ Quest const * Player::GetNextQuest(uint64 guid, Quest const *pQuest)
     {
         //we should obtain map pointer from GetMap() in 99% of cases. Special case
         //only for quests which cast teleport spells on player
-        Map * _map = IsInWorld() ? GetMap() : sMapMgr.FindMap(GetMapId(), GetInstanceId());
+        Map * _map = IsInWorld() ? GetMap() : sMapMgr->FindMap(GetMapId(), GetInstanceId());
         ASSERT(_map);
         GameObject *pGameObject = _map->GetGameObject(guid);
         if (pGameObject)
@@ -14798,7 +14798,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
         }
         else
         {
-            for (MapManager::TransportSet::iterator iter = sMapMgr.m_Transports.begin(); iter != sMapMgr.m_Transports.end(); ++iter)
+            for (MapManager::TransportSet::iterator iter = sMapMgr->m_Transports.begin(); iter != sMapMgr->m_Transports.end(); ++iter)
             {
                 if ((*iter)->GetGUIDLow() == transGUID)
                 {
@@ -14882,7 +14882,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
 
     // NOW player must have valid map
     // load the player's map here if it's not already loaded
-    Map *map = sMapMgr.CreateMap(mapId, this, instanceId);
+    Map *map = sMapMgr->CreateMap(mapId, this, instanceId);
 
     if (!map)
     {
@@ -14900,14 +14900,14 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
             RelocateToHomebind();
         }
 
-        map = sMapMgr.CreateMap(mapId, this, 0);
+        map = sMapMgr->CreateMap(mapId, this, 0);
         if (!map)
         {
             PlayerInfo const *info = sObjectMgr.GetPlayerInfo(getRace(), getClass());
             mapId = info->mapId;
             Relocate(info->positionX, info->positionY, info->positionZ, 0.0f);
             sLog->outError("ERROR: Player (guidlow %d) has invalid coordinates (X: %f Y: %f Z: %f O: %f). Teleport to default race/class locations.", guid, GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
-            map = sMapMgr.CreateMap(mapId, this, 0);
+            map = sMapMgr->CreateMap(mapId, this, 0);
             if (!map)
             {
                 sLog->outError("Player (guidlow %d) has invalid default map coordinates (X: %f Y: %f Z: %f O: %f). or instance couldn't be created", guid, GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
@@ -14917,7 +14917,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     }
 
     // if the player is in an instance (not a bg) and it has been reset in the meantime teleport him to the entrance
-    if (instanceId && !m_bgData.bgInstanceID && !sInstanceSaveMgr.GetInstanceSave(instanceId))
+    if (instanceId && !m_bgData.bgInstanceID && !sInstanceSaveMgr->GetInstanceSave(instanceId))
     {
         AreaTrigger const* at = sObjectMgr.GetMapEntranceTrigger(mapId);
         if (at)
@@ -14926,7 +14926,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
         {
             sLog->outError("Player %s(GUID: %u) logged in to a reset instance (map: %u) and there is no area-trigger leading to this map. Thus he can't be ported back to the entrance. This _might_ be an exploit attempt.", GetName(), GetGUIDLow(), mapId);
             RelocateToHomebind();
-            map = sMapMgr.CreateMap(mapId, this, instanceId);
+            map = sMapMgr->CreateMap(mapId, this, instanceId);
         }
     }
 
@@ -15940,7 +15940,7 @@ void Player::_LoadBoundInstances(QueryResult_AutoPtr result)
             }
 
             // since non permanent binds are always solo bind, they can always be reset
-            if (InstanceSave *save = sInstanceSaveMgr.AddInstanceSave(mapId, instanceId, difficulty, resetTime, !perm, true))
+            if (InstanceSave *save = sInstanceSaveMgr->AddInstanceSave(mapId, instanceId, difficulty, resetTime, !perm, true))
                 BindToInstance(save, perm, true);
         } while (result->NextRow());
     }
@@ -16224,7 +16224,7 @@ bool Player::_LoadHomeBind(QueryResult_AutoPtr result)
         m_homebindZ = fields[4].GetFloat();
 
         // accept saved data only for valid position (and non instanceable)
-        if (sMapMgr.IsValidMapCoord(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ) &&
+        if (sMapMgr->IsValidMapCoord(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ) &&
             !sMapStore.LookupEntry(m_homebindMapId)->Instanceable())
         {
             ok = true;
@@ -17045,7 +17045,7 @@ void Player::ResetInstances(uint8 method)
         }
 
         // if the map is loaded, reset it
-        Map *map = sMapMgr.FindMap(p->GetMapId(), p->GetInstanceId());
+        Map *map = sMapMgr->FindMap(p->GetMapId(), p->GetInstanceId());
         if (map && map->IsDungeon())
             if (!((InstanceMap*)map)->Reset(method))
             {

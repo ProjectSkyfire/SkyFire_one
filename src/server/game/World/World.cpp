@@ -548,7 +548,7 @@ void World::LoadConfigSettings(bool reload)
         m_configs[CONFIG_INTERVAL_GRIDCLEAN] = MIN_GRID_DELAY;
     }
     if (reload)
-        sMapMgr.SetGridCleanUpDelay(m_configs[CONFIG_INTERVAL_GRIDCLEAN]);
+        sMapMgr->SetGridCleanUpDelay(m_configs[CONFIG_INTERVAL_GRIDCLEAN]);
 
     m_configs[CONFIG_INTERVAL_MAPUPDATE] = ConfigMgr::GetIntDefault("MapUpdateInterval", 100);
     if (m_configs[CONFIG_INTERVAL_MAPUPDATE] < MIN_MAP_UPDATE_DELAY)
@@ -557,7 +557,7 @@ void World::LoadConfigSettings(bool reload)
         m_configs[CONFIG_INTERVAL_MAPUPDATE] = MIN_MAP_UPDATE_DELAY;
     }
     if (reload)
-        sMapMgr.SetMapUpdateInterval(m_configs[CONFIG_INTERVAL_MAPUPDATE]);
+        sMapMgr->SetMapUpdateInterval(m_configs[CONFIG_INTERVAL_MAPUPDATE]);
 
     m_configs[CONFIG_INTERVAL_CHANGEWEATHER] = ConfigMgr::GetIntDefault("ChangeWeatherInterval", 10 * MINUTE * IN_MILLISECONDS);
 
@@ -1102,14 +1102,14 @@ void World::SetInitialWorldSettings()
     sObjectMgr.SetHighestGuids();
 
     // Check the existence of the map files for all races' startup areas.
-    if (!sMapMgr.ExistMapAndVMap(0, -6240.32f, 331.033f)
-        ||!sMapMgr.ExistMapAndVMap(0, -8949.95f, -132.493f)
-        ||!sMapMgr.ExistMapAndVMap(1, -618.518f, -4251.67f)
-        ||!sMapMgr.ExistMapAndVMap(0, 1676.35f, 1677.45f)
-        ||!sMapMgr.ExistMapAndVMap(1, 10311.3f, 832.463f)
-        ||!sMapMgr.ExistMapAndVMap(1, -2917.58f, -257.98f)
+    if (!sMapMgr->ExistMapAndVMap(0, -6240.32f, 331.033f)
+        ||!sMapMgr->ExistMapAndVMap(0, -8949.95f, -132.493f)
+        ||!sMapMgr->ExistMapAndVMap(1, -618.518f, -4251.67f)
+        ||!sMapMgr->ExistMapAndVMap(0, 1676.35f, 1677.45f)
+        ||!sMapMgr->ExistMapAndVMap(1, 10311.3f, 832.463f)
+        ||!sMapMgr->ExistMapAndVMap(1, -2917.58f, -257.98f)
         ||m_configs[CONFIG_EXPANSION] && (
-        !sMapMgr.ExistMapAndVMap(530, 10349.6f, -6357.29f) || !sMapMgr.ExistMapAndVMap(530, -3961.64f, -13931.2f)))
+        !sMapMgr->ExistMapAndVMap(530, 10349.6f, -6357.29f) || !sMapMgr->ExistMapAndVMap(530, -3961.64f, -13931.2f)))
     {
         sLog->outError("Correct *.map files not found in path '%smaps' or *.vmtree/*.vmtile files in '%svmaps'. Please place *.map/*.vmtree/*.vmtile files in appropriate directories or correct the DataDir value in the trinitycore.conf file.", m_dataPath.c_str(), m_dataPath.c_str());
         exit(1);
@@ -1148,10 +1148,10 @@ void World::SetInitialWorldSettings()
 
     // Clean up and pack instances
     sLog->outString("Cleaning up instances...");
-    sInstanceSaveMgr.CleanupInstances();                // must be called before `creature_respawn`/`gameobject_respawn` tables
+    sInstanceSaveMgr->CleanupInstances();                // must be called before `creature_respawn`/`gameobject_respawn` tables
 
     sLog->outString("Packing instances...");
-    sInstanceSaveMgr.PackInstances();
+    sInstanceSaveMgr->PackInstances();
 
     sLog->outString("Loading Localization strings...");
     sObjectMgr.LoadCreatureLocales();
@@ -1466,7 +1466,7 @@ void World::SetInitialWorldSettings()
 
     // Initialize MapManager
     sLog->outString("Starting Map System");
-    sMapMgr.Initialize();
+    sMapMgr->Initialize();
 
     sLog->outString("Starting Game Event system...");
     uint32 nextGameEvent = gameeventmgr.Initialize();
@@ -1483,7 +1483,7 @@ void World::SetInitialWorldSettings()
 
     //Not sure if this can be moved up in the sequence (with static data loading) as it uses MapManager
     sLog->outString("Loading Transports...");
-    sMapMgr.LoadTransports();
+    sMapMgr->LoadTransports();
 
     sLog->outString("Loading Transports Events...");
     sObjectMgr.LoadTransportEvents();
@@ -1728,7 +1728,7 @@ void World::Update(time_t diff)
 
     // Handle all other objects
     // Update objects when the timer has passed (maps, transport, creatures, ...)
-    sMapMgr.Update(diff);                // As interval = 0
+    sMapMgr->Update(diff);                // As interval = 0
 
     if (m_configs[CONFIG_AUTOBROADCAST_ENABLED])
     {
@@ -1773,7 +1773,7 @@ void World::Update(time_t diff)
     }
 
     // update the instance reset times
-    sInstanceSaveMgr.Update();
+    sInstanceSaveMgr->Update();
 
     // And last, but not least handle the issued cli commands
     ProcessCliCommands();
