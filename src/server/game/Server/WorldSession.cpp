@@ -352,7 +352,7 @@ void WorldSession::LogoutPlayer(bool Save)
         while (_player->IsBeingTeleportedFar())
             HandleMoveWorldportAckOpcode();
 
-        sOutdoorPvPMgr.HandlePlayerLeaveZone(_player, _player->GetZoneId());
+        sOutdoorPvPMgr->HandlePlayerLeaveZone(_player, _player->GetZoneId());
 
         for (int i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
         {

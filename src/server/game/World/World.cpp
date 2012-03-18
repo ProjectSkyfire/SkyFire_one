@@ -1479,7 +1479,7 @@ void World::SetInitialWorldSettings()
 
     // Initialize outdoor pvp
     sLog->outString("Starting Outdoor PvP System");
-    sOutdoorPvPMgr.InitOutdoorPvP();
+    sOutdoorPvPMgr->InitOutdoorPvP();
 
     //Not sure if this can be moved up in the sequence (with static data loading) as it uses MapManager
     sLog->outString("Loading Transports...");
@@ -1742,7 +1742,7 @@ void World::Update(time_t diff)
     sBattleGroundMgr.Update(diff);
     RecordTimeDiff("UpdateBattleGroundMgr");
 
-    sOutdoorPvPMgr.Update(diff);
+    sOutdoorPvPMgr->Update(diff);
     RecordTimeDiff("UpdateOutdoorPvPMgr");
 
     ///- Delete all characters which have been deleted X days before

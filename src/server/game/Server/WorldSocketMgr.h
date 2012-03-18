@@ -67,7 +67,7 @@ private:
   ACE_Event_Handler* m_Acceptor;
 };
 
-#define sWorldSocketMgr WorldSocketMgr::Instance()
+#define sWorldSocketMgr ACE_Singleton<WorldSocketMgr, ACE_Thread_Mutex>::instance()
 
 #endif
 

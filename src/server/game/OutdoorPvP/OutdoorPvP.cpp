@@ -554,7 +554,7 @@ bool OutdoorPvP::HandleAreaTrigger(Player * /*plr*/, uint32 /*trigger*/)
 
 void OutdoorPvP::RegisterZone(uint32 zoneId)
 {
-    sOutdoorPvPMgr.AddZone(zoneId, this);
+    sOutdoorPvPMgr->AddZone(zoneId, this);
 }
 
 bool OutdoorPvP::HasPlayer(Player *plr) const

@@ -1871,7 +1871,7 @@ void Player::RemoveFromWorld()
         // Release charmed creatures, unsummon totems and remove pets/guardians
         StopCastingCharm();
         StopCastingBindSight();
-        sOutdoorPvPMgr.HandlePlayerLeaveZone(this, m_zoneUpdateId);
+        sOutdoorPvPMgr->HandlePlayerLeaveZone(this, m_zoneUpdateId);
     }
 
     // remove duel before calling Unit::RemoveFromWorld
@@ -6619,8 +6619,8 @@ void Player::UpdateZone(uint32 newZone)
     // inform outdoor pvp
     if (oldZoneId != m_zoneUpdateId)
     {
-        sOutdoorPvPMgr.HandlePlayerLeaveZone(this, oldZoneId);
-        sOutdoorPvPMgr.HandlePlayerEnterZone(this, m_zoneUpdateId);
+        sOutdoorPvPMgr->HandlePlayerLeaveZone(this, oldZoneId);
+        sOutdoorPvPMgr->HandlePlayerEnterZone(this, m_zoneUpdateId);
     }
 
     if (sWorld->getConfig(CONFIG_WEATHER))
@@ -7976,7 +7976,7 @@ void Player::SendInitWorldStates(bool forceZone, uint32 forceZoneId)
         zoneid = forceZoneId;
     else
         zoneid = GetZoneId();
-    OutdoorPvP * pvp = sOutdoorPvPMgr.GetOutdoorPvPToZoneId(zoneid);
+    OutdoorPvP * pvp = sOutdoorPvPMgr->GetOutdoorPvPToZoneId(zoneid);
     uint32 areaid = GetAreaId();
     sLog->outDebug("Sending SMSG_INIT_WORLD_STATES to Map:%u, Zone: %u", mapid, zoneid);
     // may be exist better way to do this...
@@ -12496,7 +12496,7 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
                 case GOSSIP_OPTION_AUCTIONEER:
                     break;                                  // no checks
                 case GOSSIP_OPTION_OUTDOORPVP:
-                    if (!sOutdoorPvPMgr.CanTalkTo(this, creature, itr->second))
+                    if (!sOutdoorPvPMgr->CanTalkTo(this, creature, itr->second))
                         hasMenuItem = false;
                     break;
                 default:
@@ -12670,7 +12670,7 @@ void Player::OnGossipSelect(WorldObject* pSource, uint32 gossipListId, uint32 me
             break;
         }
         case GOSSIP_OPTION_OUTDOORPVP:
-            sOutdoorPvPMgr.HandleGossipOption(this, pSource->GetGUID(), gossipListId);
+            sOutdoorPvPMgr->HandleGossipOption(this, pSource->GetGUID(), gossipListId);
             break;
         case GOSSIP_OPTION_SPIRITHEALER:
             if (isDead())
@@ -19713,7 +19713,7 @@ void Player::AutoUnequipOffhandIfNeed()
 
 OutdoorPvP * Player::GetOutdoorPvP() const
 {
-    return sOutdoorPvPMgr.GetOutdoorPvPToZoneId(GetZoneId());
+    return sOutdoorPvPMgr->GetOutdoorPvPToZoneId(GetZoneId());
 }
 
 bool Player::HasItemFitToSpellReqirements(SpellEntry const* spellInfo, Item const* ignoreItem)
