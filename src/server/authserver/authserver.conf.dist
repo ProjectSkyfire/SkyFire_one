@@ -1,13 +1,11 @@
-##############################################
-# Oregon Core Auth Server configuration file #
-##############################################
-
+###############################################
+# Trinity Core Auth Server configuration file #
+###############################################
 [authserver]
-ConfVersion=2010101001
 
 # Note to devs, line breaks should be at column 80
 ###############################################################################
-# REALMD SETTINGS
+# AUTH SERVER SETTINGS
 #
 #    LoginDatabaseInfo
 #        Database connection settings for the realm server.
@@ -129,14 +127,14 @@ ConfVersion=2010101001
 #
 ###############################################################################
 
-LoginDatabaseInfo = "127.0.0.1;3306;oregon;oregon;realmd"
+LoginDatabaseInfo = "127.0.0.1;3306;trinity;trinity;auth"
 LogsDir = ""
 MaxPingTime = 30
 RealmServerPort = 3724
 BindIP = "0.0.0.0"
 PidFile = ""
 LogLevel = 0
-LogFile = "realmd.log"
+LogFile = "auth.log"
 LogTimestamp = 0
 LogFileLevel = 0
 LogColors = ""

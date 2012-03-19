@@ -33,5 +33,5 @@
 #define WPFatal( assertion, errmsg ) if( ! (assertion) ) { sLog.outError( "\n%s:%i in %s FATAL ERROR:\n  %s\n", __FILE__, __LINE__, __FUNCTION__, (char *)errmsg ); assert( #assertion &&0 ); abort(); }
 
 #define ASSERT WPAssert
-#endif
 
+#endif

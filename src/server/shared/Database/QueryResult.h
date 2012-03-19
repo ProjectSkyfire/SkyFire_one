@@ -20,10 +20,11 @@
 #if !defined(QUERYRESULT_H)
 #define QUERYRESULT_H
 
+#include "Field.h"
+#include "Define.h"
+
 #include <ace/Refcounted_Auto_Ptr.h>
 #include <ace/Null_Mutex.h>
-
-#include "Field.h"
 
 #ifdef WIN32
   #define FD_SETSIZE 1024

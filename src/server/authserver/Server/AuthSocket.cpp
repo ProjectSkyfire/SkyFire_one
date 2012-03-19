@@ -25,6 +25,7 @@
 #include "AuthSocket.h"
 #include "AuthCodes.h"
 #include "PatchHandler.h"
+#include "Errors.h"
 
 #include <openssl/md5.h>
 //#include "Util.h" -- for commented utf8ToUpperOnlyLatin

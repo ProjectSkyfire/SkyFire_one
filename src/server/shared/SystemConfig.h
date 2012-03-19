@@ -25,8 +25,8 @@
 #include "Define.h"
 #include "revision.h"
 
-#define _PACKAGENAME "SkyFireEMU"
-#define _CODENAME "Project TBC"
+#define _PACKAGENAME "SkyFireONE"
+#define _CODENAME "ProjectTBC"
 
 #if OREGON_ENDIAN == OREGON_BIGENDIAN
 # define _ENDIAN_STRING "big-endian"
