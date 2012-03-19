@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_GUILD_H
-#define OREGONCORE_GUILD_H
+#ifndef TRINITY_GUILD_H
+#define TRINITY_GUILD_H
 
 #define WITHDRAW_MONEY_UNLIMITED    0xFFFFFFFF
 #define WITHDRAW_SLOT_UNLIMITED     0xFFFFFFFF

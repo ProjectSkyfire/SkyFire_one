@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_CREATUREAIFACTORY_H
-#define OREGON_CREATUREAIFACTORY_H
+#ifndef TRINITY_CREATUREAIFACTORY_H
+#define TRINITY_CREATUREAIFACTORY_H
 
 //#include "Policies/Singleton.h"
 #include "Dynamic/ObjectRegistry.h"

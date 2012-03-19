@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MAP_H
-#define OREGON_MAP_H
+#ifndef TRINITY_MAP_H
+#define TRINITY_MAP_H
 
 #include "Define.h"
 #include "Policies/ThreadingModel.h"
@@ -250,7 +250,7 @@ typedef UNORDERED_MAP<Creature*, CreatureMover> CreatureMoveList;
 typedef std::map<uint32/*leaderDBGUID*/, CreatureFormation*>        CreatureFormationHolderType;
 typedef std::map<uint32/*groupId*/, CreatureGroup*>            CreatureGroupHolderType;
 
-class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable<Map, ACE_Thread_Mutex>
+class Map : public GridRefManager<NGridType>, public Trinity::ObjectLevelLockable<Map, ACE_Thread_Mutex>
 {
     friend class MapReference;
     public:
@@ -291,13 +291,13 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
 
         bool IsRemovalGrid(float x, float y) const
         {
-            GridPair p = Oregon::ComputeGridPair(x, y);
+            GridPair p = Trinity::ComputeGridPair(x, y);
             return !getNGrid(p.x_coord, p.y_coord) || getNGrid(p.x_coord, p.y_coord)->GetGridState() == GRID_STATE_REMOVAL;
         }
 
         bool IsLoaded(float x, float y) const
         {
-            GridPair p = Oregon::ComputeGridPair(x, y);
+            GridPair p = Trinity::ComputeGridPair(x, y);
             return loaded(p);
         }
 
@@ -472,7 +472,7 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
     protected:
         void SetUnloadReferenceLock(const GridPair &p, bool on) { getNGrid(p.x_coord, p.y_coord)->setUnloadReferenceLock(on); }
 
-        typedef Oregon::ObjectLevelLockable<Map, ACE_Thread_Mutex>::Lock Guard;
+        typedef Trinity::ObjectLevelLockable<Map, ACE_Thread_Mutex>::Lock Guard;
 
         MapEntry const* i_mapEntry;
         uint8 i_spawnMode;
@@ -639,7 +639,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitAll(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Oregon::ComputeCellPair(x, y));
+    CellPair p(Trinity::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -654,7 +654,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitWorld(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Oregon::ComputeCellPair(x, y));
+    CellPair p(Trinity::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -667,7 +667,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitGrid(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Oregon::ComputeCellPair(x, y));
+    CellPair p(Trinity::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();

@@ -255,6 +255,6 @@ class BattleGroundMgr
         bool   m_Testing;
 };
 
-#define sBattleGroundMgr Oregon::Singleton<BattleGroundMgr>::Instance()
+#define sBattleGroundMgr Trinity::Singleton<BattleGroundMgr>::Instance()
 #endif
 

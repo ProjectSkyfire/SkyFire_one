@@ -21,7 +21,7 @@
 #include <cstdlib>
 #include "ObjectLifeTime.h"
 
-namespace Oregon
+namespace Trinity
 {
     extern "C" void external_wrapper(void *p)
     {

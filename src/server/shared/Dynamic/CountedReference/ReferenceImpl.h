@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_REFERENCEIMPL_H
-#define OREGON_REFERENCEIMPL_H
+#ifndef TRINITY_REFERENCEIMPL_H
+#define TRINITY_REFERENCEIMPL_H
 
 #include "Reference.h"
 

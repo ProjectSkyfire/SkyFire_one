@@ -343,15 +343,15 @@ typedef UNORDERED_MAP<uint32/*(mapid,spawnMode) pair*/,CellObjectGuidsMap> MapOb
 
 typedef UNORDERED_MAP<uint64/*(instance,guid) pair*/,time_t> RespawnTimes;
 
-// Oregon string ranges
-#define MIN_OREGON_STRING_ID           1                    // 'mangos_string'
-#define MAX_OREGON_STRING_ID           2000000000
-#define MIN_DB_SCRIPT_STRING_ID        MAX_OREGON_STRING_ID // 'db_script_string'
+// Trinity string ranges
+#define MIN_TRINITY_STRING_ID           1                    // 'mangos_string'
+#define MAX_TRINITY_STRING_ID           2000000000
+#define MIN_DB_SCRIPT_STRING_ID        MAX_TRINITY_STRING_ID // 'db_script_string'
 #define MAX_DB_SCRIPT_STRING_ID        2000010000
 #define MIN_CREATURE_AI_TEXT_STRING_ID (-1)                 // 'creature_ai_texts'
 #define MAX_CREATURE_AI_TEXT_STRING_ID (-1000000)
 
-struct OregonStringLocale
+struct TrinityStringLocale
 {
     std::vector<std::string> Content;                       // 0 -> default, i -> i-1 locale index
 };
@@ -365,7 +365,7 @@ typedef UNORDERED_MAP<uint32,ItemLocale> ItemLocaleMap;
 typedef UNORDERED_MAP<uint32,QuestLocale> QuestLocaleMap;
 typedef UNORDERED_MAP<uint32,NpcTextLocale> NpcTextLocaleMap;
 typedef UNORDERED_MAP<uint32,PageTextLocale> PageTextLocaleMap;
-typedef UNORDERED_MAP<uint32,OregonStringLocale> OregonStringLocaleMap;
+typedef UNORDERED_MAP<uint32,TrinityStringLocale> TrinityStringLocaleMap;
 typedef UNORDERED_MAP<uint32,GossipMenuItemsLocale> GossipMenuItemsLocaleMap;
 
 typedef std::multimap<uint32,uint32> QuestRelations;
@@ -738,8 +738,8 @@ class ObjectMgr
 
         void LoadTransportEvents();
 
-        bool LoadOregonStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value);
-        bool LoadOregonStrings() { return LoadOregonStrings(WorldDatabase,"oregon_string",MIN_OREGON_STRING_ID,MAX_OREGON_STRING_ID); }
+        bool LoadTrinityStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value);
+        bool LoadTrinityStrings() { return LoadTrinityStrings(WorldDatabase,"trinity_string",MIN_TRINITY_STRING_ID,MAX_TRINITY_STRING_ID); }
     void LoadDbScriptStrings();
         void LoadPetCreateSpells();
         void LoadCreatureLocales();
@@ -910,14 +910,14 @@ class ObjectMgr
         GameObjectData& NewGOData(uint32 guid) { return mGameObjectDataMap[guid]; }
         void DeleteGOData(uint32 guid);
 
-        OregonStringLocale const* GetOregonStringLocale(int32 entry) const
+        TrinityStringLocale const* GetTrinityStringLocale(int32 entry) const
         {
-            OregonStringLocaleMap::const_iterator itr = mOregonStringLocaleMap.find(entry);
-            if (itr == mOregonStringLocaleMap.end()) return NULL;
+            TrinityStringLocaleMap::const_iterator itr = mTrinityStringLocaleMap.find(entry);
+            if (itr == mTrinityStringLocaleMap.end()) return NULL;
             return &itr->second;
         }
-        const char *GetOregonString(int32 entry, int locale_idx) const;
-        const char *GetOregonStringForDBCLocale(int32 entry) const { return GetOregonString(entry,DBCLocaleIndex); }
+        const char *GetTrinityString(int32 entry, int locale_idx) const;
+        const char *GetTrinityStringForDBCLocale(int32 entry) const { return GetTrinityString(entry,DBCLocaleIndex); }
         int32 GetDBCLocaleIndex() const { return DBCLocaleIndex; }
         void SetDBCLocaleIndex(uint32 lang) { DBCLocaleIndex = GetIndexForLocale(LocaleConstant(lang)); }
 
@@ -1136,7 +1136,7 @@ class ObjectMgr
         QuestLocaleMap mQuestLocaleMap;
         NpcTextLocaleMap mNpcTextLocaleMap;
         PageTextLocaleMap mPageTextLocaleMap;
-        OregonStringLocaleMap mOregonStringLocaleMap;
+        TrinityStringLocaleMap mTrinityStringLocaleMap;
         GossipMenuItemsLocaleMap mGossipMenuItemsLocaleMap;
         RespawnTimes mCreatureRespawnTimes;
         RespawnTimes mGORespawnTimes;
@@ -1153,10 +1153,10 @@ class ObjectMgr
         CacheTrainerSpellMap m_mCacheTrainerSpellMap;
 };
 
-#define objmgr Oregon::Singleton<ObjectMgr>::Instance()
+#define objmgr Trinity::Singleton<ObjectMgr>::Instance()
 
 // scripting access functions
-bool LoadOregonStrings(DatabaseType& db, char const* table,int32 start_value = MAX_CREATURE_AI_TEXT_STRING_ID, int32 end_value = std::numeric_limits<int32>::min());
+bool LoadTrinityStrings(DatabaseType& db, char const* table,int32 start_value = MAX_CREATURE_AI_TEXT_STRING_ID, int32 end_value = std::numeric_limits<int32>::min());
 uint32 GetAreaTriggerScriptId(uint32 trigger_id);
 uint32 GetScriptId(const char *name);
 ObjectMgr::ScriptNameMap& GetScriptNames();

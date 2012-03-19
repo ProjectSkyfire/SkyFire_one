@@ -43,6 +43,6 @@ class Master
         void clearOnlineAccounts();
 };
 
-#define sMaster Oregon::Singleton<Master>::Instance()
+#define sMaster Trinity::Singleton<Master>::Instance()
 #endif
 

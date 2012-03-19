@@ -476,8 +476,8 @@ void ScriptedAI::DoTeleportAll(float fX, float fY, float fZ, float fO)
 Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 {
     Unit* pUnit = NULL;
-    Oregon::MostHPMissingInRange u_check(me, fRange, uiMinHPDiff);
-    Oregon::UnitLastSearcher<Oregon::MostHPMissingInRange> searcher(pUnit, u_check);
+    Trinity::MostHPMissingInRange u_check(me, fRange, uiMinHPDiff);
+    Trinity::UnitLastSearcher<Trinity::MostHPMissingInRange> searcher(pUnit, u_check);
     me->VisitNearbyObject(fRange, searcher);
 
     return pUnit;
@@ -486,8 +486,8 @@ Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 {
     std::list<Creature*> pList;
-    Oregon::FriendlyCCedInRange u_check(me, fRange);
-    Oregon::CreatureListSearcher<Oregon::FriendlyCCedInRange> searcher(pList, u_check);
+    Trinity::FriendlyCCedInRange u_check(me, fRange);
+    Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange> searcher(pList, u_check);
     me->VisitNearbyObject(fRange, searcher);
     return pList;
 }
@@ -495,8 +495,8 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float fRange, uint32 uiSpellid)
 {
     std::list<Creature*> pList;
-    Oregon::FriendlyMissingBuffInRange u_check(me, fRange, uiSpellid);
-    Oregon::CreatureListSearcher<Oregon::FriendlyMissingBuffInRange> searcher(pList, u_check);
+    Trinity::FriendlyMissingBuffInRange u_check(me, fRange, uiSpellid);
+    Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange> searcher(pList, u_check);
     me->VisitNearbyObject(fRange, searcher);
     return pList;
 }
@@ -505,14 +505,14 @@ Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
 {
     Player* pPlayer = NULL;
 
-    CellPair pair(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::PlayerAtMinimumRangeAway check(me, fMinimumRange);
-    Oregon::PlayerSearcher<Oregon::PlayerAtMinimumRangeAway> searcher(pPlayer, check);
-    TypeContainerVisitor<Oregon::PlayerSearcher<Oregon::PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
+    Trinity::PlayerAtMinimumRangeAway check(me, fMinimumRange);
+    Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway> searcher(pPlayer, check);
+    TypeContainerVisitor<Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(me->GetMap()));
 

@@ -188,7 +188,7 @@ bool GossipSelect_npc_test(Player* pPlayer, Creature* pCreature, uint32 uiSender
         pPlayer->CLOSE_GOSSIP_MENU();
         ((npc_escortAI*)(pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
 
-        return true;                                        // prevent OREGON core handling
+        return true;                                        // prevent TRINITY core handling
     }
 
     if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
@@ -196,7 +196,7 @@ bool GossipSelect_npc_test(Player* pPlayer, Creature* pCreature, uint32 uiSender
         pPlayer->CLOSE_GOSSIP_MENU();
         ((npc_escortAI*)(pCreature->AI()))->Start(false, false, pPlayer->GetGUID());
 
-        return true;                                        // prevent OREGON core handling
+        return true;                                        // prevent TRINITY core handling
     }
 
     if (uiAction == GOSSIP_ACTION_INFO_DEF+3)
@@ -204,7 +204,7 @@ bool GossipSelect_npc_test(Player* pPlayer, Creature* pCreature, uint32 uiSender
         pPlayer->CLOSE_GOSSIP_MENU();
         ((npc_escortAI*)(pCreature->AI()))->Start(false, false, pPlayer->GetGUID());
 
-        return true;                                        // prevent OREGON core handling
+        return true;                                        // prevent TRINITY core handling
     }
     return false;
 }

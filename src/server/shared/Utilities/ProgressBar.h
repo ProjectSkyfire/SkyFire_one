@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_PROGRESSBAR_H
-#define OREGONCORE_PROGRESSBAR_H
+#ifndef TRINITY_PROGRESSBAR_H
+#define TRINITY_PROGRESSBAR_H
 
 #include <stdio.h>
 #include "Define.h"

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_CREATUREAI_H
-#define OREGON_CREATUREAI_H
+#ifndef TRINITY_CREATUREAI_H
+#define TRINITY_CREATUREAI_H
 
 #include "UnitAI.h"
 #include "Common.h"

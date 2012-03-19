@@ -1622,7 +1622,7 @@ class Unit : public WorldObject
         uint32 m_procDeep;
 };
 
-namespace Oregon
+namespace Trinity
 {
     template<class T>
     void RandomResizeList(std::list<T> &_list, uint32 _size)

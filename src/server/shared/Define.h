@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_DEFINE_H
-#define OREGON_DEFINE_H
+#ifndef TRINITY_DEFINE_H
+#define TRINITY_DEFINE_H
 
 #include <sys/types.h>
 
@@ -28,34 +28,34 @@
 
 #include "CompilerDefs.h"
 
-#define OREGON_LITTLEENDIAN 0
-#define OREGON_BIGENDIAN    1
+#define TRINITY_LITTLEENDIAN 0
+#define TRINITY_BIGENDIAN    1
 
-#if !defined(OREGON_ENDIAN)
+#if !defined(TRINITY_ENDIAN)
 #  if defined (ACE_BIG_ENDIAN)
-#    define OREGON_ENDIAN OREGON_BIGENDIAN
+#    define TRINITY_ENDIAN TRINITY_BIGENDIAN
 #  else //ACE_BYTE_ORDER != ACE_BIG_ENDIAN
-#    define OREGON_ENDIAN OREGON_LITTLEENDIAN
+#    define TRINITY_ENDIAN TRINITY_LITTLEENDIAN
 #  endif //ACE_BYTE_ORDER
-#endif //OREGON_ENDIAN
+#endif //TRINITY_ENDIAN
 
 #if PLATFORM == PLATFORM_WINDOWS
-#  define OREGON_PATH_MAX MAX_PATH
+#  define TRINITY_PATH_MAX MAX_PATH
 #  ifndef DECLSPEC_NORETURN
 #    define DECLSPEC_NORETURN __declspec(noreturn)
 #  endif //DECLSPEC_NORETURN
 #else //PLATFORM != PLATFORM_WINDOWS
-#  define OREGON_PATH_MAX PATH_MAX
+#  define TRINITY_PATH_MAX PATH_MAX
 #  define DECLSPEC_NORETURN
 #endif //PLATFORM
 
 #if !defined(COREDEBUG)
-#  define OREGON_INLINE inline
+#  define TRINITY_INLINE inline
 #else //COREDEBUG
-#  if !defined(OREGON_DEBUG)
-#    define OREGON_DEBUG
-#  endif //OREGON_DEBUG
-#  define OREGON_INLINE
+#  if !defined(TRINITY_DEBUG)
+#    define TRINITY_DEBUG
+#  endif //TRINITY_DEBUG
+#  define TRINITY_INLINE
 #endif //!COREDEBUG
 
 #if COMPILER == COMPILER_GNU
@@ -82,5 +82,5 @@ typedef uint32      DWORD;
 
 typedef uint64 OBJECT_HANDLE;
 
-#endif //OREGON_DEFINE_H
+#endif //TRINITY_DEFINE_H
 

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_SPELLAURADEFINES_H
-#define OREGON_SPELLAURADEFINES_H
+#ifndef TRINITY_SPELLAURADEFINES_H
+#define TRINITY_SPELLAURADEFINES_H
 
 #define MAX_AURAS 56
 #define MAX_POSITIVE_AURAS 40

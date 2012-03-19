@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_TARGETEDMOVEMENTGENERATOR_H
-#define OREGON_TARGETEDMOVEMENTGENERATOR_H
+#ifndef TRINITY_TARGETEDMOVEMENTGENERATOR_H
+#define TRINITY_TARGETEDMOVEMENTGENERATOR_H
 
 #include "MovementGenerator.h"
 #include "DestinationHolder.h"

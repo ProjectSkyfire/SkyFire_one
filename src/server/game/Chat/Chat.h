@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_CHAT_H
-#define OREGONCORE_CHAT_H
+#ifndef TRINITY_CHAT_H
+#define TRINITY_CHAT_H
 
 #include "SharedDefines.h"
 
@@ -63,7 +63,7 @@ class ChatHandler
         static char* LineFromMessage(char*& pos) { char* start = strtok(pos,"\n"); pos = NULL; return start; }
 
         // function with different implementation for chat/console
-        virtual const char *GetOregonString(int32 entry) const;
+        virtual const char *GetTrinityString(int32 entry) const;
         virtual void SendSysMessage(const char *str);
 
         char* extractQuotedArg(char* args);
@@ -273,7 +273,7 @@ class ChatHandler
         bool HandleReloadLootTemplatesProspectingCommand(const char* args);
         bool HandleReloadLootTemplatesReferenceCommand(const char* args);
         bool HandleReloadLootTemplatesSkinningCommand(const char* args);
-        bool HandleReloadOregonStringCommand(const char* args);
+        bool HandleReloadTrinityStringCommand(const char* args);
         bool HandleReloadNpcGossipCommand(const char* args);
         bool HandleReloadNpcTrainerCommand(const char* args);
         bool HandleReloadNpcVendorCommand(const char* args);
@@ -575,7 +575,7 @@ class CliHandler : public ChatHandler
         explicit CliHandler(void* callbackArg, Print* zprint) : m_callbackArg(callbackArg), m_print(zprint) {}
 
         // overwrite functions
-        const char *GetOregonString(int32 entry) const;
+        const char *GetTrinityString(int32 entry) const;
         bool isAvailable(ChatCommand const& cmd) const;
         void SendSysMessage(const char *str);
         char const* GetName() const;

@@ -11037,8 +11037,8 @@ void Unit::UpdateReactives(uint32 p_time)
 Unit* Unit::SelectNearbyTarget(float dist) const
 {
     std::list<Unit *> targets;
-    Oregon::AnyUnfriendlyUnitInObjectRangeCheck u_check(this, this, dist);
-    Oregon::UnitListSearcher<Oregon::AnyUnfriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
+    Trinity::AnyUnfriendlyUnitInObjectRangeCheck u_check(this, this, dist);
+    Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
     VisitNearbyObject(dist, searcher);
 
     // remove current target
@@ -11494,7 +11494,7 @@ void Unit::RemoveAurasAtChanneledTarget(SpellEntry const* spellInfo, Unit * cast
 bool Unit::SetPosition(float x, float y, float z, float orientation, bool teleport)
 {
     // prevent crash when a bad coord is sent by the client
-    if (!Oregon::IsValidMapCoord(x,y,z,orientation))
+    if (!Trinity::IsValidMapCoord(x,y,z,orientation))
     {
         sLog.outDebug("Unit::SetPosition(%f, %f, %f) .. bad coordinates!", x, y, z);
         return false;
@@ -11536,7 +11536,7 @@ void Unit::NearTeleportTo(float x, float y, float z, float orientation, bool cas
     }
 }
 
-/*-----------------------Oregon-----------------------------*/
+/*-----------------------Trinity-----------------------------*/
 
 void Unit::Kill(Unit *pVictim, bool durabilityLoss)
 {
@@ -12257,7 +12257,7 @@ void Unit::UpdateObjectVisibility(bool forced)
     {
         WorldObject::UpdateObjectVisibility(true);
         // call MoveInLineOfSight for nearby creatures
-        Oregon::AIRelocationNotifier notifier(*this);
+        Trinity::AIRelocationNotifier notifier(*this);
         VisitNearbyObject(GetMap()->GetVisibilityDistance(), notifier);
     }
 }

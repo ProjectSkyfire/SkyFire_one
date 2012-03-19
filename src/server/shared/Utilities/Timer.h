@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_TIMER_H
-#define OREGON_TIMER_H
+#ifndef TRINITY_TIMER_H
+#define TRINITY_TIMER_H
 
 #include "CompilerDefs.h"
 

@@ -90,7 +90,7 @@ enum SpellNotifyPushType
 
 bool IsQuestTameSpell(uint32 spellId);
 
-namespace Oregon
+namespace Trinity
 {
     struct SpellNotifierCreatureAndPlayer;
 }
@@ -243,7 +243,7 @@ enum SpellTargets
 
 class Spell
 {
-    friend struct Oregon::SpellNotifierCreatureAndPlayer;
+    friend struct Trinity::SpellNotifierCreatureAndPlayer;
     friend void Unit::SetCurrentCastedSpell(Spell * pSpell);
     public:
 
@@ -613,7 +613,7 @@ class Spell
         bool m_skipCheck;
 };
 
-namespace Oregon
+namespace Trinity
 {
     struct SpellNotifierCreatureAndPlayer
     {

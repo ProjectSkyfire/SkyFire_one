@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_RANDOMMOTIONGENERATOR_H
-#define OREGON_RANDOMMOTIONGENERATOR_H
+#ifndef TRINITY_RANDOMMOTIONGENERATOR_H
+#define TRINITY_RANDOMMOTIONGENERATOR_H
 
 #include "MovementGenerator.h"
 #include "DestinationHolder.h"

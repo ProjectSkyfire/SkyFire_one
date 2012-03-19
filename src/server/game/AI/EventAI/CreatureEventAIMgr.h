@@ -47,6 +47,6 @@ class CreatureEventAIMgr
         CreatureEventAI_TextMap    m_CreatureEventAI_TextMap;
 };
 
-#define CreatureEAI_Mgr Oregon::Singleton<CreatureEventAIMgr>::Instance()
+#define CreatureEAI_Mgr Trinity::Singleton<CreatureEventAIMgr>::Instance()
 #endif
 

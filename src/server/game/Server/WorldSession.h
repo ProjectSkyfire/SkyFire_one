@@ -195,7 +195,7 @@ class WorldSession
         // Locales
         LocaleConstant GetSessionDbcLocale() const { return m_sessionDbcLocale; }
         int GetSessionDbLocaleIndex() const { return m_sessionDbLocaleIndex; }
-        const char *GetOregonString(int32 entry) const;
+        const char *GetTrinityString(int32 entry) const;
 
         uint32 GetLatency() const { return m_latency; }
         void SetLatency(uint32 latency) { m_latency = latency; }

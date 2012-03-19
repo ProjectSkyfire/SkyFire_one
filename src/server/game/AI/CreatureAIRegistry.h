@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_CREATUREAIREGISTRY_H
-#define OREGON_CREATUREAIREGISTRY_H
+#ifndef TRINITY_CREATUREAIREGISTRY_H
+#define TRINITY_CREATUREAIREGISTRY_H
 
 namespace AIRegistry
 {

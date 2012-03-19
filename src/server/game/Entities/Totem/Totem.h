@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_TOTEM_H
-#define OREGONCORE_TOTEM_H
+#ifndef TRINITY_TOTEM_H
+#define TRINITY_TOTEM_H
 
 #include "TemporarySummon.h"
 

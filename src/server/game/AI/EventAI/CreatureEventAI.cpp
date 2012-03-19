@@ -66,7 +66,7 @@ CreatureEventAI::CreatureEventAI(Creature *c) : CreatureAI(c)
         for (i = (*CreatureEvents).second.begin(); i != (*CreatureEvents).second.end(); ++i)
         {
             //Debug check
-            #ifndef OREGON_DEBUG
+            #ifndef TRINITY_DEBUG
             if ((*i).event_flags & EFLAG_DEBUG_ONLY)
                 continue;
             #endif
@@ -777,7 +777,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
         }
         break;
 
-        // Oregon ONLY
+        // Trinity ONLY
         case ACTION_T_SET_ACTIVE:
             me->setActive(action.raw.param1 ? true : false);
             break;
@@ -1147,17 +1147,17 @@ inline Unit* CreatureEventAI::GetTargetByType(uint32 Target, Unit* pActionInvoke
 
 Unit* CreatureEventAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 {
-    CellPair p(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
     Unit* pUnit = NULL;
 
-    Oregon::MostHPMissingInRange u_check(me, range, MinHPDiff);
-    Oregon::UnitLastSearcher<Oregon::MostHPMissingInRange> searcher(pUnit, u_check);
+    Trinity::MostHPMissingInRange u_check(me, range, MinHPDiff);
+    Trinity::UnitLastSearcher<Trinity::MostHPMissingInRange> searcher(pUnit, u_check);
 
-    TypeContainerVisitor<Oregon::UnitLastSearcher<Oregon::MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+    TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
 
     cell.Visit(p, grid_unit_searcher, *me->GetMap(), *me, range);
     return pUnit;
@@ -1165,30 +1165,30 @@ Unit* CreatureEventAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 
 void CreatureEventAI::DoFindFriendlyCC(std::list<Creature*>& _list, float range)
 {
-    CellPair p(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::FriendlyCCedInRange u_check(me, range);
-    Oregon::CreatureListSearcher<Oregon::FriendlyCCedInRange> searcher(_list, u_check);
+    Trinity::FriendlyCCedInRange u_check(me, range);
+    Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange> searcher(_list, u_check);
 
-    TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+    TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
     cell.Visit(p, grid_creature_searcher, *me->GetMap(), *me, range);
 }
 
 void CreatureEventAI::DoFindFriendlyMissingBuff(std::list<Creature*>& _list, float range, uint32 spellid)
 {
-    CellPair p(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::FriendlyMissingBuffInRange u_check(me, range, spellid);
-    Oregon::CreatureListSearcher<Oregon::FriendlyMissingBuffInRange> searcher(_list, u_check);
+    Trinity::FriendlyMissingBuffInRange u_check(me, range, spellid);
+    Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange> searcher(_list, u_check);
 
-    TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+    TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
     cell.Visit(p, grid_creature_searcher, *me->GetMap(), *me, range);
 }

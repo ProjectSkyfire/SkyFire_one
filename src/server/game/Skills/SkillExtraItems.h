@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_SKILL_EXTRA_ITEMS_H
-#define OREGON_SKILL_EXTRA_ITEMS_H
+#ifndef TRINITY_SKILL_EXTRA_ITEMS_H
+#define TRINITY_SKILL_EXTRA_ITEMS_H
 
 #include "Common.h"
 

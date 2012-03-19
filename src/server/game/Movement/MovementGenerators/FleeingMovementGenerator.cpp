@@ -159,8 +159,8 @@ FleeingMovementGenerator<T>::_getPoint(T &owner, float &x, float &y, float &z)
         }
         temp_x = x + distance * cos(angle);
         temp_y = y + distance * sin(angle);
-        Oregon::NormalizeMapCoord(temp_x);
-        Oregon::NormalizeMapCoord(temp_y);
+        Trinity::NormalizeMapCoord(temp_x);
+        Trinity::NormalizeMapCoord(temp_y);
         if (owner.IsWithinLOS(temp_x,temp_y,z))
         {
             bool is_water_now = _map->IsInWater(x,y,z);

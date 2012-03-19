@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_PETAI_H
-#define OREGON_PETAI_H
+#ifndef TRINITY_PETAI_H
+#define TRINITY_PETAI_H
 
 #include "CreatureAI.h"
 #include "Timer.h"

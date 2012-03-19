@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_COMMON_H
-#define OREGONCORE_COMMON_H
+#ifndef TRINITY_COMMON_H
+#define TRINITY_COMMON_H
 
 // config.h needs to be included 1st
 // TODO this thingy looks like hack ,but its not, need to
@@ -27,7 +27,7 @@
 #ifdef HAVE_CONFIG_H
 // Remove Some things that we will define
 // This is in case including another config.h
-// before Oregon config.h
+// before Trinity config.h
 #ifdef PACKAGE
 #undef PACKAGE
 #endif //PACKAGE

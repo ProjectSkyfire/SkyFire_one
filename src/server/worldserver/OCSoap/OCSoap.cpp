@@ -162,7 +162,7 @@ struct Namespace namespaces[] =
   { "SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/" }, // must be second
   { "xsi", "http://www.w3.org/1999/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance" },
   { "xsd", "http://www.w3.org/1999/XMLSchema",          "http://www.w3.org/*/XMLSchema" },
-  { "ns1", "urn:Oregon" },     // "ns1" namespace prefix
+  { "ns1", "urn:Trinity" },     // "ns1" namespace prefix
   { NULL, NULL }
 };
 

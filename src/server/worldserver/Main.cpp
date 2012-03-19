@@ -29,20 +29,20 @@
 #include <ace/Version.h>
 #include <ace/Get_Opt.h>
 
-#ifndef _OREGON_CORE_CONFIG
-# define _OREGON_CORE_CONFIG  "oregoncore.conf"
-#endif //_OREGON_CORE_CONFIG
+#ifndef _TRINITY_CORE_CONFIG
+# define _TRINITY_CORE_CONFIG  "trinitycore.conf"
+#endif //_TRINITY_CORE_CONFIG
 
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.
-#ifndef _OREGON_CORE_CONFVER
-# define _OREGON_CORE_CONFVER 2011091401
-#endif //_OREGON_CORE_CONFVER
+#ifndef _TRINITY_CORE_CONFVER
+# define _TRINITY_CORE_CONFVER 2011091401
+#endif //_TRINITY_CORE_CONFVER
 
 #ifdef _WIN32
 #include "ServiceWin32.h"
-char serviceName[] = "Oregond";
-char serviceLongName[] = "Oregon core service";
+char serviceName[] = "Trinityd";
+char serviceLongName[] = "Trinity core service";
 char serviceDescription[] = "Massive Network Game Object Server";
 /*
  * -1 - not in service mode
@@ -74,11 +74,11 @@ void usage(const char *prog)
         ,prog);
 }
 
-// Launch the oregon server
+// Launch the trinity server
 extern int main(int argc, char **argv)
 {
     // Command line parsing
-    char const* cfg_file = _OREGON_CORE_CONFIG;
+    char const* cfg_file = _TRINITY_CORE_CONFIG;
 
 #ifdef _WIN32
     char const *options = ":c:s:";
@@ -148,10 +148,10 @@ extern int main(int argc, char **argv)
     sLog.outString("Using configuration file %s.", cfg_file);
 
     uint32 confVersion = sConfig.GetIntDefault("ConfVersion", 0);
-    if (confVersion < _OREGON_CORE_CONFVER)
+    if (confVersion < _TRINITY_CORE_CONFVER)
     {
         sLog.outError("*****************************************************************************");
-        sLog.outError(" WARNING: Your oregoncore.conf version indicates your conf file is out of date!");
+        sLog.outError(" WARNING: Your trinitycore.conf version indicates your conf file is out of date!");
         sLog.outError("          Please check for updates, as your current default values may cause");
         sLog.outError("          strange behavior.");
         sLog.outError("*****************************************************************************");
@@ -169,6 +169,6 @@ extern int main(int argc, char **argv)
     // at sMaster return function exist with codes
     // 0 - normal shutdown
     // 1 - shutdown at error
-    // 2 - restart command used, this code can be used by restarter for restart OregonCore
+    // 2 - restart command used, this code can be used by restarter for restart TrinityCore
 }
 

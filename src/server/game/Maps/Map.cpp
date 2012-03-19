@@ -247,7 +247,7 @@ void Map::RemoveFromGrid(T* obj, NGridType *grid, Cell const& cell)
 template<class T>
 void Map::SwitchGridContainers(T* obj, bool on)
 {
-    CellPair p = Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
         sLog.outError("Map::SwitchGridContainers: Object " I64FMT " has invalid coordinates X:%f Y:%f grid cell [%u:%u]", obj->GetGUID(), obj->GetPositionX(), obj->GetPositionY(), p.x_coord, p.y_coord);
@@ -371,7 +371,7 @@ bool Map::EnsureGridLoaded(const Cell &cell)
 
 void Map::LoadGrid(float x, float y)
 {
-    CellPair pair = Oregon::ComputeCellPair(x, y);
+    CellPair pair = Trinity::ComputeCellPair(x, y);
     Cell cell(pair);
     EnsureGridLoaded(cell);
 }
@@ -380,7 +380,7 @@ bool Map::Add(Player *player)
 {
     // Check if we are adding to correct map
     ASSERT (player->GetMap() == this);
-    CellPair p = Oregon::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
         sLog.outError("Map::Add: Player (GUID: %u) has invalid coordinates X:%f Y:%f grid cell [%u:%u]", player->GetGUIDLow(), player->GetPositionX(), player->GetPositionY(), p.x_coord, p.y_coord);
@@ -410,7 +410,7 @@ template<class T>
 void
 Map::Add(T *obj)
 {
-    CellPair p = Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
         sLog.outError("Map::Add: Object " UI64FMTD " has invalid coordinates X:%f Y:%f grid cell [%u:%u]", obj->GetGUID(), obj->GetPositionX(), obj->GetPositionY(), p.x_coord, p.y_coord);
@@ -447,7 +447,7 @@ Map::Add(T *obj)
 /*
 void Map::MessageBroadcast(Player *player, WorldPacket *msg, bool to_self)
 {
-    CellPair p = Oregon::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
 
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
@@ -461,14 +461,14 @@ void Map::MessageBroadcast(Player *player, WorldPacket *msg, bool to_self)
     if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
         return;
 
-    Oregon::MessageDeliverer post_man(*player, msg, to_self);
-    TypeContainerVisitor<Oregon::MessageDeliverer, WorldTypeMapContainer > message(post_man);
+    Trinity::MessageDeliverer post_man(*player, msg, to_self);
+    TypeContainerVisitor<Trinity::MessageDeliverer, WorldTypeMapContainer > message(post_man);
     cell.Visit(p, message, *this, *player, GetVisibilityDistance());
 }
 
 void Map::MessageBroadcast(WorldObject *obj, WorldPacket *msg)
 {
-    CellPair p = Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
 
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
@@ -485,14 +485,14 @@ void Map::MessageBroadcast(WorldObject *obj, WorldPacket *msg)
 
     //TODO: currently on continents when Visibility.Distance.InFlight > Visibility.Distance.Continents
     //we have alot of blinking mobs because monster move packet send is broken...
-    Oregon::ObjectMessageDeliverer post_man(*obj, msg);
-    TypeContainerVisitor<Oregon::ObjectMessageDeliverer, WorldTypeMapContainer > message(post_man);
+    Trinity::ObjectMessageDeliverer post_man(*obj, msg);
+    TypeContainerVisitor<Trinity::ObjectMessageDeliverer, WorldTypeMapContainer > message(post_man);
     cell.Visit(p, message, *this, *obj, GetVisibilityDistance());
 }
 
 void Map::MessageDistBroadcast(Player *player, WorldPacket *msg, float dist, bool to_self, bool own_team_only)
 {
-    CellPair p = Oregon::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
 
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
@@ -506,14 +506,14 @@ void Map::MessageDistBroadcast(Player *player, WorldPacket *msg, float dist, boo
     if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
         return;
 
-    Oregon::MessageDistDeliverer post_man(*player, msg, dist, to_self, own_team_only);
-    TypeContainerVisitor<Oregon::MessageDistDeliverer , WorldTypeMapContainer > message(post_man);
+    Trinity::MessageDistDeliverer post_man(*player, msg, dist, to_self, own_team_only);
+    TypeContainerVisitor<Trinity::MessageDistDeliverer , WorldTypeMapContainer > message(post_man);
     cell.Visit(p, message, *this, *player, dist);
 }
 
 void Map::MessageDistBroadcast(WorldObject *obj, WorldPacket *msg, float dist)
 {
-    CellPair p = Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
 
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
     {
@@ -528,8 +528,8 @@ void Map::MessageDistBroadcast(WorldObject *obj, WorldPacket *msg, float dist)
     if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
         return;
 
-    Oregon::ObjectMessageDistDeliverer post_man(*obj, msg, dist);
-    TypeContainerVisitor<Oregon::ObjectMessageDistDeliverer, WorldTypeMapContainer > message(post_man);
+    Trinity::ObjectMessageDistDeliverer post_man(*obj, msg, dist);
+    TypeContainerVisitor<Trinity::ObjectMessageDistDeliverer, WorldTypeMapContainer > message(post_man);
     cell.Visit(p, message, *this, *obj, dist);
 }
 */
@@ -552,11 +552,11 @@ void Map::Update(const uint32 &t_diff)
     // update active cells around players and active objects
     resetMarkedCells();
 
-    Oregon::ObjectUpdater updater(t_diff);
+    Trinity::ObjectUpdater updater(t_diff);
     // for creature
-    TypeContainerVisitor<Oregon::ObjectUpdater, GridTypeMapContainer  > grid_object_update(updater);
+    TypeContainerVisitor<Trinity::ObjectUpdater, GridTypeMapContainer  > grid_object_update(updater);
     // for pets
-    TypeContainerVisitor<Oregon::ObjectUpdater, WorldTypeMapContainer > world_object_update(updater);
+    TypeContainerVisitor<Trinity::ObjectUpdater, WorldTypeMapContainer > world_object_update(updater);
 
     // the player iterator is stored in the map object
     // to make sure calls to Map::Remove don't invalidate it
@@ -567,7 +567,7 @@ void Map::Update(const uint32 &t_diff)
         if (!plr->IsInWorld())
             continue;
 
-        CellPair standing_cell(Oregon::ComputeCellPair(plr->GetPositionX(), plr->GetPositionY()));
+        CellPair standing_cell(Trinity::ComputeCellPair(plr->GetPositionX(), plr->GetPositionY()));
 
         // Check for correctness of standing_cell, it also avoids problems with update_cell
         if (standing_cell.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || standing_cell.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
@@ -616,7 +616,7 @@ void Map::Update(const uint32 &t_diff)
             if (!obj->IsInWorld())
                 continue;
 
-            CellPair standing_cell(Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY()));
+            CellPair standing_cell(Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY()));
 
             // Check for correctness of standing_cell, it also avoids problems with update_cell
             if (standing_cell.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || standing_cell.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
@@ -706,9 +706,9 @@ void Map::ProcessRelocationNotifies(const uint32 & diff)
                 Cell cell(pair);
                 cell.SetNoCreate();
 
-                Oregon::DelayedUnitRelocation cell_relocation(cell, pair, *this, GetVisibilityDistance());
-                TypeContainerVisitor<Oregon::DelayedUnitRelocation, GridTypeMapContainer  > grid_object_relocation(cell_relocation);
-                TypeContainerVisitor<Oregon::DelayedUnitRelocation, WorldTypeMapContainer > world_object_relocation(cell_relocation);
+                Trinity::DelayedUnitRelocation cell_relocation(cell, pair, *this, GetVisibilityDistance());
+                TypeContainerVisitor<Trinity::DelayedUnitRelocation, GridTypeMapContainer  > grid_object_relocation(cell_relocation);
+                TypeContainerVisitor<Trinity::DelayedUnitRelocation, WorldTypeMapContainer > world_object_relocation(cell_relocation);
                 Visit(cell, grid_object_relocation);
                 Visit(cell, world_object_relocation);
             }
@@ -758,7 +758,7 @@ void Map::Remove(Player *player, bool remove)
     player->RemoveFromWorld();
     SendRemoveTransports(player);
 
-    CellPair p = Oregon::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
         sLog.outCrash("Map::Remove: Player is in invalid cell!");
     else
@@ -789,7 +789,7 @@ Map::Remove(T *obj, bool remove)
     if (obj->isActiveObject())
         RemoveFromActive(obj);
 
-    CellPair p = Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
     if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
         sLog.outError("Map::Remove: Object " I64FMT " has invalid coordinates X:%f Y:%f grid cell [%u:%u]", obj->GetGUID(), obj->GetPositionX(), obj->GetPositionY(), p.x_coord, p.y_coord);
     else
@@ -822,8 +822,8 @@ Map::PlayerRelocation(Player *player, float x, float y, float z, float orientati
 {
     ASSERT(player);
 
-    CellPair old_val = Oregon::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
-    CellPair new_val = Oregon::ComputeCellPair(x, y);
+    CellPair old_val = Trinity::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
+    CellPair new_val = Trinity::ComputeCellPair(x, y);
 
     Cell old_cell(old_val);
     Cell new_cell(new_val);
@@ -858,13 +858,13 @@ Map::CreatureRelocation(Creature *creature, float x, float y, float z, float ang
 
     Cell old_cell = creature->GetCurrentCell();
 
-    CellPair new_val = Oregon::ComputeCellPair(x, y);
+    CellPair new_val = Trinity::ComputeCellPair(x, y);
     Cell new_cell(new_val);
 
     // delay creature move for grid/cell to grid/cell moves
     if (old_cell.DiffCell(new_cell) || old_cell.DiffGrid(new_cell))
     {
-        #ifdef OREGON_DEBUG
+        #ifdef TRINITY_DEBUG
         if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
             sLog.outDebug("Creature (GUID: %u Entry: %u) added to moving list from grid[%u,%u]cell[%u,%u] to grid[%u,%u]cell[%u,%u].", creature->GetGUIDLow(), creature->GetEntry(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY(), new_cell.GridX(), new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
         #endif
@@ -899,7 +899,7 @@ void Map::MoveAllCreaturesInMoveList()
         i_creaturesToMove.erase(iter);
 
         // calculate cells
-        CellPair new_val = Oregon::ComputeCellPair(cm.x, cm.y);
+        CellPair new_val = Trinity::ComputeCellPair(cm.x, cm.y);
         Cell new_cell(new_val);
 
         // do move or do move to respawn or remove creature if previous all fail
@@ -917,7 +917,7 @@ void Map::MoveAllCreaturesInMoveList()
             if (!CreatureRespawnRelocation(c))
             {
                 // ... or unload (if respawn grid also not loaded)
-                #ifdef OREGON_DEBUG
+                #ifdef TRINITY_DEBUG
                 if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
                     sLog.outDebug("Creature (GUID: %u Entry: %u) cannot be move to unloaded respawn grid.",c->GetGUIDLow(),c->GetEntry());
                 #endif
@@ -935,7 +935,7 @@ bool Map::CreatureCellRelocation(Creature *c, Cell new_cell)
         // if in same cell then none do
         if (old_cell.DiffCell(new_cell))
         {
-            #ifdef OREGON_DEBUG
+            #ifdef TRINITY_DEBUG
             if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
                 sLog.outDebug("Creature (GUID: %u Entry: %u) moved in grid[%u,%u] from cell[%u,%u] to cell[%u,%u].", c->GetGUIDLow(), c->GetEntry(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY(), new_cell.CellX(), new_cell.CellY());
             #endif
@@ -945,7 +945,7 @@ bool Map::CreatureCellRelocation(Creature *c, Cell new_cell)
         }
         else
         {
-            #ifdef OREGON_DEBUG
+            #ifdef TRINITY_DEBUG
             if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
                 sLog.outDebug("Creature (GUID: %u Entry: %u) moved in same grid[%u,%u]cell[%u,%u].", c->GetGUIDLow(), c->GetEntry(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY());
             #endif
@@ -959,7 +959,7 @@ bool Map::CreatureCellRelocation(Creature *c, Cell new_cell)
     {
         EnsureGridLoadedAtEnter(new_cell);
 
-        #ifdef OREGON_DEBUG
+        #ifdef TRINITY_DEBUG
         if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
             sLog.outDebug("Active creature (GUID: %u Entry: %u) moved from grid[%u,%u]cell[%u,%u] to grid[%u,%u]cell[%u,%u].", c->GetGUIDLow(), c->GetEntry(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY(), new_cell.GridX(), new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
         #endif
@@ -973,7 +973,7 @@ bool Map::CreatureCellRelocation(Creature *c, Cell new_cell)
     // in diff. loaded grid normal creature
     if (loaded(GridPair(new_cell.GridX(), new_cell.GridY())))
     {
-        #ifdef OREGON_DEBUG
+        #ifdef TRINITY_DEBUG
         if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
             sLog.outDebug("Creature (GUID: %u Entry: %u) moved from grid[%u,%u]cell[%u,%u] to grid[%u,%u]cell[%u,%u].", c->GetGUIDLow(), c->GetEntry(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY(), new_cell.GridX(), new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
         #endif
@@ -986,7 +986,7 @@ bool Map::CreatureCellRelocation(Creature *c, Cell new_cell)
     }
 
     // fail to move: normal creature attempt move to unloaded grid
-    #ifdef OREGON_DEBUG
+    #ifdef TRINITY_DEBUG
     if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
         sLog.outDebug("Creature (GUID: %u Entry: %u) attempted to move from grid[%u,%u]cell[%u,%u] to unloaded grid[%u,%u]cell[%u,%u].", c->GetGUIDLow(), c->GetEntry(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY(), new_cell.GridX(), new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
     #endif
@@ -998,13 +998,13 @@ bool Map::CreatureRespawnRelocation(Creature *c)
     float resp_x, resp_y, resp_z, resp_o;
     c->GetRespawnCoord(resp_x, resp_y, resp_z, &resp_o);
 
-    CellPair resp_val = Oregon::ComputeCellPair(resp_x, resp_y);
+    CellPair resp_val = Trinity::ComputeCellPair(resp_x, resp_y);
     Cell resp_cell(resp_val);
 
     c->CombatStop();
     c->GetMotionMaster()->Clear();
 
-    #ifdef OREGON_DEBUG
+    #ifdef TRINITY_DEBUG
     if ((sLog.getLogFilter() & LOG_FILTER_CREATURE_MOVES) == 0)
         sLog.outDebug("Creature (GUID: %u Entry: %u) moved from grid[%u,%u]cell[%u,%u] to respawn grid[%u,%u]cell[%u,%u].", c->GetGUIDLow(), c->GetEntry(), c->GetCurrentCell().GridX(), c->GetCurrentCell().GridY(), c->GetCurrentCell().CellX(), c->GetCurrentCell().CellY(), resp_cell.GridX(), resp_cell.GridY(), resp_cell.CellX(), resp_cell.CellY());
     #endif
@@ -1898,7 +1898,7 @@ bool Map::CheckGridIntegrity(Creature* c, bool moved) const
 {
     Cell const& cur_cell = c->GetCurrentCell();
 
-    CellPair xy_val = Oregon::ComputeCellPair(c->GetPositionX(), c->GetPositionY());
+    CellPair xy_val = Trinity::ComputeCellPair(c->GetPositionX(), c->GetPositionY());
     Cell xy_cell(xy_val);
     if (xy_cell != cur_cell)
     {
@@ -1922,19 +1922,19 @@ void Map::UpdateObjectVisibility(WorldObject* obj, Cell cell, CellPair cellpair)
 {
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
-    Oregon::VisibleChangesNotifier notifier(*obj);
-    TypeContainerVisitor<Oregon::VisibleChangesNotifier, WorldTypeMapContainer > player_notifier(notifier);
+    Trinity::VisibleChangesNotifier notifier(*obj);
+    TypeContainerVisitor<Trinity::VisibleChangesNotifier, WorldTypeMapContainer > player_notifier(notifier);
     cell.Visit(cellpair, player_notifier, *this, *obj, GetVisibilityDistance());
 }
 
 void Map::UpdateObjectsVisibilityFor(Player* player, Cell cell, CellPair cellpair)
 {
-    Oregon::VisibleNotifier notifier(*player);
+    Trinity::VisibleNotifier notifier(*player);
 
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
-    TypeContainerVisitor<Oregon::VisibleNotifier, WorldTypeMapContainer > world_notifier(notifier);
-    TypeContainerVisitor<Oregon::VisibleNotifier, GridTypeMapContainer  > grid_notifier(notifier);
+    TypeContainerVisitor<Trinity::VisibleNotifier, WorldTypeMapContainer > world_notifier(notifier);
+    TypeContainerVisitor<Trinity::VisibleNotifier, GridTypeMapContainer  > grid_notifier(notifier);
     cell.Visit(cellpair, world_notifier, *this, *player, GetVisibilityDistance());
     cell.Visit(cellpair, grid_notifier,  *this, *player, GetVisibilityDistance());
 
@@ -2179,7 +2179,7 @@ bool Map::ActiveObjectsNearGrid(uint32 x, uint32 y) const
     {
         Player* plr = iter->getSource();
 
-        CellPair p = Oregon::ComputeCellPair(plr->GetPositionX(), plr->GetPositionY());
+        CellPair p = Trinity::ComputeCellPair(plr->GetPositionX(), plr->GetPositionY());
         if ((cell_min.x_coord <= p.x_coord && p.x_coord <= cell_max.x_coord) &&
             (cell_min.y_coord <= p.y_coord && p.y_coord <= cell_max.y_coord))
             return true;
@@ -2189,7 +2189,7 @@ bool Map::ActiveObjectsNearGrid(uint32 x, uint32 y) const
     {
         WorldObject* obj = *iter;
 
-        CellPair p = Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+        CellPair p = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
         if ((cell_min.x_coord <= p.x_coord && p.x_coord <= cell_max.x_coord) &&
             (cell_min.y_coord <= p.y_coord && p.y_coord <= cell_max.y_coord))
             return true;
@@ -2207,12 +2207,12 @@ void Map::AddToActive(Creature* c)
     {
         float x,y,z;
         c->GetRespawnCoord(x,y,z);
-        GridPair p = Oregon::ComputeGridPair(x, y);
+        GridPair p = Trinity::ComputeGridPair(x, y);
         if (getNGrid(p.x_coord, p.y_coord))
             getNGrid(p.x_coord, p.y_coord)->incUnloadActiveLock();
         else
         {
-            GridPair p2 = Oregon::ComputeGridPair(c->GetPositionX(), c->GetPositionY());
+            GridPair p2 = Trinity::ComputeGridPair(c->GetPositionX(), c->GetPositionY());
             sLog.outError("Active creature (GUID: %u Entry: %u) added to grid[%u,%u] but spawn grid[%u,%u] not loaded.",
                 c->GetGUIDLow(), c->GetEntry(), p.x_coord, p.y_coord, p2.x_coord, p2.y_coord);
         }
@@ -2228,12 +2228,12 @@ void Map::RemoveFromActive(Creature* c)
     {
         float x,y,z;
         c->GetRespawnCoord(x,y,z);
-        GridPair p = Oregon::ComputeGridPair(x, y);
+        GridPair p = Trinity::ComputeGridPair(x, y);
         if (getNGrid(p.x_coord, p.y_coord))
             getNGrid(p.x_coord, p.y_coord)->decUnloadActiveLock();
         else
         {
-            GridPair p2 = Oregon::ComputeGridPair(c->GetPositionX(), c->GetPositionY());
+            GridPair p2 = Trinity::ComputeGridPair(c->GetPositionX(), c->GetPositionY());
             sLog.outError("Active creature (GUID: %u Entry: %u) removed from grid[%u,%u] but spawn grid[%u,%u] not loaded.",
                 c->GetGUIDLow(), c->GetEntry(), p.x_coord, p.y_coord, p2.x_coord, p2.y_coord);
         }

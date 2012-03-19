@@ -113,7 +113,7 @@ class InstanceSave
         bool m_canReset;
 };
 
-class InstanceSaveManager : public Oregon::Singleton<InstanceSaveManager, Oregon::ClassLevelLockable<InstanceSaveManager, ACE_Thread_Mutex> >
+class InstanceSaveManager : public Trinity::Singleton<InstanceSaveManager, Trinity::ClassLevelLockable<InstanceSaveManager, ACE_Thread_Mutex> >
 {
     friend class InstanceSave;
     public:
@@ -171,6 +171,6 @@ class InstanceSaveManager : public Oregon::Singleton<InstanceSaveManager, Oregon
         ResetTimeQueue m_resetTimeQueue;
 };
 
-#define sInstanceSaveManager Oregon::Singleton<InstanceSaveManager>::Instance()
+#define sInstanceSaveManager Trinity::Singleton<InstanceSaveManager>::Instance()
 #endif
 

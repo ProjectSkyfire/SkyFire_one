@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_WORLDPACKET_H
-#define OREGONCORE_WORLDPACKET_H
+#ifndef TRINITY_WORLDPACKET_H
+#define TRINITY_WORLDPACKET_H
 
 #include "Common.h"
 #include "ByteBuffer.h"

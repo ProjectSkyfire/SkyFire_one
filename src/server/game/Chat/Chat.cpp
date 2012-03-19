@@ -312,7 +312,7 @@ ChatCommand * ChatHandler::getCommandTable()
         { "item_enchantment_template",   SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadItemEnchantementsCommand,       "", NULL },
         { "item_loot_template",          SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadLootTemplatesItemCommand,       "", NULL },
         { "mail_loot_template",          SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadLootTemplatesMailCommand,       "", NULL },
-        { "oregon_string",               SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadOregonStringCommand,            "", NULL },
+        { "trinity_string",               SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadTrinityStringCommand,            "", NULL },
         { "npc_gossip",                  SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadNpcGossipCommand,               "", NULL },
         { "npc_trainer",                 SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadNpcTrainerCommand,              "", NULL },
         { "npc_vendor",                  SEC_ADMINISTRATOR, true,  &ChatHandler::HandleReloadNpcVendorCommand,               "", NULL },
@@ -721,9 +721,9 @@ ChatCommand * ChatHandler::getCommandTable()
     return commandTable;
 }
 
-const char *ChatHandler::GetOregonString(int32 entry) const
+const char *ChatHandler::GetTrinityString(int32 entry) const
 {
-    return m_session->GetOregonString(entry);
+    return m_session->GetTrinityString(entry);
 }
 
 bool ChatHandler::isAvailable(ChatCommand const& cmd) const
@@ -811,12 +811,12 @@ void ChatHandler::SendGlobalGMSysMessage(const char *str)
 
 void ChatHandler::SendSysMessage(int32 entry)
 {
-    SendSysMessage(GetOregonString(entry));
+    SendSysMessage(GetTrinityString(entry));
 }
 
 void ChatHandler::PSendSysMessage(int32 entry, ...)
 {
-    const char *format = GetOregonString(entry);
+    const char *format = GetTrinityString(entry);
     va_list ap;
     char str [1024];
     va_start(ap, entry);
@@ -1018,7 +1018,7 @@ valid examples:
         }
         else if (reader.get() != '|')
         {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
             sLog.outBasic("ChatHandler::isValidChatMessage sequence aborted unexpectedly");
 #endif
             return false;
@@ -1027,7 +1027,7 @@ valid examples:
         // pipe has always to be followed by at least one char
         if (reader.peek() == '\0')
         {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
             sLog.outBasic("ChatHandler::isValidChatMessage pipe followed by \\0");
 #endif
             return false;
@@ -1052,7 +1052,7 @@ valid examples:
             }
             else
             {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                 sLog.outBasic("ChatHandler::isValidChatMessage invalid sequence, expected %c but got %c", *validSequenceIterator, commandChar);
 #endif
                 return false;
@@ -1061,7 +1061,7 @@ valid examples:
         else if (validSequence != validSequenceIterator)
         {
             // no escaped pipes in sequences
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
             sLog.outBasic("ChatHandler::isValidChatMessage got escaped pipe in sequence");
 #endif
             return false;
@@ -1078,7 +1078,7 @@ valid examples:
                     reader >> c;
                     if (!c)
                     {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                         sLog.outBasic("ChatHandler::isValidChatMessage got \\0 while reading color in |c command");
 #endif
                         return false;
@@ -1096,7 +1096,7 @@ valid examples:
                         color |= 10+c-'a';
                         continue;
                     }
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                     sLog.outBasic("ChatHandler::isValidChatMessage got non hex char '%c' while reading color", c);
 #endif
                     return false;
@@ -1114,7 +1114,7 @@ valid examples:
                     linkedItem= objmgr.GetItemPrototype(atoi(buffer));
                     if (!linkedItem)
                     {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                         sLog.outBasic("ChatHandler::isValidChatMessage got invalid itemID %u in |item command", atoi(buffer));
 #endif
                         return false;
@@ -1122,7 +1122,7 @@ valid examples:
 
                     if (color != ItemQualityColors[linkedItem->Quality])
                     {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                         sLog.outBasic("ChatHandler::isValidChatMessage linked item has color %u, but user claims %u", ItemQualityColors[linkedItem->Quality],
                                 color);
 #endif
@@ -1156,7 +1156,7 @@ valid examples:
 
                     if (!linkedQuest)
                     {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                         sLog.outBasic("ChatHandler::isValidChatMessage Questtemplate %u not found", questid);
 #endif
                         return false;
@@ -1233,7 +1233,7 @@ valid examples:
                 }
                 else
                 {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                     sLog.outBasic("ChatHandler::isValidChatMessage user sent unsupported link type '%s'", buffer);
 #endif
                     return false;
@@ -1246,7 +1246,7 @@ valid examples:
                     // links start with '['
                     if (reader.get() != '[')
                     {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                         sLog.outBasic("ChatHandler::isValidChatMessage link caption doesn't start with '['");
 #endif
                         return false;
@@ -1313,7 +1313,7 @@ valid examples:
 
                             if (!ql)
                             {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                                 sLog.outBasic("ChatHandler::isValidChatMessage default questname didn't match and there is no locale");
 #endif
                                 return false;
@@ -1330,7 +1330,7 @@ valid examples:
                             }
                             if (!foundName)
                             {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                                 sLog.outBasic("ChatHandler::isValidChatMessage no quest locale title matched");
 #endif
                                 return false;
@@ -1345,7 +1345,7 @@ valid examples:
 
                             if (!il)
                             {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                                 sLog.outBasic("ChatHandler::isValidChatMessage linked item name doesn't is wrong and there is no localization");
 #endif
                                 return false;
@@ -1362,7 +1362,7 @@ valid examples:
                             }
                             if (!foundName)
                             {
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                                 sLog.outBasic("ChatHandler::isValidChatMessage linked item name wasn't found in any localization");
 #endif
                                 return false;
@@ -1380,7 +1380,7 @@ valid examples:
                 // no further payload
                 break;
             default:
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
                 sLog.outBasic("ChatHandler::isValidChatMessage got invalid command |%c", commandChar);
 #endif
                 return false;
@@ -1388,7 +1388,7 @@ valid examples:
     }
 
     // check if every opened sequence was also closed properly
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
     if (validSequence != validSequenceIterator)
         sLog.outBasic("ChatHandler::isValidChatMessage EOF in active sequence");
 #endif
@@ -1748,14 +1748,14 @@ GameObject* ChatHandler::GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid
     if (!obj && objmgr.GetGOData(lowguid))                   // guid is DB guid of object
     {
         // search near player then
-        CellPair p(Oregon::ComputeCellPair(pl->GetPositionX(), pl->GetPositionY()));
+        CellPair p(Trinity::ComputeCellPair(pl->GetPositionX(), pl->GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 
-        Oregon::GameObjectWithDbGUIDCheck go_check(*pl,lowguid);
-        Oregon::GameObjectSearcher<Oregon::GameObjectWithDbGUIDCheck> checker(obj,go_check);
+        Trinity::GameObjectWithDbGUIDCheck go_check(*pl,lowguid);
+        Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck> checker(obj,go_check);
 
-        TypeContainerVisitor<Oregon::GameObjectSearcher<Oregon::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > object_checker(checker);
+        TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > object_checker(checker);
         cell.Visit(p, object_checker, *pl->GetMap());
     }
 
@@ -1841,9 +1841,9 @@ bool ChatHandler::needReportToTarget(Player* chr) const
     return pl != chr && pl->IsVisibleGloballyFor(chr);
 }
 
-const char *CliHandler::GetOregonString(int32 entry) const
+const char *CliHandler::GetTrinityString(int32 entry) const
 {
-    return objmgr.GetOregonStringForDBCLocale(entry);
+    return objmgr.GetTrinityStringForDBCLocale(entry);
 }
 
 bool CliHandler::isAvailable(ChatCommand const& cmd) const
@@ -1860,7 +1860,7 @@ void CliHandler::SendSysMessage(const char *str)
 
 const char *CliHandler::GetName() const
 {
-    return GetOregonString(LANG_CONSOLE_COMMAND);
+    return GetTrinityString(LANG_CONSOLE_COMMAND);
 }
 
 bool CliHandler::needReportToTarget(Player* /*chr*/) const

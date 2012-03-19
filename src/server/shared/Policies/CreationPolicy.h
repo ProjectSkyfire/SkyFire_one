@@ -18,13 +18,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_CREATIONPOLICY_H
-#define OREGON_CREATIONPOLICY_H
+#ifndef TRINITY_CREATIONPOLICY_H
+#define TRINITY_CREATIONPOLICY_H
 
 #include <stdlib.h>
 #include "Define.h"
 
-namespace Oregon
+namespace Trinity
 {
     // OperatorNew policy creates an object on the heap using new.
     template <class T>

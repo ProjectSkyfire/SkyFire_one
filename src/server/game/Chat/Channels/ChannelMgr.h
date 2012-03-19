@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_CHANNELMGR_H
-#define OREGONCORE_CHANNELMGR_H
+#ifndef TRINITY_CHANNELMGR_H
+#define TRINITY_CHANNELMGR_H
 
 #include "Channel.h"
 #include "Policies/Singleton.h"
@@ -93,12 +93,12 @@ inline ChannelMgr* channelMgr(uint32 team)
 {
     if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHANNEL))
                                                             //For Test,No Seprate Faction
-        return &Oregon::Singleton<AllianceChannelMgr>::Instance();
+        return &Trinity::Singleton<AllianceChannelMgr>::Instance();
 
     if (team == ALLIANCE)
-        return &Oregon::Singleton<AllianceChannelMgr>::Instance();
+        return &Trinity::Singleton<AllianceChannelMgr>::Instance();
     if (team == HORDE)
-        return &Oregon::Singleton<HordeChannelMgr>::Instance();
+        return &Trinity::Singleton<HordeChannelMgr>::Instance();
     return NULL;
 }
 #endif

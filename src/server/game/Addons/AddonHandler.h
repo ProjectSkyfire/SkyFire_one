@@ -36,6 +36,6 @@ class AddonHandler
                                                             //built addon packet
         bool BuildAddonPacket(WorldPacket* Source, WorldPacket* Target);
 };
-#define sAddOnHandler Oregon::Singleton<AddonHandler>::Instance()
+#define sAddOnHandler Trinity::Singleton<AddonHandler>::Instance()
 #endif
 

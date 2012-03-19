@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRIDNOTIFIERSIMPL_H
-#define OREGON_GRIDNOTIFIERSIMPL_H
+#ifndef TRINITY_GRIDNOTIFIERSIMPL_H
+#define TRINITY_GRIDNOTIFIERSIMPL_H
 
 #include "GridNotifiers.h"
 #include "WorldPacket.h"
@@ -31,7 +31,7 @@
 
 template<class T>
 inline void
-Oregon::VisibleNotifier::Visit(GridRefManager<T> &m)
+Trinity::VisibleNotifier::Visit(GridRefManager<T> &m)
 {
     for (typename GridRefManager<T>::iterator iter = m.begin(); iter != m.end(); ++iter)
     {
@@ -41,7 +41,7 @@ Oregon::VisibleNotifier::Visit(GridRefManager<T> &m)
 }
 
 inline void
-Oregon::ObjectUpdater::Visit(CreatureMapType &m)
+Trinity::ObjectUpdater::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator iter=m.begin(); iter != m.end(); ++iter)
         if (iter->getSource()->IsInWorld() && !iter->getSource()->isSpiritService())
@@ -53,7 +53,7 @@ Oregon::ObjectUpdater::Visit(CreatureMapType &m)
 // WorldObject searchers & workers
 
 template<class Check>
-void Oregon::WorldObjectSearcher<Check>::Visit(GameObjectMapType &m)
+void Trinity::WorldObjectSearcher<Check>::Visit(GameObjectMapType &m)
 {
     // already found
     if (i_object)
@@ -70,7 +70,7 @@ void Oregon::WorldObjectSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectSearcher<Check>::Visit(PlayerMapType &m)
+void Trinity::WorldObjectSearcher<Check>::Visit(PlayerMapType &m)
 {
     // already found
     if (i_object)
@@ -87,7 +87,7 @@ void Oregon::WorldObjectSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::WorldObjectSearcher<Check>::Visit(CreatureMapType &m)
 {
     // already found
     if (i_object)
@@ -104,7 +104,7 @@ void Oregon::WorldObjectSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectSearcher<Check>::Visit(CorpseMapType &m)
+void Trinity::WorldObjectSearcher<Check>::Visit(CorpseMapType &m)
 {
     // already found
     if (i_object)
@@ -121,7 +121,7 @@ void Oregon::WorldObjectSearcher<Check>::Visit(CorpseMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType &m)
+void Trinity::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType &m)
 {
     // already found
     if (i_object)
@@ -138,7 +138,7 @@ void Oregon::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectListSearcher<Check>::Visit(PlayerMapType &m)
+void Trinity::WorldObjectListSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -146,7 +146,7 @@ void Oregon::WorldObjectListSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectListSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::WorldObjectListSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -154,7 +154,7 @@ void Oregon::WorldObjectListSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectListSearcher<Check>::Visit(CorpseMapType &m)
+void Trinity::WorldObjectListSearcher<Check>::Visit(CorpseMapType &m)
 {
     for (CorpseMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -162,7 +162,7 @@ void Oregon::WorldObjectListSearcher<Check>::Visit(CorpseMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectListSearcher<Check>::Visit(GameObjectMapType &m)
+void Trinity::WorldObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 {
     for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -170,7 +170,7 @@ void Oregon::WorldObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Oregon::WorldObjectListSearcher<Check>::Visit(DynamicObjectMapType &m)
+void Trinity::WorldObjectListSearcher<Check>::Visit(DynamicObjectMapType &m)
 {
     for (DynamicObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -180,7 +180,7 @@ void Oregon::WorldObjectListSearcher<Check>::Visit(DynamicObjectMapType &m)
 // Gameobject searchers
 
 template<class Check>
-void Oregon::GameObjectSearcher<Check>::Visit(GameObjectMapType &m)
+void Trinity::GameObjectSearcher<Check>::Visit(GameObjectMapType &m)
 {
     // already found
     if (i_object)
@@ -197,7 +197,7 @@ void Oregon::GameObjectSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Oregon::GameObjectLastSearcher<Check>::Visit(GameObjectMapType &m)
+void Trinity::GameObjectLastSearcher<Check>::Visit(GameObjectMapType &m)
 {
     for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -207,7 +207,7 @@ void Oregon::GameObjectLastSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Oregon::GameObjectListSearcher<Check>::Visit(GameObjectMapType &m)
+void Trinity::GameObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 {
     for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -217,7 +217,7 @@ void Oregon::GameObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 // Unit searchers
 
 template<class Check>
-void Oregon::UnitSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::UnitSearcher<Check>::Visit(CreatureMapType &m)
 {
     // already found
     if (i_object)
@@ -234,7 +234,7 @@ void Oregon::UnitSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Oregon::UnitSearcher<Check>::Visit(PlayerMapType &m)
+void Trinity::UnitSearcher<Check>::Visit(PlayerMapType &m)
 {
     // already found
     if (i_object)
@@ -251,7 +251,7 @@ void Oregon::UnitSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Oregon::UnitLastSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::UnitLastSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -261,7 +261,7 @@ void Oregon::UnitLastSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Oregon::UnitLastSearcher<Check>::Visit(PlayerMapType &m)
+void Trinity::UnitLastSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -271,7 +271,7 @@ void Oregon::UnitLastSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Oregon::UnitListSearcher<Check>::Visit(PlayerMapType &m)
+void Trinity::UnitListSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -279,7 +279,7 @@ void Oregon::UnitListSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Oregon::UnitListSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::UnitListSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -289,7 +289,7 @@ void Oregon::UnitListSearcher<Check>::Visit(CreatureMapType &m)
 // Creature searchers
 
 template<class Check>
-void Oregon::CreatureSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::CreatureSearcher<Check>::Visit(CreatureMapType &m)
 {
     // already found
     if (i_object)
@@ -306,7 +306,7 @@ void Oregon::CreatureSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Oregon::CreatureLastSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::CreatureLastSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -316,7 +316,7 @@ void Oregon::CreatureLastSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Oregon::CreatureListSearcher<Check>::Visit(CreatureMapType &m)
+void Trinity::CreatureListSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -324,7 +324,7 @@ void Oregon::CreatureListSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Oregon::PlayerListSearcher<Check>::Visit(PlayerMapType &m)
+void Trinity::PlayerListSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -332,7 +332,7 @@ void Oregon::PlayerListSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Oregon::PlayerSearcher<Check>::Visit(PlayerMapType &m)
+void Trinity::PlayerSearcher<Check>::Visit(PlayerMapType &m)
 {
     // already found
     if (i_object)
@@ -349,7 +349,7 @@ void Oregon::PlayerSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Builder>
-void Oregon::LocalizedPacketDo<Builder>::operator()(Player* p)
+void Trinity::LocalizedPacketDo<Builder>::operator()(Player* p)
 {
     uint32 loc_idx = p->GetSession()->GetSessionDbLocaleIndex();
     uint32 cache_idx = loc_idx+1;
@@ -374,7 +374,7 @@ void Oregon::LocalizedPacketDo<Builder>::operator()(Player* p)
 }
 
 template<class Builder>
-void Oregon::LocalizedPacketListDo<Builder>::operator()(Player* p)
+void Trinity::LocalizedPacketListDo<Builder>::operator()(Player* p)
 {
     uint32 loc_idx = p->GetSession()->GetSessionDbLocaleIndex();
     uint32 cache_idx = loc_idx+1;
@@ -397,5 +397,5 @@ void Oregon::LocalizedPacketListDo<Builder>::operator()(Player* p)
         p->SendDirectMessage((*data_list)[i]);
 }
 
-#endif                                                      // OREGON_GRIDNOTIFIERSIMPL_H
+#endif                                                      // TRINITY_GRIDNOTIFIERSIMPL_H
 

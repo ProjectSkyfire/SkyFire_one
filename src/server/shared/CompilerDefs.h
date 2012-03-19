@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_COMPILERDEFS_H
-#define OREGON_COMPILERDEFS_H
+#ifndef TRINITY_COMPILERDEFS_H
+#define TRINITY_COMPILERDEFS_H
 
 #define PLATFORM_WINDOWS 0
 #define PLATFORM_UNIX    1

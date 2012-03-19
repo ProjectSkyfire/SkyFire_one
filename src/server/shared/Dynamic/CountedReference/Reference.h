@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef  OREGON_REFERENCE_H
-#define  OREGON_REFERENCE_H
+#ifndef  TRINITY_REFERENCE_H
+#define  TRINITY_REFERENCE_H
 
 /*
  * Referencer is an object that holds a reference holder that  hold a reference
@@ -39,7 +39,7 @@
 template
 <
 typename T,
-class THREADING_MODEL = Oregon::SingleThreaded<T>
+class THREADING_MODEL = Trinity::SingleThreaded<T>
 >
 class Referencer
 {

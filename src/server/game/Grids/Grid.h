@@ -18,11 +18,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRID_H
-#define OREGON_GRID_H
+#ifndef TRINITY_GRID_H
+#define TRINITY_GRID_H
 
 /*
-  Grid is a logical segment of the game world represented inside Oregon.
+  Grid is a logical segment of the game world represented inside Trinity.
   Grid is bind at compile time to a particular type of object which
   we call it the object of interested.  There are many types of loader,
   specially, dynamic loader, static loader, or on-demand loader.  There's
@@ -44,7 +44,7 @@ template
 class ACTIVE_OBJECT,
 class WORLD_OBJECT_TYPES,
 class GRID_OBJECT_TYPES,
-class ThreadModel = Oregon::SingleThreaded<ACTIVE_OBJECT>
+class ThreadModel = Trinity::SingleThreaded<ACTIVE_OBJECT>
 >
 class Grid
 {

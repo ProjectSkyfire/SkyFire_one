@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_DESTINATION_HOLDER_H
-#define OREGON_DESTINATION_HOLDER_H
+#ifndef TRINITY_DESTINATION_HOLDER_H
+#define TRINITY_DESTINATION_HOLDER_H
 
 #include "Define.h"
 #include "Timer.h"

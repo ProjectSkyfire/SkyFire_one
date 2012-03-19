@@ -112,7 +112,7 @@ class Database
         bool DirectExecute(const char* sql);
         bool DirectPExecute(const char *format,...) ATTR_PRINTF(2,3);
 
-        // Writes SQL commands to a LOG file (see Oregond.conf "LogSQL")
+        // Writes SQL commands to a LOG file (see Trinityd.conf "LogSQL")
         bool PExecuteLog(const char *format,...) ATTR_PRINTF(2,3);
 
         bool BeginTransaction();

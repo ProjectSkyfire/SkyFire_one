@@ -872,7 +872,7 @@ void WorldSession::SendBattleGroundOrArenaJoinError(uint8 err)
             return;
             break;
     }
-    ChatHandler::FillMessageData(&data, NULL, CHAT_MSG_BG_SYSTEM_NEUTRAL, LANG_UNIVERSAL, NULL, 0, GetOregonString(msg), NULL);
+    ChatHandler::FillMessageData(&data, NULL, CHAT_MSG_BG_SYSTEM_NEUTRAL, LANG_UNIVERSAL, NULL, 0, GetTrinityString(msg), NULL);
     SendPacket(&data);
     return;
 }

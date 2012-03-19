@@ -324,7 +324,7 @@ void Object::_BuildMovementUpdate(ByteBuffer * data, uint8 updateFlags) const
                 *data << (float)ToPlayer()->GetTransOffsetO();
                 *data << (uint32)ToPlayer()->GetTransTime();
             }
-            //Oregon currently not have support for other than player on transport
+            //Trinity currently not have support for other than player on transport
         }
 
         // 0x02200000
@@ -1365,8 +1365,8 @@ void WorldObject::GetRandomPoint(const Position &pos, float distance, float &ran
     rand_y = pos.m_positionY + new_dist * sin(angle);
     rand_z = pos.m_positionZ;
 
-    Oregon::NormalizeMapCoord(rand_x);
-    Oregon::NormalizeMapCoord(rand_y);
+    Trinity::NormalizeMapCoord(rand_x);
+    Trinity::NormalizeMapCoord(rand_y);
     UpdateGroundPositionZ(rand_x,rand_y,rand_z);            // update to LOS height if available
 }
 
@@ -1379,7 +1379,7 @@ void WorldObject::UpdateGroundPositionZ(float x, float y, float &z) const
 
 bool Position::IsPositionValid() const
 {
-    return Oregon::IsValidMapCoord(m_positionX,m_positionY,m_positionZ,m_orientation);
+    return Trinity::IsValidMapCoord(m_positionX,m_positionY,m_positionZ,m_orientation);
 }
 
 void WorldObject::MonsterSay(const char* text, uint32 language, uint64 TargetGuid)
@@ -1438,7 +1438,7 @@ void Object::ForceValuesUpdateAtIndex(uint32 i)
     }
 }
 
-namespace Oregon
+namespace Trinity
 {
     class MonsterChatBuilder
     {
@@ -1447,7 +1447,7 @@ namespace Oregon
                 : i_object(obj), i_msgtype(msgtype), i_textId(textId), i_language(language), i_targetGUID(targetGUID) {}
             void operator()(WorldPacket& data, int32 loc_idx)
             {
-                char const* text = objmgr.GetOregonString(i_textId,loc_idx);
+                char const* text = objmgr.GetTrinityString(i_textId,loc_idx);
 
                 // TODO: i_object.GetName() also must be localized?
                 i_object.BuildMonsterChat(&data,i_msgtype,text,i_language,i_object.GetNameForLocaleIdx(loc_idx),i_targetGUID);
@@ -1460,42 +1460,42 @@ namespace Oregon
             uint32 i_language;
             uint64 i_targetGUID;
     };
-}                                                           // namespace Oregon
+}                                                           // namespace Trinity
 
 void WorldObject::MonsterSay(int32 textId, uint32 language, uint64 TargetGuid)
 {
-    CellPair p = Oregon::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
 
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_SAY, textId,language,TargetGuid);
-    Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> say_do(say_build);
-    Oregon::PlayerDistWorker<Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> > say_worker(sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY), say_do);
-    TypeContainerVisitor<Oregon::PlayerDistWorker<Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
+    Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_SAY, textId,language,TargetGuid);
+    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
+    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY), say_do);
+    TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
     cell.Visit(p, message, *GetMap(), *this, sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY));
 }
 
 void WorldObject::MonsterYell(int32 textId, uint32 language, uint64 TargetGuid)
 {
-    CellPair p = Oregon::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
 
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId,language,TargetGuid);
-    Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> say_do(say_build);
-    Oregon::PlayerDistWorker<Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> > say_worker(sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL), say_do);
-    TypeContainerVisitor<Oregon::PlayerDistWorker<Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
+    Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId,language,TargetGuid);
+    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
+    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL), say_do);
+    TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
     cell.Visit(p, message, *GetMap(), *this, sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL));
 }
 
 void WorldObject::MonsterYellToZone(int32 textId, uint32 language, uint64 TargetGuid)
 {
-    Oregon::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId,language,TargetGuid);
-    Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> say_do(say_build);
+    Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId,language,TargetGuid);
+    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
 
     uint32 zoneid = GetZoneId();
 
@@ -1507,16 +1507,16 @@ void WorldObject::MonsterYellToZone(int32 textId, uint32 language, uint64 Target
 
 void WorldObject::MonsterTextEmote(int32 textId, uint64 TargetGuid, bool IsBossEmote)
 {
-    CellPair p = Oregon::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
 
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::MonsterChatBuilder say_build(*this, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, textId,LANG_UNIVERSAL,TargetGuid);
-    Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> say_do(say_build);
-    Oregon::PlayerDistWorker<Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> > say_worker(sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), say_do);
-    TypeContainerVisitor<Oregon::PlayerDistWorker<Oregon::LocalizedPacketDo<Oregon::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
+    Trinity::MonsterChatBuilder say_build(*this, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, textId,LANG_UNIVERSAL,TargetGuid);
+    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
+    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), say_do);
+    TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
     cell.Visit(p, message, *GetMap(), *this, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE));
 }
 
@@ -1527,7 +1527,7 @@ void WorldObject::MonsterWhisper(int32 textId, uint64 receiver, bool IsBossWhisp
         return;
 
     uint32 loc_idx = player->GetSession()->GetSessionDbLocaleIndex();
-    char const* text = objmgr.GetOregonString(textId,loc_idx);
+    char const* text = objmgr.GetTrinityString(textId,loc_idx);
 
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildMonsterChat(&data,IsBossWhisper ? CHAT_MSG_RAID_BOSS_WHISPER : CHAT_MSG_MONSTER_WHISPER,text,LANG_UNIVERSAL,GetName(),receiver);
@@ -1560,13 +1560,13 @@ void WorldObject::BuildMonsterChat(WorldPacket *data, uint8 msgtype, char const*
 
 void WorldObject::SendMessageToSet(WorldPacket *data, bool /*fake*/)
 {
-    Oregon::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
+    Trinity::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), notifier);
 }
 
 void WorldObject::SendMessageToSetInRange(WorldPacket *data, float dist, bool /*bToSelf*/)
 {
-    Oregon::MessageDistDeliverer notifier(this, data, dist);
+    Trinity::MessageDistDeliverer notifier(this, data, dist);
     VisitNearbyWorldObject(dist, notifier);
 }
 
@@ -1915,8 +1915,8 @@ Creature* WorldObject::SummonTrigger(float x, float y, float z, float ang, uint3
 Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive)
 {
     Creature *creature = NULL;
-    Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck checker(*this, entry, alive, range);
-    Oregon::CreatureLastSearcher<Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, checker);
+    Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck checker(*this, entry, alive, range);
+    Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, checker);
     VisitNearbyObject(range, searcher);
     return creature;
 }
@@ -1924,36 +1924,36 @@ Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive
 GameObject* WorldObject::FindNearestGameObject(uint32 entry, float range)
 {
     GameObject *go = NULL;
-    Oregon::NearestGameObjectEntryInObjectRangeCheck checker(*this, entry, range);
-    Oregon::GameObjectLastSearcher<Oregon::NearestGameObjectEntryInObjectRangeCheck> searcher(go, checker);
+    Trinity::NearestGameObjectEntryInObjectRangeCheck checker(*this, entry, range);
+    Trinity::GameObjectLastSearcher<Trinity::NearestGameObjectEntryInObjectRangeCheck> searcher(go, checker);
     VisitNearbyGridObject(range, searcher);
     return go;
 }
 
 void WorldObject::GetGameObjectListWithEntryInGrid(std::list<GameObject*>& lList, uint32 uiEntry, float fMaxSearchRange)
 {
-    CellPair pair(Oregon::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
+    CellPair pair(Trinity::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::AllGameObjectsWithEntryInRange check(this, uiEntry, fMaxSearchRange);
-    Oregon::GameObjectListSearcher<Oregon::AllGameObjectsWithEntryInRange> searcher(lList, check);
-    TypeContainerVisitor<Oregon::GameObjectListSearcher<Oregon::AllGameObjectsWithEntryInRange>, GridTypeMapContainer> visitor(searcher);
+    Trinity::AllGameObjectsWithEntryInRange check(this, uiEntry, fMaxSearchRange);
+    Trinity::GameObjectListSearcher<Trinity::AllGameObjectsWithEntryInRange> searcher(lList, check);
+    TypeContainerVisitor<Trinity::GameObjectListSearcher<Trinity::AllGameObjectsWithEntryInRange>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(this->GetMap()));
 }
 
 void WorldObject::GetCreatureListWithEntryInGrid(std::list<Creature*>& lList, uint32 uiEntry, float fMaxSearchRange)
 {
-    CellPair pair(Oregon::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
+    CellPair pair(Trinity::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::AllCreaturesOfEntryInRange check(this, uiEntry, fMaxSearchRange);
-    Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(lList, check);
-    TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
+    Trinity::AllCreaturesOfEntryInRange check(this, uiEntry, fMaxSearchRange);
+    Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(lList, check);
+    TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(this->GetMap()));
 }
@@ -1963,8 +1963,8 @@ void WorldObject::GetNearPoint2D(float &x, float &y, float distance2d, float abs
     x = GetPositionX() + (GetObjectSize() + distance2d) * cos(absAngle);
     y = GetPositionY() + (GetObjectSize() + distance2d) * sin(absAngle);
 
-    Oregon::NormalizeMapCoord(x);
-    Oregon::NormalizeMapCoord(y);
+    Trinity::NormalizeMapCoord(x);
+    Trinity::NormalizeMapCoord(y);
 }
 
 void WorldObject::GetNearPoint(WorldObject const* /*searcher*/, float &x, float &y, float &z, float searcher_size, float distance2d, float absAngle) const
@@ -1979,8 +1979,8 @@ void WorldObject::MovePosition(Position &pos, float dist, float angle)
     angle += m_orientation;
     pos.m_positionX += dist * cos(angle);
     pos.m_positionY += dist * sin(angle);
-    Oregon::NormalizeMapCoord(pos.m_positionX);
-    Oregon::NormalizeMapCoord(pos.m_positionY);
+    Trinity::NormalizeMapCoord(pos.m_positionX);
+    Trinity::NormalizeMapCoord(pos.m_positionY);
     UpdateGroundPositionZ(pos.m_positionX, pos.m_positionY, pos.m_positionZ);
     pos.m_orientation = m_orientation;
 }
@@ -2029,8 +2029,8 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
         }
         }
 
-        Oregon::NormalizeMapCoord(pos.m_positionX);
-        Oregon::NormalizeMapCoord(pos.m_positionY);
+        Trinity::NormalizeMapCoord(pos.m_positionX);
+        Trinity::NormalizeMapCoord(pos.m_positionY);
         UpdateGroundPositionZ(pos.m_positionX, pos.m_positionY, pos.m_positionZ);
         pos.m_orientation = m_orientation;
 }
@@ -2062,8 +2062,8 @@ void WorldObject::DestroyForNearbyPlayers()
         return;
 
     std::list<Player*> targets;
-    Oregon::AnyPlayerInObjectRangeCheck check(this, GetMap()->GetVisibilityDistance());
-    Oregon::PlayerListSearcher<Oregon::AnyPlayerInObjectRangeCheck> searcher(targets, check);
+    Trinity::AnyPlayerInObjectRangeCheck check(this, GetMap()->GetVisibilityDistance());
+    Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(targets, check);
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), searcher);
     for (std::list<Player*>::const_iterator iter = targets.begin(); iter != targets.end(); ++iter)
     {
@@ -2086,7 +2086,7 @@ void WorldObject::DestroyForNearbyPlayers()
 void WorldObject::UpdateObjectVisibility(bool /*forced*/)
 {
     //updates object's visibility for nearby players
-    Oregon::VisibleChangesNotifier notifier(*this);
+    Trinity::VisibleChangesNotifier notifier(*this);
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), notifier);
 }
 
@@ -2151,7 +2151,7 @@ struct WorldObjectChangeAccumulator
 
 void WorldObject::BuildUpdate(UpdateDataMapType& data_map)
 {
-    CellPair p = Oregon::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();

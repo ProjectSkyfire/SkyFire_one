@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_PATH_H
-#define OREGONCORE_PATH_H
+#ifndef TRINITY_PATH_H
+#define TRINITY_PATH_H
 
 #include "Common.h"
 #include <vector>

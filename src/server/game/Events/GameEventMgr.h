@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GAMEEVENT_MGR_H
-#define OREGON_GAMEEVENT_MGR_H
+#ifndef TRINITY_GAMEEVENT_MGR_H
+#define TRINITY_GAMEEVENT_MGR_H
 
 #include "Define.h"
 #include "Creature.h"
@@ -160,7 +160,7 @@ class GameEventMgr
         bool isSystemInit;
 };
 
-#define gameeventmgr Oregon::Singleton<GameEventMgr>::Instance()
+#define gameeventmgr Trinity::Singleton<GameEventMgr>::Instance()
 #endif
 
 bool isGameEventActive(uint16 event_id);

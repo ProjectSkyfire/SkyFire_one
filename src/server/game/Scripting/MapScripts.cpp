@@ -271,14 +271,14 @@ inline GameObject* Map::_FindGameObject(WorldObject* pSearchObject, uint32 guid)
 {
     GameObject *pGameObject = NULL;
 
-    CellPair p(Oregon::ComputeCellPair(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
 
-    Oregon::GameObjectWithDbGUIDCheck goCheck(*pSearchObject, guid);
-    Oregon::GameObjectSearcher<Oregon::GameObjectWithDbGUIDCheck> checker(pGameObject, goCheck);
+    Trinity::GameObjectWithDbGUIDCheck goCheck(*pSearchObject, guid);
+    Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck> checker(pGameObject, goCheck);
 
-    TypeContainerVisitor<Oregon::GameObjectSearcher<Oregon::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > objectChecker(checker);
+    TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > objectChecker(checker);
     cell.Visit(p, objectChecker, *pSearchObject->GetMap());
 
     return pGameObject;
@@ -389,7 +389,7 @@ void Map::ScriptsProcess()
                     {
                         uint64 targetGUID = target ? target->GetGUID() : 0;
                         uint32 loc_idx = pSource->GetSession()->GetSessionDbLocaleIndex();
-                        std::string text(objmgr.GetOregonString(step.script->Talk.TextID, loc_idx));
+                        std::string text(objmgr.GetTrinityString(step.script->Talk.TextID, loc_idx));
 
                         switch (step.script->Talk.ChatType)
                         {
@@ -832,14 +832,14 @@ void Map::ScriptsProcess()
                 {
                     WorldObject* wSource = dynamic_cast <WorldObject*> (source);
 
-                    CellPair p(Oregon::ComputeCellPair(wSource->GetPositionX(), wSource->GetPositionY()));
+                    CellPair p(Trinity::ComputeCellPair(wSource->GetPositionX(), wSource->GetPositionY()));
                     Cell cell(p);
                     cell.data.Part.reserved = ALL_DISTRICT;
 
-                    Oregon::CreatureWithDbGUIDCheck target_check(wSource, step.script->CallScript.CreatureEntry);
-                    Oregon::CreatureSearcher<Oregon::CreatureWithDbGUIDCheck> checker(cTarget, target_check);
+                    Trinity::CreatureWithDbGUIDCheck target_check(wSource, step.script->CallScript.CreatureEntry);
+                    Trinity::CreatureSearcher<Trinity::CreatureWithDbGUIDCheck> checker(cTarget, target_check);
 
-                    TypeContainerVisitor<Oregon::CreatureSearcher <Oregon::CreatureWithDbGUIDCheck>, GridTypeMapContainer > unit_checker(checker);
+                    TypeContainerVisitor<Trinity::CreatureSearcher <Trinity::CreatureWithDbGUIDCheck>, GridTypeMapContainer > unit_checker(checker);
                     cell.Visit(p, unit_checker, *wSource->GetMap());
                 }
                 else //check hashmap holders

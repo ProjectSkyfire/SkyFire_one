@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_WORLDLOG_H
-#define OREGON_WORLDLOG_H
+#ifndef TRINITY_WORLDLOG_H
+#define TRINITY_WORLDLOG_H
 
 #include "Common.h"
 #include "Policies/Singleton.h"
@@ -28,13 +28,13 @@
 #include <stdarg.h>
 
 // Log packets to a file
-class WorldLog : public Oregon::Singleton<WorldLog, Oregon::ClassLevelLockable<WorldLog, ACE_Thread_Mutex> >
+class WorldLog : public Trinity::Singleton<WorldLog, Trinity::ClassLevelLockable<WorldLog, ACE_Thread_Mutex> >
 {
-    friend class Oregon::OperatorNew<WorldLog>;
+    friend class Trinity::OperatorNew<WorldLog>;
     WorldLog();
     WorldLog(const WorldLog &);
     WorldLog& operator=(const WorldLog &);
-    typedef Oregon::ClassLevelLockable<WorldLog, ACE_Thread_Mutex>::Lock Guard;
+    typedef Trinity::ClassLevelLockable<WorldLog, ACE_Thread_Mutex>::Lock Guard;
 
     // Close the file in destructor
     ~WorldLog();

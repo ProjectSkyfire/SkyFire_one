@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_LOOTMGR_H
-#define OREGON_LOOTMGR_H
+#ifndef TRINITY_LOOTMGR_H
+#define TRINITY_LOOTMGR_H
 
 #include "ItemEnchantmentMgr.h"
 #include "ByteBuffer.h"

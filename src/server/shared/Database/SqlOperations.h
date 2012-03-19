@@ -81,7 +81,7 @@ class SqlResultQueue;                                       // queue for thread 
 class SqlQueryHolder;                                       // groups several async quries
 class SqlQueryHolderEx;                                     // points to a holder, added to the delay thread
 
-class SqlResultQueue : public ACE_Based::LockedQueue<Oregon::IQueryCallback* , ACE_Thread_Mutex>
+class SqlResultQueue : public ACE_Based::LockedQueue<Trinity::IQueryCallback* , ACE_Thread_Mutex>
 {
     public:
         SqlResultQueue() {}
@@ -92,10 +92,10 @@ class SqlQuery : public SqlOperation
 {
     private:
         const char *m_sql;
-        Oregon::IQueryCallback * m_callback;
+        Trinity::IQueryCallback * m_callback;
         SqlResultQueue * m_queue;
     public:
-        SqlQuery(const char *sql, Oregon::IQueryCallback * callback, SqlResultQueue * queue)
+        SqlQuery(const char *sql, Trinity::IQueryCallback * callback, SqlResultQueue * queue)
             : m_sql(strdup(sql)), m_callback(callback), m_queue(queue) {}
         ~SqlQuery() { void* tofree = const_cast<char*>(m_sql); free(tofree); }
         void Execute(Database *db);
@@ -115,17 +115,17 @@ class SqlQueryHolder
         void SetSize(size_t size);
         QueryResult_AutoPtr GetResult(size_t index);
         void SetResult(size_t index, QueryResult_AutoPtr result);
-        bool Execute(Oregon::IQueryCallback * callback, SqlDelayThread *thread, SqlResultQueue *queue);
+        bool Execute(Trinity::IQueryCallback * callback, SqlDelayThread *thread, SqlResultQueue *queue);
 };
 
 class SqlQueryHolderEx : public SqlOperation
 {
     private:
         SqlQueryHolder * m_holder;
-        Oregon::IQueryCallback * m_callback;
+        Trinity::IQueryCallback * m_callback;
         SqlResultQueue * m_queue;
     public:
-        SqlQueryHolderEx(SqlQueryHolder *holder, Oregon::IQueryCallback * callback, SqlResultQueue * queue)
+        SqlQueryHolderEx(SqlQueryHolder *holder, Trinity::IQueryCallback * callback, SqlResultQueue * queue)
             : m_holder(holder), m_callback(callback), m_queue(queue) {}
         void Execute(Database *db);
 };

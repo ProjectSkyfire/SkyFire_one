@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_PET_H
-#define OREGONCORE_PET_H
+#ifndef TRINITY_PET_H
+#define TRINITY_PET_H
 
 #include "ObjectGuid.h"
 #include "Unit.h"

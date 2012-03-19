@@ -219,7 +219,7 @@ struct npc_taskmaster_fizzuleAI : public ScriptedAI
     }
 
     //This is a hack. Spellcast will make creature aggro but that is not
-    //supposed to happen (Oregon not implemented/not found way to detect this spell kind)
+    //supposed to happen (Trinity not implemented/not found way to detect this spell kind)
     void DoUglyHack()
     {
         me->RemoveAllAuras();

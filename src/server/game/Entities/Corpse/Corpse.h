@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_CORPSE_H
-#define OREGONCORE_CORPSE_H
+#ifndef TRINITY_CORPSE_H
+#define TRINITY_CORPSE_H
 
 #include "Object.h"
 #include "Database/DatabaseEnv.h"

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_ARENATEAM_H
-#define OREGONCORE_ARENATEAM_H
+#ifndef TRINITY_ARENATEAM_H
+#define TRINITY_ARENATEAM_H
 
 enum ArenaTeamCommandTypes
 {

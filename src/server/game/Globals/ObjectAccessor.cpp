@@ -42,7 +42,7 @@
 
 #include <cmath>
 
-#define CLASS_LOCK Oregon::ClassLevelLockable<ObjectAccessor, ACE_Thread_Mutex>
+#define CLASS_LOCK Trinity::ClassLevelLockable<ObjectAccessor, ACE_Thread_Mutex>
 INSTANTIATE_SINGLETON_2(ObjectAccessor, CLASS_LOCK);
 INSTANTIATE_CLASS_MUTEX(ObjectAccessor, ACE_Thread_Mutex);
 
@@ -207,7 +207,7 @@ void ObjectAccessor::RemoveCorpse(Corpse* corpse)
             return;
 
         // build mapid*cellid -> guid_set map
-        CellPair cell_pair = Oregon::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
+        CellPair cell_pair = Trinity::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
         uint32 cell_id = (cell_pair.y_coord * TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
         objmgr.DeleteCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID());
@@ -228,7 +228,7 @@ void ObjectAccessor::AddCorpse(Corpse* corpse)
         i_player2corpse[corpse->GetOwnerGUID()] = corpse;
 
         // build mapid*cellid -> guid_set map
-        CellPair cell_pair = Oregon::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
+        CellPair cell_pair = Trinity::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
         uint32 cell_id = (cell_pair.y_coord * TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
         objmgr.AddCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID(), corpse->GetInstanceId());

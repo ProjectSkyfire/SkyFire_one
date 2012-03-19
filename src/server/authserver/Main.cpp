@@ -41,14 +41,14 @@
 # define _REALMDCONFVERSION 2010101001
 #endif
 
-#ifndef _OREGON_REALM_CONFIG
-# define _OREGON_REALM_CONFIG  "oregonrealm.conf"
+#ifndef _TRINITY_REALM_CONFIG
+# define _TRINITY_REALM_CONFIG  "trinityrealm.conf"
 #endif
 
 #ifdef _WIN32
 #include "ServiceWin32.h"
 char serviceName[] = "realmd";
-char serviceLongName[] = "Oregon realm service";
+char serviceLongName[] = "Trinity realm service";
 char serviceDescription[] = "Massive Network Game Object Server";
 /*
  * -1 - not in service mode
@@ -86,7 +86,7 @@ void usage(const char *prog)
 extern int main(int argc, char **argv)
 {
     // Command line parsing
-    char const* cfg_file = _OREGON_REALM_CONFIG;
+    char const* cfg_file = _TRINITY_REALM_CONFIG;
 
 #ifdef _WIN32
     char const *options = ":c:s:";
@@ -164,7 +164,7 @@ extern int main(int argc, char **argv)
     if (confVersion < _REALMDCONFVERSION)
     {
         sLog.outError("*****************************************************************************");
-        sLog.outError(" WARNING: Your oregonrealm.conf version indicates your conf file is out of date!");
+        sLog.outError(" WARNING: Your trinityrealm.conf version indicates your conf file is out of date!");
         sLog.outError("          Please check for updates, as your current default values may cause");
         sLog.outError("          strange behavior.");
         sLog.outError("*****************************************************************************");

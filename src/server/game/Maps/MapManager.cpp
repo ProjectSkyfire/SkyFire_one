@@ -33,7 +33,7 @@
 #include "Corpse.h"
 #include "ObjectMgr.h"
 
-#define CLASS_LOCK Oregon::ClassLevelLockable<MapManager, ACE_Thread_Mutex>
+#define CLASS_LOCK Trinity::ClassLevelLockable<MapManager, ACE_Thread_Mutex>
 INSTANTIATE_SINGLETON_2(MapManager, CLASS_LOCK);
 INSTANTIATE_CLASS_MUTEX(MapManager, ACE_Thread_Mutex);
 
@@ -93,7 +93,7 @@ void MapManager::checkAndCorrectGridStatesArray()
             ok = false;
             si_GridStates[i] = i_GridStates[i];
         }
-        #ifdef OREGON_DEBUG
+        #ifdef TRINITY_DEBUG
         // inner class checking only when compiled with debug
         if (!si_GridStates[i]->checkMagic())
         {
@@ -180,7 +180,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                 {
                     // probably there must be special opcode, because client has this string constant in GlobalStrings.lua
                     // TODO: this is not a good place to send the message
-                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetOregonString(810), mapName);
+                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetTrinityString(810), mapName);
                     sLog.outDebug("MAP: Player '%s' must be in a raid group to enter instance of '%s'", player->GetName(), mapName);
                     return false;
                 }
@@ -213,7 +213,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
 
                 if (!instance_map)
                 {
-                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetOregonString(811), mapName);
+                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetTrinityString(811), mapName);
                     sLog.outDebug("MAP: Player '%s' doesn't has a corpse in instance '%s' and can't enter", player->GetName(), mapName);
                     return false;
                 }
@@ -269,7 +269,7 @@ void MapManager::DoDelayedMovesAndRemoves()
 
 bool MapManager::ExistMapAndVMap(uint32 mapid, float x,float y)
 {
-    GridPair p = Oregon::ComputeGridPair(x,y);
+    GridPair p = Trinity::ComputeGridPair(x,y);
 
     int gx=63-p.x_coord;
     int gy=63-p.y_coord;

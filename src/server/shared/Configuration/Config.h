@@ -49,7 +49,7 @@ class Config
         ACE_Configuration_Heap *mConf;
 };
 
-#define sConfig Oregon::Singleton<Config>::Instance()
+#define sConfig Trinity::Singleton<Config>::Instance()
 
 #endif
 

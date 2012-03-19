@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_SKILLDISCOVERY_H
-#define OREGON_SKILLDISCOVERY_H
+#ifndef TRINITY_SKILLDISCOVERY_H
+#define TRINITY_SKILLDISCOVERY_H
 
 #include "Common.h"
 

@@ -1675,14 +1675,14 @@ void Creature::DoFleeToGetAssistance()
     {
         Creature* pCreature = NULL;
 
-        CellPair p(Oregon::ComputeCellPair(GetPositionX(), GetPositionY()));
+        CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
-        Oregon::NearestAssistCreatureInCreatureRangeCheck u_check(this, getVictim(), radius);
-        Oregon::CreatureLastSearcher<Oregon::NearestAssistCreatureInCreatureRangeCheck> searcher(pCreature, u_check);
+        Trinity::NearestAssistCreatureInCreatureRangeCheck u_check(this, getVictim(), radius);
+        Trinity::CreatureLastSearcher<Trinity::NearestAssistCreatureInCreatureRangeCheck> searcher(pCreature, u_check);
 
-        TypeContainerVisitor<Oregon::CreatureLastSearcher<Oregon::NearestAssistCreatureInCreatureRangeCheck>, GridTypeMapContainer > grid_creature_searcher(searcher);
+        TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestAssistCreatureInCreatureRangeCheck>, GridTypeMapContainer > grid_creature_searcher(searcher);
 
         cell.Visit(p, grid_creature_searcher, *GetMap(), *this, radius);
 
@@ -1696,7 +1696,7 @@ void Creature::DoFleeToGetAssistance()
 
 Unit* Creature::SelectNearestTarget(float dist) const
 {
-    CellPair p(Oregon::ComputeCellPair(GetPositionX(), GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -1704,11 +1704,11 @@ Unit* Creature::SelectNearestTarget(float dist) const
     Unit *target = NULL;
 
     {
-        Oregon::NearestHostileUnitInAttackDistanceCheck u_check(this, dist);
-        Oregon::UnitLastSearcher<Oregon::NearestHostileUnitInAttackDistanceCheck> searcher(target, u_check);
+        Trinity::NearestHostileUnitInAttackDistanceCheck u_check(this, dist);
+        Trinity::UnitLastSearcher<Trinity::NearestHostileUnitInAttackDistanceCheck> searcher(target, u_check);
 
-        TypeContainerVisitor<Oregon::UnitLastSearcher<Oregon::NearestHostileUnitInAttackDistanceCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
-        TypeContainerVisitor<Oregon::UnitLastSearcher<Oregon::NearestHostileUnitInAttackDistanceCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestHostileUnitInAttackDistanceCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
+        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestHostileUnitInAttackDistanceCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
 
         cell.Visit(p, world_unit_searcher, *GetMap(), *this, ATTACK_DISTANCE);
         cell.Visit(p, grid_unit_searcher, *GetMap(), *this, ATTACK_DISTANCE);
@@ -1729,15 +1729,15 @@ void Creature::CallAssistance()
             std::list<Creature*> assistList;
 
             {
-                CellPair p(Oregon::ComputeCellPair(GetPositionX(), GetPositionY()));
+                CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
                 Cell cell(p);
                 cell.data.Part.reserved = ALL_DISTRICT;
                 cell.SetNoCreate();
 
-                Oregon::AnyAssistCreatureInRangeCheck u_check(this, getVictim(), radius);
-                Oregon::CreatureListSearcher<Oregon::AnyAssistCreatureInRangeCheck> searcher(assistList, u_check);
+                Trinity::AnyAssistCreatureInRangeCheck u_check(this, getVictim(), radius);
+                Trinity::CreatureListSearcher<Trinity::AnyAssistCreatureInRangeCheck> searcher(assistList, u_check);
 
-                TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AnyAssistCreatureInRangeCheck>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+                TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AnyAssistCreatureInRangeCheck>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
                 cell.Visit(p, grid_creature_searcher, *GetMap(), *this, radius);
             }
@@ -1762,15 +1762,15 @@ void Creature::CallForHelp(float fRadius)
     if (fRadius <= 0.0f || !getVictim() || isPet() || isCharmed())
         return;
 
-    CellPair p(Oregon::ComputeCellPair(GetPositionX(), GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::CallOfHelpCreatureInRangeDo u_do(this, getVictim(), fRadius);
-    Oregon::CreatureWorker<Oregon::CallOfHelpCreatureInRangeDo> worker(u_do);
+    Trinity::CallOfHelpCreatureInRangeDo u_do(this, getVictim(), fRadius);
+    Trinity::CreatureWorker<Trinity::CallOfHelpCreatureInRangeDo> worker(u_do);
 
-    TypeContainerVisitor<Oregon::CreatureWorker<Oregon::CallOfHelpCreatureInRangeDo>, GridTypeMapContainer >  grid_creature_searcher(worker);
+    TypeContainerVisitor<Trinity::CreatureWorker<Trinity::CallOfHelpCreatureInRangeDo>, GridTypeMapContainer >  grid_creature_searcher(worker);
 
     cell.Visit(p, grid_creature_searcher, *GetMap(), *this, fRadius);
 }

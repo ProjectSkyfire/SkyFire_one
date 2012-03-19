@@ -443,14 +443,14 @@ struct npc_lord_gregor_lescovarAI : public npc_escortAI
         std::list<Creature*> lCreatureList;
 
         me->GetPosition(x, y, z);
-        CellPair pair(Oregon::ComputeCellPair(x, y));
+        CellPair pair(Trinity::ComputeCellPair(x, y));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Oregon::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
-        Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
-        TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+        Trinity::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
+        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
+        TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
         cell.Visit(pair, cSearcher, *(me->GetMap()));
 
         if (!lCreatureList.empty())
@@ -667,14 +667,14 @@ struct npc_tyrion_spybotAI : public npc_escortAI
         std::list<Creature*> lCreatureList;
 
         me->GetPosition(x, y, z);
-        CellPair pair(Oregon::ComputeCellPair(x, y));
+        CellPair pair(Trinity::ComputeCellPair(x, y));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Oregon::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
-        Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
-        TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+        Trinity::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
+        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
+        TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
         cell.Visit(pair, cSearcher, *(me->GetMap()));
 
         if (!lCreatureList.empty())

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _OREGONSOAP_H
-#define _OREGONSOAP_H
+#ifndef _TRINITYSOAP_H
+#define _TRINITYSOAP_H
 
 #include "Common.h"
 #include "World.h"

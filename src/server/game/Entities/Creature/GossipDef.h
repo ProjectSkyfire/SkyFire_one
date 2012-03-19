@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_GOSSIP_H
-#define OREGONCORE_GOSSIP_H
+#ifndef TRINITY_GOSSIP_H
+#define TRINITY_GOSSIP_H
 
 #include "Common.h"
 #include "QuestDef.h"

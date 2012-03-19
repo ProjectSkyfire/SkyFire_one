@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_SINGLETONIMPL_H
-#define OREGON_SINGLETONIMPL_H
+#ifndef TRINITY_SINGLETONIMPL_H
+#define TRINITY_SINGLETONIMPL_H
 
 #include "Singleton.h"
 
@@ -34,7 +34,7 @@ class CreatePolicy,
 class LifeTimePolicy
 >
 T&
-Oregon::Singleton<T, ThreadingModel, CreatePolicy, LifeTimePolicy >::Instance()
+Trinity::Singleton<T, ThreadingModel, CreatePolicy, LifeTimePolicy >::Instance()
 {
     if (!si_instance)
     {
@@ -63,7 +63,7 @@ class CreatePolicy,
 class LifeTimePolicy
 >
 void
-Oregon::Singleton<T, ThreadingModel, CreatePolicy, LifeTimePolicy>::DestroySingleton()
+Trinity::Singleton<T, ThreadingModel, CreatePolicy, LifeTimePolicy>::DestroySingleton()
 {
     CreatePolicy::Destroy(si_instance);
     si_instance = NULL;
@@ -71,23 +71,23 @@ Oregon::Singleton<T, ThreadingModel, CreatePolicy, LifeTimePolicy>::DestroySingl
 }
 
 #define INSTANTIATE_SINGLETON_1(TYPE) \
-    template class Oregon::Singleton<TYPE, Oregon::SingleThreaded<TYPE>, Oregon::OperatorNew<TYPE>, Oregon::ObjectLifeTime<TYPE> >; \
-    template<> TYPE* Oregon::Singleton<TYPE, Oregon::SingleThreaded<TYPE>, Oregon::OperatorNew<TYPE>, Oregon::ObjectLifeTime<TYPE> >::si_instance = 0; \
-    template<> bool Oregon::Singleton<TYPE, Oregon::SingleThreaded<TYPE>, Oregon::OperatorNew<TYPE>, Oregon::ObjectLifeTime<TYPE> >::si_destroyed = false
+    template class Trinity::Singleton<TYPE, Trinity::SingleThreaded<TYPE>, Trinity::OperatorNew<TYPE>, Trinity::ObjectLifeTime<TYPE> >; \
+    template<> TYPE* Trinity::Singleton<TYPE, Trinity::SingleThreaded<TYPE>, Trinity::OperatorNew<TYPE>, Trinity::ObjectLifeTime<TYPE> >::si_instance = 0; \
+    template<> bool Trinity::Singleton<TYPE, Trinity::SingleThreaded<TYPE>, Trinity::OperatorNew<TYPE>, Trinity::ObjectLifeTime<TYPE> >::si_destroyed = false
 
 #define INSTANTIATE_SINGLETON_2(TYPE, THREADINGMODEL) \
-    template class Oregon::Singleton<TYPE, THREADINGMODEL, Oregon::OperatorNew<TYPE>, Oregon::ObjectLifeTime<TYPE> >; \
-    template<> TYPE* Oregon::Singleton<TYPE, THREADINGMODEL, Oregon::OperatorNew<TYPE>, Oregon::ObjectLifeTime<TYPE> >::si_instance = 0; \
-    template<> bool Oregon::Singleton<TYPE, THREADINGMODEL, Oregon::OperatorNew<TYPE>, Oregon::ObjectLifeTime<TYPE> >::si_destroyed = false
+    template class Trinity::Singleton<TYPE, THREADINGMODEL, Trinity::OperatorNew<TYPE>, Trinity::ObjectLifeTime<TYPE> >; \
+    template<> TYPE* Trinity::Singleton<TYPE, THREADINGMODEL, Trinity::OperatorNew<TYPE>, Trinity::ObjectLifeTime<TYPE> >::si_instance = 0; \
+    template<> bool Trinity::Singleton<TYPE, THREADINGMODEL, Trinity::OperatorNew<TYPE>, Trinity::ObjectLifeTime<TYPE> >::si_destroyed = false
 
 #define INSTANTIATE_SINGLETON_3(TYPE, THREADINGMODEL, CREATIONPOLICY ) \
-    template class Oregon::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, Oregon::ObjectLifeTime<TYPE> >; \
-    template<> TYPE* Oregon::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, Oregon::ObjectLifeTime<TYPE> >::si_instance = 0; \
-    template<> bool Oregon::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, Oregon::ObjectLifeType<TYPE> >::si_destroyed = false
+    template class Trinity::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, Trinity::ObjectLifeTime<TYPE> >; \
+    template<> TYPE* Trinity::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, Trinity::ObjectLifeTime<TYPE> >::si_instance = 0; \
+    template<> bool Trinity::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, Trinity::ObjectLifeType<TYPE> >::si_destroyed = false
 
 #define INSTANTIATE_SINGLETON_4(TYPE, THREADINGMODEL, CREATIONPOLICY, OBJECTLIFETIME) \
-    template class Oregon::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, OBJECTLIFETIME >; \
-    template<> TYPE* Oregon::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, OBJECTLIFETIME >::si_instance = 0; \
-    template<> bool Oregon::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, OBJECTLIFETIME >::si_destroyed = false
+    template class Trinity::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, OBJECTLIFETIME >; \
+    template<> TYPE* Trinity::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, OBJECTLIFETIME >::si_instance = 0; \
+    template<> bool Trinity::Singleton<TYPE, THREADINGMODEL, CREATIONPOLICY, OBJECTLIFETIME >::si_destroyed = false
 #endif
 

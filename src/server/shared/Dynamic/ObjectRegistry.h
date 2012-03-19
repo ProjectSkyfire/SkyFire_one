@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_OBJECTREGISTRY_H
-#define OREGON_OBJECTREGISTRY_H
+#ifndef TRINITY_OBJECTREGISTRY_H
+#define TRINITY_OBJECTREGISTRY_H
 
 #include "Define.h"
 #include "UnorderedMap.h"
@@ -95,7 +95,7 @@ class ObjectRegistry
 
     private:
         RegistryMapType i_registeredObjects;
-        friend class Oregon::OperatorNew<ObjectRegistry<T, Key> >;
+        friend class Trinity::OperatorNew<ObjectRegistry<T, Key> >;
 
         // protected for friend use since it should be a singleton
         ObjectRegistry() {}

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MAP_INSTANCED_H
-#define OREGON_MAP_INSTANCED_H
+#ifndef TRINITY_MAP_INSTANCED_H
+#define TRINITY_MAP_INSTANCED_H
 
 #include "Map.h"
 #include "InstanceSaveMgr.h"

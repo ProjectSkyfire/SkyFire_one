@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_HOMEMOVEMENTGENERATOR_H
-#define OREGON_HOMEMOVEMENTGENERATOR_H
+#ifndef TRINITY_HOMEMOVEMENTGENERATOR_H
+#define TRINITY_HOMEMOVEMENTGENERATOR_H
 
 #include "MovementGenerator.h"
 #include "DestinationHolder.h"

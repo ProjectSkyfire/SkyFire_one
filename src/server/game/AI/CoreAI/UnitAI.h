@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_UNITAI_H
-#define OREGON_UNITAI_H
+#ifndef TRINITY_UNITAI_H
+#define TRINITY_UNITAI_H
 
 #include "Define.h"
 #include <list>

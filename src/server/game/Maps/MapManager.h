@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MAPMANAGER_H
-#define OREGON_MAPMANAGER_H
+#ifndef TRINITY_MAPMANAGER_H
+#define TRINITY_MAPMANAGER_H
 
 #include "Define.h"
 #include "Policies/Singleton.h"
@@ -32,9 +32,9 @@
 
 class Transport;
 
-class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockable<MapManager, ACE_Thread_Mutex> >
+class MapManager : public Trinity::Singleton<MapManager, Trinity::ClassLevelLockable<MapManager, ACE_Thread_Mutex> >
 {
-    friend class Oregon::OperatorNew<MapManager>;
+    friend class Trinity::OperatorNew<MapManager>;
     typedef UNORDERED_MAP<uint32, Map*> MapMapType;
     typedef std::pair<UNORDERED_MAP<uint32, Map*>::iterator, bool>  MapMapPair;
 
@@ -80,17 +80,17 @@ class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockab
 
         static bool IsValidMapCoord(uint32 mapid, float x,float y)
         {
-            return IsValidMAP(mapid) && Oregon::IsValidMapCoord(x,y);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x,y);
         }
 
         static bool IsValidMapCoord(uint32 mapid, float x,float y,float z)
         {
-            return IsValidMAP(mapid) && Oregon::IsValidMapCoord(x,y,z);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x,y,z);
         }
 
         static bool IsValidMapCoord(uint32 mapid, float x,float y,float z,float o)
         {
-            return IsValidMAP(mapid) && Oregon::IsValidMapCoord(x,y,z,o);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x,y,z,o);
         }
 
         static bool IsValidMapCoord(WorldLocation const& loc)
@@ -151,7 +151,7 @@ class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockab
             return (iter == i_maps.end() ? NULL : iter->second);
         }
 
-        typedef Oregon::ClassLevelLockable<MapManager, ACE_Thread_Mutex>::Lock Guard;
+        typedef Trinity::ClassLevelLockable<MapManager, ACE_Thread_Mutex>::Lock Guard;
         uint32 i_gridCleanUpDelay;
         MapMapType i_maps;
         IntervalTimer i_timer;

@@ -18,15 +18,15 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_OBJECTLIFETIME_H
-#define OREGON_OBJECTLIFETIME_H
+#ifndef TRINITY_OBJECTLIFETIME_H
+#define TRINITY_OBJECTLIFETIME_H
 
 #include <stdexcept>
 #include "Define.h"
 
 typedef void (* Destroyer)(void);
 
-namespace Oregon
+namespace Trinity
 {
     void at_exit( void (*func)() );
 

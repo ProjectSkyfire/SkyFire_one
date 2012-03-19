@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRIDLOADER_H
-#define OREGON_GRIDLOADER_H
+#ifndef TRINITY_GRIDLOADER_H
+#define TRINITY_GRIDLOADER_H
 
 /*
   The GridLoader is working in conjuction with the Grid and responsible

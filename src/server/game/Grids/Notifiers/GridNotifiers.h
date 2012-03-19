@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRIDNOTIFIERS_H
-#define OREGON_GRIDNOTIFIERS_H
+#ifndef TRINITY_GRIDNOTIFIERS_H
+#define TRINITY_GRIDNOTIFIERS_H
 
 #include "ObjectGridLoader.h"
 #include "ByteBuffer.h"
@@ -37,7 +37,7 @@
 class Player;
 //class Map;
 
-namespace Oregon
+namespace Trinity
 {
     struct VisibleNotifier
     {

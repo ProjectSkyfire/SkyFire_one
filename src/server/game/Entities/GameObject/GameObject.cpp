@@ -337,8 +337,8 @@ void GameObject::Update(uint32 diff)
                     // search unfriendly creature
                     if (owner)                    // hunter trap
                     {
-                        Oregon::AnyUnfriendlyNoTotemUnitInObjectRangeCheck checker(this, owner, radius);
-                        Oregon::UnitSearcher<Oregon::AnyUnfriendlyNoTotemUnitInObjectRangeCheck> searcher(ok, checker);
+                        Trinity::AnyUnfriendlyNoTotemUnitInObjectRangeCheck checker(this, owner, radius);
+                        Trinity::UnitSearcher<Trinity::AnyUnfriendlyNoTotemUnitInObjectRangeCheck> searcher(ok, checker);
                         VisitNearbyGridObject(radius, searcher);
                         if (!ok) VisitNearbyWorldObject(radius, searcher);
                     }
@@ -347,8 +347,8 @@ void GameObject::Update(uint32 diff)
                         // environmental damage spells already have around enemies targeting but this not help in case not existed GO casting support
                         // affect only players
                         Player* player = NULL;
-                        Oregon::AnyPlayerInObjectRangeCheck checker(this, radius);
-                        Oregon::PlayerSearcher<Oregon::AnyPlayerInObjectRangeCheck> searcher(player, checker);
+                        Trinity::AnyPlayerInObjectRangeCheck checker(this, radius);
+                        Trinity::PlayerSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(player, checker);
                         VisitNearbyWorldObject(radius, searcher);
                         ok = player;
                     }
@@ -854,14 +854,14 @@ void GameObject::TriggeringLinkedGameObject(uint32 trapEntry, Unit* target)
     GameObject* trapGO = NULL;
     {
         // using original GO distance
-        CellPair p(Oregon::ComputeCellPair(GetPositionX(), GetPositionY()));
+        CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 
-        Oregon::NearestGameObjectEntryInObjectRangeCheck go_check(*target,trapEntry,range);
-        Oregon::GameObjectLastSearcher<Oregon::NearestGameObjectEntryInObjectRangeCheck> checker(trapGO,go_check);
+        Trinity::NearestGameObjectEntryInObjectRangeCheck go_check(*target,trapEntry,range);
+        Trinity::GameObjectLastSearcher<Trinity::NearestGameObjectEntryInObjectRangeCheck> checker(trapGO,go_check);
 
-        TypeContainerVisitor<Oregon::GameObjectLastSearcher<Oregon::NearestGameObjectEntryInObjectRangeCheck>, GridTypeMapContainer > object_checker(checker);
+        TypeContainerVisitor<Trinity::GameObjectLastSearcher<Trinity::NearestGameObjectEntryInObjectRangeCheck>, GridTypeMapContainer > object_checker(checker);
         cell.Visit(p, object_checker, *GetMap(), *target, range);
     }
 
@@ -875,13 +875,13 @@ GameObject* GameObject::LookupFishingHoleAround(float range)
 {
     GameObject* ok = NULL;
 
-    CellPair p(Oregon::ComputeCellPair(GetPositionX(),GetPositionY()));
+    CellPair p(Trinity::ComputeCellPair(GetPositionX(),GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
-    Oregon::NearestGameObjectFishingHole u_check(*this, range);
-    Oregon::GameObjectSearcher<Oregon::NearestGameObjectFishingHole> checker(ok, u_check);
+    Trinity::NearestGameObjectFishingHole u_check(*this, range);
+    Trinity::GameObjectSearcher<Trinity::NearestGameObjectFishingHole> checker(ok, u_check);
 
-    TypeContainerVisitor<Oregon::GameObjectSearcher<Oregon::NearestGameObjectFishingHole>, GridTypeMapContainer > grid_object_checker(checker);
+    TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::NearestGameObjectFishingHole>, GridTypeMapContainer > grid_object_checker(checker);
     cell.Visit(p, grid_object_checker, *GetMap(), *this, range);
 
     return ok;

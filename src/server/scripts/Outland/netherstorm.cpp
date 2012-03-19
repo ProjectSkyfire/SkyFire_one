@@ -301,7 +301,7 @@ CreatureAI* GetAI_npc_manaforge_control_console(Creature* pCreature)
 ## go_manaforge_control_console
 ######*/
 
-//TODO: clean up this workaround when Oregon adds support to do it properly (with gossip selections instead of instant summon)
+//TODO: clean up this workaround when Trinity adds support to do it properly (with gossip selections instead of instant summon)
 bool GOHello_go_manaforge_control_console(Player *player, GameObject* _GO)
 {
     if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
@@ -412,14 +412,14 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
     {
         Creature* pCreature = NULL;
 
-        CellPair pair(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+        CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
-        Oregon::CreatureLastSearcher<Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
-        TypeContainerVisitor<Oregon::CreatureLastSearcher<Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+        Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
+        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+        TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
         cell.Visit(pair, creature_searcher,*(me->GetMap()));
 
         return pCreature;
@@ -644,14 +644,14 @@ Creature* SearchDawnforge(Player *source, uint32 entry, float range)
 {
     Creature* pCreature = NULL;
 
-    CellPair pair(Oregon::ComputeCellPair(source->GetPositionX(), source->GetPositionY()));
+    CellPair pair(Trinity::ComputeCellPair(source->GetPositionX(), source->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*source, entry, true, range);
-    Oregon::CreatureLastSearcher<Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
-    TypeContainerVisitor<Oregon::CreatureLastSearcher<Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+    Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*source, entry, true, range);
+    Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
+    TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
     cell.Visit(pair, creature_searcher,*(source->GetMap()));
 
     return pCreature;

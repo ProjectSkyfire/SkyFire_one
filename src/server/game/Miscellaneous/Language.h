@@ -18,10 +18,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __OREGON_LANGUAGE_H
-#define __OREGON_LANGUAGE_H
+#ifndef __TRINITY_LANGUAGE_H
+#define __TRINITY_LANGUAGE_H
 
-enum OregonStrings
+enum TrinityStrings
 {
     // for chat commands
     LANG_SELECT_CHAR_OR_CREATURE        = 1,
@@ -831,7 +831,7 @@ enum OregonStrings
     LANG_COMMAND_TICKETLISTADDCOMMENT   = 2024,
     LANG_COMMAND_TICKETLISTAGECREATE    = 2025,
 
-    // Oregon strings                     5000-9999
+    // Trinity strings                     5000-9999
     LANG_COMMAND_FREEZE                 = 5000,
     LANG_COMMAND_FREEZE_ERROR           = 5001,
     LANG_COMMAND_FREEZE_WRONG           = 5002,
@@ -842,7 +842,7 @@ enum OregonStrings
     LANG_INSTANCE_MUST_RAID_GRP         = 5007,
     LANG_INSTANCE_NOT_AS_GHOST          = 5008,
     LANG_COMMAND_PLAYED_TO_ALL          = 5009,
-    // Room for more Oregon strings       5010-9999
+    // Room for more Trinity strings       5010-9999
     // Used for GM Announcements
     LANG_GM_BROADCAST                    = 6613,
     LANG_GM_NOTIFY                       = 6614,

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GUARDAI_H
-#define OREGON_GUARDAI_H
+#ifndef TRINITY_GUARDAI_H
+#define TRINITY_GUARDAI_H
 
 #include "CreatureAI.h"
 #include "Timer.h"

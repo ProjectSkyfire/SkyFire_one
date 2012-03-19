@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MOVEMENTGENERATOR_IMPL_H
-#define OREGON_MOVEMENTGENERATOR_IMPL_H
+#ifndef TRINITY_MOVEMENTGENERATOR_IMPL_H
+#define TRINITY_MOVEMENTGENERATOR_IMPL_H
 
 #include "MovementGenerator.h"
 

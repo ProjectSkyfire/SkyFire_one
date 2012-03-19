@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_OBJECTGRIDLOADER_H
-#define OREGON_OBJECTGRIDLOADER_H
+#ifndef TRINITY_OBJECTGRIDLOADER_H
+#define TRINITY_OBJECTGRIDLOADER_H
 
 #include "TypeList.h"
 #include "Define.h"

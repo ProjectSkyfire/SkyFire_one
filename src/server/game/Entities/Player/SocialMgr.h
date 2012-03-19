@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __OREGON_SOCIALMGR_H
-#define __OREGON_SOCIALMGR_H
+#ifndef __TRINITY_SOCIALMGR_H
+#define __TRINITY_SOCIALMGR_H
 
 #include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
@@ -156,6 +156,6 @@ class SocialMgr
         SocialMap m_socialMap;
 };
 
-#define sSocialMgr Oregon::Singleton<SocialMgr>::Instance()
+#define sSocialMgr Trinity::Singleton<SocialMgr>::Instance()
 #endif
 

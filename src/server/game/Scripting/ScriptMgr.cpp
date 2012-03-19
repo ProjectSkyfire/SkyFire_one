@@ -258,7 +258,7 @@ void ScriptMgr::OnPVPKill(Player *killer, Player *killed)
 
 char const* ScriptMgr::ScriptsVersion()
 {
-    return "Integrated Oregon Scripts";
+    return "Integrated Trinity Scripts";
 }
 
 bool ScriptMgr::GossipHello (Player * pPlayer, Creature* pCreature)

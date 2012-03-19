@@ -31,7 +31,7 @@
 #include "Util.h"
 #include "GridNotifiersImpl.h"
 
-namespace Oregon
+namespace Trinity
 {
     class BattleGroundChatBuilder
     {
@@ -40,7 +40,7 @@ namespace Oregon
                 : i_msgtype(msgtype), i_textId(textId), i_source(source), i_args(args) {}
             void operator()(WorldPacket& data, int32 loc_idx)
             {
-                char const* text = objmgr.GetOregonString(i_textId, loc_idx);
+                char const* text = objmgr.GetTrinityString(i_textId, loc_idx);
 
                 if (i_args)
                 {
@@ -85,9 +85,9 @@ namespace Oregon
                 : i_msgtype(msgtype), i_textId(textId), i_source(source), i_arg1(arg1), i_arg2(arg2) {}
             void operator()(WorldPacket& data, int32 loc_idx)
             {
-                char const* text = objmgr.GetOregonString(i_textId, loc_idx);
-                char const* arg1str = i_arg1 ? objmgr.GetOregonString(i_arg1, loc_idx) : "";
-                char const* arg2str = i_arg2 ? objmgr.GetOregonString(i_arg2, loc_idx) : "";
+                char const* text = objmgr.GetTrinityString(i_textId, loc_idx);
+                char const* arg1str = i_arg1 ? objmgr.GetTrinityString(i_arg1, loc_idx) : "";
+                char const* arg2str = i_arg2 ? objmgr.GetTrinityString(i_arg2, loc_idx) : "";
 
                 char str [2048];
                 snprintf(str, 2048, text, arg1str, arg2str );
@@ -111,7 +111,7 @@ namespace Oregon
             int32 i_arg1;
             int32 i_arg2;
     };
-}                                                           // namespace Oregon
+}                                                           // namespace Trinity
 
 template<class Do>
 void BattleGround::BroadcastWorker(Do& _do)
@@ -929,7 +929,7 @@ void BattleGround::SendRewardMarkByMail(Player *plr,uint32 mark, uint32 count)
                     subject = il->Name[loc_idx];
 
         // text
-        std::string textFormat = plr->GetSession()->GetOregonString(LANG_BG_MARK_BY_MAIL);
+        std::string textFormat = plr->GetSession()->GetTrinityString(LANG_BG_MARK_BY_MAIL);
         char textBuf[300];
         snprintf(textBuf,300,textFormat.c_str(),GetName(),GetName());
         uint32 itemTextId = objmgr.CreateItemText(textBuf);
@@ -1665,8 +1665,8 @@ bool BattleGround::AddSpiritGuide(uint32 type, float x, float y, float z, float 
 
 void BattleGround::SendMessageToAll(int32 entry, ChatMsg type, Player const* source)
 {
-    Oregon::BattleGroundChatBuilder bg_builder(type, entry, source);
-    Oregon::LocalizedPacketDo<Oregon::BattleGroundChatBuilder> bg_do(bg_builder);
+    Trinity::BattleGroundChatBuilder bg_builder(type, entry, source);
+    Trinity::LocalizedPacketDo<Trinity::BattleGroundChatBuilder> bg_do(bg_builder);
     BroadcastWorker(bg_do);
 }
 
@@ -1675,8 +1675,8 @@ void BattleGround::PSendMessageToAll(int32 entry, ChatMsg type, Player const* so
     va_list ap;
     va_start(ap, source);
 
-    Oregon::BattleGroundChatBuilder bg_builder(type, entry, source, &ap);
-    Oregon::LocalizedPacketDo<Oregon::BattleGroundChatBuilder> bg_do(bg_builder);
+    Trinity::BattleGroundChatBuilder bg_builder(type, entry, source, &ap);
+    Trinity::LocalizedPacketDo<Trinity::BattleGroundChatBuilder> bg_do(bg_builder);
     BroadcastWorker(bg_do);
 
     va_end(ap);
@@ -1684,8 +1684,8 @@ void BattleGround::PSendMessageToAll(int32 entry, ChatMsg type, Player const* so
 
 void BattleGround::SendMessage2ToAll(int32 entry, ChatMsg type, Player const* source, int32 arg1, int32 arg2)
 {
-    Oregon::BattleGround2ChatBuilder bg_builder(type, entry, source, arg1, arg2);
-    Oregon::LocalizedPacketDo<Oregon::BattleGround2ChatBuilder> bg_do(bg_builder);
+    Trinity::BattleGround2ChatBuilder bg_builder(type, entry, source, arg1, arg2);
+    Trinity::LocalizedPacketDo<Trinity::BattleGround2ChatBuilder> bg_do(bg_builder);
     BroadcastWorker(bg_do);
 }
 
@@ -1699,10 +1699,10 @@ void BattleGround::EndNow()
 }
 
 // Battleground messages are localized using the dbc lang, they are not client language dependent
-const char *BattleGround::GetOregonString(int32 entry)
+const char *BattleGround::GetTrinityString(int32 entry)
 {
     // FIXME: now we have different DBC locales and need localized message for each target client
-    return objmgr.GetOregonStringForDBCLocale(entry);
+    return objmgr.GetTrinityStringForDBCLocale(entry);
 }
 
 /*

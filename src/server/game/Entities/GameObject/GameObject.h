@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_GAMEOBJECT_H
-#define OREGONCORE_GAMEOBJECT_H
+#ifndef TRINITY_GAMEOBJECT_H
+#define TRINITY_GAMEOBJECT_H
 
 #include "Common.h"
 #include "SharedDefines.h"

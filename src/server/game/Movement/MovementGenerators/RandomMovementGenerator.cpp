@@ -66,8 +66,8 @@ RandomMovementGenerator<Creature>::_setRandomLocation(Creature &creature)
     ny = Y + distanceY;
 
     // prevent invalid coordinates generation
-    Oregon::NormalizeMapCoord(nx);
-    Oregon::NormalizeMapCoord(ny);
+    Trinity::NormalizeMapCoord(nx);
+    Trinity::NormalizeMapCoord(ny);
 
     dist = (nx - X)*(nx - X) + (ny - Y)*(ny - Y);
 

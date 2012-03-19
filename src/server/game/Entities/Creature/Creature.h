@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_CREATURE_H
-#define OREGONCORE_CREATURE_H
+#ifndef TRINITY_CREATURE_H
+#define TRINITY_CREATURE_H
 
 #include "Common.h"
 #include "Unit.h"

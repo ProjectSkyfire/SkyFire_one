@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_REACTORAI_H
-#define OREGON_REACTORAI_H
+#ifndef TRINITY_REACTORAI_H
+#define TRINITY_REACTORAI_H
 
 #include "CreatureAI.h"
 

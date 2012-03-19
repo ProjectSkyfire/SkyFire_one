@@ -18,21 +18,21 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_SINGLETON_H
-#define OREGON_SINGLETON_H
+#ifndef TRINITY_SINGLETON_H
+#define TRINITY_SINGLETON_H
 
 #include "CreationPolicy.h"
 #include "ThreadingModel.h"
 #include "ObjectLifeTime.h"
 
-namespace Oregon
+namespace Trinity
 {
     template
         <
         typename T,
-        class ThreadingModel = Oregon::SingleThreaded<T>,
-        class CreatePolicy = Oregon::OperatorNew<T>,
-        class LifeTimePolicy = Oregon::ObjectLifeTime<T>
+        class ThreadingModel = Trinity::SingleThreaded<T>,
+        class CreatePolicy = Trinity::OperatorNew<T>,
+        class LifeTimePolicy = Trinity::ObjectLifeTime<T>
         >
         class Singleton
     {

@@ -126,7 +126,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Tools
   ${CMAKE_SOURCE_DIR}/src/server/game/Weather
   ${CMAKE_SOURCE_DIR}/src/server/game/World
-  ${CMAKE_SOURCE_DIR}/src/server/oregonrealm
+  ${CMAKE_SOURCE_DIR}/src/server/trinityrealm
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/CommandLine
   ${CMAKE_CURRENT_SOURCE_DIR}/RemoteAccess
@@ -142,7 +142,7 @@ set(worldserver_LINK_FLAGS "")
 add_executable(worldserver ${worldserver_SRCS})
 
 if( NOT WIN32 )
-  add_definitions(-D_OREGON_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"')
+  add_definitions(-D_TRINITY_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"')
 endif()
 
 add_dependencies(worldserver revision.h)

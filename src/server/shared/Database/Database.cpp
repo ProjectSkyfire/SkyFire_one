@@ -427,7 +427,7 @@ bool Database::DirectExecute(const char* sql)
         // guarded block for thread-safe mySQL request
         ACE_Guard<ACE_Thread_Mutex> query_connection_guard(mMutex);
 
-        #ifdef OREGON_DEBUG
+        #ifdef TRINITY_DEBUG
         uint32 _s = getMSTime();
         #endif
         if (mysql_query(mMysql, sql))
@@ -438,7 +438,7 @@ bool Database::DirectExecute(const char* sql)
         }
         else
         {
-            #ifdef OREGON_DEBUG
+            #ifdef TRINITY_DEBUG
             sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s,getMSTime()), sql);
             #endif
         }

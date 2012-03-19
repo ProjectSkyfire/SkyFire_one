@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_TEMPSUMMON_H
-#define OREGONCORE_TEMPSUMMON_H
+#ifndef TRINITY_TEMPSUMMON_H
+#define TRINITY_TEMPSUMMON_H
 
 #include "Creature.h"
 

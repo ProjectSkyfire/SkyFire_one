@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_COMBATAI_H
-#define OREGON_COMBATAI_H
+#ifndef TRINITY_COMBATAI_H
+#define TRINITY_COMBATAI_H
 
 #include "CreatureAI.h"
 #include "CreatureAIImpl.h"

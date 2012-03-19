@@ -97,7 +97,7 @@ void WorldSession::SendPacket(WorldPacket const* packet)
     if (!m_Socket)
         return;
 
-    #ifdef OREGON_DEBUG
+    #ifdef TRINITY_DEBUG
 
     // Code for network use statistic
     static uint64 sendPacketCount = 0;
@@ -131,7 +131,7 @@ void WorldSession::SendPacket(WorldPacket const* packet)
         sendLastPacketBytes = packet->wpos();               // wpos is real written size
     }
 
-    #endif                                                  // !OREGON_DEBUG
+    #endif                                                  // !TRINITY_DEBUG
 
     if (m_Socket->SendPacket(*packet) == -1)
         m_Socket->CloseSocket();
@@ -484,7 +484,7 @@ void WorldSession::SendNotification(const char *format,...)
 
 void WorldSession::SendNotification(int32 string_id,...)
 {
-    char const* format = GetOregonString(string_id);
+    char const* format = GetTrinityString(string_id);
     if (format)
     {
         va_list ap;
@@ -500,9 +500,9 @@ void WorldSession::SendNotification(int32 string_id,...)
     }
 }
 
-const char * WorldSession::GetOregonString(int32 entry) const
+const char * WorldSession::GetTrinityString(int32 entry) const
 {
-    return objmgr.GetOregonString(entry,GetSessionDbLocaleIndex());
+    return objmgr.GetTrinityString(entry,GetSessionDbLocaleIndex());
 }
 
 void WorldSession::Handle_NULL(WorldPacket& recvPacket)

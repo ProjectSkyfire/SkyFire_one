@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_WAYPOINTMOVEMENTGENERATOR_H
-#define OREGON_WAYPOINTMOVEMENTGENERATOR_H
+#ifndef TRINITY_WAYPOINTMOVEMENTGENERATOR_H
+#define TRINITY_WAYPOINTMOVEMENTGENERATOR_H
 
 /** @page PathMovementGenerator is used to generate movements
  * of waypoints and flight paths.  Each serves the purpose

@@ -183,7 +183,7 @@ struct boss_akilzonAI : public ScriptedAI
             for (uint8 i = 2; i < StormCount; ++i)
                 bp0 *= 2;
 
-            CellPair p(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+            CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
             Cell cell(p);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
@@ -191,11 +191,11 @@ struct boss_akilzonAI : public ScriptedAI
             std::list<Unit *> tempUnitMap;
 
             {
-                Oregon::AnyAoETargetUnitInObjectRangeCheck u_check(me, me, 999);
-                Oregon::UnitListSearcher<Oregon::AnyAoETargetUnitInObjectRangeCheck> searcher(tempUnitMap, u_check);
+                Trinity::AnyAoETargetUnitInObjectRangeCheck u_check(me, me, 999);
+                Trinity::UnitListSearcher<Trinity::AnyAoETargetUnitInObjectRangeCheck> searcher(tempUnitMap, u_check);
 
-                TypeContainerVisitor<Oregon::UnitListSearcher<Oregon::AnyAoETargetUnitInObjectRangeCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
-                TypeContainerVisitor<Oregon::UnitListSearcher<Oregon::AnyAoETargetUnitInObjectRangeCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+                TypeContainerVisitor<Trinity::UnitListSearcher<Trinity::AnyAoETargetUnitInObjectRangeCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
+                TypeContainerVisitor<Trinity::UnitListSearcher<Trinity::AnyAoETargetUnitInObjectRangeCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
 
                 cell.Visit(p, world_unit_searcher, *(me->GetMap()));
                 cell.Visit(p, grid_unit_searcher, *(me->GetMap()));

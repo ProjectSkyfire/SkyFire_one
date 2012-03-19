@@ -390,7 +390,7 @@ enum ScriptCommands
     SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT    = 21,               // source = WorldObject (if present used as a search center), datalong = script id, datalong2 = unit lowguid, dataint = script table to use (see ScriptsType)
     SCRIPT_COMMAND_KILL                  = 22,               // source/target = Creature, dataint = remove corpse attribute
 
-    //Oregon only
+    //Trinity only
     SCRIPT_COMMAND_ORIENTATION           = 30,               // source = Unit, target (datalong > 0) = Unit, datalong = > 0 turn source to face target, o = orientation
     SCRIPT_COMMAND_EQUIP                 = 31,               // soucre = Creature, datalong = equipment id
     SCRIPT_COMMAND_MODEL                 = 32,               // source = Creature, datalong = model id
@@ -687,6 +687,6 @@ class World
 
 extern uint32 realmID;
 
-#define sWorld Oregon::Singleton<World>::Instance()
+#define sWorld Trinity::Singleton<World>::Instance()
 #endif
 

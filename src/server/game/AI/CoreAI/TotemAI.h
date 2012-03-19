@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_TOTEMAI_H
-#define OREGON_TOTEMAI_H
+#ifndef TRINITY_TOTEMAI_H
+#define TRINITY_TOTEMAI_H
 
 #include "CreatureAI.h"
 #include "Timer.h"

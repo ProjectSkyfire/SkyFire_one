@@ -79,7 +79,7 @@ private:
     uint32 m_UpdateTimer;
 };
 
-#define sOutdoorPvPMgr Oregon::Singleton<OutdoorPvPMgr>::Instance()
+#define sOutdoorPvPMgr Trinity::Singleton<OutdoorPvPMgr>::Instance()
 
 #endif /*OUTDOOR_PVP_MGR_H_*/
 

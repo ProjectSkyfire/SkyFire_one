@@ -235,14 +235,14 @@ struct boss_janalaiAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Oregon::ComputeCellPair(x, y));
+            CellPair pair(Trinity::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Oregon::AllCreaturesOfEntryInRange check(me, MOB_EGG, 100);
-            Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(templist, check);
-            TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+            Trinity::AllCreaturesOfEntryInRange check(me, MOB_EGG, 100);
+            Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
+            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
 
@@ -267,14 +267,14 @@ struct boss_janalaiAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Oregon::ComputeCellPair(x, y));
+            CellPair pair(Trinity::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Oregon::AllCreaturesOfEntryInRange check(me, MOB_FIRE_BOMB, 100);
-            Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(templist, check);
-            TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+            Trinity::AllCreaturesOfEntryInRange check(me, MOB_FIRE_BOMB, 100);
+            Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
+            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
         for (std::list<Creature*>::const_iterator i = templist.begin(); i != templist.end(); ++i)
@@ -507,14 +507,14 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Oregon::ComputeCellPair(x, y));
+            CellPair pair(Trinity::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Oregon::AllCreaturesOfEntryInRange check(me, 23817, 50);
-            Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(templist, check);
-            TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+            Trinity::AllCreaturesOfEntryInRange check(me, 23817, 50);
+            Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
+            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
 

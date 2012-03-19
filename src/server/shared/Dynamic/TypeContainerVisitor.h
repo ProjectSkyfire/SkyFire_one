@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_TYPECONTAINERVISITOR_H
-#define OREGON_TYPECONTAINERVISITOR_H
+#ifndef TRINITY_TYPECONTAINERVISITOR_H
+#define TRINITY_TYPECONTAINERVISITOR_H
 
 /*
  * TypeContainerVisitor is implemented as a visitor pattern.  It is

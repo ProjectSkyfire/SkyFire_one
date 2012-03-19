@@ -108,7 +108,7 @@ int Master::Run()
     sLog.outString("     \\/_____/\\/_/\\/____/\\/___L\\ \\/___/ \\/_/\\/_/  ");
     sLog.outString("                          /\\____/                ");
     sLog.outString("                          \\_/__/                 ");
-    sLog.outString(" http://www.oregoncore.com                    \n ");
+    sLog.outString(" http://www.trinitycore.com                    \n ");
 
     // worldd PID file creation
     std::string pidfile = sConfig.GetStringDefault("PidFile", "");
@@ -138,7 +138,7 @@ int Master::Run()
     ACE_Based::Thread world_thread(new WorldRunnable);
     world_thread.setPriority(ACE_Based::Highest);
 
-    // set realmbuilds depend on OregonCore expected builds, and set server online
+    // set realmbuilds depend on TrinityCore expected builds, and set server online
     std::string builds = AcceptableClientBuildsListStr();
     LoginDatabase.escape_string(builds);
     LoginDatabase.PExecute("UPDATE realmlist SET realmflags = realmflags & ~(%u), population = 0, realmbuilds = '%s'  WHERE id = '%d'", REALM_FLAG_OFFLINE, builds.c_str(), realmID);
@@ -174,7 +174,7 @@ int Master::Run()
 
                 if (!curAff)
                 {
-                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for OregonCore. Accessible processors bitmask (hex): %x",Aff,appAff);
+                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for TrinityCore. Accessible processors bitmask (hex): %x",Aff,appAff);
                 }
                 else
                 {
@@ -192,9 +192,9 @@ int Master::Run()
         if (Prio)
         {
             if (SetPriorityClass(hProcess,HIGH_PRIORITY_CLASS))
-                sLog.outString("OregonCore process priority class set to HIGH");
+                sLog.outString("TrinityCore process priority class set to HIGH");
             else
-                sLog.outError("ERROR: Can't set OregonCore process priority class.");
+                sLog.outError("ERROR: Can't set TrinityCore process priority class.");
             sLog.outString();
         }
     }

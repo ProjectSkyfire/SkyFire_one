@@ -18,12 +18,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_THREADINGMODEL_H
-#define OREGON_THREADINGMODEL_H
+#ifndef TRINITY_THREADINGMODEL_H
+#define TRINITY_THREADINGMODEL_H
 
 #include "Define.h"
 
-namespace Oregon
+namespace Trinity
 {
     inline void Guard(void *) {}
 
@@ -116,9 +116,9 @@ namespace Oregon
     };
 }
 
-template<class T, class MUTEX> MUTEX Oregon::ClassLevelLockable<T, MUTEX>::si_mtx;
+template<class T, class MUTEX> MUTEX Trinity::ClassLevelLockable<T, MUTEX>::si_mtx;
 
 #define INSTANTIATE_CLASS_MUTEX(CTYPE,MUTEX) \
-    template class Oregon::ClassLevelLockable<CTYPE, MUTEX >
+    template class Trinity::ClassLevelLockable<CTYPE, MUTEX >
 #endif
 

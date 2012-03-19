@@ -17,8 +17,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _OREGON_RARUNNABLE_H_
-#define _OREGON_RARUNNABLE_H_
+#ifndef _TRINITY_RARUNNABLE_H_
+#define _TRINITY_RARUNNABLE_H_
 
 #include "Common.h"
 
@@ -35,5 +35,5 @@ private:
     ACE_Reactor* m_Reactor;
 };
 
-#endif /* _OREGON_RARUNNABLE_H_ */
+#endif /* _TRINITY_RARUNNABLE_H_ */
 /// @}

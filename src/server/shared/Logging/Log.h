@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_LOG_H
-#define OREGONCORE_LOG_H
+#ifndef TRINITY_LOG_H
+#define TRINITY_LOG_H
 
 #include "Common.h"
 #include "Policies/Singleton.h"
@@ -81,9 +81,9 @@ enum ColorTypes
 
 const int Colors = int(WHITE)+1;
 
-class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Thread_Mutex> >
+class Log : public Trinity::Singleton<Log, Trinity::ClassLevelLockable<Log, ACE_Thread_Mutex> >
 {
-    friend class Oregon::OperatorNew<Log>;
+    friend class Trinity::OperatorNew<Log>;
     Log();
     ~Log();
 
@@ -169,19 +169,19 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         bool m_charLog_Dump;
 };
 
-#define sLog Oregon::Singleton<Log>::Instance()
+#define sLog Trinity::Singleton<Log>::Instance()
 
-#ifdef OREGON_DEBUG
-#define DEBUG_LOG Oregon::Singleton<Log>::Instance().outDebug
+#ifdef TRINITY_DEBUG
+#define DEBUG_LOG Trinity::Singleton<Log>::Instance().outDebug
 #else
 #define DEBUG_LOG
 #endif
 
 // primary for script library
-#define outstring_log Oregon::Singleton<Log>::Instance().outString
-#define detail_log Oregon::Singleton<Log>::Instance().outDetail
-#define debug_log Oregon::Singleton<Log>::Instance().outDebug
-#define error_log Oregon::Singleton<Log>::Instance().outError
-#define error_db_log Oregon::Singleton<Log>::Instance().outErrorDb
+#define outstring_log Trinity::Singleton<Log>::Instance().outString
+#define detail_log Trinity::Singleton<Log>::Instance().outDetail
+#define debug_log Trinity::Singleton<Log>::Instance().outDebug
+#define error_log Trinity::Singleton<Log>::Instance().outError
+#define error_db_log Trinity::Singleton<Log>::Instance().outErrorDb
 #endif
 

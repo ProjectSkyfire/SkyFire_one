@@ -78,8 +78,8 @@ void WaypointStore::Load()
         y = fields[3].GetFloat();
         z = fields[4].GetFloat();
 
-        Oregon::NormalizeMapCoord(x);
-        Oregon::NormalizeMapCoord(y);
+        Trinity::NormalizeMapCoord(x);
+        Trinity::NormalizeMapCoord(y);
 
         wp->id = fields[1].GetUInt32();
         wp->x = x;
@@ -129,8 +129,8 @@ void WaypointStore::UpdatePath(uint32 id)
         y = fields[2].GetFloat();
         z = fields[3].GetFloat();
 
-        Oregon::NormalizeMapCoord(x);
-        Oregon::NormalizeMapCoord(y);
+        Trinity::NormalizeMapCoord(x);
+        Trinity::NormalizeMapCoord(y);
 
         wp->id = fields[0].GetUInt32();
         wp->x = x;

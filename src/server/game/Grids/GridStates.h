@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRIDSTATES_H
-#define OREGON_GRIDSTATES_H
+#ifndef TRINITY_GRIDSTATES_H
+#define TRINITY_GRIDSTATES_H
 
 #include "Map.h"
 #include "Object.h"
@@ -27,7 +27,7 @@
 class GridState
 {
     public:
-#ifdef OREGON_DEBUG
+#ifdef TRINITY_DEBUG
 #define MAGIC_TESTVAL 0xFBE823BA
         GridState() { i_Magic = MAGIC_TESTVAL; }
         bool checkMagic()

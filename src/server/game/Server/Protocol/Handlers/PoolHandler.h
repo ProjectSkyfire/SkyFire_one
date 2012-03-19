@@ -99,6 +99,6 @@ class PoolHandler
         SearchMap mPoolSearchMap;
 };
 
-#define poolhandler Oregon::Singleton<PoolHandler>::Instance()
+#define poolhandler Trinity::Singleton<PoolHandler>::Instance()
 #endif
 

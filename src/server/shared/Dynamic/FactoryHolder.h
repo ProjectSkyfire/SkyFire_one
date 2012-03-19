@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_FACTORY_HOLDER
-#define OREGON_FACTORY_HOLDER
+#ifndef TRINITY_FACTORY_HOLDER
+#define TRINITY_FACTORY_HOLDER
 
 #include "Define.h"
 #include "TypeList.h"
@@ -32,7 +32,7 @@ class FactoryHolder
 {
     public:
         typedef ObjectRegistry<FactoryHolder<T, Key >, Key > FactoryHolderRegistry;
-        typedef Oregon::Singleton<FactoryHolderRegistry > FactoryHolderRepository;
+        typedef Trinity::Singleton<FactoryHolderRegistry > FactoryHolderRepository;
 
         FactoryHolder(Key k) : i_key(k) {}
         virtual ~FactoryHolder() {}

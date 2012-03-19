@@ -31,7 +31,7 @@
 #include "TypeList.h"
 #include <map>
 
-namespace Oregon
+namespace Trinity
 {
     /* ContainerMapList Helpers */
     // count functions

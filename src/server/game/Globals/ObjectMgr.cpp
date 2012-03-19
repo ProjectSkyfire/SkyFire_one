@@ -119,7 +119,7 @@ std::string GetScriptCommandName(ScriptCommands command)
         case SCRIPT_COMMAND_LOAD_PATH: res = "SCRIPT_COMMAND_LOAD_PATH"; break;
         case SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT: res = "SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT"; break;
         case SCRIPT_COMMAND_KILL: res = "SCRIPT_COMMAND_KILL"; break;
-        // Oregon only
+        // Trinity only
         case SCRIPT_COMMAND_ORIENTATION: res = "SCRIPT_COMMAND_ORIENTATION"; break;
         case SCRIPT_COMMAND_EQUIP: res = "SCRIPT_COMMAND_EQUIP"; break;
         case SCRIPT_COMMAND_MODEL: res = "SCRIPT_COMMAND_MODEL"; break;
@@ -1097,7 +1097,7 @@ void ObjectMgr::AddCreatureToGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Oregon::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid,i)][cell_id];
@@ -1113,7 +1113,7 @@ void ObjectMgr::RemoveCreatureFromGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Oregon::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid,i)][cell_id];
@@ -1319,7 +1319,7 @@ void ObjectMgr::AddGameobjectToGrid(uint32 guid, GameObjectData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Oregon::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid,i)][cell_id];
@@ -1335,7 +1335,7 @@ void ObjectMgr::RemoveGameobjectFromGrid(uint32 guid, GameObjectData const* data
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Oregon::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid,i)][cell_id];
@@ -1910,7 +1910,7 @@ void ObjectMgr::LoadPetLevelInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog.outErrorDb("Wrong (> %u) level %u in pet_levelstats table, ignoring.",STRONG_MAX_LEVEL,current_level);
                 else
-                    sLog.outDetail("Unused (> MaxPlayerLevel in Oregond.conf) level %u in pet_levelstats table, ignoring.",current_level);
+                    sLog.outDetail("Unused (> MaxPlayerLevel in Trinityd.conf) level %u in pet_levelstats table, ignoring.",current_level);
                 continue;
             }
             else if (current_level < 1)
@@ -2284,7 +2284,7 @@ void ObjectMgr::LoadPlayerInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog.outErrorDb("Wrong (> %u) level %u in player_classlevelstats table, ignoring.",STRONG_MAX_LEVEL,current_level);
                 else
-                    sLog.outDetail("Unused (> MaxPlayerLevel in Oregond.conf) level %u in player_classlevelstats table, ignoring.",current_level);
+                    sLog.outDetail("Unused (> MaxPlayerLevel in Trinityd.conf) level %u in player_classlevelstats table, ignoring.",current_level);
                 continue;
             }
 
@@ -2377,7 +2377,7 @@ void ObjectMgr::LoadPlayerInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog.outErrorDb("Wrong (> %u) level %u in player_levelstats table, ignoring.",STRONG_MAX_LEVEL,current_level);
                 else
-                    sLog.outDetail("Unused (> MaxPlayerLevel in Oregond.conf) level %u in player_levelstats table, ignoring.",current_level);
+                    sLog.outDetail("Unused (> MaxPlayerLevel in Trinityd.conf) level %u in player_levelstats table, ignoring.",current_level);
                 continue;
             }
 
@@ -2901,19 +2901,19 @@ void ObjectMgr::LoadQuests()
             sLog.outErrorDb("Quest %u has Method = %u, expected values are 0, 1 or 2.",qinfo->GetQuestId(),qinfo->GetQuestMethod());
         }
 
-        if (qinfo->QuestFlags & ~QUEST_OREGON_FLAGS_DB_ALLOWED)
+        if (qinfo->QuestFlags & ~QUEST_TRINITY_FLAGS_DB_ALLOWED)
         {
             sLog.outErrorDb("Quest %u has SpecialFlags = %u > max allowed value. Correct SpecialFlags to value <= %u",
-                qinfo->GetQuestId(),qinfo->QuestFlags,QUEST_OREGON_FLAGS_DB_ALLOWED >> 16);
-            qinfo->QuestFlags &= QUEST_OREGON_FLAGS_DB_ALLOWED;
+                qinfo->GetQuestId(),qinfo->QuestFlags,QUEST_TRINITY_FLAGS_DB_ALLOWED >> 16);
+            qinfo->QuestFlags &= QUEST_TRINITY_FLAGS_DB_ALLOWED;
         }
 
         if (qinfo->QuestFlags & QUEST_FLAGS_DAILY)
         {
-            if (!(qinfo->QuestFlags & QUEST_OREGON_FLAGS_REPEATABLE))
+            if (!(qinfo->QuestFlags & QUEST_TRINITY_FLAGS_REPEATABLE))
             {
                 sLog.outErrorDb("Daily Quest %u not marked as repeatable in SpecialFlags, added.",qinfo->GetQuestId());
-                qinfo->QuestFlags |= QUEST_OREGON_FLAGS_REPEATABLE;
+                qinfo->QuestFlags |= QUEST_TRINITY_FLAGS_REPEATABLE;
             }
         }
 
@@ -3126,7 +3126,7 @@ void ObjectMgr::LoadQuests()
                     // no changes, quest can't be done for this requirement
                 }
 
-                qinfo->SetFlag(QUEST_OREGON_FLAGS_DELIVER);
+                qinfo->SetFlag(QUEST_TRINITY_FLAGS_DELIVER);
 
                 if (!sItemStorage.LookupEntry<ItemPrototype>(id))
                 {
@@ -3243,12 +3243,12 @@ void ObjectMgr::LoadQuests()
 
                     if (found)
                     {
-                        if (!qinfo->HasFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT))
+                        if (!qinfo->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
                         {
-                            sLog.outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE or SPELL_EFFECT_SEND_EVENT for quest %u and ReqCreatureOrGOId%d = 0, but quest does not have flag QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT. Quest flags or ReqCreatureOrGOId%d must be fixed, quest modified to enable objective.",spellInfo->Id,qinfo->QuestId,j+1,j+1);
+                            sLog.outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE or SPELL_EFFECT_SEND_EVENT for quest %u and ReqCreatureOrGOId%d = 0, but quest does not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT. Quest flags or ReqCreatureOrGOId%d must be fixed, quest modified to enable objective.",spellInfo->Id,qinfo->QuestId,j+1,j+1);
 
                             // this will prevent quest completing without objective
-                            //const_cast<Quest*>(qinfo)->SetFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT);
+                            //const_cast<Quest*>(qinfo)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
                         }
                     }
                     else
@@ -3282,7 +3282,7 @@ void ObjectMgr::LoadQuests()
             {
                 // In fact SpeakTo and Kill are quite same: either you can speak to mob:SpeakTo or you can't:Kill/Cast
 
-                qinfo->SetFlag(QUEST_OREGON_FLAGS_KILL_OR_CAST | QUEST_OREGON_FLAGS_SPEAKTO);
+                qinfo->SetFlag(QUEST_TRINITY_FLAGS_KILL_OR_CAST | QUEST_TRINITY_FLAGS_SPEAKTO);
 
                 if (!qinfo->ReqCreatureOrGOCount[j])
                 {
@@ -3469,10 +3469,10 @@ void ObjectMgr::LoadQuests()
         if (qinfo->ExclusiveGroup)
             mExclusiveQuestGroups.insert(std::pair<int32, uint32>(qinfo->ExclusiveGroup, qinfo->GetQuestId()));
         if (qinfo->LimitTime)
-            qinfo->SetFlag(QUEST_OREGON_FLAGS_TIMED);
+            qinfo->SetFlag(QUEST_TRINITY_FLAGS_TIMED);
     }
 
-    // check QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT for spell with SPELL_EFFECT_QUEST_COMPLETE
+    // check QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT for spell with SPELL_EFFECT_QUEST_COMPLETE
     for (uint32 i = 0; i < sSpellStore.GetNumRows(); ++i)
     {
         SpellEntry const *spellInfo = sSpellStore.LookupEntry(i);
@@ -3492,12 +3492,12 @@ void ObjectMgr::LoadQuests()
             if (!quest)
                 continue;
 
-            if (!quest->HasFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT))
+            if (!quest->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
             {
-                sLog.outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE for quest %u , but quest does not have flag QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT. Quest flags must be fixed, quest modified to enable objective.",spellInfo->Id,quest_id);
+                sLog.outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE for quest %u , but quest does not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT. Quest flags must be fixed, quest modified to enable objective.",spellInfo->Id,quest_id);
 
                 // this will prevent quest completing without objective
-                //const_cast<Quest*>(quest)->SetFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT);
+                //const_cast<Quest*>(quest)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
             }
         }
     }
@@ -3787,7 +3787,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                     continue;
                 }
 
-                if (!Oregon::IsValidMapCoord(tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation))
+                if (!Trinity::IsValidMapCoord(tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation))
                 {
                     sLog.outErrorDb("Table `%s` has invalid coordinates (X: %f Y: %f Z: %f O: %f) in SCRIPT_COMMAND_TELEPORT_TO for script id %u",
                         tableName.c_str(), tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation, tmp.id);
@@ -3806,13 +3806,13 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                     continue;
                 }
 
-                if (!quest->HasFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT))
+                if (!quest->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
                 {
-                    sLog.outErrorDb("Table `%s` has quest (ID: %u) in SCRIPT_COMMAND_QUEST_EXPLORED in `datalong` for script id %u, but quest not have flag QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT in quest flags. Script command or quest flags wrong. Quest modified to require objective.",
+                    sLog.outErrorDb("Table `%s` has quest (ID: %u) in SCRIPT_COMMAND_QUEST_EXPLORED in `datalong` for script id %u, but quest not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT in quest flags. Script command or quest flags wrong. Quest modified to require objective.",
                         tableName.c_str(), tmp.QuestExplored.QuestID, tmp.id);
 
                     // this will prevent quest completing without objective
-                    const_cast<Quest*>(quest)->SetFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT);
+                    const_cast<Quest*>(quest)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
 
                     // continue; - quest objective requirement set and command can be allowed
                 }
@@ -3885,7 +3885,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
 
             case SCRIPT_COMMAND_TEMP_SUMMON_CREATURE:
             {
-                if (!Oregon::IsValidMapCoord(tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation))
+                if (!Trinity::IsValidMapCoord(tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation))
                 {
                     sLog.outErrorDb("Table `%s` has invalid coordinates (X: %f Y: %f Z: %f O: %f) in SCRIPT_COMMAND_TEMP_SUMMON_CREATURE for script id %u",
                         tableName.c_str(), tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation, tmp.id);
@@ -4615,12 +4615,12 @@ void ObjectMgr::LoadQuestAreaTriggers()
             continue;
         }
 
-        if (!quest->HasFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT))
+        if (!quest->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
         {
-            sLog.outErrorDb("Table areatrigger_involvedrelation has record (id: %u) for not quest %u, but quest does not have flag QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT. Trigger or quest flags must be fixed, quest modified to require objective.",trigger_ID,quest_ID);
+            sLog.outErrorDb("Table areatrigger_involvedrelation has record (id: %u) for not quest %u, but quest does not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT. Trigger or quest flags must be fixed, quest modified to require objective.",trigger_ID,quest_ID);
 
             // this will prevent quest completing without objective
-            const_cast<Quest*>(quest)->SetFlag(QUEST_OREGON_FLAGS_EXPLORATION_OR_EVENT);
+            const_cast<Quest*>(quest)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
 
             // continue; - quest modified to required objective and trigger can be allowed.
         }
@@ -6487,7 +6487,7 @@ void ObjectMgr::LoadGameObjectForQuests()
     sLog.outString(">> Loaded %u GameObject for quests", count);
 }
 
-bool ObjectMgr::LoadOregonStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value)
+bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value)
 {
     int32 start_value = min_value;
     int32 end_value   = max_value;
@@ -6515,10 +6515,10 @@ bool ObjectMgr::LoadOregonStrings(DatabaseType& db, char const* table, int32 min
     }
 
     // cleanup affected map part for reloading case
-    for (OregonStringLocaleMap::iterator itr = mOregonStringLocaleMap.begin(); itr != mOregonStringLocaleMap.end();)
+    for (TrinityStringLocaleMap::iterator itr = mTrinityStringLocaleMap.begin(); itr != mTrinityStringLocaleMap.end();)
     {
         if (itr->first >= start_value && itr->first < end_value)
-            mOregonStringLocaleMap.erase(itr++);
+            mTrinityStringLocaleMap.erase(itr++);
         else
             ++itr;
     }
@@ -6532,8 +6532,8 @@ bool ObjectMgr::LoadOregonStrings(DatabaseType& db, char const* table, int32 min
         bar.step();
 
         sLog.outString();
-        if (min_value == MIN_OREGON_STRING_ID)              // error only in case internal strings
-            sLog.outErrorDb(">> Loaded 0 Oregon strings. DB table %s is empty. Cannot continue.",table);
+        if (min_value == MIN_TRINITY_STRING_ID)              // error only in case internal strings
+            sLog.outErrorDb(">> Loaded 0 Trinity strings. DB table %s is empty. Cannot continue.",table);
         else
             sLog.outString(">> Loaded 0 string templates. DB table %s is empty.",table);
         return false;
@@ -6561,7 +6561,7 @@ bool ObjectMgr::LoadOregonStrings(DatabaseType& db, char const* table, int32 min
             continue;
         }
 
-        OregonStringLocale& data = mOregonStringLocaleMap[entry];
+        TrinityStringLocale& data = mTrinityStringLocaleMap[entry];
 
         if (data.Content.size() > 0)
         {
@@ -6594,19 +6594,19 @@ bool ObjectMgr::LoadOregonStrings(DatabaseType& db, char const* table, int32 min
     } while (result->NextRow());
 
     sLog.outString();
-    if (min_value == MIN_OREGON_STRING_ID)
-        sLog.outString(">> Loaded %u Oregon strings from table %s", count,table);
+    if (min_value == MIN_TRINITY_STRING_ID)
+        sLog.outString(">> Loaded %u Trinity strings from table %s", count,table);
     else
         sLog.outString(">> Loaded %u string templates from %s", count,table);
 
     return true;
 }
 
-const char *ObjectMgr::GetOregonString(int32 entry, int locale_idx) const
+const char *ObjectMgr::GetTrinityString(int32 entry, int locale_idx) const
 {
     // locale_idx == -1 -> default, locale_idx >= 0 in to idx+1
-    // Content[0] always exist if exist OregonStringLocale
-    if (OregonStringLocale const *msl = GetOregonStringLocale(entry))
+    // Content[0] always exist if exist TrinityStringLocale
+    if (TrinityStringLocale const *msl = GetTrinityStringLocale(entry))
     {
         if (msl->Content.size() > locale_idx+1 && !msl->Content[locale_idx+1].empty())
             return msl->Content[locale_idx+1].c_str();
@@ -6615,9 +6615,9 @@ const char *ObjectMgr::GetOregonString(int32 entry, int locale_idx) const
     }
 
     if (entry > 0)
-        sLog.outErrorDb("Entry %i not found in oregon_string table.",entry);
+        sLog.outErrorDb("Entry %i not found in trinity_string table.",entry);
     else
-        sLog.outErrorDb("Oregon string entry %i not found in DB.",entry);
+        sLog.outErrorDb("Trinity string entry %i not found in DB.",entry);
     return "<error>";
 }
 
@@ -7663,7 +7663,7 @@ void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
             {
                 case SCRIPT_COMMAND_TALK:
                 {
-                    if (!GetOregonStringLocale (itrM->second.Talk.TextID))
+                    if (!GetTrinityStringLocale (itrM->second.Talk.TextID))
                         sLog.outErrorDb("Table `db_script_string` not has string id  %u used db script (ID: %u)", itrM->second.Talk.TextID, itrMM->first);
 
                     if (ids.find(itrM->second.Talk.TextID) != ids.end())
@@ -7678,12 +7678,12 @@ void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
 
 void ObjectMgr::LoadDbScriptStrings()
 {
-    LoadOregonStrings(WorldDatabase,"db_script_string",MIN_DB_SCRIPT_STRING_ID,MAX_DB_SCRIPT_STRING_ID);
+    LoadTrinityStrings(WorldDatabase,"db_script_string",MIN_DB_SCRIPT_STRING_ID,MAX_DB_SCRIPT_STRING_ID);
 
     std::set<int32> ids;
 
     for (int32 i = MIN_DB_SCRIPT_STRING_ID; i < MAX_DB_SCRIPT_STRING_ID; ++i)
-        if (GetOregonStringLocale(i))
+        if (GetTrinityStringLocale(i))
             ids.insert(i);
 
     for (int type = SCRIPTS_FIRST; type < SCRIPTS_LAST; ++type)
@@ -7699,7 +7699,7 @@ uint32 GetAreaTriggerScriptId(uint32 trigger_id)
     return objmgr.GetAreaTriggerScriptId(trigger_id);
 }
 
-bool LoadOregonStrings(DatabaseType& db, char const* table,int32 start_value, int32 end_value)
+bool LoadTrinityStrings(DatabaseType& db, char const* table,int32 start_value, int32 end_value)
 {
     // MAX_DB_SCRIPT_STRING_ID is max allowed negative value for scripts (scrpts can use only more deep negative values
     // start/end reversed for negative values
@@ -7709,7 +7709,7 @@ bool LoadOregonStrings(DatabaseType& db, char const* table,int32 start_value, in
         return false;
     }
 
-    return objmgr.LoadOregonStrings(db,table,start_value,end_value);
+    return objmgr.LoadTrinityStrings(db,table,start_value,end_value);
 }
 
 uint32 GetScriptId(const char *name)

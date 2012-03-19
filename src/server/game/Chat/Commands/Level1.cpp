@@ -179,7 +179,7 @@ bool ChatHandler::HandleNotifyCommand(const char* args)
     if (!*args)
         return false;
 
-    std::string str = GetOregonString(LANG_GLOBAL_NOTIFY);
+    std::string str = GetTrinityString(LANG_GLOBAL_NOTIFY);
     str += args;
 
     WorldPacket data(SMSG_NOTIFICATION, (str.size()+1));
@@ -195,7 +195,7 @@ bool ChatHandler::HandleGMNotifyCommand(const char* args)
     if (!*args)
         return false;
 
-    std::string str = GetOregonString(LANG_GM_NOTIFY);
+    std::string str = GetTrinityString(LANG_GM_NOTIFY);
     str += args;
 
     WorldPacket data(SMSG_NOTIFICATION, (str.size()+1));
@@ -281,7 +281,7 @@ bool ChatHandler::HandleGMChatCommand(const char* args)
 
 std::string ChatHandler::PGetParseString(int32 entry, ...)
 {
-        const char *format = GetOregonString(entry);
+        const char *format = GetTrinityString(entry);
         va_list ap;
         char str [1024];
         va_start(ap, entry);
@@ -699,7 +699,7 @@ bool ChatHandler::HandleVisibleCommand(const char* args)
 {
     if (!*args)
     {
-        PSendSysMessage(LANG_YOU_ARE, m_session->GetPlayer()->isGMVisible() ?  GetOregonString(LANG_VISIBLE) : GetOregonString(LANG_INVISIBLE));
+        PSendSysMessage(LANG_YOU_ARE, m_session->GetPlayer()->isGMVisible() ?  GetTrinityString(LANG_VISIBLE) : GetTrinityString(LANG_INVISIBLE));
         return true;
     }
 
@@ -751,7 +751,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
             return false;
         }
     }
-    CellPair cell_val = Oregon::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+    CellPair cell_val = Trinity::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
     Cell cell(cell_val);
 
     uint32 zone_id = obj->GetZoneId();
@@ -770,7 +770,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
     float ground_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), MAX_HEIGHT);
     float floor_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ());
 
-    GridPair p = Oregon::ComputeGridPair(obj->GetPositionX(), obj->GetPositionY());
+    GridPair p = Trinity::ComputeGridPair(obj->GetPositionX(), obj->GetPositionY());
 
     int gx=63-p.x_coord;
     int gy=63-p.y_coord;
@@ -799,7 +799,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
         GetName(),
         (obj->GetTypeId() == TYPEID_PLAYER ? "player" : "creature"), obj->GetName(),
         (obj->GetTypeId() == TYPEID_PLAYER ? "GUID" : "Entry"), (obj->GetTypeId() == TYPEID_PLAYER ? obj->GetGUIDLow(): obj->GetEntry()));
-    sLog.outDebug(GetOregonString(LANG_MAP_POSITION),
+    sLog.outDebug(GetTrinityString(LANG_MAP_POSITION),
         obj->GetMapId(), (mapEntry ? mapEntry->name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
         zone_id, (zoneEntry ? zoneEntry->area_name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
         area_id, (areaEntry ? areaEntry->area_name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
@@ -910,7 +910,7 @@ bool ChatHandler::HandleNamegoCommand(const char* args)
     }
     else if (uint64 guid = objmgr.GetPlayerGUIDByName(name))
     {
-        PSendSysMessage(LANG_SUMMONING, name.c_str(),GetOregonString(LANG_OFFLINE));
+        PSendSysMessage(LANG_SUMMONING, name.c_str(),GetTrinityString(LANG_OFFLINE));
 
         // in point where GM stay
         Player::SavePositionInDB(m_session->GetPlayer()->GetMapId(),
@@ -1241,7 +1241,7 @@ bool ChatHandler::HandleModifyEnergyCommand(const char* args)
     target->SetMaxPower(POWER_ENERGY,energym);
     target->SetPower(POWER_ENERGY, energy);
 
-    sLog.outDetail(GetOregonString(LANG_CURRENT_ENERGY),target->GetMaxPower(POWER_ENERGY));
+    sLog.outDetail(GetTrinityString(LANG_CURRENT_ENERGY),target->GetMaxPower(POWER_ENERGY));
 
     return true;
 }
@@ -1987,7 +1987,7 @@ bool ChatHandler::HandleModifyMoneyCommand(const char* args)
     {
         int32 newmoney = moneyuser + addmoney;
 
-        sLog.outDetail(GetOregonString(LANG_CURRENT_MONEY), moneyuser, addmoney, newmoney);
+        sLog.outDetail(GetTrinityString(LANG_CURRENT_MONEY), moneyuser, addmoney, newmoney);
         if (newmoney <= 0)
         {
             PSendSysMessage(LANG_YOU_TAKE_ALL_MONEY, target->GetName());
@@ -2012,7 +2012,7 @@ bool ChatHandler::HandleModifyMoneyCommand(const char* args)
         target->ModifyMoney(addmoney);
     }
 
-    sLog.outDetail(GetOregonString(LANG_NEW_MONEY), moneyuser, addmoney, target->GetMoney());
+    sLog.outDetail(GetTrinityString(LANG_NEW_MONEY), moneyuser, addmoney, target->GetMoney());
 
     return true;
 }
@@ -2248,7 +2248,7 @@ bool ChatHandler::HandleWhispersCommand(const char* args)
 {
     if (!*args)
     {
-        PSendSysMessage(LANG_COMMAND_WHISPERACCEPTING, m_session->GetPlayer()->isAcceptWhispers() ?  GetOregonString(LANG_ON) : GetOregonString(LANG_OFF));
+        PSendSysMessage(LANG_COMMAND_WHISPERACCEPTING, m_session->GetPlayer()->isAcceptWhispers() ?  GetTrinityString(LANG_ON) : GetTrinityString(LANG_OFF));
         return true;
     }
 
@@ -2434,7 +2434,7 @@ bool ChatHandler::HandleNameTeleCommand(const char * args)
     }
     else if (uint64 guid = objmgr.GetPlayerGUIDByName(name.c_str()))
     {
-        PSendSysMessage(LANG_TELEPORTING_TO, name.c_str(), GetOregonString(LANG_OFFLINE), tele->name.c_str());
+        PSendSysMessage(LANG_TELEPORTING_TO, name.c_str(), GetTrinityString(LANG_OFFLINE), tele->name.c_str());
         Player::SavePositionInDB(tele->mapId,tele->position_x,tele->position_y,tele->position_z,tele->orientation,
             MapManager::Instance().GetZoneId(tele->mapId,tele->position_x,tele->position_y,tele->position_z),guid);
     }

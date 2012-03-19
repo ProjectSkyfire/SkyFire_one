@@ -341,8 +341,8 @@ void CreatureFormation::LeaderMoveTo(float x, float y, float z)
         float dy = y + sin(angle + pathangle) * dist;
         float dz = z;
 
-        Oregon::NormalizeMapCoord(dx);
-        Oregon::NormalizeMapCoord(dy);
+        Trinity::NormalizeMapCoord(dx);
+        Trinity::NormalizeMapCoord(dy);
 
         pCreature->UpdateGroundPositionZ(dx, dy, dz);
 

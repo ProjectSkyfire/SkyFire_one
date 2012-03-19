@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_REFERENCEHOLDER_H
-#define OREGON_REFERENCEHOLDER_H
+#ifndef TRINITY_REFERENCEHOLDER_H
+#define TRINITY_REFERENCEHOLDER_H
 
 /* ReferenceHolder holds the actualy referenced obejct as well the refence
    count.  The ReferenecHolder implements as a policy base object and

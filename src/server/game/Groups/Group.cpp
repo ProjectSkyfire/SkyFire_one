@@ -870,7 +870,7 @@ void Group::GetDataForXPAtKill(Unit const* victim, uint32& count,uint32& sum_lev
         if (!member_with_max_level || member_with_max_level->getLevel() < member->getLevel())
             member_with_max_level = member;
 
-        uint32 gray_level = Oregon::XP::GetGrayLevel(member->getLevel());
+        uint32 gray_level = Trinity::XP::GetGrayLevel(member->getLevel());
         // if the victim is higher level than the gray level of the currently examined group member,
         // then set not_gray_member_with_max_level if needed.
         if (victim->getLevel() > gray_level && (!not_gray_member_with_max_level

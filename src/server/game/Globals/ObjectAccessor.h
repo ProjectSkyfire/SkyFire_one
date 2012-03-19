@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_OBJECTACCESSOR_H
-#define OREGON_OBJECTACCESSOR_H
+#ifndef TRINITY_OBJECTACCESSOR_H
+#define TRINITY_OBJECTACCESSOR_H
 
 #include "Define.h"
 #include "Policies/Singleton.h"
@@ -51,7 +51,7 @@ class HashMapHolder
 
         typedef UNORDERED_MAP<uint64, T*> MapType;
         typedef ACE_Thread_Mutex LockType;
-        typedef Oregon::GeneralLock<LockType > Guard;
+        typedef Trinity::GeneralLock<LockType > Guard;
 
         static void Insert(T* o)
         {
@@ -84,9 +84,9 @@ class HashMapHolder
         static MapType  m_objectMap;
 };
 
-class ObjectAccessor : public Oregon::Singleton<ObjectAccessor, Oregon::ClassLevelLockable<ObjectAccessor, ACE_Thread_Mutex> >
+class ObjectAccessor : public Trinity::Singleton<ObjectAccessor, Trinity::ClassLevelLockable<ObjectAccessor, ACE_Thread_Mutex> >
 {
-    friend class Oregon::OperatorNew<ObjectAccessor>;
+    friend class Trinity::OperatorNew<ObjectAccessor>;
     ObjectAccessor();
     ~ObjectAccessor();
     ObjectAccessor(const ObjectAccessor&);
@@ -139,14 +139,14 @@ class ObjectAccessor : public Oregon::Singleton<ObjectAccessor, Oregon::ClassLev
             if (!obj || obj->GetMapId() != mapid)
                 return NULL;
 
-            CellPair p = Oregon::ComputeCellPair(x, y);
+            CellPair p = Trinity::ComputeCellPair(x, y);
             if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
             {
                 sLog.outError("ObjectAccessor::GetObjectInWorld: invalid coordinates supplied X:%f Y:%f grid cell [%u:%u]", x, y, p.x_coord, p.y_coord);
                 return NULL;
             }
 
-            CellPair q = Oregon::ComputeCellPair(obj->GetPositionX(),obj->GetPositionY());
+            CellPair q = Trinity::ComputeCellPair(obj->GetPositionX(),obj->GetPositionY());
             if (q.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || q.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
             {
                 sLog.outError("ObjectAccessor::GetObjecInWorld: object (GUID: %u TypeId: %u) has invalid coordinates X:%f Y:%f grid cell [%u:%u]", obj->GetGUIDLow(), obj->GetTypeId(), obj->GetPositionX(), obj->GetPositionY(), q.x_coord, q.y_coord);
@@ -226,7 +226,7 @@ class ObjectAccessor : public Oregon::Singleton<ObjectAccessor, Oregon::ClassLev
         void RemoveOldCorpses();
 
         typedef ACE_Thread_Mutex LockType;
-        typedef Oregon::GeneralLock<LockType> Guard;
+        typedef Trinity::GeneralLock<LockType> Guard;
 
     private:
 

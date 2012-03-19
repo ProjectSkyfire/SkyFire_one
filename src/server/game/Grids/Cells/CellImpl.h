@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_CELLIMPL_H
-#define OREGON_CELLIMPL_H
+#ifndef TRINITY_CELLIMPL_H
+#define TRINITY_CELLIMPL_H
 
 #include "Cell.h"
 #include "Map.h"

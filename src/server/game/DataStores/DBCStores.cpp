@@ -157,7 +157,7 @@ typedef std::list<std::string> StoreProblemList;
 
 bool IsAcceptableClientBuild(uint32 build)
 {
-    int accepted_versions[] = EXPECTED_OREGONCORE_CLIENT_BUILD;
+    int accepted_versions[] = EXPECTED_TRINITY_CLIENT_BUILD;
     for (int i = 0; accepted_versions[i]; ++i)
         if (build == accepted_versions[i])
             return true;
@@ -168,7 +168,7 @@ bool IsAcceptableClientBuild(uint32 build)
 std::string AcceptableClientBuildsListStr()
 {
     std::ostringstream data;
-    int accepted_versions[] = EXPECTED_OREGONCORE_CLIENT_BUILD;
+    int accepted_versions[] = EXPECTED_TRINITY_CLIENT_BUILD;
     for (int i = 0; accepted_versions[i]; ++i)
         data << accepted_versions[i] << " ";
     return data.str();
@@ -313,7 +313,7 @@ void LoadDBCStores(const std::string& dataPath)
 
         // DBC not support uint64 fields but SpellEntry have SpellFamilyFlags mapped at 2 uint32 fields
         // uint32 field already converted to bigendian if need, but must be swapped for correct uint64 bigendian view
-        #if OREGON_ENDIAN == OREGON_BIGENDIAN
+        #if TRINITY_ENDIAN == TRINITY_BIGENDIAN
         std::swap(*((uint32*)(&spell->SpellFamilyFlags)),*(((uint32*)(&spell->SpellFamilyFlags))+1));
         #endif
     }
@@ -485,7 +485,7 @@ void LoadDBCStores(const std::string& dataPath)
     // error checks
     if (bad_dbc_files.size() >= DBCFilesCount)
     {
-        sLog.outError("\nIncorrect DataDir value in Oregond.conf or ALL required *.dbc files (%d) not found by path: %sdbc",DBCFilesCount,dataPath.c_str());
+        sLog.outError("\nIncorrect DataDir value in Trinityd.conf or ALL required *.dbc files (%d) not found by path: %sdbc",DBCFilesCount,dataPath.c_str());
         exit(1);
     }
     else if (!bad_dbc_files.empty())

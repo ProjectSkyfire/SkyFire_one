@@ -90,5 +90,5 @@ class TicketMgr
 };
 
 #endif
-#define ticketmgr Oregon::Singleton<TicketMgr>::Instance()
+#define ticketmgr Trinity::Singleton<TicketMgr>::Instance()
 

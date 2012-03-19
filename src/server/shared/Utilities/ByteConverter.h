@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_BYTECONVERTER_H
-#define OREGON_BYTECONVERTER_H
+#ifndef TRINITY_BYTECONVERTER_H
+#define TRINITY_BYTECONVERTER_H
 
 /*
   ByteConverter reverse your byte order.  This is used
@@ -48,7 +48,7 @@ namespace ByteConverter
     }
 }
 
-#if OREGON_ENDIAN == OREGON_BIGENDIAN
+#if TRINITY_ENDIAN == TRINITY_BIGENDIAN
 template<typename T> inline void EndianConvert(T& val) { ByteConverter::apply<T>(&val); }
 template<typename T> inline void EndianConvertReverse(T&) { }
 #else
