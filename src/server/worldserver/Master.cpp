@@ -93,22 +93,31 @@ Master::~Master()
 {
 }
 
-// Main function
+/// Main function
 int Master::Run()
 {
-    sLog.outString("%s (core-daemon)", _FULLVERSION);
+    BigNumber seed1;
+    seed1.SetRand(16 * 8);
+
+    sLog.outString("%s (worldserver-daemon)", _FULLVERSION);
     sLog.outString("<Ctrl-C> to stop.\n");
 
-    sLog.outString("  _____                                          ");
-    sLog.outString(" /\\  __`\\                                        ");
-    sLog.outString(" \\ \\ \\/\\ \\  _ __   __     __     ___    ___      ");
-    sLog.outString("  \\ \\ \\ \\ \\/\\`'__\\'__`\\ /'_ `\\  / __`\\/' _ `\\    ");
-    sLog.outString("   \\ \\ \\_\\ \\ \\ \\/\\  __//\\ \\L\\ \\/\\ \\L\\ \\\\ \\/\\ \\   ");
-    sLog.outString("    \\ \\_____\\ \\_\\ \\____\\ \\____ \\ \\____/ \\_\\ \\_\\  ");
-    sLog.outString("     \\/_____/\\/_/\\/____/\\/___L\\ \\/___/ \\/_/\\/_/  ");
-    sLog.outString("                          /\\____/                ");
-    sLog.outString("                          \\_/__/                 ");
-    sLog.outString(" http://www.trinitycore.com                    \n ");
+    sLog.outString(" ");
+    sLog.outString("   ______  __  __  __  __  ______ __  ______  ______ ");
+    sLog.outString("  /\\  ___\\/\\ \\/ / /\\ \\_\\ \\/\\  ___/\\ \\/\\  == \\/\\  ___\\ ");
+    sLog.outString("  \\ \\___  \\ \\  _'-\\ \\____ \\ \\  __\\ \\ \\ \\  __<\\ \\  __\\ ");
+    sLog.outString("   \\/\\_____\\ \\_\\ \\_\\/\\_____\\ \\_\\  \\ \\_\\ \\_\\ \\_\\ \\_____\\ ");
+    sLog.outString("    \\/_____/\\/_/\\/_/\\/_____/\\/_/   \\/_/\\/_/ /_/\\/_____/ ");
+    sLog.outString("  Project SkyFireEmu 2012(c) Open-sourced Game Emulation ");
+    sLog.outString("           <http://www.projectskyfire.org/> ");
+    sLog.outString(" ");
+
+#ifdef USE_SFMT_FOR_RNG
+    sLog.outString("\n");
+    sLog.outString("SFMT has been enabled as the random number generator, if worldserver");
+    sLog.outString("freezes or crashes randomly, first, try disabling SFMT in CMAKE configuration");
+    sLog.outString("\n");
+#endif //USE_SFMT_FOR_RNG
 
     // worldd PID file creation
     std::string pidfile = sConfig.GetStringDefault("PidFile", "");
