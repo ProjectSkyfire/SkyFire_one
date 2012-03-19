@@ -1459,7 +1459,7 @@ bool Group::InCombatToInstance(uint32 instanceId)
         Player* player = itr->getSource();
         if (player && player->getAttackers().size() && player->GetInstanceId() == instanceId && (player->GetMap()->IsRaid() || player->GetMap()->IsHeroic()))
             for (std::set<Unit*>::const_iterator i = player->getAttackers().begin(); i != player->getAttackers().end(); ++i)
-          if ((*i) && (*i)->GetTypeId() == TYPEID_UNIT && (*i)->ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_INSTANCE_BIND)
+          if ((*i) && (*i)->GetTypeId() == TYPEID_UNIT && (*i)->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_INSTANCE_BIND)
                     return true;
     }
     return false;

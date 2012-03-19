@@ -210,7 +210,7 @@ struct boss_thekalAI : public ScriptedAI
                 DoCast(me, SPELL_TIGER_FORM);
                 Resurrect(me);
                 me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                const CreatureInfo *cinfo = me->GetCreatureInfo();
+                const CreatureTemplate *cinfo = me->GetCreatureTemplate();
                 me->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg / 100) * 40)));
                 me->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg / 100) * 40)));
                 me->UpdateDamagePhysical(BASE_ATTACK);

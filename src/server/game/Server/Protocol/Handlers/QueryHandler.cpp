@@ -146,7 +146,7 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    CreatureInfo const *ci = sObjectMgr.GetCreatureTemplate(entry);
+    CreatureTemplate const *ci = sObjectMgr.GetCreatureTemplate(entry);
     if (ci)
     {
         std::string Name, SubName;

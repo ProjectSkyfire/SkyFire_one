@@ -798,13 +798,13 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
                 pVictim->setDeathState(JUST_DIED);
                 pVictim->SetHealth(0);
 
-                CreatureInfo const* cInfo = pVictim->ToCreature()->GetCreatureInfo();
+                CreatureTemplate const* cInfo = pVictim->ToCreature()->GetCreatureTemplate();
                 if (cInfo && cInfo->lootid)
                     pVictim->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 
                 // some critters required for quests
                 if (GetTypeId() == TYPEID_PLAYER)
-                    if (CreatureInfo const* normalInfo = sObjectMgr.GetCreatureTemplate(pVictim->GetEntry()))
+                    if (CreatureTemplate const* normalInfo = sObjectMgr.GetCreatureTemplate(pVictim->GetEntry()))
                         this->ToPlayer()->KilledMonster(normalInfo, pVictim->GetGUID());
             }
             else
@@ -2164,7 +2164,7 @@ MeleeHitOutcome Unit::RollMeleeOutcomeAgainst (const Unit *pVictim, WeaponAttack
         if (GetTypeId() == TYPEID_PLAYER)
             parry_chance -= int32(ToPlayer()->GetExpertiseDodgeOrParryReduction(attType)*100);
 
-        if (pVictim->GetTypeId() == TYPEID_PLAYER || !(pVictim->ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_NO_PARRY))
+        if (pVictim->GetTypeId() == TYPEID_PLAYER || !(pVictim->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_NO_PARRY))
         {
             int32 tmp2 = int32(parry_chance);
             if (tmp2 > 0                                         // check if unit _can_ parry
@@ -2176,7 +2176,7 @@ MeleeHitOutcome Unit::RollMeleeOutcomeAgainst (const Unit *pVictim, WeaponAttack
             }
         }
 
-        if (pVictim->GetTypeId() == TYPEID_PLAYER || !(pVictim->ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_NO_BLOCK))
+        if (pVictim->GetTypeId() == TYPEID_PLAYER || !(pVictim->ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_NO_BLOCK))
         {
             tmp = block_chance;
             if (tmp > 0                                          // check if unit _can_ block
@@ -2205,7 +2205,7 @@ MeleeHitOutcome Unit::RollMeleeOutcomeAgainst (const Unit *pVictim, WeaponAttack
     if (tmp > 0 && roll < (sum += tmp))
     {
         sLog->outDebug ("RollMeleeOutcomeAgainst: CRIT <%d, %d)", sum-tmp, sum);
-        if (GetTypeId() == TYPEID_UNIT && (ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_NO_CRIT))
+        if (GetTypeId() == TYPEID_UNIT && (ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_NO_CRIT))
             sLog->outDebug ("RollMeleeOutcomeAgainst: CRIT DISABLED)");
         else
             return MELEE_HIT_CRIT;
@@ -2233,7 +2233,7 @@ MeleeHitOutcome Unit::RollMeleeOutcomeAgainst (const Unit *pVictim, WeaponAttack
 
     // mobs can only score crushing blows with autoattack
     if (!SpellCasted && !IsControlledByPlayer() &&
-        !(GetTypeId() == TYPEID_UNIT && ToCreature()->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_NO_CRUSH))
+        !(GetTypeId() == TYPEID_UNIT && ToCreature()->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_NO_CRUSH))
     {
         // when their weapon skill is 15 or more above victim's defense skill
         tmp = victimDefenseSkill;
@@ -6450,7 +6450,7 @@ FactionTemplateEntry const* Unit::getFactionTemplateEntry() const
             if (GetTypeId() == TYPEID_PLAYER)
                 sLog->outError("Player %s has invalid faction (faction template id) #%u", ToPlayer()->GetName(), getFaction());
             else
-                sLog->outError("Creature (template id: %u) has invalid faction (faction template id) #%u", ToCreature()->GetCreatureInfo()->Entry, getFaction());
+                sLog->outError("Creature (template id: %u) has invalid faction (faction template id) #%u", ToCreature()->GetCreatureTemplate()->Entry, getFaction());
 
             guid = GetGUID();
         }
@@ -7691,7 +7691,7 @@ uint32 Unit::SpellDamageBonus(Unit *pVictim, SpellEntry const *spellProto, uint3
     tmpDamage = (tmpDamage+TakenActualBenefit)*TakenTotalMod;
 
     if (GetTypeId() == TYPEID_UNIT && !ToCreature()->isPet())
-        tmpDamage *= ToCreature()->GetSpellDamageMod(ToCreature()->GetCreatureInfo()->rank);
+        tmpDamage *= ToCreature()->GetSpellDamageMod(ToCreature()->GetCreatureTemplate()->rank);
 
     return tmpDamage > 0 ? uint32(tmpDamage) : 0;
 }
@@ -8629,7 +8629,7 @@ void Unit::ClearInCombat()
     if (GetTypeId() != TYPEID_PLAYER)
     {
         Creature* creature = ToCreature();
-        if (creature->GetCreatureInfo() && creature->GetCreatureInfo()->unit_flags & UNIT_FLAG_OOC_NOT_ATTACKABLE)
+        if (creature->GetCreatureTemplate() && creature->GetCreatureTemplate()->unit_flags & UNIT_FLAG_OOC_NOT_ATTACKABLE)
             SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
         clearUnitState(UNIT_STAT_ATTACK_PLAYER);
@@ -9570,7 +9570,7 @@ uint32 Unit::GetCreatureType() const
             return CREATURE_TYPE_HUMANOID;
     }
     else
-        return ToCreature()->GetCreatureInfo()->type;
+        return ToCreature()->GetCreatureTemplate()->type;
 }
 
 /*#######################################
@@ -11661,7 +11661,7 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
             {
                 if (m->IsRaid() || m->IsHeroic())
                 {
-                    if (creature->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_INSTANCE_BIND)
+                    if (creature->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_INSTANCE_BIND)
                         ((InstanceMap *)m)->PermBindAllPlayers(creditedPlayer);
                 }
                 else
@@ -11975,7 +11975,7 @@ void Unit::SetCharmedBy(Unit* charmer, CharmType type)
             case CHARM_TYPE_CHARM:
                 if (GetTypeId() == TYPEID_UNIT && charmer->getClass() == CLASS_WARLOCK)
                 {
-                    CreatureInfo const *cinfo = ToCreature()->GetCreatureInfo();
+                    CreatureTemplate const *cinfo = ToCreature()->GetCreatureTemplate();
                     if (cinfo && cinfo->type == CREATURE_TYPE_DEMON)
                     {
                         //to prevent client crash
@@ -12060,7 +12060,7 @@ void Unit::RemoveCharmedBy(Unit *charmer)
             case CHARM_TYPE_CHARM:
                 if (GetTypeId() == TYPEID_UNIT && charmer->getClass() == CLASS_WARLOCK)
                 {
-                    CreatureInfo const *cinfo = ToCreature()->GetCreatureInfo();
+                    CreatureTemplate const *cinfo = ToCreature()->GetCreatureTemplate();
                     if (cinfo && cinfo->type == CREATURE_TYPE_DEMON)
                     {
                         CreatureDataAddon const *cainfo = ToCreature()->GetCreatureAddon();
@@ -12094,7 +12094,7 @@ void Unit::RestoreFaction()
         ToPlayer()->setFactionForRace(getRace());
     else
     {
-        CreatureInfo const *cinfo = ToCreature()->GetCreatureInfo();
+        CreatureTemplate const *cinfo = ToCreature()->GetCreatureTemplate();
 
         if (ToCreature()->isPet())
         {

@@ -2127,12 +2127,12 @@ void SpellMgr::LoadSpellScriptTarget()
                     sLog->outErrorDb("Table spell_script_target: target entry == 0 for not GO target type (%u).", type);
                     continue;
                 }*/
-                if (targetEntry && !sCreatureStorage.LookupEntry<CreatureInfo>(targetEntry))
+                if (targetEntry && !sCreatureStorage.LookupEntry<CreatureTemplate>(targetEntry))
                 {
                     sLog->outErrorDb("Table spell_script_target: creature template entry %u does not exist.", targetEntry);
                     continue;
                 }
-                const CreatureInfo* cInfo = sCreatureStorage.LookupEntry<CreatureInfo>(targetEntry);
+                const CreatureTemplate* cInfo = sCreatureStorage.LookupEntry<CreatureTemplate>(targetEntry);
 
                 if (spellId == 30427 && !cInfo->SkinLootId)
                 {

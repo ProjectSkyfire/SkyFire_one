@@ -1514,10 +1514,10 @@ bool ChatHandler::HandleNpcFactionIdCommand(const char* args)
     // faction is set in creature_template - not inside creature
 
     // update in memory
-    if (CreatureInfo const *cinfo = creature->GetCreatureInfo())
+    if (CreatureTemplate const *cinfo = creature->GetCreatureTemplate())
     {
-        const_cast<CreatureInfo*>(cinfo)->faction_A = factionId;
-        const_cast<CreatureInfo*>(cinfo)->faction_H = factionId;
+        const_cast<CreatureTemplate*>(cinfo)->faction_A = factionId;
+        const_cast<CreatureTemplate*>(cinfo)->faction_H = factionId;
     }
 
     // and DB
@@ -3746,7 +3746,7 @@ bool ChatHandler::HandleCreatePetCommand(const char* /*args*/)
         return false;
     }
 
-    CreatureInfo const* cInfo = sObjectMgr.GetCreatureTemplate(creatureTarget->GetEntry());
+    CreatureTemplate const* cInfo = sObjectMgr.GetCreatureTemplate(creatureTarget->GetEntry());
     // Creatures with family 0 crashes the server
     if (cInfo->family == 0)
     {

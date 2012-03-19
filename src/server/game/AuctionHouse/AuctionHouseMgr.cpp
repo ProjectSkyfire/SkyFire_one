@@ -375,7 +375,7 @@ void AuctionHouseMgr::LoadAuctions()
             continue;
         }
 
-        CreatureInfo const* auctioneerInfo = sObjectMgr.GetCreatureTemplate(auctioneerData->id);
+        CreatureTemplate const* auctioneerInfo = sObjectMgr.GetCreatureTemplate(auctioneerData->id);
         if (!auctioneerInfo)
         {
             aItem->DeleteFromDB();

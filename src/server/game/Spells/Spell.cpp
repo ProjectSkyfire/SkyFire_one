@@ -3924,7 +3924,7 @@ uint8 Spell::CanCast(bool strict)
                 if (creature->GetCreatureType() != CREATURE_TYPE_CRITTER && (!creature->lootForBody || !creature->loot.empty()))
                     return SPELL_FAILED_TARGET_NOT_LOOTED;
 
-                uint32 skill = creature->GetCreatureInfo()->GetRequiredLootSkill();
+                uint32 skill = creature->GetCreatureTemplate()->GetRequiredLootSkill();
 
                 int32 skillValue = m_caster->ToPlayer()->GetSkillValue(skill);
                 int32 TargetLevel = m_targets.getUnitTarget()->getLevel();
@@ -4235,7 +4235,7 @@ uint8 Spell::CanCast(bool strict)
                         return SPELL_FAILED_HIGHLEVEL;
 
                     // use SMSG_PET_TAME_FAILURE?
-                    if (!m_targets.getUnitTarget()->ToCreature()->GetCreatureInfo()->isTameable())
+                    if (!m_targets.getUnitTarget()->ToCreature()->GetCreatureTemplate()->isTameable())
                         return SPELL_FAILED_BAD_TARGETS;
 
                     if (m_caster->GetPetGUID())

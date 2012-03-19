@@ -419,7 +419,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                 me->setFaction(action.set_faction.factionId);
             else
             {
-                if (CreatureInfo const* ci = GetCreatureTemplateStore(me->GetEntry()))
+                if (CreatureTemplate const* ci = GetCreatureTemplateStore(me->GetEntry()))
                 {
                     //if no id provided, assume reset and then use default
                     if (me->getFaction() != ci->faction_A)
@@ -435,7 +435,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                 //set model based on entry from creature_template
                 if (action.morph.creatureId)
                 {
-                    if (CreatureInfo const* ci = GetCreatureTemplateStore(action.morph.creatureId))
+                    if (CreatureTemplate const* ci = GetCreatureTemplateStore(action.morph.creatureId))
                     {
                         uint32 display_id = sObjectMgr.ChooseDisplayId(0, ci);
                         me->SetDisplayId(display_id);

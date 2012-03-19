@@ -1310,7 +1310,7 @@ struct npc_snake_trap_serpentsAI : public ScriptedAI
         if (!me->isPet() || !Owner)
             return;
 
-        CreatureInfo const *Info = me->GetCreatureInfo();
+        CreatureTemplate const *Info = me->GetCreatureTemplate();
 
         if (Info->Entry == C_VIPER)
             IsViper = true;

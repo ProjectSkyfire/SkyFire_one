@@ -401,7 +401,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
     void SummonedCreatureDespawn(Creature* summon)
     {
-        if (summon->GetCreatureInfo()->Entry == FLAME_OF_AZZINOTH)
+        if (summon->GetCreatureTemplate()->Entry == FLAME_OF_AZZINOTH)
         {
             for (uint8 i = 0; i < 2; ++i)
                 if (summon->GetGUID() == FlameGUID[i])

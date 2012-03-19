@@ -166,7 +166,7 @@ struct boss_venoxisAI : public ScriptedAI
                     me->InterruptNonMeleeSpells(false);
                     DoCast(me, SPELL_SNAKE_FORM);
                     me->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.0f);
-                    const CreatureInfo *cinfo = me->GetCreatureInfo();
+                    const CreatureTemplate *cinfo = me->GetCreatureTemplate();
                     me->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg + ((cinfo->mindmg / 100) * 25)));
                     me->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg + ((cinfo->maxdmg / 100) * 25)));
                     me->UpdateDamagePhysical(BASE_ATTACK);

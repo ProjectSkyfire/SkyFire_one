@@ -95,7 +95,7 @@ VendorItem const* VendorItemData::FindItem(uint32 item_id) const
     return NULL;
 }
 
-uint32 CreatureInfo::GetRandomValidModelId() const
+uint32 CreatureTemplate::GetRandomValidModelId() const
 {
     uint32 c = 0;
     uint32 modelIDs[4];
@@ -108,7 +108,7 @@ uint32 CreatureInfo::GetRandomValidModelId() const
     return ((c>0) ? modelIDs[urand(0, c-1)] : 0);
 }
 
-uint32 CreatureInfo::GetFirstValidModelId() const
+uint32 CreatureTemplate::GetFirstValidModelId() const
 {
     if (Modelid_A1) return Modelid_A1;
     if (Modelid_A2) return Modelid_A2;
@@ -254,7 +254,7 @@ void Creature::RemoveCorpse(bool setSpawnTime)
  */
 bool Creature::InitEntry(uint32 Entry, uint32 team, const CreatureData *data)
 {
-    CreatureInfo const *normalInfo = sObjectMgr.GetCreatureTemplate(Entry);
+    CreatureTemplate const *normalInfo = sObjectMgr.GetCreatureTemplate(Entry);
     if (!normalInfo)
     {
         sLog->outErrorDb("Creature::UpdateEntry creature entry %u does not exist.", Entry);
@@ -263,7 +263,7 @@ bool Creature::InitEntry(uint32 Entry, uint32 team, const CreatureData *data)
 
     // get heroic mode entry
     uint32 actualEntry = Entry;
-    CreatureInfo const *cinfo = normalInfo;
+    CreatureTemplate const *cinfo = normalInfo;
     if (normalInfo->HeroicEntry)
     {
         //we already have valid Map pointer for current creature!
@@ -288,7 +288,7 @@ bool Creature::InitEntry(uint32 Entry, uint32 team, const CreatureData *data)
         return false;
     }
 
-    uint32 display_id = sObjectMgr.ChooseDisplayId(team, GetCreatureInfo(), data);
+    uint32 display_id = sObjectMgr.ChooseDisplayId(team, GetCreatureTemplate(), data);
     CreatureModelInfo const *minfo = sObjectMgr.GetCreatureModelRandomGender(display_id);
     if (!minfo)                                             // Cancel load if no model defined
     {
@@ -330,10 +330,10 @@ bool Creature::InitEntry(uint32 Entry, uint32 team, const CreatureData *data)
     if (!m_respawnradius && m_defaultMovementType == RANDOM_MOTION_TYPE)
         m_defaultMovementType = IDLE_MOTION_TYPE;
 
-    m_spells[0] = GetCreatureInfo()->spell1;
-    m_spells[1] = GetCreatureInfo()->spell2;
-    m_spells[2] = GetCreatureInfo()->spell3;
-    m_spells[3] = GetCreatureInfo()->spell4;
+    m_spells[0] = GetCreatureTemplate()->spell1;
+    m_spells[1] = GetCreatureTemplate()->spell2;
+    m_spells[2] = GetCreatureTemplate()->spell3;
+    m_spells[3] = GetCreatureTemplate()->spell4;
 
     return true;
 }
@@ -343,7 +343,7 @@ bool Creature::UpdateEntry(uint32 Entry, uint32 team, const CreatureData *data)
     if (!InitEntry(Entry, team, data))
         return false;
 
-    CreatureInfo const* cInfo = GetCreatureInfo();
+    CreatureTemplate const* cInfo = GetCreatureTemplate();
 
     m_regenHealth = cInfo->RegenHealth;
 
@@ -590,7 +590,7 @@ void Creature::Update(uint32 diff)
             if (!isInCombat())
             {
                 if (HasFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_OTHER_TAGGER))
-                    SetUInt32Value(UNIT_DYNAMIC_FLAGS, GetCreatureInfo()->dynamicflags);
+                    SetUInt32Value(UNIT_DYNAMIC_FLAGS, GetCreatureTemplate()->dynamicflags);
                 RegenerateHealth();
             }
             else if (IsPolymorphed())
@@ -702,7 +702,7 @@ bool Creature::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 team, float
 
     if (bResult)
     {
-        switch (GetCreatureInfo()->rank)
+        switch (GetCreatureTemplate()->rank)
         {
             case CREATURE_ELITE_RARE:
                 m_corpseDelay = sWorld->getConfig(CONFIG_CORPSE_DECAY_RARE);
@@ -722,7 +722,7 @@ bool Creature::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 team, float
         }
         LoadCreaturesAddon();
 
-        if (GetCreatureInfo()->InhabitType & INHABIT_AIR)
+        if (GetCreatureTemplate()->InhabitType & INHABIT_AIR)
         {
             if (GetDefaultMovementType() == IDLE_MOTION_TYPE)
                 AddUnitMovementFlag(MOVEFLAG_FLYING);
@@ -730,7 +730,7 @@ bool Creature::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 team, float
                 SetFlying(true);
         }
 
-        if (GetCreatureInfo()->InhabitType & INHABIT_WATER)
+        if (GetCreatureTemplate()->InhabitType & INHABIT_WATER)
         {
             AddUnitMovementFlag(MOVEFLAG_SWIMMING);
         }
@@ -753,15 +753,15 @@ bool Creature::isCanTrainingOf(Player* player, bool msg) const
         return false;
     }
 
-    switch (GetCreatureInfo()->trainer_type)
+    switch (GetCreatureTemplate()->trainer_type)
     {
         case TRAINER_TYPE_CLASS:
-            if (player->getClass() != GetCreatureInfo()->classNum)
+            if (player->getClass() != GetCreatureTemplate()->classNum)
             {
                 if (msg)
                 {
                     player->PlayerTalkClass->ClearMenus();
-                    switch (GetCreatureInfo()->classNum)
+                    switch (GetCreatureTemplate()->classNum)
                     {
                         case CLASS_DRUID:  player->PlayerTalkClass->SendGossipMenu(4913, GetGUID()); break;
                         case CLASS_HUNTER: player->PlayerTalkClass->SendGossipMenu(10090, GetGUID()); break;
@@ -786,12 +786,12 @@ bool Creature::isCanTrainingOf(Player* player, bool msg) const
             }
             break;
         case TRAINER_TYPE_MOUNTS:
-            if (GetCreatureInfo()->race && player->getRace() != GetCreatureInfo()->race)
+            if (GetCreatureTemplate()->race && player->getRace() != GetCreatureTemplate()->race)
             {
                 if (msg)
                 {
                     player->PlayerTalkClass->ClearMenus();
-                    switch (GetCreatureInfo()->classNum)
+                    switch (GetCreatureTemplate()->classNum)
                     {
                         case RACE_DWARF:        player->PlayerTalkClass->SendGossipMenu(5865, GetGUID()); break;
                         case RACE_GNOME:        player->PlayerTalkClass->SendGossipMenu(4881, GetGUID()); break;
@@ -809,7 +809,7 @@ bool Creature::isCanTrainingOf(Player* player, bool msg) const
             }
             break;
         case TRAINER_TYPE_TRADESKILLS:
-            if (GetCreatureInfo()->trainer_spell && !player->HasSpell(GetCreatureInfo()->trainer_spell))
+            if (GetCreatureTemplate()->trainer_spell && !player->HasSpell(GetCreatureTemplate()->trainer_spell))
             {
                 if (msg)
                 {
@@ -857,8 +857,8 @@ bool Creature::isCanInteractWithBattleMaster(Player* player, bool msg) const
 bool Creature::isCanTrainingAndResetTalentsOf(Player* player) const
 {
     return player->getLevel() >= 10
-        && GetCreatureInfo()->trainer_type == TRAINER_TYPE_CLASS
-        && player->getClass() == GetCreatureInfo()->classNum;
+        && GetCreatureTemplate()->trainer_type == TRAINER_TYPE_CLASS
+        && player->getClass() == GetCreatureTemplate()->classNum;
 }
 
 void Creature::AI_SendMoveToPacket(float x, float y, float z, uint32 time, uint32 /*MovementFlags*/, uint8 /*type*/)
@@ -936,7 +936,7 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask)
     uint32 displayId = GetNativeDisplayId();
 
     // check if it's a custom model and if not, use 0 for displayId
-    CreatureInfo const *cinfo = GetCreatureInfo();
+    CreatureTemplate const *cinfo = GetCreatureTemplate();
     if (cinfo)
     {
         if (displayId == cinfo->Modelid_A1 || displayId == cinfo->Modelid_A2 ||
@@ -994,7 +994,7 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask)
     WorldDatabase.CommitTransaction();
 }
 
-void Creature::SelectLevel(const CreatureInfo *cinfo)
+void Creature::SelectLevel(const CreatureTemplate *cinfo)
 {
     uint32 rank = isPet()? 0 : cinfo->rank;
 
@@ -1114,7 +1114,7 @@ bool Creature::CreateFromProto(uint32 guidlow, uint32 Entry, uint32 team, const 
             return false;
     }
 
-    CreatureInfo const *cinfo = sObjectMgr.GetCreatureTemplate(Entry);
+    CreatureTemplate const *cinfo = sObjectMgr.GetCreatureTemplate(Entry);
     if (!cinfo)
     {
         sLog->outErrorDb("Creature entry %u does not exist.", Entry);
@@ -1173,7 +1173,7 @@ bool Creature::LoadFromDB(uint32 guid, Map *map)
     uint32 curhealth = data->curhealth;
     if (curhealth)
     {
-        curhealth = uint32(curhealth*_GetHealthMod(GetCreatureInfo()->rank));
+        curhealth = uint32(curhealth*_GetHealthMod(GetCreatureTemplate()->rank));
         if (curhealth < 1)
             curhealth = 1;
     }
@@ -1386,8 +1386,8 @@ void Creature::setDeathState(DeathState s)
         //if (!isPet())
             setActive(false);
 
-        if (!isPet() && GetCreatureInfo()->SkinLootId)
-            if (LootTemplates_Skinning.HaveLootFor(GetCreatureInfo()->SkinLootId))
+        if (!isPet() && GetCreatureTemplate()->SkinLootId)
+            if (LootTemplates_Skinning.HaveLootFor(GetCreatureTemplate()->SkinLootId))
                 SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
 
         if (canFly() && FallGround())
@@ -1401,12 +1401,12 @@ void Creature::setDeathState(DeathState s)
         SetLootRecipient(NULL);
         ResetPlayerDamageReq();
         Unit::setDeathState(ALIVE);
-        CreatureInfo const *cinfo = GetCreatureInfo();
+        CreatureTemplate const *cinfo = GetCreatureTemplate();
         RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
         AddUnitMovementFlag(MOVEFLAG_WALK_MODE);
-        if (GetCreatureInfo()->InhabitType & INHABIT_AIR)
+        if (GetCreatureTemplate()->InhabitType & INHABIT_AIR)
             AddUnitMovementFlag(MOVEFLAG_FLYING | MOVEFLAG_FLYING2);
-        if (GetCreatureInfo()->InhabitType & INHABIT_WATER)
+        if (GetCreatureTemplate()->InhabitType & INHABIT_WATER)
             AddUnitMovementFlag(MOVEFLAG_SWIMMING);
         SetUInt32Value(UNIT_NPC_FLAGS, cinfo->npcflag);
         clearUnitState(UNIT_STAT_ALL_STATE);
@@ -1464,7 +1464,7 @@ void Creature::Respawn(bool force)
         if (m_originalEntry != GetEntry())
             UpdateEntry(m_originalEntry);
 
-        CreatureInfo const *cinfo = GetCreatureInfo();
+        CreatureTemplate const *cinfo = GetCreatureTemplate();
         SelectLevel(cinfo);
 
         if (m_isDeadByDefault)
@@ -1510,7 +1510,7 @@ bool Creature::IsImmunedToSpell(SpellEntry const* spellInfo, bool useCharges)
     if (!spellInfo)
         return false;
 
-    if (GetCreatureInfo()->MechanicImmuneMask & (1 << (spellInfo->Mechanic - 1)))
+    if (GetCreatureTemplate()->MechanicImmuneMask & (1 << (spellInfo->Mechanic - 1)))
         return true;
 
     return Unit::IsImmunedToSpell(spellInfo, useCharges);
@@ -1518,7 +1518,7 @@ bool Creature::IsImmunedToSpell(SpellEntry const* spellInfo, bool useCharges)
 
 bool Creature::IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const
 {
-    if (GetCreatureInfo()->MechanicImmuneMask & (1 << (spellInfo->EffectMechanic[index] - 1)))
+    if (GetCreatureTemplate()->MechanicImmuneMask & (1 << (spellInfo->EffectMechanic[index] - 1)))
         return true;
 
     return Unit::IsImmunedToSpellEffect(spellInfo, index);
@@ -1842,7 +1842,7 @@ CreatureDataAddon const* Creature::GetCreatureAddon() const
     }
 
     // dependent from heroic mode entry
-    return ObjectMgr::GetCreatureTemplateAddon(GetCreatureInfo()->Entry);
+    return ObjectMgr::GetCreatureTemplateAddon(GetCreatureTemplate()->Entry);
 }
 
 //creature_addon table
@@ -2057,7 +2057,7 @@ void Creature::AllLootRemovedFromCorpse()
             return;
 
         float decayRate;
-        CreatureInfo const *cinfo = GetCreatureInfo();
+        CreatureTemplate const *cinfo = GetCreatureTemplate();
 
         // corpse was not skinnable -> apply corpse looted timer
         if (!cinfo || !cinfo->SkinLootId)

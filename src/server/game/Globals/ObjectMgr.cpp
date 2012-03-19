@@ -362,9 +362,9 @@ void ObjectMgr::RemoveArenaTeam(uint32 Id)
     mArenaTeamMap.erase(Id);
 }
 
-CreatureInfo const* ObjectMgr::GetCreatureTemplate(uint32 id)
+CreatureTemplate const* ObjectMgr::GetCreatureTemplate(uint32 id)
 {
-    return sCreatureStorage.LookupEntry<CreatureInfo>(id);
+    return sCreatureStorage.LookupEntry<CreatureTemplate>(id);
 }
 
 void ObjectMgr::LoadCreatureLocales()
@@ -504,13 +504,13 @@ void ObjectMgr::LoadCreatureTemplates()
     // check data correctness
     for (uint32 i = 1; i < sCreatureStorage.MaxEntry; ++i)
     {
-        CreatureInfo const* cInfo = sCreatureStorage.LookupEntry<CreatureInfo>(i);
+        CreatureTemplate const* cInfo = sCreatureStorage.LookupEntry<CreatureTemplate>(i);
         if (!cInfo)
             continue;
 
         if (cInfo->HeroicEntry)
         {
-            CreatureInfo const* heroicInfo = GetCreatureTemplate(cInfo->HeroicEntry);
+            CreatureTemplate const* heroicInfo = GetCreatureTemplate(cInfo->HeroicEntry);
             if (!heroicInfo)
             {
                 sLog->outErrorDb("Creature (Entry: %u) has heroic_entry=%u but creature entry %u does not exist.", cInfo->HeroicEntry, cInfo->HeroicEntry);
@@ -581,22 +581,22 @@ void ObjectMgr::LoadCreatureTemplates()
         if (cInfo->Modelid_A1 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_A1))
         {
             sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_A1 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_A1);
-            const_cast<CreatureInfo*>(cInfo)->Modelid_A1 = 0;
+            const_cast<CreatureTemplate*>(cInfo)->Modelid_A1 = 0;
         }
         if (cInfo->Modelid_A2 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_A2))
         {
             sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_A2 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_A2);
-            const_cast<CreatureInfo*>(cInfo)->Modelid_A2 = 0;
+            const_cast<CreatureTemplate*>(cInfo)->Modelid_A2 = 0;
         }
         if (cInfo->Modelid_H1 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_H1))
         {
             sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_H1 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_H1);
-            const_cast<CreatureInfo*>(cInfo)->Modelid_H1 = 0;
+            const_cast<CreatureTemplate*>(cInfo)->Modelid_H1 = 0;
         }
         if (cInfo->Modelid_H2 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_H2))
         {
             sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_H2 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_H2);
-            const_cast<CreatureInfo*>(cInfo)->Modelid_H2 = 0;
+            const_cast<CreatureTemplate*>(cInfo)->Modelid_H2 = 0;
         }
 
         for (int k = 0; k < MAX_KILL_CREDIT; ++k)
@@ -606,7 +606,7 @@ void ObjectMgr::LoadCreatureTemplates()
                 if (!GetCreatureTemplate(cInfo->KillCredit[k]))
                 {
                     sLog->outErrorDb("Creature (Entry: %u) has not existed creature entry in `KillCredit%d` (%u)", cInfo->Entry, k+1, cInfo->KillCredit[k]);
-                    const_cast<CreatureInfo*>(cInfo)->KillCredit[k] = 0;
+                    const_cast<CreatureTemplate*>(cInfo)->KillCredit[k] = 0;
                 }
             }
         }
@@ -614,14 +614,14 @@ void ObjectMgr::LoadCreatureTemplates()
         if (cInfo->dmgschool >= MAX_SPELL_SCHOOL)
         {
             sLog->outErrorDb("Creature (Entry: %u) has invalid spell school value (%u) in dmgschool", cInfo->Entry, cInfo->dmgschool);
-            const_cast<CreatureInfo*>(cInfo)->dmgschool = SPELL_SCHOOL_NORMAL;
+            const_cast<CreatureTemplate*>(cInfo)->dmgschool = SPELL_SCHOOL_NORMAL;
         }
 
         if (cInfo->baseattacktime == 0)
-            const_cast<CreatureInfo*>(cInfo)->baseattacktime  = BASE_ATTACK_TIME;
+            const_cast<CreatureTemplate*>(cInfo)->baseattacktime  = BASE_ATTACK_TIME;
 
         if (cInfo->rangeattacktime == 0)
-            const_cast<CreatureInfo*>(cInfo)->rangeattacktime = BASE_ATTACK_TIME;
+            const_cast<CreatureTemplate*>(cInfo)->rangeattacktime = BASE_ATTACK_TIME;
 
         if ((cInfo->npcflag & UNIT_NPC_FLAG_TRAINER) && cInfo->trainer_type >= MAX_TRAINER_TYPE)
             sLog->outErrorDb("Creature (Entry: %u) has wrong trainer type %u", cInfo->Entry, cInfo->trainer_type);
@@ -629,7 +629,7 @@ void ObjectMgr::LoadCreatureTemplates()
         if (cInfo->InhabitType <= 0 || cInfo->InhabitType > INHABIT_ANYWHERE)
         {
             sLog->outErrorDb("Creature (Entry: %u) has wrong value (%u) in InhabitType, creature will not correctly walk/swim/fly", cInfo->Entry, cInfo->InhabitType);
-            const_cast<CreatureInfo*>(cInfo)->InhabitType = INHABIT_ANYWHERE;
+            const_cast<CreatureTemplate*>(cInfo)->InhabitType = INHABIT_ANYWHERE;
         }
 
         if (cInfo->PetSpellDataId)
@@ -642,7 +642,7 @@ void ObjectMgr::LoadCreatureTemplates()
         if (cInfo->MovementType >= MAX_DB_MOTION_TYPE)
         {
             sLog->outErrorDb("Creature (Entry: %u) has wrong movement generator type (%u), ignore and set to IDLE.", cInfo->Entry, cInfo->MovementType);
-            const_cast<CreatureInfo*>(cInfo)->MovementType = IDLE_MOTION_TYPE;
+            const_cast<CreatureTemplate*>(cInfo)->MovementType = IDLE_MOTION_TYPE;
         }
 
         if (cInfo->equipmentId > 0)                          // 0 no equipment
@@ -650,7 +650,7 @@ void ObjectMgr::LoadCreatureTemplates()
             if (!GetEquipmentInfo(cInfo->equipmentId))
             {
                 sLog->outErrorDb("Table creature_template has creature (Entry: %u) with equipment_id %u not found in table creature_equip_template, set to no equipment.", cInfo->Entry, cInfo->equipmentId);
-                const_cast<CreatureInfo*>(cInfo)->equipmentId = 0;
+                const_cast<CreatureTemplate*>(cInfo)->equipmentId = 0;
             }
         }
 
@@ -659,7 +659,7 @@ void ObjectMgr::LoadCreatureTemplates()
         {
             uint32 modelid = cInfo->GetFirstValidModelId();
             CreatureDisplayInfoEntry const* ScaleEntry = sCreatureDisplayInfoStore.LookupEntry(modelid);
-            const_cast<CreatureInfo*>(cInfo)->scale = ScaleEntry ? ScaleEntry->scale : 1.0f;
+            const_cast<CreatureTemplate*>(cInfo)->scale = ScaleEntry ? ScaleEntry->scale : 1.0f;
         }
     }
 }
@@ -758,7 +758,7 @@ void ObjectMgr::LoadCreatureAddons()
 
         ConvertCreatureAddonAuras(const_cast<CreatureDataAddon*>(addon), "creature_template_addon", "Entry");
 
-        if (!sCreatureStorage.LookupEntry<CreatureInfo>(addon->guidOrEntry))
+        if (!sCreatureStorage.LookupEntry<CreatureTemplate>(addon->guidOrEntry))
             sLog->outErrorDb("Creature (Entry: %u) does not exist but has a record in creature_template_addon", addon->guidOrEntry);
     }
 
@@ -802,7 +802,7 @@ CreatureModelInfo const* ObjectMgr::GetCreatureModelInfo(uint32 modelid)
     return sCreatureModelStorage.LookupEntry<CreatureModelInfo>(modelid);
 }
 
-uint32 ObjectMgr::ChooseDisplayId(uint32 /*team*/, const CreatureInfo *cinfo, const CreatureData *data)
+uint32 ObjectMgr::ChooseDisplayId(uint32 /*team*/, const CreatureTemplate *cinfo, const CreatureData *data)
 {
     // Load creature model (display id)
     uint32 display_id = 0;
@@ -961,7 +961,7 @@ void ObjectMgr::LoadCreatures()
     // build single time for check creature data
     std::set<uint32> heroicCreatures;
     for (uint32 i = 0; i < sCreatureStorage.MaxEntry; ++i)
-        if (CreatureInfo const* cInfo = sCreatureStorage.LookupEntry<CreatureInfo>(i))
+        if (CreatureTemplate const* cInfo = sCreatureStorage.LookupEntry<CreatureTemplate>(i))
             if (cInfo->HeroicEntry)
                 heroicCreatures.insert(cInfo->HeroicEntry);
 
@@ -972,7 +972,7 @@ void ObjectMgr::LoadCreatures()
         uint32 guid         = fields[ 0].GetUInt32();
         uint32 entry        = fields[ 1].GetUInt32();
 
-        CreatureInfo const* cInfo = GetCreatureTemplate(entry);
+        CreatureTemplate const* cInfo = GetCreatureTemplate(entry);
         if (!cInfo)
         {
             sLog->outErrorDb("Table `creature` has creature (GUID: %u) with invalid creature entry %u, skipped.", guid, entry);
@@ -1141,7 +1141,7 @@ uint32 ObjectMgr::AddGOData(uint32 entry, uint32 artKit, uint32 mapId, float x, 
 
 uint32 ObjectMgr::AddCreData(uint32 entry, uint32 /*team*/, uint32 mapId, float x, float y, float z, float o, uint32 spawntimedelay)
 {
-    CreatureInfo const *cInfo = GetCreatureTemplate(entry);
+    CreatureTemplate const *cInfo = GetCreatureTemplate(entry);
     if (!cInfo)
         return 0;
 
@@ -1835,7 +1835,7 @@ void ObjectMgr::LoadPetLevelInfo()
             Field* fields = result->Fetch();
 
             uint32 creature_id = fields[0].GetUInt32();
-            if (!sCreatureStorage.LookupEntry<CreatureInfo>(creature_id))
+            if (!sCreatureStorage.LookupEntry<CreatureTemplate>(creature_id))
             {
                 sLog->outErrorDb("Wrong creature id %u in pet_levelstats table, ignoring.", creature_id);
                 continue;
@@ -3134,7 +3134,7 @@ void ObjectMgr::LoadQuests()
                 qinfo->ReqCreatureOrGOId[j] = 0;            // quest can't be done for this requirement
             }
 
-            if (id > 0 && !sCreatureStorage.LookupEntry<CreatureInfo>(id))
+            if (id > 0 && !sCreatureStorage.LookupEntry<CreatureTemplate>(id))
             {
                 sLog->outErrorDb("Quest %u has ReqCreatureOrGOId%d = %i but creature with entry %u does not exist, quest cannot be completed.",
                     qinfo->GetQuestId(), j+1, id, uint32(id));
@@ -3517,7 +3517,7 @@ void ObjectMgr::LoadPetCreateSpells()
 
         uint32 creature_id = fields[0].GetUInt32();
 
-        if (!creature_id || !sCreatureStorage.LookupEntry<CreatureInfo>(creature_id))
+        if (!creature_id || !sCreatureStorage.LookupEntry<CreatureTemplate>(creature_id))
             continue;
 
         PetCreateSpellEntry PetCreateSpell;
@@ -4581,7 +4581,7 @@ uint16 ObjectMgr::GetTaxiMount(uint32 id, uint32 team)
         if (team == ALLIANCE) mount_entry = node->alliance_mount_type;
         else mount_entry = node->horde_mount_type;
 
-        CreatureInfo const *cinfo = GetCreatureTemplate(mount_entry);
+        CreatureTemplate const *cinfo = GetCreatureTemplate(mount_entry);
         if (cinfo)
         {
             if (! (mount_id = cinfo->GetRandomValidModelId()))
@@ -5596,7 +5596,7 @@ std::string ObjectMgr::GeneratePetName(uint32 entry)
 
     if (list0.empty() || list1.empty())
     {
-        CreatureInfo const *cinfo = GetCreatureTemplate(entry);
+        CreatureTemplate const *cinfo = GetCreatureTemplate(entry);
         char* petname = GetPetName(cinfo->family, sWorld->GetDefaultDbcLocale());
         if (!petname)
             petname = cinfo->Name;
@@ -5917,7 +5917,7 @@ void ObjectMgr::LoadCreatureQuestRelations()
 
     for (QuestRelations::iterator itr = mCreatureQuestRelations.begin(); itr != mCreatureQuestRelations.end(); ++itr)
     {
-        CreatureInfo const* cInfo = GetCreatureTemplate(itr->first);
+        CreatureTemplate const* cInfo = GetCreatureTemplate(itr->first);
         if (!cInfo)
             sLog->outErrorDb("Table creature_questrelation has data for invalid creature entry (%u) and valid quest %u", itr->first, itr->second);
         else if (!(cInfo->npcflag & UNIT_NPC_FLAG_QUESTGIVER))
@@ -5931,7 +5931,7 @@ void ObjectMgr::LoadCreatureInvolvedRelations()
 
     for (QuestRelations::iterator itr = mCreatureQuestInvolvedRelations.begin(); itr != mCreatureQuestInvolvedRelations.end(); ++itr)
     {
-        CreatureInfo const* cInfo = GetCreatureTemplate(itr->first);
+        CreatureTemplate const* cInfo = GetCreatureTemplate(itr->first);
         if (!cInfo)
             sLog->outErrorDb("Table creature_involvedrelation has data for invalid creature entry (%u) and valid quest %u", itr->first, itr->second);
         else if (!(cInfo->npcflag & UNIT_NPC_FLAG_QUESTGIVER))
@@ -6824,7 +6824,7 @@ void ObjectMgr::LoadTrainerSpell()
         uint32 entry  = fields[0].GetUInt32();
         uint32 spell  = fields[1].GetUInt32();
 
-        CreatureInfo const* cInfo = GetCreatureTemplate(entry);
+        CreatureTemplate const* cInfo = GetCreatureTemplate(entry);
 
         if (!cInfo)
         {
@@ -7166,7 +7166,7 @@ bool ObjectMgr::RemoveVendorItem(uint32 entry, uint32 item, bool savetodb)
 
 bool ObjectMgr::IsVendorItemValid(uint32 vendor_entry, uint32 item_id, uint32 maxcount, uint32 incrtime, uint32 ExtendedCost, Player* pl, std::set<uint32>* skip_vendors, uint32 ORnpcflag) const
 {
-    CreatureInfo const* cInfo = GetCreatureTemplate(vendor_entry);
+    CreatureTemplate const* cInfo = GetCreatureTemplate(vendor_entry);
     if (!cInfo)
     {
         if (pl)
@@ -7367,14 +7367,14 @@ GameObjectInfo const *GetGameObjectInfo(uint32 id)
     return sObjectMgr.GetGameObjectInfo(id);
 }
 
-CreatureInfo const *GetCreatureInfo(uint32 id)
+CreatureTemplate const *GetCreatureTemplate(uint32 id)
 {
     return sObjectMgr.GetCreatureTemplate(id);
 }
 
-CreatureInfo const* GetCreatureTemplateStore(uint32 entry)
+CreatureTemplate const* GetCreatureTemplateStore(uint32 entry)
 {
-    return sCreatureStorage.LookupEntry<CreatureInfo>(entry);
+    return sCreatureStorage.LookupEntry<CreatureTemplate>(entry);
 }
 
 Quest const* GetQuestTemplateStore(uint32 entry)

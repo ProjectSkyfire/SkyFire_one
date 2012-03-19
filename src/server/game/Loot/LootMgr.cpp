@@ -1036,7 +1036,7 @@ void LoadLootTemplates_Creature()
     // remove real entries and check existence loot
     for (uint32 i = 1; i < sCreatureStorage.MaxEntry; ++i)
     {
-        if (CreatureInfo const* cInfo = sCreatureStorage.LookupEntry<CreatureInfo>(i))
+        if (CreatureTemplate const* cInfo = sCreatureStorage.LookupEntry<CreatureTemplate>(i))
         {
             if (uint32 lootid = cInfo->lootid)
             {
@@ -1145,7 +1145,7 @@ void LoadLootTemplates_Pickpocketing()
     // remove real entries and check existence loot
     for (uint32 i = 1; i < sCreatureStorage.MaxEntry; ++i)
     {
-        if (CreatureInfo const* cInfo = sCreatureStorage.LookupEntry<CreatureInfo>(i))
+        if (CreatureTemplate const* cInfo = sCreatureStorage.LookupEntry<CreatureTemplate>(i))
         {
             if (uint32 lootid = cInfo->pickpocketLootId)
             {
@@ -1202,7 +1202,7 @@ void LoadLootTemplates_Skinning()
     // remove real entries and check existence loot
     for (uint32 i = 1; i < sCreatureStorage.MaxEntry; ++i)
     {
-        if (CreatureInfo const* cInfo = sCreatureStorage.LookupEntry<CreatureInfo>(i))
+        if (CreatureTemplate const* cInfo = sCreatureStorage.LookupEntry<CreatureTemplate>(i))
         {
             if (uint32 lootid = cInfo->SkinLootId)
             {

@@ -2567,7 +2567,7 @@ bool ChatHandler::HandleListCreatureCommand(const char *args)
         return false;
     }
 
-    CreatureInfo const* cInfo = sObjectMgr.GetCreatureTemplate(cr_id);
+    CreatureTemplate const* cInfo = sObjectMgr.GetCreatureTemplate(cr_id);
     if (!cInfo)
     {
         PSendSysMessage(LANG_COMMAND_INVALIDCREATUREID, cr_id);
@@ -3045,7 +3045,7 @@ bool ChatHandler::HandleLookupCreatureCommand(const char *args)
 
     for (uint32 id = 0; id< sCreatureStorage.MaxEntry; ++id)
     {
-        CreatureInfo const* cInfo = sCreatureStorage.LookupEntry<CreatureInfo> (id);
+        CreatureTemplate const* cInfo = sCreatureStorage.LookupEntry<CreatureTemplate> (id);
         if (!cInfo)
             continue;
 
@@ -3829,7 +3829,7 @@ bool ChatHandler::HandleNpcInfoCommand(const char* /*args*/)
     uint32 displayid = target->GetDisplayId();
     uint32 nativeid = target->GetNativeDisplayId();
     uint32 Entry = target->GetEntry();
-    CreatureInfo const* cInfo = target->GetCreatureInfo();
+    CreatureTemplate const* cInfo = target->GetCreatureTemplate();
 
     int32 curRespawnDelay = target->GetRespawnTimeEx()-time(NULL);
     if (curRespawnDelay < 0)
@@ -3846,7 +3846,7 @@ bool ChatHandler::HandleNpcInfoCommand(const char* /*args*/)
     PSendSysMessage(LANG_NPCINFO_DUNGEON_ID, target->GetInstanceId());
     PSendSysMessage(LANG_NPCINFO_POSITION, float(target->GetPositionX()), float(target->GetPositionY()), float(target->GetPositionZ()));
     if (const CreatureData* const linked = target->GetLinkedRespawnCreatureData())
-        if (CreatureInfo const *master = GetCreatureInfo(linked->id))
+        if (CreatureTemplate const *master = GetCreatureTemplate(linked->id))
             PSendSysMessage(LANG_NPCINFO_LINKGUID, sObjectMgr.GetLinkedRespawnGuid(target->GetDBTableGUIDLow()), linked->id, master->Name);
 
     if ((npcflags & UNIT_NPC_FLAG_VENDOR))
@@ -5100,7 +5100,7 @@ bool ChatHandler::HandleCompleteQuest(const char *args)
         }
         else if (creature > 0)
         {
-            if (CreatureInfo const* cInfo = sObjectMgr.GetCreatureTemplate(creature))
+            if (CreatureTemplate const* cInfo = sObjectMgr.GetCreatureTemplate(creature))
                 for (uint16 z = 0; z < creaturecount; ++z)
                     player->KilledMonster(cInfo, 0);
         }

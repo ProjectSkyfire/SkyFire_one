@@ -195,7 +195,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
     SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, owner->getFaction());
     SetUInt32Value(UNIT_CREATED_BY_SPELL, summon_spell_id);
 
-    CreatureInfo const *cinfo = GetCreatureInfo();
+    CreatureTemplate const *cinfo = GetCreatureTemplate();
     if (cinfo->type == CREATURE_TYPE_CRITTER)
     {
         map->Add(ToCreature());
@@ -892,7 +892,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
         return false;
     }
 
-    CreatureInfo const *cinfo = GetCreatureInfo();
+    CreatureTemplate const *cinfo = GetCreatureTemplate();
     if (!cinfo)
     {
         sLog->outError("CreateBaseAtCreature() failed, creatureInfo is missing!");
@@ -910,7 +910,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     SetUInt32Value(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP_ATTACKABLE);
     SetUInt32Value(UNIT_NPC_FLAGS, 0);
 
-    CreatureFamilyEntry const* cFamily = sCreatureFamilyStore.LookupEntry(creature->GetCreatureInfo()->family);
+    CreatureFamilyEntry const* cFamily = sCreatureFamilyStore.LookupEntry(creature->GetCreatureTemplate()->family);
     if (char* familyname = cFamily->Name[sWorld->GetDefaultDbcLocale()])
         SetName(familyname);
     else
@@ -932,7 +932,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
 
 bool Guardian::InitStatsForLevel(uint32 petlevel)
 {
-    CreatureInfo const *cinfo = GetCreatureInfo();
+    CreatureTemplate const *cinfo = GetCreatureTemplate();
     ASSERT(cinfo);
 
     SetLevel(petlevel);
@@ -1152,7 +1152,7 @@ bool Pet::HaveInDiet(ItemPrototype const* item) const
     if (!item->FoodType)
         return false;
 
-    CreatureInfo const* cInfo = GetCreatureInfo();
+    CreatureTemplate const* cInfo = GetCreatureTemplate();
     if (!cInfo)
         return false;
 
@@ -1692,7 +1692,7 @@ bool Pet::IsPermanentPetFor(Player* owner)
             switch (owner->getClass())
             {
                 case CLASS_WARLOCK:
-                    return GetCreatureInfo()->type == CREATURE_TYPE_DEMON;
+                    return GetCreatureTemplate()->type == CREATURE_TYPE_DEMON;
                 default:
                     return false;
             }
@@ -1726,7 +1726,7 @@ bool Pet::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 pet_number)
 
 void Pet::InitPetAuras(const uint32 Entry)
 {
-    CreatureInfo const *cInfo = sObjectMgr.GetCreatureTemplate(Entry);
+    CreatureTemplate const *cInfo = sObjectMgr.GetCreatureTemplate(Entry);
     if (!cInfo)
         return;
 
@@ -1869,7 +1869,7 @@ bool Pet::HasSpell(uint32 spell) const
 // Get all passive spells in our skill line
 void Pet::LearnPetPassives()
 {
-    CreatureInfo const* cInfo = GetCreatureInfo();
+    CreatureTemplate const* cInfo = GetCreatureTemplate();
     if (!cInfo)
         return;
 

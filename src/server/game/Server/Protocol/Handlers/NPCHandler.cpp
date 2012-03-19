@@ -128,7 +128,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
     if (!unit->isCanTrainingOf(_player, true))
         return;
 
-    CreatureInfo const *ci = unit->GetCreatureInfo();
+    CreatureTemplate const *ci = unit->GetCreatureTemplate();
 
     if (!ci)
     {
@@ -289,7 +289,7 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
     if (!sScriptMgr->GossipHello(_player, unit))
     {
         _player->TalkedToCreature(unit->GetEntry(), unit->GetGUID());
-        _player->PrepareGossipMenu(unit, unit->GetCreatureInfo()->GossipMenuId);
+        _player->PrepareGossipMenu(unit, unit->GetCreatureTemplate()->GossipMenuId);
         _player->SendPreparedGossip(unit);
     }
 }
