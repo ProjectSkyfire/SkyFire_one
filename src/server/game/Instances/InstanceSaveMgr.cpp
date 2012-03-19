@@ -176,7 +176,7 @@ void InstanceSave::SaveToDB()
         {
             data = iData->GetSaveData();
             if (!data.empty())
-                CharacterDatabase.escape_string(data);
+                CharacterDatabase.EscapeString(data);
         }
     }
 
@@ -243,7 +243,7 @@ void InstanceSaveManager::_DelHelper(DatabaseType &db, const char *fields, const
             for (size_t i = 0; i < fieldTokens.size(); i++)
             {
                 std::string fieldValue = fields[i].GetCppString();
-                db.escape_string(fieldValue);
+                db.EscapeString(fieldValue);
                 ss << (i != 0 ? " AND " : "") << fieldTokens[i] << " = '" << fieldValue << "'";
             }
             db.DirectPExecute("DELETE FROM %s WHERE %s", table, ss.str().c_str());

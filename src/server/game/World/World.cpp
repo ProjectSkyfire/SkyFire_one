@@ -2040,10 +2040,10 @@ bool World::KickPlayer(const std::string& playerName)
 // Ban an account or ban an IP address, duration will be parsed using TimeStringToSecs if it is positive, otherwise permban
 BanReturn World::BanAccount(BanMode mode, std::string nameOrIP, std::string duration, std::string reason, std::string author)
 {
-    LoginDatabase.escape_string(nameOrIP);
-    LoginDatabase.escape_string(reason);
+    LoginDatabase.EscapeString(nameOrIP);
+    LoginDatabase.EscapeString(reason);
     std::string safe_author=author;
-    LoginDatabase.escape_string(safe_author);
+    LoginDatabase.EscapeString(safe_author);
 
     uint32 duration_secs = TimeStringToSecs(duration);
     QueryResult_AutoPtr resultAccounts = QueryResult_AutoPtr(NULL);                     //used for kicking
@@ -2103,7 +2103,7 @@ bool World::RemoveBanAccount(BanMode mode, std::string nameOrIP)
 {
     if (mode == BAN_IP)
     {
-        LoginDatabase.escape_string(nameOrIP);
+        LoginDatabase.EscapeString(nameOrIP);
         LoginDatabase.PExecute("DELETE FROM ip_banned WHERE ip = '%s'",nameOrIP.c_str());
     }
     else

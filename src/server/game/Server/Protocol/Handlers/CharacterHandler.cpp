@@ -882,7 +882,7 @@ void WorldSession::HandleChangePlayerNameOpcode(WorldPacket& recv_data)
     }
 
     std::string escaped_newname = newname;
-    CharacterDatabase.escape_string(escaped_newname);
+    CharacterDatabase.EscapeString(escaped_newname);
 
     // make sure that the character belongs to the current account, that rename at login is enabled
     // and that there is no character with the desired new name
@@ -996,7 +996,7 @@ void WorldSession::HandleDeclinedPlayerNameOpcode(WorldPacket& recv_data)
     }
 
     for (int i = 0; i < MAX_DECLINED_NAME_CASES; ++i)
-        CharacterDatabase.escape_string(declinedname.name[i]);
+        CharacterDatabase.EscapeString(declinedname.name[i]);
 
     CharacterDatabase.BeginTransaction();
     CharacterDatabase.PExecute("DELETE FROM character_declinedname WHERE guid = '%u'", GUID_LOPART(guid));

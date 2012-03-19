@@ -30,7 +30,7 @@ void InstanceData::SaveToDB()
     std::string data = GetSaveData();
     if (data.empty())
         return;
-    CharacterDatabase.escape_string(data);
+    CharacterDatabase.EscapeString(data);
     CharacterDatabase.PExecute("UPDATE instance SET data = '%s' WHERE id = '%d'", data.c_str(), instance->GetInstanceId());
 }
 

@@ -41,8 +41,8 @@ AccountOpResult AccountMgr::CreateAccount(std::string username, std::string pass
     normalizeString(username);
     normalizeString(password);
 
-    LoginDatabase.escape_string(username);
-    LoginDatabase.escape_string(password);
+    LoginDatabase.EscapeString(username);
+    LoginDatabase.EscapeString(password);
 
     QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT 1 FROM account WHERE username = '%s'", username.c_str());
     if (result)
@@ -116,8 +116,8 @@ AccountOpResult AccountMgr::ChangeUsername(uint32 accid, std::string new_uname, 
     normalizeString(new_uname);
     normalizeString(new_passwd);
 
-    LoginDatabase.escape_string(new_uname);
-    LoginDatabase.escape_string(new_passwd);
+    LoginDatabase.EscapeString(new_uname);
+    LoginDatabase.EscapeString(new_passwd);
 
     if (!LoginDatabase.PExecute("UPDATE account SET username='%s',sha_pass_hash=Sha1(CONCAT('%s',':','%s')) WHERE id='%d'", new_uname.c_str(), new_uname.c_str(), new_passwd.c_str(), accid))
         return AOR_DB_INTERNAL_ERROR;                       // unexpected error
@@ -136,7 +136,7 @@ AccountOpResult AccountMgr::ChangePassword(uint32 accid, std::string new_passwd)
 
     normalizeString(new_passwd);
 
-    LoginDatabase.escape_string(new_passwd);
+    LoginDatabase.EscapeString(new_passwd);
     // also reset s and v to force update at next realmd login
     if (!LoginDatabase.PExecute("UPDATE account SET v='0', s='0', sha_pass_hash=Sha1("_CONCAT3_("username","':'","'%s'")") WHERE id='%d'", new_passwd.c_str(), accid))
         return AOR_DB_INTERNAL_ERROR;                       // unexpected error
@@ -146,7 +146,7 @@ AccountOpResult AccountMgr::ChangePassword(uint32 accid, std::string new_passwd)
 
 uint32 AccountMgr::GetId(std::string username)
 {
-    LoginDatabase.escape_string(username);
+    LoginDatabase.EscapeString(username);
     QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT id FROM account WHERE username = '%s'", username.c_str());
     if (!result)
         return 0;
@@ -212,7 +212,7 @@ uint32 AccountMgr::GetCharactersCount(uint32 acc_id)
 bool AccountMgr::CheckPassword(uint32 accid, std::string passwd)
 {
     normalizeString(passwd);
-    LoginDatabase.escape_string(passwd);
+    LoginDatabase.EscapeString(passwd);
 
     QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT 1 FROM account WHERE id='%d' AND sha_pass_hash=Sha1(CONCAT(UPPER(username),':',UPPER('%s')))",accid, passwd.c_str());
     if (result)

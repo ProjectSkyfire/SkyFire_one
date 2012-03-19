@@ -396,7 +396,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
 
             uint32 owner = GUID_LOPART(GetOwnerGUID());
             std::string name = m_name;
-            CharacterDatabase.escape_string(name);
+            CharacterDatabase.EscapeString(name);
             CharacterDatabase.BeginTransaction();
             // remove current data
             CharacterDatabase.PExecute("DELETE FROM character_pet WHERE owner = '%u' AND id = '%u'", owner, m_charmInfo->GetPetNumber());

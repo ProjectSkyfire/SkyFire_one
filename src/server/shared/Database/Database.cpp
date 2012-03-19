@@ -189,18 +189,18 @@ void Database::ThreadEnd()
     mysql_thread_end();
 }
 
-void Database::escape_string(std::string& str)
+void Database::EscapeString(std::string& str)
 {
     if (str.empty())
         return;
 
     char* buf = new char[str.size()*2+1];
-    escape_string(buf, str.c_str(),str.size());
+    EscapeString(buf, str.c_str(),str.size());
     str = buf;
     delete[] buf;
 }
 
-unsigned long Database::escape_string(char *to, const char *from, unsigned long length)
+unsigned long Database::EscapeString(char *to, const char *from, unsigned long length)
 {
     if (!mMysql || !to || !from || !length)
         return 0;

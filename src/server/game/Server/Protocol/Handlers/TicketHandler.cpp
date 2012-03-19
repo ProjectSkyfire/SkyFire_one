@@ -222,7 +222,7 @@ void WorldSession::HandleGMSurveySubmit(WorldPacket& recv_data)
 
     std::string comment;
     recv_data >> comment; // additional comment
-    CharacterDatabase.escape_string(comment);
+    CharacterDatabase.EscapeString(comment);
     CharacterDatabase.PExecute("UPDATE gm_surveys SET comment = '%s' WHERE surveyid = %i;",comment.c_str(),nextSurveyID);
 }
 

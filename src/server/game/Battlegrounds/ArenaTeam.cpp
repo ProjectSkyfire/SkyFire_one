@@ -71,7 +71,7 @@ bool ArenaTeam::Create(uint64 captainGuid, uint32 type, std::string arenaTeamNam
     m_TeamId = objmgr.GenerateArenaTeamId();
 
     // ArenaTeamName already assigned to ArenaTeam::name, use it to encode string for DB
-    CharacterDatabase.escape_string(arenaTeamName);
+    CharacterDatabase.EscapeString(arenaTeamName);
 
     CharacterDatabase.BeginTransaction();
     // CharacterDatabase.PExecute("DELETE FROM arena_team WHERE arenateamid='%u'", m_TeamId); - MAX(arenateam)+1 not exist

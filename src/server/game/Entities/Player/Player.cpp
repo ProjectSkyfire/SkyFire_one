@@ -16298,7 +16298,7 @@ void Player::SaveToDB()
     bool inworld = IsInWorld();
 
     std::string sql_name = m_name;
-    CharacterDatabase.escape_string(sql_name);
+    CharacterDatabase.EscapeString(sql_name);
 
     std::ostringstream ss;
     ss << "REPLACE INTO characters (guid, account, name, race, class, gender, level, xp, money, playerBytes, playerBytes2, playerFlags,"

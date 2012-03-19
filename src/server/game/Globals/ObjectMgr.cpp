@@ -1377,7 +1377,7 @@ uint64 ObjectMgr::GetPlayerGUIDByName(std::string name) const
 {
     uint64 guid = 0;
 
-    CharacterDatabase.escape_string(name);
+    CharacterDatabase.EscapeString(name);
 
     // Player name safe to sending to DB (checked at login) and this function using
     QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT guid FROM characters WHERE name = '%s'", name.c_str());
@@ -5203,7 +5203,7 @@ uint32 ObjectMgr::CreateItemText(std::string text)
     //insert new itempage to container
     mItemTexts[ newItemTextId ] = text;
     //save new itempage
-    CharacterDatabase.escape_string(text);
+    CharacterDatabase.EscapeString(text);
     //any Delete query needed, itemTextId is maximum of all ids
     std::ostringstream query;
     query << "INSERT INTO item_text (id, text) VALUES ('" << newItemTextId << "', '" << text << "')";

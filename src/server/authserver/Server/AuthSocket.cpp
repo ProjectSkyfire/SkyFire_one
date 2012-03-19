@@ -349,7 +349,7 @@ bool AuthSocket::_HandleLogonChallenge()
     LoginDatabase.Execute("DELETE FROM ip_banned WHERE unbandate<=UNIX_TIMESTAMP() AND unbandate<>bandate");
 
     std::string address(socket().getRemoteAddress().c_str());
-    LoginDatabase.escape_string(address);
+    LoginDatabase.EscapeString(address);
     QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT * FROM ip_banned WHERE ip = '%s'", address.c_str());
     if (result)
     {
@@ -662,7 +662,7 @@ bool AuthSocket::_HandleLogonProof()
                     else
                     {
                         std::string current_ip(socket().getRemoteAddress().c_str());
-                        LoginDatabase.escape_string(current_ip);
+                        LoginDatabase.EscapeString(current_ip);
                         LoginDatabase.PExecute("INSERT INTO ip_banned VALUES ('%s',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+'%u','Trinity realmd','Failed login autoban')",
                             current_ip.c_str(), WrongPassBanTime);
 

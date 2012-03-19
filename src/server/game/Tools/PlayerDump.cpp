@@ -203,7 +203,7 @@ std::string CreateDumpString(char const* tableName, QueryResult_AutoPtr result)
         else ss << ", '";
 
         std::string s = fields[i].GetCppString();
-        CharacterDatabase.escape_string(s);
+        CharacterDatabase.EscapeString(s);
         ss << s;
 
         ss << "'";
@@ -390,7 +390,7 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
 
     if (ObjectMgr::IsValidName(name, true))
     {
-        CharacterDatabase.escape_string(name);              // for safe, we use name only for sql quearies anyway
+        CharacterDatabase.EscapeString(name);              // for safe, we use name only for sql quearies anyway
         result = CharacterDatabase.PQuery("SELECT 1 FROM characters WHERE name = '%s'", name.c_str());
         if (result)
             name = "";                                      // use the one from the dump
@@ -486,7 +486,7 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
                 {
                     // check if the original name already exists
                     name = getnth(line, 4);
-                    CharacterDatabase.escape_string(name);
+                    CharacterDatabase.EscapeString(name);
 
                     result = CharacterDatabase.PQuery("SELECT 1 FROM characters WHERE name = '%s'", name.c_str());
                     if (result)

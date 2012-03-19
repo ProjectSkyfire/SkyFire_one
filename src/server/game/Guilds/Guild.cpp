@@ -88,12 +88,12 @@ bool Guild::Create(Player* leader, std::string gname)
     sLog->outDebug("GUILD: creating guild %s to leader: %u", gname.c_str(), GUID_LOPART(m_LeaderGuid));
 
     // gname already assigned to Guild::name, use it to encode string for DB
-    CharacterDatabase.escape_string(gname);
+    CharacterDatabase.EscapeString(gname);
 
     std::string dbGINFO = GINFO;
     std::string dbMOTD = MOTD;
-    CharacterDatabase.escape_string(dbGINFO);
-    CharacterDatabase.escape_string(dbMOTD);
+    CharacterDatabase.EscapeString(dbGINFO);
+    CharacterDatabase.EscapeString(dbMOTD);
 
     CharacterDatabase.BeginTransaction();
     // CharacterDatabase.PExecute("DELETE FROM guild WHERE guildid='%u'", m_Id); - MAX(guildid)+1 not exist
@@ -156,8 +156,8 @@ bool Guild::AddMember(uint64 plGuid, uint32 plRank)
 
     std::string dbPnote   = newmember.Pnote;
     std::string dbOFFnote = newmember.OFFnote;
-    CharacterDatabase.escape_string(dbPnote);
-    CharacterDatabase.escape_string(dbOFFnote);
+    CharacterDatabase.EscapeString(dbPnote);
+    CharacterDatabase.EscapeString(dbOFFnote);
 
     CharacterDatabase.PExecute("INSERT INTO guild_member (guildid, guid, rank, pnote, offnote) VALUES ('%u', '%u', '%u','%s','%s')",
         m_Id, GUID_LOPART(plGuid), newmember.RankId, dbPnote.c_str(), dbOFFnote.c_str());
@@ -180,7 +180,7 @@ void Guild::SetMOTD(std::string motd)
     MOTD = motd;
 
     // motd now can be used for encoding to DB
-    CharacterDatabase.escape_string(motd);
+    CharacterDatabase.EscapeString(motd);
     CharacterDatabase.PExecute("UPDATE guild SET motd='%s' WHERE guildid='%u'", motd.c_str(), m_Id);
 }
 
@@ -189,7 +189,7 @@ void Guild::SetGINFO(std::string ginfo)
     GINFO = ginfo;
 
     // ginfo now can be used for encoding to DB
-    CharacterDatabase.escape_string(ginfo);
+    CharacterDatabase.EscapeString(ginfo);
     CharacterDatabase.PExecute("UPDATE guild SET info='%s' WHERE guildid='%u'", ginfo.c_str(), m_Id);
 }
 
@@ -310,7 +310,7 @@ bool Guild::LoadRanksFromDB(QueryResult_AutoPtr guildRanksResult)
         {
             std::string name = m_Ranks[i].Name;
             uint32 rights = m_Ranks[i].Rights;
-            CharacterDatabase.escape_string(name);
+            CharacterDatabase.EscapeString(name);
             CharacterDatabase.PExecute("INSERT INTO guild_rank (guildid, rid, rname, rights) VALUES ('%u', '%u', '%s', '%u')", m_Id, uint32(i), name.c_str(), rights);
         }
         CharacterDatabase.CommitTransaction();
@@ -558,7 +558,7 @@ void Guild::SetPNOTE(uint64 guid, std::string pnote)
     itr->second.Pnote = pnote;
 
     // pnote now can be used for encoding to DB
-    CharacterDatabase.escape_string(pnote);
+    CharacterDatabase.EscapeString(pnote);
     CharacterDatabase.PExecute("UPDATE guild_member SET pnote = '%s' WHERE guid = '%u'", pnote.c_str(), itr->first);
 }
 
@@ -569,7 +569,7 @@ void Guild::SetOFFNOTE(uint64 guid, std::string offnote)
         return;
     itr->second.OFFnote = offnote;
     // offnote now can be used for encoding to DB
-    CharacterDatabase.escape_string(offnote);
+    CharacterDatabase.EscapeString(offnote);
     CharacterDatabase.PExecute("UPDATE guild_member SET offnote = '%s' WHERE guid = '%u'", offnote.c_str(), itr->first);
 }
 
@@ -645,7 +645,7 @@ void Guild::CreateRank(std::string name_, uint32 rights)
     // guild_rank.rid always store rank+1 value
 
     // m_Name now can be used for encoding to DB
-    CharacterDatabase.escape_string(name_);
+    CharacterDatabase.EscapeString(name_);
     CharacterDatabase.PExecute("INSERT INTO guild_rank (guildid, rid, rname, rights) VALUES ('%u', '%u', '%s', '%u')", m_Id, m_Ranks.size(), name_.c_str(), rights);
 }
 
@@ -691,7 +691,7 @@ void Guild::SetRankName(uint32 rankId, std::string name_)
     m_Ranks[rankId].Name = name_;
 
     // name now can be used for encoding to DB
-    CharacterDatabase.escape_string(name_);
+    CharacterDatabase.EscapeString(name_);
     CharacterDatabase.PExecute("UPDATE guild_rank SET rname='%s' WHERE rid='%u' AND guildid='%u'", name_.c_str(), (rankId+1), m_Id);
 }
 
@@ -1172,8 +1172,8 @@ void Guild::SetGuildBankTabInfo(uint8 TabId, std::string Name, std::string Icon)
     m_TabListMap[TabId]->Name = Name;
     m_TabListMap[TabId]->Icon = Icon;
 
-    CharacterDatabase.escape_string(Name);
-    CharacterDatabase.escape_string(Icon);
+    CharacterDatabase.EscapeString(Name);
+    CharacterDatabase.EscapeString(Icon);
     CharacterDatabase.PExecute("UPDATE guild_bank_tab SET TabName='%s',TabIcon='%s' WHERE guildid='%u' AND TabId='%u'", Name.c_str(), Icon.c_str(), m_Id, uint32(TabId));
 }
 
@@ -1964,7 +1964,7 @@ void Guild::SetGuildBankTabText(uint8 TabId, std::string text)
 
     m_TabListMap[TabId]->Text = text;
 
-    CharacterDatabase.escape_string(text);
+    CharacterDatabase.EscapeString(text);
     CharacterDatabase.PExecute("UPDATE guild_bank_tab SET TabText='%s' WHERE guildid='%u' AND TabId='%u'", text.c_str(), m_Id, uint32(TabId));
 
     // announce

@@ -120,8 +120,8 @@ class Database
         bool RollbackTransaction();
 
         operator bool () const { return mMysql != NULL; }
-        unsigned long escape_string(char *to, const char *from, unsigned long length);
-        void escape_string(std::string& str);
+        unsigned long EscapeString(char *to, const char *from, unsigned long length);
+        void EscapeString(std::string& str);
 
         void ThreadStart();
         void ThreadEnd();

@@ -178,7 +178,7 @@ int RASocket::check_access_level(const std::string& user)
     std::string safe_user = user;
 
     sAccountMgr->normalizeString(safe_user);
-    LoginDatabase.escape_string(safe_user);
+    LoginDatabase.EscapeString(safe_user);
 
     QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.id, aa.gmlevel, aa.RealmID FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE a.username = '%s'", safe_user.c_str());
 
@@ -208,11 +208,11 @@ int RASocket::check_password(const std::string& user, const std::string& pass)
 {
     std::string safe_user = user;
     sAccountMgr->normalizeString(safe_user);
-    LoginDatabase.escape_string(safe_user);
+    LoginDatabase.EscapeString(safe_user);
 
     std::string safe_pass = pass;
     sAccountMgr->normalizeString(safe_pass);
-    LoginDatabase.escape_string(safe_pass);
+    LoginDatabase.EscapeString(safe_pass);
 
     std::string hash = sAccountMgr->CalculateShaPassHash(safe_user, safe_pass);
 

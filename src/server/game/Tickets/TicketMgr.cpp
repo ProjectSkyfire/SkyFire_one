@@ -186,7 +186,7 @@ void TicketMgr::RemoveGMTicketByPlayer(uint64 playerGuid, uint64 GMguid)
 void TicketMgr::SaveGMTicket(GM_Ticket* ticket)
 {
     std::string msg = ticket->message;
-    CharacterDatabase.escape_string(msg);
+    CharacterDatabase.EscapeString(msg);
     std::stringstream ss;
     ss << "REPLACE INTO gm_tickets (guid, playerGuid, name, message, createtime, map, posX, posY, posZ, timestamp, closed, assignedto, comment, escalated, viewed) VALUES('";
     ss << ticket->guid << "', '";
