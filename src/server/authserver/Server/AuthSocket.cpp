@@ -635,7 +635,7 @@ bool AuthSocket::_HandleLogonProof()
 
         sLog->outBasic("'%s:%d' [AuthChallenge] account %s tried to login with invalid password!", socket().getRemoteAddress().c_str(), socket().getRemotePort(), _login.c_str ());
 
-        uint32 MaxWrongPassCount = sConfig.GetIntDefault("WrongPass.MaxCount", 0);
+        uint32 MaxWrongPassCount = ConfigMgr::GetIntDefault("WrongPass.MaxCount", 0);
         if (MaxWrongPassCount > 0)
         {
             //Increment number of failed logins by one and if it reaches the limit temporarily ban that account or IP
@@ -647,8 +647,8 @@ bool AuthSocket::_HandleLogonProof()
 
                 if (failed_logins >= MaxWrongPassCount)
                 {
-                    uint32 WrongPassBanTime = sConfig.GetIntDefault("WrongPass.BanTime", 600);
-                    bool WrongPassBanType = sConfig.GetBoolDefault("WrongPass.BanType", false);
+                    uint32 WrongPassBanTime = ConfigMgr::GetIntDefault("WrongPass.BanTime", 600);
+                    bool WrongPassBanType = ConfigMgr::GetBoolDefault("WrongPass.BanType", false);
 
                     if (WrongPassBanType)
                     {

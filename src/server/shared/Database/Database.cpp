@@ -71,8 +71,8 @@ bool Database::Initialize(const char *infoString)
 {
     // Enable logging of SQL commands (usally only GM commands)
     // (See method: PExecuteLog)
-    m_logSQL = sConfig.GetBoolDefault("LogSQL", false);
-    m_logsDir = sConfig.GetStringDefault("LogsDir","");
+    m_logSQL = ConfigMgr::GetBoolDefault("LogSQL", false);
+    m_logsDir = ConfigMgr::GetStringDefault("LogsDir","");
     if (!m_logsDir.empty())
     {
         if ((m_logsDir.at(m_logsDir.length()-1)!='/') && (m_logsDir.at(m_logsDir.length()-1)!='\\'))

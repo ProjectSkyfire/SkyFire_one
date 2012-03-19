@@ -144,7 +144,7 @@ int Master::Run()
 #endif //USE_SFMT_FOR_RNG
 
     /// worldserver PID file creation
-    std::string pidfile = sConfig.GetStringDefault("PidFile", "");
+    std::string pidfile = ConfigMgr::GetStringDefault("PidFile", "");
     if (!pidfile.empty())
     {
         uint32 pid = CreatePIDFile(pidfile);
@@ -188,9 +188,9 @@ int Master::Run()
     ACE_Based::Thread* cliThread = NULL;
 
 #ifdef _WIN32
-    if (sConfig.GetBoolDefault("Console.Enable", true) && (m_ServiceStatus == -1)/* need disable console in service mode*/)
+    if (ConfigMgr::GetBoolDefault("Console.Enable", true) && (m_ServiceStatus == -1)/* need disable console in service mode*/)
 #else
-    if (sConfig.GetBoolDefault("Console.Enable", true))
+    if (ConfigMgr::GetBoolDefault("Console.Enable", true))
 #endif
     {
         ///- Launch CliRunnable thread
@@ -204,7 +204,7 @@ int Master::Run()
     {
         HANDLE hProcess = GetCurrentProcess();
 
-        uint32 Aff = sConfig.GetIntDefault("UseProcessors", 0);
+        uint32 Aff = ConfigMgr::GetIntDefault("UseProcessors", 0);
         if (Aff > 0)
         {
             ULONG_PTR appAff;
@@ -229,7 +229,7 @@ int Master::Run()
             sLog->outString("");
         }
 
-        bool Prio = sConfig.GetBoolDefault("ProcessPriority", false);
+        bool Prio = ConfigMgr::GetBoolDefault("ProcessPriority", false);
 
         //if (Prio && (m_ServiceStatus == -1)  /* need set to default process priority class in service mode*/)
         if (Prio)
@@ -245,15 +245,15 @@ int Master::Run()
     //Start soap serving thread
     ACE_Based::Thread* soap_thread = NULL;
 
-    if (sConfig.GetBoolDefault("SOAP.Enabled", false))
+    if (ConfigMgr::GetBoolDefault("SOAP.Enabled", false))
     {
         TCSoapRunnable* runnable = new TCSoapRunnable();
-        runnable->setListenArguments(sConfig.GetStringDefault("SOAP.IP", "127.0.0.1"), sConfig.GetIntDefault("SOAP.Port", 7878));
+        runnable->setListenArguments(ConfigMgr::GetStringDefault("SOAP.IP", "127.0.0.1"), ConfigMgr::GetIntDefault("SOAP.Port", 7878));
         soap_thread = new ACE_Based::Thread(runnable);
     }
 
     ///- Start up freeze catcher thread
-    if (uint32 freeze_delay = sConfig.GetIntDefault("MaxCoreStuckTime", 0))
+    if (uint32 freeze_delay = ConfigMgr::GetIntDefault("MaxCoreStuckTime", 0))
     {
         FreezeDetectorRunnable* fdr = new FreezeDetectorRunnable();
         fdr->SetDelayTime(freeze_delay*1000);
@@ -263,7 +263,7 @@ int Master::Run()
 
     ///- Launch the world listener socket
     uint16 wsport = sWorld.getConfig(CONFIG_PORT_WORLD);
-    std::string bind_ip = sConfig.GetStringDefault("BindIP", "0.0.0.0");
+    std::string bind_ip = ConfigMgr::GetStringDefault("BindIP", "0.0.0.0");
 
     if (sWorldSocketMgr->StartNetwork(wsport, bind_ip.c_str ()) == -1)
     {
@@ -368,14 +368,14 @@ bool Master::_StartDB()
     std::string dbstring;
     uint8 num_threads;
 
-    dbstring = sConfig.GetStringDefault("WorldDatabaseInfo", "");
+    dbstring = ConfigMgr::GetStringDefault("WorldDatabaseInfo", "");
     if (dbstring.empty())
     {
         sLog->outError("World database not specified in configuration file");
         return false;
     }
 
-    num_threads = sConfig.GetIntDefault("WorldDatabase.WorkerThreads", 1);
+    num_threads = ConfigMgr::GetIntDefault("WorldDatabase.WorkerThreads", 1);
     if (num_threads < 1 || num_threads > 32)
     {
         sLog->outError("World database: invalid number of worker threads specified. "
@@ -390,14 +390,14 @@ bool Master::_StartDB()
         return false;
     }
     ///- Get character database info from configuration file
-    dbstring = sConfig.GetStringDefault("CharacterDatabaseInfo", "");
+    dbstring = ConfigMgr::GetStringDefault("CharacterDatabaseInfo", "");
     if (dbstring.empty())
     {
         sLog->outError("Character database not specified in configuration file");
         return false;
     }
 
-    num_threads = sConfig.GetIntDefault("CharacterDatabase.WorkerThreads", 1);
+    num_threads = ConfigMgr::GetIntDefault("CharacterDatabase.WorkerThreads", 1);
     if (num_threads < 1 || num_threads > 32)
     {
         sLog->outError("Character database: invalid number of worker threads specified. "
@@ -412,14 +412,14 @@ bool Master::_StartDB()
         return false;
     }
     ///- Get login database info from configuration file
-    dbstring = sConfig.GetStringDefault("LoginDatabaseInfo", "");
+    dbstring = ConfigMgr::GetStringDefault("LoginDatabaseInfo", "");
     if (dbstring.empty())
     {
         sLog->outError("Login database not specified in configuration file");
         return false;
     }
 
-    num_threads = sConfig.GetIntDefault("LoginDatabase.WorkerThreads", 1);
+    num_threads = ConfigMgr::GetIntDefault("LoginDatabase.WorkerThreads", 1);
     if (num_threads < 1 || num_threads > 32)
     {
         sLog->outError("Login database: invalid number of worker threads specified. "
@@ -434,7 +434,7 @@ bool Master::_StartDB()
         return false;
     }
     ///- Get the realm Id from the configuration file
-    realmID = sConfig.GetIntDefault("RealmID", 0);
+    realmID = ConfigMgr::GetIntDefault("RealmID", 0);
     if (!realmID)
     {
         sLog->outError("Realm ID not defined in configuration file");
@@ -443,7 +443,7 @@ bool Master::_StartDB()
     sLog->outString("Realm running as realm ID %d", realmID);
 
     ///- Initialize the DB logging system
-    sLog->SetLogDBLater(sConfig.GetBoolDefault("EnableLogDB", false)); // set var to enable DB logging once startup finished.
+    sLog->SetLogDBLater(ConfigMgr::GetBoolDefault("EnableLogDB", false)); // set var to enable DB logging once startup finished.
     sLog->SetLogDB(false);
     sLog->SetRealmID(realmID);
 

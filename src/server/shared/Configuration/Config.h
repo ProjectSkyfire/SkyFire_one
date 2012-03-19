@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -21,35 +20,18 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "Common.h"
-#include <Policies/Singleton.h>
-#include "Define.h"
+#include <string>
 
-class ACE_Configuration_Heap;
-
-class Config
+namespace ConfigMgr
 {
-    public:
-        Config();
-        ~Config();
+    bool Load(const char *file = NULL);
 
-        bool SetSource(const char *file);
-        bool Reload();
+    std::string GetStringDefault(const char* name, const std::string& def);
+    bool GetBoolDefault(const char* name, bool def);
+    int GetIntDefault(const char* name, int def);
+    float GetFloatDefault(const char* name, float def);
 
-        std::string GetStringDefault(const char* name, const char* def);
-        bool GetBoolDefault(const char* name, const bool def = false);
-        int32 GetIntDefault(const char* name, const int32 def);
-        float GetFloatDefault(const char* name, const float def);
-
-        std::string GetFilename() const { return mFilename; }
-
-    private:
-
-        std::string mFilename;
-        ACE_Configuration_Heap *mConf;
-};
-
-#define sConfig Trinity::Singleton<Config>::Instance()
+    const std::string & GetFilename();
+}
 
 #endif
-
