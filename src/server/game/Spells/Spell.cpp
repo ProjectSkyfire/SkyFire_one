@@ -259,7 +259,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
 : m_spellInfo(info), m_spellValue(new SpellValue(m_spellInfo))
 , m_caster(Caster)
 {
-    m_customAttr = spellmgr.GetSpellCustomAttr(m_spellInfo->Id);
+    m_customAttr = sSpellMgr->GetSpellCustomAttr(m_spellInfo->Id);
     m_skipCheck = skipCheck;
     m_selfContainer = NULL;
     m_triggeringContainer = triggeringContainer;
@@ -387,7 +387,7 @@ void Spell::FillTargetMap()
         if (!m_spellInfo->Effect[i])
             continue;
 
-        uint32 effectTargetType = spellmgr.EffectTargetType[m_spellInfo->Effect[i]];
+        uint32 effectTargetType = sSpellMgr->EffectTargetType[m_spellInfo->Effect[i]];
 
         // is it possible that areaaura is not applied to caster?
         if (effectTargetType == SPELL_REQUIRE_NONE)
@@ -1191,7 +1191,7 @@ void Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask)
 
     if (m_customAttr & SPELL_ATTR_CU_LINK_HIT)
     {
-        if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(m_spellInfo->Id + SPELL_LINK_HIT))
+        if (const std::vector<int32> *spell_triggered = sSpellMgr->GetSpellLinked(m_spellInfo->Id + SPELL_LINK_HIT))
             for (std::vector<int32>::const_iterator i = spell_triggered->begin(); i != spell_triggered->end(); ++i)
                 if (*i < 0)
                     unit->RemoveAurasDueToSpell(-(*i));
@@ -1424,8 +1424,8 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType)
     {
         case SPELL_TARGETS_ENTRY:
         {
-            SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(m_spellInfo->Id);
-            SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(m_spellInfo->Id);
+            SpellScriptTarget::const_iterator lower = sSpellMgr->GetBeginSpellScriptTarget(m_spellInfo->Id);
+            SpellScriptTarget::const_iterator upper = sSpellMgr->GetEndSpellScriptTarget(m_spellInfo->Id);
             if (lower == upper)
             {
                 sLog->outErrorDb("Spell (ID: %u) (caster Entry: %u) does not have record in spell_script_target", m_spellInfo->Id, m_caster->GetEntry());
@@ -1509,7 +1509,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
     if (m_originalCaster)
         modOwner = m_originalCaster->GetSpellModOwner();
 
-    switch (spellmgr.SpellTargetType[cur])
+    switch (sSpellMgr->SpellTargetType[cur])
     {
         case TARGET_TYPE_UNIT_CASTER:
         {
@@ -1796,7 +1796,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             switch (cur)
             {
                 case TARGET_DST_DB:
-                    if (SpellTargetPosition const* st = spellmgr.GetSpellTargetPosition(m_spellInfo->Id))
+                    if (SpellTargetPosition const* st = sSpellMgr->GetSpellTargetPosition(m_spellInfo->Id))
                     {
                         //TODO: fix this check
                         if (m_spellInfo->Effect[0] == SPELL_EFFECT_TELEPORT_UNITS
@@ -1926,7 +1926,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
     else if (pushType)
     {
         // Dummy, just for client
-        if (spellmgr.EffectTargetType[m_spellInfo->Effect[i]] == SPELL_REQUIRE_DEST)
+        if (sSpellMgr->EffectTargetType[m_spellInfo->Effect[i]] == SPELL_REQUIRE_DEST)
             return;
 
         float radius = GetSpellRadius(m_spellInfo, i, true);
@@ -1960,8 +1960,8 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             case TARGET_UNIT_AREA_ENTRY_DST:
             case TARGET_UNIT_CONE_ENTRY: // fix me
             {
-                SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(m_spellInfo->Id);
-                SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(m_spellInfo->Id);
+                SpellScriptTarget::const_iterator lower = sSpellMgr->GetBeginSpellScriptTarget(m_spellInfo->Id);
+                SpellScriptTarget::const_iterator upper = sSpellMgr->GetEndSpellScriptTarget(m_spellInfo->Id);
                 radius = GetSpellRadius(m_spellInfo, i, IsPositiveSpell(m_spellInfo->Id));
                 if (lower == upper)
                 {
@@ -2327,7 +2327,7 @@ void Spell::cast(bool skipCheck)
 
     if (m_customAttr & SPELL_ATTR_CU_LINK_CAST)
     {
-        if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(m_spellInfo->Id))
+        if (const std::vector<int32> *spell_triggered = sSpellMgr->GetSpellLinked(m_spellInfo->Id))
             for (std::vector<int32>::const_iterator i = spell_triggered->begin(); i != spell_triggered->end(); ++i)
                 if (*i < 0)
                     m_caster->RemoveAurasDueToSpell(-(*i));
@@ -2497,13 +2497,13 @@ void Spell::_handle_immediate_phase()
     // process ground
     for (uint32 j = 0; j < 3; ++j)
     {
-        if (spellmgr.EffectTargetType[m_spellInfo->Effect[j]] == SPELL_REQUIRE_DEST)
+        if (sSpellMgr->EffectTargetType[m_spellInfo->Effect[j]] == SPELL_REQUIRE_DEST)
         {
             if (!m_targets.HasDst()) // FIXME: this will ignore dest set in effect
                 m_targets.setDst(m_caster);
             HandleEffects(m_originalCaster, NULL, NULL, j);
         }
-        else if (spellmgr.EffectTargetType[m_spellInfo->Effect[j]] == SPELL_REQUIRE_NONE)
+        else if (sSpellMgr->EffectTargetType[m_spellInfo->Effect[j]] == SPELL_REQUIRE_NONE)
             HandleEffects(m_originalCaster, NULL, NULL, j);
     }
 }
@@ -3384,7 +3384,7 @@ void Spell::HandleThreatSpells(uint32 spellId)
 
     m_targets.getUnitTarget()->AddThreat(m_caster, float(threatSpell->threat));
 
-    sLog->outDebug("Spell %u, rank %u, added an additional %i threat", spellId, spellmgr.GetSpellRank(spellId), threatSpell->threat);
+    sLog->outDebug("Spell %u, rank %u, added an additional %i threat", spellId, sSpellMgr->GetSpellRank(spellId), threatSpell->threat);
 }
 
 void Spell::HandleEffects(Unit *pUnitTarget, Item *pItemTarget, GameObject *pGOTarget, uint32 i, float /*DamageMultiplier*/)
@@ -3448,7 +3448,7 @@ uint8 Spell::CanCast(bool strict)
                 return SPELL_FAILED_DONT_REPORT;
 
     if (m_caster->GetTypeId() == TYPEID_PLAYER && !m_caster->ToPlayer()->isGameMaster() &&
-        sWorld.getConfig(CONFIG_VMAP_INDOOR_CHECK) &&
+        sWorld->getConfig(CONFIG_VMAP_INDOOR_CHECK) &&
         VMAP::VMapFactory::createOrGetVMapManager()->isLineOfSightCalcEnabled())
     {
         if (m_spellInfo->Attributes & SPELL_ATTR_OUTDOORS_ONLY &&
@@ -3640,8 +3640,8 @@ uint8 Spell::CanCast(bool strict)
                 m_spellInfo->EffectImplicitTargetA[j] == TARGET_DST_NEARBY_ENTRY ||
                 m_spellInfo->EffectImplicitTargetB[j] == TARGET_DST_NEARBY_ENTRY)
             {
-                SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(m_spellInfo->Id);
-                SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(m_spellInfo->Id);
+                SpellScriptTarget::const_iterator lower = sSpellMgr->GetBeginSpellScriptTarget(m_spellInfo->Id);
+                SpellScriptTarget::const_iterator upper = sSpellMgr->GetEndSpellScriptTarget(m_spellInfo->Id);
                 if (lower == upper)
                     sLog->outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = TARGET_UNIT_NEARBY_ENTRY or TARGET_DST_NEARBY_ENTRY, but does not have record in spell_script_target", m_spellInfo->Id);
 
@@ -3934,7 +3934,7 @@ uint8 Spell::CanCast(bool strict)
 
                 // chance for fail at orange skinning attempt
                 if ((m_selfContainer && (*m_selfContainer) == this) &&
-                    skillValue < sWorld.GetConfigMaxSkillValue() &&
+                    skillValue < sWorld->GetConfigMaxSkillValue() &&
                     (ReqValue < 0 ? 0 : ReqValue) > irand(skillValue - 25, skillValue + 37))
                     return SPELL_FAILED_TRY_AGAIN;
 
@@ -4079,7 +4079,7 @@ uint8 Spell::CanCast(bool strict)
                     return SPELL_FAILED_LOW_CASTLEVEL;
 
                 // chance for failure in orange gather / lockpick (gathering skill can't fail at maxskill)
-                if ((canFailAtMax || SkillValue < sWorld.GetConfigMaxSkillValue()) && ReqValue > irand(SkillValue-25, SkillValue+37))
+                if ((canFailAtMax || SkillValue < sWorld->GetConfigMaxSkillValue()) && ReqValue > irand(SkillValue-25, SkillValue+37))
                     return SPELL_FAILED_TRY_AGAIN;
 
                 break;
@@ -4357,8 +4357,8 @@ int16 Spell::PetCanCast(Unit* target)
 
         for (uint32 i = 0; i < 3; ++i)
         {
-            if (spellmgr.SpellTargetType[m_spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET
-                || spellmgr.SpellTargetType[m_spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_DEST_TARGET)
+            if (sSpellMgr->SpellTargetType[m_spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET
+                || sSpellMgr->SpellTargetType[m_spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_DEST_TARGET)
             {
                 if (!target)
                     return SPELL_FAILED_BAD_IMPLICIT_TARGETS;
@@ -5099,7 +5099,7 @@ void Spell::UpdatePointers()
 
 bool Spell::IsAffectedBy(SpellEntry const *spellInfo, uint32 effectId)
 {
-    return spellmgr.IsAffectedBySpell(m_spellInfo, spellInfo->Id, effectId, spellInfo->EffectItemType[effectId]);
+    return sSpellMgr->IsAffectedBySpell(m_spellInfo, spellInfo->Id, effectId, spellInfo->EffectItemType[effectId]);
 }
 
 bool Spell::CheckTargetCreatureType(Unit* target) const

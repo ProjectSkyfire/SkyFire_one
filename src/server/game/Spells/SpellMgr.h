@@ -27,9 +27,10 @@
 #include "SharedDefines.h"
 #include "DBCStructure.h"
 #include "DBCStores.h"
-#include "Database/SQLStorage.h"
-
+#include "SQLStorage.h"
 #include "UnorderedMap.h"
+
+#include <ace/Singleton.h>
 #include <map>
 
 class Player;
@@ -796,12 +797,13 @@ typedef std::map<int32, std::vector<int32> > SpellLinkedMap;
 
 class SpellMgr
 {
+    friend class ACE_Singleton<SpellMgr, ACE_Null_Mutex>;
     // Constructors
     public:
         SpellMgr();
         ~SpellMgr();
 
-        // Accessors (const or static functions)
+        // Assessors (const or static functions)
     public:
         // Spell affects
         uint64 GetSpellAffectMask(uint16 spellId, uint8 effectId) const
@@ -1092,6 +1094,6 @@ class SpellMgr
         SpellEnchantProcEventMap     mSpellEnchantProcEventMap;
 };
 
-#define spellmgr SpellMgr::Instance()
+#define sSpellMgr ACE_Singleton<SpellMgr, ACE_Null_Mutex>::instance()
 #endif
 

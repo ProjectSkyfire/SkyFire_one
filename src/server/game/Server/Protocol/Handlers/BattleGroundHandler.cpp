@@ -164,7 +164,7 @@ void WorldSession::HandleBattleGroundJoinOpcode(WorldPacket & recv_data)
             uint32 queueSlot = member->AddBattleGroundQueueId(bgQueueTypeId);           // add to queue
 
             // store entry point coords (same as leader entry point)
-            if (!sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
+            if (!sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
                 member->SetBattleGroundEntryPoint(_player->GetMapId(), _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetOrientation());
 
             WorldPacket data;
@@ -184,7 +184,7 @@ void WorldSession::HandleBattleGroundJoinOpcode(WorldPacket & recv_data)
         // already checked if queueSlot is valid, now just get it
         uint32 queueSlot = _player->AddBattleGroundQueueId(bgQueueTypeId);
         // store entry point coords
-        if (!sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
+        if (!sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
             _player->SetBattleGroundEntryPoint(_player->GetMapId(), _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetOrientation());
 
         WorldPacket data;
@@ -450,7 +450,7 @@ void WorldSession::HandleBattleGroundPlayerPortOpcode(WorldPacket &recv_data)
                 if (!_player->IsInvitedForBattleGroundQueueType(bgQueueTypeId))
                     return;                                     // cheating?
 
-                if (sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
+                if (sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
                     _player->SetBattleGroundEntryPoint();
 
                 // resurrect the player
@@ -788,7 +788,7 @@ void WorldSession::HandleBattleGroundArenaJoin(WorldPacket & recv_data)
             uint32 queueSlot = member->AddBattleGroundQueueId(bgQueueTypeId);// add to queue
 
             // store entry point coords (same as leader entry point)
-            if (!sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
+            if (!sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
                 member->SetBattleGroundEntryPoint(_player->GetMapId(), _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetOrientation());
 
             WorldPacket data;
@@ -808,7 +808,7 @@ void WorldSession::HandleBattleGroundArenaJoin(WorldPacket & recv_data)
         uint32 queueSlot = _player->AddBattleGroundQueueId(bgQueueTypeId);
 
         // store entry point coords
-        if (!sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
+        if (!sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
             _player->SetBattleGroundEntryPoint(_player->GetMapId(), _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetOrientation());
 
         WorldPacket data;

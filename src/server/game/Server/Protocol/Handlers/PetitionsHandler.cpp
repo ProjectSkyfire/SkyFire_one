@@ -103,9 +103,9 @@ void WorldSession::HandlePetitionBuyOpcode(WorldPacket & recv_data)
     else
     {
         // TODO: find correct opcode
-        if (_player->getLevel() < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+        if (_player->getLevel() < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         {
-            SendNotification(LANG_ARENA_ONE_TOOLOW, sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL));
+            SendNotification(LANG_ARENA_ONE_TOOLOW, sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL));
             return;
         }
 
@@ -452,7 +452,7 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
         return;
 
     // not let enemies sign guild charter
-    if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD) && GetPlayer()->GetTeam() != sObjectMgr.GetPlayerTeamByGUID(ownerguid))
+    if (!sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD) && GetPlayer()->GetTeam() != sObjectMgr.GetPlayerTeamByGUID(ownerguid))
     {
         if (type != 9)
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_INVITE_SS, "", "", ERR_ARENA_TEAM_NOT_ALLIED);
@@ -463,7 +463,7 @@ void WorldSession::HandlePetitionSignOpcode(WorldPacket & recv_data)
 
     if (type != 9)
     {
-        if (_player->getLevel() < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+        if (_player->getLevel() < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         {
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, "", _player->GetName(), ERR_ARENA_TEAM_TARGET_TOO_LOW_S);
             return;
@@ -594,7 +594,7 @@ void WorldSession::HandleOfferPetitionOpcode(WorldPacket & recv_data)
 
     sLog->outDebug("OFFER PETITION: type %u, GUID1 %u, to player id: %u", type, GUID_LOPART(petitionguid), GUID_LOPART(plguid));
 
-    if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD) && GetPlayer()->GetTeam() != player->GetTeam())
+    if (!sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD) && GetPlayer()->GetTeam() != player->GetTeam())
     {
         if (type != 9)
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_INVITE_SS, "", "", ERR_ARENA_TEAM_NOT_ALLIED);
@@ -605,7 +605,7 @@ void WorldSession::HandleOfferPetitionOpcode(WorldPacket & recv_data)
 
     if (type != 9)
     {
-        if (player->getLevel() < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+        if (player->getLevel() < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         {
             // player is too low level to join an arena team
             SendArenaTeamCommandResult(ERR_ARENA_TEAM_CREATE_S, "", player->GetName(), ERR_ARENA_TEAM_TARGET_TOO_LOW_S);
@@ -737,9 +737,9 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket & recv_data)
         signs = 0;
 
     uint32 count;
-    //if (signs < sWorld.getConfig(CONFIG_MIN_PETITION_SIGNS))
+    //if (signs < sWorld->getConfig(CONFIG_MIN_PETITION_SIGNS))
     if (type == 9)
-        count = sWorld.getConfig(CONFIG_MIN_PETITION_SIGNS);
+        count = sWorld->getConfig(CONFIG_MIN_PETITION_SIGNS);
     else
         count = type-1;
     if (signs < count)

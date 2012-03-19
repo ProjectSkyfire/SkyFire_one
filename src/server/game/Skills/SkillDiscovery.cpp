@@ -92,8 +92,8 @@ void LoadSkillDiscoveryTable()
             }
             else if (reqSkillOrSpell == 0)                 // skill case
             {
-                SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(spellId);
-                SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(spellId);
+                SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spellId);
+                SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spellId);
 
                 if (lower == upper)
                 {
@@ -135,7 +135,7 @@ uint32 GetSkillDiscoverySpell(uint32 skillId, uint32 spellId, Player* player)
     {
         for (SkillDiscoveryList::iterator item_iter = tab->second.begin(); item_iter != tab->second.end(); ++item_iter)
         {
-            if (roll_chance_f(item_iter->chance * sWorld.getRate(RATE_SKILL_DISCOVERY))
+            if (roll_chance_f(item_iter->chance * sWorld->getRate(RATE_SKILL_DISCOVERY))
                 && !player->HasSpell(item_iter->spellId))
                 return item_iter->spellId;
         }
@@ -149,7 +149,7 @@ uint32 GetSkillDiscoverySpell(uint32 skillId, uint32 spellId, Player* player)
     {
         for (SkillDiscoveryList::iterator item_iter = tab->second.begin(); item_iter != tab->second.end(); ++item_iter)
         {
-            if (roll_chance_f(item_iter->chance * sWorld.getRate(RATE_SKILL_DISCOVERY))
+            if (roll_chance_f(item_iter->chance * sWorld->getRate(RATE_SKILL_DISCOVERY))
                 && !player->HasSpell(item_iter->spellId))
                 return item_iter->spellId;
         }

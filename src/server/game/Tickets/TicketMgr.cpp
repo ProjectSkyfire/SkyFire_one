@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -107,7 +106,7 @@ void TicketMgr::LoadGMTickets()
 
     if (!result)
     {
-        ticketmgr.InitTicketID();
+        sTicketMgr->InitTicketID();
         sLog->outString();
         sLog->outString(">> GM Tickets table is empty, no tickets were loaded.");
         return;
@@ -137,7 +136,7 @@ void TicketMgr::LoadGMTickets()
         AddGMTicket(ticket, true);
     } while (result->NextRow());
 
-    sWorld.SendGMText(LANG_COMMAND_TICKETRELOAD, result->GetRowCount());
+    sWorld->SendGMText(LANG_COMMAND_TICKETRELOAD, result->GetRowCount());
 }
 
 void TicketMgr::LoadGMSurveys()

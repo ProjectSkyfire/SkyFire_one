@@ -193,8 +193,8 @@ void SocialMgr::GetFriendInfo(Player* player, uint32 friendGUID, FriendInfo &fri
 
     uint32 team = player->GetTeam();
     uint32 security = player->GetSession()->GetSecurity();
-    bool allowTwoSideWhoList = sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
-    bool gmInWhoList = sWorld.getConfig(CONFIG_GM_IN_WHO_LIST) || security > SEC_PLAYER;
+    bool allowTwoSideWhoList = sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
+    bool gmInWhoList = sWorld->getConfig(CONFIG_GM_IN_WHO_LIST) || security > SEC_PLAYER;
 
     PlayerSocialMap::iterator itr = player->GetSocial()->m_playerSocialMap.find(friendGUID);
     if (itr != player->GetSocial()->m_playerSocialMap.end())
@@ -265,8 +265,8 @@ void SocialMgr::BroadcastToFriendListers(Player* player, WorldPacket *packet)
     uint32 team     = player->GetTeam();
     uint32 security = player->GetSession()->GetSecurity();
     uint32 guid     = player->GetGUIDLow();
-    bool gmInWhoList = sWorld.getConfig(CONFIG_GM_IN_WHO_LIST);
-    bool allowTwoSideWhoList = sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
+    bool gmInWhoList = sWorld->getConfig(CONFIG_GM_IN_WHO_LIST);
+    bool allowTwoSideWhoList = sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
 
     for (SocialMap::iterator itr = m_socialMap.begin(); itr != m_socialMap.end(); ++itr)
     {

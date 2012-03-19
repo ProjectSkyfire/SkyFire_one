@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -139,7 +138,7 @@ bool ChatHandler::HandleNameAnnounceCommand(const char* args)
     if (!*args)
         return false;
 
-    sWorld.SendWorldText(LANG_ANNOUNCE_COLOR, m_session->GetPlayer()->GetName(), args);
+    sWorld->SendWorldText(LANG_ANNOUNCE_COLOR, m_session->GetPlayer()->GetName(), args);
     return true;
 }
 
@@ -149,7 +148,7 @@ bool ChatHandler::HandleGMNameAnnounceCommand(const char* args)
     if (!*args)
         return false;
 
-    sWorld.SendGMText(LANG_GM_ANNOUNCE_COLOR, m_session->GetPlayer()->GetName(), args);
+    sWorld->SendGMText(LANG_GM_ANNOUNCE_COLOR, m_session->GetPlayer()->GetName(), args);
     return true;
 }
 
@@ -159,7 +158,7 @@ bool ChatHandler::HandleAnnounceCommand(const char* args)
     if (!*args)
         return false;
 
-    sWorld.SendWorldText(LANG_SYSTEMMESSAGE, args);
+    sWorld->SendWorldText(LANG_SYSTEMMESSAGE, args);
     return true;
 }
 
@@ -169,7 +168,7 @@ bool ChatHandler::HandleGMAnnounceCommand(const char* args)
     if (!*args)
         return false;
 
-    sWorld.SendGMText(LANG_GM_BROADCAST, args);
+    sWorld->SendGMText(LANG_GM_BROADCAST, args);
     return true;
 }
 
@@ -184,7 +183,7 @@ bool ChatHandler::HandleNotifyCommand(const char* args)
 
     WorldPacket data(SMSG_NOTIFICATION, (str.size()+1));
     data << str;
-    sWorld.SendGlobalMessage(&data);
+    sWorld->SendGlobalMessage(&data);
 
     return true;
 }
@@ -200,7 +199,7 @@ bool ChatHandler::HandleGMNotifyCommand(const char* args)
 
     WorldPacket data(SMSG_NOTIFICATION, (str.size()+1));
     data << str;
-    sWorld.SendGlobalGMMessage(&data);
+    sWorld->SendGlobalGMMessage(&data);
 
     return true;
 }
@@ -293,7 +292,7 @@ std::string ChatHandler::PGetParseString(int32 entry, ...)
 bool ChatHandler::HandleGMTicketListCommand(const char* /*args*/)
 {
     SendSysMessage(LANG_COMMAND_TICKETSHOWLIST);
-    for (GmTicketList::iterator itr = ticketmgr.GM_TicketList.begin(); itr != ticketmgr.GM_TicketList.end(); ++itr)
+    for (GmTicketList::iterator itr = sTicketMgr->GM_TicketList.begin(); itr != sTicketMgr->GM_TicketList.end(); ++itr)
     {
         if ((*itr)->closed != 0)
             continue;
@@ -315,7 +314,7 @@ bool ChatHandler::HandleGMTicketListCommand(const char* /*args*/)
 bool ChatHandler::HandleGMTicketListOnlineCommand(const char* /*args*/)
 {
     SendSysMessage(LANG_COMMAND_TICKETSHOWONLINELIST);
-    for (GmTicketList::iterator itr = ticketmgr.GM_TicketList.begin(); itr != ticketmgr.GM_TicketList.end(); ++itr)
+    for (GmTicketList::iterator itr = sTicketMgr->GM_TicketList.begin(); itr != sTicketMgr->GM_TicketList.end(); ++itr)
     {
         if ((*itr)->closed != 0 || !sObjectMgr.GetPlayer((*itr)->playerGuid))
             continue;
@@ -338,7 +337,7 @@ bool ChatHandler::HandleGMTicketListOnlineCommand(const char* /*args*/)
 bool ChatHandler::HandleGMTicketListClosedCommand(const char* /*args*/)
 {
     SendSysMessage(LANG_COMMAND_TICKETSHOWCLOSEDLIST);
-    for (GmTicketList::iterator itr = ticketmgr.GM_TicketList.begin(); itr != ticketmgr.GM_TicketList.end(); ++itr)
+    for (GmTicketList::iterator itr = sTicketMgr->GM_TicketList.begin(); itr != sTicketMgr->GM_TicketList.end(); ++itr)
     {
         if ((*itr)->closed == 0)
             continue;
@@ -364,7 +363,7 @@ bool ChatHandler::HandleGMTicketGetByIdCommand(const char* args)
         return false;
 
     uint64 tguid = atoi(args);
-    GM_Ticket *ticket = ticketmgr.GetGMTicket(tguid);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicket(tguid);
     if (!ticket)
     {
         SendSysMessage(LANG_COMMAND_TICKETNOTEXIST);
@@ -380,7 +379,7 @@ bool ChatHandler::HandleGMTicketGetByIdCommand(const char* args)
         data << uint32(1);
         plr->GetSession()->SendPacket(&data);
     }
-    ticketmgr.SaveGMTicket(ticket); // update database
+    sTicketMgr->SaveGMTicket(ticket); // update database
 
     std::string gmname;
     std::stringstream ss;
@@ -406,7 +405,7 @@ bool ChatHandler::HandleGMTicketGetByNameCommand(const char* args)
     if (!*args)
         return false;
 
-    GM_Ticket *ticket = ticketmgr.GetGMTicketByName(args);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicketByName(args);
     if (!ticket)
     {
         SendSysMessage(LANG_COMMAND_TICKETNOTEXIST);
@@ -422,7 +421,7 @@ bool ChatHandler::HandleGMTicketGetByNameCommand(const char* args)
         data << uint32(1);
         plr->GetSession()->SendPacket(&data);
     }
-    ticketmgr.SaveGMTicket(ticket); // update database
+    sTicketMgr->SaveGMTicket(ticket); // update database
 
     std::string gmname;
     std::stringstream ss;
@@ -449,7 +448,7 @@ bool ChatHandler::HandleGMTicketCloseByIdCommand(const char* args)
         return false;
 
     uint64 tguid = atoi(args);
-    GM_Ticket *ticket = ticketmgr.GetGMTicket(tguid);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicket(tguid);
     if (!ticket || ticket->closed != 0)
     {
         SendSysMessage(LANG_COMMAND_TICKETNOTEXIST);
@@ -466,12 +465,12 @@ bool ChatHandler::HandleGMTicketCloseByIdCommand(const char* args)
     ss << PGetParseString(LANG_COMMAND_TICKETCLOSED, m_session->GetPlayer()->GetName());
     SendGlobalGMSysMessage(ss.str().c_str());
     Player *plr = sObjectMgr.GetPlayer(ticket->playerGuid);
-    ticketmgr.RemoveGMTicket(ticket->guid, m_session->GetPlayer()->GetGUID());
+    sTicketMgr->RemoveGMTicket(ticket->guid, m_session->GetPlayer()->GetGUID());
 
     if (!plr || !plr->IsInWorld())
         return true;
 
-    if ((float)rand_chance() < sWorld.getConfig(CONFIG_CHANCE_OF_GM_SURVEY))
+    if ((float)rand_chance() < sWorld->getConfig(CONFIG_CHANCE_OF_GM_SURVEY))
     {
         // send survey
         WorldPacket data(SMSG_GM_TICKET_STATUS_UPDATE, 4);
@@ -506,7 +505,7 @@ bool ChatHandler::HandleGMTicketAssignToCommand(const char* args)
         return false;
 
     Player *cplr = m_session->GetPlayer();
-    GM_Ticket *ticket = ticketmgr.GetGMTicket(ticketGuid);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicket(ticketGuid);
 
     if (!ticket || ticket->closed != 0)
     {
@@ -549,7 +548,7 @@ bool ChatHandler::HandleGMTicketAssignToCommand(const char* args)
     }
 
     ticket->assignedToGM = tarGUID;
-    ticketmgr.UpdateGMTicket(ticket);
+    sTicketMgr->UpdateGMTicket(ticket);
     std::stringstream ss;
     ss << PGetParseString(LANG_COMMAND_TICKETLISTGUID, ticket->guid);
     ss << PGetParseString(LANG_COMMAND_TICKETLISTNAME, ticket->name.c_str());
@@ -565,7 +564,7 @@ bool ChatHandler::HandleGMTicketUnAssignCommand(const char* args)
 
     uint64 ticketGuid = atoi(args);
     Player *cplr = m_session->GetPlayer();
-    GM_Ticket *ticket = ticketmgr.GetGMTicket(ticketGuid);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicket(ticketGuid);
 
     if (!ticket|| ticket->closed != 0)
     {
@@ -605,7 +604,7 @@ bool ChatHandler::HandleGMTicketUnAssignCommand(const char* args)
     }
 
     ticket->assignedToGM = 0;
-    ticketmgr.UpdateGMTicket(ticket);
+    sTicketMgr->UpdateGMTicket(ticket);
     return true;
 }
 
@@ -622,7 +621,7 @@ bool ChatHandler::HandleGMTicketCommentCommand(const char* args)
         return false;
 
     Player *cplr = m_session->GetPlayer();
-    GM_Ticket *ticket = ticketmgr.GetGMTicket(ticketGuid);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicket(ticketGuid);
 
     if (!ticket || ticket->closed != 0)
     {
@@ -638,7 +637,7 @@ bool ChatHandler::HandleGMTicketCommentCommand(const char* args)
     std::string gmname;
     sObjectMgr.GetPlayerNameByGUID(ticket->assignedToGM, gmname);
     ticket->comment = comment;
-    ticketmgr.UpdateGMTicket(ticket);
+    sTicketMgr->UpdateGMTicket(ticket);
     std::stringstream ss;
     ss << PGetParseString(LANG_COMMAND_TICKETLISTGUID, ticket->guid);
     ss << PGetParseString(LANG_COMMAND_TICKETLISTNAME, ticket->name.c_str());
@@ -656,7 +655,7 @@ bool ChatHandler::HandleGMTicketDeleteByIdCommand(const char* args)
     if (!*args)
         return false;
     uint64 ticketGuid = atoi(args);
-    GM_Ticket *ticket = ticketmgr.GetGMTicket(ticketGuid);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicket(ticketGuid);
 
     if (!ticket)
     {
@@ -675,7 +674,7 @@ bool ChatHandler::HandleGMTicketDeleteByIdCommand(const char* args)
     ss << PGetParseString(LANG_COMMAND_TICKETDELETED, m_session->GetPlayer()->GetName());
     SendGlobalGMSysMessage(ss.str().c_str());
     Player *plr = sObjectMgr.GetPlayer(ticket->playerGuid);
-    ticketmgr.DeleteGMTicketPermanently(ticket->guid);
+    sTicketMgr->DeleteGMTicketPermanently(ticket->guid);
     if (plr && plr->IsInWorld())
     {
         // Force abandon ticket
@@ -690,7 +689,7 @@ bool ChatHandler::HandleGMTicketDeleteByIdCommand(const char* args)
 
 bool ChatHandler::HandleGMTicketReloadCommand(const char*)
 {
-    ticketmgr.LoadGMTickets();
+    sTicketMgr->LoadGMTickets();
     return true;
 }
 
@@ -800,9 +799,9 @@ bool ChatHandler::HandleGPSCommand(const char* args)
         (obj->GetTypeId() == TYPEID_PLAYER ? "player" : "creature"), obj->GetName(),
         (obj->GetTypeId() == TYPEID_PLAYER ? "GUID" : "Entry"), (obj->GetTypeId() == TYPEID_PLAYER ? obj->GetGUIDLow(): obj->GetEntry()));
     sLog->outDebug(GetSkyFireString(LANG_MAP_POSITION),
-        obj->GetMapId(), (mapEntry ? mapEntry->name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
-        zone_id, (zoneEntry ? zoneEntry->area_name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
-        area_id, (areaEntry ? areaEntry->area_name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
+        obj->GetMapId(), (mapEntry ? mapEntry->name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
+        zone_id, (zoneEntry ? zoneEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
+        area_id, (areaEntry ? areaEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
         obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), obj->GetOrientation(),
         cell.GridX(), cell.GridY(), cell.CellX(), cell.CellY(), obj->GetInstanceId(),
         zone_x, zone_y, ground_z, floor_z, have_map, have_vmap);
@@ -2151,7 +2150,7 @@ bool ChatHandler::HandleLookupAreaCommand(const char* args)
         AreaTableEntry const *areaEntry = sAreaStore.LookupEntry (areaflag);
         if (areaEntry)
         {
-            int loc = m_session ? m_session->GetSessionDbcLocale () : sWorld.GetDefaultDbcLocale();
+            int loc = m_session ? m_session->GetSessionDbcLocale () : sWorld->GetDefaultDbcLocale();
             std::string name = areaEntry->area_name[loc];
             if (name.empty())
                 continue;

@@ -291,7 +291,7 @@ Player::Player (WorldSession *session): Unit()
 
     m_areaUpdateId = 0;
 
-    m_nextSave = sWorld.getConfig(CONFIG_INTERVAL_SAVE);
+    m_nextSave = sWorld->getConfig(CONFIG_INTERVAL_SAVE);
 
     clearResurrectRequestData();
 
@@ -585,22 +585,22 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
     SetUInt32Value(PLAYER_FIELD_YESTERDAY_CONTRIBUTION, 0);
 
     // set starting level
-    uint32 start_level = sWorld.getConfig(CONFIG_START_PLAYER_LEVEL);
+    uint32 start_level = sWorld->getConfig(CONFIG_START_PLAYER_LEVEL);
 
     if (GetSession()->GetSecurity() >= SEC_MODERATOR)
     {
-        uint32 gm_level = sWorld.getConfig(CONFIG_START_GM_LEVEL);
+        uint32 gm_level = sWorld->getConfig(CONFIG_START_GM_LEVEL);
         if (gm_level > start_level)
             start_level = gm_level;
     }
 
     SetUInt32Value(UNIT_FIELD_LEVEL, start_level);
-    SetUInt32Value (PLAYER_FIELD_COINAGE, sWorld.getConfig(CONFIG_START_PLAYER_MONEY));
-    SetUInt32Value (PLAYER_FIELD_HONOR_CURRENCY, sWorld.getConfig(CONFIG_START_HONOR_POINTS));
-    SetUInt32Value (PLAYER_FIELD_ARENA_CURRENCY, sWorld.getConfig(CONFIG_START_ARENA_POINTS));
+    SetUInt32Value (PLAYER_FIELD_COINAGE, sWorld->getConfig(CONFIG_START_PLAYER_MONEY));
+    SetUInt32Value (PLAYER_FIELD_HONOR_CURRENCY, sWorld->getConfig(CONFIG_START_HONOR_POINTS));
+    SetUInt32Value (PLAYER_FIELD_ARENA_CURRENCY, sWorld->getConfig(CONFIG_START_ARENA_POINTS));
 
     // start with every map explored
-    if (sWorld.getConfig(CONFIG_START_ALL_EXPLORED))
+    if (sWorld->getConfig(CONFIG_START_ALL_EXPLORED))
     {
         for (uint8 i = 0; i < 64; i++)
             SetFlag(PLAYER_EXPLORED_ZONES_1+i, 0xFFFFFFFF);
@@ -841,7 +841,7 @@ int32 Player::getMaxTimer(MirrorTimerType timer)
             return MINUTE*IN_MILLISECONDS;
         case BREATH_TIMER:
         {
-            if (!isAlive() || HasAuraType(SPELL_AURA_WATER_BREATHING) || GetSession()->GetSecurity() >= sWorld.getConfig(CONFIG_DISABLE_BREATHING))
+            if (!isAlive() || HasAuraType(SPELL_AURA_WATER_BREATHING) || GetSession()->GetSecurity() >= sWorld->getConfig(CONFIG_DISABLE_BREATHING))
                 return DISABLED_MIRROR_TIMER;
             int32 UnderWaterTime = MINUTE*IN_MILLISECONDS;
             AuraList const& mModWaterBreathing = GetAurasByType(SPELL_AURA_MOD_WATER_BREATHING);
@@ -1181,7 +1181,7 @@ void Player::Update(uint32 p_time)
             int time_inn = time(NULL)-GetTimeInnEnter();
             if (time_inn >= 10)                             // freeze update
             {
-                float bubble = 0.125*sWorld.getRate(RATE_REST_INGAME);
+                float bubble = 0.125*sWorld->getRate(RATE_REST_INGAME);
                 //speed collect rest bonus (section/in hour)
                 SetRestBonus(GetRestBonus()+ time_inn*((float)GetUInt32Value(PLAYER_NEXT_LEVEL_XP)/72000)*bubble);
                 UpdateInnerTime(time(NULL));
@@ -1415,7 +1415,7 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
         char_flags |= CHARACTER_FLAG_GHOST;
     if (atLoginFlags & AT_LOGIN_RENAME)
         char_flags |= CHARACTER_FLAG_RENAME;
-    if (sWorld.getConfig(CONFIG_DECLINED_NAMES_USED))
+    if (sWorld->getConfig(CONFIG_DECLINED_NAMES_USED))
     {
         if (!fields[20].GetCppString().empty())
             char_flags |= CHARACTER_FLAG_DECLINED;
@@ -1536,7 +1536,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         return false;
     }
 
-    if ((GetSession()->GetSecurity() < SEC_GAMEMASTER) && !sWorld.IsAllowedMap(mapid))
+    if ((GetSession()->GetSecurity() < SEC_GAMEMASTER) && !sWorld->IsAllowedMap(mapid))
     {
         sLog->outError("Player %s tried to enter a forbidden map", GetName());
         return false;
@@ -1787,7 +1787,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
 
 bool Player::TeleportToBGEntryPoint()
 {
-    if (sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
+    if (sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
     {
         ScheduleDelayedOperation(DELAYED_BG_MOUNT_RESTORE);
         ScheduleDelayedOperation(DELAYED_BG_TAXI_RESTORE);
@@ -1921,7 +1921,7 @@ void Player::RewardRage(uint32 damage, uint32 weaponSpeedHitFactor, bool attacke
             addRage *= 2.0;
     }
 
-    addRage *= sWorld.getRate(RATE_POWER_RAGE_INCOME);
+    addRage *= sWorld->getRate(RATE_POWER_RAGE_INCOME);
 
     ModifyPower(POWER_RAGE, uint32(addRage*10));
 }
@@ -1960,7 +1960,7 @@ void Player::Regenerate(Powers power)
         case POWER_MANA:
         {
             bool recentCast = IsUnderLastManaUseEffect();
-            float ManaIncreaseRate = sWorld.getRate(RATE_POWER_MANA);
+            float ManaIncreaseRate = sWorld->getRate(RATE_POWER_MANA);
 
             if (recentCast) // Trinity Updates Mana in intervals of 2s, which is correct
                 addvalue = GetFloatValue(PLAYER_FIELD_MOD_MANA_REGEN_INTERRUPT) *  ManaIncreaseRate * 2.00f;
@@ -1970,12 +1970,12 @@ void Player::Regenerate(Powers power)
         }   break;
         case POWER_RAGE:                                    // Regenerate rage
         {
-            float RageDecreaseRate = sWorld.getRate(RATE_POWER_RAGE_LOSS);
+            float RageDecreaseRate = sWorld->getRate(RATE_POWER_RAGE_LOSS);
             addvalue = 30 * RageDecreaseRate;               // 3 rage by tick
         }   break;
         case POWER_ENERGY:                                  // Regenerate energy (rogue)
         {
-            float EnergyIncreaseRate = sWorld.getRate(RATE_POWER_ENERGY);
+            float EnergyIncreaseRate = sWorld->getRate(RATE_POWER_ENERGY);
             addvalue = 20 * EnergyIncreaseRate;
             break;
         }
@@ -2017,7 +2017,7 @@ void Player::RegenerateHealth()
 
     if (curValue >= maxValue) return;
 
-    float HealthIncreaseRate = sWorld.getRate(RATE_HEALTH);
+    float HealthIncreaseRate = sWorld->getRate(RATE_HEALTH);
 
     float addvalue = 0.0f;
 
@@ -2195,7 +2195,7 @@ void Player::SetGameMaster(bool on)
         RemoveFlag(PLAYER_FLAGS, PLAYER_FLAGS_GM);
 
         // restore FFA PvP Server state
-        if (sWorld.IsFFAPvPRealm())
+        if (sWorld->IsFFAPvPRealm())
             SetFFAPvP(true);
 
         // restore FFA PvP area state, remove not allowed for GM mounts
@@ -2234,7 +2234,7 @@ void Player::SetGMVisible(bool on)
 
 bool Player::IsGroupVisibleFor(Player* p) const
 {
-    switch (sWorld.getConfig(CONFIG_GROUP_VISIBILITY))
+    switch (sWorld->getConfig(CONFIG_GROUP_VISIBILITY))
     {
         default: return IsInSameGroupWith(p);
         case 1:  return IsInSameRaidWith(p);
@@ -2313,7 +2313,7 @@ void Player::GiveXP(uint32 xp, Unit* victim)
     uint32 level = getLevel();
 
     // XP to money conversion processed in Player::RewardQuest
-    if (level >= sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    if (level >= sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         return;
 
     // handle SPELL_AURA_MOD_XP_PCT auras
@@ -2339,11 +2339,11 @@ void Player::GiveXP(uint32 xp, Unit* victim)
     uint32 nextLvlXP = GetUInt32Value(PLAYER_NEXT_LEVEL_XP);
     uint32 newXP = curXP + xp + rested_bonus_xp;
 
-    while (newXP >= nextLvlXP && level < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    while (newXP >= nextLvlXP && level < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
     {
         newXP -= nextLvlXP;
 
-        if (level < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+        if (level < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
             GiveLevel(level + 1);
 
         level = getLevel();
@@ -2402,7 +2402,7 @@ void Player::GiveLevel(uint32 level)
 
     UpdateAllStats();
 
-    if (sWorld.getConfig(CONFIG_ALWAYS_MAXSKILL)) // Max weapon skill when leveling up
+    if (sWorld->getConfig(CONFIG_ALWAYS_MAXSKILL)) // Max weapon skill when leveling up
         UpdateSkillsToMaxSkillsForLevel();
 
     // set current level health and mana/energy to maximum after applying all mods.
@@ -2435,7 +2435,7 @@ void Player::InitTalentForLevel()
     }
     else
     {
-        uint32 talentPointsForLevel = uint32((level-9)*sWorld.getRate(RATE_TALENT));
+        uint32 talentPointsForLevel = uint32((level-9)*sWorld->getRate(RATE_TALENT));
         // if used more that have then reset
         if (m_usedTalentCount > talentPointsForLevel)
         {
@@ -2461,7 +2461,7 @@ void Player::InitStatsForLevel(bool reapplyMods)
     PlayerLevelInfo info;
     sObjectMgr.GetPlayerLevelInfo(getRace(), getClass(), getLevel(), &info);
 
-    SetUInt32Value(PLAYER_FIELD_MAX_LEVEL, sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL));
+    SetUInt32Value(PLAYER_FIELD_MAX_LEVEL, sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL));
     SetUInt32Value(PLAYER_NEXT_LEVEL_XP, Trinity::XP::xp_to_level(getLevel()));
 
     UpdateSkillsForLevel ();
@@ -2841,7 +2841,7 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
             }
         }
         // non talent spell: learn low ranks (recursive call)
-        else if (uint32 prev_spell = spellmgr.GetPrevSpellInChain(spell_id))
+        else if (uint32 prev_spell = sSpellMgr->GetPrevSpellInChain(spell_id))
         {
             if (loading)                                     // at spells loading, no output, but allow save
                 addSpell(prev_spell, active, true, loading, disabled);
@@ -2855,7 +2855,7 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
         newspell->disabled = disabled;
 
         // replace spells in action bars and spellbook to bigger rank if only one spell rank must be accessible
-        if (newspell->active && !newspell->disabled && !SpellMgr::canStackSpellRanks(spellInfo) && spellmgr.GetSpellRank(spellInfo->Id) != 0)
+        if (newspell->active && !newspell->disabled && !SpellMgr::canStackSpellRanks(spellInfo) && sSpellMgr->GetSpellRank(spellInfo->Id) != 0)
         {
             for (PlayerSpellMap::iterator itr = m_spells.begin(); itr != m_spells.end(); ++itr)
             {
@@ -2863,11 +2863,11 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
                 SpellEntry const *i_spellInfo = sSpellStore.LookupEntry(itr->first);
                 if (!i_spellInfo) continue;
 
-                if (spellmgr.IsRankSpellDueToSpell(spellInfo, itr->first))
+                if (sSpellMgr->IsRankSpellDueToSpell(spellInfo, itr->first))
                 {
                     if (itr->second->active)
                     {
-                        if (spellmgr.IsHighRankOfSpell(spell_id, itr->first))
+                        if (sSpellMgr->IsHighRankOfSpell(spell_id, itr->first))
                         {
                             if (!loading)                    // not send spell (re-/over-)learn packets at loading
                             {
@@ -2882,7 +2882,7 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
                             itr->second->state = PLAYERSPELL_CHANGED;
                             superceded_old = true;          // new spell replace old in action bars and spell book.
                         }
-                        else if (spellmgr.IsHighRankOfSpell(itr->first, spell_id))
+                        else if (sSpellMgr->IsHighRankOfSpell(itr->first, spell_id))
                         {
                             if (!loading)                    // not send spell (re-/over-)learn packets at loading
                             {
@@ -2951,14 +2951,14 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
     // update free primary prof.points (if any, can be none in case GM .learn prof. learning)
     if (uint32 freeProfs = GetFreePrimaryProfessionPoints())
     {
-        if (spellmgr.IsPrimaryProfessionFirstRankSpell(spell_id))
+        if (sSpellMgr->IsPrimaryProfessionFirstRankSpell(spell_id))
             SetFreePrimaryProfessions(freeProfs-1);
     }
 
     // add dependent skills
     uint16 maxskill = GetMaxSkillValueForLevel();
 
-    SpellLearnSkillNode const* spellLearnSkill = spellmgr.GetSpellLearnSkill(spell_id);
+    SpellLearnSkillNode const* spellLearnSkill = sSpellMgr->GetSpellLearnSkill(spell_id);
 
     if (spellLearnSkill)
     {
@@ -2978,8 +2978,8 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
     else
     {
         // not ranked skills
-        SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(spell_id);
-        SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(spell_id);
+        SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spell_id);
+        SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spell_id);
 
         for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
         {
@@ -3015,8 +3015,8 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
     }
 
     // learn dependent spells
-    SpellLearnSpellMap::const_iterator spell_begin = spellmgr.GetBeginSpellLearnSpell(spell_id);
-    SpellLearnSpellMap::const_iterator spell_end   = spellmgr.GetEndSpellLearnSpell(spell_id);
+    SpellLearnSpellMap::const_iterator spell_begin = sSpellMgr->GetBeginSpellLearnSpell(spell_id);
+    SpellLearnSpellMap::const_iterator spell_end   = sSpellMgr->GetEndSpellLearnSpell(spell_id);
 
     for (SpellLearnSpellMap::const_iterator itr = spell_begin; itr != spell_end; ++itr)
     {
@@ -3043,7 +3043,7 @@ void Player::learnSpell(uint32 spell_id)
     bool learning = addSpell(spell_id, active);
 
     // learn all disabled higher ranks (recursive)
-    SpellChainNode const* node = spellmgr.GetSpellChainNode(spell_id);
+    SpellChainNode const* node = sSpellMgr->GetSpellChainNode(spell_id);
     if (node)
     {
         PlayerSpellMap::iterator iter = m_spells.find(node->next);
@@ -3070,14 +3070,14 @@ void Player::removeSpell(uint32 spell_id, bool disabled)
         return;
 
     // unlearn non talent higher ranks (recursive)
-    SpellChainNode const* node = spellmgr.GetSpellChainNode(spell_id);
+    SpellChainNode const* node = sSpellMgr->GetSpellChainNode(spell_id);
     if (node)
     {
         if (HasSpell(node->next) && !GetTalentSpellPos(node->next))
         removeSpell(node->next, disabled);
     }
     //unlearn spells dependent from recently removed spells
-    SpellsRequiringSpellMap const& reqMap = spellmgr.GetSpellsRequiringSpell();
+    SpellsRequiringSpellMap const& reqMap = sSpellMgr->GetSpellsRequiringSpell();
     SpellsRequiringSpellMap::const_iterator itr2 = reqMap.find(spell_id);
     for (uint32 i=reqMap.count(spell_id);i>0;i--, itr2++)
         removeSpell(itr2->second, disabled);
@@ -3107,7 +3107,7 @@ void Player::removeSpell(uint32 spell_id, bool disabled)
     RemoveAurasDueToSpell(spell_id);
 
     // remove pet auras
-    if (PetAura const* petSpell = spellmgr.GetPetAura(spell_id))
+    if (PetAura const* petSpell = sSpellMgr->GetPetAura(spell_id))
         RemovePetAura(petSpell);
 
     // free talent points
@@ -3121,28 +3121,28 @@ void Player::removeSpell(uint32 spell_id, bool disabled)
     }
 
     // update free primary prof.points (if not overflow setting, can be in case GM use before .learn prof. learning)
-    if (spellmgr.IsPrimaryProfessionFirstRankSpell(spell_id))
+    if (sSpellMgr->IsPrimaryProfessionFirstRankSpell(spell_id))
     {
         uint32 freeProfs = GetFreePrimaryProfessionPoints()+1;
-        if (freeProfs <= sWorld.getConfig(CONFIG_MAX_PRIMARY_TRADE_SKILL))
+        if (freeProfs <= sWorld->getConfig(CONFIG_MAX_PRIMARY_TRADE_SKILL))
             SetFreePrimaryProfessions(freeProfs);
     }
 
     // remove dependent skill
-    SpellLearnSkillNode const* spellLearnSkill = spellmgr.GetSpellLearnSkill(spell_id);
+    SpellLearnSkillNode const* spellLearnSkill = sSpellMgr->GetSpellLearnSkill(spell_id);
     if (spellLearnSkill)
     {
-        uint32 prev_spell = spellmgr.GetPrevSpellInChain(spell_id);
+        uint32 prev_spell = sSpellMgr->GetPrevSpellInChain(spell_id);
         if (!prev_spell)                                     // first rank, remove skill
             SetSkill(spellLearnSkill->skill, 0, 0);
         else
         {
             // search prev. skill setting by spell ranks chain
-            SpellLearnSkillNode const* prevSkill = spellmgr.GetSpellLearnSkill(prev_spell);
+            SpellLearnSkillNode const* prevSkill = sSpellMgr->GetSpellLearnSkill(prev_spell);
             while (!prevSkill && prev_spell)
             {
-                prev_spell = spellmgr.GetPrevSpellInChain(prev_spell);
-                prevSkill = spellmgr.GetSpellLearnSkill(spellmgr.GetFirstSpellInChain(prev_spell));
+                prev_spell = sSpellMgr->GetPrevSpellInChain(prev_spell);
+                prevSkill = sSpellMgr->GetSpellLearnSkill(sSpellMgr->GetFirstSpellInChain(prev_spell));
             }
 
             if (!prevSkill)                                  // not found prev skill setting, remove skill
@@ -3167,8 +3167,8 @@ void Player::removeSpell(uint32 spell_id, bool disabled)
     else
     {
         // not ranked skills
-        SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(spell_id);
-        SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(spell_id);
+        SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spell_id);
+        SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spell_id);
 
         for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
         {
@@ -3193,8 +3193,8 @@ void Player::removeSpell(uint32 spell_id, bool disabled)
     }
 
     // remove dependent spells
-    SpellLearnSpellMap::const_iterator spell_begin = spellmgr.GetBeginSpellLearnSpell(spell_id);
-    SpellLearnSpellMap::const_iterator spell_end   = spellmgr.GetEndSpellLearnSpell(spell_id);
+    SpellLearnSpellMap::const_iterator spell_begin = sSpellMgr->GetBeginSpellLearnSpell(spell_id);
+    SpellLearnSpellMap::const_iterator spell_end   = sSpellMgr->GetEndSpellLearnSpell(spell_id);
 
     for (SpellLearnSpellMap::const_iterator itr2 = spell_begin; itr2 != spell_end; ++itr2)
         removeSpell(itr2->second.spell, disabled);
@@ -3322,7 +3322,7 @@ uint32 Player::resetTalentsCost() const
         return 10*GOLD;
     else
     {
-        uint32 months = (sWorld.GetGameTime() - m_resetTalentsTime)/MONTH;
+        uint32 months = (sWorld->GetGameTime() - m_resetTalentsTime)/MONTH;
         if (months > 0)
         {
             // This cost will be reduced by a rate of 5 gold per month
@@ -3352,7 +3352,7 @@ bool Player::resetTalents(bool no_cost)
     }
 
     uint32 level = getLevel();
-    uint32 talentPointsForLevel = level < 10 ? 0 : uint32((level-9)*sWorld.getRate(RATE_TALENT));
+    uint32 talentPointsForLevel = level < 10 ? 0 : uint32((level-9)*sWorld->getRate(RATE_TALENT));
 
     if (m_usedTalentCount == 0)
     {
@@ -3362,7 +3362,7 @@ bool Player::resetTalents(bool no_cost)
 
     uint32 cost = 0;
 
-    if (!no_cost && !sWorld.getConfig(CONFIG_NO_RESET_TALENT_COST))
+    if (!no_cost && !sWorld->getConfig(CONFIG_NO_RESET_TALENT_COST))
     {
         cost = resetTalentsCost();
 
@@ -3401,10 +3401,10 @@ bool Player::resetTalents(bool no_cost)
                 }
 
                 // remove learned spells (all ranks)
-                uint32 itrFirstId = spellmgr.GetFirstSpellInChain(itr->first);
+                uint32 itrFirstId = sSpellMgr->GetFirstSpellInChain(itr->first);
 
                 // unlearn if first rank is talent or learned by talent
-                if (itrFirstId == talentInfo->RankID[j] || spellmgr.IsSpellLearnToSpell(talentInfo->RankID[j], itrFirstId))
+                if (itrFirstId == talentInfo->RankID[j] || sSpellMgr->IsSpellLearnToSpell(talentInfo->RankID[j], itrFirstId))
                 {
                     removeSpell(itr->first, !IsPassiveSpell(itr->first));
                     itr = GetSpellMap().begin();
@@ -3675,14 +3675,14 @@ TrainerSpellState Player::GetTrainerSpellState(TrainerSpell const* trainer_spell
     if (getLevel() < trainer_spell->reqlevel)
         return TRAINER_SPELL_RED;
 
-    if (SpellChainNode const* spell_chain = spellmgr.GetSpellChainNode(trainer_spell->spell))
+    if (SpellChainNode const* spell_chain = sSpellMgr->GetSpellChainNode(trainer_spell->spell))
     {
         // check prev.rank requirement
         if (spell_chain->prev && !HasSpell(spell_chain->prev))
             return TRAINER_SPELL_RED;
     }
 
-    if (uint32 spell_req = spellmgr.GetSpellRequired(trainer_spell->spell))
+    if (uint32 spell_req = sSpellMgr->GetSpellRequired(trainer_spell->spell))
     {
         // check additional spell requirement
         if (!HasSpell(spell_req))
@@ -3703,7 +3703,7 @@ TrainerSpellState Player::GetTrainerSpellState(TrainerSpell const* trainer_spell
         return TRAINER_SPELL_GREEN;
 
     // check primary prof. limit
-    if (spellmgr.IsPrimaryProfessionFirstRankSpell(spell->Id) && GetFreePrimaryProfessionPoints() == 0)
+    if (sSpellMgr->IsPrimaryProfessionFirstRankSpell(spell->Id) && GetFreePrimaryProfessionPoints() == 0)
         return TRAINER_SPELL_RED;
 
     return TRAINER_SPELL_GREEN;
@@ -3727,8 +3727,8 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
     if (accountId == 0)
         updateRealmChars = false;
 
-    uint32 charDelete_method = sWorld.getConfig(CONFIG_CHARDELETE_METHOD);
-    uint32 charDelete_minLvl = sWorld.getConfig(CONFIG_CHARDELETE_MIN_LEVEL);
+    uint32 charDelete_method = sWorld->getConfig(CONFIG_CHARDELETE_METHOD);
+    uint32 charDelete_minLvl = sWorld->getConfig(CONFIG_CHARDELETE_MIN_LEVEL);
 
     // if we want to finally delete the character or the character does not meet the level requirement
     // we set it to mode CHAR_DELETE_REMOVE
@@ -3918,7 +3918,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
     }
 
     if (updateRealmChars)
-        sWorld.UpdateRealmCharCount(accountId);
+        sWorld->UpdateRealmCharCount(accountId);
 }
 
 /**
@@ -3928,7 +3928,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
  */
 void Player::DeleteOldCharacters()
 {
-    uint32 keepDays = sWorld.getConfig(CONFIG_CHARDELETE_KEEP_DAYS);
+    uint32 keepDays = sWorld->getConfig(CONFIG_CHARDELETE_KEEP_DAYS);
     if (!keepDays)
         return;
 
@@ -4086,7 +4086,7 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
     //Characters from level 11-19 will suffer from one minute of sickness
     //for each level they are above 10.
     //Characters level 20 and up suffer from ten minutes of sickness.
-    int32 startLevel = sWorld.getConfig(CONFIG_DEATH_SICKNESS_LEVEL);
+    int32 startLevel = sWorld->getConfig(CONFIG_DEATH_SICKNESS_LEVEL);
 
     if (int32(getLevel()) >= startLevel)
     {
@@ -4560,7 +4560,7 @@ void Player::LeaveLFGChannel()
 
 void Player::UpdateDefense()
 {
-    uint32 defense_skill_gain = sWorld.getConfig(CONFIG_SKILL_GAIN_DEFENSE);
+    uint32 defense_skill_gain = sWorld->getConfig(CONFIG_SKILL_GAIN_DEFENSE);
 
     if (UpdateSkill(SKILL_DEFENSE, defense_skill_gain))
     {
@@ -4968,20 +4968,20 @@ bool Player::UpdateSkill(uint32 skill_id, uint32 step)
 inline int SkillGainChance(uint32 SkillValue, uint32 GrayLevel, uint32 GreenLevel, uint32 YellowLevel)
 {
     if (SkillValue >= GrayLevel)
-        return sWorld.getConfig(CONFIG_SKILL_CHANCE_GREY)*10;
+        return sWorld->getConfig(CONFIG_SKILL_CHANCE_GREY)*10;
     if (SkillValue >= GreenLevel)
-        return sWorld.getConfig(CONFIG_SKILL_CHANCE_GREEN)*10;
+        return sWorld->getConfig(CONFIG_SKILL_CHANCE_GREEN)*10;
     if (SkillValue >= YellowLevel)
-        return sWorld.getConfig(CONFIG_SKILL_CHANCE_YELLOW)*10;
-    return sWorld.getConfig(CONFIG_SKILL_CHANCE_ORANGE)*10;
+        return sWorld->getConfig(CONFIG_SKILL_CHANCE_YELLOW)*10;
+    return sWorld->getConfig(CONFIG_SKILL_CHANCE_ORANGE)*10;
 }
 
 bool Player::UpdateCraftSkill(uint32 spellid)
 {
     sLog->outDebug("UpdateCraftSkill spellid %d", spellid);
 
-    SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(spellid);
-    SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(spellid);
+    SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spellid);
+    SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spellid);
 
     for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
     {
@@ -4997,7 +4997,7 @@ bool Player::UpdateCraftSkill(uint32 spellid)
                     learnSpell(discoveredSpell);
             }
 
-            uint32 craft_skill_gain = sWorld.getConfig(CONFIG_SKILL_GAIN_CRAFTING);
+            uint32 craft_skill_gain = sWorld->getConfig(CONFIG_SKILL_GAIN_CRAFTING);
 
             return UpdateSkillPro(_spell_idx->second->skillId, SkillGainChance(SkillValue,
                 _spell_idx->second->max_value,
@@ -5013,7 +5013,7 @@ bool Player::UpdateGatherSkill(uint32 SkillId, uint32 SkillValue, uint32 RedLeve
 {
     sLog->outDebug("UpdateGatherSkill(SkillId %d SkillLevel %d RedLevel %d)", SkillId, SkillValue, RedLevel);
 
-    uint32 gathering_skill_gain = sWorld.getConfig(CONFIG_SKILL_GAIN_GATHERING);
+    uint32 gathering_skill_gain = sWorld->getConfig(CONFIG_SKILL_GAIN_GATHERING);
 
     // For skinning and Mining chance decrease with level. 1-74 - no decrease, 75-149 - 2 times, 225-299 - 8 times
     switch (SkillId)
@@ -5023,15 +5023,15 @@ bool Player::UpdateGatherSkill(uint32 SkillId, uint32 SkillValue, uint32 RedLeve
         case SKILL_JEWELCRAFTING:
             return UpdateSkillPro(SkillId, SkillGainChance(SkillValue, RedLevel+100, RedLevel+50, RedLevel+25)*Multiplicator, gathering_skill_gain);
         case SKILL_SKINNING:
-            if (sWorld.getConfig(CONFIG_SKILL_CHANCE_SKINNING_STEPS) == 0)
+            if (sWorld->getConfig(CONFIG_SKILL_CHANCE_SKINNING_STEPS) == 0)
                 return UpdateSkillPro(SkillId, SkillGainChance(SkillValue, RedLevel+100, RedLevel+50, RedLevel+25)*Multiplicator, gathering_skill_gain);
             else
-                return UpdateSkillPro(SkillId, (SkillGainChance(SkillValue, RedLevel+100, RedLevel+50, RedLevel+25)*Multiplicator) >> (SkillValue/sWorld.getConfig(CONFIG_SKILL_CHANCE_SKINNING_STEPS)), gathering_skill_gain);
+                return UpdateSkillPro(SkillId, (SkillGainChance(SkillValue, RedLevel+100, RedLevel+50, RedLevel+25)*Multiplicator) >> (SkillValue/sWorld->getConfig(CONFIG_SKILL_CHANCE_SKINNING_STEPS)), gathering_skill_gain);
         case SKILL_MINING:
-            if (sWorld.getConfig(CONFIG_SKILL_CHANCE_MINING_STEPS) == 0)
+            if (sWorld->getConfig(CONFIG_SKILL_CHANCE_MINING_STEPS) == 0)
                 return UpdateSkillPro(SkillId, SkillGainChance(SkillValue, RedLevel+100, RedLevel+50, RedLevel+25)*Multiplicator, gathering_skill_gain);
             else
-                return UpdateSkillPro(SkillId, (SkillGainChance(SkillValue, RedLevel+100, RedLevel+50, RedLevel+25)*Multiplicator) >> (SkillValue/sWorld.getConfig(CONFIG_SKILL_CHANCE_MINING_STEPS)), gathering_skill_gain);
+                return UpdateSkillPro(SkillId, (SkillGainChance(SkillValue, RedLevel+100, RedLevel+50, RedLevel+25)*Multiplicator) >> (SkillValue/sWorld->getConfig(CONFIG_SKILL_CHANCE_MINING_STEPS)), gathering_skill_gain);
     }
     return false;
 }
@@ -5044,7 +5044,7 @@ bool Player::UpdateFishingSkill()
 
     int32 chance = SkillValue < 75 ? 100 : 2500/(SkillValue-50);
 
-    uint32 gathering_skill_gain = sWorld.getConfig(CONFIG_SKILL_GAIN_GATHERING);
+    uint32 gathering_skill_gain = sWorld->getConfig(CONFIG_SKILL_GAIN_GATHERING);
 
     return UpdateSkillPro(SKILL_FISHING, chance*10, gathering_skill_gain);
 }
@@ -5105,7 +5105,7 @@ void Player::UpdateWeaponSkill (WeaponAttackType attType)
     if (m_form == FORM_TREE)
         return;                                             // use weapon but not skill up
 
-    uint32 weapon_skill_gain = sWorld.getConfig(CONFIG_SKILL_GAIN_WEAPON);
+    uint32 weapon_skill_gain = sWorld->getConfig(CONFIG_SKILL_GAIN_WEAPON);
 
     switch (attType)
     {
@@ -5204,10 +5204,10 @@ void Player::ModifySkillBonus(uint32 skillid, int32 val, bool talent)
 
 void Player::UpdateSkillsForLevel()
 {
-    uint16 maxconfskill = sWorld.GetConfigMaxSkillValue();
+    uint16 maxconfskill = sWorld->GetConfigMaxSkillValue();
     uint32 maxSkill = GetMaxSkillValueForLevel();
 
-    bool alwaysMaxSkill = sWorld.getConfig(CONFIG_ALWAYS_MAX_SKILL_FOR_LEVEL);
+    bool alwaysMaxSkill = sWorld->getConfig(CONFIG_ALWAYS_MAX_SKILL_FOR_LEVEL);
 
     for (SkillStatusMap::iterator itr = mSkillStatus.begin(); itr != mSkillStatus.end(); ++itr)
     {
@@ -5313,8 +5313,8 @@ void Player::SetSkill(uint32 id, uint16 currVal, uint16 maxVal)
                 if (itr->second->state == PLAYERSPELL_REMOVED)
                     continue;
 
-                SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(itr->first);
-                SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(itr->first);
+                SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(itr->first);
+                SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(itr->first);
 
                 for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
                 {
@@ -5662,7 +5662,7 @@ void Player::CheckAreaExploreAndOutdoor()
     bool isOutdoor;
     uint16 areaFlag = GetBaseMap()->GetAreaFlag(GetPositionX(), GetPositionY(), GetPositionZ(), &isOutdoor);
 
-    if (sWorld.getConfig(CONFIG_VMAP_INDOOR_CHECK) && !isOutdoor && !isGameMaster())
+    if (sWorld->getConfig(CONFIG_VMAP_INDOOR_CHECK) && !isOutdoor && !isGameMaster())
         RemoveAurasWithAttribute(SPELL_ATTR_OUTDOORS_ONLY);
 
     if (areaFlag==0xffff)
@@ -5690,7 +5690,7 @@ void Player::CheckAreaExploreAndOutdoor()
         else if (p->area_level > 0)
         {
             uint32 area = p->ID;
-            if (getLevel() >= sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+            if (getLevel() >= sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
             {
                 SendExplorationExperience(area, 0);
             }
@@ -5700,7 +5700,7 @@ void Player::CheckAreaExploreAndOutdoor()
                 uint32 XP = 0;
                 if (diff < -5)
                 {
-                    XP = uint32(sObjectMgr.GetBaseXP(getLevel()+5)*sWorld.getRate(RATE_XP_EXPLORE));
+                    XP = uint32(sObjectMgr.GetBaseXP(getLevel()+5)*sWorld->getRate(RATE_XP_EXPLORE));
                 }
                 else if (diff > 5)
                 {
@@ -5710,11 +5710,11 @@ void Player::CheckAreaExploreAndOutdoor()
                     else if (exploration_percent < 0)
                         exploration_percent = 0;
 
-                    XP = uint32(sObjectMgr.GetBaseXP(p->area_level)*exploration_percent/100*sWorld.getRate(RATE_XP_EXPLORE));
+                    XP = uint32(sObjectMgr.GetBaseXP(p->area_level)*exploration_percent/100*sWorld->getRate(RATE_XP_EXPLORE));
                 }
                 else
                 {
-                    XP = uint32(sObjectMgr.GetBaseXP(p->area_level)*sWorld.getRate(RATE_XP_EXPLORE));
+                    XP = uint32(sObjectMgr.GetBaseXP(p->area_level)*sWorld->getRate(RATE_XP_EXPLORE));
                 }
 
                 GiveXP(XP, NULL);
@@ -6193,7 +6193,7 @@ int32 Player::CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, bo
     if (percent <=0)
         return 0;
 
-    return int32(sWorld.getRate(RATE_REPUTATION_GAIN)*rep*percent/100);
+    return int32(sWorld->getRate(RATE_REPUTATION_GAIN)*rep*percent/100);
 }
 
 //Calculates how many reputation points player gains in victim's enemy factions
@@ -6349,7 +6349,7 @@ bool Player::RewardHonor(Unit *uVictim, uint32 groupsize, float honor, bool pvpt
         {
             Player *pVictim = uVictim->ToPlayer();
 
-            if (GetTeam() == pVictim->GetTeam() && !sWorld.IsFFAPvPRealm())
+            if (GetTeam() == pVictim->GetTeam() && !sWorld->IsFFAPvPRealm())
                 return false;
 
             float f = 1;                                    //need for total kills (?? need more info)
@@ -6414,7 +6414,7 @@ bool Player::RewardHonor(Unit *uVictim, uint32 groupsize, float honor, bool pvpt
 
     if (uVictim != NULL)
     {
-        honor *= sWorld.getRate(RATE_HONOR);
+        honor *= sWorld->getRate(RATE_HONOR);
 
         if (groupsize > 1)
             honor /= groupsize;
@@ -6439,7 +6439,7 @@ bool Player::RewardHonor(Unit *uVictim, uint32 groupsize, float honor, bool pvpt
 
     ApplyModUInt32Value(PLAYER_FIELD_TODAY_CONTRIBUTION, uint32(honor), true);
 
-    if (sWorld.getConfig(CONFIG_PVP_TOKEN_ENABLE) && pvptoken)
+    if (sWorld->getConfig(CONFIG_PVP_TOKEN_ENABLE) && pvptoken)
     {
         if (!uVictim || uVictim == this || uVictim->HasAuraType(SPELL_AURA_NO_PVP_CREDIT))
             return true;
@@ -6447,15 +6447,15 @@ bool Player::RewardHonor(Unit *uVictim, uint32 groupsize, float honor, bool pvpt
         if (uVictim->GetTypeId() == TYPEID_PLAYER)
         {
             // Check if allowed to receive it in current map
-            uint8 MapType = sWorld.getConfig(CONFIG_PVP_TOKEN_MAP_TYPE);
+            uint8 MapType = sWorld->getConfig(CONFIG_PVP_TOKEN_MAP_TYPE);
             if ((MapType == 1 && !InBattleGround() && !IsFFAPvP())
                 || (MapType == 2 && !IsFFAPvP())
                 || (MapType == 3 && !InBattleGround()))
                 return true;
 
             uint32 noSpaceForCount = 0;
-            uint32 itemId = sWorld.getConfig(CONFIG_PVP_TOKEN_ID);
-            int32 count = sWorld.getConfig(CONFIG_PVP_TOKEN_COUNT);
+            uint32 itemId = sWorld->getConfig(CONFIG_PVP_TOKEN_ID);
+            int32 count = sWorld->getConfig(CONFIG_PVP_TOKEN_COUNT);
 
             // check space and find places
             ItemPosCountVec dest;
@@ -6483,26 +6483,26 @@ void Player::ModifyHonorPoints(int32 value)
 {
     if (value < 0)
     {
-        if (GetHonorPoints() > sWorld.getConfig(CONFIG_MAX_HONOR_POINTS))
-            SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, sWorld.getConfig(CONFIG_MAX_HONOR_POINTS) + value);
+        if (GetHonorPoints() > sWorld->getConfig(CONFIG_MAX_HONOR_POINTS))
+            SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, sWorld->getConfig(CONFIG_MAX_HONOR_POINTS) + value);
         else
             SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, GetHonorPoints() > uint32(-value) ? GetHonorPoints() + value : 0);
     }
     else
-        SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, GetHonorPoints() < sWorld.getConfig(CONFIG_MAX_HONOR_POINTS) - value ? GetHonorPoints() + value : sWorld.getConfig(CONFIG_MAX_HONOR_POINTS));
+        SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, GetHonorPoints() < sWorld->getConfig(CONFIG_MAX_HONOR_POINTS) - value ? GetHonorPoints() + value : sWorld->getConfig(CONFIG_MAX_HONOR_POINTS));
 }
 
 void Player::ModifyArenaPoints(int32 value)
 {
     if (value < 0)
     {
-        if (GetArenaPoints() > sWorld.getConfig(CONFIG_MAX_ARENA_POINTS))
-            SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, sWorld.getConfig(CONFIG_MAX_ARENA_POINTS) + value);
+        if (GetArenaPoints() > sWorld->getConfig(CONFIG_MAX_ARENA_POINTS))
+            SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, sWorld->getConfig(CONFIG_MAX_ARENA_POINTS) + value);
         else
             SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, GetArenaPoints() > uint32(-value) ? GetArenaPoints() + value : 0);
     }
     else
-        SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, GetArenaPoints() < sWorld.getConfig(CONFIG_MAX_ARENA_POINTS) - value ? GetArenaPoints() + value : sWorld.getConfig(CONFIG_MAX_ARENA_POINTS));
+        SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, GetArenaPoints() < sWorld->getConfig(CONFIG_MAX_ARENA_POINTS) - value ? GetArenaPoints() + value : sWorld->getConfig(CONFIG_MAX_ARENA_POINTS));
 }
 
 uint32 Player::GetGuildIdFromDB(uint64 guid)
@@ -6623,14 +6623,14 @@ void Player::UpdateZone(uint32 newZone)
         sOutdoorPvPMgr.HandlePlayerEnterZone(this, m_zoneUpdateId);
     }
 
-    if (sWorld.getConfig(CONFIG_WEATHER))
+    if (sWorld->getConfig(CONFIG_WEATHER))
     {
-        Weather *wth = sWorld.FindWeather(zone->ID);
+        Weather *wth = sWorld->FindWeather(zone->ID);
         if (wth)
             wth->SendWeatherUpdateToPlayer(this);
         else
         {
-            if (!sWorld.AddWeather(zone->ID))
+            if (!sWorld->AddWeather(zone->ID))
             {
                 // send fine weather packet to remove old zone's weather
                 Weather::SendFineWeatherUpdateToPlayer(this);
@@ -6643,14 +6643,14 @@ void Player::UpdateZone(uint32 newZone)
     switch (zone->team)
     {
         case AREATEAM_ALLY:
-            pvpInfo.inHostileArea = GetTeam() != ALLIANCE && (sWorld.IsPvPRealm() || zone->flags & AREA_FLAG_CAPITAL);
+            pvpInfo.inHostileArea = GetTeam() != ALLIANCE && (sWorld->IsPvPRealm() || zone->flags & AREA_FLAG_CAPITAL);
             break;
         case AREATEAM_HORDE:
-            pvpInfo.inHostileArea = GetTeam() != HORDE && (sWorld.IsPvPRealm() || zone->flags & AREA_FLAG_CAPITAL);
+            pvpInfo.inHostileArea = GetTeam() != HORDE && (sWorld->IsPvPRealm() || zone->flags & AREA_FLAG_CAPITAL);
             break;
         case AREATEAM_NONE:
             // overwrite for battlegrounds, maybe batter some zone flags but current known not 100% fit to this
-            pvpInfo.inHostileArea = sWorld.IsPvPRealm() || InBattleGround();
+            pvpInfo.inHostileArea = sWorld->IsPvPRealm() || InBattleGround();
             break;
         default:                                            // 6 in fact
             pvpInfo.inHostileArea = false;
@@ -6747,7 +6747,7 @@ void Player::CheckDuelDistance(time_t currTime)
 
 bool Player::IsOutdoorPvPActive()
 {
-    return (isAlive() && !HasInvisibilityAura() && !HasStealthAura() && (HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_IN_PVP) || sWorld.IsPvPRealm())  && !HasUnitMovementFlag(MOVEFLAG_FLYING2) && !isInFlight());
+    return (isAlive() && !HasInvisibilityAura() && !HasStealthAura() && (HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_IN_PVP) || sWorld->IsPvPRealm())  && !HasUnitMovementFlag(MOVEFLAG_FLYING2) && !isInFlight());
 }
 
 void Player::DuelComplete(DuelCompleteType type)
@@ -6825,7 +6825,7 @@ void Player::DuelComplete(DuelCompleteType type)
         duel->opponent->ClearComboPoints();
 
     // Honor points after duel (the winner) - ImpConfig
-    if (uint32 amount = sWorld.getConfig(CONFIG_HONOR_AFTER_DUEL))
+    if (uint32 amount = sWorld->getConfig(CONFIG_HONOR_AFTER_DUEL))
         duel->opponent->RewardHonor(NULL, 1, amount);
 
     //cleanups
@@ -7358,7 +7358,7 @@ void Player::CastItemCombatSpell(Unit *target, WeaponAttackType attType, uint32 
             if (pEnchant->type[s] != ITEM_ENCHANTMENT_TYPE_COMBAT_SPELL)
                 continue;
 
-            SpellEnchantProcEntry const* entry =  spellmgr.GetSpellEnchantProcEvent(enchant_id);
+            SpellEnchantProcEntry const* entry =  sSpellMgr->GetSpellEnchantProcEvent(enchant_id);
             if (entry && entry->procEx)
             {
                 // Check hit/crit/dodge/parry requirement
@@ -7761,7 +7761,7 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
                     loot->FillLoot(1, LootTemplates_Creature, this);
             // It may need a better formula
             // Now it works like this: lvl10: ~6copper, lvl70: ~9silver
-            bones->loot.gold = (uint32)(urand(50, 150) * 0.016f * pow(((float)pLevel)/5.76f, 2.5f) * sWorld.getRate(RATE_DROP_MONEY));
+            bones->loot.gold = (uint32)(urand(50, 150) * 0.016f * pow(((float)pLevel)/5.76f, 2.5f) * sWorld->getRate(RATE_DROP_MONEY));
         }
 
         if (bones->lootRecipient != this)
@@ -7799,7 +7799,7 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
                 // Generate extra money for pick pocket loot
                 const uint32 a = urand(0, creature->getLevel()/2);
                 const uint32 b = urand(0, getLevel()/2);
-                loot->gold = uint32(10 * (a + b) * sWorld.getRate(RATE_DROP_MONEY));
+                loot->gold = uint32(10 * (a + b) * sWorld->getRate(RATE_DROP_MONEY));
             }
         }
         else
@@ -8514,7 +8514,7 @@ void Player::SendTalentWipeConfirm(uint64 guid)
 {
     WorldPacket data(MSG_TALENT_WIPE_CONFIRM, (8+4));
     data << uint64(guid);
-    uint32 cost = sWorld.getConfig(CONFIG_NO_RESET_TALENT_COST) ? 0 : resetTalentsCost();
+    uint32 cost = sWorld->getConfig(CONFIG_NO_RESET_TALENT_COST) ? 0 : resetTalentsCost();
     data << cost;
     GetSession()->SendPacket(&data);
 }
@@ -12981,7 +12981,7 @@ bool Player::CanSeeStartQuest(Quest const *pQuest)
         SatisfyQuestPreviousQuest(pQuest, false) && SatisfyQuestNextChain(pQuest, false) &&
         SatisfyQuestPrevChain(pQuest, false) && SatisfyQuestDay(pQuest, false))
     {
-        return getLevel() + sWorld.getConfig(CONFIG_QUEST_HIGH_LEVEL_HIDE_DIFF) >= pQuest->GetMinLevel();
+        return getLevel() + sWorld->getConfig(CONFIG_QUEST_HIGH_LEVEL_HIDE_DIFF) >= pQuest->GetMinLevel();
     }
 
     return false;
@@ -13319,12 +13319,12 @@ void Player::RewardQuest(Quest const *pQuest, uint32 reward, Object* questGiver,
     QuestStatusData& q_status = mQuestStatus[quest_id];
 
     // Not give XP in case already completed once repeatable quest
-    uint32 XP = q_status.m_rewarded ? 0 : uint32(pQuest->XPValue(this)*sWorld.getRate(RATE_XP_QUEST));
+    uint32 XP = q_status.m_rewarded ? 0 : uint32(pQuest->XPValue(this)*sWorld->getRate(RATE_XP_QUEST));
 
-    if (getLevel() < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    if (getLevel() < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         GiveXP(XP , NULL);
     else
-        ModifyMoney(int32(pQuest->GetRewMoneyMaxLevel() * sWorld.getRate(RATE_DROP_MONEY)));
+        ModifyMoney(int32(pQuest->GetRewMoneyMaxLevel() * sWorld->getRate(RATE_DROP_MONEY)));
 
     // Give player extra money if GetRewOrReqMoney > 0 and get ReqMoney if negative
     ModifyMoney(pQuest->GetRewOrReqMoney());
@@ -14317,7 +14317,7 @@ void Player::SendQuestReward(Quest const *pQuest, uint32 XP, Object * questGiver
     data << questid;
     data << uint32(0x03);
 
-    if (getLevel() < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    if (getLevel() < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
     {
         data << XP;
         data << uint32(pQuest->GetRewOrReqMoney());
@@ -14325,7 +14325,7 @@ void Player::SendQuestReward(Quest const *pQuest, uint32 XP, Object * questGiver
     else
     {
         data << uint32(0);
-        data << uint32(pQuest->GetRewOrReqMoney() + int32(pQuest->GetRewMoneyMaxLevel() * sWorld.getRate(RATE_DROP_MONEY)));
+        data << uint32(pQuest->GetRewOrReqMoney() + int32(pQuest->GetRewMoneyMaxLevel() * sWorld->getRate(RATE_DROP_MONEY)));
     }
     data << uint32(0);                                      // new 2.3.0, HonorPoints?
     data << uint32(pQuest->GetRewItemsCount());           // max is 5
@@ -14690,15 +14690,15 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     SetDifficulty(fields[39].GetUInt32());                  // may be changed in _LoadGroup
     std::string taxi_nodes = fields[38].GetCppString();
 
-#define RelocateToHomebind() { mapId = m_homebindMapId; instanceId = 0; Relocate(m_homebindX, m_homebindY, m_homebindZ); if (!sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE)) { m_movementInfo.ClearTransportData(); transGUID = 0; } }
+#define RelocateToHomebind() { mapId = m_homebindMapId; instanceId = 0; Relocate(m_homebindX, m_homebindY, m_homebindZ); if (!sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE)) { m_movementInfo.ClearTransportData(); transGUID = 0; } }
 
     _LoadGroup(holder->GetResult(PLAYER_LOGIN_QUERY_LOADGROUP));
 
     _LoadArenaTeamInfo(holder->GetResult(PLAYER_LOGIN_QUERY_LOADARENAINFO));
 
     uint32 arena_currency = fields[40].GetUInt32();
-    if (arena_currency > sWorld.getConfig(CONFIG_MAX_ARENA_POINTS))
-        arena_currency = sWorld.getConfig(CONFIG_MAX_ARENA_POINTS);
+    if (arena_currency > sWorld->getConfig(CONFIG_MAX_ARENA_POINTS))
+        arena_currency = sWorld->getConfig(CONFIG_MAX_ARENA_POINTS);
 
     SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, arena_currency);
 
@@ -14824,7 +14824,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
         instanceId = 0;
 
         // Not finish taxi flight path
-        if (m_bgData.HasTaxiPath() && sWorld.getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
+        if (m_bgData.HasTaxiPath() && sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
         {
             for (int i = 0; i < 2; ++i)
                 m_taxi.AddTaxiDestination(m_bgData.taxiPath[i]);
@@ -14963,8 +14963,8 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     if ((int32)fields[16].GetUInt32() > 0)
     {
         float bubble = fields[24].GetUInt32() > 0
-            ? bubble1*sWorld.getRate(RATE_REST_OFFLINE_IN_TAVERN_OR_CITY)
-            : bubble0*sWorld.getRate(RATE_REST_OFFLINE_IN_WILDERNESS);
+            ? bubble1*sWorld->getRate(RATE_REST_OFFLINE_IN_TAVERN_OR_CITY)
+            : bubble0*sWorld->getRate(RATE_REST_OFFLINE_IN_WILDERNESS);
 
         SetRestBonus(GetRestBonus()+ time_diff*((float)GetUInt32Value(PLAYER_NEXT_LEVEL_XP)/72000)*bubble);
     }
@@ -15112,7 +15112,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     // GM state
     if (GetSession()->GetSecurity() > SEC_PLAYER)
     {
-        switch (sWorld.getConfig(CONFIG_GM_LOGIN_STATE))
+        switch (sWorld->getConfig(CONFIG_GM_LOGIN_STATE))
         {
             default:
             case 0:                      break;             // disable
@@ -15123,7 +15123,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
                 break;
         }
 
-        switch (sWorld.getConfig(CONFIG_GM_VISIBLE_STATE))
+        switch (sWorld->getConfig(CONFIG_GM_VISIBLE_STATE))
         {
             default:
             case 0: SetGMVisible(false); break;             // invisible
@@ -15134,7 +15134,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
                 break;
         }
 
-        switch (sWorld.getConfig(CONFIG_GM_CHAT))
+        switch (sWorld->getConfig(CONFIG_GM_CHAT))
         {
             default:
             case 0:                  break;                 // disable
@@ -15145,7 +15145,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
                 break;
         }
 
-        switch (sWorld.getConfig(CONFIG_GM_WISPERING_TO))
+        switch (sWorld->getConfig(CONFIG_GM_WISPERING_TO))
         {
             default:
             case 0:                          break;         // disable
@@ -15612,10 +15612,10 @@ void Player::_LoadQuestStatus(QueryResult_AutoPtr result)
                 {
                     AddTimedQuest(quest_id);
 
-                    if (quest_time <= sWorld.GetGameTime())
+                    if (quest_time <= sWorld->GetGameTime())
                         questStatusData.m_timer = 1;
                     else
-                        questStatusData.m_timer = (quest_time - sWorld.GetGameTime()) * IN_MILLISECONDS;
+                        questStatusData.m_timer = (quest_time - sWorld->GetGameTime()) * IN_MILLISECONDS;
                 }
                 else
                     quest_time = 0;
@@ -16144,11 +16144,11 @@ bool Player::Satisfy(AccessRequirement const *ar, uint32 target_map, bool report
     if (!isGameMaster() && ar)
     {
         uint32 LevelMin = 0;
-        if (getLevel() < ar->levelMin && !sWorld.getConfig(CONFIG_INSTANCE_IGNORE_LEVEL))
+        if (getLevel() < ar->levelMin && !sWorld->getConfig(CONFIG_INSTANCE_IGNORE_LEVEL))
             LevelMin = ar->levelMin;
 
         uint32 LevelMax = 0;
-        if (ar->levelMax >= ar->levelMin && getLevel() > ar->levelMax && !sWorld.getConfig(CONFIG_INSTANCE_IGNORE_LEVEL))
+        if (ar->levelMax >= ar->levelMin && getLevel() > ar->levelMax && !sWorld->getConfig(CONFIG_INSTANCE_IGNORE_LEVEL))
             LevelMax = ar->levelMax;
 
         uint32 missingItem = 0;
@@ -16257,7 +16257,7 @@ bool Player::_LoadHomeBind(QueryResult_AutoPtr result)
 void Player::SaveToDB()
 {
     // delay auto save at any saves (manual, in code, or autosave)
-    m_nextSave = sWorld.getConfig(CONFIG_INTERVAL_SAVE);
+    m_nextSave = sWorld->getConfig(CONFIG_INTERVAL_SAVE);
 
     //lets allow only players in world to be saved
     if (IsBeingTeleportedFar())
@@ -16689,11 +16689,11 @@ void Player::_SaveQuestStatus()
             case QUEST_NEW:
                 CharacterDatabase.PExecute("INSERT INTO character_queststatus (guid, quest, status, rewarded, explored, timer, mobcount1, mobcount2, mobcount3, mobcount4, itemcount1, itemcount2, itemcount3, itemcount4) "
                     "VALUES ('%u', '%u', '%u', '%u', '%u', '" UI64FMTD "', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u')",
-                    GetGUIDLow(), i->first, i->second.m_status, i->second.m_rewarded, i->second.m_explored, uint64(i->second.m_timer / IN_MILLISECONDS + sWorld.GetGameTime()), i->second.m_creatureOrGOcount[0], i->second.m_creatureOrGOcount[1], i->second.m_creatureOrGOcount[2], i->second.m_creatureOrGOcount[3], i->second.m_itemcount[0], i->second.m_itemcount[1], i->second.m_itemcount[2], i->second.m_itemcount[3]);
+                    GetGUIDLow(), i->first, i->second.m_status, i->second.m_rewarded, i->second.m_explored, uint64(i->second.m_timer / IN_MILLISECONDS + sWorld->GetGameTime()), i->second.m_creatureOrGOcount[0], i->second.m_creatureOrGOcount[1], i->second.m_creatureOrGOcount[2], i->second.m_creatureOrGOcount[3], i->second.m_itemcount[0], i->second.m_itemcount[1], i->second.m_itemcount[2], i->second.m_itemcount[3]);
                 break;
             case QUEST_CHANGED:
                 CharacterDatabase.PExecute("UPDATE character_queststatus SET status = '%u', rewarded = '%u', explored = '%u', timer = '" UI64FMTD "', mobcount1 = '%u', mobcount2 = '%u', mobcount3 = '%u', mobcount4 = '%u', itemcount1 = '%u', itemcount2 = '%u', itemcount3 = '%u', itemcount4 = '%u'  WHERE guid = '%u' AND quest = '%u' ",
-                    i->second.m_status, i->second.m_rewarded, i->second.m_explored, uint64(i->second.m_timer / IN_MILLISECONDS + sWorld.GetGameTime()), i->second.m_creatureOrGOcount[0], i->second.m_creatureOrGOcount[1], i->second.m_creatureOrGOcount[2], i->second.m_creatureOrGOcount[3], i->second.m_itemcount[0], i->second.m_itemcount[1], i->second.m_itemcount[2], i->second.m_itemcount[3], GetGUIDLow(), i->first);
+                    i->second.m_status, i->second.m_rewarded, i->second.m_explored, uint64(i->second.m_timer / IN_MILLISECONDS + sWorld->GetGameTime()), i->second.m_creatureOrGOcount[0], i->second.m_creatureOrGOcount[1], i->second.m_creatureOrGOcount[2], i->second.m_creatureOrGOcount[3], i->second.m_itemcount[0], i->second.m_itemcount[1], i->second.m_itemcount[2], i->second.m_itemcount[3], GetGUIDLow(), i->first);
                 break;
             case QUEST_UNCHANGED:
                 break;
@@ -16846,7 +16846,7 @@ void Player::UpdateSpeakTime()
     time_t current = time (NULL);
     if (m_speakTime > current)
     {
-        uint32 max_count = sWorld.getConfig(CONFIG_CHATFLOOD_MESSAGE_COUNT);
+        uint32 max_count = sWorld->getConfig(CONFIG_CHATFLOOD_MESSAGE_COUNT);
         if (!max_count)
             return;
 
@@ -16854,7 +16854,7 @@ void Player::UpdateSpeakTime()
         if (m_speakCount >= max_count)
         {
             // prevent overwrite mute time, if message send just before mutes set, for example.
-            time_t new_mute = current + sWorld.getConfig(CONFIG_CHATFLOOD_MUTE_TIME);
+            time_t new_mute = current + sWorld->getConfig(CONFIG_CHATFLOOD_MUTE_TIME);
             if (GetSession()->m_muteTime < new_mute)
                 GetSession()->m_muteTime = new_mute;
 
@@ -16864,7 +16864,7 @@ void Player::UpdateSpeakTime()
     else
         m_speakCount = 0;
 
-    m_speakTime = current + sWorld.getConfig(CONFIG_CHATFLOOD_MESSAGE_DELAY);
+    m_speakTime = current + sWorld->getConfig(CONFIG_CHATFLOOD_MESSAGE_DELAY);
 }
 
 bool Player::CanSpeak() const
@@ -17269,9 +17269,9 @@ void Player::Say(const std::string& text, const uint32 language)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildPlayerChat(&data, CHAT_MSG_SAY, text, language);
-    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY), true);
+    SendMessageToSetInRange(&data, sWorld->getConfig(CONFIG_LISTEN_RANGE_SAY), true);
 
-    if (sWorld.getConfig(CONFIG_CHATLOG_PUBLIC))
+    if (sWorld->getConfig(CONFIG_CHATLOG_PUBLIC))
         sLog->outChat("[SAY] Player %s says (language %u): %s",
             GetName(), language, text.c_str());
 }
@@ -17280,9 +17280,9 @@ void Player::Yell(const std::string& text, const uint32 language)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildPlayerChat(&data, CHAT_MSG_YELL, text, language);
-    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL), true);
+    SendMessageToSetInRange(&data, sWorld->getConfig(CONFIG_LISTEN_RANGE_YELL), true);
 
-    if (sWorld.getConfig(CONFIG_CHATLOG_PUBLIC))
+    if (sWorld->getConfig(CONFIG_CHATLOG_PUBLIC))
         sLog->outChat("[YELL] Player %s yells (language %u): %s",
             GetName(), language, text.c_str());
 }
@@ -17291,9 +17291,9 @@ void Player::TextEmote(const std::string& text)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildPlayerChat(&data, CHAT_MSG_EMOTE, text, LANG_UNIVERSAL);
-    SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), true, !sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHAT));
+    SendMessageToSetInRange(&data, sWorld->getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), true, !sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHAT));
 
-    if (sWorld.getConfig(CONFIG_CHATLOG_PUBLIC))
+    if (sWorld->getConfig(CONFIG_CHATLOG_PUBLIC))
         sLog->outChat("[TEXTEMOTE] Player %s emotes: %s",
             GetName(), text.c_str());
 }
@@ -17305,7 +17305,7 @@ void Player::Whisper(const std::string& text, uint32 language, uint64 receiver)
 
     Player *rPlayer = sObjectMgr.GetPlayer(receiver);
 
-    if (sWorld.getConfig(CONFIG_CHATLOG_WHISPER))
+    if (sWorld->getConfig(CONFIG_CHATLOG_WHISPER))
         sLog->outChat("[WHISPER] Player %s tells %s: %s",
             GetName(), rPlayer->GetName(), text.c_str());
 
@@ -17549,7 +17549,7 @@ bool Player::IsAffectedBySpellmod(SpellEntry const *spellInfo, SpellModifier *mo
             return false;
     }
 
-    return spellmgr.IsAffectedBySpell(spellInfo, mod->spellId, mod->effectId, mod->mask);
+    return sSpellMgr->IsAffectedBySpell(spellInfo, mod->spellId, mod->effectId, mod->mask);
 }
 
 void Player::AddSpellMod(SpellModifier* mod, bool apply)
@@ -17685,7 +17685,7 @@ void Player::RemovePetitionsAndSigns(uint64 guid, uint32 type)
 void Player::SetRestBonus (float rest_bonus_new)
 {
     // Prevent resting on max level
-    if (getLevel() >= sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    if (getLevel() >= sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         rest_bonus_new = 0;
 
     if (rest_bonus_new < 0)
@@ -18325,7 +18325,7 @@ void Player::UpdatePvPState(bool onlyFFA)
 {
     // TODO: should we always synchronize UNIT_FIELD_BYTES_2, 1 of controller and controlled?
     if (!pvpInfo.inNoPvPArea && !isGameMaster()
-        && (pvpInfo.inFFAPvPArea || sWorld.IsFFAPvPRealm()))
+        && (pvpInfo.inFFAPvPArea || sWorld->IsFFAPvPRealm()))
     {
         if (!IsFFAPvP())
         {
@@ -18616,7 +18616,7 @@ void Player::LeaveBattleground(bool teleportToEntryPoint)
         bg->RemovePlayerAtLeave(GetGUID(), teleportToEntryPoint, true);
 
         // call after remove to be sure that player resurrected for correct cast
-        if (bg->isBattleGround() && !isGameMaster() && sWorld.getConfig(CONFIG_BATTLEGROUND_CAST_DESERTER))
+        if (bg->isBattleGround() && !isGameMaster() && sWorld->getConfig(CONFIG_BATTLEGROUND_CAST_DESERTER))
         {
             if (bg->GetStatus() == STATUS_IN_PROGRESS || bg->GetStatus() == STATUS_WAIT_JOIN)
             {
@@ -18835,7 +18835,7 @@ bool Player::IsVisibleInGridForPlayer(Player const * pl) const
         if (corpse)
         {
             // 20 - aggro distance for same level, 25 - max additional distance if player level less that creature level
-            if (corpse->IsWithinDistInMap(this, (20+25)*sWorld.getRate(RATE_CREATURE_AGGRO)))
+            if (corpse->IsWithinDistInMap(this, (20+25)*sWorld->getRate(RATE_CREATURE_AGGRO)))
                 return true;
         }
     }
@@ -19023,7 +19023,7 @@ void Player::UpdateVisibilityForPlayer()
 
 void Player::InitPrimaryProfessions()
 {
-    SetFreePrimaryProfessions(sWorld.getConfig(CONFIG_MAX_PRIMARY_TRADE_SKILL));
+    SetFreePrimaryProfessions(sWorld->getConfig(CONFIG_MAX_PRIMARY_TRADE_SKILL));
 }
 
 void Player::SendComboPoints()
@@ -19133,7 +19133,7 @@ void Player::SendInitialPacketsBeforeAddToMap()
     // SMSG_SET_AURA_SINGLE
 
     data.Initialize(SMSG_LOGIN_SETTIMESPEED, 4 + 4);
-    data << uint32(secsToTimeBitFields(sWorld.GetGameTime()));
+    data << uint32(secsToTimeBitFields(sWorld->GetGameTime()));
     data << (float)0.01666667f;                             // game speed
     GetSession()->SendPacket(&data);
 }
@@ -19343,10 +19343,10 @@ void Player::learnQuestRewardedSpells(Quest const* quest)
 
     // prevent learn non first rank unknown profession and second specialization for same profession)
     uint32 learned_0 = spellInfo->EffectTriggerSpell[0];
-    if (spellmgr.GetSpellRank(learned_0) > 1 && !HasSpell(learned_0))
+    if (sSpellMgr->GetSpellRank(learned_0) > 1 && !HasSpell(learned_0))
     {
         // not have first rank learned (unlearned prof?)
-        uint32 first_spell = spellmgr.GetFirstSpellInChain(learned_0);
+        uint32 first_spell = sSpellMgr->GetFirstSpellInChain(learned_0);
         if (!HasSpell(first_spell))
             return;
 
@@ -19372,11 +19372,11 @@ void Player::learnQuestRewardedSpells(Quest const* quest)
                     continue;
 
                 // compare same chain spells
-                if (spellmgr.GetFirstSpellInChain(itr->first) != first_spell)
+                if (sSpellMgr->GetFirstSpellInChain(itr->first) != first_spell)
                     continue;
 
                 // now we have 2 specialization, learn possible only if found is lesser specialization rank
-                if (!spellmgr.IsHighRankOfSpell(learned_0, itr->first))
+                if (!sSpellMgr->IsHighRankOfSpell(learned_0, itr->first))
                     return;
             }
         }
@@ -19569,8 +19569,8 @@ bool Player::IsSpellFitByClassAndRace(uint32 spell_id) const
     uint32 racemask  = getRaceMask();
     uint32 classmask = getClassMask();
 
-    SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(spell_id);
-    SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(spell_id);
+    SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spell_id);
+    SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spell_id);
 
     for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
     {
@@ -19988,7 +19988,7 @@ bool Player::IsAtGroupRewardDistance(WorldObject const* pRewardSource) const
     if (player->GetMapId() != pRewardSource->GetMapId() || player->GetInstanceId() != pRewardSource->GetInstanceId())
         return false;
 
-    return pRewardSource->GetDistance(player) <= sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE);
+    return pRewardSource->GetDistance(player) <= sWorld->getConfig(CONFIG_GROUP_XP_DISTANCE);
 }
 
 uint32 Player::GetBaseWeaponSkillValue (WeaponAttackType attType) const
@@ -20105,10 +20105,10 @@ uint32 Player::GetCorpseReclaimDelay(bool pvp) const
 {
     if (pvp)
     {
-        if (!sWorld.getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP))
+        if (!sWorld->getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP))
             return copseReclaimDelay[0];
     }
-    else if (!sWorld.getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVE))
+    else if (!sWorld->getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVE))
         return 0;
 
     time_t now = time(NULL);
@@ -20122,8 +20122,8 @@ void Player::UpdateCorpseReclaimDelay()
 {
     bool pvp = m_ExtraFlags & PLAYER_EXTRA_PVP_DEATH;
 
-    if ((pvp && !sWorld.getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP)) ||
-        (!pvp && !sWorld.getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVE)))
+    if ((pvp && !sWorld->getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP)) ||
+        (!pvp && !sWorld->getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVE)))
         return;
 
     time_t now = time(NULL);
@@ -20159,8 +20159,8 @@ void Player::SendCorpseReclaimDelay(bool load)
             return;
 
         uint32 count;
-        if (pvp && sWorld.getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP) ||
-           !pvp && sWorld.getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVE))
+        if (pvp && sWorld->getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVP) ||
+           !pvp && sWorld->getConfig(CONFIG_DEATH_CORPSE_RECLAIM_DELAY_PVE))
         {
             count = (m_deathExpireTime-corpse->GetGhostTime())/DEATH_EXPIRE_STEP;
             if (count >= MAX_DEATH_COUNT)
@@ -20362,7 +20362,7 @@ void Player::HandleFallDamage(MovementInfo& movementInfo)
 
         if (damageperc > 0)
         {
-            uint32 damage = (uint32)(damageperc * GetMaxHealth() * sWorld.getRate(RATE_DAMAGE_FALL));
+            uint32 damage = (uint32)(damageperc * GetMaxHealth() * sWorld->getRate(RATE_DAMAGE_FALL));
 
             float height = movementInfo.GetPos()->GetPositionZ();
             UpdateGroundPositionZ(movementInfo.GetPos()->GetPositionX(), movementInfo.GetPos()->GetPositionY(), height);
@@ -20612,7 +20612,7 @@ bool Player::HasGlobalCooldown(SpellEntry const *spellInfo) const
         return false;
 
     std::map<uint32, uint32>::const_iterator itr = m_globalCooldowns.find(spellInfo->StartRecoveryCategory);
-    return itr != m_globalCooldowns.end() && (itr->second > sWorld.GetUpdateTime());
+    return itr != m_globalCooldowns.end() && (itr->second > sWorld->GetUpdateTime());
 }
 
 void Player::RemoveGlobalCooldown(SpellEntry const *spellInfo)

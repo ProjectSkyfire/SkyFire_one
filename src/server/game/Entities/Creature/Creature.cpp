@@ -167,7 +167,7 @@ m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL), m_creatureInfo(NULL), m_DBTab
     DisableReputationGain = false;
     //m_unit_movement_flags = MOVEFLAG_WALK_MODE;
 
-    m_SightDistance = sWorld.getConfig(CONFIG_SIGHT_MONSTER);
+    m_SightDistance = sWorld->getConfig(CONFIG_SIGHT_MONSTER);
     m_CombatDistance = MELEE_RANGE;
 }
 
@@ -624,7 +624,7 @@ void Creature::RegenerateMana()
     {
         if (!IsUnderLastManaUseEffect())
         {
-            float ManaIncreaseRate = sWorld.getRate(RATE_POWER_MANA);
+            float ManaIncreaseRate = sWorld->getRate(RATE_POWER_MANA);
             float Spirit = GetStat(STAT_SPIRIT);
 
             addvalue = uint32((Spirit/5.0f + 17.0f) * ManaIncreaseRate);
@@ -652,7 +652,7 @@ void Creature::RegenerateHealth()
     // Not only pet, but any controlled creature
     if (GetCharmerOrOwnerGUID())
     {
-        float HealthIncreaseRate = sWorld.getRate(RATE_HEALTH);
+        float HealthIncreaseRate = sWorld->getRate(RATE_HEALTH);
         float Spirit = GetStat(STAT_SPIRIT);
 
         if (GetPower(POWER_MANA) > 0)
@@ -705,19 +705,19 @@ bool Creature::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 team, float
         switch (GetCreatureInfo()->rank)
         {
             case CREATURE_ELITE_RARE:
-                m_corpseDelay = sWorld.getConfig(CONFIG_CORPSE_DECAY_RARE);
+                m_corpseDelay = sWorld->getConfig(CONFIG_CORPSE_DECAY_RARE);
                 break;
             case CREATURE_ELITE_ELITE:
-                m_corpseDelay = sWorld.getConfig(CONFIG_CORPSE_DECAY_ELITE);
+                m_corpseDelay = sWorld->getConfig(CONFIG_CORPSE_DECAY_ELITE);
                 break;
             case CREATURE_ELITE_RAREELITE:
-                m_corpseDelay = sWorld.getConfig(CONFIG_CORPSE_DECAY_RAREELITE);
+                m_corpseDelay = sWorld->getConfig(CONFIG_CORPSE_DECAY_RAREELITE);
                 break;
             case CREATURE_ELITE_WORLDBOSS:
-                m_corpseDelay = sWorld.getConfig(CONFIG_CORPSE_DECAY_WORLDBOSS);
+                m_corpseDelay = sWorld->getConfig(CONFIG_CORPSE_DECAY_WORLDBOSS);
                 break;
             default:
-                m_corpseDelay = sWorld.getConfig(CONFIG_CORPSE_DECAY_NORMAL);
+                m_corpseDelay = sWorld->getConfig(CONFIG_CORPSE_DECAY_NORMAL);
                 break;
         }
         LoadCreaturesAddon();
@@ -1052,17 +1052,17 @@ float Creature::_GetHealthMod(int32 Rank)
     switch (Rank)                                           // define rates for each elite rank
     {
         case CREATURE_ELITE_NORMAL:
-            return sWorld.getRate(RATE_CREATURE_NORMAL_HP);
+            return sWorld->getRate(RATE_CREATURE_NORMAL_HP);
         case CREATURE_ELITE_ELITE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_ELITE_HP);
+            return sWorld->getRate(RATE_CREATURE_ELITE_ELITE_HP);
         case CREATURE_ELITE_RAREELITE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_RAREELITE_HP);
+            return sWorld->getRate(RATE_CREATURE_ELITE_RAREELITE_HP);
         case CREATURE_ELITE_WORLDBOSS:
-            return sWorld.getRate(RATE_CREATURE_ELITE_WORLDBOSS_HP);
+            return sWorld->getRate(RATE_CREATURE_ELITE_WORLDBOSS_HP);
         case CREATURE_ELITE_RARE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_RARE_HP);
+            return sWorld->getRate(RATE_CREATURE_ELITE_RARE_HP);
         default:
-            return sWorld.getRate(RATE_CREATURE_ELITE_ELITE_HP);
+            return sWorld->getRate(RATE_CREATURE_ELITE_ELITE_HP);
     }
 }
 
@@ -1071,17 +1071,17 @@ float Creature::_GetDamageMod(int32 Rank)
     switch (Rank)                                           // define rates for each elite rank
     {
         case CREATURE_ELITE_NORMAL:
-            return sWorld.getRate(RATE_CREATURE_NORMAL_DAMAGE);
+            return sWorld->getRate(RATE_CREATURE_NORMAL_DAMAGE);
         case CREATURE_ELITE_ELITE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_ELITE_DAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_ELITE_DAMAGE);
         case CREATURE_ELITE_RAREELITE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_RAREELITE_DAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_RAREELITE_DAMAGE);
         case CREATURE_ELITE_WORLDBOSS:
-            return sWorld.getRate(RATE_CREATURE_ELITE_WORLDBOSS_DAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_WORLDBOSS_DAMAGE);
         case CREATURE_ELITE_RARE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_RARE_DAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_RARE_DAMAGE);
         default:
-            return sWorld.getRate(RATE_CREATURE_ELITE_ELITE_DAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_ELITE_DAMAGE);
     }
 }
 
@@ -1090,17 +1090,17 @@ float Creature::GetSpellDamageMod(int32 Rank)
     switch (Rank)                                           // define rates for each elite rank
     {
         case CREATURE_ELITE_NORMAL:
-            return sWorld.getRate(RATE_CREATURE_NORMAL_SPELLDAMAGE);
+            return sWorld->getRate(RATE_CREATURE_NORMAL_SPELLDAMAGE);
         case CREATURE_ELITE_ELITE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE);
         case CREATURE_ELITE_RAREELITE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_RAREELITE_SPELLDAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_RAREELITE_SPELLDAMAGE);
         case CREATURE_ELITE_WORLDBOSS:
-            return sWorld.getRate(RATE_CREATURE_ELITE_WORLDBOSS_SPELLDAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_WORLDBOSS_SPELLDAMAGE);
         case CREATURE_ELITE_RARE:
-            return sWorld.getRate(RATE_CREATURE_ELITE_RARE_SPELLDAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_RARE_SPELLDAMAGE);
         default:
-            return sWorld.getRate(RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE);
+            return sWorld->getRate(RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE);
     }
 }
 
@@ -1318,7 +1318,7 @@ bool Creature::canStartAttack(Unit const* who) const
 
 float Creature::GetAttackDistance(Unit const* pl) const
 {
-    float aggroRate = sWorld.getRate(RATE_CREATURE_AGGRO);
+    float aggroRate = sWorld->getRate(RATE_CREATURE_AGGRO);
     if (aggroRate == 0)
         return 0.0f;
 
@@ -1338,7 +1338,7 @@ float Creature::GetAttackDistance(Unit const* pl) const
     // radius grow if playlevel < creaturelevel
     RetDistance -= (float)leveldif;
 
-    if (creaturelevel+5 <= sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    if (creaturelevel+5 <= sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
     {
         // detect range auras
         RetDistance += GetTotalAuraModifier(SPELL_AURA_MOD_DETECT_RANGE);
@@ -1362,7 +1362,7 @@ void Creature::setDeathState(DeathState s)
         m_respawnTime = time(NULL) + m_respawnDelay + m_corpseDelay;
 
         // always save boss respawn time at death to prevent crash cheating
-        if (sWorld.getConfig(CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY) || isWorldBoss())
+        if (sWorld->getConfig(CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY) || isWorldBoss())
             SaveRespawnTime();
 
         SetNoSearchAssistance(false);
@@ -1635,7 +1635,7 @@ bool Creature::IsVisibleInGridForPlayer(Player const* pl) const
     if (corpse)
     {
         // 20 - aggro distance for same level, 25 - max additional distance if player level less that creature level
-        if (corpse->IsWithinDistInMap(this, (20 + 25) * sWorld.getRate(RATE_CREATURE_AGGRO)))
+        if (corpse->IsWithinDistInMap(this, (20 + 25) * sWorld->getRate(RATE_CREATURE_AGGRO)))
             return true;
     }
 
@@ -1655,7 +1655,7 @@ void Creature::DoFleeToGetAssistance()
     if (HasAuraType(SPELL_AURA_PREVENTS_FLEEING))
         return;
 
-    float radius = sWorld.getConfig(CONFIG_CREATURE_FAMILY_FLEE_ASSISTANCE_RADIUS);
+    float radius = sWorld->getConfig(CONFIG_CREATURE_FAMILY_FLEE_ASSISTANCE_RADIUS);
     if (radius >0)
     {
         Creature* creature = NULL;
@@ -1708,7 +1708,7 @@ void Creature::CallAssistance()
     {
         SetNoCallAssistance(true);
 
-        float radius = sWorld.getConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_RADIUS);
+        float radius = sWorld->getConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_RADIUS);
         if (radius > 0)
         {
             std::list<Creature*> assistList;
@@ -1736,7 +1736,7 @@ void Creature::CallAssistance()
                     e->AddAssistant((*assistList.begin())->GetGUID());
                     assistList.pop_front();
                 }
-                m_Events.AddEvent(e, m_Events.CalculateTime(sWorld.getConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_DELAY)));
+                m_Events.AddEvent(e, m_Events.CalculateTime(sWorld->getConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_DELAY)));
             }
         }
     }
@@ -1827,7 +1827,7 @@ bool Creature::IsOutOfThreatArea(Unit* pVictim) const
 
     float length = pVictim->GetDistance(m_homePosition);
     float AttackDist = GetAttackDistance(pVictim);
-    uint32 ThreatRadius = sWorld.getConfig(CONFIG_THREAT_RADIUS);
+    uint32 ThreatRadius = sWorld->getConfig(CONFIG_THREAT_RADIUS);
 
     //Use AttackDistance in distance check if threat radius is lower. This prevents creature bounce in and out of combat every update tick.
     return (length > (ThreatRadius > AttackDist ? ThreatRadius : AttackDist));
@@ -1912,7 +1912,7 @@ void Creature::SendZoneUnderAttackMessage(Player* attacker)
 
     WorldPacket data(SMSG_ZONE_UNDER_ATTACK, 4);
     data << (uint32)GetZoneId();
-    sWorld.SendGlobalMessage(&data, NULL, (enemy_team == ALLIANCE ? HORDE : ALLIANCE));
+    sWorld->SendGlobalMessage(&data, NULL, (enemy_team == ALLIANCE ? HORDE : ALLIANCE));
 }
 
 void Creature::SetInCombatWithZone()
@@ -2061,7 +2061,7 @@ void Creature::AllLootRemovedFromCorpse()
 
         // corpse was not skinnable -> apply corpse looted timer
         if (!cinfo || !cinfo->SkinLootId)
-            decayRate = sWorld.getRate(RATE_CORPSE_DECAY_LOOTED);
+            decayRate = sWorld->getRate(RATE_CORPSE_DECAY_LOOTED);
         // corpse skinnable, but without skinning flag, and then skinned, corpse will despawn next update
         else
             decayRate = 0.0f;
@@ -2078,7 +2078,7 @@ uint32 Creature::getLevelForTarget(Unit const* target) const
     if (!isWorldBoss())
         return Unit::getLevelForTarget(target);
 
-    uint32 level = target->getLevel()+sWorld.getConfig(CONFIG_WORLD_BOSS_LEVEL_DIFF);
+    uint32 level = target->getLevel()+sWorld->getConfig(CONFIG_WORLD_BOSS_LEVEL_DIFF);
     if (level < 1)
         return 1;
     if (level > 255)

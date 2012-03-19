@@ -583,7 +583,7 @@ void Unit::RemoveMovementImpairingAuras()
 {
     for (AuraMap::iterator iter = m_Auras.begin(); iter != m_Auras.end();)
     {
-        if (spellmgr.GetSpellCustomAttr(iter->second->GetId()) & SPELL_ATTR_CU_MOVEMENT_IMPAIR)
+        if (sSpellMgr->GetSpellCustomAttr(iter->second->GetId()) & SPELL_ATTR_CU_MOVEMENT_IMPAIR)
             RemoveAura(iter);
         else
             ++iter;
@@ -943,7 +943,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
             }
 
             // random durability for items (HIT TAKEN)
-            if (roll_chance_f(sWorld.getRate(RATE_DURABILITY_LOSS_DAMAGE)))
+            if (roll_chance_f(sWorld->getRate(RATE_DURABILITY_LOSS_DAMAGE)))
             {
                 EquipmentSlots slot = EquipmentSlots(urand(0, EQUIPMENT_SLOT_END-1));
                 pVictim->ToPlayer()->DurabilityPointLossForEquipSlot(slot);
@@ -953,7 +953,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
         if (GetTypeId() == TYPEID_PLAYER)
         {
             // random durability for items (HIT DONE)
-            if (roll_chance_f(sWorld.getRate(RATE_DURABILITY_LOSS_DAMAGE)))
+            if (roll_chance_f(sWorld->getRate(RATE_DURABILITY_LOSS_DAMAGE)))
             {
                 EquipmentSlots slot = EquipmentSlots(urand(0, EQUIPMENT_SLOT_END-1));
                 ToPlayer()->DurabilityPointLossForEquipSlot(slot);
@@ -1047,7 +1047,7 @@ void Unit::CastSpell(Unit* Victim, SpellEntry const *spellInfo, bool triggered, 
     //if (targetMask & (TARGET_FLAG_UNIT|TARGET_FLAG_UNK2))
     for (int i = 0; i < 3; ++i)
     {
-        if (spellmgr.SpellTargetType[spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET)
+        if (sSpellMgr->SpellTargetType[spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET)
         {
             /*SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(spellInfo->rangeIndex);
             if (srange && GetSpellMaxRange(srange) == 0.0f)
@@ -1122,7 +1122,7 @@ void Unit::CastCustomSpell(uint32 spellId, CustomSpellValues const &value, Unit*
     //check unit target
     for (int i = 0; i < 3; ++i)
     {
-        if (spellmgr.SpellTargetType[spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET)
+        if (sSpellMgr->SpellTargetType[spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET)
         {
             if (!Victim)
             {
@@ -1322,7 +1322,7 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage *damageInfo, int32 dama
     // damage before absorb/resist calculation
     damageInfo->cleanDamage = damage;
 
-    if (damageSchoolMask & SPELL_SCHOOL_MASK_NORMAL  && (spellmgr.GetSpellCustomAttr(spellInfo->Id) & SPELL_ATTR_CU_IGNORE_ARMOR) == 0)
+    if (damageSchoolMask & SPELL_SCHOOL_MASK_NORMAL  && (sSpellMgr->GetSpellCustomAttr(spellInfo->Id) & SPELL_ATTR_CU_IGNORE_ARMOR) == 0)
         damage = CalcArmorReducedDamage(pVictim, damage);
 
     // Calculate absorb resist
@@ -3564,9 +3564,9 @@ bool Unit::AddAura(Aura *Aur)
     Aur->ApplyModifier(true, true);
 
     uint32 id = Aur->GetId();
-    if (spellmgr.GetSpellCustomAttr(id) & SPELL_ATTR_CU_LINK_AURA)
+    if (sSpellMgr->GetSpellCustomAttr(id) & SPELL_ATTR_CU_LINK_AURA)
     {
-        if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(id + SPELL_LINK_AURA))
+        if (const std::vector<int32> *spell_triggered = sSpellMgr->GetSpellLinked(id + SPELL_LINK_AURA))
             for (std::vector<int32>::const_iterator itr = spell_triggered->begin(); itr != spell_triggered->end(); ++itr)
                 if (*itr < 0)
                     ApplySpellImmune(id, IMMUNITY_ID, -(*itr), true);
@@ -3591,7 +3591,7 @@ void Unit::RemoveRankAurasDueToSpell(uint32 spellId)
         uint32 i_spellId = (*i).second->GetId();
         if ((*i).second && i_spellId && i_spellId != spellId)
         {
-            if (spellmgr.IsRankSpellDueToSpell(spellInfo, i_spellId))
+            if (sSpellMgr->IsRankSpellDueToSpell(spellInfo, i_spellId))
             {
                 RemoveAurasDueToSpell(i_spellId);
 
@@ -3639,7 +3639,7 @@ bool Unit::RemoveNoStackAurasDueToAura(Aura *Aur)
                 continue;
 
             // passive non-stackable spells not stackable only with another rank of same spell
-            if (!spellmgr.IsRankSpellDueToSpell(spellProto, i_spellId))
+            if (!sSpellMgr->IsRankSpellDueToSpell(spellProto, i_spellId))
                 continue;
         }
 
@@ -3685,13 +3685,13 @@ bool Unit::RemoveNoStackAurasDueToAura(Aura *Aur)
         if (!is_triggered_by_spell)
         {
             bool sameCaster = Aur->GetCasterGUID() == (*i).second->GetCasterGUID();
-            if (spellmgr.IsNoStackSpellDueToSpell(spellId, i_spellId, sameCaster))
+            if (sSpellMgr->IsNoStackSpellDueToSpell(spellId, i_spellId, sameCaster))
             {
                 //some spells should be not removed by lower rank of them (totem, paladin aura)
                 if (!sameCaster
                     &&(spellProto->Effect[effIndex] == SPELL_EFFECT_APPLY_AREA_AURA_PARTY)
                     &&(spellProto->DurationIndex == 21)
-                    &&(spellmgr.IsRankSpellDueToSpell(spellProto, i_spellId))
+                    &&(sSpellMgr->IsRankSpellDueToSpell(spellProto, i_spellId))
                     &&(CompareAuraRanks(spellId, effIndex, i_spellId, i_effIndex) < 0))
                     return false;
 
@@ -4113,18 +4113,18 @@ void Unit::RemoveAura(AuraMap::iterator &i, AuraRemoveMode mode)
 
         // Remove Linked Auras
         uint32 id = Aur->GetId();
-        if (spellmgr.GetSpellCustomAttr(id) & SPELL_ATTR_CU_LINK_REMOVE)
+        if (sSpellMgr->GetSpellCustomAttr(id) & SPELL_ATTR_CU_LINK_REMOVE)
         {
-            if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(-(int32)id))
+            if (const std::vector<int32> *spell_triggered = sSpellMgr->GetSpellLinked(-(int32)id))
                 for (std::vector<int32>::const_iterator itr = spell_triggered->begin(); itr != spell_triggered->end(); ++itr)
                     if (*itr < 0)
                         RemoveAurasDueToSpell(-(*itr));
                     else if (Unit* caster = Aur->GetCaster())
                         CastSpell(this, *itr, true, 0, 0, caster->GetGUID());
         }
-        if (spellmgr.GetSpellCustomAttr(id) & SPELL_ATTR_CU_LINK_AURA)
+        if (sSpellMgr->GetSpellCustomAttr(id) & SPELL_ATTR_CU_LINK_AURA)
         {
-            if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(id + SPELL_LINK_AURA))
+            if (const std::vector<int32> *spell_triggered = sSpellMgr->GetSpellLinked(id + SPELL_LINK_AURA))
                 for (std::vector<int32>::const_iterator itr = spell_triggered->begin(); itr != spell_triggered->end(); ++itr)
                     if (*itr < 0)
                         ApplySpellImmune(id, IMMUNITY_ID, -(*itr), false);
@@ -6147,7 +6147,7 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, Aura* triggeredB
         if (!(*i).second) continue;
             aura_id = (*i).second->GetSpellProto()->Id;
             if (IsPassiveSpell(aura_id) || aura_id == trigger_spell_id || aura_id == triggeredByAura->GetSpellProto()->Id) continue;
-        if (spellmgr.IsNoStackSpellDueToSpell(trigger_spell_id, (*i).second->GetSpellProto()->Id, ((*i).second->GetCasterGUID() == GetGUID())))
+        if (sSpellMgr->IsNoStackSpellDueToSpell(trigger_spell_id, (*i).second->GetSpellProto()->Id, ((*i).second->GetCasterGUID() == GetGUID())))
             return false;
     }
 
@@ -11327,7 +11327,7 @@ bool Unit::IsTriggeredAtSpellProcEvent(Unit *pVictim, Aura* aura, SpellEntry con
     SpellEntry const *spellProto = aura->GetSpellProto();
 
     // Get proc Event Entry
-    spellProcEvent = spellmgr.GetSpellProcEvent(spellProto->Id);
+    spellProcEvent = sSpellMgr->GetSpellProcEvent(spellProto->Id);
 
     // Aura info stored here
     Modifier *mod = aura->GetModifier();
@@ -11852,7 +11852,7 @@ void Unit::SetFeared(bool apply)
             caster = ObjectAccessor::GetUnit(*this, fearAuras.front()->GetCasterGUID());
         if (!caster)
             caster = getAttackerForHelper();
-        GetMotionMaster()->MoveFleeing(caster, fearAuras.empty() ? sWorld.getConfig(CONFIG_CREATURE_FAMILY_FLEE_DELAY) : 0);             // caster == NULL processed in MoveFleeing
+        GetMotionMaster()->MoveFleeing(caster, fearAuras.empty() ? sWorld->getConfig(CONFIG_CREATURE_FAMILY_FLEE_DELAY) : 0);             // caster == NULL processed in MoveFleeing
     }
     else
     {

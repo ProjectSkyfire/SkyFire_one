@@ -49,15 +49,15 @@ void WorldSession::HandleDuelAcceptedOpcode(WorldPacket& recvPacket)
     pl->duel->startTimer = now;
     plTarget->duel->startTimer = now;
 
-    if (sWorld.getConfig(CONFIG_DUEL_MOD))
+    if (sWorld->getConfig(CONFIG_DUEL_MOD))
     {
         pl->ResetAllPowers();
         plTarget->ResetAllPowers();
 
-        if (sWorld.getConfig(CONFIG_DUEL_CD_RESET) && !pl->GetMap()->IsDungeon())
+        if (sWorld->getConfig(CONFIG_DUEL_CD_RESET) && !pl->GetMap()->IsDungeon())
             pl->RemoveArenaSpellCooldowns();
 
-        if (sWorld.getConfig(CONFIG_DUEL_CD_RESET) && !plTarget->GetMap()->IsDungeon())
+        if (sWorld->getConfig(CONFIG_DUEL_CD_RESET) && !plTarget->GetMap()->IsDungeon())
             plTarget->RemoveArenaSpellCooldowns();
     }
 

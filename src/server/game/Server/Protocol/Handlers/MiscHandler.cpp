@@ -212,8 +212,8 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
 
     uint32 team = _player->GetTeam();
     uint32 security = GetSecurity();
-    bool allowTwoSideWhoList = sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
-    bool gmInWhoList         = sWorld.getConfig(CONFIG_GM_IN_WHO_LIST);
+    bool allowTwoSideWhoList = sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
+    bool gmInWhoList         = sWorld->getConfig(CONFIG_GM_IN_WHO_LIST);
 
     WorldPacket data(SMSG_WHO, 50);                         // guess size
     data << uint32(clientcount);                            // clientcount place holder, listed count
@@ -324,7 +324,7 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
 
         // 49 is maximum player count sent to client - can be overridden
         // through config, but is unstable
-        if ((++clientcount) == sWorld.getConfig(CONFIG_MAX_WHO))
+        if ((++clientcount) == sWorld->getConfig(CONFIG_MAX_WHO))
             break;
     }
 
@@ -360,7 +360,7 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPacket & /*recv_data*/)
 
     //instant logout in taverns/cities or on taxi or for admins, gm's, mod's if its enabled in TrinityCore.conf
     if (GetPlayer()->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING) || GetPlayer()->isInFlight() ||
-        GetSecurity() >= sWorld.getConfig(CONFIG_INSTANT_LOGOUT))
+        GetSecurity() >= sWorld->getConfig(CONFIG_INSTANT_LOGOUT))
     {
         LogoutPlayer(true);
         return;
@@ -534,7 +534,7 @@ void WorldSession::HandleAddFriendOpcodeCallBack(QueryResult_AutoPtr result, uin
     uint32 team;
     FriendsResult friendResult;
 
-    WorldSession * session = sWorld.FindSession(accountId);
+    WorldSession * session = sWorld->FindSession(accountId);
 
     if (!session || !session->GetPlayer())
         return;
@@ -548,13 +548,13 @@ void WorldSession::HandleAddFriendOpcodeCallBack(QueryResult_AutoPtr result, uin
         team = Player::TeamForRace((*result)[1].GetUInt8());
         friendAcctid = (*result)[2].GetUInt32();
 
-        if (session->GetSecurity() >= SEC_MODERATOR || sWorld.getConfig(CONFIG_ALLOW_GM_FRIEND) || sAccountMgr->GetSecurity(friendAcctid) < SEC_MODERATOR)
+        if (session->GetSecurity() >= SEC_MODERATOR || sWorld->getConfig(CONFIG_ALLOW_GM_FRIEND) || sAccountMgr->GetSecurity(friendAcctid) < SEC_MODERATOR)
         {
             if (friendGuid)
             {
                 if (friendGuid == session->GetPlayer()->GetGUID())
                     friendResult = FRIEND_SELF;
-                else if (session->GetPlayer()->GetTeam() != team && !sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_ADD_FRIEND) && session->GetSecurity() < SEC_MODERATOR)
+                else if (session->GetPlayer()->GetTeam() != team && !sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_ADD_FRIEND) && session->GetSecurity() < SEC_MODERATOR)
                     friendResult = FRIEND_ENEMY;
                 else if (session->GetPlayer()->GetSocial()->HasFriend(GUID_LOPART(friendGuid)))
                     friendResult = FRIEND_ALREADY;
@@ -620,7 +620,7 @@ void WorldSession::HandleAddIgnoreOpcodeCallBack(QueryResult_AutoPtr result, uin
     uint64 IgnoreGuid;
     FriendsResult ignoreResult;
 
-    WorldSession * session = sWorld.FindSession(accountId);
+    WorldSession * session = sWorld->FindSession(accountId);
 
     if (!session || !session->GetPlayer())
         return;
@@ -843,7 +843,7 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
         GetPlayer()->InnEnter(time(NULL), atEntry->mapid, atEntry->x, atEntry->y, atEntry->z);
         GetPlayer()->SetRestType(REST_TYPE_IN_TAVERN);
 
-        if (sWorld.IsFFAPvPRealm())
+        if (sWorld->IsFFAPvPRealm())
             GetPlayer()->SetFFAPvP(false);
 
         return;
@@ -1056,7 +1056,7 @@ void WorldSession::HandleInspectOpcode(WorldPacket& recv_data)
     for (uint32 i = 0; i < talent_points; ++i)
         data << uint8(0);
 
-    if (sWorld.getConfig(CONFIG_TALENTS_INSPECTING) || _player->isGameMaster())
+    if (sWorld->getConfig(CONFIG_TALENTS_INSPECTING) || _player->isGameMaster())
     {
         // find class talent tabs (all players have 3 talent tabs)
         uint32 const* talentTabIds = GetTalentTabPages(plr->getClass());

@@ -94,7 +94,7 @@ bool LoginQueryHolder::Initialize()
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADSOCIALLIST,      "SELECT friend, flags, note FROM character_social WHERE guid = '%u' LIMIT 255", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADHOMEBIND,        "SELECT map, zone, position_x, position_y, position_z FROM character_homebind WHERE guid = '%u'", GUID_LOPART(m_guid));
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADSPELLCOOLDOWNS,  "SELECT spell, item, time FROM character_spell_cooldown WHERE guid = '%u'", GUID_LOPART(m_guid));
-    if (sWorld.getConfig(CONFIG_DECLINED_NAMES_USED))
+    if (sWorld->getConfig(CONFIG_DECLINED_NAMES_USED))
         res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADDECLINEDNAMES,   "SELECT genitive, dative, accusative, instrumental, prepositional FROM character_declinedname WHERE guid = '%u'", GUID_LOPART(m_guid));
     // in other case still be dummy query
     res &= SetPQuery(PLAYER_LOGIN_QUERY_LOADGUILD,           "SELECT guildid, rank FROM guild_member WHERE guid = '%u'", GUID_LOPART(m_guid));
@@ -113,7 +113,7 @@ class CharacterHandler
     public:
         void HandleCharEnumCallback(QueryResult_AutoPtr result, uint32 account)
         {
-            WorldSession * session = sWorld.FindSession(account);
+            WorldSession * session = sWorld->FindSession(account);
             if (!session)
                 return;
             session->HandleCharEnum(result);
@@ -121,7 +121,7 @@ class CharacterHandler
         void HandlePlayerLoginCallback(QueryResult_AutoPtr /*dummy*/, SqlQueryHolder * holder)
         {
             if (!holder) return;
-            WorldSession *session = sWorld.FindSession(((LoginQueryHolder*)holder)->GetAccountId());
+            WorldSession *session = sWorld->FindSession(((LoginQueryHolder*)holder)->GetAccountId());
             if (!session)
             {
                 delete holder;
@@ -160,7 +160,7 @@ void WorldSession::HandleCharEnumOpcode(WorldPacket & /*recv_data*/)
 {
     // get all the data necessary for loading all characters (along with their pets) on the account
     CharacterDatabase.AsyncPQuery(&chrHandler, &CharacterHandler::HandleCharEnumCallback, GetAccountId(),
-         !sWorld.getConfig(CONFIG_DECLINED_NAMES_USED) ?
+         !sWorld->getConfig(CONFIG_DECLINED_NAMES_USED) ?
     //   ------- Query Without Declined Names --------
     //           0               1                2                3                 4                  5                       6                        7
         "SELECT characters.guid, characters.name, characters.race, characters.class, characters.gender, characters.playerBytes, characters.playerBytes2, characters.level, "
@@ -200,7 +200,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
 
     if (GetSecurity() == SEC_PLAYER)
     {
-        if (uint32 mask = sWorld.getConfig(CONFIG_CHARACTERS_CREATING_DISABLED))
+        if (uint32 mask = sWorld->getConfig(CONFIG_CHARACTERS_CREATING_DISABLED))
         {
             bool disabled = false;
 
@@ -277,7 +277,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
         Field *fields=resultacct->Fetch();
         uint32 acctcharcount = fields[0].GetUInt32();
 
-        if (acctcharcount >= sWorld.getConfig(CONFIG_CHARACTERS_PER_ACCOUNT))
+        if (acctcharcount >= sWorld->getConfig(CONFIG_CHARACTERS_PER_ACCOUNT))
         {
             data << (uint8)CHAR_CREATE_ACCOUNT_LIMIT;
             SendPacket(&data);
@@ -292,7 +292,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
         Field *fields=result->Fetch();
         charcount = fields[0].GetUInt8();
 
-        if (charcount >= sWorld.getConfig(CONFIG_CHARACTERS_PER_REALM))
+        if (charcount >= sWorld->getConfig(CONFIG_CHARACTERS_PER_REALM))
         {
             data << (uint8)CHAR_CREATE_SERVER_LIMIT;
             SendPacket(&data);
@@ -300,8 +300,8 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
         }
     }
 
-    bool AllowTwoSideAccounts = !sWorld.IsPvPRealm() || sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_ACCOUNTS) || GetSecurity() > SEC_PLAYER;
-    uint32 skipCinematics = sWorld.getConfig(CONFIG_SKIP_CINEMATICS);
+    bool AllowTwoSideAccounts = !sWorld->IsPvPRealm() || sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_ACCOUNTS) || GetSecurity() > SEC_PLAYER;
+    uint32 skipCinematics = sWorld->getConfig(CONFIG_SKIP_CINEMATICS);
 
     bool have_same_race = false;
     if (!AllowTwoSideAccounts || skipCinematics == 1)
@@ -515,7 +515,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         data << (uint32)0;
 
         uint32 linecount=0;
-        std::string str_motd = sWorld.GetMotd();
+        std::string str_motd = sWorld->GetMotd();
         std::string::size_type pos, nextpos;
 
         pos = 0;
@@ -541,7 +541,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         sLog->outDebug("WORLD: Sent motd (SMSG_MOTD)");
 
         // send server info
-        if (sWorld.getConfig(CONFIG_ENABLE_SINFO_LOGIN) == 1)
+        if (sWorld->getConfig(CONFIG_ENABLE_SINFO_LOGIN) == 1)
             chH.PSendSysMessage(_FULLVERSION);
 
         sLog->outDebug("WORLD: Sent server info");
@@ -607,8 +607,8 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
             pCurrChar->SendCinematicStart(rEntry->CinematicSequence);
 
             // send new char string if not empty
-            if (!sWorld.GetNewCharString().empty())
-                chH.PSendSysMessage(sWorld.GetNewCharString().c_str());
+            if (!sWorld->GetNewCharString().empty())
+                chH.PSendSysMessage(sWorld->GetNewCharString().c_str());
         }
     }
 
@@ -662,7 +662,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         pCurrChar->LoadPet();
 
     // Set FFA PvP for non GM in non-rest mode
-    if (sWorld.IsFFAPvPRealm() && !pCurrChar->isGameMaster() && !pCurrChar->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING))
+    if (sWorld->IsFFAPvPRealm() && !pCurrChar->isGameMaster() && !pCurrChar->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING))
         pCurrChar->SetFFAPvP(true);
 
     if (pCurrChar->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_CONTESTED_PVP))
@@ -682,18 +682,18 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
     }
 
     // show time before shutdown if shutdown planned.
-    if (sWorld.IsShutdowning())
-        sWorld.ShutdownMsg(true, pCurrChar);
+    if (sWorld->IsShutdowning())
+        sWorld->ShutdownMsg(true, pCurrChar);
 
     // ImpConfig - Max weapon skill when logging in
-    if (sWorld.getConfig(CONFIG_ALWAYS_MAXSKILL))
+    if (sWorld->getConfig(CONFIG_ALWAYS_MAXSKILL))
         pCurrChar->UpdateSkillsToMaxSkillsForLevel();
 
-    if (sWorld.getConfig(CONFIG_ALL_TAXI_PATHS))
+    if (sWorld->getConfig(CONFIG_ALL_TAXI_PATHS))
         pCurrChar->SetTaxiCheater(true);
 
     //Reputations if "StartAllReputation" is enabled
-    if (sWorld.getConfig(CONFIG_START_ALL_REP))
+    if (sWorld->getConfig(CONFIG_START_ALL_REP))
     {
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(942), 42999);
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(935), 42999);
@@ -895,7 +895,7 @@ void WorldSession::HandleChangePlayerNameOpcode(WorldPacket& recv_data)
 
 void WorldSession::HandleChangePlayerNameOpcodeCallBack(QueryResult_AutoPtr result, uint32 accountId, std::string newname)
 {
-    WorldSession * session = sWorld.FindSession(accountId);
+    WorldSession * session = sWorld->FindSession(accountId);
     if (!session)
         return;
 

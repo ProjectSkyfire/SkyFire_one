@@ -146,7 +146,7 @@ int RASocket::process_command(const std::string& command)
     }
 
     CliCommandHolder* cmd = new CliCommandHolder(this, command.c_str(), &RASocket::zprint, &RASocket::commandFinished);
-    sWorld.QueueCliCommand(cmd);
+    sWorld->QueueCliCommand(cmd);
 
     // wait for result
     ACE_Message_Block* mb;
@@ -346,7 +346,7 @@ int RASocket::svc(void)
     }
 
     // send motd
-    if (send(std::string(sWorld.GetMotd()) + "\r\n") == -1)
+    if (send(std::string(sWorld->GetMotd()) + "\r\n") == -1)
         return -1;
 
     for (;;)

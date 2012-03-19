@@ -165,7 +165,7 @@ int Master::Run()
     LoginDatabase.DirectPExecute("UPDATE realmlist SET color = (color & ~%u) | %u WHERE id = '%d'", REALM_FLAG_OFFLINE, REALM_FLAG_INVALID, realmID);
 
     ///- Initialize the World
-    sWorld.SetInitialWorldSettings();
+    sWorld->SetInitialWorldSettings();
 
     // Initialize the signal handlers
     WorldServerSignalHandler SignalINT, SignalTERM;
@@ -262,7 +262,7 @@ int Master::Run()
     }
 
     ///- Launch the world listener socket
-    uint16 wsport = sWorld.getConfig(CONFIG_PORT_WORLD);
+    uint16 wsport = sWorld->getConfig(CONFIG_PORT_WORLD);
     std::string bind_ip = ConfigMgr::GetStringDefault("BindIP", "0.0.0.0");
 
     if (sWorldSocketMgr->StartNetwork(wsport, bind_ip.c_str ()) == -1)
@@ -453,9 +453,9 @@ bool Master::_StartDB()
     ///- Insert version info into DB
     WorldDatabase.PExecute("UPDATE version SET core_version = '%s', core_revision = '%s'", _FULLVERSION, _HASH);        // One-time query
 
-    sWorld.LoadDBVersion();
+    sWorld->LoadDBVersion();
 
-    sLog->outString("Using World DB: %s", sWorld.GetDBVersion());
+    sLog->outString("Using World DB: %s", sWorld->GetDBVersion());
     return true;
 }
 

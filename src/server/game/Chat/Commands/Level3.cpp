@@ -122,7 +122,7 @@ bool ChatHandler::HandleReloadAllQuestCommand(const char* /*args*/)
 
 bool ChatHandler::HandleReloadAllScriptsCommand(const char*)
 {
-    if (sWorld.IsScriptScheduled())
+    if (sWorld->IsScriptScheduled())
     {
         PSendSysMessage("DB scripts used currently, please attempt reload later.");
         SetSentErrorMessage(true);
@@ -180,7 +180,7 @@ bool ChatHandler::HandleReloadAllLocalesCommand(const char* /*args*/)
 bool ChatHandler::HandleReloadConfigCommand(const char* /*args*/)
 {
     sLog->outString("Re-Loading config settings...");
-    sWorld.LoadConfigSettings(true);
+    sWorld->LoadConfigSettings(true);
     sMapMgr.InitializeVisibilityDistanceInfo();
     SendGlobalGMSysMessage("World config settings reloaded.");
     return true;
@@ -213,7 +213,7 @@ bool ChatHandler::HandleReloadAccessRequirementCommand(const char*)
 bool ChatHandler::HandleReloadAutobroadcastCommand(const char*)
 {
     sLog->outString("Re-Loading Autobroadcast...");
-    sWorld.LoadAutobroadcasts();
+    sWorld->LoadAutobroadcasts();
     SendGlobalGMSysMessage("DB table autobroadcast reloaded.");
     return true;
 }
@@ -453,7 +453,7 @@ bool ChatHandler::HandleReloadSkillFishingBaseLevelCommand(const char* /*args*/)
 bool ChatHandler::HandleReloadSpellAffectCommand(const char*)
 {
     sLog->outString("Re-Loading SpellAffect definitions...");
-    spellmgr.LoadSpellAffects();
+    sSpellMgr->LoadSpellAffects();
     SendGlobalGMSysMessage("DB table spell_affect (spell mods apply requirements) reloaded.");
     return true;
 }
@@ -461,7 +461,7 @@ bool ChatHandler::HandleReloadSpellAffectCommand(const char*)
 bool ChatHandler::HandleReloadSpellRequiredCommand(const char*)
 {
     sLog->outString("Re-Loading Spell Required Data... ");
-    spellmgr.LoadSpellRequired();
+    sSpellMgr->LoadSpellRequired();
     SendGlobalGMSysMessage("DB table spell_required reloaded.");
     return true;
 }
@@ -469,7 +469,7 @@ bool ChatHandler::HandleReloadSpellRequiredCommand(const char*)
 bool ChatHandler::HandleReloadSpellElixirCommand(const char*)
 {
     sLog->outString("Re-Loading Spell Elixir types...");
-    spellmgr.LoadSpellElixirs();
+    sSpellMgr->LoadSpellElixirs();
     SendGlobalGMSysMessage("DB table spell_elixir (spell elixir types) reloaded.");
     return true;
 }
@@ -477,7 +477,7 @@ bool ChatHandler::HandleReloadSpellElixirCommand(const char*)
 bool ChatHandler::HandleReloadSpellLearnSpellCommand(const char*)
 {
     sLog->outString("Re-Loading Spell Learn Spells...");
-    spellmgr.LoadSpellLearnSpells();
+    sSpellMgr->LoadSpellLearnSpells();
     SendGlobalGMSysMessage("DB table spell_learn_spell reloaded.");
     return true;
 }
@@ -485,7 +485,7 @@ bool ChatHandler::HandleReloadSpellLearnSpellCommand(const char*)
 bool ChatHandler::HandleReloadSpellLinkedSpellCommand(const char*)
 {
     sLog->outString("Re-Loading Spell Linked Spells...");
-    spellmgr.LoadSpellLinked();
+    sSpellMgr->LoadSpellLinked();
     SendGlobalGMSysMessage("DB table spell_linked_spell reloaded.");
     return true;
 }
@@ -493,7 +493,7 @@ bool ChatHandler::HandleReloadSpellLinkedSpellCommand(const char*)
 bool ChatHandler::HandleReloadSpellProcEventCommand(const char*)
 {
     sLog->outString("Re-Loading Spell Proc Event conditions...");
-    spellmgr.LoadSpellProcEvents();
+    sSpellMgr->LoadSpellProcEvents();
     SendGlobalGMSysMessage("DB table spell_proc_event (spell proc trigger requirements) reloaded.");
     return true;
 }
@@ -501,7 +501,7 @@ bool ChatHandler::HandleReloadSpellProcEventCommand(const char*)
 bool ChatHandler::HandleReloadSpellScriptTargetCommand(const char*)
 {
     sLog->outString("Re-Loading SpellsScriptTarget...");
-    spellmgr.LoadSpellScriptTarget();
+    sSpellMgr->LoadSpellScriptTarget();
     SendGlobalGMSysMessage("DB table spell_script_target (spell targets selection in case specific creature/GO requirements) reloaded.");
     return true;
 }
@@ -509,7 +509,7 @@ bool ChatHandler::HandleReloadSpellScriptTargetCommand(const char*)
 bool ChatHandler::HandleReloadSpellTargetPositionCommand(const char*)
 {
     sLog->outString("Re-Loading Spell target coordinates...");
-    spellmgr.LoadSpellTargetPositions();
+    sSpellMgr->LoadSpellTargetPositions();
     SendGlobalGMSysMessage("DB table spell_target_position (destination coordinates for spell targets) reloaded.");
     return true;
 }
@@ -517,7 +517,7 @@ bool ChatHandler::HandleReloadSpellTargetPositionCommand(const char*)
 bool ChatHandler::HandleReloadSpellThreatsCommand(const char*)
 {
     sLog->outString("Re-Loading Aggro Spells Definitions...");
-    spellmgr.LoadSpellThreats();
+    sSpellMgr->LoadSpellThreats();
     SendGlobalGMSysMessage("DB table spell_threat (spell aggro definitions) reloaded.");
     return true;
 }
@@ -525,7 +525,7 @@ bool ChatHandler::HandleReloadSpellThreatsCommand(const char*)
 bool ChatHandler::HandleReloadSpellPetAurasCommand(const char*)
 {
     sLog->outString("Re-Loading Spell pet auras...");
-    spellmgr.LoadSpellPetAuras();
+    sSpellMgr->LoadSpellPetAuras();
     SendGlobalGMSysMessage("DB table spell_pet_auras reloaded.");
     return true;
 }
@@ -548,7 +548,7 @@ bool ChatHandler::HandleReloadItemEnchantementsCommand(const char*)
 
 bool ChatHandler::HandleReloadGameObjectScriptsCommand(const char* arg)
 {
-    if (sWorld.IsScriptScheduled())
+    if (sWorld->IsScriptScheduled())
     {
         SendSysMessage("DB scripts used currently, please attempt reload later.");
         SetSentErrorMessage(true);
@@ -568,7 +568,7 @@ bool ChatHandler::HandleReloadGameObjectScriptsCommand(const char* arg)
 
 bool ChatHandler::HandleReloadEventScriptsCommand(const char* arg)
 {
-    if (sWorld.IsScriptScheduled())
+    if (sWorld->IsScriptScheduled())
     {
         SendSysMessage("DB scripts used currently, please attempt reload later.");
         SetSentErrorMessage(true);
@@ -612,7 +612,7 @@ bool ChatHandler::HandleReloadEventAIScriptsCommand(const char* /*args*/)
 
 bool ChatHandler::HandleReloadWpScriptsCommand(const char* arg)
 {
-    if (sWorld.IsScriptScheduled())
+    if (sWorld->IsScriptScheduled())
     {
         SendSysMessage("DB scripts used currently, please attempt reload later.");
         SetSentErrorMessage(true);
@@ -632,7 +632,7 @@ bool ChatHandler::HandleReloadWpScriptsCommand(const char* arg)
 
 bool ChatHandler::HandleReloadQuestEndScriptsCommand(const char* arg)
 {
-    if (sWorld.IsScriptScheduled())
+    if (sWorld->IsScriptScheduled())
     {
         SendSysMessage("DB scripts used currently, please attempt reload later.");
         SetSentErrorMessage(true);
@@ -652,7 +652,7 @@ bool ChatHandler::HandleReloadQuestEndScriptsCommand(const char* arg)
 
 bool ChatHandler::HandleReloadQuestStartScriptsCommand(const char* arg)
 {
-    if (sWorld.IsScriptScheduled())
+    if (sWorld->IsScriptScheduled())
     {
         SendSysMessage("DB scripts used currently, please attempt reload later.");
         SetSentErrorMessage(true);
@@ -672,7 +672,7 @@ bool ChatHandler::HandleReloadQuestStartScriptsCommand(const char* arg)
 
 bool ChatHandler::HandleReloadSpellScriptsCommand(const char* arg)
 {
-    if (sWorld.IsScriptScheduled())
+    if (sWorld->IsScriptScheduled())
     {
         SendSysMessage("DB scripts used currently, please attempt reload later.");
         SetSentErrorMessage(true);
@@ -999,14 +999,14 @@ bool ChatHandler::HandleAccountSetPasswordCommand(const char *args)
 
 bool ChatHandler::HandleAllowMovementCommand(const char* /*args*/)
 {
-    if (sWorld.getAllowMovement())
+    if (sWorld->getAllowMovement())
     {
-        sWorld.SetAllowMovement(false);
+        sWorld->SetAllowMovement(false);
         SendSysMessage(LANG_CREATURE_MOVE_DISABLED);
     }
     else
     {
-        sWorld.SetAllowMovement(true);
+        sWorld->SetAllowMovement(true);
         SendSysMessage(LANG_CREATURE_MOVE_ENABLED);
     }
     return true;
@@ -1866,7 +1866,7 @@ bool ChatHandler::HandleLearnAllMySpellsCommand(const char* /*args*/)
         //TODO: skip triggered spells
 
         // skip spells with first rank learned as talent (and all talents then also)
-        uint32 first_rank = spellmgr.GetFirstSpellInChain(spellInfo->Id);
+        uint32 first_rank = sSpellMgr->GetFirstSpellInChain(spellInfo->Id);
         if (GetTalentSpellCost(first_rank) > 0)
             continue;
 
@@ -1886,7 +1886,7 @@ static void learnAllHighRanks(Player* player, uint32 spellid)
     SpellChainNode const* node;
     do
     {
-        node = spellmgr.GetSpellChainNode(spellid);
+        node = sSpellMgr->GetSpellChainNode(spellid);
         player->learnSpell(spellid);
         if (!node)
             break;
@@ -2711,7 +2711,7 @@ bool ChatHandler::HandleLookupItemSetCommand(const char *args)
         ItemSetEntry const *set = sItemSetStore.LookupEntry(id);
         if (set)
         {
-            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld.GetDefaultDbcLocale();
+            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld->GetDefaultDbcLocale();
             std::string name = set->name[loc];
             if (name.empty())
                 continue;
@@ -2776,7 +2776,7 @@ bool ChatHandler::HandleLookupSkillCommand(const char *args)
         SkillLineEntry const *skillInfo = sSkillLineStore.LookupEntry(id);
         if (skillInfo)
         {
-            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld.GetDefaultDbcLocale();
+            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld->GetDefaultDbcLocale();
             std::string name = skillInfo->name[loc];
             if (name.empty())
                 continue;
@@ -2845,7 +2845,7 @@ bool ChatHandler::HandleLookupSpellCommand(const char *args)
         SpellEntry const *spellInfo = sSpellStore.LookupEntry(id);
         if (spellInfo)
         {
-            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld.GetDefaultDbcLocale();
+            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld->GetDefaultDbcLocale();
             std::string name = spellInfo->SpellName[loc];
             if (name.empty())
                 continue;
@@ -2880,7 +2880,7 @@ bool ChatHandler::HandleLookupSpellCommand(const char *args)
 
                 // unit32 used to prevent interpreting uint8 as char at output
                 // find rank of learned spell for learning spell, or talent rank
-                uint32 rank = talentCost ? talentCost : spellmgr.GetSpellRank(learn ? spellInfo->EffectTriggerSpell[0] : id);
+                uint32 rank = talentCost ? talentCost : sSpellMgr->GetSpellRank(learn ? spellInfo->EffectTriggerSpell[0] : id);
 
                 // send spell in "id - [name, rank N] [talent] [passive] [learn] [known]" format
                 std::ostringstream ss;
@@ -4182,7 +4182,7 @@ bool ChatHandler::HandleChangeWeather(const char *args)
         return false;
 
     //Weather is OFF
-    if (!sWorld.getConfig(CONFIG_WEATHER))
+    if (!sWorld->getConfig(CONFIG_WEATHER))
     {
         SendSysMessage(LANG_WEATHER_DISABLED);
         SetSentErrorMessage(true);
@@ -4202,10 +4202,10 @@ bool ChatHandler::HandleChangeWeather(const char *args)
     Player* player = m_session->GetPlayer();
     uint32 zoneid = player->GetZoneId();
 
-    Weather* wth = sWorld.FindWeather(zoneid);
+    Weather* wth = sWorld->FindWeather(zoneid);
 
     if (!wth)
-        wth = sWorld.AddWeather(zoneid);
+        wth = sWorld->AddWeather(zoneid);
     if (!wth)
     {
         SendSysMessage(LANG_NO_WEATHER);
@@ -4766,12 +4766,12 @@ bool ChatHandler::HandleResetAllCommand(const char * args)
     if (casename == "spells")
     {
         atLogin = AT_LOGIN_RESET_SPELLS;
-        sWorld.SendWorldText(LANG_RESETALL_SPELLS);
+        sWorld->SendWorldText(LANG_RESETALL_SPELLS);
     }
     else if (casename == "talents")
     {
         atLogin = AT_LOGIN_RESET_TALENTS;
-        sWorld.SendWorldText(LANG_RESETALL_TALENTS);
+        sWorld->SendWorldText(LANG_RESETALL_TALENTS);
     }
     else
     {
@@ -4792,7 +4792,7 @@ bool ChatHandler::HandleResetAllCommand(const char * args)
 
 bool ChatHandler::HandleServerShutDownCancelCommand(const char* /*args*/)
 {
-    sWorld.ShutdownCancel();
+    sWorld->ShutdownCancel();
     return true;
 }
 
@@ -4824,10 +4824,10 @@ bool ChatHandler::HandleServerShutDownCommand(const char *args)
         if (exitcode < 0 || exitcode > 125)
             return false;
 
-        sWorld.ShutdownServ (time, 0, exitcode);
+        sWorld->ShutdownServ (time, 0, exitcode);
     }
     else
-        sWorld.ShutdownServ(time, 0, SHUTDOWN_EXIT_CODE);
+        sWorld->ShutdownServ(time, 0, SHUTDOWN_EXIT_CODE);
     return true;
 }
 
@@ -4859,10 +4859,10 @@ bool ChatHandler::HandleServerRestartCommand(const char *args)
         if (exitcode < 0 || exitcode > 125)
             return false;
 
-        sWorld.ShutdownServ (time, SHUTDOWN_MASK_RESTART, exitcode);
+        sWorld->ShutdownServ (time, SHUTDOWN_MASK_RESTART, exitcode);
     }
     else
-        sWorld.ShutdownServ(time, SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
+        sWorld->ShutdownServ(time, SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
     return true;
 }
 
@@ -4894,10 +4894,10 @@ bool ChatHandler::HandleServerIdleRestartCommand(const char *args)
         if (exitcode < 0 || exitcode > 125)
             return false;
 
-        sWorld.ShutdownServ (time, SHUTDOWN_MASK_RESTART|SHUTDOWN_MASK_IDLE, exitcode);
+        sWorld->ShutdownServ (time, SHUTDOWN_MASK_RESTART|SHUTDOWN_MASK_IDLE, exitcode);
     }
     else
-        sWorld.ShutdownServ(time, SHUTDOWN_MASK_RESTART|SHUTDOWN_MASK_IDLE, RESTART_EXIT_CODE);
+        sWorld->ShutdownServ(time, SHUTDOWN_MASK_RESTART|SHUTDOWN_MASK_IDLE, RESTART_EXIT_CODE);
     return true;
 }
 
@@ -4929,10 +4929,10 @@ bool ChatHandler::HandleServerIdleShutDownCommand(const char *args)
         if (exitcode < 0 || exitcode > 125)
             return false;
 
-        sWorld.ShutdownServ (time, SHUTDOWN_MASK_IDLE, exitcode);
+        sWorld->ShutdownServ (time, SHUTDOWN_MASK_IDLE, exitcode);
     }
     else
-        sWorld.ShutdownServ(time, SHUTDOWN_MASK_IDLE, SHUTDOWN_EXIT_CODE);
+        sWorld->ShutdownServ(time, SHUTDOWN_MASK_IDLE, SHUTDOWN_EXIT_CODE);
     return true;
 }
 
@@ -5190,7 +5190,7 @@ bool ChatHandler::HandleBanHelper(BanMode mode, const char *args)
             break;
     }
 
-    switch (sWorld.BanAccount(mode, nameOrIP, duration, reason, m_session ? m_session->GetPlayerName() : ""))
+    switch (sWorld->BanAccount(mode, nameOrIP, duration, reason, m_session ? m_session->GetPlayerName() : ""))
     {
         case BAN_SUCCESS:
             if (atoi(duration)>0)
@@ -5270,7 +5270,7 @@ bool ChatHandler::HandleUnBanHelper(BanMode mode, const char *args)
             break;
     }
 
-    if (sWorld.RemoveBanAccount(mode, nameOrIP))
+    if (sWorld->RemoveBanAccount(mode, nameOrIP))
         PSendSysMessage(LANG_UNBAN_UNBANNED, nameOrIP.c_str());
     else
         PSendSysMessage(LANG_UNBAN_ERROR, nameOrIP.c_str());
@@ -5934,31 +5934,31 @@ bool ChatHandler::HandleServerPLimitCommand(const char *args)
         int l = strlen(param);
 
         if (strncmp(param, "player", l) == 0)
-            sWorld.SetPlayerSecurityLimit(SEC_PLAYER);
+            sWorld->SetPlayerSecurityLimit(SEC_PLAYER);
         else if (strncmp(param, "moderator", l) == 0)
-            sWorld.SetPlayerSecurityLimit(SEC_MODERATOR);
+            sWorld->SetPlayerSecurityLimit(SEC_MODERATOR);
         else if (strncmp(param, "gamemaster", l) == 0)
-            sWorld.SetPlayerSecurityLimit(SEC_GAMEMASTER);
+            sWorld->SetPlayerSecurityLimit(SEC_GAMEMASTER);
         else if (strncmp(param, "administrator", l) == 0)
-            sWorld.SetPlayerSecurityLimit(SEC_ADMINISTRATOR);
+            sWorld->SetPlayerSecurityLimit(SEC_ADMINISTRATOR);
         else if (strncmp(param, "reset", l) == 0)
-            sWorld.SetPlayerAmountLimit(ConfigMgr::GetIntDefault("PlayerLimit", 100));
+            sWorld->SetPlayerAmountLimit(ConfigMgr::GetIntDefault("PlayerLimit", 100));
         else
         {
             int val = atoi(param);
             if (val < 0)
-                sWorld.SetPlayerSecurityLimit(AccountTypes(uint32(-val)));
+                sWorld->SetPlayerSecurityLimit(AccountTypes(uint32(-val)));
             else
-                sWorld.SetPlayerAmountLimit(uint32(val));
+                sWorld->SetPlayerAmountLimit(uint32(val));
         }
 
         // kick all low security level players
-        if (sWorld.GetPlayerSecurityLimit() > SEC_PLAYER)
-            sWorld.KickAllLess(sWorld.GetPlayerSecurityLimit());
+        if (sWorld->GetPlayerSecurityLimit() > SEC_PLAYER)
+            sWorld->KickAllLess(sWorld->GetPlayerSecurityLimit());
     }
 
-    uint32 pLimit = sWorld.GetPlayerAmountLimit();
-    AccountTypes allowedAccountType = sWorld.GetPlayerSecurityLimit();
+    uint32 pLimit = sWorld->GetPlayerAmountLimit();
+    AccountTypes allowedAccountType = sWorld->GetPlayerSecurityLimit();
     char const* secName = "";
     switch (allowedAccountType)
     {
@@ -6347,7 +6347,7 @@ bool ChatHandler::HandleGMListFullCommand(const char* /*args*/)
 // Define the 'Message of the day' for the realm
 bool ChatHandler::HandleServerSetMotdCommand(const char *args)
 {
-    sWorld.SetMotd(args);
+    sWorld->SetMotd(args);
     PSendSysMessage(LANG_MOTD_NEW, args);
     return true;
 }
@@ -6771,7 +6771,7 @@ bool ChatHandler::HandlePlayAllCommand(const char *args)
 
     WorldPacket data(SMSG_PLAY_SOUND, 4);
     data << uint32(soundId) << m_session->GetPlayer()->GetGUID();
-    sWorld.SendGlobalMessage(&data);
+    sWorld->SendGlobalMessage(&data);
 
     PSendSysMessage(LANG_COMMAND_PLAYED_TO_ALL, soundId);
     return true;

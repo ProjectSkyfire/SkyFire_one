@@ -127,7 +127,7 @@ bool GameEventMgr::StartEvent(uint16 event_id, bool overwrite)
         // this update is needed to possibly start events dependent on the started one
         // or to scedule another update where the next event will be started
         if (overwrite && conditions_met)
-            sWorld.ForceGameEventUpdate();
+            sWorld->ForceGameEventUpdate();
 
         return conditions_met;
     }
@@ -945,12 +945,12 @@ void GameEventMgr::UnApplyEvent(uint16 event_id)
 
 void GameEventMgr::ApplyNewEvent(uint16 event_id)
 {
-    switch (sWorld.getConfig(CONFIG_EVENT_ANNOUNCE))
+    switch (sWorld->getConfig(CONFIG_EVENT_ANNOUNCE))
     {
         case 0:                                             // disable
             break;
         case 1:                                             // announce events
-            sWorld.SendWorldText(LANG_EVENTMESSAGE, mGameEvent[event_id].description.c_str());
+            sWorld->SendWorldText(LANG_EVENTMESSAGE, mGameEvent[event_id].description.c_str());
             break;
     }
 
@@ -1382,7 +1382,7 @@ void GameEventMgr::HandleQuestComplete(uint32 quest_id)
                     // changed, save to DB the gameevent state
                     SaveWorldEventStateToDB(event_id);
                     // force update events to set timer
-                    sWorld.ForceGameEventUpdate();
+                    sWorld->ForceGameEventUpdate();
                 }
             }
         }

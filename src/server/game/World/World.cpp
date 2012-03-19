@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -939,10 +938,10 @@ void World::LoadConfigSettings(bool reload)
 
     //visibility on continents
     m_MaxVisibleDistanceOnContinents = ConfigMgr::GetFloatDefault("Visibility.Distance.Continents", DEFAULT_VISIBILITY_DISTANCE);
-    if (m_MaxVisibleDistanceOnContinents < 45*sWorld.getRate(RATE_CREATURE_AGGRO))
+    if (m_MaxVisibleDistanceOnContinents < 45*sWorld->getRate(RATE_CREATURE_AGGRO))
     {
-        sLog->outError("Visibility.Distance.Continents can't be less max aggro radius %f", 45*sWorld.getRate(RATE_CREATURE_AGGRO));
-        m_MaxVisibleDistanceOnContinents = 45*sWorld.getRate(RATE_CREATURE_AGGRO);
+        sLog->outError("Visibility.Distance.Continents can't be less max aggro radius %f", 45*sWorld->getRate(RATE_CREATURE_AGGRO));
+        m_MaxVisibleDistanceOnContinents = 45*sWorld->getRate(RATE_CREATURE_AGGRO);
     }
     else if (m_MaxVisibleDistanceOnContinents + m_VisibleUnitGreyDistance > MAX_VISIBILITY_DISTANCE)
     {
@@ -952,10 +951,10 @@ void World::LoadConfigSettings(bool reload)
 
     //visibility in instances
     m_MaxVisibleDistanceInInstances = ConfigMgr::GetFloatDefault("Visibility.Distance.Instances", DEFAULT_VISIBILITY_INSTANCE);
-    if (m_MaxVisibleDistanceInInstances < 45*sWorld.getRate(RATE_CREATURE_AGGRO))
+    if (m_MaxVisibleDistanceInInstances < 45*sWorld->getRate(RATE_CREATURE_AGGRO))
     {
-        sLog->outError("Visibility.Distance.Instances can't be less max aggro radius %f", 45*sWorld.getRate(RATE_CREATURE_AGGRO));
-        m_MaxVisibleDistanceInInstances = 45*sWorld.getRate(RATE_CREATURE_AGGRO);
+        sLog->outError("Visibility.Distance.Instances can't be less max aggro radius %f", 45*sWorld->getRate(RATE_CREATURE_AGGRO));
+        m_MaxVisibleDistanceInInstances = 45*sWorld->getRate(RATE_CREATURE_AGGRO);
     }
     else if (m_MaxVisibleDistanceInInstances + m_VisibleUnitGreyDistance > MAX_VISIBILITY_DISTANCE)
     {
@@ -965,10 +964,10 @@ void World::LoadConfigSettings(bool reload)
 
     //visibility in BG/Arenas
     m_MaxVisibleDistanceInBGArenas = ConfigMgr::GetFloatDefault("Visibility.Distance.BGArenas", DEFAULT_VISIBILITY_BGARENAS);
-    if (m_MaxVisibleDistanceInBGArenas < 45*sWorld.getRate(RATE_CREATURE_AGGRO))
+    if (m_MaxVisibleDistanceInBGArenas < 45*sWorld->getRate(RATE_CREATURE_AGGRO))
     {
-        sLog->outError("Visibility.Distance.BGArenas can't be less max aggro radius %f", 45*sWorld.getRate(RATE_CREATURE_AGGRO));
-        m_MaxVisibleDistanceInBGArenas = 45*sWorld.getRate(RATE_CREATURE_AGGRO);
+        sLog->outError("Visibility.Distance.BGArenas can't be less max aggro radius %f", 45*sWorld->getRate(RATE_CREATURE_AGGRO));
+        m_MaxVisibleDistanceInBGArenas = 45*sWorld->getRate(RATE_CREATURE_AGGRO);
     }
     else if (m_MaxVisibleDistanceInBGArenas + m_VisibleUnitGreyDistance > MAX_VISIBILITY_DISTANCE)
     {
@@ -1145,7 +1144,7 @@ void World::SetInitialWorldSettings()
     sObjectMgr.LoadInstanceTemplate();
 
     sLog->outString("Loading SkillLineAbilityMultiMap Data...");
-    spellmgr.LoadSkillLineAbilityMap();
+    sSpellMgr->LoadSkillLineAbilityMap();
 
     // Clean up and pack instances
     sLog->outString("Cleaning up instances...");
@@ -1173,31 +1172,31 @@ void World::SetInitialWorldSettings()
     sObjectMgr.LoadGameobjectInfo();
 
     sLog->outString("Loading Spell Chain Data...");
-    spellmgr.LoadSpellChains();
+    sSpellMgr->LoadSpellChains();
 
     sLog->outString("Loading Spell Required Data...");
-    spellmgr.LoadSpellRequired();
+    sSpellMgr->LoadSpellRequired();
 
     sLog->outString("Loading Spell Elixir types...");
-    spellmgr.LoadSpellElixirs();
+    sSpellMgr->LoadSpellElixirs();
 
     sLog->outString("Loading Spell Learn Skills...");
-    spellmgr.LoadSpellLearnSkills();                        // must be after LoadSpellChains
+    sSpellMgr->LoadSpellLearnSkills();                        // must be after LoadSpellChains
 
     sLog->outString("Loading Spell Learn Spells...");
-    spellmgr.LoadSpellLearnSpells();
+    sSpellMgr->LoadSpellLearnSpells();
 
     sLog->outString("Loading Spell Proc Event conditions...");
-    spellmgr.LoadSpellProcEvents();
+    sSpellMgr->LoadSpellProcEvents();
 
     sLog->outString("Loading Aggro Spells Definitions...");
-    spellmgr.LoadSpellThreats();
+    sSpellMgr->LoadSpellThreats();
 
     sLog->outString("Loading NPC Texts...");
     sObjectMgr.LoadGossipText();
 
     sLog->outString("Loading Enchant Spells Proc datas...");
-    spellmgr.LoadSpellEnchantProcData();
+    sSpellMgr->LoadSpellEnchantProcData();
 
     sLog->outString("Loading Item Random Enchantments Table...");
     LoadRandomEnchantmentsTable();
@@ -1218,7 +1217,7 @@ void World::SetInitialWorldSettings()
     sObjectMgr.LoadCreatureTemplates();
 
     sLog->outString("Loading SpellsScriptTarget...");
-    spellmgr.LoadSpellScriptTarget();                       // must be after LoadCreatureTemplates and LoadGameobjectInfo
+    sSpellMgr->LoadSpellScriptTarget();                       // must be after LoadCreatureTemplates and LoadGameobjectInfo
 
     sLog->outString("Loading Creature Reputation OnKill Data...");
     sObjectMgr.LoadReputationOnKill();
@@ -1281,19 +1280,19 @@ void World::SetInitialWorldSettings()
     sObjectMgr.LoadGraveyardZones();
 
     sLog->outString("Loading Spell target coordinates...");
-    spellmgr.LoadSpellTargetPositions();
+    sSpellMgr->LoadSpellTargetPositions();
 
     sLog->outString("Loading SpellAffect definitions...");
-    spellmgr.LoadSpellAffects();
+    sSpellMgr->LoadSpellAffects();
 
     sLog->outString("Loading spell pet auras...");
-    spellmgr.LoadSpellPetAuras();
+    sSpellMgr->LoadSpellPetAuras();
 
     sLog->outString("Loading spell extra attributes...");
-    spellmgr.LoadSpellCustomAttr();
+    sSpellMgr->LoadSpellCustomAttr();
 
     sLog->outString("Loading linked spells...");
-    spellmgr.LoadSpellLinked();
+    sSpellMgr->LoadSpellLinked();
 
     sLog->outString("Loading Player Create Data...");
     sObjectMgr.LoadPlayerInfo();
@@ -1380,10 +1379,10 @@ void World::SetInitialWorldSettings()
     FormationMgr::LoadCreatureFormations();
 
     sLog->outString("Loading GM tickets...");
-    ticketmgr.LoadGMTickets();
+    sTicketMgr->LoadGMTickets();
 
     sLog->outString("Loading GM surveys...");
-    ticketmgr.LoadGMSurveys();
+    sTicketMgr->LoadGMSurveys();
 
     // Handle outdated emails (delete/return)
     sLog->outString("Returning old mails...");
@@ -1710,20 +1709,20 @@ void World::Update(time_t diff)
     if (m_timers[WUPDATE_UPTIME].Passed())
     {
         uint32 tmpDiff = (m_gameTime - m_startTime);
-        uint32 maxClientsNum = sWorld.GetMaxActiveSessionCount();
+        uint32 maxClientsNum = sWorld->GetMaxActiveSessionCount();
 
         m_timers[WUPDATE_UPTIME].Reset();
         WorldDatabase.PExecute("UPDATE uptime SET uptime = %d, maxplayers = %d WHERE starttime = " UI64FMTD, tmpDiff, maxClientsNum, uint64(m_startTime));
     }
 
     // Clean logs table
-    if (sWorld.getConfig(CONFIG_LOGDB_CLEARTIME) > 0) // if not enabled, ignore the timer
+    if (sWorld->getConfig(CONFIG_LOGDB_CLEARTIME) > 0) // if not enabled, ignore the timer
     {
         if (m_timers[WUPDATE_CLEANDB].Passed())
         {
             m_timers[WUPDATE_CLEANDB].Reset();
             LoginDatabase.PExecute("DELETE FROM logs WHERE (time + %u) < "UI64FMTD";",
-                sWorld.getConfig(CONFIG_LOGDB_CLEARTIME), uint64(time(0)));
+                sWorld->getConfig(CONFIG_LOGDB_CLEARTIME), uint64(time(0)));
         }
     }
 
@@ -2277,22 +2276,22 @@ void World::SendAutoBroadcast()
     uint32 abcenter = ConfigMgr::GetIntDefault("AutoBroadcast.Center", 0);
 
     if (abcenter == 0)
-        sWorld.SendWorldText(LANG_AUTO_BROADCAST, msg.c_str());
+        sWorld->SendWorldText(LANG_AUTO_BROADCAST, msg.c_str());
 
     else if (abcenter == 1)
     {
         WorldPacket data(SMSG_NOTIFICATION, (msg.size()+1));
         data << msg;
-        sWorld.SendGlobalMessage(&data);
+        sWorld->SendGlobalMessage(&data);
     }
 
     else if (abcenter == 2)
     {
-        sWorld.SendWorldText(LANG_AUTO_BROADCAST, msg.c_str());
+        sWorld->SendWorldText(LANG_AUTO_BROADCAST, msg.c_str());
 
         WorldPacket data(SMSG_NOTIFICATION, (msg.size()+1));
         data << msg;
-        sWorld.SendGlobalMessage(&data);
+        sWorld->SendGlobalMessage(&data);
     }
 
     sLog->outString("AutoBroadcast: '%s'", msg.c_str());

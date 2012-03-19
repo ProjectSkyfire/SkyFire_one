@@ -787,7 +787,7 @@ void ChatHandler::SendGlobalSysMessage(const char *str)
     while (char* line = LineFromMessage(pos))
     {
         FillSystemMessageData(&data, line);
-        sWorld.SendGlobalMessage(&data);
+        sWorld->SendGlobalMessage(&data);
     }
 
     free(buf);
@@ -805,7 +805,7 @@ void ChatHandler::SendGlobalGMSysMessage(const char *str)
     while (char* line = LineFromMessage(pos))
     {
         FillSystemMessageData(&data, line);
-        sWorld.SendGlobalGMMessage(&data);
+        sWorld->SendGlobalGMMessage(&data);
      }
     free(buf);
 }
@@ -963,7 +963,7 @@ valid examples:
     const char* validSequenceIterator = validSequence;
 
     // more simple checks
-    if (sWorld.getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_SEVERITY) < 3)
+    if (sWorld->getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_SEVERITY) < 3)
     {
         const std::string validCommands = "cHhr|";
 
@@ -982,7 +982,7 @@ valid examples:
 
             ++message;
             // validate sequence
-            if (sWorld.getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_SEVERITY) == 2)
+            if (sWorld->getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_SEVERITY) == 2)
             {
                 if (commandChar == *validSequenceIterator)
                 {
@@ -1261,8 +1261,8 @@ valid examples:
                         if (linkedSpell->Attributes & SPELL_ATTR_TRADESPELL)
                         {
                             // lookup skillid
-                            SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(linkedSpell->Id);
-                            SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(linkedSpell->Id);
+                            SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(linkedSpell->Id);
+                            SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(linkedSpell->Id);
 
                             if (lower == upper)
                             {

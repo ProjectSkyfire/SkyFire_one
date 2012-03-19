@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -219,7 +218,7 @@ bool ChatHandler::HandleGoTicketCommand(const char * args)
     if (!ticket_id)
         return false;
 
-    GM_Ticket *ticket = ticketmgr.GetGMTicket(ticket_id);
+    GM_Ticket *ticket = sTicketMgr->GetGMTicket(ticket_id);
     if (!ticket)
     {
         SendSysMessage(LANG_COMMAND_TICKETNOTEXIST);
@@ -1146,7 +1145,7 @@ bool ChatHandler::HandleChangeLevelCommand(const char* args)
         return false;
 
     uint8 lvl = (uint8) atoi((char*)args);
-    if (lvl < 1 || lvl > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL) + 3)
+    if (lvl < 1 || lvl > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL) + 3)
     {
         SendSysMessage(LANG_BAD_VALUE);
         SetSentErrorMessage(true);
@@ -1873,9 +1872,9 @@ bool ChatHandler::HandleKickPlayerCommand(const char *args)
             return false;
         }
 
-        if (sWorld.getConfig(CONFIG_SHOW_KICK_IN_WORLD) == 1)
+        if (sWorld->getConfig(CONFIG_SHOW_KICK_IN_WORLD) == 1)
         {
-            sWorld.SendWorldText(LANG_COMMAND_KICKMESSAGE, player->GetName(), kicker.c_str(), reason.c_str());
+            sWorld->SendWorldText(LANG_COMMAND_KICKMESSAGE, player->GetName(), kicker.c_str(), reason.c_str());
         }
         else
         {
@@ -1916,11 +1915,11 @@ bool ChatHandler::HandleKickPlayerCommand(const char *args)
             return false;
         }
 
-        if (sWorld.KickPlayer(name.c_str()))
+        if (sWorld->KickPlayer(name.c_str()))
         {
-            if (sWorld.getConfig(CONFIG_SHOW_KICK_IN_WORLD) == 1)
+            if (sWorld->getConfig(CONFIG_SHOW_KICK_IN_WORLD) == 1)
             {
-                sWorld.SendWorldText(LANG_COMMAND_KICKMESSAGE, name.c_str(), kicker.c_str(), reason.c_str());
+                sWorld->SendWorldText(LANG_COMMAND_KICKMESSAGE, name.c_str(), kicker.c_str(), reason.c_str());
             }
             else
             {
@@ -3120,7 +3119,7 @@ bool ChatHandler::HandleLookupFactionCommand(const char* args)
                     repState = &repItr->second;
             }
 
-            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld.GetDefaultDbcLocale();
+            int loc = m_session ? m_session->GetSessionDbcLocale() : sWorld->GetDefaultDbcLocale();
             std::string name = factionEntry->name[loc];
             if (name.empty())
                 continue;

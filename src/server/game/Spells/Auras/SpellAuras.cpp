@@ -703,7 +703,7 @@ void AreaAura::Update(uint32 diff)
                 if (!CheckTarget(*tIter))
                     continue;
 
-                if (SpellEntry const *actualSpellInfo = spellmgr.SelectAuraRankForPlayerLevel(GetSpellProto(), (*tIter)->getLevel()))
+                if (SpellEntry const *actualSpellInfo = sSpellMgr->SelectAuraRankForPlayerLevel(GetSpellProto(), (*tIter)->getLevel()))
                 {
                     //int32 actualBasePoints = m_currentBasePoints;
                     // recalculate basepoints for lower rank (all AreaAura spell not use custom basepoints?)
@@ -834,7 +834,7 @@ void Aura::UpdateAuraDuration()
         SendAuraDurationForCaster(caster->ToPlayer());
 
         Group* CasterGroup = caster->ToPlayer()->GetGroup();
-        if (CasterGroup && (spellmgr.GetSpellCustomAttr(GetId()) & SPELL_ATTR_CU_AURA_CC))
+        if (CasterGroup && (sSpellMgr->GetSpellCustomAttr(GetId()) & SPELL_ATTR_CU_AURA_CC))
         {
             for (GroupReference *itr = CasterGroup->GetFirstMember(); itr != NULL; itr = itr->next())
             {
@@ -951,7 +951,7 @@ void Aura::_AddAura()
             {
                 SetAura(slot, false);
                 SetAuraFlag(slot, true);
-                SetAuraLevel(slot, caster ? caster->getLevel() : sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL));
+                SetAuraLevel(slot, caster ? caster->getLevel() : sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL));
                 UpdateAuraCharges();
 
                 // update for out of range group members
@@ -1032,7 +1032,7 @@ void Aura::_RemoveAura()
     {
         SetAura(slot, true);
         SetAuraFlag(slot, false);
-        SetAuraLevel(slot, caster ? caster->getLevel() : sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL));
+        SetAuraLevel(slot, caster ? caster->getLevel() : sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL));
 
         SetAuraApplication(slot, 0);
         // update for out of range group members
@@ -1166,7 +1166,7 @@ void Aura::HandleAddModifier(bool apply, bool Real)
         mod->effectId = m_effIndex;
         mod->lastAffected = NULL;
 
-        uint64 spellAffectMask = spellmgr.GetSpellAffectMask(GetId(), m_effIndex);
+        uint64 spellAffectMask = sSpellMgr->GetSpellAffectMask(GetId(), m_effIndex);
 
         if (spellAffectMask)
             mod->mask = spellAffectMask;
@@ -2434,7 +2434,7 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
     }
 
     // pet auras
-    if (PetAura const* petSpell = spellmgr.GetPetAura(GetId()))
+    if (PetAura const* petSpell = sSpellMgr->GetPetAura(GetId()))
     {
         if (apply)
             m_target->AddPetAura(petSpell);
@@ -5851,8 +5851,8 @@ void Aura::PeriodicTick()
                             if (m_spell->SpellFamilyName != SPELLFAMILY_WARLOCK)
                                 continue;
 
-                            SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(m_spell->Id);
-                            SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(m_spell->Id);
+                            SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(m_spell->Id);
+                            SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(m_spell->Id);
 
                             for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
                             {

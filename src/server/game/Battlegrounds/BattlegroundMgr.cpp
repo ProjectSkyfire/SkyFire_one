@@ -172,10 +172,10 @@ void BattleGroundQueue::AddPlayer(Player *plr, GroupQueueInfo *ginfo)
     // add the pinfo to ginfo's list
     ginfo->Players[plr->GetGUID()]  = &info;
 
-    if (sWorld.getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_ENABLE))
+    if (sWorld->getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_ENABLE))
     {
         //announce only once in a time
-        if (!sWorld.getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_PLAYERONLY) && m_QueuedPlayers[queue_id].size() % 5 != 0) return;
+        if (!sWorld->getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_PLAYERONLY) && m_QueuedPlayers[queue_id].size() % 5 != 0) return;
         BattleGround * bg = sBattleGroundMgr.GetBattleGroundTemplate(ginfo->BgTypeId);
         if (!bg) return;
 
@@ -185,8 +185,8 @@ void BattleGroundQueue::AddPlayer(Player *plr, GroupQueueInfo *ginfo)
         uint32 q_max_level = Player::GetMaxLevelForBattleGroundQueueId(queue_id);
 
         // replace hardcoded max level by player max level for nice output
-        if (q_max_level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
-            q_max_level = sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL);
+        if (q_max_level > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
+            q_max_level = sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL);
 
         int32 MinPlayers = bg->GetMinPlayersPerTeam();
         int32 MaxPlayers = bg->GetMaxPlayersPerTeam();
@@ -207,7 +207,7 @@ void BattleGroundQueue::AddPlayer(Player *plr, GroupQueueInfo *ginfo)
         }
 
         // Show queue status to player only (when joining queue)
-        if (sWorld.getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_PLAYERONLY))
+        if (sWorld->getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_PLAYERONLY))
         {
             uint32 needAlliance = (MinPlayers < qAlliance) ? 0 : MinPlayers - qAlliance;
             uint32 needHorde = (MinPlayers < qHorde) ? 0 : MinPlayers - qHorde;
@@ -217,7 +217,7 @@ void BattleGroundQueue::AddPlayer(Player *plr, GroupQueueInfo *ginfo)
         // System message
         else
         {
-            sWorld.SendWorldText(LANG_BG_QUEUE_ANNOUNCE_WORLD,
+            sWorld->SendWorldText(LANG_BG_QUEUE_ANNOUNCE_WORLD,
                 bgName, q_min_level, q_max_level, qAlliance, MaxPlayers, qHorde, MaxPlayers);
         }
     }
@@ -998,10 +998,10 @@ void BGQueueRemoveEvent::Abort(uint64 /*e_time*/)
 BattleGroundMgr::BattleGroundMgr()
 {
     m_BattleGrounds.clear();
-    m_AutoDistributePoints = (bool)sWorld.getConfig(CONFIG_ARENA_AUTO_DISTRIBUTE_POINTS);
-    m_MaxRatingDifference = sWorld.getConfig(CONFIG_ARENA_MAX_RATING_DIFFERENCE);
-    m_RatingDiscardTimer = sWorld.getConfig(CONFIG_ARENA_RATING_DISCARD_TIMER);
-    m_PrematureFinishTimer = sWorld.getConfig(CONFIG_BATTLEGROUND_PREMATURE_FINISH_TIMER);
+    m_AutoDistributePoints = (bool)sWorld->getConfig(CONFIG_ARENA_AUTO_DISTRIBUTE_POINTS);
+    m_MaxRatingDifference = sWorld->getConfig(CONFIG_ARENA_MAX_RATING_DIFFERENCE);
+    m_RatingDiscardTimer = sWorld->getConfig(CONFIG_ARENA_RATING_DISCARD_TIMER);
+    m_PrematureFinishTimer = sWorld->getConfig(CONFIG_BATTLEGROUND_PREMATURE_FINISH_TIMER);
     m_NextRatingDiscardUpdate = m_RatingDiscardTimer;
     m_AutoDistributionTimeChecker = 0;
     m_ArenaTesting = false;
@@ -1071,7 +1071,7 @@ void BattleGroundMgr::Update(time_t diff)
             if (time(NULL) > m_NextAutoDistributionTime)
             {
                 DistributeArenaPoints();
-                m_NextAutoDistributionTime = time(NULL) + BATTLEGROUND_ARENA_POINT_DISTRIBUTION_DAY * sWorld.getConfig(CONFIG_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS);
+                m_NextAutoDistributionTime = time(NULL) + BATTLEGROUND_ARENA_POINT_DISTRIBUTION_DAY * sWorld->getConfig(CONFIG_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS);
                 CharacterDatabase.PExecute("UPDATE saved_variables SET NextArenaPointDistributionTime = '"UI64FMTD"'", m_NextAutoDistributionTime);
             }
             m_AutoDistributionTimeChecker = 600000; // check 10 minutes
@@ -1591,8 +1591,8 @@ void BattleGroundMgr::CreateInitialBattleGrounds()
             continue;
         }
 
-        //sLog->outDetail("Creating battleground %s, %u-%u", bl->name[sWorld.GetDBClang()], MinLvl, MaxLvl);
-        if (!CreateBattleGround(bgTypeID, MinPlayersPerTeam, MaxPlayersPerTeam, MinLvl, MaxLvl, bl->name[sWorld.GetDefaultDbcLocale()], bl->mapid[0], AStartLoc[0], AStartLoc[1], AStartLoc[2], AStartLoc[3], HStartLoc[0], HStartLoc[1], HStartLoc[2], HStartLoc[3]))
+        //sLog->outDetail("Creating battleground %s, %u-%u", bl->name[sWorld->GetDBClang()], MinLvl, MaxLvl);
+        if (!CreateBattleGround(bgTypeID, MinPlayersPerTeam, MaxPlayersPerTeam, MinLvl, MaxLvl, bl->name[sWorld->GetDefaultDbcLocale()], bl->mapid[0], AStartLoc[0], AStartLoc[1], AStartLoc[2], AStartLoc[3], HStartLoc[0], HStartLoc[1], HStartLoc[2], HStartLoc[3]))
             continue;
 
         ++count;
@@ -1611,7 +1611,7 @@ void BattleGroundMgr::InitAutomaticArenaPointDistribution()
         if (!result)
         {
             sLog->outDebug("Battleground: Next arena point distribution time not found in SavedVariables, reseting it now.");
-            m_NextAutoDistributionTime = time(NULL) + BATTLEGROUND_ARENA_POINT_DISTRIBUTION_DAY * sWorld.getConfig(CONFIG_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS);
+            m_NextAutoDistributionTime = time(NULL) + BATTLEGROUND_ARENA_POINT_DISTRIBUTION_DAY * sWorld->getConfig(CONFIG_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS);
             CharacterDatabase.PExecute("INSERT INTO saved_variables (NextArenaPointDistributionTime) VALUES ('"UI64FMTD"')", m_NextAutoDistributionTime);
         }
         else
@@ -1624,9 +1624,9 @@ void BattleGroundMgr::InitAutomaticArenaPointDistribution()
 void BattleGroundMgr::DistributeArenaPoints()
 {
     // used to distribute arena points based on last week's stats
-    sWorld.SendGlobalText("Flushing Arena points based on team ratings, this may take a few minutes. Please stand by...", NULL);
+    sWorld->SendGlobalText("Flushing Arena points based on team ratings, this may take a few minutes. Please stand by...", NULL);
 
-    sWorld.SendGlobalText("Distributing arena points to players...", NULL);
+    sWorld->SendGlobalText("Distributing arena points to players...", NULL);
 
     //temporary structure for storing maximum points to add values for all players
     std::map<uint32, uint32> PlayerPoints;
@@ -1653,9 +1653,9 @@ void BattleGroundMgr::DistributeArenaPoints()
 
     PlayerPoints.clear();
 
-    sWorld.SendGlobalText("Finished setting arena points for online players.", NULL);
+    sWorld->SendGlobalText("Finished setting arena points for online players.", NULL);
 
-    sWorld.SendGlobalText("Modifying played count, arena points etc. for loaded arena teams, sending updated stats to online players...", NULL);
+    sWorld->SendGlobalText("Modifying played count, arena points etc. for loaded arena teams, sending updated stats to online players...", NULL);
     for (ObjectMgr::ArenaTeamMap::iterator titr = sObjectMgr.GetArenaTeamMapBegin(); titr != sObjectMgr.GetArenaTeamMapEnd(); ++titr)
     {
         if (ArenaTeam * at = titr->second)
@@ -1666,9 +1666,9 @@ void BattleGroundMgr::DistributeArenaPoints()
         }
     }
 
-    sWorld.SendGlobalText("Modification done.", NULL);
+    sWorld->SendGlobalText("Modification done.", NULL);
 
-    sWorld.SendGlobalText("Done flushing Arena points.", NULL);
+    sWorld->SendGlobalText("Done flushing Arena points.", NULL);
 }
 
 void BattleGroundMgr::BuildBattleGroundListPacket(WorldPacket *data, uint64 guid, Player* plr, uint32 bgTypeId)
@@ -1829,18 +1829,18 @@ void BattleGroundMgr::ToggleTesting()
 {
     m_Testing = !m_Testing;
     if (m_Testing)
-        sWorld.SendGlobalText("Battlegrounds are set to 1v0 for debugging.", NULL);
+        sWorld->SendGlobalText("Battlegrounds are set to 1v0 for debugging.", NULL);
     else
-        sWorld.SendGlobalText("Battlegrounds are set to normal playercount.", NULL);
+        sWorld->SendGlobalText("Battlegrounds are set to normal playercount.", NULL);
 }
 
 void BattleGroundMgr::ToggleArenaTesting()
 {
     m_ArenaTesting = !m_ArenaTesting;
     if (m_ArenaTesting)
-        sWorld.SendGlobalText("Arenas are set to 1v1 for debugging. So, don't join as group.", NULL);
+        sWorld->SendGlobalText("Arenas are set to 1v1 for debugging. So, don't join as group.", NULL);
     else
-        sWorld.SendGlobalText("Arenas are set to normal playercount.", NULL);
+        sWorld->SendGlobalText("Arenas are set to normal playercount.", NULL);
 }
 
 void BattleGroundMgr::SetHolidayWeekends(uint32 mask)

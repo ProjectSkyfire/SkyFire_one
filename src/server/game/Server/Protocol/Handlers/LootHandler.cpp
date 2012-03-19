@@ -220,7 +220,7 @@ void WorldSession::HandleLootMoneyOpcode(WorldPacket & /*recv_data*/)
                 Player* playerGroup = itr->getSource();
                 if (!playerGroup)
                     continue;
-                if (player->GetDistance2d(playerGroup) < sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE))
+                if (player->GetDistance2d(playerGroup) < sWorld->getConfig(CONFIG_GROUP_XP_DISTANCE))
                     playersNear.push_back(playerGroup);
             }
 
@@ -307,7 +307,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
                 // only vein pass this check
                 if (go_min != 0 && go_max > go_min)
                 {
-                    float amount_rate = sWorld.getRate(RATE_MINING_AMOUNT);
+                    float amount_rate = sWorld->getRate(RATE_MINING_AMOUNT);
                     float min_amount = go_min*amount_rate;
                     float max_amount = go_max*amount_rate;
 
@@ -318,7 +318,7 @@ void WorldSession::DoLootRelease(uint64 lguid)
                     {
                         if (uses >= min_amount)
                         {
-                            float chance_rate = sWorld.getRate(RATE_MINING_NEXT);
+                            float chance_rate = sWorld->getRate(RATE_MINING_NEXT);
 
                             int32 ReqValue = 175;
                             LockEntry const *lockInfo = sLockStore.LookupEntry(go->GetGOInfo()->chest.lockId);
@@ -445,7 +445,7 @@ void WorldSession::HandleLootMasterGiveOpcode(WorldPacket & recv_data)
         return;
 
     // TODO : add some error message?
-    if (_player->GetMapId() != target->GetMapId() || _player->GetDistance(target) > sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE))
+    if (_player->GetMapId() != target->GetMapId() || _player->GetDistance(target) > sWorld->getConfig(CONFIG_GROUP_XP_DISTANCE))
         return;
 
     sLog->outDebug("WorldSession::HandleLootMasterGiveOpcode (CMSG_LOOT_MASTER_GIVE, 0x02A3) Target = [%s].", target->GetName());

@@ -614,7 +614,7 @@ uint32 WorldSession::getDialogStatus(Player* player, Object* questgiver, uint32 
                 {
                     if (pQuest->IsAutoComplete() || (pQuest->IsRepeatable() && player->getQuestStatusMap()[quest_id].m_rewarded))
                         result2 = DIALOG_STATUS_REWARD_REP;
-                    else if (player->getLevel() <= player->GetQuestLevelForPlayer(pQuest) + sWorld.getConfig(CONFIG_QUEST_LOW_LEVEL_HIDE_DIFF))
+                    else if (player->getLevel() <= player->GetQuestLevelForPlayer(pQuest) + sWorld->getConfig(CONFIG_QUEST_LOW_LEVEL_HIDE_DIFF))
                     {
                         if (pQuest->HasFlag(QUEST_FLAGS_DAILY))
                             result2 = DIALOG_STATUS_AVAILABLE_REP;

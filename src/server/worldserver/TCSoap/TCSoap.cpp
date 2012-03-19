@@ -112,7 +112,7 @@ int ns1__executeCommand(soap* soap, char* command, char** result)
     {
         // CliCommandHolder will be deleted from world, accessing after queueing is NOT save
         CliCommandHolder* cmd = new CliCommandHolder(&connection, command, &SOAPCommand::print, &SOAPCommand::commandFinished);
-        sWorld.QueueCliCommand(cmd);
+        sWorld->QueueCliCommand(cmd);
     }
 
     // wait for callback to complete command

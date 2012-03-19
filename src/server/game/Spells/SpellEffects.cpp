@@ -1855,7 +1855,7 @@ void Spell::EffectDummy(uint32 i)
     }
 
     // pet auras
-    if (PetAura const* petSpell = spellmgr.GetPetAura(m_spellInfo->Id))
+    if (PetAura const* petSpell = sSpellMgr->GetPetAura(m_spellInfo->Id))
     {
         m_caster->AddPetAura(petSpell);
         return;
@@ -2835,7 +2835,7 @@ void Spell::EffectEnergize(uint32 i)
         for (Unit::AuraMap::iterator itr = Auras.begin(); itr != Auras.end(); ++itr)
         {
             uint32 spell_id = itr->second->GetId();
-            if (uint32 mask = spellmgr.GetSpellElixirMask(spell_id))
+            if (uint32 mask = sSpellMgr->GetSpellElixirMask(spell_id))
                 elixir_mask |= mask;
         }
 
@@ -2844,7 +2844,7 @@ void Spell::EffectEnergize(uint32 i)
 
         // get all available elixirs by mask and spell level
         std::vector<uint32> elixirs;
-        SpellElixirMap const& m_spellElixirs = spellmgr.GetSpellElixirMap();
+        SpellElixirMap const& m_spellElixirs = sSpellMgr->GetSpellElixirMap();
         for (SpellElixirMap::const_iterator itr = m_spellElixirs.begin(); itr != m_spellElixirs.end(); ++itr)
         {
             if (itr->second & elixir_mask)
@@ -3723,7 +3723,7 @@ void Spell::EffectEnchantItemPerm(uint32 i)
     if (!item_owner)
         return;
 
-    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
+    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld->getConfig(CONFIG_GM_LOG_TRADE))
     {
         sLog->outCommand(p_caster->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(perm): %s (Entry: %d) for player: %s (Account: %u)",
             p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
@@ -3857,7 +3857,7 @@ void Spell::EffectEnchantItemTmp(uint32 i)
     if (!item_owner)
         return;
 
-    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
+    if (item_owner != p_caster && p_caster->GetSession()->GetSecurity() > SEC_PLAYER && sWorld->getConfig(CONFIG_GM_LOG_TRADE))
     {
         sLog->outCommand(p_caster->GetSession()->GetAccountId(), "GM %s (Account: %u) enchanting(temp): %s (Entry: %d) for player: %s (Account: %u)",
             p_caster->GetName(), p_caster->GetSession()->GetAccountId(),
@@ -5306,7 +5306,7 @@ void Spell::EffectStuck(uint32 /*i*/)
     if (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER)
         return;
 
-    if (!sWorld.getConfig(CONFIG_CAST_UNSTUCK))
+    if (!sWorld->getConfig(CONFIG_CAST_UNSTUCK))
         return;
 
     Player* pTarget = unitTarget->ToPlayer();
@@ -6179,7 +6179,7 @@ void Spell::EffectProspecting(uint32 /*i*/)
     if (itemTarget->GetCount() < 5)
         return;
 
-    if (sWorld.getConfig(CONFIG_SKILL_PROSPECTING))
+    if (sWorld->getConfig(CONFIG_SKILL_PROSPECTING))
     {
         uint32 SkillValue = p_caster->GetPureSkillValue(SKILL_JEWELCRAFTING);
         uint32 reqSkillValue = itemTarget->GetProto()->RequiredSkillRank;

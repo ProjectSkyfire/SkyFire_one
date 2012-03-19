@@ -1842,7 +1842,7 @@ void ObjectMgr::LoadPetLevelInfo()
             }
 
             uint32 current_level = fields[1].GetUInt32();
-            if (current_level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+            if (current_level > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
             {
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog->outErrorDb("Wrong (> %u) level %u in pet_levelstats table, ignoring.", STRONG_MAX_LEVEL, current_level);
@@ -1859,7 +1859,7 @@ void ObjectMgr::LoadPetLevelInfo()
             PetLevelInfo*& pInfoMapEntry = petInfo[creature_id];
 
             if (pInfoMapEntry == NULL)
-                pInfoMapEntry =  new PetLevelInfo[sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL)];
+                pInfoMapEntry =  new PetLevelInfo[sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL)];
 
             // data for level 1 stored in [0] array element, ...
             PetLevelInfo* pLevelInfo = &pInfoMapEntry[current_level-1];
@@ -1894,7 +1894,7 @@ void ObjectMgr::LoadPetLevelInfo()
         }
 
         // fill level gaps
-        for (uint32 level = 1; level < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL); ++level)
+        for (uint32 level = 1; level < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL); ++level)
         {
             if (pInfo[level].health == 0)
             {
@@ -1907,8 +1907,8 @@ void ObjectMgr::LoadPetLevelInfo()
 
 PetLevelInfo const* ObjectMgr::GetPetLevelInfo(uint32 creature_id, uint32 level) const
 {
-    if (level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
-        level = sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL);
+    if (level > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
+        level = sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL);
 
     PetLevelInfoMap::const_iterator itr = petInfo.find(creature_id);
     if (itr == petInfo.end())
@@ -2069,7 +2069,7 @@ void ObjectMgr::LoadPlayerInfo()
     // Load playercreate spells
     {
         QueryResult_AutoPtr result = QueryResult_AutoPtr(NULL);
-        if (sWorld.getConfig(CONFIG_START_ALL_SPELLS))
+        if (sWorld->getConfig(CONFIG_START_ALL_SPELLS))
             result = WorldDatabase.Query("SELECT race, class, Spell, Active FROM playercreateinfo_spell_custom");
         else
             result = WorldDatabase.Query("SELECT race, class, Spell, Active FROM playercreateinfo_spell");
@@ -2189,7 +2189,7 @@ void ObjectMgr::LoadPlayerInfo()
             }
 
             uint32 current_level = fields[1].GetUInt32();
-            if (current_level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+            if (current_level > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
             {
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog->outErrorDb("Wrong (> %u) level %u in player_classlevelstats table, ignoring.", STRONG_MAX_LEVEL, current_level);
@@ -2201,7 +2201,7 @@ void ObjectMgr::LoadPlayerInfo()
             PlayerClassInfo* pClassInfo = &playerClassInfo[current_class];
 
             if (!pClassInfo->levelInfo)
-                pClassInfo->levelInfo = new PlayerClassLevelInfo[sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL)];
+                pClassInfo->levelInfo = new PlayerClassLevelInfo[sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL)];
 
             PlayerClassLevelInfo* pClassLevelInfo = &pClassInfo->levelInfo[current_level-1];
 
@@ -2233,7 +2233,7 @@ void ObjectMgr::LoadPlayerInfo()
         }
 
         // fill level gaps
-        for (uint32 level = 1; level < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL); ++level)
+        for (uint32 level = 1; level < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL); ++level)
         {
             if (pClassInfo->levelInfo[level].basehealth == 0)
             {
@@ -2277,7 +2277,7 @@ void ObjectMgr::LoadPlayerInfo()
             }
 
             uint32 current_level = fields[2].GetUInt32();
-            if (current_level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+            if (current_level > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
             {
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog->outErrorDb("Wrong (> %u) level %u in player_levelstats table, ignoring.", STRONG_MAX_LEVEL, current_level);
@@ -2289,7 +2289,7 @@ void ObjectMgr::LoadPlayerInfo()
             PlayerInfo* pInfo = &playerInfo[current_race][current_class];
 
             if (!pInfo->levelInfo)
-                pInfo->levelInfo = new PlayerLevelInfo[sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL)];
+                pInfo->levelInfo = new PlayerLevelInfo[sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL)];
 
             PlayerLevelInfo* pLevelInfo = &pInfo->levelInfo[current_level-1];
 
@@ -2326,11 +2326,11 @@ void ObjectMgr::LoadPlayerInfo()
                 continue;
 
             // skip expansion races if not playing with expansion
-            if (sWorld.getConfig(CONFIG_EXPANSION) < 1 && (race == RACE_BLOODELF || race == RACE_DRAENEI))
+            if (sWorld->getConfig(CONFIG_EXPANSION) < 1 && (race == RACE_BLOODELF || race == RACE_DRAENEI))
                 continue;
 
             // skip expansion classes if not playing with expansion
-            if (sWorld.getConfig(CONFIG_EXPANSION) < 2 && class_ == CLASS_DEATH_KNIGHT)
+            if (sWorld->getConfig(CONFIG_EXPANSION) < 2 && class_ == CLASS_DEATH_KNIGHT)
                 continue;
 
             // fatal error if no level 1 data
@@ -2341,7 +2341,7 @@ void ObjectMgr::LoadPlayerInfo()
             }
 
             // fill level gaps
-            for (uint32 level = 1; level < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL); ++level)
+            for (uint32 level = 1; level < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL); ++level)
             {
                 if (pInfo->levelInfo[level].stats[0] == 0)
                 {
@@ -2360,8 +2360,8 @@ void ObjectMgr::GetPlayerClassLevelInfo(uint32 class_, uint32 level, PlayerClass
 
     PlayerClassInfo const* pInfo = &playerClassInfo[class_];
 
-    if (level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
-        level = sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL);
+    if (level > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
+        level = sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL);
 
     *info = pInfo->levelInfo[level-1];
 }
@@ -2375,7 +2375,7 @@ void ObjectMgr::GetPlayerLevelInfo(uint32 race, uint32 class_, uint32 level, Pla
     if (pInfo->displayId_m == 0 || pInfo->displayId_f == 0)
         return;
 
-    if (level <= sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    if (level <= sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         *info = pInfo->levelInfo[level-1];
     else
         BuildPlayerLevelInfo(race, class_, level, info);
@@ -2384,9 +2384,9 @@ void ObjectMgr::GetPlayerLevelInfo(uint32 race, uint32 class_, uint32 level, Pla
 void ObjectMgr::BuildPlayerLevelInfo(uint8 race, uint8 _class, uint8 level, PlayerLevelInfo* info) const
 {
     // base data (last known level)
-    *info = playerInfo[race][_class].levelInfo[sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL)-1];
+    *info = playerInfo[race][_class].levelInfo[sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL)-1];
 
-    for (int lvl = sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL)-1; lvl < level; ++lvl)
+    for (int lvl = sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL)-1; lvl < level; ++lvl)
     {
         switch (_class)
         {
@@ -2858,10 +2858,10 @@ void ObjectMgr::LoadQuests()
 
         if (qinfo->RequiredSkillValue)
         {
-            if (qinfo->RequiredSkillValue > sWorld.GetConfigMaxSkillValue())
+            if (qinfo->RequiredSkillValue > sWorld->GetConfigMaxSkillValue())
             {
                 sLog->outErrorDb("Quest %u has RequiredSkillValue = %u but max possible skill is %u, quest cannot be completed.",
-                    qinfo->GetQuestId(), qinfo->RequiredSkillValue, sWorld.GetConfigMaxSkillValue());
+                    qinfo->GetQuestId(), qinfo->RequiredSkillValue, sWorld->GetConfigMaxSkillValue());
                 // no changes, quest can't be done for this requirement
             }
 
@@ -3549,7 +3549,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
     if (tableName.empty())
         return;
 
-    if (sWorld.IsScriptScheduled())                          // function don't must be called in time scripts use.
+    if (sWorld->IsScriptScheduled())                          // function don't must be called in time scripts use.
         return;
 
     sLog->outString("%s :", tableName.c_str());
@@ -4154,7 +4154,7 @@ void ObjectMgr::LoadInstanceTemplate()
         }
 
         // the reset_delay must be at least one day
-        temp->reset_delay = std::max((uint32)1, (uint32)(temp->reset_delay * sWorld.getRate(RATE_INSTANCE_RESET_TIME)));
+        temp->reset_delay = std::max((uint32)1, (uint32)(temp->reset_delay * sWorld->getRate(RATE_INSTANCE_RESET_TIME)));
     }
 
     sLog->outString(">> Loaded %u Instance Template definitions", sInstanceTemplate.RecordCount);
@@ -5597,7 +5597,7 @@ std::string ObjectMgr::GeneratePetName(uint32 entry)
     if (list0.empty() || list1.empty())
     {
         CreatureInfo const *cinfo = GetCreatureTemplate(entry);
-        char* petname = GetPetName(cinfo->family, sWorld.GetDefaultDbcLocale());
+        char* petname = GetPetName(cinfo->family, sWorld->GetDefaultDbcLocale());
         if (!petname)
             petname = cinfo->Name;
         return std::string(petname);
@@ -5981,7 +5981,7 @@ enum LanguageType
 
 static LanguageType GetRealmLanguageType(bool create)
 {
-    switch (sWorld.getConfig(CONFIG_REALM_ZONE))
+    switch (sWorld->getConfig(CONFIG_REALM_ZONE))
     {
         case REALM_ZONE_UNKNOWN:                            // any language
         case REALM_ZONE_DEVELOPMENT:
@@ -6052,7 +6052,7 @@ bool ObjectMgr::IsValidName(const std::string& name, bool create)
     if (wname.size() < 1 || wname.size() > MAX_PLAYER_NAME)
         return false;
 
-    uint32 strictMask = sWorld.getConfig(CONFIG_STRICT_PLAYER_NAMES);
+    uint32 strictMask = sWorld->getConfig(CONFIG_STRICT_PLAYER_NAMES);
 
     return isValidString(wname, strictMask, false, create);
 }
@@ -6066,7 +6066,7 @@ bool ObjectMgr::IsValidCharterName(const std::string& name)
     if (wname.size() < 1)
         return false;
 
-    uint32 strictMask = sWorld.getConfig(CONFIG_STRICT_CHARTER_NAMES);
+    uint32 strictMask = sWorld->getConfig(CONFIG_STRICT_CHARTER_NAMES);
 
     return isValidString(wname, strictMask, true);
 }
@@ -6080,7 +6080,7 @@ bool ObjectMgr::IsValidPetName(const std::string& name)
     if (wname.size() < 1)
         return false;
 
-    uint32 strictMask = sWorld.getConfig(CONFIG_STRICT_PET_NAMES);
+    uint32 strictMask = sWorld->getConfig(CONFIG_STRICT_PET_NAMES);
 
     return isValidString(wname, strictMask, false);
 }
@@ -6586,7 +6586,7 @@ bool PlayerCondition::IsValid(ConditionType condition, uint32 value1, uint32 val
                 sLog->outErrorDb("Skill condition specifies invalid skill (%u), skipped", value1);
                 return false;
             }
-            if (value2 < 1 || value2 > sWorld.GetConfigMaxSkillValue())
+            if (value2 < 1 || value2 > sWorld->GetConfigMaxSkillValue())
             {
                 sLog->outErrorDb("Skill condition specifies invalid skill value (%u), skipped", value2);
                 return false;

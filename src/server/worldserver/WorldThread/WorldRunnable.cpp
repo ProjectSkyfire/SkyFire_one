@@ -44,7 +44,7 @@ void WorldRunnable::run()
 {
     // Init new SQL thread for the world database
     WorldDatabase.ThreadStart();                                // let thread do safe mySQL requests (one connection call enough)
-    sWorld.InitResultQueue();
+    sWorld->InitResultQueue();
 
     uint32 realCurrTime = 0;
     uint32 realPrevTime = getMSTime();
@@ -61,7 +61,7 @@ void WorldRunnable::run()
 
         uint32 diff = getMSTimeDiff(realPrevTime, realCurrTime);
 
-        sWorld.Update( diff );
+        sWorld->Update( diff );
         realPrevTime = realCurrTime;
 
         // diff (D0) include time of previous sleep (d0) + tick time (t0)
@@ -87,8 +87,8 @@ void WorldRunnable::run()
 
     // sScriptMgr->OnShutdown(); //NYI
 
-    sWorld.KickAll();                                       // save and kick all players
-    sWorld.UpdateSessions( 1 );                             // real players unload required UpdateSessions call
+    sWorld->KickAll();                                       // save and kick all players
+    sWorld->UpdateSessions( 1 );                             // real players unload required UpdateSessions call
 
     // unload battleground templates before different singletons destroyed
     sBattleGroundMgr.DeleteAlllBattleGrounds();

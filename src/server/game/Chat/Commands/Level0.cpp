@@ -89,12 +89,12 @@ bool ChatHandler::HandleStartCommand(const char* /*args*/)
 
 bool ChatHandler::HandleServerInfoCommand(const char* /*args*/)
 {
-    uint32 activeClientsNum = sWorld.GetActiveSessionCount();
-    uint32 queuedClientsNum = sWorld.GetQueuedSessionCount();
-    uint32 maxActiveClientsNum = sWorld.GetMaxActiveSessionCount();
-    uint32 maxQueuedClientsNum = sWorld.GetMaxQueuedSessionCount();
-    std::string str = secsToTimeString(sWorld.GetUptime());
-    uint32 updateTime = sWorld.GetUpdateTime();
+    uint32 activeClientsNum = sWorld->GetActiveSessionCount();
+    uint32 queuedClientsNum = sWorld->GetQueuedSessionCount();
+    uint32 maxActiveClientsNum = sWorld->GetMaxActiveSessionCount();
+    uint32 maxQueuedClientsNum = sWorld->GetMaxQueuedSessionCount();
+    std::string str = secsToTimeString(sWorld->GetUptime());
+    uint32 updateTime = sWorld->GetUpdateTime();
 
     PSendSysMessage(_FULLVERSION);
     //if (m_session)
@@ -103,7 +103,7 @@ bool ChatHandler::HandleServerInfoCommand(const char* /*args*/)
     //    full = _FULLVERSION(REVISION_DATE, REVISION_TIME, REVISION_ID);
 
     //SendSysMessage(full);
-    //PSendSysMessage(LANG_USING_WORLD_DB, sWorld.GetDBVersion());
+    //PSendSysMessage(LANG_USING_WORLD_DB, sWorld->GetDBVersion());
     PSendSysMessage(LANG_CONNECTED_USERS, activeClientsNum, maxActiveClientsNum, queuedClientsNum, maxQueuedClientsNum);
     PSendSysMessage(LANG_UPTIME, str.c_str());
     PSendSysMessage("Update time diff: %u.", updateTime);
@@ -146,7 +146,7 @@ bool ChatHandler::HandleSaveCommand(const char* /*args*/)
     }
 
     // save or plan save after 20 sec (logout delay) if current next save time more this value and _not_ output any messages to prevent cheat planning
-    uint32 save_interval = sWorld.getConfig(CONFIG_INTERVAL_SAVE);
+    uint32 save_interval = sWorld->getConfig(CONFIG_INTERVAL_SAVE);
     if (save_interval == 0 || save_interval > 20 * IN_MILLISECONDS && player->GetSaveTimer() <= save_interval - 20 * IN_MILLISECONDS)
         player->SaveToDB();
 
@@ -162,7 +162,7 @@ bool ChatHandler::HandleGMListIngameCommand(const char* /*args*/)
     for (HashMapHolder<Player>::MapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
         if (itr->second->GetSession()->GetSecurity() &&
-            (itr->second->isGameMaster() || sWorld.getConfig(CONFIG_GM_IN_GM_LIST)) &&
+            (itr->second->isGameMaster() || sWorld->getConfig(CONFIG_GM_IN_GM_LIST)) &&
             (!m_session || itr->second->IsVisibleGloballyFor(m_session->GetPlayer())))
         {
             if (first)
@@ -262,7 +262,7 @@ bool ChatHandler::HandleAccountLockCommand(const char* args)
 // Display the 'Message of the day' for the realm
 bool ChatHandler::HandleServerMotdCommand(const char* /*args*/)
 {
-    PSendSysMessage(LANG_MOTD_CURRENT, sWorld.GetMotd());
+    PSendSysMessage(LANG_MOTD_CURRENT, sWorld->GetMotd());
     return true;
 }
 

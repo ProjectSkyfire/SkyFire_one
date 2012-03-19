@@ -133,7 +133,7 @@ void WorldSession::HandlePetActionHelper(Unit *pet, uint64 guid1, uint16 spellid
                         return;
 
                     // Not let attack through obstructions
-                    if (sWorld.getConfig(CONFIG_PET_LOS))
+                    if (sWorld->getConfig(CONFIG_PET_LOS))
                     {
                       if (!pet->IsWithinLOSInMap(TargetUnit))
                         return;

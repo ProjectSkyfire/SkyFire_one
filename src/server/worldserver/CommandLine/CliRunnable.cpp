@@ -478,7 +478,7 @@ bool ChatHandler::HandleCharacterDeletedDeleteCommand(const char* args)
  */
 bool ChatHandler::HandleCharacterDeletedOldCommand(const char* args)
 {
-    int32 keepDays = sWorld.getConfig(CONFIG_CHARDELETE_KEEP_DAYS);
+    int32 keepDays = sWorld->getConfig(CONFIG_CHARDELETE_KEEP_DAYS);
 
     char* px = strtok((char*)args, " ");
     if (px)
@@ -675,7 +675,7 @@ bool ChatHandler::HandleServerSetDiffTimeCommand(const char *args)
     if (NewTime < 0)
         return false;
 
-    sWorld.SetRecordDiffInterval(NewTime);
+    sWorld->SetRecordDiffInterval(NewTime);
     printf( "Record diff every %u ms\n", NewTime);
     return true;
 }
@@ -768,7 +768,7 @@ void CliRunnable::run()
             }
 
             fflush(stdout);
-            sWorld.QueueCliCommand(new CliCommandHolder(NULL, command.c_str(), &utf8print, &commandFinished));
+            sWorld->QueueCliCommand(new CliCommandHolder(NULL, command.c_str(), &utf8print, &commandFinished));
 #if PLATFORM != PLATFORM_WINDOWS
             add_history(command.c_str());
 #endif

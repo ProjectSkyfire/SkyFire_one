@@ -50,7 +50,7 @@ AuctionHouseMgr::~AuctionHouseMgr()
 
 AuctionHouseObject * AuctionHouseMgr::GetAuctionsMap(uint32 factionTemplateId)
 {
-    if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
+    if (sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
         return &mNeutralAuctions;
 
     // team have linked auction houses
@@ -72,19 +72,19 @@ uint32 AuctionHouseMgr::GetAuctionDeposit(AuctionHouseEntry const* entry, uint32
     double faction_pct;
     if (MSV > 0)
     {
-        if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
-            faction_pct = (0.75 * (double)sWorld.getRate(RATE_AUCTION_DEPOSIT));
+        if (sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
+            faction_pct = (0.75 * (double)sWorld->getRate(RATE_AUCTION_DEPOSIT));
         else
         {
             FactionTemplateEntry const* u_entry = sFactionTemplateStore.LookupEntry(entry->houseId);
             if (!u_entry)
-                faction_pct = (0.75 * (double)sWorld.getRate(RATE_AUCTION_DEPOSIT));
+                faction_pct = (0.75 * (double)sWorld->getRate(RATE_AUCTION_DEPOSIT));
             else if (u_entry->ourMask & FACTION_MASK_ALLIANCE)
-                faction_pct = (0.15 * (double)sWorld.getRate(RATE_AUCTION_DEPOSIT));
+                faction_pct = (0.15 * (double)sWorld->getRate(RATE_AUCTION_DEPOSIT));
             else if (u_entry->ourMask & FACTION_MASK_HORDE)
-                faction_pct = (0.15 * (double)sWorld.getRate(RATE_AUCTION_DEPOSIT));
+                faction_pct = (0.15 * (double)sWorld->getRate(RATE_AUCTION_DEPOSIT));
             else
-                faction_pct = (0.75 * (double)sWorld.getRate(RATE_AUCTION_DEPOSIT));
+                faction_pct = (0.75 * (double)sWorld->getRate(RATE_AUCTION_DEPOSIT));
         }
         deposit = ((double)MSV * faction_pct * (double)pItem->GetCount()) * (double)(time / MIN_AUCTION_TIME);
     }
@@ -118,7 +118,7 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
     uint64 bidder_guid = MAKE_NEW_GUID(auction->bidder, 0, HIGHGUID_PLAYER);
     Player *bidder = sObjectMgr.GetPlayer(bidder_guid);
     // data for gm.log
-    if (sWorld.getConfig(CONFIG_GM_LOG_TRADE))
+    if (sWorld->getConfig(CONFIG_GM_LOG_TRADE))
     {
         std::string bidder_name;
         if (bidder)
@@ -193,7 +193,7 @@ void AuctionHouseMgr::SendAuctionSalePendingMail(AuctionEntry * auction)
         std::ostringstream msgAuctionSalePendingBody;
         uint32 auctionCut = auction->GetAuctionCut();
 
-        time_t distrTime = time(NULL) + sWorld.getConfig(CONFIG_MAIL_DELIVERY_DELAY);
+        time_t distrTime = time(NULL) + sWorld->getConfig(CONFIG_MAIL_DELIVERY_DELAY);
 
         msgAuctionSalePendingBody.width(16);
         msgAuctionSalePendingBody << std::right << std::hex << auction->bidder;
@@ -439,7 +439,7 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(uint32 factionTem
 {
     uint32 houseid = 7; // goblin auction house
 
-    if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
+    if (!sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
     {
         // FIXME: found way for proper auctionhouse selection by another way
         // AuctionHouse.dbc have faction field with _player_ factions associated with auction house races.
@@ -491,7 +491,7 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(uint32 factionTem
 
 void AuctionHouseObject::Update()
 {
-    time_t curTime = sWorld.GetGameTime();
+    time_t curTime = sWorld->GetGameTime();
     // Handle expired auctions
 
     // If storage is empty, no need to update. next == NULL in this case.
@@ -677,7 +677,7 @@ bool AuctionEntry::BuildAuctionInfo(WorldPacket & data) const
 
 uint32 AuctionEntry::GetAuctionCut() const
 {
-    return uint32(auctionHouseEntry->cutPercent * bid * sWorld.getRate(RATE_AUCTION_CUT) / 100.f);
+    return uint32(auctionHouseEntry->cutPercent * bid * sWorld->getRate(RATE_AUCTION_CUT) / 100.f);
 }
 
 // the sum of outbid is (1% from current bid)*5, if bid is very small, it is 1c

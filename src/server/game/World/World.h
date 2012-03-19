@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -691,6 +690,6 @@ class World
 
 extern uint32 realmID;
 
-#define sWorld (*ACE_Singleton<World, ACE_Null_Mutex>::instance())
+#define sWorld ACE_Singleton<World, ACE_Null_Mutex>::instance()
 #endif
 

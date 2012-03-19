@@ -34,7 +34,7 @@
 
 #define DEFAULT_GRID_EXPIRY     300
 #define MAX_GRID_LOAD_TIME      50
-#define MAX_CREATURE_ATTACK_RADIUS  (45.0f * sWorld.getRate(RATE_CREATURE_AGGRO))
+#define MAX_CREATURE_ATTACK_RADIUS  (45.0f * sWorld->getRate(RATE_CREATURE_AGGRO))
 
 GridState* si_GridStates[MAX_GRID_STATE];
 
@@ -52,14 +52,14 @@ Map::~Map()
     }
 
     if (!m_scriptSchedule.empty())
-        sWorld.DecreaseScheduledScriptCount(m_scriptSchedule.size());
+        sWorld->DecreaseScheduledScriptCount(m_scriptSchedule.size());
 }
 
 bool Map::ExistMap(uint32 mapid, int gx, int gy)
 {
-    int len = sWorld.GetDataPath().length()+strlen("maps/%03u%02u%02u.map")+1;
+    int len = sWorld->GetDataPath().length()+strlen("maps/%03u%02u%02u.map")+1;
     char* tmp = new char[len];
-    snprintf(tmp, len, (char *)(sWorld.GetDataPath()+"maps/%03u%02u%02u.map").c_str(), mapid, gx, gy);
+    snprintf(tmp, len, (char *)(sWorld->GetDataPath()+"maps/%03u%02u%02u.map").c_str(), mapid, gx, gy);
 
     bool ret = false;
     FILE *pf=fopen(tmp, "rb");
@@ -88,11 +88,11 @@ bool Map::ExistVMap(uint32 mapid, int gx, int gy)
     {
         if (vmgr->isMapLoadingEnabled())
         {
-            bool exists = vmgr->existsMap((sWorld.GetDataPath()+ "vmaps").c_str(), mapid, gx, gy);
+            bool exists = vmgr->existsMap((sWorld->GetDataPath()+ "vmaps").c_str(), mapid, gx, gy);
             if (!exists)
             {
                 std::string name = vmgr->getDirFileName(mapid, gx, gy);
-                sLog->outError("VMap file '%s' is missing or points to wrong version of vmap file. Redo vmaps with latest version of vmap_assembler.exe.", (sWorld.GetDataPath()+"vmaps/"+name).c_str());
+                sLog->outError("VMap file '%s' is missing or points to wrong version of vmap file. Redo vmaps with latest version of vmap_assembler.exe.", (sWorld->GetDataPath()+"vmaps/"+name).c_str());
                 return false;
             }
         }
@@ -104,7 +104,7 @@ bool Map::ExistVMap(uint32 mapid, int gx, int gy)
 void Map::LoadVMap(int gx, int gy)
 {
                                                             // x and y are swapped !!
-    int vmapLoadResult = VMAP::VMapFactory::createOrGetVMapManager()->loadMap((sWorld.GetDataPath()+ "vmaps").c_str(), GetId(), gx, gy);
+    int vmapLoadResult = VMAP::VMapFactory::createOrGetVMapManager()->loadMap((sWorld->GetDataPath()+ "vmaps").c_str(), GetId(), gx, gy);
     switch (vmapLoadResult)
     {
         case VMAP::VMAP_LOAD_RESULT_OK:
@@ -148,9 +148,9 @@ void Map::LoadMap(int gx, int gy, bool reload)
 
     // map file name
     char *tmp=NULL;
-    int len = sWorld.GetDataPath().length()+strlen("maps/%03u%02u%02u.map")+1;
+    int len = sWorld->GetDataPath().length()+strlen("maps/%03u%02u%02u.map")+1;
     tmp = new char[len];
-    snprintf(tmp, len, (char *)(sWorld.GetDataPath()+"maps/%03u%02u%02u.map").c_str(), GetId(), gx, gy);
+    snprintf(tmp, len, (char *)(sWorld->GetDataPath()+"maps/%03u%02u%02u.map").c_str(), GetId(), gx, gy);
     sLog->outDetail("Loading map %s", tmp);
     // loading data
     GridMaps[gx][gy] = new GridMap();
@@ -210,7 +210,7 @@ i_scriptLock(false)
 void Map::InitVisibilityDistance()
 {
     //init visibility for continents
-    m_VisibleDistance = sWorld.GetMaxVisibleDistanceOnContinents();
+    m_VisibleDistance = sWorld->GetMaxVisibleDistanceOnContinents();
     m_VisibilityNotifyPeriod = World::GetVisibilityNotifyPeriodOnContinents();
 }
 
@@ -304,7 +304,7 @@ Map::EnsureGridCreated(const GridPair &p)
         {
             sLog->outDebug("Creating grid[%u, %u] for map %u instance %u", p.x_coord, p.y_coord, GetId(), i_InstanceId);
 
-            setNGrid(new NGridType(p.x_coord*MAX_NUMBER_OF_GRIDS + p.y_coord, p.x_coord, p.y_coord, i_gridExpiry, sWorld.getConfig(CONFIG_GRID_UNLOAD)),
+            setNGrid(new NGridType(p.x_coord*MAX_NUMBER_OF_GRIDS + p.y_coord, p.x_coord, p.y_coord, i_gridExpiry, sWorld->getConfig(CONFIG_GRID_UNLOAD)),
                 p.x_coord, p.y_coord);
 
             // build a linkage between this map and NGridType
@@ -811,7 +811,7 @@ Map::Remove(T *obj, bool remove)
     if (remove)
     {
         // if option set then object already saved at this moment
-        if (!sWorld.getConfig(CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY))
+        if (!sWorld->getConfig(CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY))
             obj->SaveRespawnTime();
         DeleteFromWorld(obj);
     }
@@ -1915,7 +1915,7 @@ bool Map::CheckGridIntegrity(Creature* c, bool moved) const
 
 const char* Map::GetMapName() const
 {
-    return i_mapEntry ? i_mapEntry->name[sWorld.GetDefaultDbcLocale()] : "UNNAMEDMAP\x0";
+    return i_mapEntry ? i_mapEntry->name[sWorld->GetDefaultDbcLocale()] : "UNNAMEDMAP\x0";
 }
 
 void Map::UpdateObjectVisibility(WorldObject* obj, Cell cell, CellPair cellpair)
@@ -2262,7 +2262,7 @@ InstanceMap::InstanceMap(uint32 id, time_t expiry, uint32 InstanceId, uint8 Spaw
 
     // the timer is started by default, and stopped when the first player joins
     // this make sure it gets unloaded if for some reason no player joins
-    m_unloadTimer = std::max(sWorld.getConfig(CONFIG_INSTANCE_UNLOAD_DELAY), (uint32)MIN_UNLOAD_DELAY);
+    m_unloadTimer = std::max(sWorld->getConfig(CONFIG_INSTANCE_UNLOAD_DELAY), (uint32)MIN_UNLOAD_DELAY);
 }
 
 InstanceMap::~InstanceMap()
@@ -2274,7 +2274,7 @@ InstanceMap::~InstanceMap()
 void InstanceMap::InitVisibilityDistance()
 {
     //init visibility distance for instances
-    m_VisibleDistance = sWorld.GetMaxVisibleDistanceInInstances();
+    m_VisibleDistance = sWorld->GetMaxVisibleDistanceInInstances();
     m_VisibilityNotifyPeriod = World::GetVisibilityNotifyPeriodInInstances();
 }
 
@@ -2437,7 +2437,7 @@ void InstanceMap::Remove(Player* player, bool remove)
     sLog->outDetail("MAP: Removing player '%s' from instance '%u' of map '%s' before relocating to another map", player->GetName(), GetInstanceId(), GetMapName());
     //if last player set unload timer
     if (!m_unloadTimer && m_mapRefManager.getSize() == 1)
-        m_unloadTimer = m_unloadWhenEmpty ? MIN_UNLOAD_DELAY : std::max(sWorld.getConfig(CONFIG_INSTANCE_UNLOAD_DELAY), (uint32)MIN_UNLOAD_DELAY);
+        m_unloadTimer = m_unloadWhenEmpty ? MIN_UNLOAD_DELAY : std::max(sWorld->getConfig(CONFIG_INSTANCE_UNLOAD_DELAY), (uint32)MIN_UNLOAD_DELAY);
     Map::Remove(player, remove);
     // for normal instances schedule the reset after all players have left
     SetResetSchedule(true);
@@ -2601,7 +2601,7 @@ BattleGroundMap::~BattleGroundMap()
 void BattleGroundMap::InitVisibilityDistance()
 {
     //init visibility distance for BG/Arenas
-    m_VisibleDistance = sWorld.GetMaxVisibleDistanceInBGArenas();
+    m_VisibleDistance = sWorld->GetMaxVisibleDistanceInBGArenas();
     m_VisibilityNotifyPeriod = World::GetVisibilityNotifyPeriodInBGArenas();
 }
 

@@ -164,10 +164,10 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 
         ++count;
 
-        bool primary_prof_first_rank = spellmgr.IsPrimaryProfessionFirstRankSpell(tSpell->spell);
+        bool primary_prof_first_rank = sSpellMgr->IsPrimaryProfessionFirstRankSpell(tSpell->spell);
 
-        SpellChainNode const* chain_node = spellmgr.GetSpellChainNode(tSpell->spell);
-        uint32 req_spell = spellmgr.GetSpellRequired(tSpell->spell);
+        SpellChainNode const* chain_node = sSpellMgr->GetSpellChainNode(tSpell->spell);
+        uint32 req_spell = sSpellMgr->GetSpellRequired(tSpell->spell);
 
         data << uint32(tSpell->spell);
         data << uint8(_player->GetTrainerSpellState(tSpell));

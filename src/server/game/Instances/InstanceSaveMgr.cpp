@@ -425,7 +425,7 @@ void InstanceSaveManager::LoadResetTimes()
     }
 
     // load the global respawn times for raid/heroic instances
-    uint32 diff = sWorld.getConfig(CONFIG_INSTANCE_RESET_TIME_HOUR) * HOUR;
+    uint32 diff = sWorld->getConfig(CONFIG_INSTANCE_RESET_TIME_HOUR) * HOUR;
     m_resetTimeByMapId.resize(sMapStore.GetNumRows()+1);
     result = CharacterDatabase.Query("SELECT mapid, resettime FROM instance_reset");
     if (result)
@@ -626,7 +626,7 @@ void InstanceSaveManager::_ResetOrWarnAll(uint32 mapid, bool warn, uint32 timeLe
         CharacterDatabase.CommitTransaction();
 
         // calculate the next reset time
-        uint32 diff = sWorld.getConfig(CONFIG_INSTANCE_RESET_TIME_HOUR) * HOUR;
+        uint32 diff = sWorld->getConfig(CONFIG_INSTANCE_RESET_TIME_HOUR) * HOUR;
         uint32 period = temp->reset_delay * DAY;
         uint64 next_reset = ((now + timeLeft + MINUTE) / DAY * DAY) + period + diff;
         // update it in the DB

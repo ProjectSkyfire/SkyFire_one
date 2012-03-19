@@ -318,7 +318,7 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
     if (Unit* target = targets.getUnitTarget())
     {
         // if rank not found then function return NULL but in explicit cast case original spell can be casted and later failed with appropriate error message
-        if (SpellEntry const *actualSpellInfo = spellmgr.SelectAuraRankForPlayerLevel(spellInfo, target->getLevel()))
+        if (SpellEntry const *actualSpellInfo = sSpellMgr->SelectAuraRankForPlayerLevel(spellInfo, target->getLevel()))
             spellInfo = actualSpellInfo;
     }
 

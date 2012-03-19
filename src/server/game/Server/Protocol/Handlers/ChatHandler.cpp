@@ -43,15 +43,15 @@ bool WorldSession::processChatmessageFurtherAfterSecurityChecks(std::string& msg
     if (lang != LANG_ADDON)
     {
         // strip invisible characters for non-addon messages
-        if (sWorld.getConfig(CONFIG_CHAT_FAKE_MESSAGE_PREVENTING))
+        if (sWorld->getConfig(CONFIG_CHAT_FAKE_MESSAGE_PREVENTING))
             stripLineInvisibleChars(msg);
 
-        if (sWorld.getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_SEVERITY) && GetSecurity() < SEC_MODERATOR
+        if (sWorld->getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_SEVERITY) && GetSecurity() < SEC_MODERATOR
                 && !ChatHandler(this).isValidChatMessage(msg.c_str()))
         {
             sLog->outError("Player %s (GUID: %u) sent a chatmessage with an invalid link: %s", GetPlayer()->GetName(),
                     GetPlayer()->GetGUIDLow(), msg.c_str());
-            if (sWorld.getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_KICK))
+            if (sWorld->getConfig(CONFIG_CHAT_STRICT_LINK_CHECKING_KICK))
                 KickPlayer();
             return false;
         }
@@ -105,7 +105,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
 
     if (lang == LANG_ADDON)
     {
-        if (sWorld.getConfig(CONFIG_CHATLOG_ADDON))
+        if (sWorld->getConfig(CONFIG_CHATLOG_ADDON))
         {
             std::string msg = "";
             recv_data >> msg;
@@ -121,7 +121,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
         }
 
         // Disabled addon channel?
-        if (!sWorld.getConfig(CONFIG_ADDON_CHANNEL))
+        if (!sWorld->getConfig(CONFIG_ADDON_CHANNEL))
             return;
     }
     // LANG_ADDON should not be changed nor be affected by flood control
@@ -133,7 +133,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
         else
         {
             // send in universal language in two side iteration allowed mode
-            if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHAT))
+            if (sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHAT))
                 lang = LANG_UNIVERSAL;
             else
             {
@@ -144,13 +144,13 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                     case CHAT_MSG_RAID_LEADER:
                     case CHAT_MSG_RAID_WARNING:
                         // allow two side chat at group channel if two side group allowed
-                        if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP))
+                        if (sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP))
                             lang = LANG_UNIVERSAL;
                         break;
                     case CHAT_MSG_GUILD:
                     case CHAT_MSG_OFFICER:
                         // allow two side chat at guild channel if two side guild allowed
-                        if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD))
+                        if (sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GUILD))
                             lang = LANG_UNIVERSAL;
                         break;
                 }
@@ -240,7 +240,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                 return;
             }
 
-            if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHAT) && tSecurity == SEC_PLAYER && pSecurity == SEC_PLAYER)
+            if (!sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHAT) && tSecurity == SEC_PLAYER && pSecurity == SEC_PLAYER)
             {
                 uint32 sidea = GetPlayer()->GetTeam();
                 uint32 sideb = player->GetTeam();
@@ -287,7 +287,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             ChatHandler::FillMessageData(&data, this, type, lang, NULL, 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false, group->GetMemberGroup(GetPlayer()->GetGUID()));
 
-            if (sWorld.getConfig(CONFIG_CHATLOG_PARTY))
+            if (sWorld->getConfig(CONFIG_CHATLOG_PARTY))
                 sLog->outChat("[PARTY] Player %s tells group with leader %s: %s",
                     GetPlayer()->GetName(), group->GetLeaderName(), msg.c_str());
         }
@@ -315,12 +315,12 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                 if (guild)
                     guild->BroadcastToGuild(this, msg, lang == LANG_ADDON ? LANG_ADDON : LANG_UNIVERSAL);
 
-                if (lang != LANG_ADDON && sWorld.getConfig(CONFIG_CHATLOG_GUILD))
+                if (lang != LANG_ADDON && sWorld->getConfig(CONFIG_CHATLOG_GUILD))
                 {
                     sLog->outChat("[GUILD] Player %s tells guild %s: %s",
                         GetPlayer()->GetName(), guild->GetName().c_str(), msg.c_str());
                 }
-                else if (lang == LANG_ADDON && sWorld.getConfig(CONFIG_CHATLOG_ADDON))
+                else if (lang == LANG_ADDON && sWorld->getConfig(CONFIG_CHATLOG_ADDON))
                 {
                     sLog->outChat("[ADDON] Player %s sends to guild %s: %s",
                         GetPlayer()->GetName(), guild->GetName().c_str(), msg.c_str());
@@ -352,7 +352,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                 if (guild)
                     guild->BroadcastToOfficers(this, msg, lang == LANG_ADDON ? LANG_ADDON : LANG_UNIVERSAL);
 
-                if (sWorld.getConfig(CONFIG_CHATLOG_GUILD))
+                if (sWorld->getConfig(CONFIG_CHATLOG_GUILD))
                     sLog->outChat("[OFFICER] Player %s tells guild %s officers: %s",
                         GetPlayer()->GetName(), guild->GetName().c_str(), msg.c_str());
             }
@@ -385,7 +385,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             ChatHandler::FillMessageData(&data, this, CHAT_MSG_RAID, lang, "", 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false);
 
-            if (sWorld.getConfig(CONFIG_CHATLOG_RAID))
+            if (sWorld->getConfig(CONFIG_CHATLOG_RAID))
                 sLog->outChat("[RAID] Player %s tells raid with leader %s: %s",
                     GetPlayer()->GetName(), group->GetLeaderName(), msg.c_str());
         } break;
@@ -415,7 +415,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             ChatHandler::FillMessageData(&data, this, CHAT_MSG_RAID_LEADER, lang, "", 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false);
 
-            if (sWorld.getConfig(CONFIG_CHATLOG_RAID))
+            if (sWorld->getConfig(CONFIG_CHATLOG_RAID))
                 sLog->outChat("[RAID] Leader player %s tells raid: %s",
                     GetPlayer()->GetName(), msg.c_str());
         } break;
@@ -439,7 +439,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             ChatHandler::FillMessageData(&data, this, CHAT_MSG_RAID_WARNING, lang, "", 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false);
 
-            if (sWorld.getConfig(CONFIG_CHATLOG_RAID))
+            if (sWorld->getConfig(CONFIG_CHATLOG_RAID))
                 sLog->outChat("[RAID] Leader player %s warns raid with: %s",
                     GetPlayer()->GetName(), msg.c_str());
         } break;
@@ -464,7 +464,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             ChatHandler::FillMessageData(&data, this, CHAT_MSG_BATTLEGROUND, lang, "", 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false);
 
-            if (sWorld.getConfig(CONFIG_CHATLOG_BGROUND))
+            if (sWorld->getConfig(CONFIG_CHATLOG_BGROUND))
                 sLog->outChat("[BATTLEGROUND] Player %s tells battleground with leader %s: %s",
                     GetPlayer()->GetName(), group->GetLeaderName(), msg.c_str());
         } break;
@@ -489,7 +489,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
             ChatHandler::FillMessageData(&data, this, CHAT_MSG_BATTLEGROUND_LEADER, lang, "", 0, msg.c_str(), NULL);
             group->BroadcastPacket(&data, false);
 
-            if (sWorld.getConfig(CONFIG_CHATLOG_BGROUND))
+            if (sWorld->getConfig(CONFIG_CHATLOG_BGROUND))
                 sLog->outChat("[RAID] Leader player %s tells battleground: %s",
                     GetPlayer()->GetName(), msg.c_str());
         } break;
@@ -516,10 +516,10 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
                         chn->HasFlag(CHANNEL_FLAG_GENERAL) ||
                         chn->HasFlag(CHANNEL_FLAG_CITY) ||
                         chn->HasFlag(CHANNEL_FLAG_LFG)) &&
-                        sWorld.getConfig(CONFIG_CHATLOG_SYSCHAN))
+                        sWorld->getConfig(CONFIG_CHATLOG_SYSCHAN))
                             sLog->outChat("[SYSCHAN] Player %s tells channel %s: %s",
                                 GetPlayer()->GetName(), chn->GetName().c_str(), msg.c_str());
-                    else if (sWorld.getConfig(CONFIG_CHATLOG_CHANNEL))
+                    else if (sWorld->getConfig(CONFIG_CHATLOG_CHANNEL))
                             sLog->outChat("[CHANNEL] Player %s tells channel %s: %s",
                                 GetPlayer()->GetName(), chn->GetName().c_str(), msg.c_str());
                 }
@@ -643,7 +643,7 @@ void WorldSession::HandleTextEmoteOpcode(WorldPacket & recv_data)
     else
         data << (uint8)0x00;
 
-    GetPlayer()->SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), true);
+    GetPlayer()->SendMessageToSetInRange(&data, sWorld->getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), true);
 
     //Send scripted event call
     if (unit && unit->GetTypeId() == TYPEID_UNIT && ((Creature*)unit)->AI())

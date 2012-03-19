@@ -591,7 +591,7 @@ void Pet::RegenerateFocus()
     if (curValue >= maxValue)
         return;
 
-    float addvalue = 24 * sWorld.getRate(RATE_POWER_FOCUS);
+    float addvalue = 24 * sWorld->getRate(RATE_POWER_FOCUS);
 
     AuraList const& ModPowerRegenPCTAuras = GetAurasByType(SPELL_AURA_MOD_POWER_REGEN_PERCENT);
     for (AuraList::const_iterator i = ModPowerRegenPCTAuras.begin(); i != ModPowerRegenPCTAuras.end(); ++i)
@@ -617,7 +617,7 @@ void Pet::ModifyLoyalty(int32 addvalue)
     uint32 loyaltylevel = GetLoyaltyLevel();
 
     if (addvalue > 0)                                        //only gain influenced, not loss
-        addvalue = int32((float)addvalue * sWorld.getRate(RATE_LOYALTY));
+        addvalue = int32((float)addvalue * sWorld->getRate(RATE_LOYALTY));
 
     if (loyaltylevel >= BEST_FRIEND && (addvalue + m_loyaltyPoints) > int32(GetMaxLoyaltyPoints(loyaltylevel)))
         return;
@@ -706,14 +706,14 @@ bool Pet::CanTakeMoreActiveSpells(uint32 spellid)
     if (IsPassiveSpell(spellid))
         return true;
 
-    chainstartstore[0] = spellmgr.GetFirstSpellInChain(spellid);
+    chainstartstore[0] = sSpellMgr->GetFirstSpellInChain(spellid);
 
     for (PetSpellMap::iterator itr = m_spells.begin(); itr != m_spells.end(); ++itr)
     {
         if (IsPassiveSpell(itr->first))
             continue;
 
-        uint32 chainstart = spellmgr.GetFirstSpellInChain(itr->first);
+        uint32 chainstart = sSpellMgr->GetFirstSpellInChain(itr->first);
 
         uint8 x;
 
@@ -746,8 +746,8 @@ int32 Pet::GetTPForSpell(uint32 spellid)
 {
     uint32 basetrainp = 0;
 
-    SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(spellid);
-    SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(spellid);
+    SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spellid);
+    SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spellid);
     for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
     {
         if (!_spell_idx->second->reqtrainpoints)
@@ -758,17 +758,17 @@ int32 Pet::GetTPForSpell(uint32 spellid)
     }
 
     uint32 spenttrainp = 0;
-    uint32 chainstart = spellmgr.GetFirstSpellInChain(spellid);
+    uint32 chainstart = sSpellMgr->GetFirstSpellInChain(spellid);
 
     for (PetSpellMap::iterator itr = m_spells.begin(); itr != m_spells.end(); ++itr)
     {
         if (itr->second.state == PETSPELL_REMOVED)
             continue;
 
-        if (spellmgr.GetFirstSpellInChain(itr->first) == chainstart)
+        if (sSpellMgr->GetFirstSpellInChain(itr->first) == chainstart)
         {
-            SkillLineAbilityMap::const_iterator _lower = spellmgr.GetBeginSkillLineAbilityMap(itr->first);
-            SkillLineAbilityMap::const_iterator _upper = spellmgr.GetEndSkillLineAbilityMap(itr->first);
+            SkillLineAbilityMap::const_iterator _lower = sSpellMgr->GetBeginSkillLineAbilityMap(itr->first);
+            SkillLineAbilityMap::const_iterator _upper = sSpellMgr->GetEndSkillLineAbilityMap(itr->first);
 
             for (SkillLineAbilityMap::const_iterator _spell_idx2 = _lower; _spell_idx2 != _upper; ++_spell_idx2)
             {
@@ -829,7 +829,7 @@ void Pet::GivePetXP(uint32 xp)
     uint32 level = getLevel();
 
     // XP to money conversion processed in Player::RewardQuest
-    if (level >= sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    if (level >= sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
         return;
 
     uint32 curXP = GetUInt32Value(UNIT_FIELD_PETEXPERIENCE);
@@ -842,7 +842,7 @@ void Pet::GivePetXP(uint32 xp)
         return;
     }
 
-    while (newXP >= nextLvlXP && level < sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
+    while (newXP >= nextLvlXP && level < sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
     {
         newXP -= nextLvlXP;
 
@@ -911,7 +911,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     SetUInt32Value(UNIT_NPC_FLAGS, 0);
 
     CreatureFamilyEntry const* cFamily = sCreatureFamilyStore.LookupEntry(creature->GetCreatureInfo()->family);
-    if (char* familyname = cFamily->Name[sWorld.GetDefaultDbcLocale()])
+    if (char* familyname = cFamily->Name[sWorld->GetDefaultDbcLocale()])
         SetName(familyname);
     else
         SetName(creature->GetName());
@@ -1482,13 +1482,13 @@ bool Pet::addSpell(uint16 spell_id, uint16 active /*= ACT_DECIDE*/, PetSpellStat
     else
         newspell.active = active;
 
-    uint32 chainstart = spellmgr.GetFirstSpellInChain(spell_id);
+    uint32 chainstart = sSpellMgr->GetFirstSpellInChain(spell_id);
 
     for (PetSpellMap::iterator itr2 = m_spells.begin(); itr2 != m_spells.end(); ++itr2)
     {
         if (itr2->second.state == PETSPELL_REMOVED) continue;
 
-        if (spellmgr.GetFirstSpellInChain(itr2->first) == chainstart)
+        if (sSpellMgr->GetFirstSpellInChain(itr2->first) == chainstart)
         {
             newspell.active = itr2->second.active;
 
@@ -1579,8 +1579,8 @@ void Pet::InitPetCreateSpells()
 
             addSpell(petspellid);
 
-            SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(learn_spellproto->EffectTriggerSpell[0]);
-            SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(learn_spellproto->EffectTriggerSpell[0]);
+            SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(learn_spellproto->EffectTriggerSpell[0]);
+            SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(learn_spellproto->EffectTriggerSpell[0]);
 
             for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
             {
@@ -1621,7 +1621,7 @@ void Pet::CheckLearning(uint32 spellid)
 
 uint32 Pet::resetTalentsCost() const
 {
-    uint32 days = (sWorld.GetGameTime() - m_resetTalentsTime)/DAY;
+    uint32 days = (sWorld->GetGameTime() - m_resetTalentsTime)/DAY;
 
     // The first time reset costs 10 silver; after 1 day cost is reset to 10 silver
     if (m_resetTalentsCost < 10*SILVER || days > 0)

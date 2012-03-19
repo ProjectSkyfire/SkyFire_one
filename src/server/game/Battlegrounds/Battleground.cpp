@@ -731,7 +731,7 @@ void BattleGround::EndBattleGround(uint32 winner)
                 SetArenaTeamRatingChangeForTeam(ALLIANCE, loser_change);
             }
             sLog->outArena("Arena match Type: %u for Team1Id: %u - Team2Id: %u ended. WinnerTeamId: %u. Winner rating: %u, Loser rating: %u. RatingChange: %i.", m_ArenaType, m_ArenaTeamIds[BG_TEAM_ALLIANCE], m_ArenaTeamIds[BG_TEAM_HORDE], winner_arena_team->GetId(), winner_rating, loser_rating, winner_change);
-            if (sWorld.getConfig(CONFIG_ARENA_LOG_EXTENDED_INFO))
+            if (sWorld->getConfig(CONFIG_ARENA_LOG_EXTENDED_INFO))
                 for (BattleGround::BattleGroundScoreMap::const_iterator itr = GetPlayerScoresBegin();itr !=GetPlayerScoresEnd(); ++itr)
                     if (Player* player = sObjectMgr.GetPlayer(itr->first))
                         sLog->outArena("Statistics for %s (GUID: " UI64FMTD ", Team: %d, IP: %s): %u damage, %u healing, %u killing blows", player->GetName(), itr->first, player->GetArenaTeamId(m_ArenaType == 5 ? 2 : m_ArenaType == 3), player->GetSession()->GetRemoteAddress().c_str(), itr->second->DamageDone, itr->second->HealingDone, itr->second->KillingBlows);
@@ -803,7 +803,7 @@ void BattleGround::EndBattleGround(uint32 winner)
         }
         else if (winner == 0)
         {
-            if (sWorld.getConfig(CONFIG_BATTLEGROUND_PREMATURE_REWARD))
+            if (sWorld->getConfig(CONFIG_BATTLEGROUND_PREMATURE_REWARD))
             {
                 if (almost_winning_team == team)                  // player's team had more points
                     RewardMark(plr, ITEM_WINNER_COUNT);
@@ -1874,7 +1874,7 @@ WorldSafeLocsEntry const* BattleGround::GetClosestGraveYard(Player* player)
 void BattleGround::Announce()
 {
     //send world message
-    if (sWorld.getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_ENABLE) && sWorld.getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_ONSTART))
+    if (sWorld->getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_ENABLE) && sWorld->getConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_ONSTART))
     {
         uint32 queue_id = 0;
 
@@ -1888,9 +1888,9 @@ void BattleGround::Announce()
         uint32 q_max_level = Player::GetMaxLevelForBattleGroundQueueId(queue_id);
 
         // replace hardcoded max level by player max level for nice output
-        if (q_max_level > sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL))
-            q_max_level = sWorld.getConfig(CONFIG_MAX_PLAYER_LEVEL);
+        if (q_max_level > sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL))
+            q_max_level = sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL);
 
-        sWorld.SendWorldText(LANG_BG_QUEUE_ANNOUNCE_START, bgName, q_min_level, q_max_level);
+        sWorld->SendWorldText(LANG_BG_QUEUE_ANNOUNCE_START, bgName, q_min_level, q_max_level);
     }
 }

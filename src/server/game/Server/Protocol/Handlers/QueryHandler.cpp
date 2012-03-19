@@ -61,7 +61,7 @@ void WorldSession::SendNameQueryOpcode(Player *p)
 void WorldSession::SendNameQueryOpcodeFromDB(uint64 guid)
 {
     CharacterDatabase.AsyncPQuery(&WorldSession::SendNameQueryOpcodeFromDBCallBack, GetAccountId(),
-        !sWorld.getConfig(CONFIG_DECLINED_NAMES_USED) ?
+        !sWorld->getConfig(CONFIG_DECLINED_NAMES_USED) ?
     //   ------- Query Without Declined Names --------
     //          0                1     2
         "SELECT guid, name, SUBSTRING(data, LENGTH(SUBSTRING_INDEX(data, ' ', '%u'))+2, LENGTH(SUBSTRING_INDEX(data, ' ', '%u')) - LENGTH(SUBSTRING_INDEX(data, ' ', '%u'))-1) "
@@ -81,7 +81,7 @@ void WorldSession::SendNameQueryOpcodeFromDBCallBack(QueryResult_AutoPtr result,
     if (!result)
         return;
 
-    WorldSession * session = sWorld.FindSession(accountId);
+    WorldSession * session = sWorld->FindSession(accountId);
     if (!session)
         return;
 
@@ -104,7 +104,7 @@ void WorldSession::SendNameQueryOpcodeFromDBCallBack(QueryResult_AutoPtr result,
     data << (uint32)((field >> 8) & 0xFF);
 
     // if the first declined name field (3) is empty, the rest must be too
-    if (sWorld.getConfig(CONFIG_DECLINED_NAMES_USED) && fields[3].GetCppString() != "")
+    if (sWorld->getConfig(CONFIG_DECLINED_NAMES_USED) && fields[3].GetCppString() != "")
     {
         data << uint8(1);                                   // is declined
         for (int i = 3; i < MAX_DECLINED_NAME_CASES+3; ++i)

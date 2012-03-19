@@ -510,7 +510,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
             break;
         }
         case SPELLFAMILY_POTION:
-            return spellmgr.GetSpellElixirSpecific(spellInfo->Id);
+            return sSpellMgr->GetSpellElixirSpecific(spellInfo->Id);
     }
 
     // only warlock armor/skin have this (in additional to family cases)
@@ -545,7 +545,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
     }
 
     // elixirs can have different families, but potion most ofc.
-    if (SpellSpecific sp = spellmgr.GetSpellElixirSpecific(spellInfo->Id))
+    if (SpellSpecific sp = sSpellMgr->GetSpellElixirSpecific(spellInfo->Id))
         return sp;
 
     return SPELL_NORMAL;
@@ -1110,7 +1110,7 @@ void SpellMgr::LoadSpellAffects()
             if (mSpellAffectMap.find((id<<8) + effectId) != mSpellAffectMap.end())
                 continue;
 
-            sLog->outErrorDb("Spell %u (%s) misses spell_affect for effect %u", id, spellInfo->SpellName[sWorld.GetDefaultDbcLocale()], effectId);
+            sLog->outErrorDb("Spell %u (%s) misses spell_affect for effect %u", id, spellInfo->SpellName[sWorld->GetDefaultDbcLocale()], effectId);
         }
     }
 }
@@ -1232,7 +1232,7 @@ void SpellMgr::LoadSpellProcEvents()
         if (GetSpellProcEvent(id))
             continue;
 
-        sLog->outErrorDb("Spell %u (%s) misses spell_proc_event", id, spellInfo->SpellName[sWorld.GetDBClang()]);
+        sLog->outErrorDb("Spell %u (%s) misses spell_proc_event", id, spellInfo->SpellName[sWorld->GetDBClang()]);
     }
     */
 }
@@ -1254,8 +1254,8 @@ bool SpellMgr::IsSpellProcEventCanTriggeredBy(SpellProcEventEntry const * spellP
         if (!procSpell)
             return false;
 
-        SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(procSpell->Id);
-        SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(procSpell->Id);
+        SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(procSpell->Id);
+        SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(procSpell->Id);
 
         bool found = false;
         for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
@@ -1781,7 +1781,7 @@ void SpellMgr::LoadSpellChains()
         SpellEntry const *SpellInfo=sSpellStore.LookupEntry(spell_id);
         if (!SpellInfo)
             continue;
-        std::string sRank = SpellInfo->Rank[sWorld.GetDefaultDbcLocale()];
+        std::string sRank = SpellInfo->Rank[sWorld->GetDefaultDbcLocale()];
         if (sRank.empty())
             continue;
         //exception to polymorph spells-make pig and turtle other chain than sheep
@@ -1791,7 +1791,7 @@ void SpellMgr::LoadSpellChains()
         SpellRankEntry entry;
         SpellRankValue value;
         entry.SkillId=AbilityInfo->skillId;
-        entry.SpellName=SpellInfo->SpellName[sWorld.GetDefaultDbcLocale()];
+        entry.SpellName=SpellInfo->SpellName[sWorld->GetDefaultDbcLocale()];
         entry.DurationIndex=SpellInfo->DurationIndex;
         entry.RangeIndex=SpellInfo->rangeIndex;
         entry.ProcFlags=SpellInfo->procFlags;
@@ -1804,7 +1804,7 @@ void SpellMgr::LoadSpellChains()
         {
             AbilityInfo=mSkillLineAbilityMap.lower_bound(spell_id)->second;
             value.Id=spell_id;
-            value.Rank=SpellInfo->Rank[sWorld.GetDefaultDbcLocale()];
+            value.Rank=SpellInfo->Rank[sWorld->GetDefaultDbcLocale()];
             RankMap.insert(std::pair<SpellRankEntry, SpellRankValue>(entry, value));
             spell_id=AbilityInfo->forward_spellid;
             SpellInfo=sSpellStore.LookupEntry(spell_id);
@@ -1918,7 +1918,7 @@ void SpellMgr::LoadSpellChains()
 
 //uncomment these two lines to print yourself list of spell_chains on startup
 //    for (UNORDERED_MAP<uint32, SpellChainNode>::iterator itr=mSpellChains.begin();itr != mSpellChains.end();itr++)
-//       sLog->outString("Id: %u, Rank: %d , %s", itr->first, itr->second.rank, sSpellStore.LookupEntry(itr->first)->Rank[sWorld.GetDefaultDbcLocale()]);
+//       sLog->outString("Id: %u, Rank: %d , %s", itr->first, itr->second.rank, sSpellStore.LookupEntry(itr->first)->Rank[sWorld->GetDefaultDbcLocale()]);
 
     sLog->outString();
     sLog->outString(">> Loaded %u spell chains", count);
@@ -2161,8 +2161,8 @@ void SpellMgr::LoadSpellScriptTarget()
         {
             if (spellInfo->EffectImplicitTargetA[j] == TARGET_UNIT_NEARBY_ENTRY || spellInfo->EffectImplicitTargetA[j] != TARGET_UNIT_CASTER && spellInfo->EffectImplicitTargetB[j] == TARGET_UNIT_NEARBY_ENTRY)
             {
-                SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(spellInfo->Id);
-                SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(spellInfo->Id);
+                SpellScriptTarget::const_iterator lower = sSpellMgr->GetBeginSpellScriptTarget(spellInfo->Id);
+                SpellScriptTarget::const_iterator upper = sSpellMgr->GetEndSpellScriptTarget(spellInfo->Id);
                 if (lower == upper)
                 {
                     sLog->outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = %u (TARGET_UNIT_NEARBY_ENTRY), but does not have record in spell_script_target", spellInfo->Id, TARGET_UNIT_NEARBY_ENTRY);
@@ -2625,7 +2625,7 @@ bool IsSpellAllowedInLocation(SpellEntry const *spellInfo, uint32 map_id, uint32
     // elixirs (all area dependent elixirs have family SPELLFAMILY_POTION, use this for speedup)
     if (spellInfo->SpellFamilyName == SPELLFAMILY_POTION)
     {
-        if (uint32 mask = spellmgr.GetSpellElixirMask(spellInfo->Id))
+        if (uint32 mask = sSpellMgr->GetSpellElixirMask(spellInfo->Id))
         {
             if (mask & ELIXIR_BATTLE_MASK)
             {

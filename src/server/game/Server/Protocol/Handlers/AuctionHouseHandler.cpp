@@ -240,7 +240,7 @@ void WorldSession::HandleAuctionSellItem(WorldPacket & recv_data)
         return;
     }
 
-    if (GetSecurity() > SEC_PLAYER && sWorld.getConfig(CONFIG_GM_LOG_TRADE))
+    if (GetSecurity() > SEC_PLAYER && sWorld->getConfig(CONFIG_GM_LOG_TRADE))
     {
         sLog->outCommand(GetAccountId(), "GM %s (Account: %u) create auction: %s (Entry: %u Count: %u)",
             GetPlayerName(), GetAccountId(), it->GetProto()->Name1, it->GetEntry(), it->GetCount());
@@ -248,11 +248,11 @@ void WorldSession::HandleAuctionSellItem(WorldPacket & recv_data)
 
     pl->ModifyMoney(-int32(deposit));
 
-    uint32 auction_time = uint32(etime * sWorld.getRate(RATE_AUCTION_TIME));
+    uint32 auction_time = uint32(etime * sWorld->getRate(RATE_AUCTION_TIME));
 
     AuctionEntry *AH = new AuctionEntry;
     AH->Id = sObjectMgr.GenerateAuctionID();
-    if (sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
+    if (sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
         AH->auctioneer = 23442;
     else
         AH->auctioneer = GUID_LOPART(auctioneer);
