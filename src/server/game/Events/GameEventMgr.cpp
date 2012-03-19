@@ -1037,7 +1037,7 @@ void GameEventMgr::GameEventSpawn(int16 event_id)
             sObjectMgr.AddCreatureToGrid(*itr, data);
 
             // Spawn if necessary (loaded grids only)
-            Map* map = const_cast<Map*>(MapManager::Instance().CreateBaseMap(data->mapid));
+            Map* map = const_cast<Map*>(sMapMgr.CreateBaseMap(data->mapid));
             // We use spawn coords to spawn
             if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
             {
@@ -1065,7 +1065,7 @@ void GameEventMgr::GameEventSpawn(int16 event_id)
             sObjectMgr.AddGameobjectToGrid(*itr, data);
             // Spawn if necessary (loaded grids only)
             // this base map checked as non-instanced and then only existed
-            Map* map = const_cast<Map*>(MapManager::Instance().CreateBaseMap(data->mapid));
+            Map* map = const_cast<Map*>(sMapMgr.CreateBaseMap(data->mapid));
             // We use current coords to unspawn, not spawn coords since creature can have changed grid
             if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
             {

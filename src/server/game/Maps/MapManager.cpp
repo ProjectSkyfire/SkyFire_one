@@ -20,7 +20,6 @@
 
 #include "MapManager.h"
 #include "InstanceSaveMgr.h"
-#include "Policies/SingletonImp.h"
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
 #include "ObjectAccessor.h"
@@ -32,10 +31,6 @@
 #include "CellImpl.h"
 #include "Corpse.h"
 #include "ObjectMgr.h"
-
-#define CLASS_LOCK Trinity::ClassLevelLockable<MapManager, ACE_Thread_Mutex>
-INSTANTIATE_SINGLETON_2(MapManager, CLASS_LOCK);
-INSTANTIATE_CLASS_MUTEX(MapManager, ACE_Thread_Mutex);
 
 extern GridState* si_GridStates[];                          // debugging code, should be deleted some day
 
@@ -89,7 +84,7 @@ void MapManager::checkAndCorrectGridStatesArray()
     {
         if (i_GridStates[i] != si_GridStates[i])
         {
-            sLog->outError("MapManager::checkGridStates(), GridState: si_GridStates is currupt !!!");
+            sLog->outError("sMapMgr.checkGridStates(), GridState: si_GridStates is currupt !!!");
             ok = false;
             si_GridStates[i] = i_GridStates[i];
         }
@@ -114,7 +109,7 @@ Map* MapManager::_createBaseMap(uint32 id)
 
     if (m == NULL)
     {
-        Guard guard(*this);
+        ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
 
         const MapEntry* entry = sMapStore.LookupEntry(id);
         if (entry && entry->Instanceable())
@@ -309,7 +304,7 @@ void MapManager::InitMaxInstanceId()
 
 uint32 MapManager::GetNumInstances()
 {
-    Guard guard(*this);
+    ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
 
     uint32 ret = 0;
     for (MapMapType::iterator itr = i_maps.begin(); itr != i_maps.end(); ++itr)
@@ -326,7 +321,7 @@ uint32 MapManager::GetNumInstances()
 
 uint32 MapManager::GetNumPlayersInInstances()
 {
-    Guard guard(*this);
+    ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
 
     uint32 ret = 0;
     for (MapMapType::iterator itr = i_maps.begin(); itr != i_maps.end(); ++itr)

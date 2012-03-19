@@ -271,7 +271,7 @@ bool ChatHandler::HandleGoTriggerCommand(const char* args)
         return false;
     }
 
-    if (!MapManager::IsValidMapCoord(at->mapid, at->x, at->y, at->z))
+    if (!sMapMgr.IsValidMapCoord(at->mapid, at->x, at->y, at->z))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, at->x, at->y, at->mapid);
         SetSentErrorMessage(true);
@@ -316,7 +316,7 @@ bool ChatHandler::HandleGoGraveyardCommand(const char* args)
         return false;
     }
 
-    if (!MapManager::IsValidMapCoord(gy->map_id, gy->x, gy->y, gy->z))
+    if (!sMapMgr.IsValidMapCoord(gy->map_id, gy->x, gy->y, gy->z))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, gy->x, gy->y, gy->map_id);
         SetSentErrorMessage(true);
@@ -419,7 +419,7 @@ bool ChatHandler::HandleGoCreatureCommand(const char* args)
     float ort = fields[3].GetFloat();
     int mapid = fields[4].GetUInt16();
 
-    if (!MapManager::IsValidMapCoord(mapid, x, y, z, ort))
+    if (!sMapMgr.IsValidMapCoord(mapid, x, y, z, ort))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
@@ -476,7 +476,7 @@ bool ChatHandler::HandleGoObjectCommand(const char* args)
         return false;
     }
 
-    if (!MapManager::IsValidMapCoord(mapid, x, y, z, ort))
+    if (!sMapMgr.IsValidMapCoord(mapid, x, y, z, ort))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
@@ -752,7 +752,7 @@ bool ChatHandler::HandleMoveObjectCommand(const char* args)
         float y = (float)atof(py);
         float z = (float)atof(pz);
 
-        if (!MapManager::IsValidMapCoord(obj->GetMapId(), x, y, z))
+        if (!sMapMgr.IsValidMapCoord(obj->GetMapId(), x, y, z))
         {
             PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, obj->GetMapId());
             SetSentErrorMessage(true);

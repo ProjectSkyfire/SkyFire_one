@@ -22,7 +22,6 @@
 #define TRINITY_MAP_H
 
 #include "Define.h"
-#include "Policies/ThreadingModel.h"
 
 #include "DBCStructure.h"
 #include "GridDefines.h"
@@ -250,7 +249,7 @@ typedef UNORDERED_MAP<Creature*, CreatureMover> CreatureMoveList;
 typedef std::map<uint32/*leaderDBGUID*/, CreatureFormation*>        CreatureFormationHolderType;
 typedef std::map<uint32/*groupId*/, CreatureGroup*>            CreatureGroupHolderType;
 
-class Map : public GridRefManager<NGridType>, public Trinity::ObjectLevelLockable<Map, ACE_Thread_Mutex>
+class Map : public GridRefManager<NGridType>
 {
     friend class MapReference;
     public:
@@ -472,7 +471,7 @@ class Map : public GridRefManager<NGridType>, public Trinity::ObjectLevelLockabl
     protected:
         void SetUnloadReferenceLock(const GridPair &p, bool on) { getNGrid(p.x_coord, p.y_coord)->setUnloadReferenceLock(on); }
 
-        typedef Trinity::ObjectLevelLockable<Map, ACE_Thread_Mutex>::Lock Guard;
+        ACE_Thread_Mutex Lock;
 
         MapEntry const* i_mapEntry;
         uint8 i_spawnMode;

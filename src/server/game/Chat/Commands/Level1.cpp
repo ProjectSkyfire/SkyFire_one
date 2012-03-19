@@ -2436,7 +2436,7 @@ bool ChatHandler::HandleNameTeleCommand(const char * args)
     {
         PSendSysMessage(LANG_TELEPORTING_TO, name.c_str(), GetSkyFireString(LANG_OFFLINE), tele->name.c_str());
         Player::SavePositionInDB(tele->mapId, tele->position_x, tele->position_y, tele->position_z, tele->orientation,
-            MapManager::Instance().GetZoneId(tele->mapId, tele->position_x, tele->position_y, tele->position_z), guid);
+            sMapMgr.GetZoneId(tele->mapId, tele->position_x, tele->position_y, tele->position_z), guid);
     }
     else
         PSendSysMessage(LANG_NO_PLAYER, name.c_str());
@@ -2633,7 +2633,7 @@ bool ChatHandler::HandleGoXYCommand(const char* args)
         mapid = (uint32)atoi(pmapid);
     else mapid = _player->GetMapId();
 
-    if (!MapManager::IsValidMapCoord(mapid, x, y))
+    if (!sMapMgr.IsValidMapCoord(mapid, x, y))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
@@ -2650,7 +2650,7 @@ bool ChatHandler::HandleGoXYCommand(const char* args)
     else
         _player->SaveRecallPosition();
 
-    Map const *map = MapManager::Instance().CreateBaseMap(mapid);
+    Map const *map = sMapMgr.CreateBaseMap(mapid);
     float z = std::max(map->GetHeight(x, y, MAX_HEIGHT), map->GetWaterLevel(x, y));
 
     _player->TeleportTo(mapid, x, y, z, _player->GetOrientation());
@@ -2683,7 +2683,7 @@ bool ChatHandler::HandleGoXYZCommand(const char* args)
     else
         mapid = _player->GetMapId();
 
-    if (!MapManager::IsValidMapCoord(mapid, x, y, z))
+    if (!sMapMgr.IsValidMapCoord(mapid, x, y, z))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
@@ -2738,7 +2738,7 @@ bool ChatHandler::HandleGoZoneXYCommand(const char* args)
     // update to parent zone if exist (client map show only zones without parents)
     AreaTableEntry const* zoneEntry = areaEntry->zone ? GetAreaEntryByAreaID(areaEntry->zone) : areaEntry;
 
-    Map const *map = MapManager::Instance().CreateBaseMap(zoneEntry->mapid);
+    Map const *map = sMapMgr.CreateBaseMap(zoneEntry->mapid);
 
     if (map->Instanceable())
     {
@@ -2749,7 +2749,7 @@ bool ChatHandler::HandleGoZoneXYCommand(const char* args)
 
     Zone2MapCoordinates(x, y, zoneEntry->ID);
 
-    if (!MapManager::IsValidMapCoord(zoneEntry->mapid, x, y))
+    if (!sMapMgr.IsValidMapCoord(zoneEntry->mapid, x, y))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, zoneEntry->mapid);
         SetSentErrorMessage(true);
@@ -2796,7 +2796,7 @@ bool ChatHandler::HandleGoGridCommand(const char* args)
     float x = (grid_x-CENTER_GRID_ID+0.5f)*SIZE_OF_GRIDS;
     float y = (grid_y-CENTER_GRID_ID+0.5f)*SIZE_OF_GRIDS;
 
-    if (!MapManager::IsValidMapCoord(mapid, x, y))
+    if (!sMapMgr.IsValidMapCoord(mapid, x, y))
     {
         PSendSysMessage(LANG_INVALID_TARGET_COORD, x, y, mapid);
         SetSentErrorMessage(true);
@@ -2813,7 +2813,7 @@ bool ChatHandler::HandleGoGridCommand(const char* args)
     else
         _player->SaveRecallPosition();
 
-    Map const *map = MapManager::Instance().CreateBaseMap(mapid);
+    Map const *map = sMapMgr.CreateBaseMap(mapid);
     float z = std::max(map->GetHeight(x, y, MAX_HEIGHT), map->GetWaterLevel(x, y));
     _player->TeleportTo(mapid, x, y, z, _player->GetOrientation());
 

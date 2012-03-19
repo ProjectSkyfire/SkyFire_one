@@ -299,7 +299,7 @@ Map::EnsureGridCreated(const GridPair &p)
 {
     if (!getNGrid(p.x_coord, p.y_coord))
     {
-        Guard guard(*this);
+        ACE_GUARD(ACE_Thread_Mutex, Guard, Lock);
         if (!getNGrid(p.x_coord, p.y_coord))
         {
             sLog->outDebug("Creating grid[%u, %u] for map %u instance %u", p.x_coord, p.y_coord, GetId(), i_InstanceId);
@@ -1981,7 +1981,7 @@ void Map::SendInitSelf(Player * player)
 void Map::SendInitTransports(Player * player)
 {
     // Hack to send out transports
-    MapManager::TransportMap& tmap = MapManager::Instance().m_TransportsByMap;
+    MapManager::TransportMap& tmap = sMapMgr.m_TransportsByMap;
 
     // no transports at map
     if (tmap.find(player->GetMapId()) == tmap.end())
@@ -2011,7 +2011,7 @@ void Map::SendInitTransports(Player * player)
 void Map::SendRemoveTransports(Player * player)
 {
     // Hack to send out transports
-    MapManager::TransportMap& tmap = MapManager::Instance().m_TransportsByMap;
+    MapManager::TransportMap& tmap = sMapMgr.m_TransportsByMap;
 
     // no transports at map
     if (tmap.find(player->GetMapId()) == tmap.end())
@@ -2320,7 +2320,7 @@ bool InstanceMap::Add(Player *player)
     // Is it needed?
 
     {
-        Guard guard(*this);
+        ACE_GUARD_RETURN(ACE_Thread_Mutex, guard, Lock, false);
         //if (!CanEnter(player))
             //return false;
 
@@ -2625,7 +2625,7 @@ bool BattleGroundMap::CanEnter(Player * player)
 bool BattleGroundMap::Add(Player * player)
 {
     {
-        Guard guard(*this);
+        ACE_GUARD_RETURN(ACE_Thread_Mutex, guard, Lock, false);
         //if (!CanEnter(player))
             //return false;
         // reset instance validity, battleground maps do not homebind

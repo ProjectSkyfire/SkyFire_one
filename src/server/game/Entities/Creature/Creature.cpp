@@ -2225,7 +2225,7 @@ time_t Creature::GetLinkedCreatureRespawnTime() const
             if (data->mapid == GetMapId())   // look up on the same map
                 targetMap = GetMap();
             else                            // it shouldn't be instanceable map here
-                targetMap = MapManager::Instance().FindMap(data->mapid);
+                targetMap = sMapMgr.FindMap(data->mapid);
         }
         if (targetMap)
             return sObjectMgr.GetCreatureRespawnTime(targetGuid, targetMap->GetInstanceId());

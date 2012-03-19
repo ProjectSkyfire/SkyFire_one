@@ -181,7 +181,7 @@ bool ChatHandler::HandleReloadConfigCommand(const char* /*args*/)
 {
     sLog->outString("Re-Loading config settings...");
     sWorld.LoadConfigSettings(true);
-    MapManager::Instance().InitializeVisibilityDistanceInfo();
+    sMapMgr.InitializeVisibilityDistanceInfo();
     SendGlobalGMSysMessage("World config settings reloaded.");
     return true;
 }
@@ -6287,8 +6287,8 @@ bool ChatHandler::HandleInstanceUnbindCommand(const char *args)
 
 bool ChatHandler::HandleInstanceStatsCommand(const char* /*args*/)
 {
-    PSendSysMessage("instances loaded: %d", MapManager::Instance().GetNumInstances());
-    PSendSysMessage("players in instances: %d", MapManager::Instance().GetNumPlayersInInstances());
+    PSendSysMessage("instances loaded: %d", sMapMgr.GetNumInstances());
+    PSendSysMessage("players in instances: %d", sMapMgr.GetNumPlayersInInstances());
     PSendSysMessage("instance saves: %d", sInstanceSaveManager.GetNumInstanceSaves());
     PSendSysMessage("players bound: %d", sInstanceSaveManager.GetNumBoundPlayersTotal());
     PSendSysMessage("groups bound: %d", sInstanceSaveManager.GetNumBoundGroupsTotal());
