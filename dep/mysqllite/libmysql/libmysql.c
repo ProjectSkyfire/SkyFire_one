@@ -4373,7 +4373,7 @@ int STDCALL mysql_stmt_store_result(MYSQL_STMT *stmt)
   if (stmt->update_max_length)
   {
     MYSQL_ROWS *cur= result->data;
-    for(; cur; cur=cur->next)
+    for (; cur; cur=cur->next)
       stmt_update_metadata(stmt, cur);
   }
 

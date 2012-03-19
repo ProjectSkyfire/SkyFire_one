@@ -305,7 +305,7 @@ static void _zip_resolveDirectory(std::string& completeDir, const std::string& d
 		tempLength = length;
 	}
 
-	for(int t = 0; t < tempLength; ++t){
+	for (int t = 0; t < tempLength; ++t){
 		if (t > 0){
 			completeDir += "/";
 		}
@@ -713,7 +713,7 @@ static void getFileOrDirListZip(const std::string& path,
     Set<std::string> fileSet;
 
     int count = zip_get_num_files( z );
-    for( int i = 0; i < count; ++i ) {
+    for ( int i = 0; i < count; ++i ) {
         struct zip_stat info;
         zip_stat_init( &info );    // TODO: Docs unclear if zip_stat_init is required.
         zip_stat_index( z, i, ZIP_FL_NOCASE, &info );

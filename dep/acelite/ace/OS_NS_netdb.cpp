@@ -238,7 +238,7 @@ ACE_OS::getmacaddress (struct macaddr_node_t *node)
 
     result = Netbios (&ncb);
 
-    for(int i = 0; i < lenum.length; i++)
+    for (int i = 0; i < lenum.length; i++)
       {
         ACE_OS::memset (&ncb, 0, sizeof(ncb));
         ncb.ncb_command  = NCBRESET;
@@ -408,7 +408,7 @@ ACE_OS::getmacaddress (struct macaddr_node_t *node)
       return -1;
     }
 
-  for(char* ptr=buffer; ptr < buffer + ifc.ifc_len; )
+  for (char* ptr=buffer; ptr < buffer + ifc.ifc_len; )
     {
       ifr = (struct ifreq *) ptr;
 

@@ -422,7 +422,7 @@ ulong my_strntoul_8bit(CHARSET_INFO *cs,
   s = nptr;
   e = nptr+l;
 
-  for( ; s<e && my_isspace(cs, *s); s++);
+  for ( ; s<e && my_isspace(cs, *s); s++);
 
   if (s==e)
   {
@@ -507,7 +507,7 @@ longlong my_strntoll_8bit(CHARSET_INFO *cs __attribute__((unused)),
   s = nptr;
   e = nptr+l;
 
-  for(; s<e && my_isspace(cs,*s); s++);
+  for (; s<e && my_isspace(cs,*s); s++);
 
   if (s == e)
   {
@@ -602,7 +602,7 @@ ulonglong my_strntoull_8bit(CHARSET_INFO *cs,
   s = nptr;
   e = nptr+l;
 
-  for(; s<e && my_isspace(cs,*s); s++);
+  for (; s<e && my_isspace(cs,*s); s++);
 
   if (s == e)
   {
@@ -972,7 +972,7 @@ size_t my_scan_8bit(CHARSET_INFO *cs, const char *str, const char *end, int sq)
   case MY_SEQ_INTTAIL:
     if (*str == '.')
     {
-      for(str++ ; str != end && *str == '0' ; str++);
+      for (str++ ; str != end && *str == '0' ; str++);
       return (size_t) (str - str0);
     }
     return 0;

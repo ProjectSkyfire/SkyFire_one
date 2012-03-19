@@ -2093,7 +2093,7 @@ void Aura::HandleAuraDummy(bool apply, bool Real)
                     if (urand(0, 10) > 2)
                     {
                         int32 count = urand(0, 1) ? 2 : 4;
-                        for(int i = 0; i < count; ++i)
+                        for (int i = 0; i < count; ++i)
                             caster->SummonCreature(urand(0, 1) ? 22482 : 22483, m_target->GetPositionX(), m_target->GetPositionY(), m_target->GetPositionZ(), m_target->GetOrientation(), TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000);
                     }
                     else

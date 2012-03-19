@@ -5246,7 +5246,7 @@ add_to_argv (int& argc, char** argv, int max_args, char* string)
                 }
 
               // Skip over whitespace in between arguments
-              for(++i; i < length && ACE_OS::ace_isspace (string[i]); ++i)
+              for (++i; i < length && ACE_OS::ace_isspace (string[i]); ++i)
                 {
                 }
 

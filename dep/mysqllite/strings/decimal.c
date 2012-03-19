@@ -233,14 +233,14 @@ void max_decimal(int precision, int frac, decimal_t *to)
     int firstdigits= intpart % DIG_PER_DEC1;
     if (firstdigits)
       *buf++= powers10[firstdigits] - 1; /* get 9 99 999 ... */
-    for(intpart/= DIG_PER_DEC1; intpart; intpart--)
+    for (intpart/= DIG_PER_DEC1; intpart; intpart--)
       *buf++= DIG_MAX;
   }
 
   if ((to->frac= frac))
   {
     int lastdigits= frac % DIG_PER_DEC1;
-    for(frac/= DIG_PER_DEC1; frac; frac--)
+    for (frac/= DIG_PER_DEC1; frac; frac--)
       *buf++= DIG_MAX;
     if (lastdigits)
       *buf= frac_max[lastdigits - 1];
@@ -401,14 +401,14 @@ int decimal2string(const decimal_t *from, char *to, int *to_len,
         x*=10;
       }
     }
-    for(; fill; fill--)
+    for (; fill; fill--)
       *s1++=filler;
   }
 
   fill= intg_len - intg;
   if (intg == 0)
     fill--; /* symbol 0 before digital point */
-  for(; fill; fill--)
+  for (; fill; fill--)
     *s++=filler;
   if (intg)
   {
@@ -516,7 +516,7 @@ void do_mini_left_shift(decimal_t *dec, int shift, int beg, int last)
   DBUG_ASSERT(end < dec->buf + dec->len);
   if (beg % DIG_PER_DEC1 < shift)
     *(from - 1)= (*from) / powers10[c_shift];
-  for(; from < end; from++)
+  for (; from < end; from++)
     *from= ((*from % powers10[c_shift]) * powers10[shift] +
             (*(from + 1)) / powers10[c_shift]);
   *from= (*from % powers10[c_shift]) * powers10[shift];
@@ -545,7 +545,7 @@ void do_mini_right_shift(decimal_t *dec, int shift, int beg, int last)
   DBUG_ASSERT(end >= dec->buf);
   if (DIG_PER_DEC1 - ((last - 1) % DIG_PER_DEC1 + 1) < shift)
     *(from + 1)= (*from % powers10[shift]) * powers10[c_shift];
-  for(; from > end; from--)
+  for (; from > end; from--)
     *from= (*from / powers10[shift] +
             (*(from - 1) % powers10[shift]) * powers10[c_shift]);
   *from= *from / powers10[shift];
@@ -699,9 +699,9 @@ int decimal_shift(decimal_t *dec, int shift)
       barier= dec->buf + (ROUND_UP(end) - 1 - d_shift);
       DBUG_ASSERT(to >= dec->buf);
       DBUG_ASSERT(barier + d_shift < dec->buf + dec->len);
-      for(; to <= barier; to++)
+      for (; to <= barier; to++)
         *to= *(to + d_shift);
-      for(barier+= d_shift; to <= barier; to++)
+      for (barier+= d_shift; to <= barier; to++)
         *to= 0;
       d_shift= -d_shift;
     }
@@ -713,9 +713,9 @@ int decimal_shift(decimal_t *dec, int shift)
       barier= dec->buf + ROUND_UP(beg + 1) - 1 + d_shift;
       DBUG_ASSERT(to < dec->buf + dec->len);
       DBUG_ASSERT(barier - d_shift >= dec->buf);
-      for(; to >= barier; to--)
+      for (; to >= barier; to--)
         *to= *(to - d_shift);
-      for(barier-= d_shift; to >= barier; to--)
+      for (barier-= d_shift; to >= barier; to--)
         *to= 0;
     }
     d_shift*= DIG_PER_DEC1;
