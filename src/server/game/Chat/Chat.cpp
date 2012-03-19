@@ -492,7 +492,6 @@ ChatCommand * ChatHandler::getCommandTable()
         { "setdeathstate", SEC_GAMEMASTER,     false, &ChatHandler::HandleNpcSetDeathStateCommand,    "", NULL },
         { "addtemp",       SEC_GAMEMASTER,     false, &ChatHandler::HandleTempAddSpwCommand,          "", NULL },
         { "addformation",  SEC_MODERATOR,      false, &ChatHandler::HandleNpcAddFormationCommand,     "", NULL },
-        { "addgroup",      SEC_MODERATOR,      false, &ChatHandler::HandleNpcAddGroupCommand,         "", NULL },
         { "setlink",       SEC_MODERATOR,      false, &ChatHandler::HandleNpcSetLinkCommand,          "", NULL },
 
         //{ TODO: fix or remove this commands

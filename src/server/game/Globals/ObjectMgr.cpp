@@ -6195,7 +6195,7 @@ void ObjectMgr::LoadGameObjectForQuests()
     sLog->outString(">> Loaded %u GameObject for quests", count);
 }
 
-bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value)
+bool ObjectMgr::LoadSkyFireStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value)
 {
     int32 start_value = min_value;
     int32 end_value   = max_value;
@@ -6223,10 +6223,10 @@ bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 mi
     }
 
     // cleanup affected map part for reloading case
-    for (TrinityStringLocaleMap::iterator itr = mTrinityStringLocaleMap.begin(); itr != mTrinityStringLocaleMap.end();)
+    for (SkyFireStringLocaleMap::iterator itr = mSkyFireStringLocaleMap.begin(); itr != mSkyFireStringLocaleMap.end();)
     {
         if (itr->first >= start_value && itr->first < end_value)
-            mTrinityStringLocaleMap.erase(itr++);
+            mSkyFireStringLocaleMap.erase(itr++);
         else
             ++itr;
     }
@@ -6236,7 +6236,7 @@ bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 mi
     if (!result)
     {
         sLog->outString();
-        if (min_value == MIN_TRINITY_STRING_ID)              // error only in case internal strings
+        if (min_value == MIN_SKYFIRE_STRING_ID)              // error only in case internal strings
             sLog->outErrorDb(">> Loaded 0 Trinity strings. DB table %s is empty. Cannot continue.", table);
         else
             sLog->outString(">> Loaded 0 string templates. DB table %s is empty.", table);
@@ -6262,7 +6262,7 @@ bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 mi
             continue;
         }
 
-        TrinityStringLocale& data = mTrinityStringLocaleMap[entry];
+        SkyFireStringLocale& data = mSkyFireStringLocaleMap[entry];
 
         if (data.Content.size() > 0)
         {
@@ -6295,7 +6295,7 @@ bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 mi
     } while (result->NextRow());
 
     sLog->outString();
-    if (min_value == MIN_TRINITY_STRING_ID)
+    if (min_value == MIN_SKYFIRE_STRING_ID)
         sLog->outString(">> Loaded %u Trinity strings from table %s", count, table);
     else
         sLog->outString(">> Loaded %u string templates from %s", count, table);
@@ -6306,8 +6306,8 @@ bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 mi
 const char *ObjectMgr::GetSkyFireString(int32 entry, int locale_idx) const
 {
     // locale_idx == -1 -> default, locale_idx >= 0 in to idx+1
-    // Content[0] always exist if exist TrinityStringLocale
-    if (TrinityStringLocale const *msl = GetSkyFireStringLocale(entry))
+    // Content[0] always exist if exist SkyFireStringLocale
+    if (SkyFireStringLocale const *msl = GetSkyFireStringLocale(entry))
     {
         if (msl->Content.size() > locale_idx+1 && !msl->Content[locale_idx+1].empty())
             return msl->Content[locale_idx+1].c_str();
@@ -7318,7 +7318,7 @@ void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
 
 void ObjectMgr::LoadDbScriptStrings()
 {
-    LoadTrinityStrings(WorldDatabase, "db_script_string", MIN_DB_SCRIPT_STRING_ID, MAX_DB_SCRIPT_STRING_ID);
+    LoadSkyFireStrings(WorldDatabase, "db_script_string", MIN_DB_SCRIPT_STRING_ID, MAX_DB_SCRIPT_STRING_ID);
 
     std::set<int32> ids;
 
@@ -7339,7 +7339,7 @@ uint32 GetAreaTriggerScriptId(uint32 trigger_id)
     return sObjectMgr.GetAreaTriggerScriptId(trigger_id);
 }
 
-bool LoadTrinityStrings(DatabaseType& db, char const* table, int32 start_value, int32 end_value)
+bool LoadSkyFireStrings(DatabaseType& db, char const* table, int32 start_value, int32 end_value)
 {
     // MAX_DB_SCRIPT_STRING_ID is max allowed negative value for scripts (scrpts can use only more deep negative values
     // start/end reversed for negative values
@@ -7349,7 +7349,7 @@ bool LoadTrinityStrings(DatabaseType& db, char const* table, int32 start_value, 
         return false;
     }
 
-    return sObjectMgr.LoadTrinityStrings(db, table, start_value, end_value);
+    return sObjectMgr.LoadSkyFireStrings(db, table, start_value, end_value);
 }
 
 uint32 GetScriptId(const char *name)

@@ -55,7 +55,6 @@
 #include "TicketMgr.h"
 #include "Util.h"
 #include "Language.h"
-#include "CreatureFormations.h"
 #include "CreatureGroups.h"
 #include "Transport.h"
 #include "CreatureEventAIMgr.h"
@@ -851,7 +850,7 @@ void World::LoadConfigSettings(bool reload)
     {
         uint32 val = ConfigMgr::GetIntDefault("Expansion", 1);
         if (val != m_configs[CONFIG_EXPANSION])
-            sLog->outError("Expansion option can't be changed at Trinityd.conf reload, using current value (%u).", m_configs[CONFIG_EXPANSION]);
+            sLog->outError("Expansion option can't be changed at worldserver.conf reload, using current value (%u).", m_configs[CONFIG_EXPANSION]);
     }
     else
         m_configs[CONFIG_EXPANSION] = ConfigMgr::GetIntDefault("Expansion", 1);
@@ -1115,10 +1114,10 @@ void World::SetInitialWorldSettings()
         exit(1);
     }
 
-    // Loading strings. Getting no records means core load has to be canceled because no error message can be output.
+    ///- Loading strings. Getting no records means core load has to be canceled because no error message can be output.
     sLog->outString();
-    sLog->outString("Loading Trinity strings...");
-    if (!sObjectMgr.LoadTrinityStrings())
+    sLog->outString("Loading SkyFire strings...");
+    if (!sObjectMgr.LoadSkyFireStrings())
         exit(1);                                            // Error message displayed in function already
 
     // Update the realm entry in the database with the realm type from the config file
@@ -1376,10 +1375,7 @@ void World::SetInitialWorldSettings()
     sWaypointMgr->Load();
 
     sLog->outString("Loading Creature Formations...");
-    formation_mgr.LoadCreatureFormations();
-
-    sLog->outString("Loading Creature Groups...");
-    group_mgr.LoadCreatureGroups();
+    FormationMgr::LoadCreatureFormations();
 
     sLog->outString("Loading GM tickets...");
     ticketmgr.LoadGMTickets();
@@ -1463,7 +1459,7 @@ void World::SetInitialWorldSettings()
     mail_timer_expires = ((DAY * IN_MILLISECONDS) / (m_timers[WUPDATE_AUCTIONS].GetInterval()));
     sLog->outDebug("Mail timer set to: %u, mail return is called every %u minutes", mail_timer, mail_timer_expires);
 
-    // Initilize static helper structures
+    // Initialize static helper structures
     AIRegistry::Initialize();
     Player::InitVisibleBits();
 

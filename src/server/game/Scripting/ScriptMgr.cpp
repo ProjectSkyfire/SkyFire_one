@@ -38,7 +38,6 @@ void LoadOverridenSQLData();
 
 void ScriptMgr::LoadDatabase()
 {
-    pSystemMgr.LoadVersion();
     pSystemMgr.LoadScriptTexts();
     pSystemMgr.LoadScriptTextsCustom();
     pSystemMgr.LoadScriptWaypoints();

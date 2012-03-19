@@ -389,7 +389,7 @@ bool ChatHandler::HandleReloadLootTemplatesSkinningCommand(const char*)
 bool ChatHandler::HandleReloadSkyFireStringCommand(const char*)
 {
     sLog->outString("Re-Loading skyfire_string Table!");
-    sObjectMgr.LoadTrinityStrings();
+    sObjectMgr.LoadSkyFireStrings();
     SendGlobalGMSysMessage("DB table skyfire_string reloaded.");
     return true;
 }

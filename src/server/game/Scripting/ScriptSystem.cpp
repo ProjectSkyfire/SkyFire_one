@@ -34,29 +34,10 @@ SystemMgr& SystemMgr::Instance()
     return pSysMgr;
 }
 
-void SystemMgr::LoadVersion()
-{
-    //Get Version information
-    QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT script_version FROM version LIMIT 1");
-
-    if (Result)
-    {
-        Field* pFields = Result->Fetch();
-
-        sLog->outString("TSCR: Database version is: %s", pFields[0].GetString());
-        sLog->outString("");
-    }
-    else
-    {
-        sLog->outError("TSCR: Missing version.script_version information.");
-        sLog->outString("");
-    }
-}
-
 void SystemMgr::LoadScriptTexts()
 {
     sLog->outString("TSCR: Loading Script Texts...");
-    LoadTrinityStrings(WorldDatabase, "script_texts", TEXT_SOURCE_RANGE, 1+(TEXT_SOURCE_RANGE*2));
+    LoadSkyFireStrings(WorldDatabase, "script_texts", TEXT_SOURCE_RANGE, 1+(TEXT_SOURCE_RANGE*2));
 
     QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM script_texts");
 
@@ -118,7 +99,7 @@ void SystemMgr::LoadScriptTexts()
 void SystemMgr::LoadScriptTextsCustom()
 {
     sLog->outString("TSCR: Loading Custom Texts...");
-    LoadTrinityStrings(WorldDatabase, "custom_texts", TEXT_SOURCE_RANGE*2, 1+(TEXT_SOURCE_RANGE*3));
+    LoadSkyFireStrings(WorldDatabase, "custom_texts", TEXT_SOURCE_RANGE*2, 1+(TEXT_SOURCE_RANGE*3));
 
     QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM custom_texts");
 

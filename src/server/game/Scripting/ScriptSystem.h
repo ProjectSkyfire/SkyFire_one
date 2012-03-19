@@ -80,12 +80,11 @@ class SystemMgr
         typedef UNORDERED_MAP<uint32, std::vector<ScriptPointMove> > PointMoveMap;
 
         //Database
-        void LoadVersion();
         void LoadScriptTexts();
         void LoadScriptTextsCustom();
         void LoadScriptWaypoints();
 
-        //Retrive from storage
+        //Retrieve from storage
         StringTextData const* GetTextData(int32 uiTextId) const
         {
             TextDataMap::const_iterator itr = m_mTextDataMap.find(uiTextId);

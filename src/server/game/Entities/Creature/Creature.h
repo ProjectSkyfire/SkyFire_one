@@ -640,12 +640,8 @@ class Creature : public Unit, public GridObject<Creature>
         void UpdateWaypointID(uint32 wpID){m_waypointID = wpID;}
 
         void SearchFormation();
-        CreatureFormation *GetFormation() {return m_formation;}
-        void SetFormation(CreatureFormation *formation) {m_formation = formation;}
-
-        void SearchGroup();
-        CreatureGroup *GetGroup() {return m_group;}
-        void SetGroup(CreatureGroup *group) {m_group = group;}
+        CreatureGroup* GetFormation() {return m_formation;}
+        void SetFormation(CreatureGroup* formation) {m_formation = formation;}
 
         Unit *SelectVictim();
 
@@ -715,7 +711,7 @@ class Creature : public Unit, public GridObject<Creature>
         uint32 m_path_id;
 
         //Formation var
-        CreatureFormation *m_formation;
+        CreatureGroup* m_formation;
         //Group var
         CreatureGroup *m_group;
 
