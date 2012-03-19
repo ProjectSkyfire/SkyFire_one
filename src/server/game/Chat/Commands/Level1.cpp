@@ -2555,7 +2555,7 @@ bool ChatHandler::HandleGroupSummonCommand(const char* args)
         (m_session->GetPlayer()->GetGroup()->GetLeaderGUID() != m_session->GetPlayer()->GetGUID())))
         // the last check is a bit excessive, but let it be, just in case
     {
-        PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST);
+        SendSysMessage(LANG_CANNOT_SUMMON_TO_INST);
         SetSentErrorMessage(true);
         return false;
     }
