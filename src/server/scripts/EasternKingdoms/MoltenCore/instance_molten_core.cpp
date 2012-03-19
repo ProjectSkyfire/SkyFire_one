@@ -97,7 +97,7 @@ struct instance_molten_core : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case 176951:                                    //Sulfuron
             RuneKoro = pGo->GetGUID();
@@ -175,7 +175,7 @@ struct instance_molten_core : public ScriptedInstance
 
     uint64 GetData64 (uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_SULFURON:
                 return Sulfuron;
@@ -191,7 +191,7 @@ struct instance_molten_core : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_LUCIFRONISDEAD:
                 if (IsBossDied[0])

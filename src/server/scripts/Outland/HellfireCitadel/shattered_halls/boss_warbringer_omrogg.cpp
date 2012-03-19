@@ -247,7 +247,7 @@ struct boss_warbringer_omroggAI : public ScriptedAI
 
             Unit *source = (Left->GetEntry() == Killing[ikilling].creature ? Left : Right);
 
-            switch(ikilling)
+            switch (ikilling)
             {
                 case 0:
                     DoScriptText(Killing[ikilling].id, source);

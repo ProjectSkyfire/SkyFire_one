@@ -1,8 +1,6 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,8 +16,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TRINITYSOAP_H
-#define _TRINITYSOAP_H
+#ifndef _TCSOAP_H
+#define _TCSOAP_H
 
 #include "Common.h"
 #include "World.h"
@@ -28,14 +26,15 @@
 
 #include "soapH.h"
 #include "soapStub.h"
+#include "stdsoap2.h"
 
 #include <ace/Semaphore.h>
 #include <ace/Task.h>
 
-class OCSoapRunnable: public ACE_Based::Runnable
+class TCSoapRunnable: public ACE_Based::Runnable
 {
     public:
-        OCSoapRunnable() { }
+        TCSoapRunnable() { }
         void run();
         void setListenArguments(std::string host, uint16 port)
         {
@@ -43,36 +42,10 @@ class OCSoapRunnable: public ACE_Based::Runnable
             m_port = port;
         }
     private:
+        void process_message(ACE_Message_Block* mb);
+
         std::string m_host;
         uint16 m_port;
-};
-
-class SOAPWorkingThread : public ACE_Task<ACE_MT_SYNCH>
-{
-    public:
-        SOAPWorkingThread ()
-        { }
-
-        virtual int svc (void)
-        {
-            while (1)
-            {
-                ACE_Message_Block *mb = 0;
-                if (this->getq (mb) == -1)
-                {
-                    ACE_DEBUG ((LM_INFO,
-                                ACE_TEXT ("(%t) Shutting down\n")));
-                    break;
-                }
-
-                // Process the message.
-                process_message (mb);
-            }
-
-            return 0;
-        }
-    private:
-        void process_message (ACE_Message_Block *mb);
 };
 
 class SOAPCommand
@@ -82,6 +55,7 @@ class SOAPCommand
             pendingCommands(0, USYNC_THREAD, "pendingCommands")
         {
         }
+
         ~SOAPCommand()
         {
         }
@@ -97,7 +71,8 @@ class SOAPCommand
         {
             m_success = val;
         }
-        bool hasCommandSucceeded()
+
+        bool hasCommandSucceeded() const
         {
             return m_success;
         }
@@ -114,4 +89,3 @@ class SOAPCommand
 };
 
 #endif
-

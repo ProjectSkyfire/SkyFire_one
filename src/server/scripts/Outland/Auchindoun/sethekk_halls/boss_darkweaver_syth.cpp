@@ -95,7 +95,7 @@ struct boss_darkweaver_sythAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -119,7 +119,7 @@ struct boss_darkweaver_sythAI : public ScriptedAI
         if (rand()%2)
             return;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY_1, me); break;
             case 1: DoScriptText(SAY_SLAY_2, me); break;

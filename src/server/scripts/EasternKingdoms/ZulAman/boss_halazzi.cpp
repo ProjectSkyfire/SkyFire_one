@@ -155,7 +155,7 @@ struct boss_halazziAI : public ScriptedAI
 
     void EnterPhase(PhaseHalazzi NextPhase)
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_LYNX:
         case PHASE_ENRAGE:
@@ -223,7 +223,7 @@ struct boss_halazziAI : public ScriptedAI
         {
             if (SaberlashTimer <= diff)
             {
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                     case 0:
                         me->MonsterYell(YELL_SABER_ONE, LANG_UNIVERSAL, NULL);

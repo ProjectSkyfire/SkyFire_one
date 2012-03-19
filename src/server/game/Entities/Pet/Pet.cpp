@@ -363,7 +363,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
     uint32 curhealth = GetHealth();
     uint32 curmana = GetPower(POWER_MANA);
 
-    switch(mode)
+    switch (mode)
     {
         case PET_SAVE_IN_STABLE_SLOT_1:
         case PET_SAVE_IN_STABLE_SLOT_2:
@@ -383,7 +383,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
     _SaveSpellCooldowns();
     _SaveAuras();
 
-    switch(mode)
+    switch (mode)
     {
         case PET_SAVE_AS_CURRENT:
         case PET_SAVE_IN_STABLE_SLOT_1:
@@ -505,7 +505,7 @@ void Pet::Update(uint32 diff)
     if (m_removed)                                           // pet already removed, just wait in remove queue, no updates
         return;
 
-    switch(m_deathState)
+    switch (m_deathState)
     {
         case CORPSE:
         {
@@ -662,7 +662,7 @@ void Pet::TickLoyaltyChange()
 {
     int32 addvalue;
 
-    switch(GetHappinessState())
+    switch (GetHappinessState())
     {
         case HAPPY:   addvalue =  20; break;
         case CONTENT: addvalue =  10; break;
@@ -1732,7 +1732,7 @@ void Pet::InitPetAuras(const uint32 Entry)
 
     uint32 aura1 = 0, aura2 = 0, aura3 = 0;
 
-    switch(cInfo->family)
+    switch (cInfo->family)
     {
         // WARLOCK PETS:
         case CREATURE_FAMILY_IMP:

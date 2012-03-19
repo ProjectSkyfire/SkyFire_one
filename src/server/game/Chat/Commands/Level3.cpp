@@ -1338,7 +1338,7 @@ bool ChatHandler::HandleAccountSetGmLevelCommand(const char *args)
 
         // Check for account
         targetAccountName = arg1;
-        if (!AccountMgr::normalizeString(targetAccountName))
+        if (!sAccountMgr->normalizeString(targetAccountName))
         {
             PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, targetAccountName.c_str());
             SetSentErrorMessage(true);
@@ -1416,7 +1416,7 @@ bool ChatHandler::HandleAccountSetPasswordCommand(const char *args)
         return false;
 
     std::string account_name = szAccount;
-    if (!AccountMgr::normalizeString(account_name))
+    if (!sAccountMgr->normalizeString(account_name))
     {
         PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
         SetSentErrorMessage(true);
@@ -3900,7 +3900,7 @@ bool ChatHandler::HandleAddWeaponCommand(const char* /*args*/)
     bool added = false;
     if (tmpItem)
     {
-        switch(SlotID)
+        switch (SlotID)
         {
             case 1:
                 pCreature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, ItemID);
@@ -5027,7 +5027,7 @@ static bool HandleResetStatsOrLevelHelper(Player* player)
     // reset only if player not in some form;
     if (player->m_form == FORM_NONE)
     {
-        switch(player->getGender())
+        switch (player->getGender())
         {
             case GENDER_FEMALE:
                 player->SetDisplayId(info->displayId_f);
@@ -5645,10 +5645,10 @@ bool ChatHandler::HandleBanHelper(BanMode mode, const char *args)
     if (!reason)
         return false;
 
-    switch(mode)
+    switch (mode)
     {
         case BAN_ACCOUNT:
-            if (!AccountMgr::normalizeString(nameOrIP))
+            if (!sAccountMgr->normalizeString(nameOrIP))
             {
                 PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, nameOrIP.c_str());
                 SetSentErrorMessage(true);
@@ -5669,7 +5669,7 @@ bool ChatHandler::HandleBanHelper(BanMode mode, const char *args)
             break;
     }
 
-    switch(sWorld.BanAccount(mode, nameOrIP, duration, reason, m_session ? m_session->GetPlayerName() : ""))
+    switch (sWorld.BanAccount(mode, nameOrIP, duration, reason, m_session ? m_session->GetPlayerName() : ""))
     {
         case BAN_SUCCESS:
             if (atoi(duration)>0)
@@ -5680,7 +5680,7 @@ bool ChatHandler::HandleBanHelper(BanMode mode, const char *args)
         case BAN_SYNTAX_ERROR:
             return false;
         case BAN_NOTFOUND:
-            switch(mode)
+            switch (mode)
             {
                 default:
                     PSendSysMessage(LANG_BAN_NOTFOUND,"account",nameOrIP.c_str());
@@ -5725,10 +5725,10 @@ bool ChatHandler::HandleUnBanHelper(BanMode mode, const char *args)
 
     std::string nameOrIP = cnameOrIP;
 
-    switch(mode)
+    switch (mode)
     {
         case BAN_ACCOUNT:
-            if (!AccountMgr::normalizeString(nameOrIP))
+            if (!sAccountMgr->normalizeString(nameOrIP))
             {
                 PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, nameOrIP.c_str());
                 SetSentErrorMessage(true);
@@ -5767,7 +5767,7 @@ bool ChatHandler::HandleBanInfoAccountCommand(const char *args)
         return false;
 
     std::string account_name = cname;
-    if (!AccountMgr::normalizeString(account_name))
+    if (!sAccountMgr->normalizeString(account_name))
     {
         PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
         SetSentErrorMessage(true);
@@ -6149,7 +6149,7 @@ bool ChatHandler::HandleLoadPDumpCommand(const char *args)
         return false;
 
     std::string account_name = account;
-    if (!AccountMgr::normalizeString(account_name))
+    if (!sAccountMgr->normalizeString(account_name))
     {
         PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
         SetSentErrorMessage(true);
@@ -6220,7 +6220,7 @@ bool ChatHandler::HandleLoadPDumpCommand(const char *args)
         }
     }
 
-    switch(PlayerDumpReader().LoadDump(file, account_id, name, guid))
+    switch (PlayerDumpReader().LoadDump(file, account_id, name, guid))
     {
         case DUMP_SUCCESS:
             PSendSysMessage(LANG_COMMAND_IMPORT_SUCCESS);
@@ -6306,7 +6306,7 @@ bool ChatHandler::HandleWritePDumpCommand(const char *args)
         return false;
     }
 
-    switch(PlayerDumpWriter().WriteDump(file, guid))
+    switch (PlayerDumpWriter().WriteDump(file, guid))
     {
         case DUMP_SUCCESS:
             PSendSysMessage(LANG_COMMAND_EXPORT_SUCCESS);
@@ -6345,7 +6345,7 @@ bool ChatHandler::HandleMovegensCommand(const char* /*args*/)
             SendSysMessage("Empty");
             continue;
         }
-        switch(mg->GetMovementGeneratorType())
+        switch (mg->GetMovementGeneratorType())
         {
             case IDLE_MOTION_TYPE:          SendSysMessage(LANG_MOVEGENS_IDLE);          break;
             case RANDOM_MOTION_TYPE:        SendSysMessage(LANG_MOVEGENS_RANDOM);        break;
@@ -6439,7 +6439,7 @@ bool ChatHandler::HandleServerPLimitCommand(const char *args)
     uint32 pLimit = sWorld.GetPlayerAmountLimit();
     AccountTypes allowedAccountType = sWorld.GetPlayerSecurityLimit();
     char const* secName = "";
-    switch(allowedAccountType)
+    switch (allowedAccountType)
     {
         case SEC_PLAYER:        secName = "Player";        break;
         case SEC_MODERATOR:     secName = "Moderator";     break;
@@ -6858,7 +6858,7 @@ bool ChatHandler::HandleAccountSetAddonCommand(const char *args)
     {
         // Convert Account name to Upper Format
         account_name = szAcc;
-        if (!AccountMgr::normalizeString(account_name))
+        if (!sAccountMgr->normalizeString(account_name))
         {
             PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, account_name.c_str());
             SetSentErrorMessage(true);

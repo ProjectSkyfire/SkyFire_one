@@ -459,7 +459,7 @@ DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, s
         }
 
         // change the data to server values
-        switch(type)
+        switch (type)
         {
             case DTT_CHAR_TABLE:
                 if (!changenth(line, 1, newguid))

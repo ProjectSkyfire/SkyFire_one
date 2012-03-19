@@ -121,7 +121,7 @@ ACE_OS::open (const char *filename,
     return h;
 #elif defined (INTEGRITY)
   ACE_UNUSED_ARG (sa);
-  if(!strcmp(filename,ACE_DEV_NULL)) {
+  if (!strcmp(filename,ACE_DEV_NULL)) {
       ACE_OSCALL_RETURN (::AllocateNullConsoleDescriptor(), ACE_HANDLE, -1);
   }
   else {

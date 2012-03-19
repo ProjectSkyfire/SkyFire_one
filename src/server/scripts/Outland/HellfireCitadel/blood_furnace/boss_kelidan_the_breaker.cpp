@@ -122,7 +122,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         if (rand()%2)
             return;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_KILL_1, me); break;
             case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -134,7 +134,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         if (who && !addYell)
         {
             addYell = true;
-            switch(rand()%3)
+            switch (rand()%3)
             {
                 case 0: DoScriptText(SAY_ADD_AGGRO_1, me); break;
                 case 1: DoScriptText(SAY_ADD_AGGRO_2, me); break;

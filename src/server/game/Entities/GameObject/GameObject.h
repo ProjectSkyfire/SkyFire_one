@@ -368,7 +368,7 @@ struct GameObjectInfo
 
     uint32 GetCharges() const                               // despawn at uses amount
     {
-        switch(type)
+        switch (type)
         {
             //case GAMEOBJECT_TYPE_TRAP:        return trap.charges;
             case GAMEOBJECT_TYPE_GUARDPOST:   return guardpost.charges;
@@ -379,7 +379,7 @@ struct GameObjectInfo
 
     uint32 GetGossipMenuId() const
     {
-        switch(type)
+        switch (type)
         {
             case GAMEOBJECT_TYPE_QUESTGIVER:    return questgiver.gossipID;
             case GAMEOBJECT_TYPE_GOOBER:        return goober.gossipID;
@@ -513,7 +513,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetLootId() const { return GetLootId(GetGOInfo()); }
         uint32 GetLockId() const
         {
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_DOOR:       return GetGOInfo()->door.lockId;
                 case GAMEOBJECT_TYPE_BUTTON:     return GetGOInfo()->button.lockId;
@@ -532,7 +532,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
 
         bool GetDespawnPossibility() const                      // despawn at targeting of cast?
         {
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_DOOR:       return GetGOInfo()->door.noDamageImmune;
                 case GAMEOBJECT_TYPE_BUTTON:     return GetGOInfo()->button.noDamageImmune;
@@ -615,7 +615,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
 
         uint32 GetLinkedGameObjectEntry() const
         {
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_CHEST:       return GetGOInfo()->chest.linkedTrapId;
                 case GAMEOBJECT_TYPE_SPELL_FOCUS: return GetGOInfo()->spellFocus.linkedTrapId;
@@ -627,7 +627,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetAutoCloseTime() const
         {
             uint32 autoCloseTime = 0;
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_DOOR:          autoCloseTime = GetGOInfo()->door.autoCloseTime; break;
                 case GAMEOBJECT_TYPE_BUTTON:        autoCloseTime = GetGOInfo()->button.autoCloseTime; break;

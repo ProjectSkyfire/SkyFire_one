@@ -167,7 +167,7 @@ struct npc_ancestral_wolfAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 DoScriptText(EMOTE_WOLF_LIFT_HEAD, me);
@@ -284,7 +284,7 @@ bool GossipHello_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_tracy_proudwell(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TRACY_PROUDWELL_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -329,7 +329,7 @@ bool GossipHello_npc_trollbane(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_trollbane(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TROLLBANE_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
@@ -516,7 +516,7 @@ bool GossipHello_npc_wing_commander_brack(Player *player, Creature* pCreature)
 
 bool GossipSelect_npc_wing_commander_brack(Player *player, Creature* pCreature, uint32 sender, uint32 action)
 {
-    switch(action)
+    switch (action)
     {
     case GOSSIP_ACTION_INFO_DEF + 1:
         player->CLOSE_GOSSIP_MENU();
@@ -836,7 +836,7 @@ struct npc_anchorite_baradaAI : public ScriptedAI
         Creature* pColonel = me->FindNearestCreature(NPC_COLONEL_JULES, 15);
         colonel = me->GetAngle(pColonel->GetPositionX(), pColonel->GetPositionY());
 
-        switch(uiSteps)
+        switch (uiSteps)
         {
             case 1:me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                    pColonel->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -996,7 +996,7 @@ struct npc_darkness_releasedAI : public ScriptedAI
         DoCast(SPELL_AURA_ME);
         me->SetUnitMovementFlags(MOVEFLAG_LEVITATING);
         me->SetSpeed(MOVE_RUN, 0.10f);
-        switch(urand(0, 3))
+        switch (urand(0, 3))
         {
             case 0: me->GetMotionMaster()->MovePoint(0, -714.212f, 2750.606f, 105.0f); break;
             case 1: me->GetMotionMaster()->MovePoint(0, -713.406f, 2744.240f, 105.0f); break;
@@ -1242,7 +1242,7 @@ struct npc_vindicator_sedaiAI : public ScriptedAI
         Creature* pAmb = me->FindNearestCreature(NPC_AMBUSHER, 35);
         Creature* pKrun = me->FindNearestCreature(NPC_KRUN, 20);
 
-        switch(uiSteps)
+        switch (uiSteps)
         {
             case 1:DoSpawnEscort();
             case 2:me->SetUnitMovementFlags(MOVEFLAG_WALK_MODE);

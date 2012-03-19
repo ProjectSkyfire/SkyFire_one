@@ -243,7 +243,7 @@ struct boss_felmystAI : public ScriptedAI
 
     void EnterPhase(PhaseFelmyst NextPhase)
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_GROUND:
             me->CastStop(SPELL_FOG_BREATH);
@@ -269,7 +269,7 @@ struct boss_felmystAI : public ScriptedAI
 
     void HandleFlightSequence()
     {
-        switch(uiFlightCount)
+        switch (uiFlightCount)
         {
         case 0:
             //me->AttackStop();
@@ -418,7 +418,7 @@ struct boss_felmystAI : public ScriptedAI
 
         if (phase == PHASE_GROUND)
         {
-            switch(events.ExecuteEvent())
+            switch (events.ExecuteEvent())
             {
                 case EVENT_BERSERK:
                     DoScriptText(YELL_BERSERK, me);
@@ -453,7 +453,7 @@ struct boss_felmystAI : public ScriptedAI
 
         if (phase == PHASE_FLIGHT)
         {
-            switch(events.ExecuteEvent())
+            switch (events.ExecuteEvent())
             {
                 case EVENT_BERSERK:
                     DoScriptText(YELL_BERSERK, me);

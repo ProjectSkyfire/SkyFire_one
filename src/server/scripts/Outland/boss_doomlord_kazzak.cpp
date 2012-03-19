@@ -82,7 +82,7 @@ struct boss_doomlordkazzakAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_AGGRO1, me); break;
         case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -97,7 +97,7 @@ struct boss_doomlordkazzakAI : public ScriptedAI
 
             DoCast(me, SPELL_CAPTURESOUL);
 
-            switch(rand()%3)
+            switch (rand()%3)
             {
             case 0: DoScriptText(SAY_KILL1, me); break;
             case 1: DoScriptText(SAY_KILL2, me); break;

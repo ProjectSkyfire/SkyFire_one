@@ -87,7 +87,7 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_SLAY1, me); break;
         case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -130,7 +130,7 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
                 if (rand()%2)
                     return;
 
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                 case 0: DoScriptText(SAY_DRAGONS_BREATH_1, me); break;
                 case 1: DoScriptText(SAY_DRAGONS_BREATH_2, me); break;

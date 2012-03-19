@@ -71,7 +71,7 @@ struct instance_gnomeregan : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*bAdd*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case NPC_BLASTMASTER_EMI_SHORTFUSE: uiBastmasterEmiShortfuseGUID = pCreature->GetGUID(); break;
         }
@@ -79,7 +79,7 @@ struct instance_gnomeregan : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*bAdd*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_CAVE_IN_LEFT:
                 uiCaveInLeftGUID = pGo->GetGUID();
@@ -96,7 +96,7 @@ struct instance_gnomeregan : public ScriptedInstance
 
     void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_EVENT:
                 m_auiEncounter[0] = uiData;
@@ -108,7 +108,7 @@ struct instance_gnomeregan : public ScriptedInstance
 
     uint32 GetData(uint32 uiType, uint32 /*uiData*/)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_EVENT:    return m_auiEncounter[0];
         }
@@ -116,7 +116,7 @@ struct instance_gnomeregan : public ScriptedInstance
 
     uint64 GetData64(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case DATA_GO_CAVE_IN_LEFT:              return uiCaveInLeftGUID;
             case DATA_GO_CAVE_IN_RIGHT:             return uiCaveInRightGUID;

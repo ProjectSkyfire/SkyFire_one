@@ -81,7 +81,7 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
 
     void DoSummonSeedling()
     {
-        switch(rand()%4)
+        switch (rand()%4)
         {
             case 0: DoCast(me, SPELL_PLANT_WHITE); break;
             case 1: DoCast(me, SPELL_PLANT_GREEN); break;
@@ -92,7 +92,7 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_KILL_1, me); break;
         case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -111,7 +111,7 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
 
         if (TreeForm_Timer <= diff)
         {
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_TREE_1, me); break;
             case 1: DoScriptText(SAY_TREE_2, me); break;

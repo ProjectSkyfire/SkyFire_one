@@ -208,7 +208,7 @@ void WorldSession::HandleBattleGroundPlayerPositionsOpcode(WorldPacket & /*recv_
     if (!bg)                                                 // can't be received if player not in battleground
         return;
 
-    switch(bg->GetTypeID())
+    switch (bg->GetTypeID())
     {
         case BATTLEGROUND_WS:
             {
@@ -444,7 +444,7 @@ void WorldSession::HandleBattleGroundPlayerPortOpcode(WorldPacket &recv_data)
             action = 0;
         }
         WorldPacket data;
-        switch(action)
+        switch (action)
         {
             case 1:                                     // port to battleground
                 if (!_player->IsInvitedForBattleGroundQueueType(bgQueueTypeId))
@@ -689,7 +689,7 @@ void WorldSession::HandleBattleGroundArenaJoin(WorldPacket & recv_data)
     uint8 arenatype = 0;
     uint32 arenaRating = 0;
 
-    switch(arenaslot)
+    switch (arenaslot)
     {
         case 0:
             arenatype = ARENA_TYPE_2v2;

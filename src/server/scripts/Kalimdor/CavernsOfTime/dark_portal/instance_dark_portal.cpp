@@ -170,7 +170,7 @@ struct instance_dark_portal : public ScriptedInstance
 
     uint8 GetRiftWaveId()
     {
-        switch(mRiftPortalCount)
+        switch (mRiftPortalCount)
         {
         case 6:
             mRiftWaveId = 2;
@@ -195,7 +195,7 @@ struct instance_dark_portal : public ScriptedInstance
             return;
         }
 
-        switch(type)
+        switch (type)
         {
         case TYPE_MEDIVH:
             if (data == SPECIAL && Encounter[0] == IN_PROGRESS)
@@ -253,7 +253,7 @@ struct instance_dark_portal : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case TYPE_MEDIVH:
             return Encounter[0];

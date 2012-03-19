@@ -171,7 +171,7 @@ void guardAI::UpdateAI(const uint32 diff)
 
 void guardAI::DoReplyToTextEmote(uint32 em)
 {
-    switch(em)
+    switch (em)
     {
         case TEXTEMOTE_KISS:    me->HandleEmoteCommand(EMOTE_ONESHOT_BOW);    break;
         case TEXTEMOTE_WAVE:    me->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);   break;

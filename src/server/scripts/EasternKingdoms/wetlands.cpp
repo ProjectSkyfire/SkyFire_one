@@ -61,7 +61,7 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 2:
                 if (me->HasStealthAura())

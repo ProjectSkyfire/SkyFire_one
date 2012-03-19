@@ -58,7 +58,7 @@ struct npc_forest_frogAI : public ScriptedAI
         if (pInstance)
         {
             uint32 cEntry = 0;
-            switch(rand()%10)
+            switch (rand()%10)
             {
                 case 0: cEntry = 24397; break;          //Mannuth
                 case 1: cEntry = 24403; break;          //Deez

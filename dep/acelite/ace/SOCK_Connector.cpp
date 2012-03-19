@@ -128,7 +128,7 @@ ACE_SOCK_Connector::shared_connect_finish (ACE_SOCK_Stream &new_stream,
               // the select() with ETIME - in this case return
               // EWOULDBLOCK so the wait strategy can complete the
               // connection.
-              if(ACE::handle_timed_complete (new_stream.get_handle (),
+              if (ACE::handle_timed_complete (new_stream.get_handle (),
                                              timeout) == ACE_INVALID_HANDLE)
                 {
                   int const tmp = errno;

@@ -120,7 +120,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
 
     void JustSummoned(Creature *summoned)
     {
-        switch(summoned->GetEntry())
+        switch (summoned->GetEntry())
         {
             case MOB_HEARTHEN_GUARD:
             case MOB_SHARPSHOOTER_GUARD:
@@ -272,7 +272,7 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
 
                 for (uint32 i = 0; i < summoned; i++)
                 {
-                    switch(rand()%3)
+                    switch (rand()%3)
                     {
                         case 0: Summoned = me->SummonCreature(MOB_HEARTHEN_GUARD, AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;
                         case 1: Summoned = me->SummonCreature(MOB_SHARPSHOOTER_GUARD, AddsEntrance[0],AddsEntrance[1], AddsEntrance[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000); break;

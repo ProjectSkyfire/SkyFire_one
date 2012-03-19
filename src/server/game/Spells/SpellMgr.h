@@ -387,7 +387,7 @@ bool IsAutocastableSpell(uint32 spellId);
 
 inline bool IsDeathPersistentSpell(SpellEntry const *spellInfo)
 {
-    switch(spellInfo->Id)
+    switch (spellInfo->Id)
     {
         case 40214:                                     // Dragonmaw Illusion
         case 35480: case 35481: case 35482:             // Human Illusion

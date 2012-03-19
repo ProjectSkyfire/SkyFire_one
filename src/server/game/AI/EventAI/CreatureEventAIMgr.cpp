@@ -125,7 +125,7 @@ void CreatureEventAIMgr::CheckUnusedAITexts()
             for (int j = 0; j < MAX_ACTIONS; ++j)
             {
                 CreatureEventAI_Action const& action = event.action[j];
-                switch(action.type)
+                switch (action.type)
                 {
                     case ACTION_T_TEXT:
                     {
@@ -208,7 +208,7 @@ void CreatureEventAIMgr::CheckUnusedAISummons()
             for (int j = 0; j < MAX_ACTIONS; ++j)
             {
                 CreatureEventAI_Action const& action = event.action[j];
-                switch(action.type)
+                switch (action.type)
                 {
                     case ACTION_T_SUMMON_ID:
                     {
@@ -345,7 +345,7 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                         sLog->outErrorDb("CreatureEventAI:  Creature %u is using repeatable event(%u) with param4 < param3 (RepeatMax < RepeatMin). Event will never repeat.", temp.creature_id, i);
                     break;
                 case EVENT_T_SPAWNED:
-                    switch(temp.spawned.condition)
+                    switch (temp.spawned.condition)
                     {
                         case SPAWNED_EVENT_ALWAY:
                             break;

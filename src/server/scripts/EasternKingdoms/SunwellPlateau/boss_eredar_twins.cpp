@@ -180,7 +180,7 @@ struct boss_sacrolashAI : public ScriptedAI
 
     void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_SHADOW_BLADES:
         case SPELL_SHADOW_NOVA:
@@ -196,7 +196,7 @@ struct boss_sacrolashAI : public ScriptedAI
 
     void HandleTouchedSpells(Unit *pTarget, uint32 TouchedType)
     {
-        switch(TouchedType)
+        switch (TouchedType)
         {
         case SPELL_FLAME_TOUCHED:
             if (!pTarget->HasAura(SPELL_DARK_FLAME, 0))
@@ -471,7 +471,7 @@ struct boss_alythessAI : public Scripted_NoMovementAI
 
     void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_BLAZE:
             pTarget->CastSpell(pTarget, SPELL_BLAZE_SUMMON, true);
@@ -487,7 +487,7 @@ struct boss_alythessAI : public Scripted_NoMovementAI
 
     void HandleTouchedSpells(Unit *pTarget, uint32 TouchedType)
     {
-        switch(TouchedType)
+        switch (TouchedType)
         {
         case SPELL_FLAME_TOUCHED:
             if (!pTarget->HasAura(SPELL_DARK_FLAME, 0))
@@ -688,7 +688,7 @@ struct mob_shadow_imageAI : public ScriptedAI
 
     void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_SHADOW_FURY:
         case SPELL_DARK_STRIKE:

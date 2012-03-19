@@ -125,7 +125,7 @@ void BattleGroundBE::HandleAreaTrigger(Player *Source, uint32 Trigger)
 
     //uint32 SpellId = 0;
     //uint64 buff_guid = 0;
-    switch(Trigger)
+    switch (Trigger)
     {
         case 4538:                                          // buff trigger?
             //buff_guid = m_BgObjects[BG_BE_OBJECT_BUFF_1];

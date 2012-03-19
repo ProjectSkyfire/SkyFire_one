@@ -103,7 +103,7 @@ struct boss_gruulAI : public ScriptedAI
 
     void KilledUnit()
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_SLAY1, me); break;
         case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -130,7 +130,7 @@ struct boss_gruulAI : public ScriptedAI
         {
             if (GroundSlamTimer <= diff)
             {
-                switch(GroundSlamStage)
+                switch (GroundSlamStage)
                 {
                     case 0:
                     {
@@ -156,7 +156,7 @@ struct boss_gruulAI : public ScriptedAI
 
                             if (target && target2)
                             {
-                                switch(rand()%2)
+                                switch (rand()%2)
                                 {
                                     case 0: target2->CastSpell(target, SPELL_MAGNETIC_PULL, true, NULL, NULL, me->GetGUID()); break;
                                     case 1: target2->CastSpell(target, SPELL_KNOCK_BACK, true, NULL, NULL, me->GetGUID()); break;

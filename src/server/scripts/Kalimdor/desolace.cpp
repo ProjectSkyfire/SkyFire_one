@@ -302,7 +302,7 @@ struct npc_melizza_brimbuzzleAI : public npc_escortAI
 
                     if (Unit* pPlayer = GetPlayerForEscort())
                     {
-                        switch(m_uiPostEventCount)
+                        switch (m_uiPostEventCount)
                         {
                             case 1:
                                 DoScriptText(SAY_POST_EVENT_1, me);

@@ -122,7 +122,7 @@ void BattleGroundRL::HandleAreaTrigger(Player *Source, uint32 Trigger)
 
     //uint32 SpellId = 0;
     //uint64 buff_guid = 0;
-    switch(Trigger)
+    switch (Trigger)
     {
         case 4696:                                          // buff trigger?
         case 4697:                                          // buff trigger?

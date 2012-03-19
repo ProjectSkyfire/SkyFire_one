@@ -524,7 +524,7 @@ struct npc_anachronos_the_ancientAI : public ScriptedAI
         AnimationTimer = EventAnim[AnimationCount].Timer;
         if (eventEnd == false)
         {
-            switch(AnimationCount)
+            switch (AnimationCount)
             {
                 case 0:
                     DoScriptText(ANACHRONOS_SAY_1, me , Fandral);

@@ -293,7 +293,7 @@ void System::init() {
 
 	    switch (pInfo->cputype) {
 	    case CPU_TYPE_POWERPC:
-	        switch(pInfo->cpusubtype){
+	        switch (pInfo->cpusubtype){
 		case CPU_SUBTYPE_POWERPC_750:
 		case CPU_SUBTYPE_POWERPC_7400:
 		case CPU_SUBTYPE_POWERPC_7450:

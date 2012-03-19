@@ -140,7 +140,7 @@ my_bool my_gethwaddr(uchar *to)
   static pfnGetAdaptersAddresses fnGetAdaptersAddresses=
                                 (pfnGetAdaptersAddresses)-1;
 
-  if(fnGetAdaptersAddresses == (pfnGetAdaptersAddresses)-1)
+  if (fnGetAdaptersAddresses == (pfnGetAdaptersAddresses)-1)
   {
     /* Get the function from the DLL */
     fnGetAdaptersAddresses= (pfnGetAdaptersAddresses)

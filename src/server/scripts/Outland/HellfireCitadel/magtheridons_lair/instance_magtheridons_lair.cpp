@@ -77,7 +77,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
         case 17257:
             MagtheridonGUID = pCreature->GetGUID();
@@ -90,7 +90,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case 181713:
             pGo->SetUInt32Value(GAMEOBJECT_FLAGS, 0);
@@ -112,7 +112,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
 
     uint64 GetData64(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_MAGTHERIDON:
             return MagtheridonGUID;
@@ -122,7 +122,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_MAGTHERIDON_EVENT:
             Encounters[0] = data;
@@ -135,7 +135,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
             }
             break;
         case DATA_CHANNELER_EVENT:
-            switch(data)
+            switch (data)
             {
             case NOT_STARTED: // Reset all channelers once one is reset.
                 if (Encounters[1] != NOT_STARTED)

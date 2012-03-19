@@ -72,7 +72,7 @@ struct npc_galen_goodwardAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
         case 1:
             DoScriptText(GILAN_SAY_START_2, me);

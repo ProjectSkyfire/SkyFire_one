@@ -333,7 +333,7 @@ struct boss_zuljinAI : public ScriptedAI
 
     void EnterPhase(uint32 NextPhase)
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case 0:
             break;

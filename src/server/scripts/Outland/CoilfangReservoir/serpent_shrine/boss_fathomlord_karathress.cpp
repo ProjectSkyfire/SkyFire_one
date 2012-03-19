@@ -409,7 +409,7 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
             pet = true;
             //uint32 spell_id;
             uint32 pet_id;
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0:
                 //spell_id = SPELL_SUMMON_FATHOM_LURKER;
@@ -679,7 +679,7 @@ struct boss_fathomguard_caribdisAI : public ScriptedAI
         Unit* pUnit = NULL;
         if (pInstance)
         {
-            switch(rand()%4)
+            switch (rand()%4)
             {
             case 0:
                 pUnit = Unit::GetUnit((*me), pInstance->GetData64(DATA_KARATHRESS));

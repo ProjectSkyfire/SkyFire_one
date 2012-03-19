@@ -121,7 +121,7 @@ void BattleGroundNA::HandleAreaTrigger(Player *Source, uint32 Trigger)
 
     //uint32 SpellId = 0;
     //uint64 buff_guid = 0;
-    switch(Trigger)
+    switch (Trigger)
     {
         case 4536:                                          // buff trigger?
         case 4537:                                          // buff trigger?

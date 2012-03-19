@@ -194,7 +194,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 184568:
                 ControlConsole = pGo->GetGUID();
@@ -227,7 +227,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 21212: LadyVashj = pCreature->GetGUID();            break;
             case 21214: Karathress = pCreature->GetGUID();           break;
@@ -249,7 +249,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_THELURKERBELOW:           return LurkerBelow;
             case DATA_SHARKKIS:                 return Sharkkis;
@@ -266,7 +266,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_STRANGE_POOL:
             {
@@ -318,7 +318,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_HYDROSSTHEUNSTABLEEVENT:  return m_auiEncounter[0];
             case DATA_LEOTHERASTHEBLINDEVENT:   return m_auiEncounter[1];

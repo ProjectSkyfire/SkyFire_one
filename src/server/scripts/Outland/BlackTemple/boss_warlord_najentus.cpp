@@ -122,7 +122,7 @@ struct boss_najentusAI : public ScriptedAI
 
     void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_NEEDLE_SPINE:
             me->CastSpell(pTarget, SPELL_NEEDLE_SPINE_DMG, true);
@@ -194,7 +194,7 @@ struct boss_najentusAI : public ScriptedAI
 
         if (SpecialYellTimer <= diff)
         {
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_SPECIAL1, me); break;
             case 1: DoScriptText(SAY_SPECIAL2, me); break;
@@ -215,7 +215,7 @@ struct boss_najentusAI : public ScriptedAI
                     //must let target summon, otherwise you cannot click the spine
                     pTarget->SummonGameObject(GOBJECT_SPINE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), me->GetOrientation(), 0, 0, 0, 0, 0);
 
-                    switch(rand()%2)
+                    switch (rand()%2)
                     {
                     case 0: DoScriptText(SAY_NEEDLE1, me); break;
                     case 1: DoScriptText(SAY_NEEDLE2, me); break;

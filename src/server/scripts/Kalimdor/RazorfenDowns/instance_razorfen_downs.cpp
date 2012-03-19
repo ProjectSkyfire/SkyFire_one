@@ -94,7 +94,7 @@ struct instance_razorfen_downs : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*bAdd*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_GONG:
                 uiGongGUID = pGo->GetGUID();
@@ -112,7 +112,7 @@ struct instance_razorfen_downs : public ScriptedInstance
         {
             uiGongWaves = uiData;
 
-            switch(uiGongWaves)
+            switch (uiGongWaves)
             {
                 case 9:
                 case 14:
@@ -133,7 +133,7 @@ struct instance_razorfen_downs : public ScriptedInstance
                     uint32 uiCreature = 0;
                     uint8 uiSummonTimes = 0;
 
-                    switch(uiGongWaves)
+                    switch (uiGongWaves)
                     {
                         case 1:
                             uiCreature = CREATURE_TOMB_FIEND;
@@ -180,7 +180,7 @@ struct instance_razorfen_downs : public ScriptedInstance
 
     uint32 GetData(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case DATA_GONG_WAVES:
                 return uiGongWaves;
@@ -191,7 +191,7 @@ struct instance_razorfen_downs : public ScriptedInstance
 
     uint64 GetData64(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case DATA_GONG: return uiGongGUID;
         }

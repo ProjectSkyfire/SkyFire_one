@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,14 +17,18 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// \addtogroup Trinityd
+/// @{
+/// \file
+
 #ifndef __CLIRUNNABLE_H
 #define __CLIRUNNABLE_H
 
-// Command Line Interface handling thread
+/// Command Line Interface handling thread
 class CliRunnable : public ACE_Based::Runnable
 {
     public:
         void run();
 };
 #endif
-
+/// @}

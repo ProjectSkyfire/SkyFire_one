@@ -68,7 +68,7 @@ struct npc_shadowfang_prisonerAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPoint)
     {
-        switch(uiPoint)
+        switch (uiPoint)
         {
             case 0:
                 if (uiNpcEntry == NPC_ASH)

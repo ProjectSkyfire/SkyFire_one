@@ -101,7 +101,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_FIRE_OF_AKU_MAI_1:
                 m_uiShrine1GUID = pGo->GetGUID();
@@ -135,7 +135,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
 
     void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_GELIHAST:
                 m_auiEncounter[0] = uiData;
@@ -205,7 +205,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
 
     uint32 GetData(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_GELIHAST:
                 return m_auiEncounter[0];
@@ -226,7 +226,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
 
     uint64 GetData64(uint32 uiData)
     {
-        switch(uiData)
+        switch (uiData)
         {
             case DATA_TWILIGHT_LORD_KELRIS:
                 return m_uiTwilightLordKelrisGUID;

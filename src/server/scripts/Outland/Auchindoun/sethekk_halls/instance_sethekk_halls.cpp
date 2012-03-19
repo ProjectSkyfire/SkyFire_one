@@ -88,7 +88,7 @@ struct instance_sethekk_halls : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case IKISS_DOOR: IkissDoorGUID = pGo->GetGUID(); break;
         }
@@ -113,7 +113,7 @@ struct instance_sethekk_halls : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_SYTHEVENT:
                 if (Encounter[0] != DONE)
@@ -142,7 +142,7 @@ struct instance_sethekk_halls : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_SYTHEVENT: return Encounter[0];
             case DATA_ANZUEVENT: return Encounter[1];
@@ -208,7 +208,7 @@ struct npc_lakkaAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);

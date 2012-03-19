@@ -283,7 +283,7 @@ struct mob_doomfire_targettingAI : public ScriptedAI
         if (ChangeTargetTimer <= diff)
         {
             Unit *pTarget = NULL;
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0:                                     // stalk player
                     pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
@@ -388,7 +388,7 @@ struct boss_archimondeAI : public hyjal_trashAI
 
     void GainSoulCharge(Player* victim)
     {
-        switch(victim->getClass())
+        switch (victim->getClass())
         {
             case CLASS_PRIEST:
             case CLASS_PALADIN:

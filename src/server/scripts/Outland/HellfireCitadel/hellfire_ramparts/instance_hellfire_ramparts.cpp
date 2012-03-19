@@ -74,7 +74,7 @@ struct instance_ramparts : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_GARGOLMAR:
                 if (Encounter[0] != DONE)
@@ -99,7 +99,7 @@ struct instance_ramparts : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_GARGOLMAR: return Encounter[0];
             case DATA_OMOR: return Encounter[1];

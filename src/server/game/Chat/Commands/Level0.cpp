@@ -213,7 +213,7 @@ bool ChatHandler::HandleAccountPasswordCommand(const char* args)
 
     AccountOpResult result = sAccountMgr->ChangePassword(m_session->GetAccountId(), password_new);
 
-    switch(result)
+    switch (result)
     {
         case AOR_OK:
             SendSysMessage(LANG_COMMAND_PASSWORD);

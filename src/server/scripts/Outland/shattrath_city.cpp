@@ -317,7 +317,7 @@ struct npc_khadgars_servantAI : public npc_escortAI
     {
         if (!m_uiRandomTalkCooldown && pWho->GetTypeId() == TYPEID_UNIT && me->IsWithinDistInMap(pWho, 10.0f))
         {
-            switch(pWho->GetEntry())
+            switch (pWho->GetEntry())
             {
                 case NPC_HAGGARD:
                     if (Player* pPlayer = GetPlayerForEscort())
@@ -363,7 +363,7 @@ struct npc_khadgars_servantAI : public npc_escortAI
     {
         m_uiPointId = uiPointId;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 if (Creature* pKhadgar = me->FindNearestCreature(NPC_KHADGAR, 10.0f))
@@ -408,11 +408,11 @@ struct npc_khadgars_servantAI : public npc_escortAI
             {
                 m_uiTalkTimer = 7500;
 
-                switch(m_uiPointId)
+                switch (m_uiPointId)
                 {
                     case 5:                                 //to lower city
                     {
-                        switch(m_uiTalkCount)
+                        switch (m_uiTalkCount)
                         {
                             case 1:
                                 DoScriptText(SAY_KHAD_SERV_1, me, pPlayer);
@@ -432,7 +432,7 @@ struct npc_khadgars_servantAI : public npc_escortAI
                     }
                     case 24:                                //in lower city
                     {
-                        switch(m_uiTalkCount)
+                        switch (m_uiTalkCount)
                         {
                             case 5:
                                 if (Creature* pShanir = me->FindNearestCreature(NPC_SHANIR, 10.0f))
@@ -452,7 +452,7 @@ struct npc_khadgars_servantAI : public npc_escortAI
                     }
                     case 50:                                //outside
                     {
-                        switch(m_uiTalkCount)
+                        switch (m_uiTalkCount)
                         {
                             case 8:
                                 DoScriptText(SAY_KHAD_SERV_8, me, pPlayer);
@@ -472,7 +472,7 @@ struct npc_khadgars_servantAI : public npc_escortAI
                     }
                     case 63:                                //scryer
                     {
-                        switch(m_uiTalkCount)
+                        switch (m_uiTalkCount)
                         {
                             case 12:
                                 DoScriptText(SAY_KHAD_SERV_12, me, pPlayer);
@@ -486,7 +486,7 @@ struct npc_khadgars_servantAI : public npc_escortAI
                     }
                     case 74:                                //aldor
                     {
-                        switch(m_uiTalkCount)
+                        switch (m_uiTalkCount)
                         {
                             case 14:
                                 DoScriptText(SAY_KHAD_SERV_14, me, pPlayer);
@@ -506,7 +506,7 @@ struct npc_khadgars_servantAI : public npc_escortAI
                     }
                     case 75:                                //a'dal
                     {
-                        switch(m_uiTalkCount)
+                        switch (m_uiTalkCount)
                         {
                             case 18:
                                 DoScriptText(SAY_KHAD_SERV_18, me, pPlayer);
@@ -605,7 +605,7 @@ struct npc_dirty_larryAI : public ScriptedAI
     {
         Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
 
-        switch(Step)
+        switch (Step)
         {
         case 0:{ me->SetInFront(pPlayer);
             Unit* Creepjack = me->FindNearestCreature(NPC_CREEPJACK, 20);
@@ -782,7 +782,7 @@ bool GossipHello_npc_khadgar(Player *player, Creature *creature)
 
 bool GossipSelect_npc_khadgar(Player *player, Creature *creature, uint32 sender, uint32 action)
 {
-    switch(action)
+    switch (action)
     {
     case GOSSIP_ACTION_INFO_DEF+1:
         player->ADD_GOSSIP_ITEM(0, KHADGAR_GOSSIP_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);

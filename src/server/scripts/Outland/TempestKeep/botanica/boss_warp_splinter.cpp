@@ -141,7 +141,7 @@ struct boss_warp_splinterAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_SLAY_1, me); break;
         case 1: DoScriptText(SAY_SLAY_2, me); break;
@@ -166,7 +166,7 @@ struct boss_warp_splinterAI : public ScriptedAI
             if (Creature *pTreant = me->SummonCreature(CREATURE_TREANT, treant_pos[i][0],treant_pos[i][1],treant_pos[i][2],O, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000))
                 ((mob_treantAI*)pTreant->AI())->WarpGuid = me->GetGUID();
         }
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_SUMMON_1, me); break;
         case 1: DoScriptText(SAY_SUMMON_2, me); break;

@@ -36,7 +36,7 @@ SpellMgr::SpellMgr()
 {
     for (int i = 0; i < TOTAL_SPELL_EFFECTS; ++i)
     {
-        switch(i)
+        switch (i)
         {
             case SPELL_EFFECT_PERSISTENT_AREA_AURA: //27
             case SPELL_EFFECT_SUMMON:               //28
@@ -84,7 +84,7 @@ SpellMgr::SpellMgr()
 
     for (int i = 0; i < TOTAL_SPELL_TARGETS; ++i)
     {
-        switch(i)
+        switch (i)
         {
             case TARGET_UNIT_CASTER:
             case TARGET_UNIT_CASTER_FISHING:
@@ -194,7 +194,7 @@ SpellMgr::SpellMgr()
 
     for (int i = 0; i < TOTAL_SPELL_TARGETS; ++i)
     {
-        switch(i)
+        switch (i)
         {
             case TARGET_UNIT_AREA_ENEMY_DST:
             case TARGET_UNIT_AREA_ENEMY_SRC:
@@ -400,7 +400,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
     if (!spellInfo)
         return SPELL_NORMAL;
 
-    switch(spellInfo->SpellFamilyName)
+    switch (spellInfo->SpellFamilyName)
     {
         case SPELLFAMILY_GENERIC:
         {
@@ -418,7 +418,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
                 && !spellInfo->Category)
                 return SPELL_WELL_FED;
 
-            switch(spellInfo->Id)
+            switch (spellInfo->Id)
             {
                 case 12880: // warrior's Enrage rank 1
                 case 14201: //           Enrage rank 2
@@ -530,7 +530,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
     {
         if (spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA)
         {
-            switch(spellInfo->EffectApplyAuraName[i])
+            switch (spellInfo->EffectApplyAuraName[i])
             {
                 case SPELL_AURA_MOD_CHARM:
                 case SPELL_AURA_MOD_POSSESS_PET:
@@ -553,7 +553,7 @@ SpellSpecific GetSpellSpecific(uint32 spellId)
 
 bool IsSingleFromSpellSpecificPerCaster(uint32 spellSpec1, uint32 spellSpec2)
 {
-    switch(spellSpec1)
+    switch (spellSpec1)
     {
         case SPELL_SEAL:
         case SPELL_BLESSING:
@@ -572,7 +572,7 @@ bool IsSingleFromSpellSpecificPerCaster(uint32 spellSpec1, uint32 spellSpec2)
 
 bool IsSingleFromSpellSpecificPerTarget(uint32 spellSpec1, uint32 spellSpec2)
 {
-    switch(spellSpec1)
+    switch (spellSpec1)
     {
         case SPELL_TRACKER:
         case SPELL_WARLOCK_ARMOR:
@@ -604,7 +604,7 @@ bool IsSingleFromSpellSpecificPerTarget(uint32 spellSpec1, uint32 spellSpec2)
 bool IsPositiveTarget(uint32 targetA, uint32 targetB)
 {
     // non-positive targets
-    switch(targetA)
+    switch (targetA)
     {
         case TARGET_UNIT_TARGET_ENEMY:
         case TARGET_UNIT_AREA_ENEMY_SRC:
@@ -632,7 +632,7 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
     if (IsPassiveSpell(spellId) && GetTalentSpellCost(spellId))
         return true;
 
-    switch(spellId)
+    switch (spellId)
     {
         case 23333:                                         // BG spell
         case 23335:                                         // BG spell
@@ -656,7 +656,7 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
             return false;
     }
 
-    switch(spellproto->Effect[effIndex])
+    switch (spellproto->Effect[effIndex])
     {
         // always positive effects (check before target checks that provided non-positive result in some case for positive effects)
         case SPELL_EFFECT_HEAL:
@@ -670,12 +670,12 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
         case SPELL_EFFECT_APPLY_AURA:
         case SPELL_EFFECT_APPLY_AREA_AURA_FRIEND:
         {
-            switch(spellproto->EffectApplyAuraName[effIndex])
+            switch (spellproto->EffectApplyAuraName[effIndex])
             {
                 case SPELL_AURA_DUMMY:
                 {
                     // dummy aura can be positive or negative dependent from casted spell
-                    switch(spellproto->Id)
+                    switch (spellproto->Id)
                     {
                         case 13139:                         // net-o-matic special effect
                         case 23445:                         // evil twin
@@ -752,7 +752,7 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
                     break;
                 case SPELL_AURA_TRANSFORM:
                     // some spells negative
-                    switch(spellproto->Id)
+                    switch (spellproto->Id)
                     {
                         case 36897:                         // Transporter Malfunction (race mutation to horde)
                         case 36899:                         // Transporter Malfunction (race mutation to alliance)
@@ -761,7 +761,7 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
                     break;
                 case SPELL_AURA_MOD_SCALE:
                     // some spells negative
-                    switch(spellproto->Id)
+                    switch (spellproto->Id)
                     {
                         case 36900:                         // Soul Split: Evil!
                         case 36901:                         // Soul Split: Good
@@ -773,7 +773,7 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
                 case SPELL_AURA_MECHANIC_IMMUNITY:
                 {
                     // non-positive immunities
-                    switch(spellproto->EffectMiscValue[effIndex])
+                    switch (spellproto->EffectMiscValue[effIndex])
                     {
                         case MECHANIC_BANDAGE:
                         case MECHANIC_SHIELD:
@@ -788,7 +788,7 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
                 case SPELL_AURA_ADD_PCT_MODIFIER:
                 {
                     // non-positive mods
-                    switch(spellproto->EffectMiscValue[effIndex])
+                    switch (spellproto->EffectMiscValue[effIndex])
                     {
                         case SPELLMOD_COST:                 // dependent from bas point sign (negative -> positive)
                             if (spellproto->EffectBasePoints[effIndex]+int32(spellproto->EffectBaseDice[effIndex]) > 0)
@@ -852,7 +852,7 @@ bool IsSingleTargetSpell(SpellEntry const *spellInfo)
         return true;
 
     // TODO - need found Judgements rule
-    switch(GetSpellSpecific(spellInfo->Id))
+    switch (GetSpellSpecific(spellInfo->Id))
     {
         case SPELL_JUDGEMENT:
             return true;
@@ -878,7 +878,7 @@ bool IsSingleTargetSpells(SpellEntry const *spellInfo1, SpellEntry const *spellI
     // TODO - need found Judgements rule
     SpellSpecific spec1 = GetSpellSpecific(spellInfo1->Id);
     // spell with single target specific types
-    switch(spec1)
+    switch (spec1)
     {
         case SPELL_JUDGEMENT:
         case SPELL_MAGE_POLYMORPH:
@@ -1547,7 +1547,7 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2, bool
             if (spellInfo_1->Effect[i] == SPELL_EFFECT_APPLY_AURA
                 || spellInfo_1->Effect[i] == SPELL_EFFECT_PERSISTENT_AREA_AURA)
                 // not area auras (shaman totem)
-                switch(spellInfo_1->EffectApplyAuraName[i])
+                switch (spellInfo_1->EffectApplyAuraName[i])
                 {
                     // DOT or HOT from different casters will stack
                     case SPELL_AURA_PERIODIC_DAMAGE:
@@ -2105,7 +2105,7 @@ void SpellMgr::LoadSpellScriptTarget()
             continue;
         }
 
-        switch(type)
+        switch (type)
         {
             case SPELL_TARGET_TYPE_GAMEOBJECT:
             {
@@ -2272,7 +2272,7 @@ void SpellMgr::LoadSpellCustomAttr()
 
         for (uint32 j = 0; j < 3; ++j)
         {
-            switch(spellInfo->EffectApplyAuraName[j])
+            switch (spellInfo->EffectApplyAuraName[j])
             {
                 case SPELL_AURA_PERIODIC_DAMAGE:
                 case SPELL_AURA_PERIODIC_DAMAGE_PERCENT:
@@ -2294,7 +2294,7 @@ void SpellMgr::LoadSpellCustomAttr()
                     break;
             }
 
-            switch(spellInfo->Effect[j])
+            switch (spellInfo->Effect[j])
             {
                 case SPELL_EFFECT_SCHOOL_DAMAGE:
                 case SPELL_EFFECT_WEAPON_DAMAGE:
@@ -2335,7 +2335,7 @@ void SpellMgr::LoadSpellCustomAttr()
         if (spellInfo->SpellVisual == 3879)
             mSpellCustomAttr[i] |= SPELL_ATTR_CU_CONE_BACK;
 
-        switch(i)
+        switch (i)
         {
         case 26029: // dark glare
         case 37433: // spout
@@ -2351,7 +2351,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 42384:                             // Brutal Swipe
         case 45150:                             // Meteor Slash
             mSpellCustomAttr[i] |= SPELL_ATTR_CU_SHARE_DAMAGE;
-            switch(i) // Saber Lash Targets
+            switch (i) // Saber Lash Targets
             {
             case 40810:             spellInfo->MaxAffectedTargets = 3; break;
             case 43267: case 43268: spellInfo->MaxAffectedTargets = 2; break;
@@ -2513,7 +2513,7 @@ void SpellMgr::LoadSpellLinked()
 
         if (trigger > 0)
         {
-            switch(type)
+            switch (type)
             {
                 case 0: mSpellCustomAttr[trigger] |= SPELL_ATTR_CU_LINK_CAST; break;
                 case 1: mSpellCustomAttr[trigger] |= SPELL_ATTR_CU_LINK_HIT;  break;
@@ -2553,7 +2553,7 @@ bool SpellMgr::IsSpellValid(SpellEntry const* spellInfo, Player* pl, bool msg)
     // check effects
     for (int i=0; i<3; ++i)
     {
-        switch(spellInfo->Effect[i])
+        switch (spellInfo->Effect[i])
         {
             case 0:
                 continue;
@@ -2656,7 +2656,7 @@ bool IsSpellAllowedInLocation(SpellEntry const *spellInfo, uint32 map_id, uint32
     }
 
     // special cases zone check (maps checked by multimap common id)
-    switch(spellInfo->Id)
+    switch (spellInfo->Id)
     {
         case 23333:                                         // Warsong Flag
         case 23335:                                         // Silverwing Flag
@@ -2776,7 +2776,7 @@ void SpellMgr::LoadSkillLineAbilityMap()
 DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto, bool triggered)
 {
     // Explicit Diminishing Groups
-    switch(spellproto->SpellFamilyName)
+    switch (spellproto->SpellFamilyName)
     {
         case SPELLFAMILY_MAGE:
         {
@@ -2881,7 +2881,7 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
 
 bool IsDiminishingReturnsGroupDurationLimited(DiminishingGroup group)
 {
-    switch(group)
+    switch (group)
     {
         case DIMINISHING_CONTROL_STUN:
         case DIMINISHING_TRIGGER_STUN:
@@ -2905,7 +2905,7 @@ bool IsDiminishingReturnsGroupDurationLimited(DiminishingGroup group)
 
 DiminishingReturnsType GetDiminishingReturnsGroupType(DiminishingGroup group)
 {
-    switch(group)
+    switch (group)
     {
         case DIMINISHING_BLIND_CYCLONE:
         case DIMINISHING_CONTROL_STUN:

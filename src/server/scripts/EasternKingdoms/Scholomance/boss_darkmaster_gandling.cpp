@@ -124,7 +124,7 @@ struct boss_darkmaster_gandlingAI : public ScriptedAI
                         DoModifyThreatPercent(pTarget, -100);
 
                     Creature *Summoned = NULL;
-                    switch(rand()%6)
+                    switch (rand()%6)
                     {
                         case 0:
                             DoTeleportPlayer(pTarget, 250.0696f, 0.3921f, 84.8408f, 3.149f);

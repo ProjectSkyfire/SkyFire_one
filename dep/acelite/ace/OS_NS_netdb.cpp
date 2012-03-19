@@ -414,7 +414,7 @@ ACE_OS::getmacaddress (struct macaddr_node_t *node)
 
       if (ifr->ifr_addr.sa_family == AF_LINK)
         {
-          if(ACE_OS::strcmp (ifr->ifr_name, "en0") == 0)
+          if (ACE_OS::strcmp (ifr->ifr_name, "en0") == 0)
             {
               struct sockaddr_dl* sdl =
                 (struct sockaddr_dl *) &ifr->ifr_addr;
@@ -427,7 +427,7 @@ ACE_OS::getmacaddress (struct macaddr_node_t *node)
 
       ptr += sizeof(ifr->ifr_name);
 
-      if(sizeof(ifr->ifr_addr) > ifr->ifr_addr.sa_len)
+      if (sizeof(ifr->ifr_addr) > ifr->ifr_addr.sa_len)
         ptr += sizeof(ifr->ifr_addr);
       else
         ptr += ifr->ifr_addr.sa_len;

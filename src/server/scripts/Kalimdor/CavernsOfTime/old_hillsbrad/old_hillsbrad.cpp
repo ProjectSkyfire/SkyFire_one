@@ -200,7 +200,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI
         if (!pInstance)
             return;
 
-        switch(i)
+        switch (i)
         {
             case 8:
                 SetRun(false);
@@ -419,7 +419,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI
 
     void JustSummoned(Creature* summoned)
     {
-         switch(summoned->GetEntry())
+         switch (summoned->GetEntry())
          {
         //TODO: make Scarloc start into event instead, and not start attack directly
          case MOB_ENTRY_BARN_GUARDSMAN:
@@ -507,7 +507,7 @@ bool GossipSelect_npc_thrall_old_hillsbrad(Player* pPlayer, Creature* pCreature,
 {
     ScriptedInstance* pInstance = (pCreature->GetInstanceData());
 
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -573,7 +573,7 @@ struct npc_tarethaAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        switch(i)
+        switch (i)
         {
             case 6:
                 DoScriptText(SAY_TA_FREE, me);

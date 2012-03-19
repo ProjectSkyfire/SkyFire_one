@@ -132,7 +132,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 24850: Kalecgos_Dragon     = pCreature->GetGUID(); break;
             case 24891: Kalecgos_Human      = pCreature->GetGUID(); break;
@@ -152,7 +152,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 188421: ForceField     = pGo->GetGUID(); break;
             case 188523: KalecgosWall[0] = pGo->GetGUID(); break;
@@ -173,7 +173,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
 
     uint32 GetData(uint32 id)
     {
-        switch(id)
+        switch (id)
         {
             case DATA_KALECGOS_EVENT:     return m_auiEncounter[0];
             case DATA_BRUTALLUS_EVENT:    return m_auiEncounter[1];
@@ -187,7 +187,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
 
     uint64 GetData64(uint32 id)
     {
-        switch(id)
+        switch (id)
         {
             case DATA_KALECGOS_DRAGON:      return Kalecgos_Dragon;
             case DATA_KALECGOS_HUMAN:       return Kalecgos_Human;
@@ -212,7 +212,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
 
     void SetData(uint32 id, uint32 data)
     {
-        switch(id)
+        switch (id)
         {
             case DATA_KALECGOS_EVENT:
                 {
@@ -238,7 +238,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
                 m_auiEncounter[2] = data; break;
             case DATA_EREDAR_TWINS_EVENT:  m_auiEncounter[3] = data; break;
             case DATA_MURU_EVENT:
-                switch(data)
+                switch (data)
                 {
                     case DONE:
                         HandleGameObject(MurusGate[0], true);

@@ -133,7 +133,7 @@ Unit* UnitAI::SelectTarget(SelectAggroTarget targetType, uint32 position, float 
     if (targetType == SELECT_TARGET_NEAREST || targetType == SELECT_TARGET_FARTHEST)
         targetList.sort(TargetDistanceOrder(me));
 
-    switch(targetType)
+    switch (targetType)
     {
         case SELECT_TARGET_NEAREST:
         case SELECT_TARGET_TOPAGGRO:
@@ -205,7 +205,7 @@ void UnitAI::DoCast(uint32 spellId)
 {
     Unit *target = NULL;
     //sLog->outError("aggre %u %u", spellId, (uint32)AISpellInfo[spellId].target);
-    switch(AISpellInfo[spellId].target)
+    switch (AISpellInfo[spellId].target)
     {
         default:
         case AITARGET_SELF:     target = me; break;

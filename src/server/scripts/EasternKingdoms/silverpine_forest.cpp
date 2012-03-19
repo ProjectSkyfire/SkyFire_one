@@ -131,7 +131,7 @@ struct npc_deathstalker_erlandAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 1: DoScriptText(SAY_START, me, pPlayer);break;
         case 13:

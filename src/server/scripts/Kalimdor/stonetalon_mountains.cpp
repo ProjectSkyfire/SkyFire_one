@@ -109,7 +109,7 @@ struct npc_kaya_flathoofAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 16:
             DoScriptText(SAY_AMBUSH, me);

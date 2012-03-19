@@ -22,7 +22,7 @@ set(authserver_SRCS
   Main.cpp
 )
 
-if( WIN32 )
+if ( WIN32 )
 set(authserver_SRCS
     ${authserver_SRCS}
     authserver.rc
@@ -60,21 +60,21 @@ add_executable(authserver
 
 add_dependencies(authserver revision.h)
 
-if( NOT WIN32 )
+if ( NOT WIN32 )
   add_definitions(-D_TRINITY_REALM_CONFIG='"${CONF_DIR}/authserver.conf"')
 endif()
 
-if( UNIX )
+if ( UNIX )
   set(authserver_LINK_FLAGS "-pthread ${authserver_LINK_FLAGS}")
 endif()
 
-if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+if ( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
   set(authserver_LINK_FLAGS "-framework Carbon ${authserver_LINK_FLAGS}")
 endif()
 
 set_target_properties(authserver PROPERTIES LINK_FLAGS "${authserver_LINK_FLAGS}")
 
-if( WIN32 )
+if ( WIN32 )
   target_link_libraries(
     authserver
     shared
@@ -92,7 +92,7 @@ else()
   )
 endif()
 
-if( UNIX )
+if ( UNIX )
   install(TARGETS authserver DESTINATION bin)
   install(FILES  authserver.conf.dist DESTINATION etc)
 endif()

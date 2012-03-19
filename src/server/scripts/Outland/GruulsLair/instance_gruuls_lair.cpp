@@ -77,7 +77,7 @@ struct instance_gruuls_lair : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 18835: KigglerTheCrazed = pCreature->GetGUID(); break;
             case 18836: BlindeyeTheSeer = pCreature->GetGUID();  break;
@@ -89,7 +89,7 @@ struct instance_gruuls_lair : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 184468:
                 MaulgarDoor = pGo->GetGUID();
@@ -107,7 +107,7 @@ struct instance_gruuls_lair : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_MAULGAREVENT_TANK:    return MaulgarEvent_Tank;
             case DATA_KIGGLERTHECRAZED:     return KigglerTheCrazed;
@@ -123,7 +123,7 @@ struct instance_gruuls_lair : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_MAULGAREVENT:
                 if (data == DONE)
@@ -147,7 +147,7 @@ struct instance_gruuls_lair : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_MAULGAREVENT: return Encounters[0];
             case DATA_GRUULEVENT:   return Encounters[1];

@@ -542,7 +542,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
     void HandleTalkSequence();
     void HandleFlightSequence()
     {
-        switch(FlightCount)
+        switch (FlightCount)
         {
         case 1://lift off
             me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
@@ -670,7 +670,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
             me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
         }
 
-        switch(TransformCount)
+        switch (TransformCount)
         {
         case 2:
             DoResetThreat();
@@ -712,7 +712,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
                 else Timer[i] -= diff;
         }
 
-        switch(Phase)
+        switch (Phase)
         {
         case PHASE_NORMAL:
             if (HPPCT(me) < 65)
@@ -750,7 +750,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
         if (Phase == PHASE_NORMAL || Phase == PHASE_NORMAL_2 || Phase == PHASE_NORMAL_MAIEV && !me->HasAura(SPELL_CAGED, 0))
         {
-            switch(Event)
+            switch (Event)
             {
                 //PHASE_NORMAL
             case EVENT_BERSERK:
@@ -824,7 +824,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
         if (Phase == PHASE_FLIGHT)
         {
-            switch(Event)
+            switch (Event)
             {
             case EVENT_FIREBALL:
                 DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_FIREBALL);
@@ -857,7 +857,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
         if (Phase == PHASE_DEMON)
         {
-            switch(Event)
+            switch (Event)
             {
             case EVENT_SHADOW_BLAST:
                 me->GetMotionMaster()->Clear(false);
@@ -1146,7 +1146,7 @@ struct npc_akama_illidanAI : public ScriptedAI
     {
         if (!pInstance)
             return;
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_CHANNEL:
             BeginChannel();
@@ -1208,7 +1208,7 @@ struct npc_akama_illidanAI : public ScriptedAI
 
     void HandleTalkSequence()
     {
-        switch(TalkCount)
+        switch (TalkCount)
         {
         case 0:
             if (GETCRE(Illidan, IllidanGUID))
@@ -1243,7 +1243,7 @@ struct npc_akama_illidanAI : public ScriptedAI
                 return;
         }
 
-        switch(ChannelCount)
+        switch (ChannelCount)
         {
         case 0: // channel failed
             me->InterruptNonMeleeSpells(true);
@@ -1291,7 +1291,7 @@ struct npc_akama_illidanAI : public ScriptedAI
 
     void HandleWalkSequence()
     {
-        switch(WalkCount)
+        switch (WalkCount)
         {
         case 6:
             for (uint8 i = 0; i < 2; ++i)
@@ -1339,7 +1339,7 @@ struct npc_akama_illidanAI : public ScriptedAI
 
         if (Event)
         {
-            switch(Phase)
+            switch (Phase)
             {
             case PHASE_CHANNEL:
                 if (JustCreated)
@@ -1469,7 +1469,7 @@ struct boss_maievAI : public ScriptedAI
 
     void EnterPhase(PhaseIllidan NextPhase)//This is in fact Illidan's phase.
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_TALK_SEQUENCE:
             if (Timer[EVENT_MAIEV_STEALTH])
@@ -1548,7 +1548,7 @@ struct boss_maievAI : public ScriptedAI
                 else Timer[i] -= diff;
             }
 
-            switch(Event)
+            switch (Event)
             {
             case EVENT_MAIEV_STEALTH:
                 {
@@ -1872,7 +1872,7 @@ void boss_illidan_stormrageAI::Reset()
 void boss_illidan_stormrageAI::JustSummoned(Creature* summon)
 {
     Summons.Summon(summon);
-    switch(summon->GetEntry())
+    switch (summon->GetEntry())
     {
     case PARASITIC_SHADOWFIEND:
         {
@@ -1918,7 +1918,7 @@ void boss_illidan_stormrageAI::JustSummoned(Creature* summon)
 
 void boss_illidan_stormrageAI::HandleTalkSequence()
 {
-    switch(TalkCount)
+    switch (TalkCount)
     {
     case 0:
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -2076,7 +2076,7 @@ void boss_illidan_stormrageAI::SummonMaiev()
 void boss_illidan_stormrageAI::EnterPhase(PhaseIllidan NextPhase)
 {
     DoZoneInCombat();
-    switch(NextPhase)
+    switch (NextPhase)
     {
     case PHASE_NORMAL:
     case PHASE_NORMAL_2:

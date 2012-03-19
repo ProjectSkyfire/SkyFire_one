@@ -625,7 +625,7 @@ struct npc_akamaAI : public ScriptedAI
         if (type != POINT_MOTION_TYPE)
             return;
 
-        switch(id)
+        switch (id)
         {
         case 0: ++WayPointId; break;
 
@@ -754,7 +754,7 @@ struct npc_akamaAI : public ScriptedAI
         if (SoulRetrieveTimer)
             if (SoulRetrieveTimer <= diff)
             {
-                switch(EndingTalkCount)
+                switch (EndingTalkCount)
                 {
                 case 0:
                     me->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);

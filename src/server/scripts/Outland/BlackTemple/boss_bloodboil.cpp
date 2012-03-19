@@ -209,7 +209,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
             if (EnrageTimer <= diff)
             {
                 DoCast(me, SPELL_BERSERK);
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                 case 0: DoScriptText(SAY_ENRAGE1, me); break;
                 case 1: DoScriptText(SAY_ENRAGE2, me); break;

@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,20 +17,29 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "WorldSocketMgr.h"
-#include "Common.h"
-#include "World.h"
-#include "WorldRunnable.h"
-#include "Timer.h"
-#include "ObjectAccessor.h"
-#include "MapManager.h"
-#include "BattlegroundMgr.h"
+/** \file
+    \ingroup Trinityd
+*/
 
+#include "Common.h"
+#include "ObjectAccessor.h"
+#include "World.h"
+#include "WorldSocketMgr.h"
 #include "Database/DatabaseEnv.h"
+#include "ScriptMgr.h"
+#include "BattlegroundMgr.h"
+#include "MapManager.h"
+#include "Timer.h"
+#include "WorldRunnable.h"
 
 #define WORLD_SLEEP_CONST 50
 
-// Heartbeat for the World
+#ifdef _WIN32
+#include "ServiceWin32.h"
+extern int m_ServiceStatus;
+#endif
+
+/// Heartbeat for the World
 void WorldRunnable::run()
 {
     // Init new SQL thread for the world database
@@ -43,7 +51,9 @@ void WorldRunnable::run()
 
     uint32 prevSleepTime = 0;                               // used for balanced full tick time length near WORLD_SLEEP_CONST
 
-    // While we have not World::m_stopEvent, update the world
+    // sScriptMgr.OnStartup(); //NYI
+
+    ///- While we have not World::m_stopEvent, update the world
     while (!World::IsStopped())
     {
         ++World::m_worldLoopCounter;
@@ -51,7 +61,7 @@ void WorldRunnable::run()
 
         uint32 diff = getMSTimeDiff(realPrevTime, realCurrTime);
 
-        sWorld.Update(diff);
+        sWorld.Update( diff );
         realPrevTime = realCurrTime;
 
         // diff (D0) include time of previous sleep (d0) + tick time (t0)
@@ -65,7 +75,17 @@ void WorldRunnable::run()
         }
         else
             prevSleepTime = 0;
+
+        #ifdef _WIN32
+            if (m_ServiceStatus == 0)
+                World::StopNow(SHUTDOWN_EXIT_CODE);
+
+            while (m_ServiceStatus == 2)
+                Sleep(1000);
+        #endif
     }
+
+    // sScriptMgr.OnShutdown(); //NYI
 
     sWorld.KickAll();                                       // save and kick all players
     sWorld.UpdateSessions( 1 );                             // real players unload required UpdateSessions call
@@ -79,5 +99,6 @@ void WorldRunnable::run()
 
     // End the database thread
     WorldDatabase.ThreadEnd();                                  // free mySQL thread resources
+    //objmgr.UnloadAll();             // unload 'i_player2corpse' storage and remove from world
+    //sScriptMgr.Unload();
 }
-

@@ -332,7 +332,7 @@ add_definitions(-DACE_BUILD_DLL)
 
 add_library(ace SHARED ${ace_STAT_SRCS})
 
-if( WIN32 )
+if ( WIN32 )
     if (MSYS OR MINGW)
         find_library(WS2_32_LIBRARY ws2_32)
         target_link_libraries(ace ${WS2_32_LIBRARY})

@@ -104,7 +104,7 @@ struct boss_fankrissAI : public ScriptedAI
         //Summon 1-3 Spawns of Fankriss at random time.
         if (SpawnSpawns_Timer <= diff)
         {
-            switch(rand()%3)
+            switch (rand()%3)
             {
                 case 0:
                     SummonSpawn(SelectUnit(SELECT_TARGET_RANDOM, 0));
@@ -137,7 +137,7 @@ struct boss_fankrissAI : public ScriptedAI
                     if (DoGetThreat(pTarget))
                         DoModifyThreatPercent(pTarget, -100);
 
-                    switch(rand()%3)
+                    switch (rand()%3)
                     {
                         case 0:
                             DoTeleportPlayer(pTarget, -8106.0142f, 1289.2900f,-74.419533f, 5.112f);

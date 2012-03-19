@@ -203,7 +203,7 @@ struct boss_vazrudenAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -214,7 +214,7 @@ struct boss_vazrudenAI : public ScriptedAI
     void KilledUnit(Unit* who)
     {
         if (who && who->GetEntry() != ENTRY_VAZRUDEN)
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0: DoScriptText(SAY_KILL_1, me); break;
                 default: DoScriptText(SAY_KILL_2, me); break;
@@ -397,7 +397,7 @@ struct boss_vazruden_the_heraldAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        switch(phase)
+        switch (phase)
         {
         case 0: // circle around the platform
             return;

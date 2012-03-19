@@ -182,7 +182,7 @@ struct instance_karazhan : public ScriptedInstance
 
     void SetData64(uint32 identifier, uint64 data)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_IMAGE_OF_MEDIVH: ImageGUID = data;
             case DATA_NIGHTBANE:       m_uiNightBaneGUID = data;
@@ -191,7 +191,7 @@ struct instance_karazhan : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 183932:   m_uiCurtainGUID          = pGo->GetGUID();         break;
             case 184278:
@@ -221,7 +221,7 @@ struct instance_karazhan : public ScriptedInstance
             case 184281:   m_uiServantsAccessDoor   = pGo->GetGUID();         break;
         }
 
-        switch(m_uiOperaEvent)
+        switch (m_uiOperaEvent)
         {
             //TODO: Set Object visibilities for Opera based on performance
             case EVENT_OZ:

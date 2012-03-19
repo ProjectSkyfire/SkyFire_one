@@ -271,7 +271,7 @@ void AuthSocket::_SetVSFields(const std::string& rI)
 
 void AuthSocket::SendProof(SHA1Hash sha)
 {
-    switch(_build)
+    switch (_build)
     {
         case 5875:                                          // 1.12.1
         case 6005:                                          // 1.12.2
@@ -876,7 +876,7 @@ bool AuthSocket::_HandleRealmList()
 
 void AuthSocket::LoadRealmlist(ByteBuffer &pkt, uint32 acctid)
 {
-    switch(_build)
+    switch (_build)
     {
         case 5875:                                          // 1.12.1
         case 6005:                                          // 1.12.2

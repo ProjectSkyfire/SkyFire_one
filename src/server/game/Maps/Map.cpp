@@ -105,7 +105,7 @@ void Map::LoadVMap(int gx, int gy)
 {
                                                             // x and y are swapped !!
     int vmapLoadResult = VMAP::VMapFactory::createOrGetVMapManager()->loadMap((sWorld.GetDataPath()+ "vmaps").c_str(), GetId(), gx, gy);
-    switch(vmapLoadResult)
+    switch (vmapLoadResult)
     {
         case VMAP::VMAP_LOAD_RESULT_OK:
             sLog->outDetail("VMAP loaded name:%s, id:%d, x:%d, y:%d (vmap rep.: x:%d, y:%d)", GetMapName(), GetId(), gx, gy, gx, gy);
@@ -2092,7 +2092,7 @@ void Map::RemoveAllObjectsInRemoveList()
         bool on = itr->second;
         i_objectsToSwitch.erase(itr);
 
-        switch(obj->GetTypeId())
+        switch (obj->GetTypeId())
         {
             case TYPEID_UNIT:
                 if (!obj->ToCreature()->isPet())
@@ -2109,7 +2109,7 @@ void Map::RemoveAllObjectsInRemoveList()
         std::set<WorldObject*>::iterator itr = i_objectsToRemove.begin();
         WorldObject* obj = *itr;
 
-        switch(obj->GetTypeId())
+        switch (obj->GetTypeId())
         {
             case TYPEID_CORPSE:
             {

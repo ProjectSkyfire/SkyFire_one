@@ -147,7 +147,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_KILL1, me); break;
         case 1: DoScriptText(SAY_KILL2, me); break;
@@ -194,7 +194,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
     {
         float z;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: z = 1; break;
             case 1: z = -1; break;
@@ -425,7 +425,7 @@ struct mob_solarium_priestAI : public ScriptedAI
         {
             Unit *pTarget = NULL;
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0:
                     if (pInstance)

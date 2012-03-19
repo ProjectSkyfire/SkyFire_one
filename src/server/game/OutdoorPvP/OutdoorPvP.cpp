@@ -406,7 +406,7 @@ void OPvPCapturePoint::SendUpdateWorldState(uint32 field, uint32 value)
 void OPvPCapturePoint::SendObjectiveComplete(uint32 id, uint64 guid)
 {
     uint32 team;
-    switch(m_State)
+    switch (m_State)
     {
     case OBJECTIVESTATE_ALLIANCE:
         team = 0;

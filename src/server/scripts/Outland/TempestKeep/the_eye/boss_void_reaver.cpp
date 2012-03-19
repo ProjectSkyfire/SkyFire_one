@@ -72,7 +72,7 @@ struct boss_void_reaverAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_SLAY1, me); break;
         case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -106,7 +106,7 @@ struct boss_void_reaverAI : public ScriptedAI
         {
             DoCast(me->getVictim(),SPELL_POUNDING);
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_POUNDING1, me); break;
             case 1: DoScriptText(SAY_POUNDING2, me); break;

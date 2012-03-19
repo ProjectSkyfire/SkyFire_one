@@ -150,7 +150,7 @@ void Totem::UnSummon()
 bool Totem::IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const
 {
     // TODO: possibly all negative auras immuned?
-    switch(spellInfo->EffectApplyAuraName[index])
+    switch (spellInfo->EffectApplyAuraName[index])
     {
         case SPELL_AURA_PERIODIC_DAMAGE:
         case SPELL_AURA_PERIODIC_LEECH:

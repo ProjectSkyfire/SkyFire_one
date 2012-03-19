@@ -68,7 +68,7 @@ struct instance_scarlet_monastery : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case ENTRY_PUMPKIN_SHRINE: PumpkinShrineGUID = pGo->GetGUID();break;
         case 104600: DoorHighInquisitorGUID = pGo->GetGUID(); break;
@@ -77,7 +77,7 @@ struct instance_scarlet_monastery : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case ENTRY_HORSEMAN:    HorsemanGUID = pCreature->GetGUID(); break;
             case ENTRY_HEAD:        HeadGUID = pCreature->GetGUID(); break;
@@ -90,7 +90,7 @@ struct instance_scarlet_monastery : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case TYPE_MOGRAINE_AND_WHITE_EVENT:
             if (data == IN_PROGRESS)
@@ -122,7 +122,7 @@ struct instance_scarlet_monastery : public ScriptedInstance
 
     uint64 GetData64(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             //case GAMEOBJECT_PUMPKIN_SHRINE:   return PumpkinShrineGUID;
             //case DATA_HORSEMAN:               return HorsemanGUID;

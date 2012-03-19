@@ -412,7 +412,7 @@ void ArenaTeam::SetEmblem(uint32 backgroundColor, uint32 emblemStyle, uint32 emb
 
 void ArenaTeam::SetStats(uint32 stat_type, uint32 value)
 {
-    switch(stat_type)
+    switch (stat_type)
     {
         case STAT_TYPE_RATING:
             m_stats.rating = value;
@@ -486,7 +486,7 @@ void ArenaTeam::BroadcastEvent(ArenaTeamEvents event, uint64 guid, char const* s
 
 uint8 ArenaTeam::GetSlotByType(uint32 type)
 {
-    switch(type)
+    switch (type)
     {
         case ARENA_TEAM_2v2: return 0;
         case ARENA_TEAM_3v3: return 1;

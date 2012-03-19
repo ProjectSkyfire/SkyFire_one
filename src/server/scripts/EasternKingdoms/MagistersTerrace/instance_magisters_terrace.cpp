@@ -89,7 +89,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     uint32 GetData(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_SELIN_EVENT:          return m_auiEncounter[0];
             case DATA_VEXALLUS_EVENT:       return m_auiEncounter[1];
@@ -103,7 +103,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     void SetData(uint32 identifier, uint32 data)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_SELIN_EVENT:       m_auiEncounter[0] = data;  break;
             case DATA_VEXALLUS_EVENT:
@@ -131,7 +131,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 24723: SelinGUID = pCreature->GetGUID(); break;
             case 24560: DelrissaGUID = pCreature->GetGUID(); break;
@@ -141,7 +141,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 187896:  VexallusDoorGUID = pGo->GetGUID();       break;
             //SunwellRaid Gate 02
@@ -157,7 +157,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_SELIN:                return SelinGUID;
             case DATA_DELRISSA:             return DelrissaGUID;

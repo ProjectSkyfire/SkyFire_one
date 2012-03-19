@@ -734,7 +734,7 @@ struct npc_overlord_morghorAI : public ScriptedAI
             return 0;
         }
 
-        switch(Step)
+        switch (Step)
         {
         case 0: return 0; break;
         case 1: me->GetMotionMaster()->MovePoint(0, -5104.41f, 595.297f, 85.6838f); return 9000; break;
@@ -910,7 +910,7 @@ struct npc_earthmender_wildaAI : public npc_escortAI
         if (!player)
             return;
 
-        switch(i)
+        switch (i)
         {
                case 0: DoScriptText(SAY_START, me, player); break;
                case 13: DoScriptText(SAY_PROGRESS1, me, player);
@@ -919,7 +919,7 @@ struct npc_earthmender_wildaAI : public npc_escortAI
                case 14: SummonAssassin(); break;
                case 15: DoScriptText(SAY_PROGRESS3, me, player); break;
                case 19:
-                   switch(rand()%3)
+                   switch (rand()%3)
                    {
                    case 0: DoScriptText(SAY_PROGRESS2, me, player); break;
                    case 1: DoScriptText(SAY_PROGRESS4, me, player); break;
@@ -928,7 +928,7 @@ struct npc_earthmender_wildaAI : public npc_escortAI
                    break;
                case 20: SummonAssassin(); break;
                case 26:
-                   switch(rand()%3)
+                   switch (rand()%3)
                    {
                    case 0: DoScriptText(SAY_PROGRESS2, me, player); break;
                    case 1: DoScriptText(SAY_PROGRESS4, me, player); break;
@@ -937,7 +937,7 @@ struct npc_earthmender_wildaAI : public npc_escortAI
                    break;
                case 27: SummonAssassin(); break;
                case 33:
-                   switch(rand()%3)
+                   switch (rand()%3)
                    {
                    case 0: DoScriptText(SAY_PROGRESS2, me, player); break;
                    case 1: DoScriptText(SAY_PROGRESS4, me, player); break;
@@ -946,7 +946,7 @@ struct npc_earthmender_wildaAI : public npc_escortAI
                    break;
                case 34: SummonAssassin(); break;
                case 37:
-                   switch(rand()%3)
+                   switch (rand()%3)
                    {
                    case 0: DoScriptText(SAY_PROGRESS2, me, player); break;
                    case 1: DoScriptText(SAY_PROGRESS4, me, player); break;
@@ -956,7 +956,7 @@ struct npc_earthmender_wildaAI : public npc_escortAI
                case 38: SummonAssassin(); break;
                case 39: DoScriptText(SAY_PROGRESS6, me, player); break;
                case 43:
-                   switch(rand()%3)
+                   switch (rand()%3)
                    {
                    case 0: DoScriptText(SAY_PROGRESS2, me, player); break;
                    case 1: DoScriptText(SAY_PROGRESS4, me, player); break;
@@ -979,7 +979,7 @@ struct npc_earthmender_wildaAI : public npc_escortAI
            Unit* CoilskarAssassin = me->SummonCreature(NPC_COILSKAR_ASSASSIN, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 0);
            if (CoilskarAssassin)
            {
-               switch(rand()%2)
+               switch (rand()%2)
                {
                case 0: DoScriptText(ASSASSIN_SAY_AGGRO1, CoilskarAssassin, player); break;
                case 1: DoScriptText(ASSASSIN_SAY_AGGRO2, CoilskarAssassin, player); break;
@@ -1193,7 +1193,7 @@ struct mob_torlothAI : public ScriptedAI
 
         m_uiAnimationTimer = TorlothAnim[m_uiAnimationCount].uiTimer;
 
-        switch(m_uiAnimationCount)
+        switch (m_uiAnimationCount)
         {
             case 0:
                 me->SetStandState(UNIT_STAND_STATE_KNEEL);
@@ -1584,7 +1584,7 @@ struct npc_enraged_spiritAI : public ScriptedAI
         uint32 entry = 0;
         uint32 credit = 0;
 
-        switch(me->GetEntry()) {
+        switch (me->GetEntry()) {
           case ENTRY_ENRAGED_FIRE_SPIRIT:
             entry  = ENTRY_FIERY_SOUL;
             //credit = SPELL_FIERY_SOUL_CAPTURED_CREDIT;

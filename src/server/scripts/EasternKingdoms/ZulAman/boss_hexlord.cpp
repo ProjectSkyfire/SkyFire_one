@@ -442,7 +442,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
     {
         uint32 random = urand(0, 2);
         Unit *pTarget = NULL;
-        switch(PlayerAbility[PlayerClass][random].target)
+        switch (PlayerAbility[PlayerClass][random].target)
         {
             case ABILITY_TARGET_SELF:
                 pTarget = me;

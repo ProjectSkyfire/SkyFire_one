@@ -75,7 +75,7 @@ struct instance_scholomance : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_GATE_KIRTONOS:  GateKirtonosGUID = pGo->GetGUID(); break;
             case GO_GATE_GANDLING:  GateGandlingGUID = pGo->GetGUID(); break;
@@ -90,7 +90,7 @@ struct instance_scholomance : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_LORDALEXEIBAROV_DEATH:
                 IsBossDied[0] = true;

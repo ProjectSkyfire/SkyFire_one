@@ -346,7 +346,7 @@ struct npc_magwinAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 0:
             DoScriptText(SAY_START, me, pPlayer);
@@ -448,7 +448,7 @@ struct npc_geezleAI : public ScriptedAI
     {
         Unit* Spark = Unit::GetUnit((*me), SparkGUID);
 
-        switch(Step)
+        switch (Step)
         {
         case 0: return 99999;
         case 1:

@@ -574,7 +574,7 @@ void BattleGroundWS::HandleAreaTrigger(Player *Source, uint32 Trigger)
 
     //uint32 SpellId = 0;
     //uint64 buff_guid = 0;
-    switch(Trigger)
+    switch (Trigger)
     {
         case 3686:                                          // Alliance elixir of speed spawn. Trigger not working, because located inside other areatrigger, can be replaced by IsWithinDist(object, dist) in BattleGround::Update().
             //buff_guid = m_BgObjects[BG_WS_OBJECT_SPEEDBUFF_1];
@@ -704,7 +704,7 @@ void BattleGroundWS::UpdatePlayerScore(Player *Source, uint32 type, uint32 value
     if (itr == m_PlayerScores.end())                         // player not found
         return;
 
-    switch(type)
+    switch (type)
     {
         case SCORE_FLAG_CAPTURES:                           // flags captured
             ((BattleGroundWGScore*)itr->second)->FlagCaptures += value;

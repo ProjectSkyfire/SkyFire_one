@@ -274,7 +274,7 @@ struct boss_yaujAI : public ScriptedAI
                 Unit *pKri = Unit::GetUnit((*me), pInstance->GetData64(DATA_KRI));
                 Unit *pVem = Unit::GetUnit((*me), pInstance->GetData64(DATA_VEM));
 
-                switch(rand()%3)
+                switch (rand()%3)
                 {
                     case 0:
                         if (pKri)

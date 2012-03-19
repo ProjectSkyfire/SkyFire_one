@@ -152,7 +152,7 @@ struct mob_wisp_invisAI : public ScriptedAI
     void EnterCombat(Unit * /*who*/){}
     void SetType(uint32 _type)
     {
-        switch(Creaturetype = _type)
+        switch (Creaturetype = _type)
         {
             case 1:
                 spell = SPELL_PUMPKIN_AURA_GREEN;
@@ -244,7 +244,7 @@ struct mob_headAI : public ScriptedAI
         if (withbody)
             return;
 
-        switch(Phase)
+        switch (Phase)
         {
             case 1:
                 if (((me->GetHealth() - damage)*100)/me->GetMaxHealth() < 67)
@@ -601,7 +601,7 @@ struct boss_headless_horsemanAI : public ScriptedAI
     {
         if (withhead)
         {
-            switch(Phase)
+            switch (Phase)
             {
                 case 0:
                 {

@@ -1178,7 +1178,7 @@ ACE_Message_Block::clone (Message_Flags mask) const
 
   ACE_Message_Block *nb = 0;
 
-  if(message_block_allocator_ == 0)
+  if (message_block_allocator_ == 0)
     {
       ACE_NEW_RETURN (nb,
                       ACE_Message_Block (0, // size
@@ -1208,7 +1208,7 @@ ACE_Message_Block::clone (Message_Flags mask) const
       // ACE_NEW_MALLOC_RETURN, there would be a memory leak because the
       // above db pointer would be left dangling.
       nb = static_cast<ACE_Message_Block*> (message_block_allocator_->malloc (sizeof (ACE_Message_Block)));
-      if(nb != 0)
+      if (nb != 0)
         new (nb) ACE_Message_Block (0, // size
                                     ACE_Message_Type (0), // type
                                     0, // cont

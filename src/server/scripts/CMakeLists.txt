@@ -12,7 +12,7 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 # Enable precompiled headers when using the GCC compiler.
-if( USE_SCRIPTPCH )
+if ( USE_SCRIPTPCH )
   include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
   )
@@ -25,7 +25,7 @@ file(GLOB_RECURSE scripts_kalimdor Kalimdor/*.cpp Kalimdor/*.h)
 file(GLOB_RECURSE scripts_outland Outland/*.cpp Outland/*.h)
 file(GLOB_RECURSE scripts_world World/*.cpp World/*.h)
 
-if( USE_SCRIPTPCH AND MSVC )
+if ( USE_SCRIPTPCH AND MSVC )
   set(scripts_STAT_SRCS
     PrecompiledHeaders/ScriptPCH.cpp
     PrecompiledHeaders/ScriptPCH.h
@@ -40,7 +40,7 @@ set(scripts_STAT_SRCS
   ../game/AI/ScriptedAI/ScriptedSimpleAI.cpp
 )
 
-if(SCRIPTS)
+if (SCRIPTS)
   set(scripts_STAT_SRCS
     ${scripts_STAT_SRCS}
     ${scripts_custom}
@@ -143,8 +143,8 @@ add_library(scripts STATIC ${scripts_STAT_SRCS})
 add_dependencies(scripts revision.h)
 
 # Generate precompiled header
-if( USE_SCRIPTPCH )
-  if(CMAKE_COMPILER_IS_GNUCXX)
+if ( USE_SCRIPTPCH )
+  if (CMAKE_COMPILER_IS_GNUCXX)
     add_precompiled_header(scripts ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/ScriptPCH.h)
   elseif(MSVC)
     add_native_precompiled_header(scripts ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/ScriptPCH)

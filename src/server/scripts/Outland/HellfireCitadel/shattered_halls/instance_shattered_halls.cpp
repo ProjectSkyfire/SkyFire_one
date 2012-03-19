@@ -142,7 +142,7 @@ struct instance_shattered_halls : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case DOOR_NETHEKURSE1: nethekurseDoor1GUID = pGo->GetGUID(); break;
             case DOOR_NETHEKURSE2: nethekurseDoor2GUID = pGo->GetGUID(); break;
@@ -151,7 +151,7 @@ struct instance_shattered_halls : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 16807: nethekurseGUID = pCreature->GetGUID(); break;
             case 16809: warbringerGUID = pCreature->GetGUID(); break;
@@ -185,7 +185,7 @@ struct instance_shattered_halls : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_NETHEKURSE:
                 if (data == FAIL)
@@ -254,7 +254,7 @@ struct instance_shattered_halls : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_NETHEKURSE:
                 return Encounter[0];
@@ -270,7 +270,7 @@ struct instance_shattered_halls : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        switch(data)
+        switch (data)
         {
             case DATA_NETHEKURSE:
                 return nethekurseGUID;
@@ -330,7 +330,7 @@ struct instance_shattered_halls : public ScriptedInstance
         {
             if (uiExecutionTimer <= diff)
             {
-                switch(uiExecutionStage)
+                switch (uiExecutionStage)
                 {
                     case 0:
                         if (Creature* pSoldier = instance->GetCreature(uiTeam == ALLIANCE ? officeraGUID : officerhGUID))

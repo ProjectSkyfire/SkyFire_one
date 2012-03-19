@@ -228,7 +228,7 @@ struct boss_kelthuzadAI : public ScriptedAI
             float Walk_Pos_X;
             float Walk_Pos_Y;
             float Walk_Pos_Z;
-            switch(rand()%6)
+            switch (rand()%6)
             {
                 case 0:
                     Walk_Pos_X = ADDX_LEFT_FAR;
@@ -267,7 +267,7 @@ struct boss_kelthuzadAI : public ScriptedAI
 
     void EnterCombat(Unit* who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_AGGRO1, me); break;
         case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -360,7 +360,7 @@ struct boss_kelthuzadAI : public ScriptedAI
                 float Walk_Pos_X;
                 float Walk_Pos_Y;
                 float Walk_Pos_Z;
-                switch(rand()%6)
+                switch (rand()%6)
                 {
                     case 0:
                         pUnit = me->SummonCreature(16441, ADDX_LEFT_FAR, ADDY_LEFT_FAR, ADDZ_LEFT_FAR, ADDO_LEFT_FAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);

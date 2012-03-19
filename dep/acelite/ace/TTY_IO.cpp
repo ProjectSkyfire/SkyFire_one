@@ -295,7 +295,7 @@ int ACE_TTY_IO::control (Control_Mode cmd, Serial_Params *arg) const
 
 #if defined (IGNBRK)
       // If device is not a modem set to ignore break points
-      if(arg->modem)
+      if (arg->modem)
         devpar.c_iflag &= ~IGNBRK;
       else
         devpar.c_iflag |= IGNBRK;

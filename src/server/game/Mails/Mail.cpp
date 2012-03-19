@@ -596,7 +596,7 @@ void WorldSession::HandleGetMail(WorldPacket & recv_data)
         data << uint32((*itr)->messageID);                  // Message ID
         data << uint8((*itr)->messageType);                 // Message Type
 
-        switch((*itr)->messageType)
+        switch ((*itr)->messageType)
         {
             case MAIL_NORMAL:                               // sender guid
                 data << uint64(MAKE_NEW_GUID((*itr)->sender, 0, HIGHGUID_PLAYER));
@@ -774,7 +774,7 @@ void WorldSession::HandleMsgQueryNextMailtime(WorldPacket & /*recv_data*/)
 
                 data << (uint64) m->sender;                 // sender guid
 
-                switch(m->messageType)
+                switch (m->messageType)
                 {
                     case MAIL_AUCTION:
                         data << uint32(m->sender);          // auction house id
@@ -808,7 +808,7 @@ void WorldSession::HandleMsgQueryNextMailtime(WorldPacket & /*recv_data*/)
  */
 MailSender::MailSender(Object* sender, MailStationery stationery ) : m_stationery(stationery)
 {
-    switch(sender->GetTypeId())
+    switch (sender->GetTypeId())
     {
         case TYPEID_UNIT:
             m_messageType = MAIL_CREATURE;

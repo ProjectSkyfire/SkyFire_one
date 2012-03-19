@@ -418,11 +418,11 @@ void Spell::FillTargetMap()
         {
             // add here custom effects that need default target.
             // FOR EVERY TARGET TYPE THERE IS A DIFFERENT FILL!!
-            switch(m_spellInfo->Effect[i])
+            switch (m_spellInfo->Effect[i])
             {
                 case SPELL_EFFECT_DUMMY:
                 {
-                    switch(m_spellInfo->Id)
+                    switch (m_spellInfo->Id)
                     {
                         case 20577:                         // Cannibalize
                         {
@@ -439,7 +439,7 @@ void Spell::FillTargetMap()
 
                             if (result)
                             {
-                                switch(result->GetTypeId())
+                                switch (result->GetTypeId())
                                 {
                                     case TYPEID_UNIT:
                                     case TYPEID_PLAYER:
@@ -523,7 +523,7 @@ void Spell::FillTargetMap()
                         AddItemTarget(m_targets.getItemTarget(), i);
                     break;*/
                 case SPELL_EFFECT_APPLY_AURA:
-                    switch(m_spellInfo->EffectApplyAuraName[i])
+                    switch (m_spellInfo->EffectApplyAuraName[i])
                     {
                         case SPELL_AURA_ADD_FLAT_MODIFIER:  // some spell mods auras have 0 target modes instead expected TARGET_UNIT_CASTER(1) (and present for other ranks for same spell for example)
                         case SPELL_AURA_ADD_PCT_MODIFIER:
@@ -1001,7 +1001,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_WARRIOR && m_spellInfo->SpellFamilyFlags & 0x40000000000LL)
         {
             uint32 BTAura = 0;
-            switch(m_spellInfo->Id)
+            switch (m_spellInfo->Id)
             {
                 case 23881: BTAura = 23885; break;
                 case 23892: BTAura = 23886; break;
@@ -1385,7 +1385,7 @@ void Spell::SearchChainTarget(std::list<Unit*> &TagUnitMap, float max_range, uin
 void Spell::SearchAreaTarget(std::list<Unit*> &TagUnitMap, float radius, const uint32 type, SpellTargets TargetType, uint32 entry)
 {
     Position *pos;
-    switch(type)
+    switch (type)
     {
         case PUSH_DST_CENTER:
             CheckDst();
@@ -1421,7 +1421,7 @@ void Spell::SearchAreaTarget(std::list<Unit*> &TagUnitMap, float radius, const u
 
 WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType)
 {
-    switch(TargetType)
+    switch (TargetType)
     {
         case SPELL_TARGETS_ENTRY:
         {
@@ -1441,7 +1441,7 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType)
 
             for (SpellScriptTarget::const_iterator i_spellST = lower; i_spellST != upper; ++i_spellST)
             {
-                switch(i_spellST->second.type)
+                switch (i_spellST->second.type)
                 {
                     case SPELL_TARGET_TYPE_GAMEOBJECT:
                         if (i_spellST->second.targetEntry)
@@ -1510,11 +1510,11 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
     if (m_originalCaster)
         modOwner = m_originalCaster->GetSpellModOwner();
 
-    switch(spellmgr.SpellTargetType[cur])
+    switch (spellmgr.SpellTargetType[cur])
     {
         case TARGET_TYPE_UNIT_CASTER:
         {
-            switch(cur)
+            switch (cur)
             {
                 case TARGET_UNIT_CASTER:
                     AddUnitTarget(m_caster, i);
@@ -1555,7 +1555,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
                 break;
             }
 
-            switch(cur)
+            switch (cur)
             {
                 case TARGET_UNIT_TARGET_ENEMY:
                     if ((m_spellInfo->AttributesEx & (0x8 | 0x80)) == 0)
@@ -1591,7 +1591,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
 
             WorldObject *target = NULL;
 
-            switch(cur)
+            switch (cur)
             {
                 case TARGET_UNIT_NEARBY_ENEMY:
                     target = SearchNearbyTarget(range, SPELL_TARGETS_ENEMY);
@@ -1660,7 +1660,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             else if (cur == TARGET_DEST_CASTER_RANDOM)
                 dist = objSize + (dist - objSize) * rand_norm();
 
-            switch(cur)
+            switch (cur)
             {
                 case TARGET_DEST_CASTER_FRONT_LEFT: angle = -M_PI/4;    break;
                 case TARGET_DEST_CASTER_BACK_LEFT:  angle = -3*M_PI/4;  break;
@@ -1717,7 +1717,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             else if (cur == TARGET_DEST_CASTER_RANDOM)
                 dist = objSize + (dist - objSize) * rand_norm();
 
-            switch(cur)
+            switch (cur)
             {
                 case TARGET_DEST_TARGET_FRONT:      angle = 0.0f;       break;
                 case TARGET_DEST_TARGET_BACK:       angle = M_PI;       break;
@@ -1763,7 +1763,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             }
 
             float angle;
-            switch(cur)
+            switch (cur)
             {
                 case TARGET_DEST_DYNOBJ_ENEMY:
                 case TARGET_DEST_DYNOBJ_ALLY:
@@ -1794,7 +1794,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
 
         case TARGET_TYPE_DEST_SPECIAL:
         {
-            switch(cur)
+            switch (cur)
             {
                 case TARGET_DST_DB:
                     if (SpellTargetPosition const* st = spellmgr.GetSpellTargetPosition(m_spellInfo->Id))
@@ -1936,7 +1936,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
 
         std::list<Unit*> unitList;
 
-        switch(cur)
+        switch (cur)
         {
             case TARGET_UNIT_AREA_ENEMY_SRC:
             case TARGET_UNIT_AREA_ENEMY_DST:
@@ -2636,7 +2636,7 @@ void Spell::update(uint32 difftime)
             cancel();
     }
 
-    switch(m_spellState)
+    switch (m_spellState)
     {
         case SPELL_STATE_PREPARING:
         {
@@ -2809,7 +2809,7 @@ void Spell::SendCastResult(uint8 result)
                 break;
             case SPELL_FAILED_REQUIRES_AREA:
                 // hardcode areas limitation case
-                switch(m_spellInfo->Id)
+                switch (m_spellInfo->Id)
                 {
                     case 41617:                             // Cenarion Mana Salve
                     case 41619:                             // Cenarion Healing Salve
@@ -3025,7 +3025,7 @@ void Spell::SendLogExecute()
         data << uint32(count2);                             // count2 (target count?)
         for (uint32 j = 0; j < count2; ++j)
         {
-            switch(m_spellInfo->Effect[0])
+            switch (m_spellInfo->Effect[0])
             {
                 case SPELL_EFFECT_POWER_DRAIN:
                     if (Unit *unit = m_targets.getUnitTarget())
@@ -3654,7 +3654,7 @@ uint8 Spell::CanCast(bool strict)
 
                 for (SpellScriptTarget::const_iterator i_spellST = lower; i_spellST != upper; ++i_spellST)
                 {
-                    switch(i_spellST->second.type)
+                    switch (i_spellST->second.type)
                     {
                         case SPELL_TARGET_TYPE_GAMEOBJECT:
                         {
@@ -3779,7 +3779,7 @@ uint8 Spell::CanCast(bool strict)
     for (int i = 0; i < 3; i++)
     {
         // for effects of spells that have only one target
-        switch(m_spellInfo->Effect[i])
+        switch (m_spellInfo->Effect[i])
         {
             case SPELL_EFFECT_DUMMY:
             {
@@ -3981,7 +3981,7 @@ uint8 Spell::CanCast(bool strict)
                     bool ok_key = false;
                     for (int it = 0; it < 5; ++it)
                     {
-                        switch(lockInfo->keytype[it])
+                        switch (lockInfo->keytype[it])
                         {
                             case LOCK_KEY_NONE:
                                 break;
@@ -3999,7 +3999,7 @@ uint8 Spell::CanCast(bool strict)
                                 if (uint32(m_spellInfo->EffectMiscValue[i]) != lockInfo->key[it])
                                     break;
 
-                                switch(lockInfo->key[it])
+                                switch (lockInfo->key[it])
                                 {
                                     case LOCKTYPE_HERBALISM:
                                         if (m_caster->ToPlayer()->HasSkill(SKILL_HERBALISM))
@@ -4102,7 +4102,7 @@ uint8 Spell::CanCast(bool strict)
                 SummonPropertiesEntry const *SummonProperties = sSummonPropertiesStore.LookupEntry(m_spellInfo->EffectMiscValueB[i]);
                 if (!SummonProperties)
                     break;
-                switch(SummonProperties->Category)
+                switch (SummonProperties->Category)
                 {
                     case SUMMON_CATEGORY_PET:
                         if (m_caster->GetPetGUID())
@@ -4223,7 +4223,7 @@ uint8 Spell::CanCast(bool strict)
 
     for (int i = 0; i < 3; i++)
     {
-        switch(m_spellInfo->EffectApplyAuraName[i])
+        switch (m_spellInfo->EffectApplyAuraName[i])
         {
             case SPELL_AURA_DUMMY:
             {
@@ -4453,7 +4453,7 @@ uint8 Spell::CheckCasterAuras() const
 
                     //Make a second check for spell failed so the right SPELL_FAILED message is returned.
                     //That is needed when your casting is prevented by multiple states and you are only immune to some of them.
-                    switch(itr->second->GetModifier()->m_auraname)
+                    switch (itr->second->GetModifier()->m_auraname)
                     {
                         case SPELL_AURA_MOD_STUN:
                             if (!(m_spellInfo->AttributesEx5 & SPELL_ATTR_EX5_USABLE_WHILE_STUNNED))
@@ -4931,7 +4931,7 @@ uint8 Spell::CheckItems()
                 if (!pItem || pItem->IsBroken())
                     return SPELL_FAILED_EQUIPPED_ITEM;
 
-                switch(pItem->GetProto()->SubClass)
+                switch (pItem->GetProto()->SubClass)
                 {
                     case ITEM_SUBCLASS_WEAPON_THROWN:
                     {
@@ -4961,7 +4961,7 @@ uint8 Spell::CheckItems()
                             return SPELL_FAILED_NO_AMMO;
 
                         // check ammo ws. weapon compatibility
-                        switch(pItem->GetProto()->SubClass)
+                        switch (pItem->GetProto()->SubClass)
                         {
                             case ITEM_SUBCLASS_WEAPON_BOW:
                             case ITEM_SUBCLASS_WEAPON_CROSSBOW:
@@ -5182,7 +5182,7 @@ bool Spell::CheckTarget(Unit* target, uint32 eff)
         return true;
 
     //Check targets for LOS visibility (except spells without range limitations)
-    switch(m_spellInfo->Effect[eff])
+    switch (m_spellInfo->Effect[eff])
     {
         case SPELL_EFFECT_SUMMON_PLAYER:                    // from anywhere
             break;
@@ -5520,7 +5520,7 @@ int32 Spell::CalculateDamageDone(Unit *unit, const uint32 effectMask, float *mul
             m_damage = 0;
             damage = CalculateDamage(i, NULL);
 
-            switch(m_spellInfo->Effect[i])
+            switch (m_spellInfo->Effect[i])
             {
                 case SPELL_EFFECT_SCHOOL_DAMAGE:
                     SpellDamageSchoolDmg(i);
@@ -5559,7 +5559,7 @@ int32 Spell::CalculateDamageDone(Unit *unit, const uint32 effectMask, float *mul
 
 void Spell::SetSpellValue(SpellValueMod mod, int32 value)
 {
-    switch(mod)
+    switch (mod)
     {
         case SPELLVALUE_BASE_POINT0:
             m_spellValue->EffectBasePoints[0] = value - int32(m_spellInfo->EffectBaseDice[0]);

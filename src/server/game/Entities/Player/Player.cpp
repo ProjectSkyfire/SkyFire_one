@@ -136,7 +136,7 @@ PlayerTaxi::PlayerTaxi()
 void PlayerTaxi::InitTaxiNodesForLevel(uint32 race, uint32 level)
 {
     // capital and taxi hub masks
-    switch(race)
+    switch (race)
     {
         case RACE_HUMAN:    SetTaximaskNode(2);  break;     // Human
         case RACE_ORC:      SetTaximaskNode(23); break;     // Orc
@@ -152,7 +152,7 @@ void PlayerTaxi::InitTaxiNodesForLevel(uint32 race, uint32 level)
     }
 
     // new continent starting masks (It will be accessible only at new map)
-    switch(Player::TeamForRace(race))
+    switch (Player::TeamForRace(race))
     {
         case ALLIANCE: SetTaximaskNode(100); break;
         case HORDE:    SetTaximaskNode(99);  break;
@@ -522,7 +522,7 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
 
     uint32 unitfield;
 
-    switch(powertype)
+    switch (powertype)
     {
         case POWER_ENERGY:
         case POWER_MANA:
@@ -539,7 +539,7 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
     SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, DEFAULT_WORLD_OBJECT_SIZE);
     SetFloatValue(UNIT_FIELD_COMBATREACH, DEFAULT_COMBAT_REACH);
 
-    switch(gender)
+    switch (gender)
     {
         case GENDER_FEMALE:
             SetDisplayId(info->displayId_f);
@@ -679,7 +679,7 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
             uint32 count = iProto->Stackable;               // max stack by default (mostly 1)
             if (iProto->Class == ITEM_CLASS_CONSUMABLE && iProto->SubClass == ITEM_SUBCLASS_FOOD)
             {
-                switch(iProto->Spells[0].SpellCategory)
+                switch (iProto->Spells[0].SpellCategory)
                 {
                     case SPELL_CATEGORY_FOOD:                                // food
                         if (iProto->Stackable > 4)
@@ -2234,7 +2234,7 @@ void Player::SetGMVisible(bool on)
 
 bool Player::IsGroupVisibleFor(Player* p) const
 {
-    switch(sWorld.getConfig(CONFIG_GROUP_VISIBILITY))
+    switch (sWorld.getConfig(CONFIG_GROUP_VISIBILITY))
     {
         default: return IsInSameGroupWith(p);
         case 1:  return IsInSameRaidWith(p);
@@ -2796,7 +2796,7 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
 
             disabled_case = true;
         }
-        else switch(itr->second->state)
+        else switch (itr->second->state)
         {
             case PLAYERSPELL_UNCHANGED:                     // known saved spell
                 return false;
@@ -2996,7 +2996,7 @@ bool Player::addSpell(uint32 spell_id, bool active, bool learning, bool loading,
                 // lockpicking special case, not have ABILITY_LEARNED_ON_GET_RACE_OR_CLASS_SKILL
                 pSkill->id == SKILL_LOCKPICKING && _spell_idx->second->max_value == 0)
             {
-                switch(GetSkillRangeType(pSkill, _spell_idx->second->racemask != 0))
+                switch (GetSkillRangeType(pSkill, _spell_idx->second->racemask != 0))
                 {
                     case SKILL_RANGE_LANGUAGE:
                         SetSkill(pSkill->id, 300, 300);
@@ -3784,7 +3784,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
     // remove signs from petitions (also remove petitions if owner);
     RemovePetitionsAndSigns(playerguid, 10);
 
-    switch(charDelete_method)
+    switch (charDelete_method)
     {
         // completely remove from the database
         case CHAR_DELETE_REMOVE:
@@ -3962,7 +3962,7 @@ void Player::DeleteOldCharacters(uint32 keepDays)
 void Player::SetMovement(PlayerMovementType pType)
 {
     WorldPacket data;
-    switch(pType)
+    switch (pType)
     {
         case MOVE_ROOT:       data.Initialize(SMSG_FORCE_MOVE_ROOT,   GetPackGUID().size()+4); break;
         case MOVE_UNROOT:     data.Initialize(SMSG_FORCE_MOVE_UNROOT, GetPackGUID().size()+4); break;
@@ -4579,7 +4579,7 @@ void Player::HandleBaseModValue(BaseModGroup modGroup, BaseModType modType, floa
 
     float val = 1.0f;
 
-    switch(modType)
+    switch (modType)
     {
         case FLAT_MOD:
             m_auraBaseMod[modGroup][modType] += apply ? amount : -amount;
@@ -4596,7 +4596,7 @@ void Player::HandleBaseModValue(BaseModGroup modGroup, BaseModType modType, floa
     if (!CanModifyStats())
         return;
 
-    switch(modGroup)
+    switch (modGroup)
     {
         case CRIT_PERCENTAGE:              UpdateCritPercentage(BASE_ATTACK);                          break;
         case RANGED_CRIT_PERCENTAGE:       UpdateCritPercentage(RANGED_ATTACK);                        break;
@@ -5107,7 +5107,7 @@ void Player::UpdateWeaponSkill (WeaponAttackType attType)
 
     uint32 weapon_skill_gain = sWorld.getConfig(CONFIG_SKILL_GAIN_WEAPON);
 
-    switch(attType)
+    switch (attType)
     {
         case BASE_ATTACK:
         {
@@ -5134,7 +5134,7 @@ void Player::UpdateWeaponSkill (WeaponAttackType attType)
 void Player::UpdateCombatSkills(Unit *pVictim, WeaponAttackType attType, MeleeHitOutcome outcome, bool defence)
 {
 /* Not need, this checked on call this func from trigger system
-    switch(outcome)
+    switch (outcome)
     {
         case MELEE_HIT_CRIT:
         case MELEE_HIT_DODGE:
@@ -5734,7 +5734,7 @@ uint32 Player::TeamForRace(uint8 race)
         return ALLIANCE;
     }
 
-    switch(rEntry->TeamID)
+    switch (rEntry->TeamID)
     {
         case 7: return ALLIANCE;
         case 1: return HORDE;
@@ -7099,7 +7099,7 @@ void Player::_ApplyWeaponDependentAuraCritMod(Item *item, WeaponAttackType attac
         return;
 
     BaseModGroup mod = BASEMOD_END;
-    switch(attackType)
+    switch (attackType)
     {
         case BASE_ATTACK:   mod = CRIT_PERCENTAGE;        break;
         case OFF_ATTACK:    mod = OFFHAND_CRIT_PERCENTAGE;break;
@@ -7125,7 +7125,7 @@ void Player::_ApplyWeaponDependentAuraDamageMod(Item *item, WeaponAttackType att
         return;
 
     UnitMods unitMod = UNIT_MOD_END;
-    switch(attackType)
+    switch (attackType)
     {
         case BASE_ATTACK:   unitMod = UNIT_MOD_DAMAGE_MAINHAND; break;
         case OFF_ATTACK:    unitMod = UNIT_MOD_DAMAGE_OFFHAND;  break;
@@ -7134,7 +7134,7 @@ void Player::_ApplyWeaponDependentAuraDamageMod(Item *item, WeaponAttackType att
     }
 
     UnitModifierType unitModType = TOTAL_VALUE;
-    switch(modifier->m_auraname)
+    switch (modifier->m_auraname)
     {
         case SPELL_AURA_MOD_DAMAGE_DONE:         unitModType = TOTAL_VALUE; break;
         case SPELL_AURA_MOD_DAMAGE_PERCENT_DONE: unitModType = TOTAL_PCT;   break;
@@ -7547,7 +7547,7 @@ bool Player::CheckAmmoCompatibility(const ItemPrototype *ammo_proto) const
         return false;
 
     // check ammo ws. weapon compatibility
-    switch(weapon_proto->SubClass)
+    switch (weapon_proto->SubClass)
     {
         case ITEM_SUBCLASS_WEAPON_BOW:
         case ITEM_SUBCLASS_WEAPON_CROSSBOW:
@@ -7980,7 +7980,7 @@ void Player::SendInitWorldStates(bool forceZone, uint32 forceZoneId)
     uint32 areaid = GetAreaId();
     DEBUG_LOG("Sending SMSG_INIT_WORLD_STATES to Map:%u, Zone: %u", mapid, zoneid);
     // may be exist better way to do this...
-    switch(zoneid)
+    switch (zoneid)
     {
         case 0:
         case 1:
@@ -8059,7 +8059,7 @@ void Player::SendInitWorldStates(bool forceZone, uint32 forceZoneId)
         data << uint32(0x9bd) << uint32(0xF);               // 8
         data << uint32(0x9bb) << uint32(0xF);               // 9
     }
-    switch(zoneid)
+    switch (zoneid)
     {
         case 1:
         case 11:
@@ -8683,7 +8683,7 @@ uint8 Player::FindEquipSlot(ItemPrototype const* proto, uint32 slot, bool swap) 
             break;
         case INVTYPE_RELIC:
         {
-            switch(proto->SubClass)
+            switch (proto->SubClass)
             {
                 case ITEM_SUBCLASS_ARMOR_LIBRAM:
                     if (pClass == CLASS_PALADIN)
@@ -8930,7 +8930,7 @@ Item* Player::GetShield(bool useable) const
 
 uint32 Player::GetAttackBySlot(uint8 slot)
 {
-    switch(slot)
+    switch (slot)
     {
         case EQUIPMENT_SLOT_MAINHAND: return BASE_ATTACK;
         case EQUIPMENT_SLOT_OFFHAND:  return OFF_ATTACK;
@@ -12081,7 +12081,7 @@ void Player::ApplyEnchantment(Item *item, EnchantmentSlot slot, bool apply, bool
         uint32 enchant_amount = pEnchant->amount[s];
         uint32 enchant_spell_id = pEnchant->spellid[s];
 
-        switch(enchant_display_type)
+        switch (enchant_display_type)
         {
             case ITEM_ENCHANTMENT_TYPE_NONE:
                 break;
@@ -12328,7 +12328,7 @@ void Player::ApplyEnchantment(Item *item, EnchantmentSlot slot, bool apply, bool
             default:
                 sLog->outError("Unknown item enchantment display type: %d",enchant_display_type);
                 break;
-        }                                                   /*switch(enchant_display_type)*/
+        }                                                   /*switch (enchant_display_type)*/
     }                                                       /*for*/
 
     // visualize enchantment at player and equipped items
@@ -12437,7 +12437,7 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
             if (!(itr->second.npc_option_npcflag & npcflags))
                 continue;
 
-            switch(itr->second.option_id)
+            switch (itr->second.option_id)
             {
                 case GOSSIP_OPTION_GOSSIP:
                     if (itr->second.action_menu_id)         // has sub menu, so do not "talk" with this NPC yet
@@ -12509,7 +12509,7 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
         {
             GameObject *pGo = (GameObject*)pSource;
 
-            switch(itr->second.option_id)
+            switch (itr->second.option_id)
             {
                 case GOSSIP_OPTION_QUESTGIVER:
                     if (pGo->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
@@ -12647,7 +12647,7 @@ void Player::OnGossipSelect(WorldObject* pSource, uint32 gossipListId, uint32 me
 
     GossipMenuItemData pMenuData = gossipmenu.GetItemData(gossipListId);
 
-    switch(gossipOptionId)
+    switch (gossipOptionId)
     {
         case GOSSIP_OPTION_GOSSIP:
         {
@@ -17198,7 +17198,7 @@ void Player::RemovePet(Pet* pet, PetSaveMode mode, bool returnreagent)
 
     if (returnreagent)
     {
-        switch(pet->GetEntry())
+        switch (pet->GetEntry())
         {
             //warlock pets except imp are removed(?) when logging out
             case 1860:
@@ -18012,7 +18012,7 @@ void Player::InitDataForForm(bool reapplyMods)
     else
         SetRegularAttackTime();
 
-    switch(m_form)
+    switch (m_form)
     {
         case FORM_CAT:
         {
@@ -18465,7 +18465,7 @@ bool Player::EnchantmentFitsRequirements(uint32 enchantmentcondition, int8 slot)
         // if have <CompareColor> use them as count, else use <value> from Condition
         uint32 _cmp_gem = Condition->CompareColor[i] ? curcount[Condition->CompareColor[i] - 1]: Condition->Value[i];
 
-        switch(Condition->Comparator[i])
+        switch (Condition->Comparator[i])
         {
             case 2:                                         // requires less <color> than (<value> || <comparecolor>) gems
                 activate &= (_cur_gem < _cmp_gem) ? true : false;

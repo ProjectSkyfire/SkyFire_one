@@ -155,7 +155,7 @@ struct boss_maexxnaAI : public ScriptedAI
             Creature* Wrap = NULL;
             if (pTarget)
             {
-                switch(i)
+                switch (i)
                 {
                     case 0:
                         DoTeleportPlayer(pTarget, LOC_X1, LOC_Y1, LOC_Z1, pTarget->GetOrientation());

@@ -111,7 +111,7 @@ struct instance_steam_vault : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 17797: ThespiaGUID = pCreature->GetGUID(); break;
             case 17796: MekgineerGUID = pCreature->GetGUID(); break;
@@ -121,7 +121,7 @@ struct instance_steam_vault : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case MAIN_CHAMBERS_DOOR: MainChambersDoor = pGo->GetGUID(); break;
             case ACCESS_PANEL_HYDRO: AccessPanelHydro = pGo->GetGUID(); break;
@@ -139,7 +139,7 @@ struct instance_steam_vault : public ScriptedInstance
             return;
         }
 
-        switch(type)
+        switch (type)
         {
             case TYPE_HYDROMANCER_THESPIA:
                 if (data == SPECIAL)
@@ -185,7 +185,7 @@ struct instance_steam_vault : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_HYDROMANCER_THESPIA:
                 return Encounter[0];
@@ -201,7 +201,7 @@ struct instance_steam_vault : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        switch(data)
+        switch (data)
         {
             case DATA_THESPIA:
                 return ThespiaGUID;

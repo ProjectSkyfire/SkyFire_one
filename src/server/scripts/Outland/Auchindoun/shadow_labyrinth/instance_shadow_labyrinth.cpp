@@ -75,7 +75,7 @@ struct instance_shadow_labyrinth : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case REFECTORY_DOOR: RefectoryDoorGUID = pGo->GetGUID(); break;
         case SCREAMING_HALL_DOOR: ScreamingHallDoorGUID = pGo->GetGUID(); break;
@@ -84,7 +84,7 @@ struct instance_shadow_labyrinth : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 18732:
                 GrandmasterVorpil = pCreature->GetGUID();
@@ -118,7 +118,7 @@ struct instance_shadow_labyrinth : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_HELLMAW:
                 if (Encounter[0] != DONE)
@@ -173,7 +173,7 @@ struct instance_shadow_labyrinth : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_HELLMAW: return Encounter[0];
             case TYPE_OVERSEER: return Encounter[1];

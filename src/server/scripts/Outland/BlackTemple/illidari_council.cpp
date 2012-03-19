@@ -528,7 +528,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
             {
                 if (Unit* pUnit = SelectCouncilMember())
                 {
-                    switch(rand()%2)
+                    switch (rand()%2)
                     {
                         case 0: DoCast(pUnit, SPELL_BLESS_SPELLWARD);  break;
                         case 1: DoCast(pUnit, SPELL_BLESS_PROTECTION); break;
@@ -585,7 +585,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
         {
             if (!me->IsNonMeleeSpellCasted(false))
             {
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                     case 0: DoCast(me, SPELL_SEAL_OF_COMMAND);  break;
                     case 1: DoCast(me, SPELL_SEAL_OF_BLOOD);    break;

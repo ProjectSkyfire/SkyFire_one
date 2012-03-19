@@ -64,7 +64,7 @@ struct npc_professor_phizzlethorpeAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
         case 4:DoScriptText(SAY_PROGRESS_2, me, pPlayer);break;
         case 5:DoScriptText(SAY_PROGRESS_3, me, pPlayer);break;

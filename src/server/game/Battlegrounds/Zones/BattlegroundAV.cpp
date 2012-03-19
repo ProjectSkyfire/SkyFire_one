@@ -128,7 +128,7 @@ void BattleGroundAV::HandleQuestComplete(uint32 questid, Player *player)
     uint8 team = GetTeamIndexByTeamId(player->GetTeam());
     //TODO add reputation, events (including quest not available anymore, next quest availabe, go/npc de/spawning)and maybe honor
     sLog->outDebug("BattleGroundAV: Quest %i completed",questid);
-    switch(questid)
+    switch (questid)
     {
         case BG_AV_QUEST_A_SCRAPS1:
         case BG_AV_QUEST_A_SCRAPS2:
@@ -451,7 +451,7 @@ void BattleGroundAV::HandleAreaTrigger(Player *Source, uint32 Trigger)
         return;
 
     uint32 SpellId = 0;
-    switch(Trigger)
+    switch (Trigger)
     {
         case 95:
         case 2608:
@@ -490,7 +490,7 @@ void BattleGroundAV::UpdatePlayerScore(Player* Source, uint32 type, uint32 value
     if (itr == m_PlayerScores.end())                         // player not found...
         return;
 
-    switch(type)
+    switch (type)
     {
         case SCORE_GRAVEYARDS_ASSAULTED:
             ((BattleGroundAVScore*)itr->second)->GraveyardsAssaulted += value;
@@ -786,7 +786,7 @@ void BattleGroundAV::EventPlayerClickedOnFlag(Player *source, GameObject* target
     sLog->outDebug("BattleGroundAV: using gameobject %i with type %i",target_obj->GetEntry(),object);
     if (object < 0)
         return;
-    switch(target_obj->GetEntry())
+    switch (target_obj->GetEntry())
     {
         case BG_AV_OBJECTID_BANNER_A:
         case BG_AV_OBJECTID_BANNER_A_B:

@@ -187,7 +187,7 @@ namespace Trinity
             }
             else
             {
-                switch(count)
+                switch (count)
                 {
                     case 0:
                     case 1:

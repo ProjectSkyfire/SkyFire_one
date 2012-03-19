@@ -220,7 +220,7 @@ struct boss_lady_vashjAI : public ScriptedAI
     }
     void KilledUnit(Unit * /*victim*/)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -238,7 +238,7 @@ struct boss_lady_vashjAI : public ScriptedAI
 
     void StartEvent()
     {
-        switch(rand()%4)
+        switch (rand()%4)
         {
             case 0: DoScriptText(SAY_AGGRO1, me); break;
             case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -304,7 +304,7 @@ struct boss_lady_vashjAI : public ScriptedAI
 
     void CastShootOrMultishot()
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0:
                 //Shoot
@@ -319,7 +319,7 @@ struct boss_lady_vashjAI : public ScriptedAI
         }
         if (rand()%3)
         {
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0: DoScriptText(SAY_BOWSHOT1, me); break;
                 case 1: DoScriptText(SAY_BOWSHOT2, me); break;
@@ -974,7 +974,7 @@ bool ItemUse_item_tainted_core(Player* pPlayer, Item* /*_Item*/, SpellCastTarget
         {
             uint32 identifier;
             uint8 channel_identifier;
-            switch(targets.getGOTarget()->GetEntry())
+            switch (targets.getGOTarget()->GetEntry())
             {
                 case 185052:
                     identifier = DATA_SHIELDGENERATOR1;

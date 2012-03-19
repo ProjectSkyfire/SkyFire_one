@@ -723,7 +723,7 @@ bool bWriteVariables, HANDLE pThreadHandle)                                     
         if (SymGetLineFromAddr64(m_hProcess, sf.AddrPC.Offset,
             &dwLineDisplacement, &lineInfo))
         {
-            _tprintf(_T("  %s line %u"),lineInfo.FileName, lineInfo.LineNumber);
+            _tprintf(_T("  %s line %u"), lineInfo.FileName, lineInfo.LineNumber);
         }
 
         _tprintf(_T("\r\n"));
@@ -926,7 +926,7 @@ char* Name)
 
             // Get the size of the child member
             ULONG64 length;
-            SymGetTypeInfo(m_hProcess, modBase, typeId, TI_GET_LENGTH,&length);
+            SymGetTypeInfo(m_hProcess, modBase, typeId, TI_GET_LENGTH, &length);
 
             // Calculate the address of the member
             DWORD_PTR dwFinalOffset = offset + dwMemberOffset;
@@ -963,7 +963,7 @@ PVOID pAddress)
     {
         if (basicType == btFloat)
         {
-            pszCurrBuffer += sprintf(pszCurrBuffer," = %f", *(PFLOAT)pAddress);
+            pszCurrBuffer += sprintf(pszCurrBuffer, " = %f", *(PFLOAT)pAddress);
         }
         else if (basicType == btChar)
         {
@@ -977,7 +977,7 @@ PVOID pAddress)
                     *(PDWORD)pAddress);
         }
         else
-            pszCurrBuffer += sprintf(pszCurrBuffer," = %X", *(PDWORD)pAddress);
+            pszCurrBuffer += sprintf(pszCurrBuffer, " = %X", *(PDWORD)pAddress);
     }
     else if (length == 8)
     {

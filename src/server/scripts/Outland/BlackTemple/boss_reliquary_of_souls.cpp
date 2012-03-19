@@ -217,7 +217,7 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
 
         if (Timer <= diff)
         {
-            switch(Counter)
+            switch (Counter)
             {
             case 0:
                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY2H);  // I R ANNNGRRRY!

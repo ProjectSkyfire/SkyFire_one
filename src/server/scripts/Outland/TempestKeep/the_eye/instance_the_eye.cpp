@@ -81,7 +81,7 @@ struct instance_the_eye : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
             case 20064: ThaladredTheDarkener = pCreature->GetGUID(); break;
             case 20063: MasterEngineerTelonicus = pCreature->GetGUID(); break;
@@ -95,7 +95,7 @@ struct instance_the_eye : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_THALADREDTHEDARKENER:         return ThaladredTheDarkener;
             case DATA_LORDSANGUINAR:                return LordSanguinar;
@@ -110,7 +110,7 @@ struct instance_the_eye : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_ALAREVENT:
                 AlarEventPhase = data;
@@ -137,7 +137,7 @@ struct instance_the_eye : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_ALAREVENT:    return AlarEventPhase;
             case DATA_HIGHASTROMANCERSOLARIANEVENT: return Encounters[1];

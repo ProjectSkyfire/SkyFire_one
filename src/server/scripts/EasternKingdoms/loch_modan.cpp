@@ -121,7 +121,7 @@ struct npc_miranAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
         case 8:
             DoScriptText(MIRAN_SAY_AMBUSH_ONE, me);

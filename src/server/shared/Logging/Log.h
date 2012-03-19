@@ -110,6 +110,8 @@ class Log
         void outChat( const char * str, ... )                   ATTR_PRINTF(2,3);
         void outArena( const char * str, ... )                  ATTR_PRINTF(2,3);
         void outCharDump( const char * str, uint32 account_id, uint32 guid, const char * name );
+        void outSQLDev( const char * str, ... )                 ATTR_PRINTF(2, 3);
+        void outSQLDriver( const char* str, ... )               ATTR_PRINTF(2, 3);
 
         static void outTimestamp(FILE* file);
         static std::string GetTimestampStr();
@@ -117,6 +119,7 @@ class Log
         void SetLogLevel(char * Level);
         void SetLogFileLevel(char * Level);
         void SetDBLogLevel(char * Level);
+        void SetSQLDriverQueryLogging(bool newStatus) { m_sqlDriverQueryLogging = newStatus; }
         void SetRealmID(uint32 id) { realm = id; }
 
         uint32 getLogFilter() const { return m_logFilter; }
@@ -127,6 +130,7 @@ class Log
         bool GetLogDBLater() { return m_enableLogDBLater; }
         void SetLogDB(bool enable) { m_enableLogDB = enable; }
         void SetLogDBLater(bool value) { m_enableLogDBLater = value; }
+        bool GetSQLDriverQueryLogging() const { return m_sqlDriverQueryLogging; }
     private:
         FILE* openLogFile(char const* configFileName,char const* configTimeStampFlag, char const* mode);
         FILE* openGmlogPerAccount(uint32 account);
@@ -138,6 +142,8 @@ class Log
         FILE* dberLogfile;
         FILE* chatLogfile;
         FILE* arenaLogFile;
+        FILE* sqlLogFile;
+        FILE* sqlDevLogFile;
 
         // cache values for after initilization use (like gm log per account case)
         std::string m_logsDir;
@@ -154,6 +160,10 @@ class Log
         // log coloring
         bool m_colored;
         ColorTypes m_colors[4];
+
+        // log levels:
+        // false: errors only, true: full query logging
+        bool m_sqlDriverQueryLogging;
 
         // log levels:
         // 0 minimum/string, 1 basic/error, 2 detail, 3 full/debug

@@ -191,7 +191,7 @@ struct npc_morriduneAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPoint)
     {
-        switch(uiPoint)
+        switch (uiPoint)
         {
             case 4:
                 SetEscortPaused(true);
@@ -219,7 +219,7 @@ bool GossipHello_npc_morridune(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_morridune(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->TeleportTo(1, 9952.239, 2284.277, 1341.394, 1.595);

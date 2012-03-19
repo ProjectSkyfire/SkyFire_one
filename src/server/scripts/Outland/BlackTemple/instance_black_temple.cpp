@@ -135,7 +135,7 @@ struct instance_black_temple : public ScriptedInstance
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (pCreature->GetEntry())
         {
         case 22887:    Najentus = pCreature->GetGUID();                  break;
         case 23089:    Akama = pCreature->GetGUID();                     break;
@@ -154,7 +154,7 @@ struct instance_black_temple : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case 185483: NajentusGate = pGo->GetGUID();// Gate past Naj'entus (at the entrance to Supermoose's courtyards)
             if (Encounters[0] == DONE)HandleGameObject(NULL, true, pGo);break;
@@ -183,7 +183,7 @@ struct instance_black_temple : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
         case DATA_HIGHWARLORDNAJENTUS:         return Najentus;
         case DATA_AKAMA:                       return Akama;
@@ -209,7 +209,7 @@ struct instance_black_temple : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_HIGHWARLORDNAJENTUSEVENT:
             if (data == DONE)
@@ -297,7 +297,7 @@ struct instance_black_temple : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_HIGHWARLORDNAJENTUSEVENT:         return Encounters[0];
         case DATA_SUPREMUSEVENT:                    return Encounters[1];

@@ -68,7 +68,7 @@ struct npc_corporal_keeshanAI : public npc_escortAI
         if (uiI >= 65 && me->GetUnitMovementFlags() == MOVEFLAG_WALK_MODE)
             me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
 
-        switch(uiI)
+        switch (uiI)
         {
             case 39:
                 SetEscortPaused(true);
@@ -97,7 +97,7 @@ struct npc_corporal_keeshanAI : public npc_escortAI
         {
             if (uiTimer <= uiDiff)
             {
-                switch(uiPhase)
+                switch (uiPhase)
                 {
                     case 1:
                         me->SetStandState(UNIT_STAND_STATE_SIT);

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,9 +17,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** \file
+    \ingroup Trinityd
+*/
+
 #include "Common.h"
-#include "Config.h"
-#include "DatabaseEnv.h"
+#include "Configuration/Config.h"
+#include "Database/DatabaseEnv.h"
 #include "AccountMgr.h"
 #include "Log.h"
 #include "RASocket.h"
@@ -173,7 +177,7 @@ int RASocket::check_access_level(const std::string& user)
 {
     std::string safe_user = user;
 
-    AccountMgr::normalizeString(safe_user);
+    sAccountMgr->normalizeString(safe_user);
     LoginDatabase.escape_string(safe_user);
 
     QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.id, aa.gmlevel, aa.RealmID FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE a.username = '%s'", safe_user.c_str());
@@ -184,7 +188,7 @@ int RASocket::check_access_level(const std::string& user)
         return -1;
     }
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
 
     if (fields[1].GetUInt32() < iMinLevel)
     {
@@ -203,14 +207,14 @@ int RASocket::check_access_level(const std::string& user)
 int RASocket::check_password(const std::string& user, const std::string& pass)
 {
     std::string safe_user = user;
-    AccountMgr::normalizeString(safe_user);
+    sAccountMgr->normalizeString(safe_user);
     LoginDatabase.escape_string(safe_user);
 
     std::string safe_pass = pass;
-    AccountMgr::normalizeString(safe_pass);
+    sAccountMgr->normalizeString(safe_pass);
     LoginDatabase.escape_string(safe_pass);
 
-    std::string hash = AccountMgr::CalculateShaPassHash(safe_user, safe_pass);
+    std::string hash = sAccountMgr->CalculateShaPassHash(safe_user, safe_pass);
 
     QueryResult_AutoPtr check = LoginDatabase.PQuery(
             "SELECT 1 FROM account WHERE username = '%s' AND sha_pass_hash = '%s'",
@@ -282,7 +286,7 @@ int RASocket::subnegotiate()
 
     if (n >= 1024)
     {
-        sLog->outRemote("RASocket::subnegotiate: allocated buffer 1024 bytes was too small for negotiation packet, size: %u", n);
+        sLog->outRemote("RASocket::subnegotiate: allocated buffer 1024 bytes was too small for negotiation packet, size: %u", uint32(n));
         return -1;
     }
 
@@ -345,7 +349,7 @@ int RASocket::svc(void)
     if (send(std::string(sWorld.GetMotd()) + "\r\n") == -1)
         return -1;
 
-    for(;;)
+    for (;;)
     {
         // show prompt
         const char* tc_prompt = "TC> ";

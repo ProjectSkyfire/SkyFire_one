@@ -76,7 +76,7 @@ bool GossipHello_npc_bunthen_plainswind(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_bunthen_plainswind(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -182,7 +182,7 @@ bool GossipHello_npc_silva_filnaveth(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_silva_filnaveth(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -332,7 +332,7 @@ public:
     void EnterCombat(Unit* who)
     {
         uint32 rnd = rand()%2;
-        switch(rnd)
+        switch (rnd)
         {
             case 0: DoScriptText(CLINTAR_SPIRIT_SAY_UNDER_ATTACK_1, me, who); break;
             case 1: DoScriptText(CLINTAR_SPIRIT_SAY_UNDER_ATTACK_2, me, who); break;
@@ -385,10 +385,10 @@ public:
                 return;
             }
 
-            switch(CurrWP)
+            switch (CurrWP)
             {
                 case 0:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             me->Say(CLINTAR_SPIRIT_SAY_START, 0, PlayerGUID);
@@ -401,7 +401,7 @@ public:
                     }
                     break;
                 case 6:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 133);
@@ -416,7 +416,7 @@ public:
                     }
                     break;
                 case 15:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 133);
@@ -430,7 +430,7 @@ public:
                     }
                     break;
                 case 16:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             DoScriptText(CLINTAR_SPIRIT_SAY_GET_TWO, me, pPlayer);
@@ -443,7 +443,7 @@ public:
                     }
                     break;
                 case 20:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             {
@@ -463,7 +463,7 @@ public:
                     }
                     break;
                 case 24:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 133);
@@ -477,7 +477,7 @@ public:
                     }
                     break;
                 case 25:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             DoScriptText(CLINTAR_SPIRIT_SAY_GET_THREE, me, pPlayer);
@@ -490,7 +490,7 @@ public:
                     }
                     break;
                 case 40:
-                    switch(Step)
+                    switch (Step)
                     {
                         case 0:
                             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 2);

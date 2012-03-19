@@ -234,7 +234,7 @@ int my_fclose(FILE *fd, myf MyFlags)
 #else
   err= my_win_fclose(fd);
 #endif
-  if(err < 0)
+  if (err < 0)
   {
     my_errno=errno;
     if (MyFlags & (MY_FAE | MY_WME))

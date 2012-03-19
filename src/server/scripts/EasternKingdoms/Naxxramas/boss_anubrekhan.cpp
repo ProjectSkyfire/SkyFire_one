@@ -77,7 +77,7 @@ struct boss_anubrekhanAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_AGGRO1, me); break;
         case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -89,7 +89,7 @@ struct boss_anubrekhanAI : public ScriptedAI
     {
             if (!HasTaunted && me->IsWithinDistInMap(who, 60.0f))
             {
-                switch(rand()%5)
+                switch (rand()%5)
                 {
                 case 0: DoScriptText(SAY_GREET, me); break;
                 case 1: DoScriptText(SAY_TAUNT1, me); break;

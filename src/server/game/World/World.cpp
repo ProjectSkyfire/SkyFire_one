@@ -2049,7 +2049,7 @@ BanReturn World::BanAccount(BanMode mode, std::string nameOrIP, std::string dura
     QueryResult_AutoPtr resultAccounts = QueryResult_AutoPtr(NULL);                     //used for kicking
 
     // Update the database with ban information
-    switch(mode)
+    switch (mode)
     {
         case BAN_IP:
             //No SQL injection as strings are escaped

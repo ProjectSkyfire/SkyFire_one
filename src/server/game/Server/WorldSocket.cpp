@@ -592,7 +592,7 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
 
     try
     {
-        switch(opcode)
+        switch (opcode)
         {
             case CMSG_PING:
                 return HandlePing (*new_pct);

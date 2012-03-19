@@ -104,7 +104,7 @@ struct npc_calvin_montagueAI : public ScriptedAI
                 return;
             }
 
-            switch(m_uiPhase)
+            switch (m_uiPhase)
             {
                 case 1:
                     DoScriptText(SAY_COMPLETE, me);

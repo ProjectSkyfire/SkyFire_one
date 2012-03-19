@@ -171,10 +171,10 @@ bool ItemCanGoIntoBag(ItemPrototype const *pProto, ItemPrototype const *pBagProt
     if (!pProto || !pBagProto)
         return false;
 
-    switch(pBagProto->Class)
+    switch (pBagProto->Class)
     {
         case ITEM_CLASS_CONTAINER:
-            switch(pBagProto->SubClass)
+            switch (pBagProto->SubClass)
             {
                 case ITEM_SUBCLASS_CONTAINER:
                     return true;
@@ -210,7 +210,7 @@ bool ItemCanGoIntoBag(ItemPrototype const *pProto, ItemPrototype const *pBagProt
                     return false;
             }
         case ITEM_CLASS_QUIVER:
-            switch(pBagProto->SubClass)
+            switch (pBagProto->SubClass)
             {
                 case ITEM_SUBCLASS_QUIVER:
                     if (!(pProto->BagFamily & BAG_FAMILY_MASK_ARROWS))

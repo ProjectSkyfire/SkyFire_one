@@ -178,7 +178,7 @@ int64 fileLength(const std::string& filename) {
     if (result == -1) {
 #if _HAVE_ZIP /* G3DFIX: Use ZIP-library only if defined */
 		std::string zip, contents;
-		if(zipfileExists(filename, zip, contents)){
+		if (zipfileExists(filename, zip, contents)){
 			int64 requiredMem;
 
                         struct zip *z = zip_open( zip.c_str(), ZIP_CHECKCONS, NULL );
@@ -299,14 +299,14 @@ static void _zip_resolveDirectory(std::string& completeDir, const std::string& d
 	completeDir = drive;
 	int tempLength;
 	// if the given length is longer than the array, we correct it
-	if(length > path.length()){
+	if (length > path.length()){
 		tempLength = path.length();
 	} else{
 		tempLength = length;
 	}
 
 	for(int t = 0; t < tempLength; ++t){
-		if(t > 0){
+		if (t > 0){
 			completeDir += "/";
 		}
 		completeDir += path[t];
@@ -320,7 +320,7 @@ static bool _zip_zipContains(const std::string& zipDir, const std::string& desir
 	//1 is sensitive, 2 is not, 0 is default
         int test = zip_name_locate( z, desiredFile.c_str(), ZIP_FL_NOCASE );
         zip_close( z );
-	if(test == -1){
+	if (test == -1){
 		return false;
 	}
 	return true;

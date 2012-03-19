@@ -689,7 +689,7 @@ namespace Trinity
                     default: continue;
                 }
 
-                switch(i_push_type)
+                switch (i_push_type)
                 {
                     case PUSH_IN_FRONT:
                         if (i_caster->isInFrontInMap((Unit*)(itr->getSource()), i_radius, M_PI/3))

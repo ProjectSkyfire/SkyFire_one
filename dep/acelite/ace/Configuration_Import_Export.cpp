@@ -374,7 +374,7 @@ ACE_Registry_ImpExp::process_previous_line_format (ACE_TCHAR* buffer,
       if (*end == '\"')
         {
           // string type
-          if(config_.set_string_value (section, buffer, end + 1))
+          if (config_.set_string_value (section, buffer, end + 1))
             return -4;
         }
       else if (*end == '#')

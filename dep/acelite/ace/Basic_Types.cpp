@@ -37,7 +37,7 @@ ACE_U_LongLong::as_string (ACE_TCHAR *output,
     }
   else
     {
-      switch(base)
+      switch (base)
         {
           case 8:
             {

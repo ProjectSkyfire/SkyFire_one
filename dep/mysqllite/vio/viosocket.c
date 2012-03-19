@@ -720,7 +720,7 @@ static size_t pipe_complete_io(Vio* vio, char* buf, size_t size, DWORD timeout_m
     WaitForSingleObjects will normally return WAIT_OBJECT_O (success, IO completed)
     or WAIT_TIMEOUT.
   */
-  if(ret != WAIT_OBJECT_0)
+  if (ret != WAIT_OBJECT_0)
   {
     CancelIo(vio->hPipe);
     DBUG_PRINT("error",("WaitForSingleObject() returned  %d", ret));
@@ -833,7 +833,7 @@ void vio_win32_timeout(Vio *vio, uint which , uint timeout_sec)
       timeout_ms= timeout_sec * 1000;
 
     /* which == 1 means "write", which == 0 means "read".*/
-    if(which)
+    if (which)
       vio->write_timeout_ms= timeout_ms;
     else
       vio->read_timeout_ms= timeout_ms;

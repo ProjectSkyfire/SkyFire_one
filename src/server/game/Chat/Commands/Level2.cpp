@@ -2062,7 +2062,7 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
     PSendSysMessage(LANG_PINFO_ACCOUNT, (target?"":GetTrinityString(LANG_OFFLINE)), name.c_str(), GUID_LOPART(targetGUID), username.c_str(), accId, email.c_str(), security, last_ip.c_str(), last_login.c_str(), latency);
 
     std::string race_s, Class_s;
-    switch(race)
+    switch (race)
     {
         case RACE_HUMAN:            race_s = "Human";       break;
         case RACE_ORC:              race_s = "Orc";         break;
@@ -2075,7 +2075,7 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
         case RACE_BLOODELF:         race_s = "Blood Elf";   break;
         case RACE_DRAENEI:          race_s = "Draenei";     break;
     }
-    switch(Class)
+    switch (Class)
     {
         case CLASS_WARRIOR:         Class_s = "Warrior";        break;
         case CLASS_PALADIN:         Class_s = "Paladin";        break;
@@ -3643,7 +3643,7 @@ bool ChatHandler::HandleLookupPlayerAccountCommand(const char* args)
     char* limit_str = strtok (NULL, " ");
     int32 limit = limit_str ? atoi (limit_str) : -1;
 
-    if (!AccountMgr::normalizeString (account))
+    if (!sAccountMgr->normalizeString (account))
         return false;
 
     LoginDatabase.escape_string (account);

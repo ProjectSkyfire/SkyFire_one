@@ -54,7 +54,7 @@ bool GossipHello_npc_taxi(Player* pPlayer, Creature* pCreature)
     if (pCreature->isQuestGiver())
         pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    switch(pCreature->GetEntry()) {
+    switch (pCreature->GetEntry()) {
     case 17435: // Azuremyst Isle - Susurrus
         if (pPlayer->HasItemCount(23843, 1, true))
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SUSURRUS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
@@ -140,7 +140,7 @@ bool GossipSelect_npc_taxi(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
 {
     std::vector<uint32> nodes;
 
-    switch(uiAction) {
+    switch (uiAction) {
     case GOSSIP_ACTION_INFO_DEF:
         //spellId is correct, however it gives flight a somewhat funny effect //TaxiPath 506.
         pPlayer->CLOSE_GOSSIP_MENU();

@@ -270,7 +270,7 @@ ACE_OS::localtime_r (const time_t *t, struct tm *res)
 
   res->tm_hour = systime.wHour;
 
-  if(pTz.DaylightBias!=0)
+  if (pTz.DaylightBias!=0)
     res->tm_isdst = 1;
   else
     res->tm_isdst = 1;

@@ -942,7 +942,7 @@ static int search_default_file_with_ext(Process_option_func opt_handler,
       {
     if (*value == '\\' && value != value_end-1)
     {
-      switch(*++value) {
+      switch (*++value) {
       case 'n':
         *ptr++='\n';
         break;

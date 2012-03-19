@@ -63,7 +63,7 @@ struct instance_razorfen_kraul : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*apply*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case 21099: DoorWardGUID = pGo->GetGUID(); break;
         }
@@ -82,7 +82,7 @@ struct instance_razorfen_kraul : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_WARD_KEEPERS:
                 if (data == NOT_STARTED)

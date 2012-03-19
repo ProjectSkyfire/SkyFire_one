@@ -366,7 +366,7 @@ struct npc_isla_starmaneAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 0:
             {
@@ -449,7 +449,7 @@ bool GossipHello_go_skull_pile(Player *player, GameObject* _GO)
 
 void SendActionMenu_go_skull_pile(Player *player, GameObject* _GO, uint32 action)
 {
-    switch(action)
+    switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
               player->CastSpell(player, 40642, false);
@@ -468,7 +468,7 @@ void SendActionMenu_go_skull_pile(Player *player, GameObject* _GO, uint32 action
 
 bool GossipSelect_go_skull_pile(Player *player, GameObject* _GO, uint32 sender, uint32 action)
 {
-    switch(sender)
+    switch (sender)
     {
         case GOSSIP_SENDER_MAIN:    SendActionMenu_go_skull_pile(player, _GO, action); break;
     }
@@ -496,7 +496,7 @@ struct npc_skywingAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 7:
             me->SummonCreature(NPC_LUANGA_IMPRISONER, -3399.274658, 4055.948975, 18.603474, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
@@ -602,7 +602,7 @@ struct npc_akunoAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 5:
                 DoScriptText(SAY_AKU_AMBUSH_A, me);
@@ -807,7 +807,7 @@ struct npc_letollAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 JustStartedEscort();
@@ -864,7 +864,7 @@ struct npc_letollAI : public npc_escortAI
                 {
                     m_uiEventTimer = 7000;
 
-                    switch(m_uiEventCount)
+                    switch (m_uiEventCount)
                     {
                         case 0:
                             DoScriptText(SAY_LE_ALMOST, me);
@@ -1021,7 +1021,7 @@ struct npc_mana_bomb_exp_triggerAI : public ScriptedAI
             if (m_uiEventCounter < 10)
                 me->CastSpell(me, SPELL_MANA_BOMB_LIGHTNING, false);
 
-            switch(m_uiEventCounter)
+            switch (m_uiEventCounter)
             {
                 case 5:
                     if (pManaBomb)
@@ -1101,7 +1101,7 @@ bool GOHello_veil_skith_cage(Player* pPlayer, GameObject* pGo)
         {
             pPlayer->KilledMonsterCredit(NPC_CAPTIVE_CHILD, pChild->GetGUID());
 
-            switch(urand(0, 3))
+            switch (urand(0, 3))
             {
                 case 0: DoScriptText(SAY_THANKS_1, pChild); break;
                 case 1: DoScriptText(SAY_THANKS_2, pChild); break;

@@ -190,7 +190,7 @@ struct npc_grimstoneAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        switch(i)
+        switch (i)
         {
         case 0:
             DoScriptText(SCRIPT_TEXT1, me);//2
@@ -275,7 +275,7 @@ struct npc_grimstoneAI : public npc_escortAI
         {
             if (Event_Timer <= diff)
             {
-                switch(EventPhase)
+                switch (EventPhase)
                 {
                 case 0:
                     DoScriptText(SCRIPT_TEXT5, me);//1
@@ -580,7 +580,7 @@ struct npc_dughal_stormwingAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-    switch(i)
+    switch (i)
         {
         case 0:me->Say(SAY_DUGHAL_FREE, LANG_UNIVERSAL, PlayerGUID); break;
         case 1:pInstance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_OBJECTIVE_COMPLETED);break;
@@ -683,7 +683,7 @@ struct npc_marshal_windsorAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-    switch(i)
+    switch (i)
         {
         case 1:
             me->Say(SAY_WINDSOR_1, LANG_UNIVERSAL, PlayerGUID);
@@ -847,7 +847,7 @@ struct npc_marshal_reginald_windsorAI : public npc_escortAI
     void WaypointReached(uint32 i)
     {
     wp=i;
-    switch(i)
+    switch (i)
         {
         case 0:
             me->setFaction(11);
@@ -1053,7 +1053,7 @@ struct npc_tobias_seecherAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-    switch(i)
+    switch (i)
         {
         case 0:me->Say(SAY_TOBIAS_FREE, LANG_UNIVERSAL, PlayerGUID); break;
         case 2:
@@ -1173,7 +1173,7 @@ struct npc_rocknotAI : public npc_escortAI
         if (!pInstance)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 1:
             me->HandleEmoteCommand(EMOTE_ONESHOT_KICK);

@@ -201,7 +201,7 @@ float ethereum_NPC[2][7] =
 bool GOHello_go_ethereum_prison(Player *pPlayer, GameObject *pGO)
 {
     pGO->SetGoState(GO_STATE_ACTIVE);
-    switch(rand()%2)
+    switch (rand()%2)
     {
         case 0:
             pGO->SummonCreature(ethereum_NPC[0][rand()%6], pGO->GetPositionX(), pGO->GetPositionY(), pGO->GetPositionZ()+0.3, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
@@ -298,7 +298,7 @@ bool GOHello_go_shrine_of_the_birds(Player *pPlayer, GameObject *pGO)
     float fX, fY, fZ;
     pGO->GetClosePoint(fX, fY, fZ, pGO->GetObjectSize(), INTERACTION_DISTANCE);
 
-    switch(pGO->GetEntry())
+    switch (pGO->GetEntry())
     {
         case GO_SHRINE_HAWK:
             BirdEntry = NPC_HAWK_GUARD;
@@ -371,7 +371,7 @@ bool GOHello_go_fel_crystalforge(Player *pPlayer, GameObject *pGO)
 bool GOSelect_go_fel_crystalforge(Player *pPlayer, GameObject *pGO, uint32 /*uiSender*/, uint32 uiAction)
 {
     pPlayer->PlayerTalkClass->ClearMenus();
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF:
             pPlayer->CastSpell(pPlayer, SPELL_CREATE_1_FLASK_OF_BEAST, false);
@@ -424,7 +424,7 @@ bool GOHello_go_bashir_crystalforge(Player *pPlayer, GameObject *pGO)
 bool GOSelect_go_bashir_crystalforge(Player *pPlayer, GameObject *pGO, uint32 /*uiSender*/, uint32 uiAction)
 {
     pPlayer->PlayerTalkClass->ClearMenus();
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF:
             pPlayer->CastSpell(pPlayer, SPELL_CREATE_1_FLASK_OF_SORCERER, false);
@@ -468,7 +468,7 @@ enum eMatrixPunchograph
 
 bool GOHello_go_matrix_punchograph(Player *pPlayer, GameObject *pGO)
 {
-    switch(pGO->GetEntry())
+    switch (pGO->GetEntry())
     {
         case MATRIX_PUNCHOGRAPH_3005_A:
             if (pPlayer->HasItemCount(ITEM_WHITE_PUNCH_CARD, 1))
@@ -583,7 +583,7 @@ bool GOHello_go_hive_pod(Player *pPlayer, GameObject *pGO)
 
 bool GOHello_go_the_ravens_claw(Player *pPlayer, GameObject* /*pGO*/)
 {
-    if(pPlayer->HasItemCount(ITEM_ESSENCE_INFUSED_MOONSTONE, 1))
+    if (pPlayer->HasItemCount(ITEM_ESSENCE_INFUSED_MOONSTONE, 1))
         pPlayer->DestroyItemCount(ITEM_ESSENCE_INFUSED_MOONSTONE, 1, true);
     return true;
 }

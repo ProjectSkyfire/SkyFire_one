@@ -187,7 +187,7 @@ struct boss_shahrazAI : public ScriptedAI
         {
             if (!me->IsNonMeleeSpellCasted(false))
             {
-                switch(CurrentBeam)
+                switch (CurrentBeam)
                 {
                     case 0:
                         DoCast(me, SPELL_BEAM_SINISTER_TRIGGER);

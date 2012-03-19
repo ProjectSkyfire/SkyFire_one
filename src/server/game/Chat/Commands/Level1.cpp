@@ -58,7 +58,7 @@ bool ChatHandler::HandleNpcSayCommand(const char* args)
 
     // make some emotes
     char lastchar = args[strlen(args) - 1];
-    switch(lastchar)
+    switch (lastchar)
     {
         case '?':   pCreature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);      break;
         case '!':   pCreature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);   break;
@@ -1719,7 +1719,7 @@ bool ChatHandler::HandleModifyMountCommand(const char* args)
     uint32 num = 0;
 
     num = atoi((char*)args);
-    switch(num)
+    switch (num)
     {
         case 1:
             mId=14340;

@@ -731,7 +731,9 @@ enum TrinityStrings
     LANG_CHARACTER_DELETED_SKIP_FULL    = 1020,
     LANG_CHARACTER_DELETED_SKIP_NAME    = 1021,
     LANG_CHARACTER_DELETED_LIST_LINE_CHAT = 1022,
-    // Room for more level 4              1023-1099 not used
+    LANG_SQLDRIVER_QUERY_LOGGING_ENABLED  = 1023,
+    LANG_SQLDRIVER_QUERY_LOGGING_DISABLED = 1024,
+    // Room for more level 4              1025-1099 not used
 
     // Level 3 (continue)
     LANG_ACCOUNT_SETADDON               = 1100,

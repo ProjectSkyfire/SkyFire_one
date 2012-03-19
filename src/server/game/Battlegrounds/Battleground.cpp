@@ -243,7 +243,7 @@ void BattleGround::Update(time_t diff)
         for (std::map<uint64, uint8>::iterator itr = m_RemovedPlayers.begin(); itr != m_RemovedPlayers.end(); ++itr)
         {
             Player *plr = objmgr.GetPlayer(itr->first);
-            switch(itr->second)
+            switch (itr->second)
             {
                 //following code is handled by event:
                 /*case 0:
@@ -849,7 +849,7 @@ void BattleGround::EndBattleGround(uint32 winner)
 
 uint32 BattleGround::GetBattlemasterEntry() const
 {
-    switch(GetTypeID())
+    switch (GetTypeID())
     {
         case BATTLEGROUND_AV: return 15972;
         case BATTLEGROUND_WS: return 14623;
@@ -870,7 +870,7 @@ void BattleGround::RewardMark(Player *plr, uint32 count)
         return;
 
     BattleGroundMarks mark;
-    switch(GetTypeID())
+    switch (GetTypeID())
     {
         case BATTLEGROUND_AV:
             mark = ITEM_AV_MARK_OF_HONOR;
@@ -947,7 +947,7 @@ void BattleGround::RewardQuest(Player *plr)
         return;
 
     uint32 quest;
-    switch(GetTypeID())
+    switch (GetTypeID())
     {
         case BATTLEGROUND_AV:
             quest = SPELL_AV_QUEST_REWARD;
@@ -1342,7 +1342,7 @@ void BattleGround::UpdatePlayerScore(Player *Source, uint32 type, uint32 value)
     if (itr == m_PlayerScores.end())                        // player not found...
         return;
 
-    switch(type)
+    switch (type)
     {
         case SCORE_KILLING_BLOWS:                           // Killing blows
             itr->second->KillingBlows += value;

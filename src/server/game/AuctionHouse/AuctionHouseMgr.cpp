@@ -444,7 +444,7 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(uint32 factionTem
         // FIXME: found way for proper auctionhouse selection by another way
         // AuctionHouse.dbc have faction field with _player_ factions associated with auction house races.
         // but no easy way convert creature faction to player race faction for specific city
-        switch(factionTemplateId)
+        switch (factionTemplateId)
         {
             case   12: houseid = 1; break; // human
             case   29: houseid = 6; break; // orc, and generic for horde

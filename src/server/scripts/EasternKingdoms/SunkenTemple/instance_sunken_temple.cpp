@@ -86,7 +86,7 @@ struct instance_sunken_temple : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_ATALAI_STATUE1: GOAtalaiStatue1 = pGo->GetGUID();   break;
             case GO_ATALAI_STATUE2: GOAtalaiStatue2 = pGo->GetGUID();   break;
@@ -100,7 +100,7 @@ struct instance_sunken_temple : public ScriptedInstance
 
      virtual void Update(uint32 /*diff*/) // correct order goes form 1-6
      {
-         switch(State)
+         switch (State)
          {
          case GO_ATALAI_STATUE1:
             if (!s1 && !s2 && !s3 && !s4 && !s5 && !s6)

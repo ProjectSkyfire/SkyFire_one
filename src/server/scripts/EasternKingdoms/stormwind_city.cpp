@@ -335,7 +335,7 @@ struct npc_stormwind_royal_guardAI : public ScriptedAI
         {
             if (uiSpybotTimer <= uiDiff)
             {
-                switch(uiSpybotPhase)
+                switch (uiSpybotPhase)
                 {
                 case 1:
                     if ( Unit *pSpybot = me->GetUnit(*me, SpybotGUID))
@@ -366,7 +366,7 @@ struct npc_stormwind_royal_guardAI : public ScriptedAI
         {
             IsMove = true;
 
-            switch(MovePoint)
+            switch (MovePoint)
             {
             case 1:
                 me->GetMotionMaster()->MovePoint(1, P1[PointID].m_fX, P1[PointID].m_fY, P1[PointID].m_fZ);
@@ -384,7 +384,7 @@ struct npc_stormwind_royal_guardAI : public ScriptedAI
         if (type != POINT_MOTION_TYPE)
             return;
 
-        switch(id)
+        switch (id)
         {
         case 1:
             IsMove = false;
@@ -475,7 +475,7 @@ struct npc_lord_gregor_lescovarAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 4:
                 SetEscortPaused(true);
@@ -505,7 +505,7 @@ struct npc_lord_gregor_lescovarAI : public npc_escortAI
         {
             if (uiTimer <= uiDiff)
             {
-                switch(uiPhase)
+                switch (uiPhase)
                 {
                     case 1:
                         uiTimer = 3000;
@@ -636,7 +636,7 @@ struct npc_tyrion_spybotAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 3:
                 DoGuardList();
@@ -693,7 +693,7 @@ struct npc_tyrion_spybotAI : public npc_escortAI
         {
             if (uiTimer <= uiDiff)
             {
-                switch(uiPhase)
+                switch (uiPhase)
                 {
                 case 1:
                     DoScriptText(SAY_QUEST_ACCEPT_ATTACK, me);

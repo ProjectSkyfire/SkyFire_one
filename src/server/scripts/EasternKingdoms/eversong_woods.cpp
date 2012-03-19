@@ -122,7 +122,7 @@ bool GossipHello_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature)
 
 bool GossipSelect_npc_prospector_anvilward(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
@@ -228,7 +228,7 @@ struct npc_secondTrialAI : public ScriptedAI
       spellJudLight   = false;
       spellCommand    = false;
 
-      switch(me->GetEntry())
+      switch (me->GetEntry())
       {
           case CHAMPION_BLOODWRATH:
               spellFlashLight = true;
@@ -366,7 +366,7 @@ struct master_kelerun_bloodmournAI : public ScriptedAI
                 {
                     CAST_AI(npc_secondTrialAI, paladinSpawn->AI())->Activate(me->GetGUID());
 
-                    switch(paladinPhase)
+                    switch (paladinPhase)
                     {
                     case 0:
                         DoScriptText(TEXT_SECOND_TRIAL_1, me);

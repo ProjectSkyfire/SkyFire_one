@@ -115,7 +115,7 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
             Player* p = Unit::GetPlayer(*me, someplayer);
             if (p)
             {
-                switch(me->GetEntry())
+                switch (me->GetEntry())
                 {
                     case ENTRY_BNAAR_C_CONSOLE:
                         p->FailQuest(10299);
@@ -146,7 +146,7 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
 
     void DoWaveSpawnForCreature(Creature *creature)
     {
-        switch(creature->GetEntry())
+        switch (creature->GetEntry())
         {
             case ENTRY_BNAAR_C_CONSOLE:
                 if (rand()%2)
@@ -200,7 +200,7 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
     }
     void DoFinalSpawnForCreature(Creature *creature)
     {
-        switch(creature->GetEntry())
+        switch (creature->GetEntry())
         {
             case ENTRY_BNAAR_C_CONSOLE:
                 add = me->SummonCreature(ENTRY_SUNFURY_TECH, 2946.52f, 4201.42f, 163.47f, 3.54f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
@@ -235,7 +235,7 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
     {
         if (Event_Timer <= diff)
         {
-            switch(Phase)
+            switch (Phase)
             {
                 case 1:
                     if (someplayer)
@@ -313,7 +313,7 @@ bool GOHello_go_manaforge_control_console(Player *player, GameObject* _GO)
     Creature* manaforge;
     manaforge = NULL;
 
-    switch(_GO->GetAreaId())
+    switch (_GO->GetAreaId())
     {
         case 3726:                                          //b'naar
             if ((player->GetQuestStatus(10299) == QUEST_STATUS_INCOMPLETE || player->GetQuestStatus(10329) == QUEST_STATUS_INCOMPLETE) &&
@@ -567,7 +567,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
             break;
             //Phase 6
         case 6:
-            switch(PhaseSubphase)
+            switch (PhaseSubphase)
             {
                 //Subphase 1: Turn Dawnforge and Ardonis
             case 0:
@@ -586,7 +586,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
             break;
             //Phase 7 Pathaleons say 3 Sentence, every sentence need a subphase
         case 7:
-            switch(PhaseSubphase)
+            switch (PhaseSubphase)
             {
                 //Subphase 1
             case 0:
@@ -865,7 +865,7 @@ struct npc_bessyAI : public npc_escortAI
         if (!pPlayer)
             return;
 
-        switch(i)
+        switch (i)
         {
             case 3: //first spawn
                 me->SummonCreature(SPAWN_FIRST, 2449.67f, 2183.11f, 96.85f, 6.20f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
@@ -1281,7 +1281,7 @@ struct npc_drijyaAI : public npc_escortAI
         }
         if (pSummoned->GetEntry() == NPC_TROOPER)
         {
-            if(Player* pPlayer = GetPlayerForEscort())
+            if (Player* pPlayer = GetPlayerForEscort())
                 pSummoned->AI()->AttackStart(pPlayer);
         }
         else
@@ -1296,7 +1296,7 @@ struct npc_drijyaAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 DoScriptText(SAY_DR_START, me);

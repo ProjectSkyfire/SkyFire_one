@@ -94,7 +94,7 @@ bool GossipHello_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature)
 bool GossipSelect_npc_jaina_proudmoore(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
 {
     hyjalAI* ai = CAST_AI(hyjalAI, pCreature->AI());
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             ai->StartEvent(pPlayer);
@@ -164,7 +164,7 @@ bool GossipSelect_npc_thrall(Player* pPlayer, Creature* pCreature, uint32 /*uiSe
 {
     hyjalAI* ai = CAST_AI(hyjalAI, pCreature->AI());
     ai->DeSpawnVeins();//despawn the alliance veins
-    switch(uiAction)
+    switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
             ai->StartEvent(pPlayer);

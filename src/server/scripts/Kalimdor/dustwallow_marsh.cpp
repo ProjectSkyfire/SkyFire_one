@@ -240,7 +240,7 @@ struct npc_theramore_guardAI : public ScriptedAI
 
         if (bYellTimer && uiYellTimer <= uiDiff)
         {
-            switch(uiStep)
+            switch (uiStep)
             {
             case 0:
                 DoScriptText(RAND(SAY_QUEST2, SAY_QUEST3, SAY_QUEST4, SAY_QUEST5, SAY_QUEST6), me);
@@ -378,7 +378,7 @@ struct npc_morokkAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 SetEscortPaused(true);
@@ -557,7 +557,7 @@ struct npc_ogronAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 9:
                 DoScriptText(SAY_OGR_SPOT, me);
@@ -619,11 +619,11 @@ struct npc_ogronAI : public npc_escortAI
                 {
                     m_uiGlobalTimer = 5000;
 
-                    switch(m_uiPhase)
+                    switch (m_uiPhase)
                     {
                         case PHASE_INTRO:
                         {
-                            switch(m_uiPhaseCounter)
+                            switch (m_uiPhaseCounter)
                             {
                                 case 0:
                                     if (Creature* pReethe = me->FindNearestCreature(NPC_REETHE, 15.0f))
@@ -662,7 +662,7 @@ struct npc_ogronAI : public npc_escortAI
 
                         case PHASE_GUESTS:
                         {
-                            switch(m_uiPhaseCounter)
+                            switch (m_uiPhaseCounter)
                             {
                                 case 6:
                                     if (Creature* pCaldwell = me->FindNearestCreature(NPC_CALDWELL, 15.0f))
@@ -704,7 +704,7 @@ struct npc_ogronAI : public npc_escortAI
 
                         case PHASE_COMPLETE:
                         {
-                            switch(m_uiPhaseCounter)
+                            switch (m_uiPhaseCounter)
                             {
                                 case 12:
                                     if (Player* pPlayer = GetPlayerForEscort())
@@ -882,7 +882,7 @@ struct npc_private_hendelAI : public ScriptedAI
     {
         if (!UpdateVictim() && m_uiPhase)
         {
-            switch(m_uiPhase)
+            switch (m_uiPhase)
             {
             case PHASE_ATTACK:
                 DoAttackPlayer();

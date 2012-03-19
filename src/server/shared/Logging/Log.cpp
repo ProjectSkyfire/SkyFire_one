@@ -30,18 +30,18 @@ Log::Log() :
     raLogfile(NULL), logfile(NULL), gmLogfile(NULL), charLogfile(NULL),
     dberLogfile(NULL), chatLogfile(NULL), m_gmlog_per_account(false),
     m_enableLogDBLater(false), m_enableLogDB(false), m_colored(false),
-    arenaLogFile(NULL)
+    arenaLogFile(NULL), sqlLogFile(NULL), sqlDevLogFile(NULL)
 {
     Initialize();
 }
 
 Log::~Log()
 {
-    if( logfile != NULL )
+    if ( logfile != NULL )
         fclose(logfile);
     logfile = NULL;
 
-    if( gmLogfile != NULL )
+    if ( gmLogfile != NULL )
         fclose(gmLogfile);
     gmLogfile = NULL;
 
@@ -49,7 +49,7 @@ Log::~Log()
         fclose(charLogfile);
     charLogfile = NULL;
 
-    if( dberLogfile != NULL )
+    if ( dberLogfile != NULL )
         fclose(dberLogfile);
     dberLogfile = NULL;
 
@@ -64,6 +64,14 @@ Log::~Log()
     if (arenaLogFile != NULL)
         fclose(arenaLogFile);
     arenaLogFile = NULL;
+
+    if (sqlLogFile != NULL)
+        fclose(sqlLogFile);
+    sqlLogFile = NULL;
+
+    if (sqlDevLogFile != NULL)
+        fclose(sqlDevLogFile);
+    sqlDevLogFile = NULL;
 }
 
 void Log::SetLogLevel(char *Level)
@@ -120,20 +128,20 @@ void Log::Initialize()
     InitColors(sConfig.GetStringDefault("LogColors", ""));
 
     m_gmlog_per_account = sConfig.GetBoolDefault("GmLogPerAccount",false);
-    if(!m_gmlog_per_account)
+    if (!m_gmlog_per_account)
         gmLogfile = openLogFile("GMLogFile","GmLogTimestamp","a");
     else
     {
         // GM log settings for per account case
         m_gmlog_filename_format = sConfig.GetStringDefault("GMLogFile", "");
-        if(!m_gmlog_filename_format.empty())
+        if (!m_gmlog_filename_format.empty())
         {
             bool m_gmlog_timestamp = sConfig.GetBoolDefault("GmLogTimestamp",false);
 
             size_t dot_pos = m_gmlog_filename_format.find_last_of(".");
-            if(dot_pos!=m_gmlog_filename_format.npos)
+            if (dot_pos!=m_gmlog_filename_format.npos)
             {
-                if(m_gmlog_timestamp)
+                if (m_gmlog_timestamp)
                     m_gmlog_filename_format.insert(dot_pos,m_logsTimestamp);
 
                 m_gmlog_filename_format.insert(dot_pos,"_#%u");
@@ -142,7 +150,7 @@ void Log::Initialize()
             {
                 m_gmlog_filename_format += "_#%u";
 
-                if(m_gmlog_timestamp)
+                if (m_gmlog_timestamp)
                     m_gmlog_filename_format += m_logsTimestamp;
             }
 
@@ -156,19 +164,21 @@ void Log::Initialize()
     raLogfile = openLogFile("RaLogFile",NULL,"a");
     chatLogfile = openLogFile("ChatLogFile","ChatLogTimestamp","a");
     arenaLogFile = openLogFile("ArenaLogFile",NULL,"a");
+    sqlLogFile = openLogFile("SQLDriverLogFile", NULL, "a");
+    sqlDevLogFile = openLogFile("SQLDeveloperLogFile", NULL, "a");
 
     // Main log file settings
     m_logLevel     = sConfig.GetIntDefault("LogLevel", LOGL_NORMAL);
     m_logFileLevel = sConfig.GetIntDefault("LogFileLevel", LOGL_NORMAL);
     m_dbLogLevel   = sConfig.GetIntDefault("DBLogLevel", LOGL_NORMAL);
-
+    m_sqlDriverQueryLogging = sConfig.GetBoolDefault("SQLDriverQueryLogging", false);
     m_logFilter = 0;
 
-    if(sConfig.GetBoolDefault("LogFilter_TransportMoves", true))
+    if (sConfig.GetBoolDefault("LogFilter_TransportMoves", true))
         m_logFilter |= LOG_FILTER_TRANSPORT_MOVES;
-    if(sConfig.GetBoolDefault("LogFilter_CreatureMoves", true))
+    if (sConfig.GetBoolDefault("LogFilter_CreatureMoves", true))
         m_logFilter |= LOG_FILTER_CREATURE_MOVES;
-    if(sConfig.GetBoolDefault("LogFilter_VisibilityChanges", true))
+    if (sConfig.GetBoolDefault("LogFilter_VisibilityChanges", true))
         m_logFilter |= LOG_FILTER_VISIBILITY_CHANGES;
 
     // Char log settings
@@ -186,13 +196,13 @@ void Log::Initialize()
 FILE* Log::openLogFile(char const* configFileName,char const* configTimeStampFlag, char const* mode)
 {
     std::string logfn=sConfig.GetStringDefault(configFileName, "");
-    if(logfn.empty())
+    if (logfn.empty())
         return NULL;
 
-    if(configTimeStampFlag && sConfig.GetBoolDefault(configTimeStampFlag,false))
+    if (configTimeStampFlag && sConfig.GetBoolDefault(configTimeStampFlag,false))
     {
         size_t dot_pos = logfn.find_last_of(".");
-        if(dot_pos!=logfn.npos)
+        if (dot_pos!=logfn.npos)
             logfn.insert(dot_pos,m_logsTimestamp);
         else
             logfn += m_logsTimestamp;
@@ -203,7 +213,7 @@ FILE* Log::openLogFile(char const* configFileName,char const* configTimeStampFla
 
 FILE* Log::openGmlogPerAccount(uint32 account)
 {
-    if(m_gmlog_filename_format.empty())
+    if (m_gmlog_filename_format.empty())
         return NULL;
 
     char namebuf[TRINITY_PATH_MAX];
@@ -226,7 +236,7 @@ void Log::outTimestamp(FILE* file)
 
 void Log::InitColors(const std::string& str)
 {
-    if(str.empty())
+    if (str.empty())
     {
         m_colored = false;
         return;
@@ -240,10 +250,10 @@ void Log::InitColors(const std::string& str)
     {
         ss >> color[i];
 
-        if(!ss)
+        if (!ss)
             return;
 
-        if(color[i] < 0 || color[i] >= Colors)
+        if (color[i] < 0 || color[i] >= Colors)
             return;
     }
 
@@ -399,7 +409,7 @@ void Log::outString(const char * str, ...)
         ResetColor(true);
 
     printf("\n");
-    if(logfile)
+    if (logfile)
     {
         outTimestamp(logfile);
         va_start(ap, str);
@@ -527,6 +537,34 @@ void Log::outArena(const char * str, ...)
     }
 }
 
+void Log::outSQLDriver(const char* str, ...)
+{
+    if (!str)
+        return;
+
+    va_list ap;
+    va_start(ap, str);
+    vutf8printf(stdout, str, &ap);
+    va_end(ap);
+
+    printf("\n");
+
+    if (sqlLogFile)
+    {
+        outTimestamp(sqlLogFile);
+
+        va_list apSQL;
+        va_start(apSQL, str);
+        vfprintf(sqlLogFile, str, apSQL);
+        va_end(apSQL);
+
+        fprintf(sqlLogFile, "\n");
+        fflush(sqlLogFile);
+    }
+
+    fflush(stdout);
+}
+
 void Log::outErrorDb(const char * err, ...)
 {
     if (!err)
@@ -570,6 +608,32 @@ void Log::outErrorDb(const char * err, ...)
         fflush(dberLogfile);
     }
     fflush(stderr);
+}
+
+void Log::outSQLDev(const char* str, ...)
+{
+    if (!str)
+        return;
+
+    va_list ap;
+    va_start(ap, str);
+    vutf8printf(stdout, str, &ap);
+    va_end(ap);
+
+    printf("\n");
+
+    if (sqlDevLogFile)
+    {
+        va_list ap2;
+        va_start(ap2, str);
+        vfprintf(sqlDevLogFile, str, ap2);
+        va_end(ap2);
+
+        fprintf(sqlDevLogFile, "\n");
+        fflush(sqlDevLogFile);
+    }
+
+    fflush(stdout);
 }
 
 void Log::outBasic(const char * str, ...)
@@ -674,7 +738,7 @@ void Log::outDebugInLine(const char * str, ...)
         vutf8printf(stdout, str, &ap);
         va_end(ap);
 
-        //if(m_colored)
+        //if (m_colored)
         //    ResetColor(true);
 
         if (logfile)
@@ -702,7 +766,7 @@ void Log::outDebug(const char * str, ...)
         va_end(ap2);
     }
 
-    if( m_logLevel > LOGL_DETAIL )
+    if ( m_logLevel > LOGL_DETAIL )
     {
         if (m_colored)
             SetColor(true,m_colors[LOGL_DEBUG]);
@@ -712,7 +776,7 @@ void Log::outDebug(const char * str, ...)
         vutf8printf(stdout, str, &ap);
         va_end(ap);
 
-        if(m_colored)
+        if (m_colored)
             ResetColor(true);
 
         printf( "\n" );

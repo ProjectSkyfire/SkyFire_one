@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,16 +17,20 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SystemConfig.h"
+/// \addtogroup Trinityd Trinity Daemon
+/// @{
+/// \file
+
+#include <openssl/opensslv.h>
+#include <openssl/crypto.h>
+#include <ace/Version.h>
 
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
-#include "Config.h"
+#include "Configuration/Config.h"
 
 #include "Log.h"
 #include "Master.h"
-#include <ace/Version.h>
-#include <ace/Get_Opt.h>
 
 #ifndef _TRINITY_CORE_CONFIG
 # define _TRINITY_CORE_CONFIG  "worldserver.conf"
@@ -35,9 +38,9 @@
 
 #ifdef _WIN32
 #include "ServiceWin32.h"
-char serviceName[] = "Trinityd";
-char serviceLongName[] = "Trinity core service";
-char serviceDescription[] = "Massive Network Game Object Server";
+char serviceName[] = "worldserver";
+char serviceLongName[] = "TrinityCore world service";
+char serviceDescription[] = "TrinityCore World of Warcraft emulator world service";
 /*
  * -1 - not in service mode
  *  0 - stopped
@@ -53,84 +56,78 @@ DatabaseType LoginDatabase;                                 ///< Accessor to the
 
 uint32 realmID;                                             ///< Id of the realm
 
-// Print out the usage string for this program on the console.
+/// Print out the usage string for this program on the console.
 void usage(const char *prog)
 {
     sLog->outString("Usage: \n %s [<options>]\n"
-        "    -v, --version            print version and exit\n\r"
         "    -c config_file           use config_file as configuration file\n\r"
         #ifdef _WIN32
         "    Running as service functions:\n\r"
-        "    -s run                   run as service\n\r"
+        "    --service                run as service\n\r"
         "    -s install               install service\n\r"
         "    -s uninstall             uninstall service\n\r"
         #endif
         , prog);
 }
 
-// Launch the trinity server
+/// Launch the Trinity server
 extern int main(int argc, char **argv)
 {
-    // Command line parsing
+    ///- Command line parsing to get the configuration file name
     char const* cfg_file = _TRINITY_CORE_CONFIG;
-
-#ifdef _WIN32
-    char const *options = ":c:s:";
-#else
-    char const *options = ":c:";
-#endif
-
-    ACE_Get_Opt cmd_opts(argc, argv, options);
-    cmd_opts.long_option("version", 'v');
-
-    int option;
-    while ((option = cmd_opts()) != EOF)
+    int c = 1;
+    while ( c < argc )
     {
-        switch (option)
+        if (strcmp(argv[c], "-c") == 0)
         {
-            case 'c':
-                cfg_file = cmd_opts.opt_arg();
-                break;
-            case 'v':
-                printf("%s\n", _FULLVERSION);
-                return 0;
-#ifdef _WIN32
-            case 's':
+            if (++c >= argc)
             {
-                const char *mode = cmd_opts.opt_arg();
-
-                if (!strcmp(mode, "install"))
-                {
-                    if (WinServiceInstall())
-                        sLog->outString("Installing service");
-                    return 1;
-                }
-                else if (!strcmp(mode, "uninstall"))
-                {
-                    if (WinServiceUninstall())
-                        sLog->outString("Uninstalling service");
-                    return 1;
-                }
-                else if (!strcmp(mode, "run"))
-                    WinServiceRun();
-                else
-                {
-                    sLog->outError("Runtime-Error: -%c unsupported argument %s", cmd_opts.opt_opt(), mode);
-                    usage(argv[0]);
-                    return 1;
-                }
-                break;
+                sLog->outError("Runtime-Error: -c option requires an input argument");
+                usage(argv[0]);
+                return 1;
             }
-#endif
-            case ':':
-                sLog->outError("Runtime-Error: -%c option requires an input argument", cmd_opts.opt_opt());
-                usage(argv[0]);
-                return 1;
-            default:
-                sLog->outError("Runtime-Error: bad format of commandline arguments");
-                usage(argv[0]);
-                return 1;
+            else
+                cfg_file = argv[c];
         }
+
+        #ifdef _WIN32
+        ////////////
+        //Services//
+        ////////////
+        if (strcmp(argv[c], "-s") == 0)
+        {
+            if (++c >= argc)
+            {
+                sLog->outError("Runtime-Error: -s option requires an input argument");
+                usage(argv[0]);
+                return 1;
+            }
+            if (strcmp(argv[c], "install") == 0)
+            {
+                if (WinServiceInstall())
+                    sLog->outString("Installing service");
+                return 1;
+            }
+            else if (strcmp(argv[c], "uninstall") == 0)
+            {
+                if (WinServiceUninstall())
+                    sLog->outString("Uninstalling service");
+                return 1;
+            }
+            else
+            {
+                sLog->outError("Runtime-Error: unsupported option %s", argv[c]);
+                usage(argv[0]);
+                return 1;
+            }
+        }
+        if (strcmp(argv[c], "--service") == 0)
+        {
+            WinServiceRun();
+        }
+        ////
+        #endif
+        ++c;
     }
 
     if (!sConfig.SetSource(cfg_file))
@@ -141,15 +138,19 @@ extern int main(int argc, char **argv)
     }
     sLog->outString("Using configuration file %s.", cfg_file);
 
+    sLog->outDetail("%s (Library: %s)", OPENSSL_VERSION_TEXT, SSLeay_version(SSLEAY_VERSION));
     sLog->outDetail("Using ACE: %s", ACE_VERSION);
 
-    // and run the 'Master'
-    // todo - Why do we need this 'Master'? Can't all of this be in the Main as for Realmd?
-    return sMaster.Run();
+    ///- and run the 'Master'
+    /// \todo Why do we need this 'Master'? Can't all of this be in the Main as for Realmd?
+    int ret = sMaster->Run();
 
     // at sMaster return function exist with codes
     // 0 - normal shutdown
     // 1 - shutdown at error
-    // 2 - restart command used, this code can be used by restarter for restart TrinityCore
+    // 2 - restart command used, this code can be used by restarter for restart Trinityd
+
+    return ret;
 }
 
+/// @}

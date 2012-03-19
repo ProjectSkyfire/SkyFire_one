@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,31 +17,30 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// \addtogroup Trinityd
+/// @{
+/// \file
+
 #ifndef _MASTER_H
 #define _MASTER_H
 
 #include "Common.h"
-#include "Policies/Singleton.h"
 
-// Start the server
+/// Start the server
 class Master
 {
     public:
         Master();
         ~Master();
         int Run();
-        static volatile uint32 m_masterLoopCounter;
 
     private:
         bool _StartDB();
-
-        void _HookSignals();
-        void _UnhookSignals();
-        static void _OnSignal(int s);
+        void _StopDB();
 
         void clearOnlineAccounts();
 };
 
-#define sMaster Trinity::Singleton<Master>::Instance()
+#define sMaster ACE_Singleton<Master, ACE_Null_Mutex>::instance()
 #endif
-
+/// @}
