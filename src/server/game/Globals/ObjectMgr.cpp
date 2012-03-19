@@ -486,7 +486,7 @@ struct SQLCreatureLoader : public SQLStorageLoaderBase<SQLCreatureLoader>
     template<class D>
     void convert_from_str(uint32 field_pos, char *src, D &dst)
     {
-        dst = D(sObjectMgr.GetScriptId(src));
+        dst = D(sObjectMgr->GetScriptId(src));
     }
 };
 
@@ -1501,7 +1501,7 @@ struct SQLItemLoader : public SQLStorageLoaderBase<SQLItemLoader>
     template<class D>
     void convert_from_str(uint32 field_pos, char *src, D &dst)
     {
-        dst = D(sObjectMgr.GetScriptId(src));
+        dst = D(sObjectMgr->GetScriptId(src));
     }
 };
 
@@ -4118,7 +4118,7 @@ struct SQLInstanceLoader : public SQLStorageLoaderBase<SQLInstanceLoader>
     template<class D>
     void convert_from_str(uint32 field_pos, char *src, D &dst)
     {
-        dst = D(sObjectMgr.GetScriptId(src));
+        dst = D(sObjectMgr->GetScriptId(src));
     }
 };
 
@@ -5335,7 +5335,7 @@ struct SQLGameObjectLoader : public SQLStorageLoaderBase<SQLGameObjectLoader>
     template<class D>
     void convert_from_str(uint32 /*field_pos*/, char *src, D &dst)
     {
-        dst = D(sObjectMgr.GetScriptId(src));
+        dst = D(sObjectMgr->GetScriptId(src));
     }
 };
 
@@ -5637,7 +5637,7 @@ void ObjectMgr::LoadCorpses()
             continue;
         }
 
-        sObjectAccessor.AddCorpse(corpse);
+        sObjectAccessor->AddCorpse(corpse);
 
         ++count;
     }
@@ -6487,7 +6487,7 @@ bool PlayerCondition::Meets(Player const * player) const
         case CONDITION_NO_AURA:
             return !player->HasAura(value1, value2);
         case CONDITION_ACTIVE_EVENT:
-            return gameeventmgr.IsActiveEvent(value1);
+            return sGameEventMgr->IsActiveEvent(value1);
         case CONDITION_INSTANCE_DATA:
         {
             Map *map = player->GetMap();
@@ -6526,7 +6526,7 @@ bool PlayerCondition::IsValid(ConditionType condition, uint32 value1, uint32 val
         }
         case CONDITION_ITEM:
         {
-            ItemPrototype const *proto = sObjectMgr.GetItemPrototype(value1);
+            ItemPrototype const *proto = sObjectMgr->GetItemPrototype(value1);
             if (!proto)
             {
                 sLog->outErrorDb("Item condition has invalid item (%u), skipped", value1);
@@ -6536,7 +6536,7 @@ bool PlayerCondition::IsValid(ConditionType condition, uint32 value1, uint32 val
         }
         case CONDITION_ITEM_EQUIPPED:
         {
-            ItemPrototype const *proto = sObjectMgr.GetItemPrototype(value1);
+            ItemPrototype const *proto = sObjectMgr->GetItemPrototype(value1);
             if (!proto)
             {
                 sLog->outErrorDb("ItemEquipped condition has invalid item (%u), skipped", value1);
@@ -6596,7 +6596,7 @@ bool PlayerCondition::IsValid(ConditionType condition, uint32 value1, uint32 val
         case CONDITION_QUESTREWARDED:
         case CONDITION_QUESTTAKEN:
         {
-            Quest const *Quest = sObjectMgr.GetQuestTemplate(value1);
+            Quest const *Quest = sObjectMgr->GetQuestTemplate(value1);
             if (!Quest)
             {
                 sLog->outErrorDb("Quest condition has invalid quest (%u), skipped", value1);
@@ -6630,7 +6630,7 @@ bool PlayerCondition::IsValid(ConditionType condition, uint32 value1, uint32 val
         }
         case CONDITION_ACTIVE_EVENT:
         {
-            GameEventMgr::GameEventDataMap const& events = gameeventmgr.GetEventMap();
+            GameEventMgr::GameEventDataMap const& events = sGameEventMgr->GetEventMap();
             if (value1 >=events.size() || !events[value1].isValid())
             {
                 sLog->outErrorDb("Active event condition requires valid event id (%u), skipped", value1);
@@ -7336,7 +7336,7 @@ void ObjectMgr::LoadDbScriptStrings()
 // Functions for scripting access
 uint32 GetAreaTriggerScriptId(uint32 trigger_id)
 {
-    return sObjectMgr.GetAreaTriggerScriptId(trigger_id);
+    return sObjectMgr->GetAreaTriggerScriptId(trigger_id);
 }
 
 bool LoadSkyFireStrings(DatabaseType& db, char const* table, int32 start_value, int32 end_value)
@@ -7349,27 +7349,27 @@ bool LoadSkyFireStrings(DatabaseType& db, char const* table, int32 start_value, 
         return false;
     }
 
-    return sObjectMgr.LoadSkyFireStrings(db, table, start_value, end_value);
+    return sObjectMgr->LoadSkyFireStrings(db, table, start_value, end_value);
 }
 
 uint32 GetScriptId(const char *name)
 {
-    return sObjectMgr.GetScriptId(name);
+    return sObjectMgr->GetScriptId(name);
 }
 
 ObjectMgr::ScriptNameMap & GetScriptNames()
 {
-    return sObjectMgr.GetScriptNames();
+    return sObjectMgr->GetScriptNames();
 }
 
 GameObjectInfo const *GetGameObjectInfo(uint32 id)
 {
-    return sObjectMgr.GetGameObjectInfo(id);
+    return sObjectMgr->GetGameObjectInfo(id);
 }
 
 CreatureTemplate const *GetCreatureTemplate(uint32 id)
 {
-    return sObjectMgr.GetCreatureTemplate(id);
+    return sObjectMgr->GetCreatureTemplate(id);
 }
 
 CreatureTemplate const* GetCreatureTemplateStore(uint32 entry)
@@ -7379,7 +7379,7 @@ CreatureTemplate const* GetCreatureTemplateStore(uint32 entry)
 
 Quest const* GetQuestTemplateStore(uint32 entry)
 {
-    return sObjectMgr.GetQuestTemplate(entry);
+    return sObjectMgr->GetQuestTemplate(entry);
 }
 
 void ObjectMgr::LoadTransportEvents()

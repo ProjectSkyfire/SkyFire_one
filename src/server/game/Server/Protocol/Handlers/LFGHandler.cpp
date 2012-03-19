@@ -33,7 +33,7 @@ static void AttemptJoin(Player* _player)
         return;
 
     ACE_GUARD(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType const& players = sObjectAccessor.GetPlayers();
+    HashMapHolder<Player>::MapType const& players = sObjectAccessor->GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator iter = players.begin(); iter != players.end(); ++iter)
     {
         Player *plr = iter->second;
@@ -64,7 +64,7 @@ static void AttemptJoin(Player* _player)
                 continue;
             }
 
-            sObjectMgr.AddGroup(group);
+            sObjectMgr->AddGroup(group);
         }
 
         // stop at success join
@@ -93,7 +93,7 @@ static void AttemptAddMore(Player* _player)
         return;
 
     ACE_GUARD(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType const& players = sObjectAccessor.GetPlayers();
+    HashMapHolder<Player>::MapType const& players = sObjectAccessor->GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator iter = players.begin(); iter != players.end(); ++iter)
     {
         Player *plr = iter->second;
@@ -122,7 +122,7 @@ static void AttemptAddMore(Player* _player)
                 return;  // can't create group (??)
             }
 
-            sObjectMgr.AddGroup(group);
+            sObjectMgr->AddGroup(group);
         }
 
         // stop at join fail (full)
@@ -268,7 +268,7 @@ void WorldSession::SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type)
     data << uint32(0);                                      // count again, strange, placeholder
 
     //TODO: Guard Player map
-    HashMapHolder<Player>::MapType const& players = sObjectAccessor.GetPlayers();
+    HashMapHolder<Player>::MapType const& players = sObjectAccessor->GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator iter = players.begin(); iter != players.end(); ++iter)
     {
         Player *plr = iter->second;

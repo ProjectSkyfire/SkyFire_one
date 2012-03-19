@@ -43,5 +43,5 @@ class PreparedStatementHolder
     private:
         void _prepareStatement(const char* name, const char* sql, Database* db, uint32 &count);
 };
-#define sPreparedStatement (*ACE_Singleton<PreparedStatementHolder, ACE_Null_Mutex>::instance())
+#define sPreparedStatement ACE_Singleton<PreparedStatementHolder, ACE_Null_Mutex>::instance()
 #endif

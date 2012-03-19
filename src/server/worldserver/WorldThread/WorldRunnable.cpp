@@ -91,7 +91,7 @@ void WorldRunnable::run()
     sWorld->UpdateSessions( 1 );                             // real players unload required UpdateSessions call
 
     // unload battleground templates before different singletons destroyed
-    sBattleGroundMgr.DeleteAlllBattleGrounds();
+    sBattleGroundMgr->DeleteAlllBattleGrounds();
 
     sWorldSocketMgr->StopNetwork();
 
@@ -99,6 +99,6 @@ void WorldRunnable::run()
 
     // End the database thread
     WorldDatabase.ThreadEnd();                                  // free mySQL thread resources
-    //sObjectMgr.UnloadAll();             // unload 'i_player2corpse' storage and remove from world
+    //sObjectMgr->UnloadAll();             // unload 'i_player2corpse' storage and remove from world
     //sScriptMgr->Unload();
 }

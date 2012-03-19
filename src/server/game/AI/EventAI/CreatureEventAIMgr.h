@@ -48,6 +48,6 @@ class CreatureEventAIMgr
         CreatureEventAI_TextMap    m_CreatureEventAI_TextMap;
 };
 
-#define CreatureEAI_Mgr (*ACE_Singleton<CreatureEventAIMgr, ACE_Null_Mutex>::instance())
-#endif
+#define CreatureEAI_Mgr ACE_Singleton<CreatureEventAIMgr, ACE_Null_Mutex>::instance()
 
+#endif

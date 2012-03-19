@@ -140,9 +140,9 @@ int WorldSocket::SendPacket (const WorldPacket& pct)
         return -1;
 
     // Dump outgoing packet.
-    if (sWorldLog.LogWorld())
+    if (sWorldLog->LogWorld())
     {
-        sWorldLog.outTimestampLog ("SERVER:\nSOCKET: %u\nLENGTH: %u\nOPCODE: %s (0x%.4X)\nDATA:\n",
+        sWorldLog->outTimestampLog ("SERVER:\nSOCKET: %u\nLENGTH: %u\nOPCODE: %s (0x%.4X)\nDATA:\n",
                      (uint32) get_handle(),
                      pct.size(),
                      LookupOpcodeName (pct.GetOpcode()),
@@ -152,11 +152,11 @@ int WorldSocket::SendPacket (const WorldPacket& pct)
         while (p < pct.size())
         {
             for (uint32 j = 0; j < 16 && p < pct.size(); j++)
-                sWorldLog.outLog("%.2X ", const_cast<WorldPacket&>(pct)[p++]);
+                sWorldLog->outLog("%.2X ", const_cast<WorldPacket&>(pct)[p++]);
 
-            sWorldLog.outLog("\n");
+            sWorldLog->outLog("\n");
         }
-        sWorldLog.outLog("\n");
+        sWorldLog->outLog("\n");
     }
 
     if (iSendPacket (pct) == -1)
@@ -571,9 +571,9 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
         return -1;
 
     // Dump received packet.
-    if (sWorldLog.LogWorld())
+    if (sWorldLog->LogWorld())
     {
-        sWorldLog.outTimestampLog ("CLIENT:\nSOCKET: %u\nLENGTH: %u\nOPCODE: %s (0x%.4X)\nDATA:\n",
+        sWorldLog->outTimestampLog ("CLIENT:\nSOCKET: %u\nLENGTH: %u\nOPCODE: %s (0x%.4X)\nDATA:\n",
                      (uint32) get_handle(),
                      new_pct->size(),
                      LookupOpcodeName (new_pct->GetOpcode()),
@@ -583,11 +583,11 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
         while (p < new_pct->size())
         {
             for (uint32 j = 0; j < 16 && p < new_pct->size(); j++)
-                sWorldLog.outLog ("%.2X ", (*new_pct)[p++]);
+                sWorldLog->outLog ("%.2X ", (*new_pct)[p++]);
 
-            sWorldLog.outLog ("\n");
+            sWorldLog->outLog ("\n");
         }
-        sWorldLog.outLog ("\n");
+        sWorldLog->outLog ("\n");
     }
 
     try

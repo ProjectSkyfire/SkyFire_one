@@ -239,6 +239,6 @@ class ObjectAccessor
         LockType i_corpseGuard;
 };
 
-#define sObjectAccessor (*ACE_Singleton<ObjectAccessor, ACE_Thread_Mutex>::instance())
+#define sObjectAccessor ACE_Singleton<ObjectAccessor, ACE_Thread_Mutex>::instance()
 #endif
 

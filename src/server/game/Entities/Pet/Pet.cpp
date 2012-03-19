@@ -106,7 +106,7 @@ void Pet::AddToWorld()
     // Register the pet for guid lookup
     if (!IsInWorld())
     {
-        sObjectAccessor.AddObject(this);
+        sObjectAccessor->AddObject(this);
         Unit::AddToWorld();
         AIM_Initialize();
     }
@@ -129,7 +129,7 @@ void Pet::RemoveFromWorld()
     {
         // Don't call the function for Creature, normal mobs + totems go in a different storage
         Unit::RemoveFromWorld();
-        sObjectAccessor.RemoveObject(this);
+        sObjectAccessor->RemoveObject(this);
     }
 }
 
@@ -174,7 +174,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         return false;
 
     Map *map = owner->GetMap();
-    uint32 guid = sObjectMgr.GenerateLowGuid(HIGHGUID_PET);
+    uint32 guid = sObjectMgr->GenerateLowGuid(HIGHGUID_PET);
     uint32 pet_number = fields[0].GetUInt32();
     if (!Create(guid, map, petentry, pet_number))
         return false;
@@ -876,10 +876,10 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
         sLog->outError("CRITICAL ERROR: NULL pointer parsed into CreateBaseAtCreature()");
         return false;
     }
-    uint32 guid=sObjectMgr.GenerateLowGuid(HIGHGUID_PET);
+    uint32 guid=sObjectMgr->GenerateLowGuid(HIGHGUID_PET);
 
     sLog->outDebug("Create pet");
-    uint32 pet_number = sObjectMgr.GeneratePetNumber();
+    uint32 pet_number = sObjectMgr->GeneratePetNumber();
     if (!Create(guid, creature->GetMap(), creature->GetEntry(), pet_number))
         return false;
 
@@ -995,7 +995,7 @@ bool Guardian::InitStatsForLevel(uint32 petlevel)
         SetModifierValue(UnitMods(UNIT_MOD_RESISTANCE_START + i), BASE_VALUE, float(createResistance[i]));
 
     //health, mana, armor and resistance
-    PetLevelInfo const* pInfo = sObjectMgr.GetPetLevelInfo(creature_ID, petlevel);
+    PetLevelInfo const* pInfo = sObjectMgr->GetPetLevelInfo(creature_ID, petlevel);
     if (pInfo)                                      // exist in DB
     {
         SetCreateHealth(pInfo->health);
@@ -1548,7 +1548,7 @@ void Pet::InitPetCreateSpells()
     m_spells.clear();
 
     int32 usedtrainpoints = 0, petspellid;
-    PetCreateSpellEntry const* CreateSpells = sObjectMgr.GetPetCreateSpellEntry(GetEntry());
+    PetCreateSpellEntry const* CreateSpells = sObjectMgr->GetPetCreateSpellEntry(GetEntry());
     if (CreateSpells)
     {
         Unit* owner = GetOwner();
@@ -1726,7 +1726,7 @@ bool Pet::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 pet_number)
 
 void Pet::InitPetAuras(const uint32 Entry)
 {
-    CreatureTemplate const *cInfo = sObjectMgr.GetCreatureTemplate(Entry);
+    CreatureTemplate const *cInfo = sObjectMgr->GetCreatureTemplate(Entry);
     if (!cInfo)
         return;
 

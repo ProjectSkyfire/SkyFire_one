@@ -194,11 +194,11 @@ void PoolGroup<T>::DespawnObject(SpawnedPoolData& spawns, uint32 guid)
 template<>
 void PoolGroup<Creature>::Despawn1Object(uint32 guid)
 {
-    if (CreatureData const* data = sObjectMgr.GetCreatureData(guid))
+    if (CreatureData const* data = sObjectMgr->GetCreatureData(guid))
     {
-        sObjectMgr.RemoveCreatureFromGrid(guid, data);
+        sObjectMgr->RemoveCreatureFromGrid(guid, data);
 
-        if (Creature* creature = sObjectAccessor.GetObjectInWorld(MAKE_NEW_GUID(guid, data->id, HIGHGUID_UNIT), (Creature*) NULL))
+        if (Creature* creature = sObjectAccessor->GetObjectInWorld(MAKE_NEW_GUID(guid, data->id, HIGHGUID_UNIT), (Creature*) NULL))
             creature->AddObjectToRemoveList();
     }
 }
@@ -207,11 +207,11 @@ void PoolGroup<Creature>::Despawn1Object(uint32 guid)
 template<>
 void PoolGroup<GameObject>::Despawn1Object(uint32 guid)
 {
-    if (GameObjectData const* data = sObjectMgr.GetGOData(guid))
+    if (GameObjectData const* data = sObjectMgr->GetGOData(guid))
     {
-        sObjectMgr.RemoveGameobjectFromGrid(guid, data);
+        sObjectMgr->RemoveGameobjectFromGrid(guid, data);
 
-        if (GameObject* pGameobject = sObjectAccessor.GetObjectInWorld(MAKE_NEW_GUID(guid, data->id, HIGHGUID_GAMEOBJECT), (GameObject*) NULL))
+        if (GameObject* pGameobject = sObjectAccessor->GetObjectInWorld(MAKE_NEW_GUID(guid, data->id, HIGHGUID_GAMEOBJECT), (GameObject*) NULL))
             pGameobject->AddObjectToRemoveList();
     }
 }
@@ -220,7 +220,7 @@ void PoolGroup<GameObject>::Despawn1Object(uint32 guid)
 template<>
 void PoolGroup<Pool>::Despawn1Object(uint32 child_pool_id)
 {
-    sPoolMgr.DespawnPool(child_pool_id);
+    sPoolMgr->DespawnPool(child_pool_id);
 }
 
 // Method for a pool only to remove any found record causing a circular dependency loop
@@ -289,9 +289,9 @@ void PoolGroup<T>::SpawnObject(SpawnedPoolData& spawns, uint32 limit, uint32 tri
 template <>
 void PoolGroup<Creature>::Spawn1Object(PoolObject* obj)
 {
-    if (CreatureData const* data = sObjectMgr.GetCreatureData(obj->guid))
+    if (CreatureData const* data = sObjectMgr->GetCreatureData(obj->guid))
     {
-        sObjectMgr.AddCreatureToGrid(obj->guid, data);
+        sObjectMgr->AddCreatureToGrid(obj->guid, data);
 
         // Spawn if necessary (loaded grids only)
         Map* map = const_cast<Map*>(sMapMgr->CreateBaseMap(data->mapid));
@@ -315,9 +315,9 @@ void PoolGroup<Creature>::Spawn1Object(PoolObject* obj)
 template <>
 void PoolGroup<GameObject>::Spawn1Object(PoolObject* obj)
 {
-    if (GameObjectData const* data = sObjectMgr.GetGOData(obj->guid))
+    if (GameObjectData const* data = sObjectMgr->GetGOData(obj->guid))
     {
-        sObjectMgr.AddGameobjectToGrid(obj->guid, data);
+        sObjectMgr->AddGameobjectToGrid(obj->guid, data);
         // Spawn if necessary (loaded grids only)
         // this base map checked as non-instanced and then only existed
         Map* map = const_cast<Map*>(sMapMgr->CreateBaseMap(data->mapid));
@@ -344,15 +344,15 @@ void PoolGroup<GameObject>::Spawn1Object(PoolObject* obj)
 template <>
 void PoolGroup<Pool>::Spawn1Object(PoolObject* obj)
 {
-    sPoolMgr.SpawnPool(obj->guid);
+    sPoolMgr->SpawnPool(obj->guid);
 }
 
 // Method that does the respawn job on the specified creature
 template <>
 void PoolGroup<Creature>::ReSpawn1Object(PoolObject* obj)
 {
-    if (CreatureData const* data = sObjectMgr.GetCreatureData(obj->guid))
-        if (Creature* creature = sObjectAccessor.GetObjectInWorld(MAKE_NEW_GUID(obj->guid, data->id, HIGHGUID_UNIT), (Creature*) NULL))
+    if (CreatureData const* data = sObjectMgr->GetCreatureData(obj->guid))
+        if (Creature* creature = sObjectAccessor->GetObjectInWorld(MAKE_NEW_GUID(obj->guid, data->id, HIGHGUID_UNIT), (Creature*) NULL))
             creature->GetMap()->Add(creature);
 }
 
@@ -360,8 +360,8 @@ void PoolGroup<Creature>::ReSpawn1Object(PoolObject* obj)
 template <>
 void PoolGroup<GameObject>::ReSpawn1Object(PoolObject* obj)
 {
-    if (GameObjectData const* data = sObjectMgr.GetGOData(obj->guid))
-        if (GameObject* pGameobject = sObjectAccessor.GetObjectInWorld(MAKE_NEW_GUID(obj->guid, data->id, HIGHGUID_GAMEOBJECT), (GameObject*) NULL))
+    if (GameObjectData const* data = sObjectMgr->GetGOData(obj->guid))
+        if (GameObject* pGameobject = sObjectAccessor->GetObjectInWorld(MAKE_NEW_GUID(obj->guid, data->id, HIGHGUID_GAMEOBJECT), (GameObject*) NULL))
             pGameobject->GetMap()->Add(pGameobject);
 }
 
@@ -446,7 +446,7 @@ void PoolMgr::LoadFromDB()
             uint16 pool_id = fields[1].GetUInt16();
             float chance   = fields[2].GetFloat();
 
-            CreatureData const* data = sObjectMgr.GetCreatureData(guid);
+            CreatureData const* data = sObjectMgr->GetCreatureData(guid);
 
             if (!data)
             {
@@ -504,13 +504,13 @@ void PoolMgr::LoadFromDB()
             uint16 pool_id = fields[1].GetUInt16();
             float chance   = fields[2].GetFloat();
 
-            GameObjectData const* data = sObjectMgr.GetGOData(guid);
+            GameObjectData const* data = sObjectMgr->GetGOData(guid);
             if (!data)
             {
                 sLog->outErrorDb("`pool_gameobject` has a non existing gameobject spawn (GUID: %u) defined for pool id (%u), skipped.", guid, pool_id);
                 continue;
             }
-            GameObjectInfo const* goinfo = sObjectMgr.GetGameObjectInfo(data->id);
+            GameObjectInfo const* goinfo = sObjectMgr->GetGameObjectInfo(data->id);
             if (goinfo->type != GAMEOBJECT_TYPE_CHEST &&
                 goinfo->type != GAMEOBJECT_TYPE_GOOBER &&
                 goinfo->type != GAMEOBJECT_TYPE_FISHINGHOLE)

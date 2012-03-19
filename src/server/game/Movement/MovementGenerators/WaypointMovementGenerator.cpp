@@ -220,7 +220,7 @@ template void WaypointMovementGenerator<Player>::MovementInform(Player &);
 //----------------------------------------------------//
 void FlightPathMovementGenerator::LoadPath(Player &)
 {
-    sObjectMgr.GetTaxiPathNodes(i_pathId, i_path, i_mapIds);
+    sObjectMgr->GetTaxiPathNodes(i_pathId, i_path, i_mapIds);
 }
 
 uint32 FlightPathMovementGenerator::GetPathAtMapEnd() const

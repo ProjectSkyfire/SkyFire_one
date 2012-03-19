@@ -626,4 +626,3 @@ class CreatureEventAI : public CreatureAI
         uint32 InvinceabilityHpLevel;                       // Minimal health level allowed at damage apply
 };
 #endif
-

@@ -63,7 +63,7 @@ Guild::~Guild()
 
 bool Guild::Create(Player* leader, std::string gname)
 {
-    if (sObjectMgr.GetGuildByName(gname))
+    if (sObjectMgr->GetGuildByName(gname))
         return false;
 
     WorldSession* lSession = leader->GetSession();
@@ -76,7 +76,7 @@ bool Guild::Create(Player* leader, std::string gname)
     MOTD = "No message set.";
     m_GuildBankMoney = 0;
     m_PurchasedTabs = 0;
-    m_Id = sObjectMgr.GenerateGuildId();
+    m_Id = sObjectMgr->GenerateGuildId();
 
     // creating data
     time_t now = time(0);
@@ -114,16 +114,16 @@ void Guild::CreateDefaultGuildRanks(int locale_idx)
     CharacterDatabase.PExecute("DELETE FROM guild_rank WHERE guildid='%u'", m_Id);
     CharacterDatabase.PExecute("DELETE FROM guild_bank_right WHERE guildid = '%u'", m_Id);
 
-    CreateRank(sObjectMgr.GetSkyFireString(LANG_GUILD_MASTER, locale_idx),  GR_RIGHT_ALL);
-    CreateRank(sObjectMgr.GetSkyFireString(LANG_GUILD_OFFICER, locale_idx), GR_RIGHT_ALL);
-    CreateRank(sObjectMgr.GetSkyFireString(LANG_GUILD_VETERAN, locale_idx), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
-    CreateRank(sObjectMgr.GetSkyFireString(LANG_GUILD_MEMBER, locale_idx),  GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
-    CreateRank(sObjectMgr.GetSkyFireString(LANG_GUILD_INITIATE, locale_idx), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
+    CreateRank(sObjectMgr->GetSkyFireString(LANG_GUILD_MASTER, locale_idx),  GR_RIGHT_ALL);
+    CreateRank(sObjectMgr->GetSkyFireString(LANG_GUILD_OFFICER, locale_idx), GR_RIGHT_ALL);
+    CreateRank(sObjectMgr->GetSkyFireString(LANG_GUILD_VETERAN, locale_idx), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
+    CreateRank(sObjectMgr->GetSkyFireString(LANG_GUILD_MEMBER, locale_idx),  GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
+    CreateRank(sObjectMgr->GetSkyFireString(LANG_GUILD_INITIATE, locale_idx), GR_RIGHT_GCHATLISTEN | GR_RIGHT_GCHATSPEAK);
 }
 
 bool Guild::AddMember(uint64 plGuid, uint32 plRank)
 {
-    Player* pl = sObjectMgr.GetPlayer(plGuid);
+    Player* pl = sObjectMgr->GetPlayer(plGuid);
     if (pl)
     {
         if (pl->GetGuildId() != 0)
@@ -231,7 +231,7 @@ bool Guild::LoadGuildFromDB(QueryResult_AutoPtr guildDataResult)
 bool Guild::CheckGuildStructure()
 {
     // If the leader does not exist attempt to promote another member
-    if (!sObjectMgr.GetPlayerAccountIdByGUID(m_LeaderGuid))
+    if (!sObjectMgr->GetPlayerAccountIdByGUID(m_LeaderGuid))
     {
         DelMember(m_LeaderGuid);
         // check no members case (disbanded)
@@ -406,7 +406,7 @@ bool Guild::FillPlayerData(uint64 guid, MemberSlot* memslot)
     uint32 plClass;
     uint32 plZone;
 
-    Player* pl = sObjectMgr.GetPlayer(guid);
+    Player* pl = sObjectMgr->GetPlayer(guid);
     if (pl)
     {
         accountId = pl->GetSession()->GetAccountId();
@@ -511,7 +511,7 @@ void Guild::DelMember(uint64 guid, bool isDisbanding)
         SetLeader(newLeaderGUID);
 
         // If player not online data in data field will be loaded from guild tabs no need to update it !!
-        if (Player *newLeader = sObjectMgr.GetPlayer(newLeaderGUID))
+        if (Player *newLeader = sObjectMgr->GetPlayer(newLeaderGUID))
             newLeader->SetRank(GR_GUILDMASTER);
 
         // when leader non-exist (at guild load with deleted leader only) not send broadcasts
@@ -524,7 +524,7 @@ void Guild::DelMember(uint64 guid, bool isDisbanding)
 
     members.erase(GUID_LOPART(guid));
 
-    Player* player = sObjectMgr.GetPlayer(guid);
+    Player* player = sObjectMgr->GetPlayer(guid);
     // If player not online data in data field will be loaded from guild tabs no need to update it !!
     if (player)
     {
@@ -541,7 +541,7 @@ void Guild::ChangeRank(uint64 guid, uint32 newRank)
     if (itr != members.end())
         itr->second.RankId = newRank;
 
-    Player* player = sObjectMgr.GetPlayer(guid);
+    Player* player = sObjectMgr->GetPlayer(guid);
     // If player not online data in data field will be loaded from guild tabs no need to update it !!
     if (player)
         player->SetRank(newRank);
@@ -733,7 +733,7 @@ void Guild::Disband()
     CharacterDatabase.PExecute("DELETE FROM guild_bank_eventlog WHERE guildid = '%u'", m_Id);
     CharacterDatabase.PExecute("DELETE FROM guild_eventlog WHERE guildid = '%u'", m_Id);
     CharacterDatabase.CommitTransaction();
-    sObjectMgr.RemoveGuild(m_Id);
+    sObjectMgr->RemoveGuild(m_Id);
 }
 
 void Guild::Roster(WorldSession *session /*= NULL*/)
@@ -1261,7 +1261,7 @@ void Guild::LoadGuildBankFromDB()
             continue;
         }
 
-        ItemPrototype const *proto = sObjectMgr.GetItemPrototype(ItemEntry);
+        ItemPrototype const *proto = sObjectMgr->GetItemPrototype(ItemEntry);
 
         if (!proto)
         {

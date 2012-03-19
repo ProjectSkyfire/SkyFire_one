@@ -162,7 +162,7 @@ class GameEventMgr
         bool isSystemInit;
 };
 
-#define gameeventmgr (*ACE_Singleton<GameEventMgr, ACE_Null_Mutex>::instance())
+#define sGameEventMgr ACE_Singleton<GameEventMgr, ACE_Null_Mutex>::instance()
 #endif
 
 bool isGameEventActive(uint16 event_id);  // wtf is this outside of /EOF??

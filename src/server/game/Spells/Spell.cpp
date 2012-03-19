@@ -484,7 +484,7 @@ void Spell::FillTargetMap()
                 case SPELL_EFFECT_SUMMON_PLAYER:
                     if (m_caster->GetTypeId() == TYPEID_PLAYER && m_caster->ToPlayer()->GetSelection())
                     {
-                        Player* target = sObjectMgr.GetPlayer(m_caster->ToPlayer()->GetSelection());
+                        Player* target = sObjectMgr->GetPlayer(m_caster->ToPlayer()->GetSelection());
                         if (target)
                             AddUnitTarget(target, i);
                     }
@@ -2067,7 +2067,7 @@ void Spell::prepare(SpellCastTargets * targets, Aura* triggeredByAura)
 
     if (m_caster->GetTypeId() == TYPEID_PLAYER)
     {
-        if (sObjectMgr.IsPlayerSpellDisabled(m_spellInfo->Id))
+        if (sObjectMgr->IsPlayerSpellDisabled(m_spellInfo->Id))
         {
             SendCastResult(SPELL_FAILED_SPELL_UNAVAILABLE);
             finish(false);
@@ -2076,7 +2076,7 @@ void Spell::prepare(SpellCastTargets * targets, Aura* triggeredByAura)
     }
     else if (m_caster->GetTypeId() == TYPEID_UNIT && m_caster->ToCreature()->isPet())
     {
-        if (sObjectMgr.IsPetSpellDisabled(m_spellInfo->Id))
+        if (sObjectMgr->IsPetSpellDisabled(m_spellInfo->Id))
         {
             SendCastResult(SPELL_FAILED_SPELL_UNAVAILABLE);
             finish(false);
@@ -2085,7 +2085,7 @@ void Spell::prepare(SpellCastTargets * targets, Aura* triggeredByAura)
     }
     else
     {
-        if (sObjectMgr.IsCreatureSpellDisabled(m_spellInfo->Id))
+        if (sObjectMgr->IsCreatureSpellDisabled(m_spellInfo->Id))
         {
             finish(false);
             return;
@@ -2946,7 +2946,7 @@ void Spell::WriteAmmoToPacket(WorldPacket * data)
                 uint32 ammoID = m_caster->ToPlayer()->GetUInt32Value(PLAYER_AMMO_ID);
                 if (ammoID)
                 {
-                    ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(ammoID);
+                    ItemPrototype const *pProto = sObjectMgr->GetItemPrototype(ammoID);
                     if (pProto)
                     {
                         ammoDisplayID = pProto->DisplayInfoID;
@@ -4139,7 +4139,7 @@ uint8 Spell::CanCast(bool strict)
                 if (!m_caster->ToPlayer()->GetSelection())
                     return SPELL_FAILED_BAD_TARGETS;
 
-                Player* target = sObjectMgr.GetPlayer(m_caster->ToPlayer()->GetSelection());
+                Player* target = sObjectMgr->GetPlayer(m_caster->ToPlayer()->GetSelection());
                 if (!target || m_caster->ToPlayer() == target || !target->IsInSameRaidWith(m_caster->ToPlayer()))
                     return SPELL_FAILED_BAD_TARGETS;
 
@@ -4149,7 +4149,7 @@ uint8 Spell::CanCast(bool strict)
                     InstanceTemplate const* instance = ObjectMgr::GetInstanceTemplate(m_caster->GetMapId());
                     if (!instance)
                         return SPELL_FAILED_TARGET_NOT_IN_INSTANCE;
-                    if (!target->Satisfy(sObjectMgr.GetAccessRequirement(instance->access_id), m_caster->GetMapId()))
+                    if (!target->Satisfy(sObjectMgr->GetAccessRequirement(instance->access_id), m_caster->GetMapId()))
                         return SPELL_FAILED_BAD_TARGETS;
                 }
                 break;
@@ -4952,7 +4952,7 @@ uint8 Spell::CheckItems()
                             return SPELL_FAILED_NO_AMMO;
                         }
 
-                        ItemPrototype const *ammoProto = sObjectMgr.GetItemPrototype(ammo);
+                        ItemPrototype const *ammoProto = sObjectMgr->GetItemPrototype(ammo);
                         if (!ammoProto)
                             return SPELL_FAILED_NO_AMMO;
 

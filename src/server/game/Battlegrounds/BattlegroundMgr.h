@@ -257,6 +257,5 @@ class BattleGroundMgr
         bool   m_Testing;
 };
 
-#define sBattleGroundMgr (*ACE_Singleton<BattleGroundMgr, ACE_Null_Mutex>::instance())
+#define sBattleGroundMgr ACE_Singleton<BattleGroundMgr, ACE_Null_Mutex>::instance()
 #endif
-

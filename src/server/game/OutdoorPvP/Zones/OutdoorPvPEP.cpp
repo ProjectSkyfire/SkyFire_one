@@ -190,13 +190,13 @@ void OPvPCapturePointEP::ChangeState()
         field = EP_MAP_A[m_TowerType];
         if (((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled)
             ((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled--;
-        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetSkyFireStringForDBCLocale(EP_LANG_LOOSE_A[m_TowerType]));
+        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr->GetSkyFireStringForDBCLocale(EP_LANG_LOOSE_A[m_TowerType]));
         break;
     case OBJECTIVESTATE_HORDE:
         field = EP_MAP_H[m_TowerType];
         if (((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled)
             ((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled--;
-        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetSkyFireStringForDBCLocale(EP_LANG_LOOSE_H[m_TowerType]));
+        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr->GetSkyFireStringForDBCLocale(EP_LANG_LOOSE_H[m_TowerType]));
         break;
     case OBJECTIVESTATE_NEUTRAL_ALLIANCE_CHALLENGE:
     case OBJECTIVESTATE_ALLIANCE_HORDE_CHALLENGE:
@@ -226,14 +226,14 @@ void OPvPCapturePointEP::ChangeState()
         artkit = 2;
         if (((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled<4)
             ((OutdoorPvPEP*)m_PvP)->m_AllianceTowersControlled++;
-        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetSkyFireStringForDBCLocale(EP_LANG_CAPTURE_A[m_TowerType]));
+        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr->GetSkyFireStringForDBCLocale(EP_LANG_CAPTURE_A[m_TowerType]));
         break;
     case OBJECTIVESTATE_HORDE:
         field = EP_MAP_H[m_TowerType];
         artkit = 1;
         if (((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled<4)
             ((OutdoorPvPEP*)m_PvP)->m_HordeTowersControlled++;
-        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr.GetSkyFireStringForDBCLocale(EP_LANG_CAPTURE_H[m_TowerType]));
+        sWorld->SendZoneText(OutdoorPvPEPBuffZones[0], sObjectMgr->GetSkyFireStringForDBCLocale(EP_LANG_CAPTURE_H[m_TowerType]));
         break;
     case OBJECTIVESTATE_NEUTRAL_ALLIANCE_CHALLENGE:
     case OBJECTIVESTATE_ALLIANCE_HORDE_CHALLENGE:
@@ -385,14 +385,14 @@ void OPvPCapturePointEP::LinkGraveYard(uint32 team)
     if (EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD] != team)
     {
         EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD] = team;
-        sObjectMgr.RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, team, false);
-        sObjectMgr.AddGraveYardLink(EP_GraveYardId, EP_GraveYardZone, team, false);
+        sObjectMgr->RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, team, false);
+        sObjectMgr->AddGraveYardLink(EP_GraveYardId, EP_GraveYardZone, team, false);
     }
 }
 
 void OPvPCapturePointEP::UnlinkGraveYard()
 {
-    sObjectMgr.RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD], false);
+    sObjectMgr->RemoveGraveYardLink(EP_GraveYardId, EP_GraveYardZone, EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD], false);
     EP_TOWER_EVENT_TEAM[EP_TOWER_CROWNGUARD] = 0;
 }
 

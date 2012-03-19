@@ -290,7 +290,7 @@ void Map::DeleteFromWorld(T* obj)
 template<>
 void Map::DeleteFromWorld(Player* pl)
 {
-    sObjectAccessor.RemoveObject(pl);
+    sObjectAccessor->RemoveObject(pl);
     delete pl;
 }
 
@@ -362,7 +362,7 @@ bool Map::EnsureGridLoaded(const Cell &cell)
         loader.LoadN();
 
         // Add resurrectable corpses to world object list in grid
-        sObjectAccessor.AddCorpsesToGrid(GridPair(cell.GridX(), cell.GridY()), (*grid)(cell.CellX(), cell.CellY()), this);
+        sObjectAccessor->AddCorpsesToGrid(GridPair(cell.GridX(), cell.GridY()), (*grid)(cell.CellX(), cell.CellY()), this);
         return true;
     }
 
@@ -2113,7 +2113,7 @@ void Map::RemoveAllObjectsInRemoveList()
         {
             case TYPEID_CORPSE:
             {
-                Corpse* corpse = sObjectAccessor.GetCorpse(*obj, obj->GetGUID());
+                Corpse* corpse = sObjectAccessor->GetCorpse(*obj, obj->GetGUID());
                 if (!corpse)
                     sLog->outError("Tried to delete corpse/bones %u that is not in map.", obj->GetGUIDLow());
                 else
@@ -2291,7 +2291,7 @@ bool InstanceMap::CanEnter(Player* player)
     }
 
     // cannot enter if the instance is full (player cap), GMs don't count
-    InstanceTemplate const* iTemplate = sObjectMgr.GetInstanceTemplate(GetId());
+    InstanceTemplate const* iTemplate = sObjectMgr->GetInstanceTemplate(GetId());
     if (!player->isGameMaster() && GetPlayersCountExceptGMs() >= iTemplate->maxPlayers)
     {
         sLog->outDetail("MAP: Instance '%u' of map '%s' cannot have more than '%u' players. Player '%s' rejected", GetInstanceId(), GetMapName(), iTemplate->maxPlayers, player->GetName());
@@ -2448,7 +2448,7 @@ void InstanceMap::CreateInstanceData(bool load)
     if (i_data != NULL)
         return;
 
-    InstanceTemplate const* mInstance = sObjectMgr.GetInstanceTemplate(GetId());
+    InstanceTemplate const* mInstance = sObjectMgr->GetInstanceTemplate(GetId());
     if (mInstance)
     {
         i_script_id = mInstance->script_id;
@@ -2470,7 +2470,7 @@ void InstanceMap::CreateInstanceData(bool load)
             const char* data = fields[0].GetString();
             if (data && data != "")
             {
-                sLog->outDebug("Loading instance data for %s with id %u", sObjectMgr.GetScriptName(i_script_id), i_InstanceId);
+                sLog->outDebug("Loading instance data for %s with id %u", sObjectMgr->GetScriptName(i_script_id), i_InstanceId);
                 i_data->Load(data);
             }
         }
@@ -2561,7 +2561,7 @@ void InstanceMap::UnloadAll()
     ASSERT(!HavePlayers());
 
     if (m_resetAfterUnload == true)
-        sObjectMgr.DeleteRespawnTimeForInstance(GetInstanceId());
+        sObjectMgr->DeleteRespawnTimeForInstance(GetInstanceId());
 
     Map::UnloadAll();
 }

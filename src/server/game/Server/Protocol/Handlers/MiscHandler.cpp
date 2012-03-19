@@ -220,7 +220,7 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
     data << uint32(clientcount);                            // clientcount place holder, online count
 
     ACE_GUARD(ACE_Thread_Mutex, g, *HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType& m = sObjectAccessor.GetPlayers();
+    HashMapHolder<Player>::MapType& m = sObjectAccessor->GetPlayers();
     for (HashMapHolder<Player>::MapType::const_iterator itr = m.begin(); itr != m.end(); ++itr)
     {
         if (security == SEC_PLAYER)
@@ -283,7 +283,7 @@ void WorldSession::HandleWhoOpcode(WorldPacket & recv_data)
         if (!(wplayer_name.empty() || wpname.find(wplayer_name) != std::wstring::npos))
             continue;
 
-        std::string gname = sObjectMgr.GetGuildNameById(itr->second->GetGuildId());
+        std::string gname = sObjectMgr->GetGuildNameById(itr->second->GetGuildId());
         std::wstring wgname;
         if (!Utf8toWStr(gname, wgname))
             continue;
@@ -576,7 +576,7 @@ void WorldSession::HandleAddFriendOpcodeCallBack(QueryResult_AutoPtr result, uin
         }
     }
 
-    sSocialMgr.SendFriendStatus(session->GetPlayer(), friendResult, GUID_LOPART(friendGuid), false);
+    sSocialMgr->SendFriendStatus(session->GetPlayer(), friendResult, GUID_LOPART(friendGuid), false);
 
     sLog->outDebug("WORLD: Sent (SMSG_FRIEND_STATUS)");
 }
@@ -591,7 +591,7 @@ void WorldSession::HandleDelFriendOpcode(WorldPacket & recv_data)
 
     _player->GetSocial()->RemoveFromSocialList(GUID_LOPART(FriendGUID), false);
 
-    sSocialMgr.SendFriendStatus(GetPlayer(), FRIEND_REMOVED, GUID_LOPART(FriendGUID), false);
+    sSocialMgr->SendFriendStatus(GetPlayer(), FRIEND_REMOVED, GUID_LOPART(FriendGUID), false);
 
     sLog->outDebug("WORLD: Sent motd (SMSG_FRIEND_STATUS)");
 }
@@ -649,7 +649,7 @@ void WorldSession::HandleAddIgnoreOpcodeCallBack(QueryResult_AutoPtr result, uin
         }
     }
 
-    sSocialMgr.SendFriendStatus(session->GetPlayer(), ignoreResult, GUID_LOPART(IgnoreGuid), false);
+    sSocialMgr->SendFriendStatus(session->GetPlayer(), ignoreResult, GUID_LOPART(IgnoreGuid), false);
 
     sLog->outDebug("WORLD: Sent (SMSG_FRIEND_STATUS)");
 }
@@ -664,7 +664,7 @@ void WorldSession::HandleDelIgnoreOpcode(WorldPacket & recv_data)
 
     _player->GetSocial()->RemoveFromSocialList(GUID_LOPART(IgnoreGUID), true);
 
-    sSocialMgr.SendFriendStatus(GetPlayer(), FRIEND_IGNORE_REMOVED, GUID_LOPART(IgnoreGUID), false);
+    sSocialMgr->SendFriendStatus(GetPlayer(), FRIEND_IGNORE_REMOVED, GUID_LOPART(IgnoreGUID), false);
 
     sLog->outDebug("WORLD: Sent motd (SMSG_FRIEND_STATUS)");
 }
@@ -825,10 +825,10 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
     if (sScriptMgr->AreaTrigger(GetPlayer(), atEntry))
         return;
 
-    uint32 quest_id = sObjectMgr.GetQuestForAreaTrigger(Trigger_ID);
+    uint32 quest_id = sObjectMgr->GetQuestForAreaTrigger(Trigger_ID);
     if (quest_id && GetPlayer()->isAlive() && GetPlayer()->IsActiveQuest(quest_id))
     {
-        Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
+        Quest const* pQuest = sObjectMgr->GetQuestTemplate(quest_id);
         if (pQuest)
         {
             if (GetPlayer()->GetQuestStatus(quest_id) == QUEST_STATUS_INCOMPLETE)
@@ -836,7 +836,7 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
         }
     }
 
-    if (sObjectMgr.IsTavernAreaTrigger(Trigger_ID))
+    if (sObjectMgr->IsTavernAreaTrigger(Trigger_ID))
     {
         // set resting flag we are in the inn
         GetPlayer()->SetFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING);
@@ -866,11 +866,11 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
     }
 
     // NULL if all values default (non teleport trigger)
-    AreaTrigger const* at = sObjectMgr.GetAreaTrigger(Trigger_ID);
+    AreaTrigger const* at = sObjectMgr->GetAreaTrigger(Trigger_ID);
     if (!at)
         return;
 
-    if (!GetPlayer()->Satisfy(sObjectMgr.GetAccessRequirement(at->access_id), at->target_mapId, true))
+    if (!GetPlayer()->Satisfy(sObjectMgr->GetAccessRequirement(at->access_id), at->target_mapId, true))
         return;
 
     GetPlayer()->TeleportTo(at->target_mapId, at->target_X, at->target_Y, at->target_Z, at->target_Orientation, TELE_TO_NOT_LEAVE_TRANSPORT);
@@ -1042,7 +1042,7 @@ void WorldSession::HandleInspectOpcode(WorldPacket& recv_data)
 
     _player->SetSelection(guid);
 
-    Player *plr = sObjectMgr.GetPlayer(guid);
+    Player *plr = sObjectMgr->GetPlayer(guid);
     if (!plr)                                                // wrong player
         return;
 
@@ -1126,7 +1126,7 @@ void WorldSession::HandleInspectHonorStatsOpcode(WorldPacket& recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    Player* player = sObjectMgr.GetPlayer(guid);
+    Player* player = sObjectMgr->GetPlayer(guid);
 
     if (!player)
     {
@@ -1200,7 +1200,7 @@ void WorldSession::HandleWhoisOpcode(WorldPacket& recv_data)
         return;
     }
 
-    Player *plr = sObjectMgr.GetPlayer(charname.c_str());
+    Player *plr = sObjectMgr->GetPlayer(charname.c_str());
 
     if (!plr)
     {
