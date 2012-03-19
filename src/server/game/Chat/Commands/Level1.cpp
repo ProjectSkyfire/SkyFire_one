@@ -816,7 +816,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
 }
 
 //Summon Player
-bool ChatHandler::HandleNamegoCommand(const char* args)
+bool ChatHandler::HandleSummonCommand(const char* args)
 {
     if (!*args)
         return false;
@@ -930,7 +930,7 @@ bool ChatHandler::HandleNamegoCommand(const char* args)
 }
 
 //Teleport to Player
-bool ChatHandler::HandleGonameCommand(const char* args)
+bool ChatHandler::HandleAppearCommand(const char* args)
 {
     if (!*args)
         return false;
@@ -2515,7 +2515,7 @@ bool ChatHandler::HandleGroupTeleCommand(const char * args)
 }
 
 //Summon group of player
-bool ChatHandler::HandleGroupgoCommand(const char* args)
+bool ChatHandler::HandleGroupSummonCommand(const char* args)
 {
     if (!*args)
         return false;
@@ -2555,7 +2555,7 @@ bool ChatHandler::HandleGroupgoCommand(const char* args)
         (m_session->GetPlayer()->GetGroup()->GetLeaderGUID() != m_session->GetPlayer()->GetGUID())))
         // the last check is a bit excessive, but let it be, just in case
     {
-        SendSysMessage(LANG_CANNOT_SUMMON_TO_INST);
+        PSendSysMessage(LANG_CANNOT_SUMMON_TO_INST);
         SetSentErrorMessage(true);
         return false;
     }
