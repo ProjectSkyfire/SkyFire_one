@@ -326,7 +326,7 @@ struct instance_karazhan : public ScriptedInstance
             m_auiEncounter[10] >> m_auiEncounter[11];
         if (dataHead1 != 'K' || dataHead2 != 'Z')
         {
-            error_log("SD2: Karazhan corrupted save uiData.");
+            sLog->outError("SD2: Karazhan corrupted save uiData.");
             for (int i = 0; i < MAX_ENCOUNTER; i++)
                 m_auiEncounter[i] = 0;
         } else OUT_LOAD_INST_DATA_COMPLETE;

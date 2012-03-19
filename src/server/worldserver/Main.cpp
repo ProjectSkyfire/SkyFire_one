@@ -56,7 +56,7 @@ uint32 realmID;                                             ///< Id of the realm
 // Print out the usage string for this program on the console.
 void usage(const char *prog)
 {
-    sLog.outString("Usage: \n %s [<options>]\n"
+    sLog->outString("Usage: \n %s [<options>]\n"
         "    -v, --version            print version and exit\n\r"
         "    -c config_file           use config_file as configuration file\n\r"
         #ifdef _WIN32
@@ -102,20 +102,20 @@ extern int main(int argc, char **argv)
                 if (!strcmp(mode, "install"))
                 {
                     if (WinServiceInstall())
-                        sLog.outString("Installing service");
+                        sLog->outString("Installing service");
                     return 1;
                 }
                 else if (!strcmp(mode, "uninstall"))
                 {
                     if (WinServiceUninstall())
-                        sLog.outString("Uninstalling service");
+                        sLog->outString("Uninstalling service");
                     return 1;
                 }
                 else if (!strcmp(mode, "run"))
                     WinServiceRun();
                 else
                 {
-                    sLog.outError("Runtime-Error: -%c unsupported argument %s", cmd_opts.opt_opt(), mode);
+                    sLog->outError("Runtime-Error: -%c unsupported argument %s", cmd_opts.opt_opt(), mode);
                     usage(argv[0]);
                     return 1;
                 }
@@ -123,11 +123,11 @@ extern int main(int argc, char **argv)
             }
 #endif
             case ':':
-                sLog.outError("Runtime-Error: -%c option requires an input argument", cmd_opts.opt_opt());
+                sLog->outError("Runtime-Error: -%c option requires an input argument", cmd_opts.opt_opt());
                 usage(argv[0]);
                 return 1;
             default:
-                sLog.outError("Runtime-Error: bad format of commandline arguments");
+                sLog->outError("Runtime-Error: bad format of commandline arguments");
                 usage(argv[0]);
                 return 1;
         }
@@ -135,13 +135,13 @@ extern int main(int argc, char **argv)
 
     if (!sConfig.SetSource(cfg_file))
     {
-        sLog.outError("Invalid or missing configuration file : %s", cfg_file);
-        sLog.outError("Verify that the file exists and has \'[worldserver]' written in the top of the file!");
+        sLog->outError("Invalid or missing configuration file : %s", cfg_file);
+        sLog->outError("Verify that the file exists and has \'[worldserver]' written in the top of the file!");
         return 1;
     }
-    sLog.outString("Using configuration file %s.", cfg_file);
+    sLog->outString("Using configuration file %s.", cfg_file);
 
-    sLog.outDetail("Using ACE: %s", ACE_VERSION);
+    sLog->outDetail("Using ACE: %s", ACE_VERSION);
 
     // and run the 'Master'
     // todo - Why do we need this 'Master'? Can't all of this be in the Main as for Realmd?

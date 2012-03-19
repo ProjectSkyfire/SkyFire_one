@@ -574,7 +574,7 @@ bool ChatHandler::HandleReloadAllAreaCommand(const char*)
 
 bool ChatHandler::HandleReloadAllLootCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables...");
+    sLog->outString("Re-Loading Loot Tables...");
     LoadLootTables();
     SendGlobalGMSysMessage("DB tables *_loot_template reloaded.");
     return true;
@@ -593,7 +593,7 @@ bool ChatHandler::HandleReloadAllQuestCommand(const char* /*args*/)
     HandleReloadQuestAreaTriggersCommand("a");
     HandleReloadQuestTemplateCommand("a");
 
-    sLog.outString("Re-Loading Quests Relations...");
+    sLog->outString("Re-Loading Quests Relations...");
     objmgr.LoadQuestRelations();
     SendGlobalGMSysMessage("DB tables *_questrelation and *_involvedrelation reloaded.");
     return true;
@@ -608,7 +608,7 @@ bool ChatHandler::HandleReloadAllScriptsCommand(const char*)
         return false;
     }
 
-    sLog.outString("Re-Loading Scripts...");
+    sLog->outString("Re-Loading Scripts...");
     HandleReloadGameObjectScriptsCommand("a");
     HandleReloadEventScriptsCommand("a");
     HandleReloadQuestEndScriptsCommand("a");
@@ -658,7 +658,7 @@ bool ChatHandler::HandleReloadAllLocalesCommand(const char* /*args*/)
 
 bool ChatHandler::HandleReloadConfigCommand(const char* /*args*/)
 {
-    sLog.outString("Re-Loading config settings...");
+    sLog->outString("Re-Loading config settings...");
     sWorld.LoadConfigSettings(true);
     MapManager::Instance().InitializeVisibilityDistanceInfo();
     SendGlobalGMSysMessage("World config settings reloaded.");
@@ -667,7 +667,7 @@ bool ChatHandler::HandleReloadConfigCommand(const char* /*args*/)
 
 bool ChatHandler::HandleReloadAreaTriggerTavernCommand(const char*)
 {
-    sLog.outString("Re-Loading Tavern Area Triggers...");
+    sLog->outString("Re-Loading Tavern Area Triggers...");
     objmgr.LoadTavernAreaTriggers();
     SendGlobalGMSysMessage("DB table areatrigger_tavern reloaded.");
     return true;
@@ -675,7 +675,7 @@ bool ChatHandler::HandleReloadAreaTriggerTavernCommand(const char*)
 
 bool ChatHandler::HandleReloadAreaTriggerTeleportCommand(const char*)
 {
-    sLog.outString("Re-Loading AreaTrigger teleport definitions...");
+    sLog->outString("Re-Loading AreaTrigger teleport definitions...");
     objmgr.LoadAreaTriggerTeleports();
     SendGlobalGMSysMessage("DB table areatrigger_teleport reloaded.");
     return true;
@@ -683,7 +683,7 @@ bool ChatHandler::HandleReloadAreaTriggerTeleportCommand(const char*)
 
 bool ChatHandler::HandleReloadAccessRequirementCommand(const char*)
 {
-    sLog.outString("Re-Loading Access Requirement definitions...");
+    sLog->outString("Re-Loading Access Requirement definitions...");
     objmgr.LoadAccessRequirements();
     SendGlobalGMSysMessage("DB table access_requirement reloaded.");
      return true;
@@ -691,7 +691,7 @@ bool ChatHandler::HandleReloadAccessRequirementCommand(const char*)
 
 bool ChatHandler::HandleReloadAutobroadcastCommand(const char*)
 {
-    sLog.outString("Re-Loading Autobroadcast...");
+    sLog->outString("Re-Loading Autobroadcast...");
     sWorld.LoadAutobroadcasts();
     SendGlobalGMSysMessage("DB table autobroadcast reloaded.");
     return true;
@@ -706,7 +706,7 @@ bool ChatHandler::HandleReloadCommandCommand(const char*)
 
 bool ChatHandler::HandleReloadCreatureQuestRelationsCommand(const char*)
 {
-    sLog.outString("Loading Quests Relations... (creature_questrelation)");
+    sLog->outString("Loading Quests Relations... (creature_questrelation)");
     objmgr.LoadCreatureQuestRelations();
     SendGlobalGMSysMessage("DB table creature_questrelation (creature quest givers) reloaded.");
     return true;
@@ -714,7 +714,7 @@ bool ChatHandler::HandleReloadCreatureQuestRelationsCommand(const char*)
 
 bool ChatHandler::HandleReloadCreatureLinkedRespawnCommand(const char *args)
 {
-    sLog.outString("Loading Linked Respawns... (creature_linked_respawn)");
+    sLog->outString("Loading Linked Respawns... (creature_linked_respawn)");
     objmgr.LoadCreatureLinkedRespawn();
     SendGlobalGMSysMessage("DB table creature_linked_respawn (creature linked respawns) reloaded.");
     return true;
@@ -722,7 +722,7 @@ bool ChatHandler::HandleReloadCreatureLinkedRespawnCommand(const char *args)
 
 bool ChatHandler::HandleReloadGossipMenuCommand(const char*)
 {
-    sLog.outString( "Re-Loading `gossip_menu` Table!" );
+    sLog->outString( "Re-Loading `gossip_menu` Table!" );
     objmgr.LoadGossipMenu();
     SendGlobalSysMessage("DB table `gossip_menu` reloaded.");
     return true;
@@ -730,7 +730,7 @@ bool ChatHandler::HandleReloadGossipMenuCommand(const char*)
 
 bool ChatHandler::HandleReloadGossipMenuOptionCommand(const char*)
 {
-    sLog.outString( "Re-Loading `gossip_menu_option` Table!" );
+    sLog->outString( "Re-Loading `gossip_menu_option` Table!" );
     objmgr.LoadGossipMenuItems();
     SendGlobalSysMessage("DB table `gossip_menu_option` reloaded.");
     return true;
@@ -738,7 +738,7 @@ bool ChatHandler::HandleReloadGossipMenuOptionCommand(const char*)
 
 bool ChatHandler::HandleReloadCreatureQuestInvRelationsCommand(const char*)
 {
-    sLog.outString("Loading Quests Relations... (creature_involvedrelation)");
+    sLog->outString("Loading Quests Relations... (creature_involvedrelation)");
     objmgr.LoadCreatureInvolvedRelations();
     SendGlobalGMSysMessage("DB table creature_involvedrelation (creature quest takers) reloaded.");
     return true;
@@ -746,7 +746,7 @@ bool ChatHandler::HandleReloadCreatureQuestInvRelationsCommand(const char*)
 
 bool ChatHandler::HandleReloadGOQuestRelationsCommand(const char*)
 {
-    sLog.outString("Loading Quests Relations... (gameobject_questrelation)");
+    sLog->outString("Loading Quests Relations... (gameobject_questrelation)");
     objmgr.LoadGameobjectQuestRelations();
     SendGlobalGMSysMessage("DB table gameobject_questrelation (gameobject quest givers) reloaded.");
     return true;
@@ -754,7 +754,7 @@ bool ChatHandler::HandleReloadGOQuestRelationsCommand(const char*)
 
 bool ChatHandler::HandleReloadGOQuestInvRelationsCommand(const char*)
 {
-    sLog.outString("Loading Quests Relations... (gameobject_involvedrelation)");
+    sLog->outString("Loading Quests Relations... (gameobject_involvedrelation)");
     objmgr.LoadGameobjectInvolvedRelations();
     SendGlobalGMSysMessage("DB table gameobject_involvedrelation (gameobject quest takers) reloaded.");
     return true;
@@ -762,7 +762,7 @@ bool ChatHandler::HandleReloadGOQuestInvRelationsCommand(const char*)
 
 bool ChatHandler::HandleReloadQuestAreaTriggersCommand(const char*)
 {
-    sLog.outString("Re-Loading Quest Area Triggers...");
+    sLog->outString("Re-Loading Quest Area Triggers...");
     objmgr.LoadQuestAreaTriggers();
     SendGlobalGMSysMessage("DB table areatrigger_involvedrelation (quest area triggers) reloaded.");
     return true;
@@ -770,7 +770,7 @@ bool ChatHandler::HandleReloadQuestAreaTriggersCommand(const char*)
 
 bool ChatHandler::HandleReloadQuestTemplateCommand(const char*)
 {
-    sLog.outString("Re-Loading Quest Templates...");
+    sLog->outString("Re-Loading Quest Templates...");
     objmgr.LoadQuests();
     SendGlobalGMSysMessage("DB table quest_template (quest definitions) reloaded.");
     return true;
@@ -778,7 +778,7 @@ bool ChatHandler::HandleReloadQuestTemplateCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesCreatureCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (creature_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (creature_loot_template)");
     LoadLootTemplates_Creature();
     LootTemplates_Creature.CheckLootRefs();
     SendGlobalGMSysMessage("DB table creature_loot_template reloaded.");
@@ -787,7 +787,7 @@ bool ChatHandler::HandleReloadLootTemplatesCreatureCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesDisenchantCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (disenchant_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (disenchant_loot_template)");
     LoadLootTemplates_Disenchant();
     LootTemplates_Disenchant.CheckLootRefs();
     SendGlobalGMSysMessage("DB table disenchant_loot_template reloaded.");
@@ -796,7 +796,7 @@ bool ChatHandler::HandleReloadLootTemplatesDisenchantCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesFishingCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (fishing_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (fishing_loot_template)");
     LoadLootTemplates_Fishing();
     LootTemplates_Fishing.CheckLootRefs();
     SendGlobalGMSysMessage("DB table fishing_loot_template reloaded.");
@@ -805,7 +805,7 @@ bool ChatHandler::HandleReloadLootTemplatesFishingCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesGameobjectCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (gameobject_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (gameobject_loot_template)");
     LoadLootTemplates_Gameobject();
     LootTemplates_Gameobject.CheckLootRefs();
     SendGlobalGMSysMessage("DB table gameobject_loot_template reloaded.");
@@ -814,7 +814,7 @@ bool ChatHandler::HandleReloadLootTemplatesGameobjectCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesItemCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (item_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (item_loot_template)");
     LoadLootTemplates_Item();
     LootTemplates_Item.CheckLootRefs();
     SendGlobalGMSysMessage("DB table item_loot_template reloaded.");
@@ -823,7 +823,7 @@ bool ChatHandler::HandleReloadLootTemplatesItemCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesPickpocketingCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (pickpocketing_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (pickpocketing_loot_template)");
     LoadLootTemplates_Pickpocketing();
     LootTemplates_Pickpocketing.CheckLootRefs();
     SendGlobalGMSysMessage("DB table pickpocketing_loot_template reloaded.");
@@ -832,7 +832,7 @@ bool ChatHandler::HandleReloadLootTemplatesPickpocketingCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesProspectingCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (prospecting_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (prospecting_loot_template)");
     LoadLootTemplates_Prospecting();
     LootTemplates_Prospecting.CheckLootRefs();
     SendGlobalGMSysMessage("DB table prospecting_loot_template reloaded.");
@@ -841,7 +841,7 @@ bool ChatHandler::HandleReloadLootTemplatesProspectingCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesMailCommand(const char*)
 {
-    sLog.outString( "Re-Loading Loot Tables... (`mail_loot_template`)" );
+    sLog->outString( "Re-Loading Loot Tables... (`mail_loot_template`)" );
     LoadLootTemplates_Mail();
     LootTemplates_Mail.CheckLootRefs();
     SendGlobalSysMessage("DB table `mail_loot_template` reloaded.");
@@ -850,7 +850,7 @@ bool ChatHandler::HandleReloadLootTemplatesMailCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesReferenceCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (reference_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (reference_loot_template)");
     LoadLootTemplates_Reference();
     SendGlobalGMSysMessage("DB table reference_loot_template reloaded.");
     return true;
@@ -858,7 +858,7 @@ bool ChatHandler::HandleReloadLootTemplatesReferenceCommand(const char*)
 
 bool ChatHandler::HandleReloadLootTemplatesSkinningCommand(const char*)
 {
-    sLog.outString("Re-Loading Loot Tables... (skinning_loot_template)");
+    sLog->outString("Re-Loading Loot Tables... (skinning_loot_template)");
     LoadLootTemplates_Skinning();
     LootTemplates_Skinning.CheckLootRefs();
     SendGlobalGMSysMessage("DB table skinning_loot_template reloaded.");
@@ -867,7 +867,7 @@ bool ChatHandler::HandleReloadLootTemplatesSkinningCommand(const char*)
 
 bool ChatHandler::HandleReloadTrinityStringCommand(const char*)
 {
-    sLog.outString("Re-Loading trinity_string Table!");
+    sLog->outString("Re-Loading trinity_string Table!");
     objmgr.LoadTrinityStrings();
     SendGlobalGMSysMessage("DB table trinity_string reloaded.");
     return true;
@@ -875,7 +875,7 @@ bool ChatHandler::HandleReloadTrinityStringCommand(const char*)
 
 bool ChatHandler::HandleReloadNpcGossipCommand(const char*)
 {
-    sLog.outString("Re-Loading npc_gossip Table!");
+    sLog->outString("Re-Loading npc_gossip Table!");
     objmgr.LoadNpcTextId();
     SendGlobalGMSysMessage("DB table npc_gossip reloaded.");
     return true;
@@ -883,7 +883,7 @@ bool ChatHandler::HandleReloadNpcGossipCommand(const char*)
 
 bool ChatHandler::HandleReloadNpcTrainerCommand(const char*)
 {
-    sLog.outString("Re-Loading npc_trainer Table!");
+    sLog->outString("Re-Loading npc_trainer Table!");
     objmgr.LoadTrainerSpell();
     SendGlobalGMSysMessage("DB table npc_trainer reloaded.");
     return true;
@@ -891,7 +891,7 @@ bool ChatHandler::HandleReloadNpcTrainerCommand(const char*)
 
 bool ChatHandler::HandleReloadNpcVendorCommand(const char*)
 {
-    sLog.outString("Re-Loading npc_vendor Table!");
+    sLog->outString("Re-Loading npc_vendor Table!");
     objmgr.LoadVendors();
     SendGlobalGMSysMessage("DB table npc_vendor reloaded.");
     return true;
@@ -899,7 +899,7 @@ bool ChatHandler::HandleReloadNpcVendorCommand(const char*)
 
 bool ChatHandler::HandleReloadReservedNameCommand(const char*)
 {
-    sLog.outString("Loading ReservedNames... (reserved_name)");
+    sLog->outString("Loading ReservedNames... (reserved_name)");
     objmgr.LoadReservedPlayersNames();
     SendGlobalGMSysMessage("DB table reserved_name (player reserved names) reloaded.");
     return true;
@@ -907,7 +907,7 @@ bool ChatHandler::HandleReloadReservedNameCommand(const char*)
 
 bool ChatHandler::HandleReloadSkillDiscoveryTemplateCommand(const char* /*args*/)
 {
-    sLog.outString("Re-Loading Skill Discovery Table...");
+    sLog->outString("Re-Loading Skill Discovery Table...");
     LoadSkillDiscoveryTable();
     SendGlobalGMSysMessage("DB table skill_discovery_template (recipes discovered at crafting) reloaded.");
     return true;
@@ -915,7 +915,7 @@ bool ChatHandler::HandleReloadSkillDiscoveryTemplateCommand(const char* /*args*/
 
 bool ChatHandler::HandleReloadSkillExtraItemTemplateCommand(const char* /*args*/)
 {
-    sLog.outString("Re-Loading Skill Extra Item Table...");
+    sLog->outString("Re-Loading Skill Extra Item Table...");
     LoadSkillExtraItemTable();
     SendGlobalGMSysMessage("DB table skill_extra_item_template (extra item creation when crafting) reloaded.");
     return true;
@@ -923,7 +923,7 @@ bool ChatHandler::HandleReloadSkillExtraItemTemplateCommand(const char* /*args*/
 
 bool ChatHandler::HandleReloadSkillFishingBaseLevelCommand(const char* /*args*/)
 {
-    sLog.outString("Re-Loading Skill Fishing base level requirements...");
+    sLog->outString("Re-Loading Skill Fishing base level requirements...");
     objmgr.LoadFishingBaseSkillLevel();
     SendGlobalGMSysMessage("DB table skill_fishing_base_level (fishing base level for zone/subzone) reloaded.");
     return true;
@@ -931,7 +931,7 @@ bool ChatHandler::HandleReloadSkillFishingBaseLevelCommand(const char* /*args*/)
 
 bool ChatHandler::HandleReloadSpellAffectCommand(const char*)
 {
-    sLog.outString("Re-Loading SpellAffect definitions...");
+    sLog->outString("Re-Loading SpellAffect definitions...");
     spellmgr.LoadSpellAffects();
     SendGlobalGMSysMessage("DB table spell_affect (spell mods apply requirements) reloaded.");
     return true;
@@ -939,7 +939,7 @@ bool ChatHandler::HandleReloadSpellAffectCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellRequiredCommand(const char*)
 {
-    sLog.outString("Re-Loading Spell Required Data... ");
+    sLog->outString("Re-Loading Spell Required Data... ");
     spellmgr.LoadSpellRequired();
     SendGlobalGMSysMessage("DB table spell_required reloaded.");
     return true;
@@ -947,7 +947,7 @@ bool ChatHandler::HandleReloadSpellRequiredCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellElixirCommand(const char*)
 {
-    sLog.outString("Re-Loading Spell Elixir types...");
+    sLog->outString("Re-Loading Spell Elixir types...");
     spellmgr.LoadSpellElixirs();
     SendGlobalGMSysMessage("DB table spell_elixir (spell elixir types) reloaded.");
     return true;
@@ -955,7 +955,7 @@ bool ChatHandler::HandleReloadSpellElixirCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellLearnSpellCommand(const char*)
 {
-    sLog.outString("Re-Loading Spell Learn Spells...");
+    sLog->outString("Re-Loading Spell Learn Spells...");
     spellmgr.LoadSpellLearnSpells();
     SendGlobalGMSysMessage("DB table spell_learn_spell reloaded.");
     return true;
@@ -963,7 +963,7 @@ bool ChatHandler::HandleReloadSpellLearnSpellCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellLinkedSpellCommand(const char*)
 {
-    sLog.outString("Re-Loading Spell Linked Spells...");
+    sLog->outString("Re-Loading Spell Linked Spells...");
     spellmgr.LoadSpellLinked();
     SendGlobalGMSysMessage("DB table spell_linked_spell reloaded.");
     return true;
@@ -971,7 +971,7 @@ bool ChatHandler::HandleReloadSpellLinkedSpellCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellProcEventCommand(const char*)
 {
-    sLog.outString("Re-Loading Spell Proc Event conditions...");
+    sLog->outString("Re-Loading Spell Proc Event conditions...");
     spellmgr.LoadSpellProcEvents();
     SendGlobalGMSysMessage("DB table spell_proc_event (spell proc trigger requirements) reloaded.");
     return true;
@@ -979,7 +979,7 @@ bool ChatHandler::HandleReloadSpellProcEventCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellScriptTargetCommand(const char*)
 {
-    sLog.outString("Re-Loading SpellsScriptTarget...");
+    sLog->outString("Re-Loading SpellsScriptTarget...");
     spellmgr.LoadSpellScriptTarget();
     SendGlobalGMSysMessage("DB table spell_script_target (spell targets selection in case specific creature/GO requirements) reloaded.");
     return true;
@@ -987,7 +987,7 @@ bool ChatHandler::HandleReloadSpellScriptTargetCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellTargetPositionCommand(const char*)
 {
-    sLog.outString("Re-Loading Spell target coordinates...");
+    sLog->outString("Re-Loading Spell target coordinates...");
     spellmgr.LoadSpellTargetPositions();
     SendGlobalGMSysMessage("DB table spell_target_position (destination coordinates for spell targets) reloaded.");
     return true;
@@ -995,7 +995,7 @@ bool ChatHandler::HandleReloadSpellTargetPositionCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellThreatsCommand(const char*)
 {
-    sLog.outString("Re-Loading Aggro Spells Definitions...");
+    sLog->outString("Re-Loading Aggro Spells Definitions...");
     spellmgr.LoadSpellThreats();
     SendGlobalGMSysMessage("DB table spell_threat (spell aggro definitions) reloaded.");
     return true;
@@ -1003,7 +1003,7 @@ bool ChatHandler::HandleReloadSpellThreatsCommand(const char*)
 
 bool ChatHandler::HandleReloadSpellPetAurasCommand(const char*)
 {
-    sLog.outString("Re-Loading Spell pet auras...");
+    sLog->outString("Re-Loading Spell pet auras...");
     spellmgr.LoadSpellPetAuras();
     SendGlobalGMSysMessage("DB table spell_pet_auras reloaded.");
     return true;
@@ -1011,7 +1011,7 @@ bool ChatHandler::HandleReloadSpellPetAurasCommand(const char*)
 
 bool ChatHandler::HandleReloadPageTextsCommand(const char*)
 {
-    sLog.outString("Re-Loading Page Texts...");
+    sLog->outString("Re-Loading Page Texts...");
     objmgr.LoadPageTexts();
     SendGlobalGMSysMessage("DB table page_texts reloaded.");
     return true;
@@ -1019,7 +1019,7 @@ bool ChatHandler::HandleReloadPageTextsCommand(const char*)
 
 bool ChatHandler::HandleReloadItemEnchantementsCommand(const char*)
 {
-    sLog.outString("Re-Loading Item Random Enchantments Table...");
+    sLog->outString("Re-Loading Item Random Enchantments Table...");
     LoadRandomEnchantmentsTable();
     SendGlobalGMSysMessage("DB table item_enchantment_template reloaded.");
     return true;
@@ -1035,7 +1035,7 @@ bool ChatHandler::HandleReloadGameObjectScriptsCommand(const char* arg)
     }
 
     if (*arg != 'a')
-        sLog.outString("Re-Loading Scripts from gameobject_scripts...");
+        sLog->outString("Re-Loading Scripts from gameobject_scripts...");
 
     objmgr.LoadGameObjectScripts();
 
@@ -1055,7 +1055,7 @@ bool ChatHandler::HandleReloadEventScriptsCommand(const char* arg)
     }
 
     if (*arg != 'a')
-        sLog.outString("Re-Loading Scripts from event_scripts...");
+        sLog->outString("Re-Loading Scripts from event_scripts...");
 
     objmgr.LoadEventScripts();
 
@@ -1067,7 +1067,7 @@ bool ChatHandler::HandleReloadEventScriptsCommand(const char* arg)
 
 bool ChatHandler::HandleReloadEventAITextsCommand(const char* /*args*/)
 {
-    sLog.outString("Re-Loading Texts from `creature_ai_texts`...");
+    sLog->outString("Re-Loading Texts from `creature_ai_texts`...");
     CreatureEAI_Mgr.LoadCreatureEventAI_Texts(true);
     SendGlobalSysMessage("DB table `creature_ai_texts` reloaded.");
     return true;
@@ -1075,7 +1075,7 @@ bool ChatHandler::HandleReloadEventAITextsCommand(const char* /*args*/)
 
 bool ChatHandler::HandleReloadEventAISummonsCommand(const char* /*args*/)
 {
-    sLog.outString("Re-Loading Summons from `creature_ai_summons`...");
+    sLog->outString("Re-Loading Summons from `creature_ai_summons`...");
     CreatureEAI_Mgr.LoadCreatureEventAI_Summons(true);
     SendGlobalSysMessage("DB table `creature_ai_summons` reloaded.");
     return true;
@@ -1083,7 +1083,7 @@ bool ChatHandler::HandleReloadEventAISummonsCommand(const char* /*args*/)
 
 bool ChatHandler::HandleReloadEventAIScriptsCommand(const char* /*args*/)
 {
-    sLog.outString("Re-Loading Scripts from `creature_ai_scripts`...");
+    sLog->outString("Re-Loading Scripts from `creature_ai_scripts`...");
     CreatureEAI_Mgr.LoadCreatureEventAI_Scripts();
     SendGlobalSysMessage("DB table `creature_ai_scripts` reloaded.");
     return true;
@@ -1099,7 +1099,7 @@ bool ChatHandler::HandleReloadWpScriptsCommand(const char* arg)
     }
 
     if (*arg != 'a')
-        sLog.outString("Re-Loading Scripts from waypoint_scripts...");
+        sLog->outString("Re-Loading Scripts from waypoint_scripts...");
 
     objmgr.LoadWaypointScripts();
 
@@ -1119,7 +1119,7 @@ bool ChatHandler::HandleReloadQuestEndScriptsCommand(const char* arg)
     }
 
     if (*arg != 'a')
-        sLog.outString("Re-Loading Scripts from quest_end_scripts...");
+        sLog->outString("Re-Loading Scripts from quest_end_scripts...");
 
     objmgr.LoadQuestEndScripts();
 
@@ -1139,7 +1139,7 @@ bool ChatHandler::HandleReloadQuestStartScriptsCommand(const char* arg)
     }
 
     if (*arg != 'a')
-        sLog.outString("Re-Loading Scripts from quest_start_scripts...");
+        sLog->outString("Re-Loading Scripts from quest_start_scripts...");
 
     objmgr.LoadQuestStartScripts();
 
@@ -1159,7 +1159,7 @@ bool ChatHandler::HandleReloadSpellScriptsCommand(const char* arg)
     }
 
     if (*arg != 'a')
-        sLog.outString("Re-Loading Scripts from spell_scripts...");
+        sLog->outString("Re-Loading Scripts from spell_scripts...");
 
     objmgr.LoadSpellScripts();
 
@@ -1171,7 +1171,7 @@ bool ChatHandler::HandleReloadSpellScriptsCommand(const char* arg)
 
 bool ChatHandler::HandleReloadDbScriptStringCommand(const char* arg)
 {
-    sLog.outString("Re-Loading Script strings from db_script_string...");
+    sLog->outString("Re-Loading Script strings from db_script_string...");
     objmgr.LoadDbScriptStrings();
     SendGlobalGMSysMessage("DB table db_script_string reloaded.");
     return true;
@@ -1179,7 +1179,7 @@ bool ChatHandler::HandleReloadDbScriptStringCommand(const char* arg)
 
 bool ChatHandler::HandleReloadGameGraveyardZoneCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Graveyard-zone links...");
+    sLog->outString("Re-Loading Graveyard-zone links...");
 
     objmgr.LoadGraveyardZones();
 
@@ -1190,7 +1190,7 @@ bool ChatHandler::HandleReloadGameGraveyardZoneCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadGameTeleCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Game Tele coordinates...");
+    sLog->outString("Re-Loading Game Tele coordinates...");
 
     objmgr.LoadGameTele();
 
@@ -1201,7 +1201,7 @@ bool ChatHandler::HandleReloadGameTeleCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadSpellDisabledCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading spell disabled table...");
+    sLog->outString("Re-Loading spell disabled table...");
 
     objmgr.LoadSpellDisabledEntrys();
 
@@ -1212,7 +1212,7 @@ bool ChatHandler::HandleReloadSpellDisabledCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadLocalesCreatureCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Locales Creature ...");
+    sLog->outString("Re-Loading Locales Creature ...");
     objmgr.LoadCreatureLocales();
     SendGlobalGMSysMessage("DB table locales_creature reloaded.");
     return true;
@@ -1220,7 +1220,7 @@ bool ChatHandler::HandleReloadLocalesCreatureCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadLocalesGameobjectCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Locales Gameobject ... ");
+    sLog->outString("Re-Loading Locales Gameobject ... ");
     objmgr.LoadGameObjectLocales();
     SendGlobalGMSysMessage("DB table locales_gameobject reloaded.");
     return true;
@@ -1228,7 +1228,7 @@ bool ChatHandler::HandleReloadLocalesGameobjectCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadLocalesItemCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Locales Item ... ");
+    sLog->outString("Re-Loading Locales Item ... ");
     objmgr.LoadItemLocales();
     SendGlobalGMSysMessage("DB table locales_item reloaded.");
     return true;
@@ -1236,7 +1236,7 @@ bool ChatHandler::HandleReloadLocalesItemCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadLocalesNpcTextCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Locales NPC Text ... ");
+    sLog->outString("Re-Loading Locales NPC Text ... ");
     objmgr.LoadNpcTextLocales();
     SendGlobalGMSysMessage("DB table locales_npc_text reloaded.");
     return true;
@@ -1244,7 +1244,7 @@ bool ChatHandler::HandleReloadLocalesNpcTextCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadLocalesPageTextCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Locales Page Text ... ");
+    sLog->outString("Re-Loading Locales Page Text ... ");
     objmgr.LoadPageTextLocales();
     SendGlobalGMSysMessage("DB table locales_page_text reloaded.");
     return true;
@@ -1252,7 +1252,7 @@ bool ChatHandler::HandleReloadLocalesPageTextCommand(const char* /*arg*/)
 
 bool ChatHandler::HandleReloadLocalesQuestCommand(const char* /*arg*/)
 {
-    sLog.outString("Re-Loading Locales Quest ... ");
+    sLog->outString("Re-Loading Locales Quest ... ");
     objmgr.LoadQuestLocales();
     SendGlobalGMSysMessage("DB table locales_quest reloaded.");
     return true;
@@ -1261,7 +1261,7 @@ bool ChatHandler::HandleReloadLocalesQuestCommand(const char* /*arg*/)
 bool ChatHandler::HandleReloadAuctionsCommand(const char *args)
 {
     // Reload dynamic data tables from the database
-    sLog.outString("Re-Loading Auctions...");
+    sLog->outString("Re-Loading Auctions...");
     sAuctionMgr->LoadAuctionItems();
     sAuctionMgr->LoadAuctions();
     SendGlobalGMSysMessage("Auctions reloaded.");
@@ -2555,7 +2555,7 @@ bool ChatHandler::HandleAddItemCommand(const char *args)
     if (!plTarget)
         plTarget = pl;
 
-    sLog.outDetail(GetTrinityString(LANG_ADDITEM), itemId, count);
+    sLog->outDetail(GetTrinityString(LANG_ADDITEM), itemId, count);
 
     ItemPrototype const *pProto = objmgr.GetItemPrototype(itemId);
     if (!pProto)
@@ -2634,7 +2634,7 @@ bool ChatHandler::HandleAddItemSetCommand(const char *args)
     if (!plTarget)
         plTarget = pl;
 
-    sLog.outDetail(GetTrinityString(LANG_ADDITEMSET), itemsetId);
+    sLog->outDetail(GetTrinityString(LANG_ADDITEMSET), itemsetId);
 
     bool found = false;
     for (uint32 id = 0; id < sItemStorage.MaxEntry; id++)
@@ -4733,14 +4733,14 @@ bool ChatHandler::HandleSetValue(const char *args)
     if (isint32)
     {
         iValue = (uint32)atoi(py);
-        sLog.outDebug(GetTrinityString(LANG_SET_UINT), GUID_LOPART(guid), Opcode, iValue);
+        sLog->outDebug(GetTrinityString(LANG_SET_UINT), GUID_LOPART(guid), Opcode, iValue);
         target->SetUInt32Value(Opcode , iValue);
         PSendSysMessage(LANG_SET_UINT_FIELD, GUID_LOPART(guid), Opcode, iValue);
     }
     else
     {
         fValue = (float)atof(py);
-        sLog.outDebug(GetTrinityString(LANG_SET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
+        sLog->outDebug(GetTrinityString(LANG_SET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
         target->SetFloatValue(Opcode , fValue);
         PSendSysMessage(LANG_SET_FLOAT_FIELD, GUID_LOPART(guid), Opcode, fValue);
     }
@@ -4784,13 +4784,13 @@ bool ChatHandler::HandleGetValue(const char *args)
     if (isint32)
     {
         iValue = target->GetUInt32Value(Opcode);
-        sLog.outDebug(GetTrinityString(LANG_GET_UINT), GUID_LOPART(guid), Opcode, iValue);
+        sLog->outDebug(GetTrinityString(LANG_GET_UINT), GUID_LOPART(guid), Opcode, iValue);
         PSendSysMessage(LANG_GET_UINT_FIELD, GUID_LOPART(guid), Opcode,    iValue);
     }
     else
     {
         fValue = target->GetFloatValue(Opcode);
-        sLog.outDebug(GetTrinityString(LANG_GET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
+        sLog->outDebug(GetTrinityString(LANG_GET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
         PSendSysMessage(LANG_GET_FLOAT_FIELD, GUID_LOPART(guid), Opcode, fValue);
     }
 
@@ -4813,7 +4813,7 @@ bool ChatHandler::HandleSet32Bit(const char *args)
     if (Value > 32)                                         //uint32 = 32 bits
         return false;
 
-    sLog.outDebug(GetTrinityString(LANG_SET_32BIT), Opcode, Value);
+    sLog->outDebug(GetTrinityString(LANG_SET_32BIT), Opcode, Value);
 
     m_session->GetPlayer()->SetUInt32Value(Opcode , 2^Value);
 
@@ -4841,7 +4841,7 @@ bool ChatHandler::HandleMod32Value(const char *args)
         return false;
     }
 
-    sLog.outDebug(GetTrinityString(LANG_CHANGE_32BIT), Opcode, Value);
+    sLog->outDebug(GetTrinityString(LANG_CHANGE_32BIT), Opcode, Value);
 
     int CurrentValue = (int)m_session->GetPlayer()->GetUInt32Value(Opcode);
 
@@ -4994,7 +4994,7 @@ static bool HandleResetStatsOrLevelHelper(Player* player)
     ChrClassesEntry const* cEntry = sChrClassesStore.LookupEntry(player->getClass());
     if (!cEntry)
     {
-        sLog.outError("Class %u not found in DBC (Wrong DBC files?)",player->getClass());
+        sLog->outError("Class %u not found in DBC (Wrong DBC files?)",player->getClass());
         return false;
     }
 
@@ -5009,7 +5009,7 @@ static bool HandleResetStatsOrLevelHelper(Player* player)
         unitfield = 0x0000EE00;
     else
     {
-        sLog.outError("Invalid default powertype %u for player (class %u)",powertype, player->getClass());
+        sLog->outError("Invalid default powertype %u for player (class %u)",powertype, player->getClass());
         return false;
     }
 

@@ -211,7 +211,7 @@ MotionMaster::MoveTargetedHome()
     }
     else
     {
-        sLog.outError("Player (GUID: %u) attempt targeted home", i_owner->GetGUIDLow());
+        sLog->outError("Player (GUID: %u) attempt targeted home", i_owner->GetGUIDLow());
     }
 }
 
@@ -366,7 +366,7 @@ MotionMaster::MoveSeekAssistance(float x, float y, float z)
 {
     if (i_owner->GetTypeId() == TYPEID_PLAYER)
     {
-        sLog.outError("Player (GUID: %u) attempt to seek assistance",i_owner->GetGUIDLow());
+        sLog->outError("Player (GUID: %u) attempt to seek assistance",i_owner->GetGUIDLow());
     }
     else
     {
@@ -383,7 +383,7 @@ MotionMaster::MoveSeekAssistanceDistract(uint32 time)
 {
     if (i_owner->GetTypeId() == TYPEID_PLAYER)
     {
-        sLog.outError("Player (GUID: %u) attempt to call distract after assistance",i_owner->GetGUIDLow());
+        sLog->outError("Player (GUID: %u) attempt to call distract after assistance",i_owner->GetGUIDLow());
     }
     else
     {
@@ -433,7 +433,7 @@ MotionMaster::MoveTaxiFlight(uint32 path, uint32 pathnode)
     }
     else
     {
-        sLog.outError("Creature (Entry: %u GUID: %u) attempt taxi to (Path %u node %u)",
+        sLog->outError("Creature (Entry: %u GUID: %u) attempt taxi to (Path %u node %u)",
             i_owner->GetEntry(), i_owner->GetGUIDLow(), path, pathnode);
     }
 }
@@ -561,7 +561,7 @@ void MotionMaster::DirectDelete(_Ty curr)
 
 void MotionMaster::DelayedDelete(_Ty curr)
 {
-    sLog.outCrash("Unit (Entry %u) is trying to delete its updating MG (Type %u)!", i_owner->GetEntry(), curr->GetMovementGeneratorType());
+    sLog->outCrash("Unit (Entry %u) is trying to delete its updating MG (Type %u)!", i_owner->GetEntry(), curr->GetMovementGeneratorType());
     if (isStatic(curr))
         return;
     if (!m_expList)

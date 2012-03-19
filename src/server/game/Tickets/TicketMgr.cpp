@@ -110,8 +110,8 @@ void TicketMgr::LoadGMTickets()
     if (!result)
     {
         ticketmgr.InitTicketID();
-        sLog.outString();
-        sLog.outString(">> GM Tickets table is empty, no tickets were loaded.");
+        sLog->outString();
+        sLog->outString(">> GM Tickets table is empty, no tickets were loaded.");
         return;
     }
 
@@ -154,7 +154,7 @@ void TicketMgr::LoadGMSurveys()
     else
         m_GMSurveyID = 0;
 
-    sLog.outString(">> Loaded GM Survey count from database.");
+    sLog->outString(">> Loaded GM Survey count from database.");
 }
 
 void TicketMgr::RemoveGMTicket(uint64 ticketGuid, uint64 GMguid)

@@ -88,9 +88,9 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket & recv_data)
     if (_player->PlayerTalkClass->GossipOptionCoded(gossipListId))
     {
         // recheck
-        sLog.outBasic("reading string");
+        sLog->outBasic("reading string");
         recv_data >> code;
-        sLog.outBasic("string read: %s", code.c_str());
+        sLog->outBasic("string read: %s", code.c_str());
     }
 
     Creature *unit = NULL;
@@ -568,7 +568,7 @@ void WorldSession::HandleAddFriendOpcodeCallBack(QueryResult_AutoPtr result, uin
                     if (!session->GetPlayer()->GetSocial()->AddToSocialList(GUID_LOPART(friendGuid), false))
                     {
                         friendResult = FRIEND_LIST_FULL;
-                        sLog.outDebug("WORLD: %s's friend list is full.", session->GetPlayer()->GetName());
+                        sLog->outDebug("WORLD: %s's friend list is full.", session->GetPlayer()->GetName());
                     }
                 }
                 session->GetPlayer()->GetSocial()->SetFriendNote(GUID_LOPART(friendGuid), friendNote);
@@ -920,7 +920,7 @@ void WorldSession::HandleSetActionButtonOpcode(WorldPacket& recv_data)
             GetPlayer()->addActionButton(button, action, type, misc);
         }
         else
-            sLog.outError("MISC: Unknown action button type %u for action %u into button %u", type, action, button);
+            sLog->outError("MISC: Unknown action button type %u for action %u into button %u", type, action, button);
     }
 }
 
@@ -1008,7 +1008,7 @@ void WorldSession::HandleSetActionBar(WorldPacket& recv_data)
     if (!GetPlayer())                                        // ignore until not logged (check needed because STATUS_AUTHED)
     {
         if (ActionBar != 0)
-            sLog.outError("WorldSession::HandleSetActionBar in not logged state with value: %u, ignored",uint32(ActionBar));
+            sLog->outError("WorldSession::HandleSetActionBar in not logged state with value: %u, ignored",uint32(ActionBar));
         return;
     }
 
@@ -1130,7 +1130,7 @@ void WorldSession::HandleInspectHonorStatsOpcode(WorldPacket& recv_data)
 
     if (!player)
     {
-        sLog.outError("InspectHonorStats: WTF, player not found...");
+        sLog->outError("InspectHonorStats: WTF, player not found...");
         return;
     }
 
@@ -1168,7 +1168,7 @@ void WorldSession::HandleWorldTeleportOpcode(WorldPacket& recv_data)
 
     if (GetPlayer()->isInFlight())
     {
-        sLog.outDebug("Player '%s' (GUID: %u) in flight, ignore worldport command.",GetPlayer()->GetName(),GetPlayer()->GetGUIDLow());
+        sLog->outDebug("Player '%s' (GUID: %u) in flight, ignore worldport command.",GetPlayer()->GetName(),GetPlayer()->GetGUIDLow());
         return;
     }
 
@@ -1316,7 +1316,7 @@ void WorldSession::HandleFarSightOpcode(WorldPacket & recv_data)
             if (WorldObject *target = _player->GetViewpoint())
                 _player->SetSeer(target);
             else
-                sLog.outError("Player %s requests invalid seer", _player->GetName());
+                sLog->outError("Player %s requests invalid seer", _player->GetName());
             break;
         default:
             DEBUG_LOG("Unhandled mode in CMSG_FAR_SIGHT: %u", apply);

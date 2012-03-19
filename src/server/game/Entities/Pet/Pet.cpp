@@ -186,7 +186,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
 
     if (!IsPositionValid())
     {
-        sLog.outError("Pet (guidlow %d, entry %d) not loaded. Suggested coordinates isn't valid (X: %f Y: %f)",
+        sLog->outError("Pet (guidlow %d, entry %d) not loaded. Suggested coordinates isn't valid (X: %f Y: %f)",
             GetGUIDLow(), GetEntry(), GetPositionX(), GetPositionY());
         return false;
     }
@@ -238,7 +238,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
             setPowerType(POWER_FOCUS);
             break;
         default:
-            sLog.outError("Pet has incorrect type (%u) for pet loading.",getPetType());
+            sLog->outError("Pet has incorrect type (%u) for pet loading.",getPetType());
     }
 
     SetUInt32Value(UNIT_FIELD_PET_NAME_TIMESTAMP, time(NULL));
@@ -326,7 +326,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         CastPetAuras(current);
     }
 
-    sLog.outDebug("New Pet has guid %u", GetGUIDLow());
+    sLog->outDebug("New Pet has guid %u", GetGUIDLow());
 
     owner->PetSpellInitialize();
 
@@ -461,7 +461,7 @@ void Pet::SavePetToDB(PetSaveMode mode)
             break;
         }
         default:
-            sLog.outError("Unknown pet save/remove mode: %d",mode);
+            sLog->outError("Unknown pet save/remove mode: %d",mode);
     }
 }
 
@@ -522,7 +522,7 @@ void Pet::Update(uint32 diff)
             Player* owner = GetOwner();
             if (!owner || (!IsWithinDistInMap(owner, GetMap()->GetVisibilityDistance()) && !isPossessed()) || isControlled() && !owner->GetPetGUID())
             {
-                sLog.outError("Pet %u is not pet of owner %u, removed", GetEntry(), m_owner->GetName());
+                sLog->outError("Pet %u is not pet of owner %u, removed", GetEntry(), m_owner->GetName());
                 Remove(PET_SAVE_NOT_IN_SLOT, true);
                 return;
             }
@@ -873,12 +873,12 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
 {
     if (!creature)
     {
-        sLog.outError("CRITICAL ERROR: NULL pointer parsed into CreateBaseAtCreature()");
+        sLog->outError("CRITICAL ERROR: NULL pointer parsed into CreateBaseAtCreature()");
         return false;
     }
     uint32 guid=objmgr.GenerateLowGuid(HIGHGUID_PET);
 
-    sLog.outDebug("Create pet");
+    sLog->outDebug("Create pet");
     uint32 pet_number = objmgr.GeneratePetNumber();
     if (!Create(guid, creature->GetMap(), creature->GetEntry(), pet_number))
         return false;
@@ -887,7 +887,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
 
     if (!IsPositionValid())
     {
-        sLog.outError("Pet (guidlow %d, entry %d) not created base at creature. Suggested coordinates isn't valid (X: %f Y: %f)",
+        sLog->outError("Pet (guidlow %d, entry %d) not created base at creature. Suggested coordinates isn't valid (X: %f Y: %f)",
             GetGUIDLow(), GetEntry(), GetPositionX(), GetPositionY());
         return false;
     }
@@ -895,7 +895,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     CreatureInfo const *cinfo = GetCreatureInfo();
     if (!cinfo)
     {
-        sLog.outError("CreateBaseAtCreature() failed, creatureInfo is missing!");
+        sLog->outError("CreateBaseAtCreature() failed, creatureInfo is missing!");
         return false;
     }
 
@@ -950,7 +950,7 @@ bool Guardian::InitStatsForLevel(uint32 petlevel)
             m_summonMask |= SUMMON_MASK_HUNTER_PET;
         }
         else
-            sLog.outError("Unknown type pet %u is summoned by player class %u", GetEntry(), m_owner->getClass());
+            sLog->outError("Unknown type pet %u is summoned by player class %u", GetEntry(), m_owner->getClass());
     }
 
     uint32 creature_ID = (petType == HUNTER_PET) ? 1 : cinfo->Entry;
@@ -1205,7 +1205,7 @@ void Pet::_LoadSpellCooldowns()
 
             if (!sSpellStore.LookupEntry(spell_id))
             {
-                sLog.outError("Pet %u has unknown spell %u in pet_spell_cooldown, skipping.",m_charmInfo->GetPetNumber(),spell_id);
+                sLog->outError("Pet %u has unknown spell %u in pet_spell_cooldown, skipping.",m_charmInfo->GetPetNumber(),spell_id);
                 continue;
             }
 
@@ -1218,7 +1218,7 @@ void Pet::_LoadSpellCooldowns()
 
             _AddCreatureSpellCooldown(spell_id, db_time);
 
-            sLog.outDebug("Pet (Number: %u) spell %u cooldown loaded (%u secs).", m_charmInfo->GetPetNumber(), spell_id, uint32(db_time-curTime));
+            sLog->outDebug("Pet (Number: %u) spell %u cooldown loaded (%u secs).", m_charmInfo->GetPetNumber(), spell_id, uint32(db_time-curTime));
         }
         while (result->NextRow());
 
@@ -1325,13 +1325,13 @@ void Pet::_LoadAuras(uint32 timediff)
             SpellEntry const* spellproto = sSpellStore.LookupEntry(spellid);
             if (!spellproto)
             {
-                sLog.outError("Unknown aura (spellid %u, effindex %u), ignore.",spellid, effindex);
+                sLog->outError("Unknown aura (spellid %u, effindex %u), ignore.",spellid, effindex);
                 continue;
             }
 
             if (effindex >= 3)
             {
-                sLog.outError("Invalid effect index (spellid %u, effindex %u), ignore.",spellid, effindex);
+                sLog->outError("Invalid effect index (spellid %u, effindex %u), ignore.",spellid, effindex);
                 continue;
             }
 
@@ -1433,11 +1433,11 @@ bool Pet::addSpell(uint16 spell_id, uint16 active /*= ACT_DECIDE*/, PetSpellStat
         // do pet spell book cleanup
         if (state == PETSPELL_UNCHANGED)                    // spell load case
         {
-            sLog.outError("Pet::addSpell: Invalid SpellStore spell #%u request, deleting for all pets in pet_spell.",spell_id);
+            sLog->outError("Pet::addSpell: Invalid SpellStore spell #%u request, deleting for all pets in pet_spell.",spell_id);
             CharacterDatabase.PExecute("DELETE FROM pet_spell WHERE spell = '%u'",spell_id);
         }
         else
-            sLog.outError("Pet::addSpell: Invalid SpellStore spell #%u request.",spell_id);
+            sLog->outError("Pet::addSpell: Invalid SpellStore spell #%u request.",spell_id);
 
         return false;
     }

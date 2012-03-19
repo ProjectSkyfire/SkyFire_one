@@ -39,18 +39,18 @@ void OCSoapRunnable::run()
     soap.send_timeout = 5;
     if (soap_bind(&soap, m_host.c_str(), m_port, 100) < 0)
     {
-        sLog.outError("OCSoap: couldn't bind to %s:%d", m_host.c_str(), m_port);
+        sLog->outError("OCSoap: couldn't bind to %s:%d", m_host.c_str(), m_port);
         exit(-1);
     }
 
-    sLog.outString("OCSoap: bound to http://%s:%d", m_host.c_str(), m_port);
+    sLog->outString("OCSoap: bound to http://%s:%d", m_host.c_str(), m_port);
 
     while(!World::IsStopped())
     {
         if (!soap_valid_socket(soap_accept(&soap)))
             continue;   // ran into an accept timeout
 
-        sLog.outDebug("OCSoap: accepted connection from IP=%d.%d.%d.%d", (int)(soap.ip>>24)&0xFF, (int)(soap.ip>>16)&0xFF, (int)(soap.ip>>8)&0xFF, (int)soap.ip&0xFF);
+        sLog->outDebug("OCSoap: accepted connection from IP=%d.%d.%d.%d", (int)(soap.ip>>24)&0xFF, (int)(soap.ip>>16)&0xFF, (int)(soap.ip>>8)&0xFF, (int)soap.ip&0xFF);
         struct soap* thread_soap = soap_copy(&soap);// make a safe copy
 
         ACE_Message_Block *mb = new ACE_Message_Block(sizeof(struct soap*));
@@ -88,33 +88,33 @@ int ns1__executeCommand(soap* soap, char* command, char** result)
     // security check
     if (!soap->userid || !soap->passwd)
     {
-        sLog.outDebug("OCSoap: Client didn't provide login information");
+        sLog->outDebug("OCSoap: Client didn't provide login information");
         return 401;
     }
 
     uint32 accountId = sAccountMgr->GetId(soap->userid);
     if (!accountId)
     {
-        sLog.outDebug("OCSoap: Client used invalid username '%s'", soap->userid);
+        sLog->outDebug("OCSoap: Client used invalid username '%s'", soap->userid);
         return 401;
     }
 
     if (!sAccountMgr->CheckPassword(accountId, soap->passwd))
     {
-        sLog.outDebug("OCSoap: invalid password for account '%s'", soap->userid);
+        sLog->outDebug("OCSoap: invalid password for account '%s'", soap->userid);
         return 401;
     }
 
     if (sAccountMgr->GetSecurity(accountId) < SEC_ADMINISTRATOR)
     {
-        sLog.outDebug("OCSoap: %s's gmlevel is too low", soap->userid);
+        sLog->outDebug("OCSoap: %s's gmlevel is too low", soap->userid);
         return 403;
     }
 
     if (!command || !*command)
         return soap_sender_fault(soap, "Command must not be empty", "The supplied command was an empty string");
 
-    sLog.outDebug("OCSoap: got command '%s'", command);
+    sLog->outDebug("OCSoap: got command '%s'", command);
     SOAPCommand connection;
 
     // commands are executed in the world thread. We have to wait for them to be completed
@@ -129,7 +129,7 @@ int ns1__executeCommand(soap* soap, char* command, char** result)
     int acc = connection.pendingCommands.acquire();
     if (acc)
     {
-        sLog.outError("OCSoap: Error while acquiring lock, acc = %i, errno = %u", acc, errno);
+        sLog->outError("OCSoap: Error while acquiring lock, acc = %i, errno = %u", acc, errno);
     }
 
     // alright, command finished

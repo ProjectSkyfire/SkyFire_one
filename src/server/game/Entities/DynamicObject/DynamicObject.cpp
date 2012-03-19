@@ -67,7 +67,7 @@ void DynamicObject::RemoveFromWorld()
             }
             else
             {
-                sLog.outCrash("DynamicObject::RemoveFromWorld cannot find viewpoint owner");
+                sLog->outCrash("DynamicObject::RemoveFromWorld cannot find viewpoint owner");
             }
         }
         WorldObject::RemoveFromWorld();
@@ -81,7 +81,7 @@ bool DynamicObject::Create(uint32 guidlow, Unit *caster, uint32 spellId, uint32 
     Relocate(pos);
     if (!IsPositionValid())
     {
-        sLog.outError("DynamicObject (spell %u eff %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",spellId, effIndex, GetPositionX(),GetPositionY());
+        sLog->outError("DynamicObject (spell %u eff %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",spellId, effIndex, GetPositionX(),GetPositionY());
         return false;
     }
 

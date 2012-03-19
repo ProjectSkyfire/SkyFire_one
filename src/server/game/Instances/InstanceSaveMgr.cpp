@@ -86,13 +86,13 @@ InstanceSave* InstanceSaveManager::AddInstanceSave(uint32 mapId, uint32 instance
     const MapEntry* entry = sMapStore.LookupEntry(mapId);
     if (!entry)
     {
-        sLog.outError("InstanceSaveManager::AddInstanceSave: wrong mapid = %d, instanceid = %d!", mapId, instanceId);
+        sLog->outError("InstanceSaveManager::AddInstanceSave: wrong mapid = %d, instanceid = %d!", mapId, instanceId);
         return NULL;
     }
 
     if (instanceId == 0)
     {
-        sLog.outError("InstanceSaveManager::AddInstanceSave: mapid = %d, wrong instanceid = %d!", mapId, instanceId);
+        sLog->outError("InstanceSaveManager::AddInstanceSave: mapid = %d, wrong instanceid = %d!", mapId, instanceId);
         return NULL;
     }
 
@@ -110,7 +110,7 @@ InstanceSave* InstanceSaveManager::AddInstanceSave(uint32 mapId, uint32 instance
         }
     }
 
-    sLog.outDebug("InstanceSaveManager::AddInstanceSave: mapid = %d, instanceid = %d", mapId, instanceId);
+    sLog->outDebug("InstanceSaveManager::AddInstanceSave: mapid = %d, instanceid = %d", mapId, instanceId);
 
     InstanceSave *save = new InstanceSave(mapId, instanceId, difficulty, resetTime, canReset);
     if (!load) save->SaveToDB();
@@ -333,8 +333,8 @@ void InstanceSaveManager::CleanupInstances()
         while (result->NextRow());
     }
 
-    sLog.outString();
-    sLog.outString(">> Initialized %u instances", (uint32)InstanceSet.size());
+    sLog->outString();
+    sLog->outString(">> Initialized %u instances", (uint32)InstanceSet.size());
 }
 
 void InstanceSaveManager::PackInstances()
@@ -378,8 +378,8 @@ void InstanceSaveManager::PackInstances()
         ++InstanceNumber;
     }
 
-    sLog.outString();
-    sLog.outString(">> Instance numbers remapped, next instance id is %u", InstanceNumber);
+    sLog->outString();
+    sLog->outString(">> Instance numbers remapped, next instance id is %u", InstanceNumber);
 }
 
 void InstanceSaveManager::LoadResetTimes()
@@ -445,7 +445,7 @@ void InstanceSaveManager::LoadResetTimes()
             uint32 mapid = fields[0].GetUInt32();
             if (!objmgr.GetInstanceTemplate(mapid))
             {
-                sLog.outError("InstanceSaveManager::LoadResetTimes: invalid mapid %u in instance_reset!", mapid);
+                sLog->outError("InstanceSaveManager::LoadResetTimes: invalid mapid %u in instance_reset!", mapid);
                 CharacterDatabase.DirectPExecute("DELETE FROM instance_reset WHERE mapid = '%u'", mapid);
                 continue;
             }
@@ -522,7 +522,7 @@ void InstanceSaveManager::ScheduleReset(bool add, time_t time, InstResetEvent ev
             for (itr = m_resetTimeQueue.begin(); itr != m_resetTimeQueue.end(); ++itr)
                 if (itr->second == event) { m_resetTimeQueue.erase(itr); return; }
             if (itr == m_resetTimeQueue.end())
-                sLog.outError("InstanceSaveManager::ScheduleReset: cannot cancel the reset, the event(%d,%d,%d) was not found!", event.type, event.mapid, event.instanceId);
+                sLog->outError("InstanceSaveManager::ScheduleReset: cannot cancel the reset, the event(%d,%d,%d) was not found!", event.type, event.mapid, event.instanceId);
         }
     }
 }
@@ -584,7 +584,7 @@ void InstanceSaveManager::_ResetSave(InstanceSaveHashMap::iterator &itr)
 
 void InstanceSaveManager::_ResetInstance(uint32 mapid, uint32 instanceId)
 {
-    sLog.outDebug("InstanceSaveMgr::_ResetInstance %u, %u", mapid, instanceId);
+    sLog->outDebug("InstanceSaveMgr::_ResetInstance %u, %u", mapid, instanceId);
     Map *map = (MapInstanced*)MapManager::Instance().CreateBaseMap(mapid);
     if (!map->Instanceable())
         return;
@@ -614,7 +614,7 @@ void InstanceSaveManager::_ResetOrWarnAll(uint32 mapid, bool warn, uint32 timeLe
         InstanceTemplate const* temp = objmgr.GetInstanceTemplate(mapid);
         if (!temp || !temp->reset_delay)
         {
-            sLog.outError("InstanceSaveManager::ResetOrWarnAll: no instance template or reset delay for map %d", mapid);
+            sLog->outError("InstanceSaveManager::ResetOrWarnAll: no instance template or reset delay for map %d", mapid);
             return;
         }
 

@@ -631,7 +631,7 @@ bool ChatHandler::HandleServerSetLogLevelCommand(const char *args)
     if (!NewLevel)
         return false;
 
-    sLog.SetLogLevel(NewLevel);
+    sLog->SetLogLevel(NewLevel);
     return true;
 }
 
@@ -678,7 +678,7 @@ void CliRunnable::run()
     char commandbuf[256];
     bool canflush = true;
     // Display the list of available CLI functions then beep
-    sLog.outString();
+    sLog->outString();
     #if PLATFORM != WINDOWS
     rl_attempted_completion_function = cli_completion;
     #endif

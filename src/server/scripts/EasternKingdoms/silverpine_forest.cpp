@@ -276,7 +276,7 @@ struct pyrewood_ambushAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        //sLog.outString("DEBUG: p(%i) k(%i) d(%u) W(%i)", Phase, KillCount, diff, WaitTimer);
+        //sLog->outString("DEBUG: p(%i) k(%i) d(%u) W(%i)", Phase, KillCount, diff, WaitTimer);
 
         if (!QuestInProgress)
             return;

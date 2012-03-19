@@ -254,7 +254,7 @@ bool PoolGroup<Creature>::Spawn1Object(uint32 guid)
         if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
         {
             Creature* pCreature = new Creature;
-            //sLog.outDebug("Spawning creature %u",guid);
+            //sLog->outDebug("Spawning creature %u",guid);
             if (!pCreature->LoadFromDB(guid, map))
             {
                 delete pCreature;
@@ -282,7 +282,7 @@ bool PoolGroup<GameObject>::Spawn1Object(uint32 guid)
         if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
         {
             GameObject* pGameobject = new GameObject;
-            //sLog.outDebug("Spawning gameobject %u", guid);
+            //sLog->outDebug("Spawning gameobject %u", guid);
             if (!pGameobject->LoadFromDB(guid, map))
             {
                 delete pGameobject;
@@ -355,8 +355,8 @@ void PoolHandler::LoadFromDB()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT MAX(entry) FROM pool_template");
     if (!result)
     {
-        sLog.outString(">> Table pool_template is empty.");
-        sLog.outString();
+        sLog->outString(">> Table pool_template is empty.");
+        sLog->outString();
         return;
     }
     else
@@ -371,8 +371,8 @@ void PoolHandler::LoadFromDB()
     if (!result)
     {
         mPoolTemplate.clear();
-        sLog.outString(">> Table pool_template is empty:");
-        sLog.outString();
+        sLog->outString(">> Table pool_template is empty:");
+        sLog->outString();
         return;
     }
 
@@ -389,13 +389,13 @@ void PoolHandler::LoadFromDB()
         pPoolTemplate.MaxLimit  = fields[1].GetUInt32();
     } while (result->NextRow());
 
-    sLog.outString();
-    sLog.outString(">> Loaded %u objects pools", count);
+    sLog->outString();
+    sLog->outString(">> Loaded %u objects pools", count);
 
     // Creatures
 
-    sLog.outString();
-    sLog.outString("Loading Creatures Pooling Data...");
+    sLog->outString();
+    sLog->outString("Loading Creatures Pooling Data...");
 
     mPoolCreatureGroups.resize(max_pool_id + 1);
     mCreatureSearchMap.clear();
@@ -405,8 +405,8 @@ void PoolHandler::LoadFromDB()
     count = 0;
     if (!result)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded %u creatures in pools", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u creatures in pools", count);
     }
     else
     {
@@ -421,17 +421,17 @@ void PoolHandler::LoadFromDB()
             CreatureData const* data = objmgr.GetCreatureData(guid);
             if (!data)
             {
-                sLog.outErrorDb("`pool_creature` has invalid creature spawn (GUID: %u) defined for pool id (%u), skipped.", guid, pool_id);
+                sLog->outErrorDb("`pool_creature` has invalid creature spawn (GUID: %u) defined for pool id (%u), skipped.", guid, pool_id);
                 continue;
             }
             if (pool_id > max_pool_id)
             {
-                sLog.outErrorDb("`pool_creature` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",pool_id);
+                sLog->outErrorDb("`pool_creature` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",pool_id);
                 continue;
             }
             if (chance < 0 || chance > 100)
             {
-                sLog.outErrorDb("`pool_creature` has an invalid chance (%f) for creature guid (%u) in pool id (%i), skipped.", chance, guid, pool_id);
+                sLog->outErrorDb("`pool_creature` has an invalid chance (%f) for creature guid (%u) in pool id (%i), skipped.", chance, guid, pool_id);
                 continue;
             }
             PoolTemplateData *pPoolTemplate = &mPoolTemplate[pool_id];
@@ -443,13 +443,13 @@ void PoolHandler::LoadFromDB()
             SearchPair p(guid, pool_id);
             mCreatureSearchMap.insert(p);
         } while (result->NextRow());
-        sLog.outString();
-        sLog.outString(">> Loaded %u creatures in pools", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u creatures in pools", count);
     }
 
     // Gameobjects
 
-    sLog.outString("Loading Gameobject Pooling Data...");
+    sLog->outString("Loading Gameobject Pooling Data...");
 
     mPoolGameobjectGroups.resize(max_pool_id + 1);
     mGameobjectSearchMap.clear();
@@ -459,8 +459,8 @@ void PoolHandler::LoadFromDB()
     count = 0;
     if (!result)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded %u gameobject in pools", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u gameobject in pools", count);
     }
     else
     {
@@ -475,7 +475,7 @@ void PoolHandler::LoadFromDB()
             GameObjectData const* data = objmgr.GetGOData(guid);
             if (!data)
             {
-                sLog.outErrorDb("`pool_gameobject` has invalid gameobject spawn (GUID: %u) defined for pool id (%u), skipped.", guid, pool_id);
+                sLog->outErrorDb("`pool_gameobject` has invalid gameobject spawn (GUID: %u) defined for pool id (%u), skipped.", guid, pool_id);
                 continue;
             }
             GameObjectInfo const* goinfo = objmgr.GetGameObjectInfo(data->id);
@@ -483,17 +483,17 @@ void PoolHandler::LoadFromDB()
                 goinfo->type != GAMEOBJECT_TYPE_GOOBER &&
                 goinfo->type != GAMEOBJECT_TYPE_FISHINGHOLE)
             {
-                sLog.outErrorDb("`pool_gameobject` has a not lootable gameobject spawn (GUID: %u, type: %u) defined for pool id (%u), skipped.", guid, goinfo->type, pool_id);
+                sLog->outErrorDb("`pool_gameobject` has a not lootable gameobject spawn (GUID: %u, type: %u) defined for pool id (%u), skipped.", guid, goinfo->type, pool_id);
                 continue;
             }
             if (pool_id > max_pool_id)
             {
-                sLog.outErrorDb("`pool_gameobject` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",pool_id);
+                sLog->outErrorDb("`pool_gameobject` pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",pool_id);
                 continue;
             }
             if (chance < 0 || chance > 100)
             {
-                sLog.outErrorDb("`pool_gameobject` has an invalid chance (%f) for gameobject guid (%u) in pool id (%i), skipped.", chance, guid, pool_id);
+                sLog->outErrorDb("`pool_gameobject` has an invalid chance (%f) for gameobject guid (%u) in pool id (%i), skipped.", chance, guid, pool_id);
                 continue;
             }
             PoolTemplateData *pPoolTemplate = &mPoolTemplate[pool_id];
@@ -506,13 +506,13 @@ void PoolHandler::LoadFromDB()
             SearchPair p(guid, pool_id);
             mGameobjectSearchMap.insert(p);
         } while (result->NextRow());
-        sLog.outString();
-        sLog.outString(">> Loaded %u gameobject in pools", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u gameobject in pools", count);
     }
 
     // Pool of pools
 
-    sLog.outString("Loading Mother Pooling Data...");
+    sLog->outString("Loading Mother Pooling Data...");
 
     mPoolPoolGroups.resize(max_pool_id + 1);
     //                                   1        2            3
@@ -521,8 +521,8 @@ void PoolHandler::LoadFromDB()
     count = 0;
     if (!result)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded %u pools in pools", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u pools in pools", count);
     }
     else
     {
@@ -536,22 +536,22 @@ void PoolHandler::LoadFromDB()
 
             if (mother_pool_id > max_pool_id)
             {
-                sLog.outErrorDb("`pool_pool` mother_pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",mother_pool_id);
+                sLog->outErrorDb("`pool_pool` mother_pool id (%i) is out of range compared to max pool id in `pool_template`, skipped.",mother_pool_id);
                 continue;
             }
             if (child_pool_id > max_pool_id)
             {
-                sLog.outErrorDb("`pool_pool` included pool_id (%i) is out of range compared to max pool id in `pool_template`, skipped.",child_pool_id);
+                sLog->outErrorDb("`pool_pool` included pool_id (%i) is out of range compared to max pool id in `pool_template`, skipped.",child_pool_id);
                 continue;
             }
             if (mother_pool_id == child_pool_id)
             {
-                sLog.outErrorDb("`pool_pool` pool_id (%i) includes itself, dead-lock detected, skipped.",child_pool_id);
+                sLog->outErrorDb("`pool_pool` pool_id (%i) includes itself, dead-lock detected, skipped.",child_pool_id);
                 continue;
             }
             if (chance < 0 || chance > 100)
             {
-                sLog.outErrorDb("`pool_pool` has an invalid chance (%f) for pool id (%u) in mother pool id (%i), skipped.", chance, child_pool_id, mother_pool_id);
+                sLog->outErrorDb("`pool_pool` has an invalid chance (%f) for pool id (%u) in mother pool id (%i), skipped.", chance, child_pool_id, mother_pool_id);
                 continue;
             }
             PoolTemplateData *pPoolTemplateMother = &mPoolTemplate[mother_pool_id];
@@ -580,7 +580,7 @@ void PoolHandler::LoadFromDB()
                         ss << *itr << " ";
                     ss << "create(s) a circular reference, which can cause the server to freeze.\nRemoving the last link between mother pool "
                         << poolItr->first << " and child pool " << poolItr->second;
-                    sLog.outErrorDb(ss.str().c_str());
+                    sLog->outErrorDb(ss.str().c_str());
                     mPoolPoolGroups[poolItr->second].RemoveOneRelation(poolItr->first);
                     mPoolSearchMap.erase(poolItr);
                     --count;
@@ -589,8 +589,8 @@ void PoolHandler::LoadFromDB()
             }
         }
 
-        sLog.outString();
-        sLog.outString(">> Loaded %u pools in mother pools", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u pools in mother pools", count);
     }
 }
 
@@ -607,7 +607,7 @@ void PoolHandler::Initialize()
             uint16 pool_entry = fields[0].GetUInt16();
             if (!CheckPool(pool_entry))
             {
-                sLog.outErrorDb("Pool Id (%u) has all creatures or gameobjects with explicit chance sum <>100 and no equal chance defined. The pool system cannot pick one to spawn.", pool_entry);
+                sLog->outErrorDb("Pool Id (%u) has all creatures or gameobjects with explicit chance sum <>100 and no equal chance defined. The pool system cannot pick one to spawn.", pool_entry);
                 continue;
             }
             SpawnPool(pool_entry, 0, 0);
@@ -617,7 +617,7 @@ void PoolHandler::Initialize()
         } while (result->NextRow());
     }
 
-    sLog.outBasic("Pool handling system initialized, %u pools spawned.", count);
+    sLog->outBasic("Pool handling system initialized, %u pools spawned.", count);
     m_IsPoolSystemStarted = true;
 }
 

@@ -185,12 +185,12 @@ void BattleGroundWS::RespawnFlag(uint32 Team, bool captured)
 {
     if (Team == ALLIANCE)
     {
-        sLog.outDebug("Respawn Alliance flag");
+        sLog->outDebug("Respawn Alliance flag");
         m_FlagState[BG_TEAM_ALLIANCE] = BG_WS_FLAG_STATE_ON_BASE;
     }
     else
     {
-        sLog.outDebug("Respawn Horde flag");
+        sLog->outDebug("Respawn Horde flag");
         m_FlagState[BG_TEAM_HORDE] = BG_WS_FLAG_STATE_ON_BASE;
     }
 
@@ -228,7 +228,7 @@ void BattleGroundWS::RespawnFlagAfterDrop(uint32 team)
     if (obj)
         obj->Delete();
     else
-        sLog.outError("unknown droped flag bg, guid: %u",GUID_LOPART(GetDroppedFlagGUID(team)));
+        sLog->outError("unknown droped flag bg, guid: %u",GUID_LOPART(GetDroppedFlagGUID(team)));
 
     SetDroppedFlagGUID(0, team);
     m_BothFlagsKept = false;
@@ -530,7 +530,7 @@ void BattleGroundWS::RemovePlayer(Player *plr, uint64 guid)
     {
         if (!plr)
         {
-            sLog.outError("BattleGroundWS: Removing offline player who has the FLAG!!");
+            sLog->outError("BattleGroundWS: Removing offline player who has the FLAG!!");
             SetAllianceFlagPicker(0);
             RespawnFlag(ALLIANCE, false);
         }
@@ -541,7 +541,7 @@ void BattleGroundWS::RemovePlayer(Player *plr, uint64 guid)
     {
         if (!plr)
         {
-            sLog.outError("BattleGroundWS: Removing offline player who has the FLAG!!");
+            sLog->outError("BattleGroundWS: Removing offline player who has the FLAG!!");
             SetHordeFlagPicker(0);
             RespawnFlag(HORDE, false);
         }
@@ -610,7 +610,7 @@ void BattleGroundWS::HandleAreaTrigger(Player *Source, uint32 Trigger)
         case 4629:                                          // unk4
             break;
         default:
-            sLog.outError("WARNING: Unhandled AreaTrigger in Battleground: %u", Trigger);
+            sLog->outError("WARNING: Unhandled AreaTrigger in Battleground: %u", Trigger);
             Source->GetSession()->SendAreaTriggerMessage("Warning: Unhandled AreaTrigger in Battleground: %u", Trigger);
             break;
     }
@@ -645,25 +645,25 @@ bool BattleGroundWS::SetupBattleGround()
         || !AddObject(BG_WS_OBJECT_DOOR_H_4, BG_OBJECT_DOOR_H_4_WS_ENTRY, 950.7952f, 1459.583f, 342.1523f, 0.05235988f, 0, 0, 0.02617695f, 0.9996573f, RESPAWN_IMMEDIATELY)
 )
     {
-        sLog.outErrorDb("BatteGroundWS: Failed to spawn some object BattleGround not created!");
+        sLog->outErrorDb("BatteGroundWS: Failed to spawn some object BattleGround not created!");
         return false;
     }
 
     WorldSafeLocsEntry const *sg = sWorldSafeLocsStore.LookupEntry(WS_GRAVEYARD_MAIN_ALLIANCE);
     if (!sg || !AddSpiritGuide(WS_SPIRIT_MAIN_ALLIANCE, sg->x, sg->y, sg->z, 3.124139f, ALLIANCE))
     {
-        sLog.outErrorDb("BatteGroundWS: Failed to spawn Alliance spirit guide! BattleGround not created!");
+        sLog->outErrorDb("BatteGroundWS: Failed to spawn Alliance spirit guide! BattleGround not created!");
         return false;
     }
 
     sg = sWorldSafeLocsStore.LookupEntry(WS_GRAVEYARD_MAIN_HORDE);
     if (!sg || !AddSpiritGuide(WS_SPIRIT_MAIN_HORDE, sg->x, sg->y, sg->z, 3.193953f, HORDE))
     {
-        sLog.outErrorDb("BatteGroundWS: Failed to spawn Horde spirit guide! BattleGround not created!");
+        sLog->outErrorDb("BatteGroundWS: Failed to spawn Horde spirit guide! BattleGround not created!");
         return false;
     }
 
-    sLog.outDebug("BatteGroundWS: BG objects and spirit guides spawned");
+    sLog->outDebug("BatteGroundWS: BG objects and spirit guides spawned");
 
     return true;
 }

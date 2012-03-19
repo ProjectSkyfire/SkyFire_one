@@ -127,7 +127,7 @@ void RealmList::UpdateIfNeed()
 
 void RealmList::UpdateRealms(bool init)
 {
-    sLog.outDetail("Updating Realm List...");
+    sLog->outDetail("Updating Realm List...");
 
     //                                                        0   1     2        3     4     5           6         7                     8           9
     QueryResult_AutoPtr result = LoginDatabase.Query( "SELECT id, name, address, port, icon, realmflags, timezone, allowedSecurityLevel, population, realmbuilds FROM realmlist WHERE (realmflags & 1) = 0 ORDER BY name" );
@@ -145,7 +145,7 @@ void RealmList::UpdateRealms(bool init)
 
             if (realmflags & ~(REALM_FLAG_OFFLINE|REALM_FLAG_NEW_PLAYERS|REALM_FLAG_RECOMMENDED|REALM_FLAG_SPECIFYBUILD))
             {
-                sLog.outError("Realm allowed have only OFFLINE Mask 0x2), or NEWPLAYERS (mask 0x20), or RECOMENDED (mask 0x40), or SPECIFICBUILD (mask 0x04) flags in DB");
+                sLog->outError("Realm allowed have only OFFLINE Mask 0x2), or NEWPLAYERS (mask 0x20), or RECOMENDED (mask 0x40), or SPECIFICBUILD (mask 0x04) flags in DB");
                 realmflags &= (REALM_FLAG_OFFLINE|REALM_FLAG_NEW_PLAYERS|REALM_FLAG_RECOMMENDED|REALM_FLAG_SPECIFYBUILD);
             }
 
@@ -156,7 +156,7 @@ void RealmList::UpdateRealms(bool init)
                 fields[8].GetFloat(), fields[9].GetString());
 
             if (init)
-                sLog.outString("Added realm \"%s\"", fields[1].GetString());
+                sLog->outString("Added realm \"%s\"", fields[1].GetString());
         } while ( result->NextRow() );
     }
 }

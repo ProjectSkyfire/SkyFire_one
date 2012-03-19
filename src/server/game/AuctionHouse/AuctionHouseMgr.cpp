@@ -93,13 +93,13 @@ uint32 AuctionHouseMgr::GetAuctionDeposit(AuctionHouseEntry const* entry, uint32
         faction_pct = 0.0f;
         deposit = 0.0f;
     }
-    sLog.outDebug("SellPrice:\t\t%u", MSV);
-    sLog.outDebug("Deposit Percent:\t%f", faction_pct);
-    sLog.outDebug("Auction Time1:\t\t%u", time);
-    sLog.outDebug("Auction Time2:\t\t%u", MIN_AUCTION_TIME);
-    sLog.outDebug("Auction Time3:\t\t%u", (time / MIN_AUCTION_TIME));
-    sLog.outDebug("Count:\t\t\t%u", pItem->GetCount());
-    sLog.outDebug("Deposit:\t\t%f", deposit);
+    sLog->outDebug("SellPrice:\t\t%u", MSV);
+    sLog->outDebug("Deposit Percent:\t%f", faction_pct);
+    sLog->outDebug("Auction Time1:\t\t%u", time);
+    sLog->outDebug("Auction Time2:\t\t%u", MIN_AUCTION_TIME);
+    sLog->outDebug("Auction Time3:\t\t%u", (time / MIN_AUCTION_TIME));
+    sLog->outDebug("Count:\t\t\t%u", pItem->GetCount());
+    sLog->outDebug("Deposit:\t\t%f", deposit);
     if (deposit > 0)
         return (uint32)deposit;
     else
@@ -146,7 +146,7 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
 
             uint32 owner_accid = objmgr.GetPlayerAccountIdByGUID(auction->owner);
 
-            sLog.outCommand(bidder_accId,"GM %s (Account: %u) won item in auction: %s (Entry: %u Count: %u) and pay money: %u. Original owner %s (Account: %u)",
+            sLog->outCommand(bidder_accId,"GM %s (Account: %u) won item in auction: %s (Entry: %u Count: %u) and pay money: %u. Original owner %s (Account: %u)",
                 bidder_name.c_str(),bidder_accId, pItem->GetProto()->Name1, pItem->GetEntry(),pItem->GetCount(),auction->bid, owner_name.c_str(),owner_accid);
         }
     }
@@ -161,7 +161,7 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
         msgAuctionWonBody.width(16);
         msgAuctionWonBody << std::right << std::hex << auction->owner;
         msgAuctionWonBody << std::dec << ":" << auction->bid << ":" << auction->buyout;
-        sLog.outDebug("AuctionWon body string : %s", msgAuctionWonBody.str().c_str());
+        sLog->outDebug("AuctionWon body string : %s", msgAuctionWonBody.str().c_str());
 
         // prepare mail data... :
         uint32 itemTextId = objmgr.CreateItemText(msgAuctionWonBody.str());
@@ -201,7 +201,7 @@ void AuctionHouseMgr::SendAuctionSalePendingMail(AuctionEntry * auction)
         msgAuctionSalePendingBody << ":" << auction->deposit << ":" << auctionCut << ":0:";
         msgAuctionSalePendingBody << secsToTimeBitFields(distrTime);
 
-        sLog.outDebug("AuctionSalePending body string : %s", msgAuctionSalePendingBody.str().c_str());
+        sLog->outDebug("AuctionSalePending body string : %s", msgAuctionSalePendingBody.str().c_str());
 
         uint32 itemTextId = objmgr.CreateItemText(msgAuctionSalePendingBody.str());
 
@@ -230,7 +230,7 @@ void AuctionHouseMgr::SendAuctionSuccessfulMail(AuctionEntry * auction)
         auctionSuccessfulBody << std::dec << ":" << auction->bid << ":" << auction->buyout;
         auctionSuccessfulBody << ":" << auction->deposit << ":" << auctionCut;
 
-        sLog.outDebug("AuctionSuccessful body string : %s", auctionSuccessfulBody.str().c_str());
+        sLog->outDebug("AuctionSuccessful body string : %s", auctionSuccessfulBody.str().c_str());
 
         uint32 itemTextId = objmgr.CreateItemText(auctionSuccessfulBody.str());
 
@@ -280,8 +280,8 @@ void AuctionHouseMgr::LoadAuctionItems()
 
     if (!result)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 auction items");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 auction items");
         return;
     }
 
@@ -298,7 +298,7 @@ void AuctionHouseMgr::LoadAuctionItems()
 
         if (!proto)
         {
-            sLog.outError("AuctionHouseMgr::LoadAuctionItems: Unknown item (GUID: %u id: #%u) in auction, skipped.", item_guid, item_template);
+            sLog->outError("AuctionHouseMgr::LoadAuctionItems: Unknown item (GUID: %u id: #%u) in auction, skipped.", item_guid, item_template);
             continue;
         }
 
@@ -315,8 +315,8 @@ void AuctionHouseMgr::LoadAuctionItems()
     }
     while (result->NextRow());
 
-    sLog.outString();
-    sLog.outString(">> Loaded %u auction items", count);
+    sLog->outString();
+    sLog->outString(">> Loaded %u auction items", count);
 }
 
 void AuctionHouseMgr::LoadAuctions()
@@ -324,8 +324,8 @@ void AuctionHouseMgr::LoadAuctions()
     QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT COUNT(*) FROM auctionhouse");
     if (!result)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
         return;
     }
 
@@ -334,16 +334,16 @@ void AuctionHouseMgr::LoadAuctions()
 
     if (!AuctionCount)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
         return;
     }
 
     result = CharacterDatabase.Query("SELECT id, auctioneerguid, itemguid, item_template, itemowner, buyoutprice, time, buyguid, lastbid, startbid, deposit FROM auctionhouse");
     if (!result)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 auctions. DB table auctionhouse is empty.");
         return;
     }
 
@@ -370,7 +370,7 @@ void AuctionHouseMgr::LoadAuctions()
         if (!auctioneerData)
         {
             aItem->DeleteFromDB();
-            sLog.outError("Auction %u has invalid auctioneer (GUID : %u)", aItem->Id, aItem->auctioneer);
+            sLog->outError("Auction %u has invalid auctioneer (GUID : %u)", aItem->Id, aItem->auctioneer);
             delete aItem;
             continue;
         }
@@ -379,7 +379,7 @@ void AuctionHouseMgr::LoadAuctions()
         if (!auctioneerInfo)
         {
             aItem->DeleteFromDB();
-            sLog.outError("Auction %u has invalid auctioneer (GUID : %u Entry: %u)", aItem->Id, aItem->auctioneer, auctioneerData->id);
+            sLog->outError("Auction %u has invalid auctioneer (GUID : %u Entry: %u)", aItem->Id, aItem->auctioneer, auctioneerData->id);
             delete aItem;
             continue;
         }
@@ -388,7 +388,7 @@ void AuctionHouseMgr::LoadAuctions()
         if (!aItem->auctionHouseEntry)
         {
             aItem->DeleteFromDB();
-            sLog.outError("Auction %u has auctioneer (GUID : %u Entry: %u) with wrong faction %u",
+            sLog->outError("Auction %u has auctioneer (GUID : %u Entry: %u) with wrong faction %u",
                 aItem->Id, aItem->auctioneer, auctioneerData->id, auctioneerInfo->faction_A);
             delete aItem;
             continue;
@@ -399,7 +399,7 @@ void AuctionHouseMgr::LoadAuctions()
         if (!GetAItem(aItem->item_guidlow))
         {
             aItem->DeleteFromDB();
-            sLog.outError("Auction %u has invalid item : %u", aItem->Id, aItem->item_guidlow);
+            sLog->outError("Auction %u has invalid item : %u", aItem->Id, aItem->item_guidlow);
             delete aItem;
             continue;
         }
@@ -407,8 +407,8 @@ void AuctionHouseMgr::LoadAuctions()
         GetAuctionsMap(auctioneerInfo->faction_A)->AddAuction(aItem);
     } while (result->NextRow());
 
-    sLog.outString();
-    sLog.outString(">> Loaded %u auctions", AuctionCount);
+    sLog->outString();
+    sLog->outString(">> Loaded %u auctions", AuctionCount);
 }
 
 void AuctionHouseMgr::AddAItem(Item* it)
@@ -648,7 +648,7 @@ bool AuctionEntry::BuildAuctionInfo(WorldPacket & data) const
     Item *pItem = sAuctionMgr->GetAItem(item_guidlow);
     if (!pItem)
     {
-        sLog.outError("auction to item, that doesn't exist !!!!");
+        sLog->outError("auction to item, that doesn't exist !!!!");
         return false;
     }
     data << uint32(Id);

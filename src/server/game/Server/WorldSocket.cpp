@@ -170,7 +170,7 @@ int WorldSocket::SendPacket (const WorldPacket& pct)
         if (m_PacketQueue.enqueue_tail (npct) == -1)
         {
             delete npct;
-            sLog.outError ("WorldSocket::SendPacket: m_PacketQueue.enqueue_tail failed");
+            sLog->outError ("WorldSocket::SendPacket: m_PacketQueue.enqueue_tail failed");
             return -1;
         }
     }
@@ -212,7 +212,7 @@ int WorldSocket::open (void *a)
 
     if (peer().get_remote_addr(remote_addr) == -1)
     {
-        sLog.outError ("WorldSocket::open: peer().get_remote_addr errno = %s", ACE_OS::strerror (errno));
+        sLog->outError ("WorldSocket::open: peer().get_remote_addr errno = %s", ACE_OS::strerror (errno));
         return -1;
     }
 
@@ -228,7 +228,7 @@ int WorldSocket::open (void *a)
     // Register with ACE Reactor
     if (reactor()->register_handler(this, ACE_Event_Handler::READ_MASK | ACE_Event_Handler::WRITE_MASK) == -1)
     {
-        sLog.outError ("WorldSocket::open: unable to register client handler errno = %s", ACE_OS::strerror (errno));
+        sLog->outError ("WorldSocket::open: unable to register client handler errno = %s", ACE_OS::strerror (errno));
         return -1;
     }
 
@@ -383,7 +383,7 @@ int WorldSocket::handle_input_header (void)
 
     if ((header.size < 4) || (header.size > 10240) || (header.cmd  > 10240))
     {
-        sLog.outError ("WorldSocket::handle_input_header: client sent malformed packet size = %d , cmd = %d",
+        sLog->outError ("WorldSocket::handle_input_header: client sent malformed packet size = %d , cmd = %d",
                        header.size, header.cmd);
 
         errno = EINVAL;
@@ -486,7 +486,7 @@ int WorldSocket::handle_input_missing_data (void)
         // hope this is not hack , as proper m_RecvWPct is asserted around
         if (!m_RecvWPct)
         {
-            sLog.outError ("Forcing close on input m_RecvWPct = NULL");
+            sLog->outError ("Forcing close on input m_RecvWPct = NULL");
             errno = EINVAL;
             return -1;
         }
@@ -532,7 +532,7 @@ int WorldSocket::cancel_wakeup_output (GuardType& g)
         (this, ACE_Event_Handler::WRITE_MASK) == -1)
     {
         // would be good to store errno from reactor with errno guard
-        sLog.outError ("WorldSocket::cancel_wakeup_output");
+        sLog->outError ("WorldSocket::cancel_wakeup_output");
         return -1;
     }
 
@@ -551,7 +551,7 @@ int WorldSocket::schedule_wakeup_output (GuardType& g)
     if (reactor()->schedule_wakeup
         (this, ACE_Event_Handler::WRITE_MASK) == -1)
     {
-        sLog.outError ("WorldSocket::schedule_wakeup_output");
+        sLog->outError ("WorldSocket::schedule_wakeup_output");
         return -1;
     }
 
@@ -599,7 +599,7 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
             case CMSG_AUTH_SESSION:
                 if (m_Session)
                 {
-                    sLog.outError ("WorldSocket::ProcessIncoming: Player send CMSG_AUTH_SESSION again");
+                    sLog->outError ("WorldSocket::ProcessIncoming: Player send CMSG_AUTH_SESSION again");
                     return -1;
                 }
 
@@ -627,7 +627,7 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
                 }
                 else
                 {
-                    sLog.outError ("WorldSocket::ProcessIncoming: Client not authed opcode = %u", uint32(opcode));
+                    sLog->outError ("WorldSocket::ProcessIncoming: Client not authed opcode = %u", uint32(opcode));
                     return -1;
                 }
             }
@@ -635,11 +635,11 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
     }
     catch(ByteBufferException &)
     {
-        sLog.outError("WorldSocket::ProcessIncoming ByteBufferException occured while parsing an instant handled packet (opcode: %u) from client %s, accountid=%i. Disconnected client.",
+        sLog->outError("WorldSocket::ProcessIncoming ByteBufferException occured while parsing an instant handled packet (opcode: %u) from client %s, accountid=%i. Disconnected client.",
                 opcode, GetRemoteAddress().c_str(), m_Session?m_Session->GetAccountId():-1);
-        if (sLog.IsOutDebug())
+        if (sLog->IsOutDebug())
         {
-            sLog.outDebug("Dumping error causing packet:");
+            sLog->outDebug("Dumping error causing packet:");
             new_pct->hexlike();
         }
 
@@ -688,7 +688,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
 
         SendPacket (packet);
 
-        sLog.outError ("WorldSocket::HandleAuthSession: Sent Auth Response (version mismatch).");
+        sLog->outError ("WorldSocket::HandleAuthSession: Sent Auth Response (version mismatch).");
         return -1;
     }
 
@@ -719,7 +719,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
 
         SendPacket (packet);
 
-        sLog.outError ("WorldSocket::HandleAuthSession: Sent Auth Response (unknown account).");
+        sLog->outError ("WorldSocket::HandleAuthSession: Sent Auth Response (unknown account).");
         return -1;
     }
 
@@ -756,7 +756,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
             packet << uint8 (AUTH_FAILED);
             SendPacket (packet);
 
-            sLog.outBasic ("WorldSocket::HandleAuthSession: Sent Auth Response (Account IP differs).");
+            sLog->outBasic ("WorldSocket::HandleAuthSession: Sent Auth Response (Account IP differs).");
             return -1;
         }
     }
@@ -803,14 +803,14 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
         packet << uint8 (AUTH_BANNED);
         SendPacket (packet);
 
-        sLog.outError ("WorldSocket::HandleAuthSession: Sent Auth Response (Account banned).");
+        sLog->outError ("WorldSocket::HandleAuthSession: Sent Auth Response (Account banned).");
         return -1;
     }
 
     // Check locked state for server
     sWorld.UpdateAllowedSecurity();
     AccountTypes allowedAccountType = sWorld.GetPlayerSecurityLimit ();
-    sLog.outDebug("Allowed Level: %u Player Level %u", allowedAccountType, AccountTypes(security));
+    sLog->outDebug("Allowed Level: %u Player Level %u", allowedAccountType, AccountTypes(security));
     if (allowedAccountType > SEC_PLAYER && security < allowedAccountType)
     {
         WorldPacket Packet (SMSG_AUTH_RESPONSE, 1);
@@ -818,7 +818,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
 
         SendPacket (packet);
 
-        sLog.outDetail ("WorldSocket::HandleAuthSession: User tries to login but his security level is not enough");
+        sLog->outDetail ("WorldSocket::HandleAuthSession: User tries to login but his security level is not enough");
         return -1;
     }
 
@@ -842,7 +842,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
 
         SendPacket (packet);
 
-        sLog.outError ("WorldSocket::HandleAuthSession: Sent Auth Response (authentification failed).");
+        sLog->outError ("WorldSocket::HandleAuthSession: Sent Auth Response (authentification failed).");
         return -1;
     }
 
@@ -911,7 +911,7 @@ int WorldSocket::HandlePing (WorldPacket& recvPacket)
 
                 if (m_Session && m_Session->GetSecurity() == SEC_PLAYER)
                 {
-                    sLog.outError  ("WorldSocket::HandlePing: Player kicked for "
+                    sLog->outError  ("WorldSocket::HandlePing: Player kicked for "
                                     "over-speed pings address = %s",
                                     GetRemoteAddress().c_str());
 
@@ -931,7 +931,7 @@ int WorldSocket::HandlePing (WorldPacket& recvPacket)
             m_Session->SetLatency (latency);
         else
         {
-            sLog.outError ("WorldSocket::HandlePing: peer sent CMSG_PING, "
+            sLog->outError ("WorldSocket::HandlePing: peer sent CMSG_PING, "
                             "but is not authenticated or got recently kicked,"
                             " address = %s",
                             GetRemoteAddress().c_str());
@@ -984,7 +984,7 @@ bool WorldSocket::iFlushPacketQueue ()
             if (m_PacketQueue.enqueue_head (pct) == -1)
             {
                 delete pct;
-                sLog.outError ("WorldSocket::iFlushPacketQueue m_PacketQueue->enqueue_head");
+                sLog->outError ("WorldSocket::iFlushPacketQueue m_PacketQueue->enqueue_head");
                 return false;
             }
 

@@ -66,7 +66,7 @@ DatabaseType LoginDatabase;                                 // Accessor to the r
 // Print out the usage string for this program on the console.
 void usage(const char *prog)
 {
-    sLog.outString("Usage: \n %s [<options>]\n"
+    sLog->outString("Usage: \n %s [<options>]\n"
         "    -v, --version            print version and exit\n\r"
         "    -c config_file           use config_file as configuration file\n\r"
         #ifdef _WIN32
@@ -112,20 +112,20 @@ extern int main(int argc, char **argv)
                 if (!strcmp(mode, "install"))
                 {
                     if (WinServiceInstall())
-                        sLog.outString("Installing service");
+                        sLog->outString("Installing service");
                     return 1;
                 }
                 else if (!strcmp(mode, "uninstall"))
                 {
                     if (WinServiceUninstall())
-                        sLog.outString("Uninstalling service");
+                        sLog->outString("Uninstalling service");
                     return 1;
                 }
                 else if (!strcmp(mode, "run"))
                     WinServiceRun();
                 else
                 {
-                    sLog.outError("Runtime-Error: -%c unsupported argument %s", cmd_opts.opt_opt(), mode);
+                    sLog->outError("Runtime-Error: -%c unsupported argument %s", cmd_opts.opt_opt(), mode);
                     usage(argv[0]);
                     return 1;
                 }
@@ -133,11 +133,11 @@ extern int main(int argc, char **argv)
             }
 #endif
             case ':':
-                sLog.outError("Runtime-Error: -%c option requires an input argument", cmd_opts.opt_opt());
+                sLog->outError("Runtime-Error: -%c option requires an input argument", cmd_opts.opt_opt());
                 usage(argv[0]);
                 return 1;
             default:
-                sLog.outError("Runtime-Error: bad format of commandline arguments");
+                sLog->outError("Runtime-Error: bad format of commandline arguments");
                 usage(argv[0]);
                 return 1;
         }
@@ -145,17 +145,17 @@ extern int main(int argc, char **argv)
 
     if (!sConfig.SetSource(cfg_file))
     {
-        sLog.outError("Invalid or missing configuration file : %s", cfg_file);
-        sLog.outError("Verify that the file exists and has \'[authserver]\' written in the top of the file!");
+        sLog->outError("Invalid or missing configuration file : %s", cfg_file);
+        sLog->outError("Verify that the file exists and has \'[authserver]\' written in the top of the file!");
         return 1;
     }
-    sLog.Initialize();
+    sLog->Initialize();
 
-    sLog.outString( "%s [realm-daemon]", _FULLVERSION);
-    sLog.outString( "<Ctrl-C> to stop.\n" );
-    sLog.outString("Using configuration file %s.", cfg_file);
+    sLog->outString( "%s [realm-daemon]", _FULLVERSION);
+    sLog->outString( "<Ctrl-C> to stop.\n" );
+    sLog->outString("Using configuration file %s.", cfg_file);
 
-    sLog.outDetail("Using ACE: %s", ACE_VERSION);
+    sLog->outDetail("Using ACE: %s", ACE_VERSION);
 
 #if defined (ACE_HAS_EVENT_POLL) || defined (ACE_HAS_DEV_POLL)
     ACE_Reactor::instance(new ACE_Reactor(new ACE_Dev_Poll_Reactor(ACE::max_handles(), 1), 1), true);
@@ -163,7 +163,7 @@ extern int main(int argc, char **argv)
     ACE_Reactor::instance(new ACE_Reactor(new ACE_TP_Reactor(), true), true);
 #endif
 
-    sLog.outBasic("Max allowed open files is %d", ACE::max_handles());
+    sLog->outBasic("Max allowed open files is %d", ACE::max_handles());
 
     // realmd PID file creation
     std::string pidfile = sConfig.GetStringDefault("PidFile", "");
@@ -172,11 +172,11 @@ extern int main(int argc, char **argv)
         uint32 pid = CreatePIDFile(pidfile);
         if (!pid)
         {
-            sLog.outError( "Cannot create PID file %s.\n", pidfile.c_str() );
+            sLog->outError( "Cannot create PID file %s.\n", pidfile.c_str() );
             return 1;
         }
 
-        sLog.outString( "Daemon PID: %u\n", pid );
+        sLog->outString( "Daemon PID: %u\n", pid );
     }
 
     // Initialize the database connection
@@ -187,7 +187,7 @@ extern int main(int argc, char **argv)
     sRealmList->Initialize(sConfig.GetIntDefault("RealmsStateUpdateDelay", 20));
     if (sRealmList->size() == 0)
     {
-        sLog.outError("No valid realms specified.");
+        sLog->outError("No valid realms specified.");
         return 1;
     }
 
@@ -206,7 +206,7 @@ extern int main(int argc, char **argv)
 
     if (acceptor.open(bind_addr, ACE_Reactor::instance(), ACE_NONBLOCK) == -1)
     {
-        sLog.outError("realmd can not bind to %s:%d", bind_ip.c_str(), rmport);
+        sLog->outError("realmd can not bind to %s:%d", bind_ip.c_str(), rmport);
         return 1;
     }
 
@@ -230,17 +230,17 @@ extern int main(int argc, char **argv)
 
                 if (!curAff )
                 {
-                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for realmd. Accessible processors bitmask (hex): %x",Aff, appAff);
+                    sLog->outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for realmd. Accessible processors bitmask (hex): %x",Aff, appAff);
                 }
                 else
                 {
                     if (SetProcessAffinityMask(hProcess, curAff))
-                        sLog.outString("Using processors (bitmask, hex): %x", curAff);
+                        sLog->outString("Using processors (bitmask, hex): %x", curAff);
                     else
-                        sLog.outError("Can't set used processors (hex): %x", curAff);
+                        sLog->outError("Can't set used processors (hex): %x", curAff);
                 }
             }
-            sLog.outString();
+            sLog->outString();
         }
 
         bool Prio = sConfig.GetBoolDefault("ProcessPriority", false);
@@ -248,10 +248,10 @@ extern int main(int argc, char **argv)
         if (Prio)
         {
             if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
-                sLog.outString("realmd process priority class set to HIGH");
+                sLog->outString("realmd process priority class set to HIGH");
             else
-                sLog.outError("ERROR: Can't set realmd process priority class.");
-            sLog.outString();
+                sLog->outError("ERROR: Can't set realmd process priority class.");
+            sLog->outString();
         }
     }
     #endif
@@ -272,7 +272,7 @@ extern int main(int argc, char **argv)
         if ( (++loopCounter) == numLoops )
         {
             loopCounter = 0;
-            sLog.outDetail("Ping MySQL to keep connection alive");
+            sLog->outDetail("Ping MySQL to keep connection alive");
             LoginDatabase.Query("SELECT 1 FROM realmlist LIMIT 1");
         }
 #ifdef _WIN32
@@ -287,7 +287,7 @@ extern int main(int argc, char **argv)
     // Remove signal handling before leaving
     UnhookSignals();
 
-    sLog.outString( "Halting process..." );
+    sLog->outString( "Halting process..." );
     return 0;
 }
 
@@ -317,14 +317,14 @@ bool StartDB()
     std::string dbstring = sConfig.GetStringDefault("LoginDatabaseInfo", "");
     if (dbstring.empty())
     {
-        sLog.outError("Database not specified");
+        sLog->outError("Database not specified");
         return false;
     }
 
-    sLog.outString("Database: %s", dbstring.c_str() );
+    sLog->outString("Database: %s", dbstring.c_str() );
     if (!LoginDatabase.Initialize(dbstring.c_str()))
     {
-        sLog.outError("Cannot connect to database");
+        sLog->outError("Cannot connect to database");
         return false;
     }
 

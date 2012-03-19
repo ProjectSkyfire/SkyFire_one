@@ -348,11 +348,11 @@ void FlightPathMovementGenerator::PreloadEndGrid()
     // Load the grid
     if (endMap)
     {
-        sLog.outDetail("Preloading flightmaster at grid (%f, %f) for map %u", m_endGridX, m_endGridY, m_endMapId);
+        sLog->outDetail("Preloading flightmaster at grid (%f, %f) for map %u", m_endGridX, m_endGridY, m_endMapId);
         endMap->LoadGrid(m_endGridX, m_endGridY);
     }
     else
-        sLog.outDetail("Unable to determine map to preload flightmaster grid");
+        sLog->outDetail("Unable to determine map to preload flightmaster grid");
 }
 
 //

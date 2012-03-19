@@ -795,11 +795,11 @@ bool ChatHandler::HandleGPSCommand(const char* args)
         cell.GridX(), cell.GridY(), cell.CellX(), cell.CellY(), obj->GetInstanceId(),
         zone_x, zone_y, ground_z, floor_z, have_map, have_vmap);
 
-    sLog.outDebug("Player %s GPS call for %s '%s' (%s: %u):",
+    sLog->outDebug("Player %s GPS call for %s '%s' (%s: %u):",
         GetName(),
         (obj->GetTypeId() == TYPEID_PLAYER ? "player" : "creature"), obj->GetName(),
         (obj->GetTypeId() == TYPEID_PLAYER ? "GUID" : "Entry"), (obj->GetTypeId() == TYPEID_PLAYER ? obj->GetGUIDLow(): obj->GetEntry()));
-    sLog.outDebug(GetTrinityString(LANG_MAP_POSITION),
+    sLog->outDebug(GetTrinityString(LANG_MAP_POSITION),
         obj->GetMapId(), (mapEntry ? mapEntry->name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
         zone_id, (zoneEntry ? zoneEntry->area_name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
         area_id, (areaEntry ? areaEntry->area_name[sWorld.GetDefaultDbcLocale()] : "<unknown>"),
@@ -1241,7 +1241,7 @@ bool ChatHandler::HandleModifyEnergyCommand(const char* args)
     target->SetMaxPower(POWER_ENERGY, energym);
     target->SetPower(POWER_ENERGY, energy);
 
-    sLog.outDetail(GetTrinityString(LANG_CURRENT_ENERGY),target->GetMaxPower(POWER_ENERGY));
+    sLog->outDetail(GetTrinityString(LANG_CURRENT_ENERGY),target->GetMaxPower(POWER_ENERGY));
 
     return true;
 }
@@ -1987,7 +1987,7 @@ bool ChatHandler::HandleModifyMoneyCommand(const char* args)
     {
         int32 newmoney = moneyuser + addmoney;
 
-        sLog.outDetail(GetTrinityString(LANG_CURRENT_MONEY), moneyuser, addmoney, newmoney);
+        sLog->outDetail(GetTrinityString(LANG_CURRENT_MONEY), moneyuser, addmoney, newmoney);
         if (newmoney <= 0)
         {
             PSendSysMessage(LANG_YOU_TAKE_ALL_MONEY, target->GetName());
@@ -2012,7 +2012,7 @@ bool ChatHandler::HandleModifyMoneyCommand(const char* args)
         target->ModifyMoney(addmoney);
     }
 
-    sLog.outDetail(GetTrinityString(LANG_NEW_MONEY), moneyuser, addmoney, target->GetMoney());
+    sLog->outDetail(GetTrinityString(LANG_NEW_MONEY), moneyuser, addmoney, target->GetMoney());
 
     return true;
 }

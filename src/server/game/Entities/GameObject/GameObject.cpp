@@ -89,7 +89,7 @@ void GameObject::CleanupsBeforeDelete()
                 else if (IS_PET_GUID(owner_guid))
                     ownerType = "pet";
 
-                sLog.outError("Delete GameObject (GUID: %u Entry: %u SpellId %u LinkedGO %u) that lost references to owner (GUID %u Type '%s') GO list. Crash possible later.",
+                sLog->outError("Delete GameObject (GUID: %u Entry: %u SpellId %u LinkedGO %u) that lost references to owner (GUID %u Type '%s') GO list. Crash possible later.",
                     GetGUIDLow(), GetGOInfo()->id, m_spellId, GetLinkedGameObjectEntry(), GUID_LOPART(owner_guid), ownerType);
             }
         }
@@ -123,7 +123,7 @@ void GameObject::RemoveFromWorld()
             if (Unit * owner = GetOwner())
                 owner->RemoveGameObject(this, false);
             else
-                sLog.outError("Delete GameObject (GUID: %u Entry: %u) that has references in invalid creature %u GO list. Crash possible.",GetGUIDLow(),GetGOInfo()->id, GUID_LOPART(owner_guid));
+                sLog->outError("Delete GameObject (GUID: %u Entry: %u) that has references in invalid creature %u GO list. Crash possible.",GetGUIDLow(),GetGOInfo()->id, GUID_LOPART(owner_guid));
         }
 
         WorldObject::RemoveFromWorld();
@@ -139,14 +139,14 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map *map, float x, float
     Relocate(x, y, z, ang);
     if (!IsPositionValid())
     {
-        sLog.outError("Gameobject (GUID: %u Entry: %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",guidlow, name_id, x, y);
+        sLog->outError("Gameobject (GUID: %u Entry: %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",guidlow, name_id, x, y);
         return false;
     }
 
     GameObjectInfo const* goinfo = objmgr.GetGameObjectInfo(name_id);
     if (!goinfo)
     {
-        sLog.outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid entry in gameobject_template. Map: %u  (X: %f Y: %f Z: %f) ang: %f rotation0: %f rotation1: %f rotation2: %f rotation3: %f",guidlow, name_id, map->GetId(), x, y, z, ang, rotation0, rotation1, rotation2, rotation3);
+        sLog->outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid entry in gameobject_template. Map: %u  (X: %f Y: %f Z: %f) ang: %f rotation0: %f rotation1: %f rotation2: %f rotation3: %f",guidlow, name_id, map->GetId(), x, y, z, ang, rotation0, rotation1, rotation2, rotation3);
         return false;
     }
 
@@ -156,7 +156,7 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map *map, float x, float
 
     if (goinfo->type >= MAX_GAMEOBJECT_TYPE)
     {
-        sLog.outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid GO type '%u' in gameobject_template. It will crash the client if created.",guidlow, name_id, goinfo->type);
+        sLog->outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid GO type '%u' in gameobject_template. It will crash the client if created.",guidlow, name_id, goinfo->type);
         return false;
     }
 
@@ -535,7 +535,7 @@ void GameObject::SaveToDB()
     GameObjectData const *data = objmgr.GetGOData(m_DBTableGuid);
     if (!data)
     {
-        sLog.outError("GameObject::SaveToDB failed, cannot get gameobject data!");
+        sLog->outError("GameObject::SaveToDB failed, cannot get gameobject data!");
         return;
     }
 
@@ -602,7 +602,7 @@ bool GameObject::LoadFromDB(uint32 guid, Map *map)
 
     if (!data)
     {
-        sLog.outErrorDb("ERROR: Gameobject (GUID: %u) not found in table gameobject, can't load. ",guid);
+        sLog->outErrorDb("ERROR: Gameobject (GUID: %u) not found in table gameobject, can't load. ",guid);
         return false;
     }
 
@@ -1104,7 +1104,7 @@ void GameObject::Use(Unit* user)
 
                     //provide error, no fishable zone or area should be 0
                     if (!zone_skill)
-                        sLog.outErrorDb("Fishable areaId %u is not properly defined in skill_fishing_base_level.",subzone);
+                        sLog->outErrorDb("Fishable areaId %u is not properly defined in skill_fishing_base_level.",subzone);
 
                     int32 skill = player->GetSkillValue(SKILL_FISHING);
                     int32 chance = skill - zone_skill + 5;
@@ -1355,7 +1355,7 @@ void GameObject::Use(Unit* user)
             break;
         }
         default:
-            sLog.outDebug("Unknown Object Type %u", GetGoType());
+            sLog->outDebug("Unknown Object Type %u", GetGoType());
             break;
     }
 
@@ -1366,9 +1366,9 @@ void GameObject::Use(Unit* user)
     if (!spellInfo)
     {
         if (user->GetTypeId() != TYPEID_PLAYER || !sOutdoorPvPMgr.HandleCustomSpell(user->ToPlayer(),spellId, this))
-            sLog.outError("WORLD: unknown spell id %u at use action for gameobject (Entry: %u GoType: %u)", spellId, GetEntry(),GetGoType());
+            sLog->outError("WORLD: unknown spell id %u at use action for gameobject (Entry: %u GoType: %u)", spellId, GetEntry(),GetGoType());
         else
-            sLog.outDebug("WORLD: %u non-dbc spell was handled by OutdoorPvP", spellId);
+            sLog->outDebug("WORLD: %u non-dbc spell was handled by OutdoorPvP", spellId);
         return;
     }
 

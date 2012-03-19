@@ -76,7 +76,7 @@ class CreatureFormation
     public:
         //Fromation cannot be created empty
         explicit CreatureFormation(uint32 id) : m_leader(NULL), m_formationID(id), m_Formed(false) {}
-        ~CreatureFormation() { sLog.outDebug("Destroying formation"); }
+        ~CreatureFormation() { sLog->outDebug("Destroying formation"); }
 
         Creature* getLeader() const { return m_leader; }
         uint32 GetId() const { return m_formationID; }

@@ -70,8 +70,8 @@ void ScriptMgr::ScriptsInit()
     //Load database (must be called after SD2Config.SetSource).
     LoadDatabase();
 
-    outstring_log("TSCR: Loading C++ scripts");
-    outstring_log("");
+    sLog->outString("TSCR: Loading C++ scripts");
+    sLog->outString("");
 
     for (uint16 i =0; i<MAX_SCRIPTS; ++i)
         m_scripts[i]=NULL;
@@ -80,9 +80,9 @@ void ScriptMgr::ScriptsInit()
 
     AddScripts();
 
-    outstring_log(">> Loaded %i C++ Scripts.", num_sc_scripts);
+    sLog->outString(">> Loaded %i C++ Scripts.", num_sc_scripts);
 
-    outstring_log(">> Load Overriden SQL Data.");
+    sLog->outString(">> Load Overriden SQL Data.");
     LoadOverridenSQLData();
 }
 
@@ -93,13 +93,13 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
 {
     if (!pSource)
     {
-        error_log("TSCR: DoScriptText entry %i, invalid Source pointer.", iTextEntry);
+        sLog->outError("TSCR: DoScriptText entry %i, invalid Source pointer.", iTextEntry);
         return;
     }
 
     if (iTextEntry >= 0)
     {
-        error_log("TSCR: DoScriptText with source entry %u (TypeId=%u, guid=%u) attempts to process text entry %i, but text entry must be negative.", pSource->GetEntry(), pSource->GetTypeId(), pSource->GetGUIDLow(), iTextEntry);
+        sLog->outError("TSCR: DoScriptText with source entry %u (TypeId=%u, guid=%u) attempts to process text entry %i, but text entry must be negative.", pSource->GetEntry(), pSource->GetTypeId(), pSource->GetGUIDLow(), iTextEntry);
         return;
     }
 
@@ -107,11 +107,11 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
 
     if (!pData)
     {
-        error_log("TSCR: DoScriptText with source entry %u (TypeId=%u, guid=%u) could not find text entry %i.", pSource->GetEntry(), pSource->GetTypeId(), pSource->GetGUIDLow(), iTextEntry);
+        sLog->outError("TSCR: DoScriptText with source entry %u (TypeId=%u, guid=%u) could not find text entry %i.", pSource->GetEntry(), pSource->GetTypeId(), pSource->GetGUIDLow(), iTextEntry);
         return;
     }
 
-    debug_log("TSCR: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u", iTextEntry, pData->uiSoundId, pData->uiType, pData->uiLanguage, pData->uiEmote);
+    sLog->outDebug("TSCR: DoScriptText: text entry=%i, Sound=%u, Type=%u, Language=%u, Emote=%u", iTextEntry, pData->uiSoundId, pData->uiType, pData->uiLanguage, pData->uiEmote);
 
     if (pData->uiSoundId)
     {
@@ -120,7 +120,7 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
             pSource->SendPlaySound(pData->uiSoundId, false);
         }
         else
-            error_log("TSCR: DoScriptText entry %i tried to process invalid sound id %u.", iTextEntry, pData->uiSoundId);
+            sLog->outError("TSCR: DoScriptText entry %i tried to process invalid sound id %u.", iTextEntry, pData->uiSoundId);
     }
 
     if (pData->uiEmote)
@@ -128,7 +128,7 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
         if (pSource->GetTypeId() == TYPEID_UNIT || pSource->GetTypeId() == TYPEID_PLAYER)
             ((Unit*)pSource)->HandleEmoteCommand(pData->uiEmote);
         else
-            error_log("TSCR: DoScriptText entry %i tried to process emote for invalid TypeId (%u).", iTextEntry, pSource->GetTypeId());
+            sLog->outError("TSCR: DoScriptText entry %i tried to process emote for invalid TypeId (%u).", iTextEntry, pSource->GetTypeId());
     }
 
     switch(pData->uiType)
@@ -150,7 +150,7 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
                 if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
                     pSource->MonsterWhisper(iTextEntry, pTarget->GetGUID());
                 else
-                    error_log("TSCR: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
+                    sLog->outError("TSCR: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
             }
             break;
         case CHAT_TYPE_BOSS_WHISPER:
@@ -158,7 +158,7 @@ void DoScriptText(int32 iTextEntry, WorldObject* pSource, Unit* pTarget)
                 if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
                     pSource->MonsterWhisper(iTextEntry, pTarget->GetGUID(), true);
                 else
-                    error_log("TSCR: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
+                    sLog->outError("TSCR: DoScriptText entry %i cannot whisper without target unit (TYPEID_PLAYER).", iTextEntry);
             }
             break;
         case CHAT_TYPE_ZONE_YELL:
@@ -176,7 +176,7 @@ void Script::RegisterSelf()
         // somebody forgot to allocate memory for a script by a method like this: newscript = new Script
         if (m_scripts[i] == this)
         {
-            error_log("ScriptName: '%s' - Forgot to allocate memory, so this script and/or the script before that can't work.", Name.c_str());
+            sLog->outError("ScriptName: '%s' - Forgot to allocate memory, so this script and/or the script before that can't work.", Name.c_str());
             // don't register it
             // and don't delete it because its memory is used for another script
             return;
@@ -211,14 +211,14 @@ void Script::RegisterSelf()
         else
         {
             // TODO: write a better error message than this one :)
-            error_log("ScriptName: '%s' already assigned with the same ScriptName, so the script can't work.", Name.c_str());
+            sLog->outError("ScriptName: '%s' already assigned with the same ScriptName, so the script can't work.", Name.c_str());
             delete this;
         }
     }
     else
     {
         if (Name.find("example") == std::string::npos)
-            error_db_log("TSCR: RegisterSelf, but script named %s does not have ScriptName assigned in database.",(this)->Name.c_str());
+            sLog->outErrorDb("TSCR: RegisterSelf, but script named %s does not have ScriptName assigned in database.",(this)->Name.c_str());
         delete this;
     }
 }
@@ -260,7 +260,7 @@ bool ScriptMgr::GossipHello (Player * pPlayer, Creature* pCreature)
 
 bool ScriptMgr::GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
 {
-    debug_log("TSCR: Gossip selection, sender: %d, action: %d", uiSender, uiAction);
+    sLog->outDebug("TSCR: Gossip selection, sender: %d, action: %d", uiSender, uiAction);
 
     Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pGossipSelect) return false;
@@ -271,7 +271,7 @@ bool ScriptMgr::GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSend
 
 bool ScriptMgr::GossipSelectWithCode(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction, const char* sCode)
 {
-    debug_log("TSCR: Gossip selection with code, sender: %d, action: %d", uiSender, uiAction);
+    sLog->outDebug("TSCR: Gossip selection with code, sender: %d, action: %d", uiSender, uiAction);
 
     Script *tmpscript = m_scripts[pCreature->GetScriptId()];
     if (!tmpscript || !tmpscript->pGossipSelectWithCode) return false;
@@ -284,7 +284,7 @@ bool ScriptMgr::GOSelect(Player* pPlayer, GameObject* pGO, uint32 uiSender, uint
 {
     if (!pGO)
     return false;
-    debug_log("TSCR: Gossip selection, sender: %d, action: %d", uiSender, uiAction);
+    sLog->outDebug("TSCR: Gossip selection, sender: %d, action: %d", uiSender, uiAction);
 
     Script *tmpscript = m_scripts[pGO->GetGOInfo()->ScriptId];
     if (!tmpscript || !tmpscript->pGOSelect) return false;
@@ -297,7 +297,7 @@ bool ScriptMgr::GOSelectWithCode(Player* pPlayer, GameObject* pGO, uint32 uiSend
 {
     if (!pGO)
     return false;
-    debug_log("TSCR: Gossip selection, sender: %d, action: %d",uiSender, uiAction);
+    sLog->outDebug("TSCR: Gossip selection, sender: %d, action: %d",uiSender, uiAction);
 
     Script *tmpscript = m_scripts[pGO->GetGOInfo()->ScriptId];
     if (!tmpscript || !tmpscript->pGOSelectWithCode) return false;

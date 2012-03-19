@@ -163,13 +163,13 @@ InstanceMap* MapInstanced::CreateInstance(uint32 InstanceId, InstanceSave *save,
     const MapEntry* entry = sMapStore.LookupEntry(GetId());
     if (!entry)
     {
-        sLog.outError("CreateInstance: no entry for map %d", GetId());
+        sLog->outError("CreateInstance: no entry for map %d", GetId());
         ASSERT(false);
     }
     const InstanceTemplate * iTemplate = objmgr.GetInstanceTemplate(GetId());
     if (!iTemplate)
     {
-        sLog.outError("CreateInstance: no instance template for map %d", GetId());
+        sLog->outError("CreateInstance: no instance template for map %d", GetId());
         ASSERT(false);
     }
 
@@ -177,7 +177,7 @@ InstanceMap* MapInstanced::CreateInstance(uint32 InstanceId, InstanceSave *save,
     if (entry && !entry->SupportsHeroicMode())
         difficulty = DIFFICULTY_NORMAL;
 
-    sLog.outDebug("MapInstanced::CreateInstance: %s map instance %d for %d created with difficulty %s", save?"":"new ", InstanceId, GetId(), difficulty?"heroic":"normal");
+    sLog->outDebug("MapInstanced::CreateInstance: %s map instance %d for %d created with difficulty %s", save?"":"new ", InstanceId, GetId(), difficulty?"heroic":"normal");
 
     InstanceMap *map = new InstanceMap(GetId(), GetGridExpiry(), InstanceId, difficulty, this);
     ASSERT(map->IsDungeon());
@@ -194,7 +194,7 @@ BattleGroundMap* MapInstanced::CreateBattleGround(uint32 InstanceId, BattleGroun
     // load/create a map
     Guard guard(*this);
 
-    sLog.outDebug("MapInstanced::CreateBattleGround: map bg %d for %d created.", InstanceId, GetId());
+    sLog->outDebug("MapInstanced::CreateBattleGround: map bg %d for %d created.", InstanceId, GetId());
 
     BattleGroundMap *map = new BattleGroundMap(GetId(), GetGridExpiry(), InstanceId, this);
     ASSERT(map->IsBattleGroundOrArena());

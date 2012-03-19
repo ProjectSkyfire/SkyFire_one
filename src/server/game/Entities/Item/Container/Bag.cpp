@@ -43,7 +43,7 @@ Bag::~Bag()
         {
             if (item->IsInWorld())
             {
-                sLog.outCrash("Item %u (slot %u, bag slot %u) in bag %u (slot %u, bag slot %u, m_bagslot %u) is to be deleted but is still in world.",
+                sLog->outCrash("Item %u (slot %u, bag slot %u) in bag %u (slot %u, bag slot %u, m_bagslot %u) is to be deleted but is still in world.",
                     item->GetEntry(), (uint32)item->GetSlot(), (uint32)item->GetBagSlot(),
                     GetEntry(), (uint32)GetSlot(), (uint32)GetBagSlot(), (uint32)i);
                 item->RemoveFromWorld();
@@ -158,7 +158,7 @@ void Bag::StoreItem(uint8 slot, Item *pItem, bool /*update*/)
 {
     if (slot > MAX_BAG_SIZE)
     {
-        sLog.outError("Player GUID " UI64FMTD " tried to manipulate packets and crash the server.", GetOwnerGUID());
+        sLog->outError("Player GUID " UI64FMTD " tried to manipulate packets and crash the server.", GetOwnerGUID());
         return;
     }
 

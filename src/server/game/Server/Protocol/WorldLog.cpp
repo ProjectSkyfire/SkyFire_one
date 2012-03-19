@@ -76,13 +76,13 @@ void WorldLog::outTimestampLog(char const *fmt, ...)
         fflush(i_file);
     }
 
-    if (sLog.GetLogDB() && m_dbWorld)
+    if (sLog->GetLogDB() && m_dbWorld)
     {
         va_list ap2;
         va_start(ap2, fmt);
         char nnew_str[MAX_QUERY_LEN];
         vsnprintf(nnew_str, MAX_QUERY_LEN, fmt, ap2);
-        sLog.outDB(LOG_TYPE_WORLD, nnew_str);
+        sLog->outDB(LOG_TYPE_WORLD, nnew_str);
         va_end(ap2);
     }
 }
@@ -103,13 +103,13 @@ void WorldLog::outLog(char const *fmt, ...)
         fflush(i_file);
     }
 
-    if (sLog.GetLogDB() && m_dbWorld)
+    if (sLog->GetLogDB() && m_dbWorld)
     {
         va_list ap2;
         va_start(ap2, fmt);
         char nnew_str[MAX_QUERY_LEN];
         vsnprintf(nnew_str, MAX_QUERY_LEN, fmt, ap2);
-        sLog.outDB(LOG_TYPE_WORLD, nnew_str);
+        sLog->outDB(LOG_TYPE_WORLD, nnew_str);
         va_end(ap2);
     }
 }

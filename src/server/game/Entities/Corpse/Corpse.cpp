@@ -86,7 +86,7 @@ bool Corpse::Create(uint32 guidlow, Player *owner, uint32 mapid, float x, float 
 
     if (!IsPositionValid())
     {
-        sLog.outError("Corpse (guidlow %d, owner %s) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
+        sLog->outError("Corpse (guidlow %d, owner %s) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
             guidlow, owner->GetName(), x, y);
         return false;
     }
@@ -148,7 +148,7 @@ void Corpse::DeleteBonesFromWorld()
 
     if (!corpse)
     {
-        sLog.outError("Bones %u not found in world.", GetGUIDLow());
+        sLog->outError("Bones %u not found in world.", GetGUIDLow());
         return;
     }
 
@@ -192,7 +192,7 @@ bool Corpse::LoadFromDB(uint32 guid, Field *fields)
 
     if (m_type >= MAX_CORPSE_TYPE)
     {
-        sLog.outError("Corpse (guidlow %d, owner %d) has wrong corpse type.  Not loaded.",GetGUIDLow(),GUID_LOPART(GetOwnerGUID()));
+        sLog->outError("Corpse (guidlow %d, owner %d) has wrong corpse type.  Not loaded.",GetGUIDLow(),GUID_LOPART(GetOwnerGUID()));
         return false;
     }
 
@@ -208,7 +208,7 @@ bool Corpse::LoadFromDB(uint32 guid, Field *fields)
 
     if (!IsPositionValid())
     {
-        sLog.outError("Corpse (guidlow %d, owner %d) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
+        sLog->outError("Corpse (guidlow %d, owner %d) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
             GetGUIDLow(), GUID_LOPART(GetOwnerGUID()), GetPositionX(), GetPositionY());
         return false;
     }

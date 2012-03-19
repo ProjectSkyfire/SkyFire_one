@@ -60,7 +60,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    sLog.outDetail("WORLD: CMSG_USE_ITEM packet, bagIndex: %u, slot: %u, spell_count: %u , cast_count: %u, Item: %u, data length = %i", bagIndex, slot, spell_count, cast_count, pItem->GetEntry(), recvPacket.size());
+    sLog->outDetail("WORLD: CMSG_USE_ITEM packet, bagIndex: %u, slot: %u, spell_count: %u , cast_count: %u, Item: %u, data length = %i", bagIndex, slot, spell_count, cast_count, pItem->GetEntry(), recvPacket.size());
 
     ItemPrototype const *proto = pItem->GetProto();
     if (!proto)
@@ -139,7 +139,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
             SpellEntry const *spellInfo = sSpellStore.LookupEntry(SPELL_ID_GENERIC_LEARN);
             if (!spellInfo)
             {
-                sLog.outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, SPELL_ID_GENERIC_LEARN);
+                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, SPELL_ID_GENERIC_LEARN);
                 pUser->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
                 return;
             }
@@ -170,7 +170,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
             SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellData.SpellId);
             if (!spellInfo)
             {
-                sLog.outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, spellData.SpellId);
+                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, spellData.SpellId);
                 continue;
             }
 
@@ -192,14 +192,14 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
 
 void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
 {
-    sLog.outDetail("WORLD: CMSG_OPEN_ITEM packet, data length = %i",recvPacket.size());
+    sLog->outDetail("WORLD: CMSG_OPEN_ITEM packet, data length = %i",recvPacket.size());
 
     Player* pUser = _player;
     uint8 bagIndex, slot;
 
     recvPacket >> bagIndex >> slot;
 
-    sLog.outDetail("bagIndex: %u, slot: %u",bagIndex, slot);
+    sLog->outDetail("bagIndex: %u, slot: %u",bagIndex, slot);
 
     Item *pItem = pUser->GetItemByPos(bagIndex, slot);
     if (!pItem)
@@ -224,7 +224,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
         if (!lockInfo)
         {
             pUser->SendEquipError(EQUIP_ERR_ITEM_LOCKED, pItem, NULL);
-            sLog.outError("WORLD::OpenItem: item [guid = %u] has an unknown lockId: %u!", pItem->GetGUIDLow(), lockId);
+            sLog->outError("WORLD::OpenItem: item [guid = %u] has an unknown lockId: %u!", pItem->GetGUIDLow(), lockId);
             return;
         }
 
@@ -252,7 +252,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
         }
         else
         {
-            sLog.outError("Wrapped item %u does not have record in character_gifts table and will be deleted", pItem->GetGUIDLow());
+            sLog->outError("Wrapped item %u does not have record in character_gifts table and will be deleted", pItem->GetGUIDLow());
             pUser->DestroyItem(pItem->GetBagSlot(), pItem->GetSlot(), true);
             return;
         }
@@ -294,7 +294,7 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
 
     if (!spellInfo)
     {
-        sLog.outError("WORLD: unknown spell id %u", spellId);
+        sLog->outError("WORLD: unknown spell id %u", spellId);
         return;
     }
 
@@ -383,7 +383,7 @@ void WorldSession::HandlePetCancelAuraOpcode(WorldPacket& recvPacket)
     SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellId);
     if (!spellInfo)
     {
-        sLog.outError("WORLD: unknown PET spell id %u", spellId);
+        sLog->outError("WORLD: unknown PET spell id %u", spellId);
         return;
     }
 
@@ -391,13 +391,13 @@ void WorldSession::HandlePetCancelAuraOpcode(WorldPacket& recvPacket)
 
     if (!pet)
     {
-        sLog.outError("Pet %u not exist.", uint32(GUID_LOPART(guid)));
+        sLog->outError("Pet %u not exist.", uint32(GUID_LOPART(guid)));
         return;
     }
 
     if (pet != GetPlayer()->GetGuardianPet() && pet != GetPlayer()->GetCharm())
     {
-        sLog.outError("HandlePetCancelAura.Pet %u isn't pet of player %s", uint32(GUID_LOPART(guid)),GetPlayer()->GetName());
+        sLog->outError("HandlePetCancelAura.Pet %u isn't pet of player %s", uint32(GUID_LOPART(guid)),GetPlayer()->GetName());
         return;
     }
 

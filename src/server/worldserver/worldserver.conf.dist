@@ -334,6 +334,15 @@ MapUpdate.Threads = 1
 #        Default: 0 - don't include dumping chars to log
 #                 1 - include dumping chars to log
 #
+#    CharLogDump.Separate
+#        Write character dump to separate file
+#        Default: 0 - don't write dump to separate file
+#                 1 - write each dump to separate file
+#
+#    CharLogDump.SeparateDir
+#        Subdirectory within logs dir for separate char dumps.
+#
+#
 #    GmLogFile
 #        Log file of gm commands
 #        Default: "gm_commands.log"
@@ -361,11 +370,6 @@ MapUpdate.Threads = 1
 #    ArenaLogFile
 #        Log file of arena fights and arena team creations
 #        Default: "" - do not create arena log file
-#
-#   ArenaLogExtendedInfo
-#        Extended Info Log file of arena fights and arena team creations
-#        Default: 0 - extended arena logs off
-#                 1 - extended arena logs on
 #
 #    LogColors
 #        Color for messages (format "normal basic detail debug")
@@ -396,8 +400,8 @@ MapUpdate.Threads = 1
 #        Log level of DB logging.
 #                 0 = Minimum
 #                 1 = Basic
-#        Default: 2 = Detail
-#                 3 = Full/Debug
+#                 2 = Detail
+#        Default: 3 = Full/Debug
 #
 #    LogDB.Char
 #        Enable/disable logging character outputs to DB.
@@ -487,13 +491,14 @@ DBErrorLogFile = "db_errors.log"
 CharLogFile = "characters.log"
 CharLogTimestamp = 0
 CharLogDump = 0
+CharLogDump.Separate = 0
+CharLogDump.SeparateDir = ""
 GmLogFile = "gm_commands.log"
 GmLogTimestamp = 0
 GmLogPerAccount = 0
 RaLogFile = "ra_commands.log"
 ArenaLogFile = ""
-ArenaLogExtendedInfo = 0
-LogColors = ""
+LogColors = "13 11 9 5"
 EnableLogDB = 0
 DBLogLevel = 2
 LogDB.Char   = 0

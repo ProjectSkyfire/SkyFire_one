@@ -153,7 +153,7 @@ void BattleGroundEY::CheckSomeoneJoinedPoint()
                 Player *plr = objmgr.GetPlayer(m_PlayersNearPoint[EY_POINTS_MAX][j]);
                 if (!plr)
                 {
-                    sLog.outError("BattleGroundEY: Player (GUID: %u) not found!", GUID_LOPART(m_PlayersNearPoint[EY_POINTS_MAX][j]));
+                    sLog->outError("BattleGroundEY: Player (GUID: %u) not found!", GUID_LOPART(m_PlayersNearPoint[EY_POINTS_MAX][j]));
                     ++j;
                     continue;
                 }
@@ -193,7 +193,7 @@ void BattleGroundEY::CheckSomeoneLeftPoint()
                 Player *plr = objmgr.GetPlayer(m_PlayersNearPoint[i][j]);
                 if (!plr)
                 {
-                    sLog.outError("BattleGroundEY: Player (GUID: %u) not found!", GUID_LOPART(m_PlayersNearPoint[i][j]));
+                    sLog->outError("BattleGroundEY: Player (GUID: %u) not found!", GUID_LOPART(m_PlayersNearPoint[i][j]));
                     //move not existed player to "free space" - this will cause many error showing in log, but it is a very important bug
                     m_PlayersNearPoint[EY_POINTS_MAX].push_back(m_PlayersNearPoint[i][j]);
                     m_PlayersNearPoint[i].erase(m_PlayersNearPoint[i].begin() + j);
@@ -386,7 +386,7 @@ void BattleGroundEY::HandleAreaTrigger(Player *Source, uint32 Trigger)
         case 4571:
             break;
         default:
-            sLog.outError("WARNING: Unhandled AreaTrigger in Battleground: %u", Trigger);
+            sLog->outError("WARNING: Unhandled AreaTrigger in Battleground: %u", Trigger);
             Source->GetSession()->SendAreaTriggerMessage("Warning: Unhandled AreaTrigger in Battleground: %u", Trigger);
             break;
     }
@@ -449,7 +449,7 @@ bool BattleGroundEY::SetupBattleGround()
         || !AddObject(BG_EY_OBJECT_TOWER_CAP_MAGE_TOWER, BG_OBJECT_HU_TOWER_CAP_EY_ENTRY, 2282.121582f, 1760.006958f, 1189.707153f, 1.919862f, 0, 0, 0.819152f, 0.573576f, RESPAWN_ONE_DAY)
 )
     {
-        sLog.outErrorDb("BatteGroundEY: Failed to spawn some object BattleGround not created!");
+        sLog->outErrorDb("BatteGroundEY: Failed to spawn some object BattleGround not created!");
         return false;
     }
 
@@ -459,28 +459,28 @@ bool BattleGroundEY::SetupBattleGround()
         AreaTriggerEntry const* at = sAreaTriggerStore.LookupEntry(m_Points_Trigger[i]);
         if (!at)
         {
-            sLog.outError("BattleGroundEY: Unknown trigger: %u", m_Points_Trigger[i]);
+            sLog->outError("BattleGroundEY: Unknown trigger: %u", m_Points_Trigger[i]);
             continue;
         }
         if ( !AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3, Buff_Entries[0], at->x, at->y, at->z, 0.907571f, 0, 0, 0.438371f, 0.898794f, RESPAWN_ONE_DAY)
             || !AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 1, Buff_Entries[1], at->x, at->y, at->z, 0.907571f, 0, 0, 0.438371f, 0.898794f, RESPAWN_ONE_DAY)
             || !AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 2, Buff_Entries[2], at->x, at->y, at->z, 0.907571f, 0, 0, 0.438371f, 0.898794f, RESPAWN_ONE_DAY)
 )
-            sLog.outError("BattleGroundEY: Cannot spawn buff");
+            sLog->outError("BattleGroundEY: Cannot spawn buff");
     }
 
     WorldSafeLocsEntry const *sg = NULL;
     sg = sWorldSafeLocsStore.LookupEntry(EY_GRAVEYARD_MAIN_ALLIANCE);
     if (!sg || !AddSpiritGuide(EY_SPIRIT_MAIN_ALLIANCE, sg->x, sg->y, sg->z, 3.124139f, ALLIANCE))
     {
-        sLog.outErrorDb("BatteGroundEY: Failed to spawn spirit guide! BattleGround not created!");
+        sLog->outErrorDb("BatteGroundEY: Failed to spawn spirit guide! BattleGround not created!");
         return false;
     }
 
     sg = sWorldSafeLocsStore.LookupEntry(EY_GRAVEYARD_MAIN_HORDE);
     if (!sg || !AddSpiritGuide(EY_SPIRIT_MAIN_HORDE, sg->x, sg->y, sg->z, 3.193953f, HORDE))
     {
-        sLog.outErrorDb("BatteGroundEY: Failed to spawn spirit guide! BattleGround not created!");
+        sLog->outErrorDb("BatteGroundEY: Failed to spawn spirit guide! BattleGround not created!");
         return false;
     }
 
@@ -540,7 +540,7 @@ void BattleGroundEY::RespawnFlagAfterDrop()
     if (obj)
         obj->Delete();
     else
-        sLog.outError("BattleGroundEY: Unknown dropped flag guid: %u",GUID_LOPART(GetDroppedFlagGUID()));
+        sLog->outError("BattleGroundEY: Unknown dropped flag guid: %u",GUID_LOPART(GetDroppedFlagGUID()));
 
     SetDroppedFlagGUID(0);
 }
@@ -708,7 +708,7 @@ void BattleGroundEY::EventTeamCapturedPoint(Player *Source, uint32 Point)
     WorldSafeLocsEntry const *sg = NULL;
     sg = sWorldSafeLocsStore.LookupEntry(m_CapturingPointTypes[Point].GraveYardId);
     if (!sg || !AddSpiritGuide(Point, sg->x, sg->y, sg->z, 3.124139f, Team))
-        sLog.outError("BatteGroundEY: Failed to spawn spirit guide! point: %u, team: %u, graveyard_id: %u",
+        sLog->outError("BatteGroundEY: Failed to spawn spirit guide! point: %u, team: %u, graveyard_id: %u",
             Point, Team, m_CapturingPointTypes[Point].GraveYardId);
 
 //    SpawnBGCreature(Point, RESPAWN_IMMEDIATELY);
@@ -843,7 +843,7 @@ WorldSafeLocsEntry const *BattleGroundEY::GetClosestGraveYard(Player* player)
 
     if (!entry)
     {
-        sLog.outError("BattleGroundEY: Not found the main team graveyard. Graveyard system isn't working!");
+        sLog->outError("BattleGroundEY: Not found the main team graveyard. Graveyard system isn't working!");
         return NULL;
     }
 
@@ -860,7 +860,7 @@ WorldSafeLocsEntry const *BattleGroundEY::GetClosestGraveYard(Player* player)
         {
             entry = sWorldSafeLocsStore.LookupEntry(m_CapturingPointTypes[i].GraveYardId);
             if (!entry)
-                sLog.outError("BattleGroundEY: Not found graveyard: %u",m_CapturingPointTypes[i].GraveYardId);
+                sLog->outError("BattleGroundEY: Not found graveyard: %u",m_CapturingPointTypes[i].GraveYardId);
             else
             {
                 distance = (entry->x - plr_x)*(entry->x - plr_x) + (entry->y - plr_y)*(entry->y - plr_y) + (entry->z - plr_z)*(entry->z - plr_z);

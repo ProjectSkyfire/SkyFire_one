@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -18,11 +17,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_LOG_H
-#define TRINITY_LOG_H
+#ifndef TRINITYCORE_LOG_H
+#define TRINITYCORE_LOG_H
 
 #include "Common.h"
-#include "Policies/Singleton.h"
+#include <ace/Singleton.h>
 #include "Database/DatabaseEnv.h"
 
 class Config;
@@ -81,9 +80,9 @@ enum ColorTypes
 
 const int Colors = int(WHITE)+1;
 
-class Log : public Trinity::Singleton<Log, Trinity::ClassLevelLockable<Log, ACE_Thread_Mutex> >
+class Log
 {
-    friend class Trinity::OperatorNew<Log>;
+    friend class ACE_Singleton<Log, ACE_Thread_Mutex>;
     Log();
     ~Log();
 
@@ -95,21 +94,21 @@ class Log : public Trinity::Singleton<Log, Trinity::ClassLevelLockable<Log, ACE_
         void ResetColor(bool stdout_stream);
 
         void outDB( LogTypes type, const char * str );
-        void outString( const char * str, ... )                 ATTR_PRINTF(2, 3);
+        void outString( const char * str, ... )                 ATTR_PRINTF(2,3);
         void outString( );
-        void outStringInLine( const char * str, ... )           ATTR_PRINTF(2, 3);
-        void outError( const char * err, ... )                  ATTR_PRINTF(2, 3);
-        void outCrash( const char * err, ... )                  ATTR_PRINTF(2, 3);
-        void outBasic( const char * str, ... )                  ATTR_PRINTF(2, 3);
-        void outDetail( const char * str, ... )                 ATTR_PRINTF(2, 3);
-        void outDebug( const char * str, ... )                  ATTR_PRINTF(2, 3);
-        void outDebugInLine( const char * str, ... )            ATTR_PRINTF(2, 3);
-        void outErrorDb( const char * str, ... )                ATTR_PRINTF(2, 3);
-        void outChar( const char * str, ... )                   ATTR_PRINTF(2, 3);
-        void outCommand( uint32 account, const char * str, ...) ATTR_PRINTF(3, 4);
-        void outRemote( const char * str, ... )                 ATTR_PRINTF(2, 3);
-        void outChat( const char * str, ... )                   ATTR_PRINTF(2, 3);
-        void outArena( const char * str, ... )                  ATTR_PRINTF(2, 3);
+        void outStringInLine( const char * str, ... )           ATTR_PRINTF(2,3);
+        void outError( const char * err, ... )                  ATTR_PRINTF(2,3);
+        void outCrash( const char * err, ... )                  ATTR_PRINTF(2,3);
+        void outBasic( const char * str, ... )                  ATTR_PRINTF(2,3);
+        void outDetail( const char * str, ... )                 ATTR_PRINTF(2,3);
+        void outDebug( const char * str, ... )                  ATTR_PRINTF(2,3);
+        void outDebugInLine( const char * str, ... )            ATTR_PRINTF(2,3);
+        void outErrorDb( const char * str, ... )                ATTR_PRINTF(2,3);
+        void outChar( const char * str, ... )                   ATTR_PRINTF(2,3);
+        void outCommand( uint32 account, const char * str, ...) ATTR_PRINTF(3,4);
+        void outRemote( const char * str, ... )                 ATTR_PRINTF(2,3);
+        void outChat( const char * str, ... )                   ATTR_PRINTF(2,3);
+        void outArena( const char * str, ... )                  ATTR_PRINTF(2,3);
         void outCharDump( const char * str, uint32 account_id, uint32 guid, const char * name );
 
         static void outTimestamp(FILE* file);
@@ -129,7 +128,7 @@ class Log : public Trinity::Singleton<Log, Trinity::ClassLevelLockable<Log, ACE_
         void SetLogDB(bool enable) { m_enableLogDB = enable; }
         void SetLogDBLater(bool value) { m_enableLogDBLater = value; }
     private:
-        FILE* openLogFile(char const* configFileName, char const* configTimeStampFlag, char const* mode);
+        FILE* openLogFile(char const* configFileName,char const* configTimeStampFlag, char const* mode);
         FILE* openGmlogPerAccount(uint32 account);
 
         FILE* raLogfile;
@@ -167,21 +166,17 @@ class Log : public Trinity::Singleton<Log, Trinity::ClassLevelLockable<Log, ACE_
         bool m_dbGM;
         bool m_dbChat;
         bool m_charLog_Dump;
+        bool m_charLog_Dump_Separate;
+        std::string m_dumpsDir;
 };
 
-#define sLog Trinity::Singleton<Log>::Instance()
+#define sLog ACE_Singleton<Log, ACE_Thread_Mutex>::instance()
 
 #ifdef TRINITY_DEBUG
-#define DEBUG_LOG Trinity::Singleton<Log>::Instance().outDebug
+#define DEBUG_LOG sLog->outDebug
 #else
 #define DEBUG_LOG
 #endif
 
-// primary for script library
-#define outstring_log Trinity::Singleton<Log>::Instance().outString
-#define detail_log Trinity::Singleton<Log>::Instance().outDetail
-#define debug_log Trinity::Singleton<Log>::Instance().outDebug
-#define error_log Trinity::Singleton<Log>::Instance().outError
-#define error_db_log Trinity::Singleton<Log>::Instance().outErrorDb
 #endif
 

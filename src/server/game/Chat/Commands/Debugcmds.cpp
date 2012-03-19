@@ -95,7 +95,7 @@ bool ChatHandler::HandleSetPoiCommand(const char* args)
 
     uint32 flags = atol(flags_text);
 
-    sLog.outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon, flags);
+    sLog->outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon, flags);
     pPlayer->PlayerTalkClass->SendPointOfInterest(target->GetPositionX(), target->GetPositionY(), Poi_Icon(icon), flags, 30, "Test POI");
     return true;
 }
@@ -215,12 +215,12 @@ bool ChatHandler::HandleSendOpcodeCommand(const char* /*args*/)
         }
         else
         {
-            sLog.outDebug("Sending opcode: unknown type '%s'", type.c_str());
+            sLog->outDebug("Sending opcode: unknown type '%s'", type.c_str());
             break;
         }
     }
     ifs.close();
-    sLog.outDebug("Sending opcode %u", data.GetOpcode());
+    sLog->outDebug("Sending opcode %u", data.GetOpcode());
     data.hexlike();
     unit->ToPlayer()->GetSession()->SendPacket(&data);
     PSendSysMessage(LANG_COMMAND_OPCODESENT, data.GetOpcode(), unit->GetName());

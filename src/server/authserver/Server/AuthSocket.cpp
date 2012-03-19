@@ -193,7 +193,7 @@ AuthSocket::~AuthSocket()
 // Accept the connection and set the s random value for SRP6
 void AuthSocket::OnAccept()
 {
-    sLog.outBasic("Accepting connection from '%s'", get_remote_address().c_str());
+    sLog->outBasic("Accepting connection from '%s'", get_remote_address().c_str());
 }
 
 // Read the packet from the client
@@ -370,7 +370,7 @@ bool AuthSocket::_HandleLogonChallenge()
     if (result)
     {
         pkt << (uint8)WOW_FAIL_BANNED;
-        sLog.outBasic("[AuthChallenge] Banned ip %s tries to login!", get_remote_address().c_str());
+        sLog->outBasic("[AuthChallenge] Banned ip %s tries to login!", get_remote_address().c_str());
     }
     else
     {
@@ -417,12 +417,12 @@ bool AuthSocket::_HandleLogonChallenge()
                     if ((*banresult)[0].GetUInt64() == (*banresult)[1].GetUInt64())
                     {
                         pkt << (uint8) WOW_FAIL_BANNED;
-                        sLog.outBasic("[AuthChallenge] Banned account %s tries to login!",_login.c_str ());
+                        sLog->outBasic("[AuthChallenge] Banned account %s tries to login!",_login.c_str ());
                     }
                     else
                     {
                         pkt << (uint8) WOW_FAIL_SUSPENDED;
-                        sLog.outBasic("[AuthChallenge] Temporarily banned account %s tries to login!",_login.c_str ());
+                        sLog->outBasic("[AuthChallenge] Temporarily banned account %s tries to login!",_login.c_str ());
                     }
                 }
                 else
@@ -495,7 +495,7 @@ bool AuthSocket::_HandleLogonChallenge()
                     for (int i = 0; i < 4; ++i)
                         _localizationName[i] = ch->country[4-i-1];
 
-                    sLog.outBasic("[AuthChallenge] account %s is using '%c%c%c%c' locale (%u)", _login.c_str (), ch->country[3], ch->country[2], ch->country[1], ch->country[0], GetLocaleByName(_localizationName));
+                    sLog->outBasic("[AuthChallenge] account %s is using '%c%c%c%c' locale (%u)", _login.c_str (), ch->country[3], ch->country[2], ch->country[1], ch->country[0], GetLocaleByName(_localizationName));
                 }
             }
         }
@@ -656,7 +656,7 @@ bool AuthSocket::_HandleLogonProof()
     // Check if SRP6 results match (password is correct), else send an error
     if (!memcmp(M.AsByteArray(), lp.M1, 20))
     {
-        sLog.outBasic("User '%s' successfully authenticated", _login.c_str());
+        sLog->outBasic("User '%s' successfully authenticated", _login.c_str());
 
         // Update the sessionkey, last_ip, last login time and reset number of failed logins in the account table for this account
         // No SQL injection (escaped user name) and IP address as received by socket
@@ -687,7 +687,7 @@ bool AuthSocket::_HandleLogonProof()
             char data[2]= { CMD_AUTH_LOGON_PROOF, WOW_FAIL_UNKNOWN_ACCOUNT};
             send(data, sizeof(data));
         }
-        sLog.outBasic("[AuthChallenge] account %s tried to login with wrong password!",_login.c_str ());
+        sLog->outBasic("[AuthChallenge] account %s tried to login with wrong password!",_login.c_str ());
 
         uint32 MaxWrongPassCount = sConfig.GetIntDefault("WrongPass.MaxCount", 0);
         if (MaxWrongPassCount > 0)
@@ -710,7 +710,7 @@ bool AuthSocket::_HandleLogonProof()
                         uint32 acc_id = fields[0].GetUInt32();
                         LoginDatabase.PExecute("INSERT INTO account_banned VALUES ('%u',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+'%u','Trinity realmd','Failed login autoban',1)",
                             acc_id, WrongPassBanTime);
-                        sLog.outBasic("[AuthChallenge] account %s got banned for '%u' seconds because it failed to authenticate '%u' times",
+                        sLog->outBasic("[AuthChallenge] account %s got banned for '%u' seconds because it failed to authenticate '%u' times",
                             _login.c_str(), WrongPassBanTime, failed_logins);
                     }
                     else
@@ -719,7 +719,7 @@ bool AuthSocket::_HandleLogonProof()
                         LoginDatabase.escape_string(current_ip);
                         LoginDatabase.PExecute("INSERT INTO ip_banned VALUES ('%s',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+'%u','Trinity realmd','Failed login autoban')",
                             current_ip.c_str(), WrongPassBanTime);
-                        sLog.outBasic("[AuthChallenge] IP %s got banned for '%u' seconds because account %s failed to authenticate '%u' times",
+                        sLog->outBasic("[AuthChallenge] IP %s got banned for '%u' seconds because account %s failed to authenticate '%u' times",
                             current_ip.c_str(), WrongPassBanTime, _login.c_str(), failed_logins);
                     }
                 }
@@ -772,7 +772,7 @@ bool AuthSocket::_HandleReconnectChallenge()
     // Stop if the account is not found
     if (!result)
     {
-        sLog.outError("[ERROR] user %s tried to login and we cannot find his session key in the database.", _login.c_str());
+        sLog->outError("[ERROR] user %s tried to login and we cannot find his session key in the database.", _login.c_str());
         close_connection();
         return false;
     }
@@ -828,7 +828,7 @@ bool AuthSocket::_HandleReconnectProof()
     }
     else
     {
-        sLog.outError("[ERROR] user %s tried to login, but session invalid.", _login.c_str());
+        sLog->outError("[ERROR] user %s tried to login, but session invalid.", _login.c_str());
         close_connection();
         return false;
     }
@@ -849,7 +849,7 @@ bool AuthSocket::_HandleRealmList()
     QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT id, sha_pass_hash FROM account WHERE username = '%s'",_safelogin.c_str());
     if (!result)
     {
-        sLog.outError("[ERROR] user %s tried to login and we cannot find him in the database.",_login.c_str());
+        sLog->outError("[ERROR] user %s tried to login and we cannot find him in the database.",_login.c_str());
         close_connection();
         return false;
     }

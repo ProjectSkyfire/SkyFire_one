@@ -404,7 +404,7 @@ void hyjalAI::Reset()
             UpdateWorldState(WORLD_STATE_ENEMYCOUNT, 0);
             pInstance->SetData(DATA_RESET_TRASH_COUNT, 0);
         }
-    } else error_log(ERROR_INST_DATA);
+    } else sLog->outError(ERROR_INST_DATA);
 
     //Visibility
     DoHide = true;
@@ -535,7 +535,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
 
     if (!pInstance)
     {
-        error_log(ERROR_INST_DATA);
+        sLog->outError(ERROR_INST_DATA);
         return;
     }
     InfernalCount = 0;//reset infernal count every new wave
@@ -562,7 +562,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
         else
         {
             NextWaveTimer = 15000;
-            debug_log("TSCR: HyjalAI: debug mode is enabled. Next Wave in 15 seconds");
+            sLog->outDebug("TSCR: HyjalAI: debug mode is enabled. Next Wave in 15 seconds");
         }
     }
     else
@@ -602,7 +602,7 @@ uint32 hyjalAI::GetInstanceData(uint32 Event)
 {
     if (pInstance)
         return pInstance->GetData(Event);
-    else error_log(ERROR_INST_DATA);
+    else sLog->outError(ERROR_INST_DATA);
 
     return 0;
 }
@@ -659,7 +659,7 @@ void hyjalAI::UpdateWorldState(uint32 id, uint32 state)
                 if (Player* player = itr->getSource())
                     player->SendUpdateWorldState(id, state);
             }
-    } else debug_log("TSCR: HyjalAI: UpdateWorldState, but PlayerList is empty");
+    } else sLog->outDebug("TSCR: HyjalAI: UpdateWorldState, but PlayerList is empty");
 }
 
 void hyjalAI::Retreat()

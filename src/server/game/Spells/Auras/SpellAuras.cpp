@@ -478,7 +478,7 @@ Unit *caster, Item* castItem) : Aura(spellproto, eff, currentBasePoints, target,
                 m_modifier.m_auraname = SPELL_AURA_NONE;
             break;
         default:
-            sLog.outError("Wrong spell effect in AreaAura constructor");
+            sLog->outError("Wrong spell effect in AreaAura constructor");
             ASSERT(false);
             break;
     }
@@ -1910,7 +1910,7 @@ void Aura::TriggerSpell()
         triggeredSpellInfo = sSpellStore.LookupEntry(trigger_spell_id);
         if (triggeredSpellInfo == NULL)
         {
-            sLog.outError("Aura::TriggerSpell: Spell %u has 0 in EffectTriggered[%d], unhandled custom case?",GetId(),GetEffIndex());
+            sLog->outError("Aura::TriggerSpell: Spell %u has 0 in EffectTriggered[%d], unhandled custom case?",GetId(),GetEffIndex());
             return;
         }
     }
@@ -2456,7 +2456,7 @@ void Aura::HandleAuraMounted(bool apply, bool Real)
         CreatureInfo const* ci = objmgr.GetCreatureTemplate(m_modifier.m_miscvalue);
         if (!ci)
         {
-            sLog.outErrorDb("AuraMounted: creature_template='%u' not found in database (only need it modelid)", m_modifier.m_miscvalue);
+            sLog->outErrorDb("AuraMounted: creature_template='%u' not found in database (only need it modelid)", m_modifier.m_miscvalue);
             return;
         }
 
@@ -2616,7 +2616,7 @@ void Aura::HandleAuraModShapeshift(bool apply, bool Real)
             modelid = 16031;
             break;
         default:
-            sLog.outError("Auras: Unknown Shapeshift Type: %u", m_modifier.m_miscvalue);
+            sLog->outError("Auras: Unknown Shapeshift Type: %u", m_modifier.m_miscvalue);
     }
 
     // remove polymorph before changing display id to keep new display id
@@ -2888,7 +2888,7 @@ void Aura::HandleAuraTransform(bool apply, bool Real)
             {
                                                             //pig pink ^_^
                 m_target->SetDisplayId(16358);
-                sLog.outError("Auras: unknown creature id = %d (only need its modelid) Form Spell Aura Transform in Spell ID = %d", m_modifier.m_miscvalue, GetId());
+                sLog->outError("Auras: unknown creature id = %d (only need its modelid) Form Spell Aura Transform in Spell ID = %d", m_modifier.m_miscvalue, GetId());
             }
             else
             {
@@ -4422,7 +4422,7 @@ void Aura::HandleAuraModStat(bool apply, bool /*Real*/)
 {
     if (m_modifier.m_miscvalue < -2 || m_modifier.m_miscvalue > 4)
     {
-        sLog.outError("WARNING: Spell %u effect %u has unsupported misc value (%i) for SPELL_AURA_MOD_STAT ",GetId(),GetEffIndex(),m_modifier.m_miscvalue);
+        sLog->outError("WARNING: Spell %u effect %u has unsupported misc value (%i) for SPELL_AURA_MOD_STAT ",GetId(),GetEffIndex(),m_modifier.m_miscvalue);
         return;
     }
 
@@ -4450,7 +4450,7 @@ void Aura::HandleModPercentStat(bool apply, bool /*Real*/)
 {
     if (m_modifier.m_miscvalue < -1 || m_modifier.m_miscvalue > 4)
     {
-        sLog.outError("WARNING: Misc Value for SPELL_AURA_MOD_PERCENT_STAT not valid");
+        sLog->outError("WARNING: Misc Value for SPELL_AURA_MOD_PERCENT_STAT not valid");
         return;
     }
 
@@ -4527,7 +4527,7 @@ void Aura::HandleModTotalPercentStat(bool apply, bool /*Real*/)
 {
     if (m_modifier.m_miscvalue < -1 || m_modifier.m_miscvalue > 4)
     {
-        sLog.outError("WARNING: Misc Value for SPELL_AURA_MOD_PERCENT_STAT not valid");
+        sLog->outError("WARNING: Misc Value for SPELL_AURA_MOD_PERCENT_STAT not valid");
         return;
     }
 
@@ -4563,7 +4563,7 @@ void Aura::HandleAuraModResistenceOfStatPercent(bool /*apply*/, bool /*Real*/)
     {
         // support required adding replace UpdateArmor by loop by UpdateResistence at intellect update
         // and include in UpdateResistence same code as in UpdateArmor for aura mod apply.
-        sLog.outError("Aura SPELL_AURA_MOD_RESISTANCE_OF_STAT_PERCENT(182) need adding support for non-armor resistances!");
+        sLog->outError("Aura SPELL_AURA_MOD_RESISTANCE_OF_STAT_PERCENT(182) need adding support for non-armor resistances!");
         return;
     }
 
@@ -4812,7 +4812,7 @@ void Aura::HandleAuraModDodgePercent(bool /*apply*/, bool /*Real*/)
         return;
 
     m_target->ToPlayer()->UpdateDodgePercentage();
-    //sLog.outError("BONUS DODGE CHANCE: + %f", float(m_modifier.m_amount));
+    //sLog->outError("BONUS DODGE CHANCE: + %f", float(m_modifier.m_amount));
 }
 
 void Aura::HandleAuraModBlockPercent(bool /*apply*/, bool /*Real*/)
@@ -4821,7 +4821,7 @@ void Aura::HandleAuraModBlockPercent(bool /*apply*/, bool /*Real*/)
         return;
 
     m_target->ToPlayer()->UpdateBlockPercentage();
-    //sLog.outError("BONUS BLOCK CHANCE: + %f", float(m_modifier.m_amount));
+    //sLog->outError("BONUS BLOCK CHANCE: + %f", float(m_modifier.m_amount));
 }
 
 void Aura::HandleAuraModRegenInterrupt(bool /*apply*/, bool Real)
@@ -5021,7 +5021,7 @@ void Aura::HandleAuraModRangedAttackPowerOfStatPercent(bool /*apply*/, bool Real
     if (m_modifier.m_miscvalue != STAT_INTELLECT)
     {
         // support required adding UpdateAttackPowerAndDamage calls at stat update
-        sLog.outError("Aura SPELL_AURA_MOD_RANGED_ATTACK_POWER_OF_STAT_PERCENT (212) need support non-intellect stats!");
+        sLog->outError("Aura SPELL_AURA_MOD_RANGED_ATTACK_POWER_OF_STAT_PERCENT (212) need support non-intellect stats!");
         return;
     }
 
@@ -5832,7 +5832,7 @@ void Aura::PeriodicTick()
                     {
                         if ((*i)->GetEffIndex() != 1)
                         {
-                            sLog.outError("Expected spell %u structure change, need code update",(*i)->GetId());
+                            sLog->outError("Expected spell %u structure change, need code update",(*i)->GetId());
                             break;
                         }
 
@@ -5886,7 +5886,7 @@ void Aura::PeriodicTick()
             if (m_target->GetHealth() < pdamage)
                 pdamage = uint32(m_target->GetHealth());
 
-            sLog.outDetail("PeriodicTick: %u (TypeId: %u) health leech of %u (TypeId: %u) for %u dmg inflicted by %u abs is %u",
+            sLog->outDetail("PeriodicTick: %u (TypeId: %u) health leech of %u (TypeId: %u) for %u dmg inflicted by %u abs is %u",
                 GUID_LOPART(GetCasterGUID()), GuidHigh2TypeId(GUID_HIPART(GetCasterGUID())), m_target->GetGUIDLow(), m_target->GetTypeId(), pdamage, GetId(),absorb);
 
             pCaster->SendSpellNonMeleeDamageLog(m_target, GetId(), pdamage, GetSpellSchoolMask(GetSpellProto()), absorb, resist, false, 0);
@@ -5947,7 +5947,7 @@ void Aura::PeriodicTick()
 
             //pdamage = pCaster->SpellHealingBonus(GetSpellProto(), pdamage, DOT, m_target);
 
-            sLog.outDetail("PeriodicTick: %u (TypeId: %u) heal of %u (TypeId: %u) for %u health inflicted by %u",
+            sLog->outDetail("PeriodicTick: %u (TypeId: %u) heal of %u (TypeId: %u) for %u health inflicted by %u",
                 GUID_LOPART(GetCasterGUID()), GuidHigh2TypeId(GUID_HIPART(GetCasterGUID())), m_target->GetGUIDLow(), m_target->GetTypeId(), pdamage, GetId());
 
             WorldPacket data(SMSG_PERIODICAURALOG, (21+16));// we guess size
@@ -6024,7 +6024,7 @@ void Aura::PeriodicTick()
             // ignore non positive values (can be result apply spellmods to aura damage
             uint32 pdamage = GetModifierValue() > 0 ? GetModifierValue() : 0;
 
-            sLog.outDetail("PeriodicTick: %u (TypeId: %u) power leech of %u (TypeId: %u) for %u dmg inflicted by %u",
+            sLog->outDetail("PeriodicTick: %u (TypeId: %u) power leech of %u (TypeId: %u) for %u dmg inflicted by %u",
                 GUID_LOPART(GetCasterGUID()), GuidHigh2TypeId(GUID_HIPART(GetCasterGUID())), m_target->GetGUIDLow(), m_target->GetTypeId(), pdamage, GetId());
 
             if (m_modifier.m_miscvalue < 0 || m_modifier.m_miscvalue > 4)
@@ -6103,7 +6103,7 @@ void Aura::PeriodicTick()
             // ignore non positive values (can be result apply spellmods to aura damage
             uint32 pdamage = GetModifierValue() > 0 ? GetModifierValue() : 0;
 
-            sLog.outDetail("PeriodicTick: %u (TypeId: %u) energize %u (TypeId: %u) for %u dmg inflicted by %u",
+            sLog->outDetail("PeriodicTick: %u (TypeId: %u) energize %u (TypeId: %u) for %u dmg inflicted by %u",
                 GUID_LOPART(GetCasterGUID()), GuidHigh2TypeId(GUID_HIPART(GetCasterGUID())), m_target->GetGUIDLow(), m_target->GetTypeId(), pdamage, GetId());
 
             if (m_modifier.m_miscvalue < 0 || m_modifier.m_miscvalue >= MAX_POWERS)
@@ -6137,7 +6137,7 @@ void Aura::PeriodicTick()
 
             uint32 pdamage = uint32(m_target->GetMaxPower(POWER_MANA) * amount/100);
 
-            sLog.outDetail("PeriodicTick: %u (TypeId: %u) energize %u (TypeId: %u) for %u mana inflicted by %u",
+            sLog->outDetail("PeriodicTick: %u (TypeId: %u) energize %u (TypeId: %u) for %u mana inflicted by %u",
                 GUID_LOPART(GetCasterGUID()), GuidHigh2TypeId(GUID_HIPART(GetCasterGUID())), m_target->GetGUIDLow(), m_target->GetTypeId(), pdamage, GetId());
 
             if (m_target->GetMaxPower(POWER_MANA) == 0)
@@ -6571,7 +6571,7 @@ void Aura::UnregisterSingleCastAura()
         }
         else
         {
-            sLog.outError("Couldn't find the caster of the single target aura, may crash later!");
+            sLog->outError("Couldn't find the caster of the single target aura, may crash later!");
             ASSERT(false);
         }
         m_isSingleTargetAura = false;

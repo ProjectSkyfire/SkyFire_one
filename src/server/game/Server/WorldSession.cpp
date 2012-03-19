@@ -81,7 +81,7 @@ WorldSession::~WorldSession()
 
 void WorldSession::SizeError(WorldPacket const& packet, uint32 size) const
 {
-    sLog.outError("Client (account %u) send packet %s (%u) with size " SIZEFMTD " but expected %u (attempt crash server?), skipped",
+    sLog->outError("Client (account %u) send packet %s (%u) with size " SIZEFMTD " but expected %u (attempt crash server?), skipped",
         GetAccountId(), LookupOpcodeName(packet.GetOpcode()), packet.GetOpcode(), packet.size(), size);
 }
 
@@ -123,8 +123,8 @@ void WorldSession::SendPacket(WorldPacket const* packet)
     {
         uint64 minTime = uint64(cur_time - lastTime);
         uint64 fullTime = uint64(lastTime - firstTime);
-        sLog.outDetail("Send all time packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f time: %u",sendPacketCount, sendPacketBytes, float(sendPacketCount)/fullTime, float(sendPacketBytes)/fullTime, uint32(fullTime));
-        sLog.outDetail("Send last min packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f",sendLastPacketCount, sendLastPacketBytes, float(sendLastPacketCount)/minTime, float(sendLastPacketBytes)/minTime);
+        sLog->outDetail("Send all time packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f time: %u",sendPacketCount, sendPacketBytes, float(sendPacketCount)/fullTime, float(sendPacketBytes)/fullTime, uint32(fullTime));
+        sLog->outDetail("Send last min packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f",sendLastPacketCount, sendLastPacketBytes, float(sendLastPacketCount)/minTime, float(sendLastPacketBytes)/minTime);
 
         lastTime = cur_time;
         sendLastPacketCount = 1;
@@ -146,7 +146,7 @@ void WorldSession::QueuePacket(WorldPacket* new_packet)
 // Logging helper for unexpected opcodes
 void WorldSession::LogUnexpectedOpcode(WorldPacket* packet, const char *reason)
 {
-    sLog.outError("SESSION: received unexpected opcode %s (0x%.4X) %s",
+    sLog->outError("SESSION: received unexpected opcode %s (0x%.4X) %s",
         LookupOpcodeName(packet->GetOpcode()),
         packet->GetOpcode(),
         reason);
@@ -155,7 +155,7 @@ void WorldSession::LogUnexpectedOpcode(WorldPacket* packet, const char *reason)
 // Logging helper for unexpected opcodes
 void WorldSession::LogUnprocessedTail(WorldPacket *packet)
 {
-    sLog.outError("SESSION: opcode %s (0x%.4X) has unprocessed tail data (read stop at %u from %u)",
+    sLog->outError("SESSION: opcode %s (0x%.4X) has unprocessed tail data (read stop at %u from %u)",
         LookupOpcodeName(packet->GetOpcode()),
         packet->GetOpcode(),
         packet->rpos(),packet->wpos());
@@ -178,14 +178,14 @@ bool WorldSession::Update(uint32 diff)
     while (m_Socket && !m_Socket->IsClosed() && _recvQueue.next(packet))
     {
         /*#if 1
-        sLog.outError("MOEP: %s (0x%.4X)",
+        sLog->outError("MOEP: %s (0x%.4X)",
                         LookupOpcodeName(packet->GetOpcode()),
                         packet->GetOpcode());
         #endif*/
 
         if (packet->GetOpcode() >= NUM_MSG_TYPES)
         {
-            sLog.outError("SESSION: received invalid opcode %s (0x%.4X)",
+            sLog->outError("SESSION: received invalid opcode %s (0x%.4X)",
                 LookupOpcodeName(packet->GetOpcode()),
                 packet->GetOpcode());
         }
@@ -229,7 +229,7 @@ bool WorldSession::Update(uint32 diff)
                         ExecuteOpcode(opHandle, packet);
                         break;
                     case STATUS_NEVER:
-                        sLog.outError("SESSION: received not allowed opcode %s (0x%.4X)",
+                        sLog->outError("SESSION: received not allowed opcode %s (0x%.4X)",
                             LookupOpcodeName(packet->GetOpcode()),
                             packet->GetOpcode());
                         break;
@@ -237,11 +237,11 @@ bool WorldSession::Update(uint32 diff)
             }
             catch(ByteBufferException &)
             {
-                sLog.outError("WorldSession::Update ByteBufferException occured while parsing a packet (opcode: %u) from client %s, accountid=%i. Skipped packet.",
+                sLog->outError("WorldSession::Update ByteBufferException occured while parsing a packet (opcode: %u) from client %s, accountid=%i. Skipped packet.",
                         packet->GetOpcode(), GetRemoteAddress().c_str(), GetAccountId());
-                if (sLog.IsOutDebug())
+                if (sLog->IsOutDebug())
                 {
-                    sLog.outDebug("Dumping error causing packet:");
+                    sLog->outDebug("Dumping error causing packet:");
                     packet->hexlike();
                 }
             }
@@ -427,7 +427,7 @@ void WorldSession::LogoutPlayer(bool Save)
         //No SQL injection as AccountId is uint32
         CharacterDatabase.PExecute("UPDATE characters SET online = 0 WHERE account = '%u'",
             GetAccountId());
-        sLog.outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
+        sLog->outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
     }
 
     //Hook for OnLogout Event
@@ -507,28 +507,28 @@ const char * WorldSession::GetTrinityString(int32 entry) const
 
 void WorldSession::Handle_NULL(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received unhandled opcode %s (0x%.4X)",
+    sLog->outError("SESSION: received unhandled opcode %s (0x%.4X)",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }
 
 void WorldSession::Handle_EarlyProccess(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received opcode %s (0x%.4X) that must be processed in WorldSocket::OnRead",
+    sLog->outError("SESSION: received opcode %s (0x%.4X) that must be processed in WorldSocket::OnRead",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }
 
 void WorldSession::Handle_ServerSide(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received server-side opcode %s (0x%.4X)",
+    sLog->outError("SESSION: received server-side opcode %s (0x%.4X)",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }
 
 void WorldSession::Handle_Deprecated(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received deprecated opcode %s (0x%.4X)",
+    sLog->outError("SESSION: received deprecated opcode %s (0x%.4X)",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }

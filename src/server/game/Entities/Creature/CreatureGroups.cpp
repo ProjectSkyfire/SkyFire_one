@@ -43,13 +43,13 @@ void CreatureGroupManager::AddCreatureToGroup(uint32 groupId, Creature *member)
     //Add member to an existing group
     if (itr != map->CreatureGroupHolder.end())
     {
-        sLog.outDebug("Group found: %u, inserting creature GUID: %u, Group InstanceID %u", groupId, member->GetGUIDLow(), member->GetInstanceId());
+        sLog->outDebug("Group found: %u, inserting creature GUID: %u, Group InstanceID %u", groupId, member->GetGUIDLow(), member->GetInstanceId());
         itr->second->AddMember(member);
     }
     //Create new group
     else
     {
-        sLog.outDebug("Group not found: %u. Creating new group.", groupId);
+        sLog->outDebug("Group not found: %u. Creating new group.", groupId);
         CreatureGroup* group = new CreatureGroup(groupId);
         map->CreatureGroupHolder[groupId] = group;
         group->AddMember(member);
@@ -58,7 +58,7 @@ void CreatureGroupManager::AddCreatureToGroup(uint32 groupId, Creature *member)
 
 void CreatureGroupManager::RemoveCreatureFromGroup(CreatureGroup *group, Creature *member)
 {
-    sLog.outDebug("Deleting member pointer to GUID: %u from group %u", group->GetId(), member->GetDBTableGUIDLow());
+    sLog->outDebug("Deleting member pointer to GUID: %u from group %u", group->GetId(), member->GetDBTableGUIDLow());
     group->RemoveMember(member);
 
     if (group->isEmpty())
@@ -67,7 +67,7 @@ void CreatureGroupManager::RemoveCreatureFromGroup(CreatureGroup *group, Creatur
         if (!map)
             return;
 
-        sLog.outDebug("Deleting group with InstanceID %u", member->GetInstanceId());
+        sLog->outDebug("Deleting group with InstanceID %u", member->GetInstanceId());
         map->CreatureGroupHolder.erase(group->GetId());
         delete group;
     }
@@ -86,7 +86,7 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (!result)
     {
-        sLog.outErrorDb(" ...an error occured while loading the table creature_groups (maybe it doesn't exist ?)\n");
+        sLog->outErrorDb(" ...an error occured while loading the table creature_groups (maybe it doesn't exist ?)\n");
         return;
     }
 
@@ -95,7 +95,7 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (!result)
     {
-        sLog.outErrorDb(" ...an error occured while loading the table creature_group_data (maybe it doesn't exist ?)\n");
+        sLog->outErrorDb(" ...an error occured while loading the table creature_group_data (maybe it doesn't exist ?)\n");
         return;
     }
 
@@ -104,7 +104,7 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (result)
     {
-        sLog.outDetail(">> %u Groups without member found, groups skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Groups without member found, groups skipped.",result->Fetch()->GetInt32());
     }
 
     //Check if member without group exist
@@ -112,7 +112,7 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (result)
     {
-        sLog.outDetail(">> %u Member without group found, member skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Member without group found, member skipped.",result->Fetch()->GetInt32());
     }
 
     //Get groups
@@ -120,8 +120,8 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (!result_data)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 creature groups. DB table `creature_groups` is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 creature groups. DB table `creature_groups` is empty.");
         return;
     }
 
@@ -130,8 +130,8 @@ void CreatureGroupManager::LoadCreatureGroups()
 
     if (!result_member)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 creature groups. DB table `creature_group_data` is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 creature groups. DB table `creature_group_data` is empty.");
         return;
     }
 
@@ -159,14 +159,14 @@ void CreatureGroupManager::LoadCreatureGroups()
         // check data correctness
         if (guidSet.find(group_member->leaderGUID) == guidSet.end())
         {
-            sLog.outErrorDb("creature_groups table leader guid %u incorrect (not exist)", group_member->leaderGUID);
+            sLog->outErrorDb("creature_groups table leader guid %u incorrect (not exist)", group_member->leaderGUID);
             delete group_member;
             return;
         }
 
         CreatureGroupMap[groupId] = group_member;
 
-        sLog.outDebug("CreatureGroup::LoadCreatureGroups: Load Group %u with Leader %u and groupType %u.", groupId, leaderGUID, groupType);
+        sLog->outDebug("CreatureGroup::LoadCreatureGroups: Load Group %u with Leader %u and groupType %u.", groupId, leaderGUID, groupType);
     }
     while (result_data->NextRow()) ;
 
@@ -182,20 +182,20 @@ void CreatureGroupManager::LoadCreatureGroups()
         // check data correctness
         if (guidSet.find(memberGUID) == guidSet.end())
         {
-            sLog.outErrorDb("creature_group_data table member guid %u incorrect (not exist)", memberGUID);
+            sLog->outErrorDb("creature_group_data table member guid %u incorrect (not exist)", memberGUID);
             continue;
         }
 
         CreatureGroupDataMap[memberGUID] = groupId;
 
-        sLog.outDebug("CreatureGroup::LoadCreatureGroups: Load Member %u for Group with groupId %u.", memberGUID, groupId);
+        sLog->outDebug("CreatureGroup::LoadCreatureGroups: Load Member %u for Group with groupId %u.", memberGUID, groupId);
     }
     while (result_member->NextRow()) ;
 
-    sLog.outString();
-    sLog.outString(">> Loaded " UI64FMTD " groups", total_groups);
-    sLog.outString(">> Loaded " UI64FMTD " creatures in groups", total_member);
-    sLog.outString();
+    sLog->outString();
+    sLog->outString(">> Loaded " UI64FMTD " groups", total_groups);
+    sLog->outString(">> Loaded " UI64FMTD " creatures in groups", total_member);
+    sLog->outString();
 }
 
 void CreatureGroup::AddMember(Creature *member)
@@ -203,7 +203,7 @@ void CreatureGroup::AddMember(Creature *member)
     if (!member)
         return;
 
-    sLog.outDebug("CreatureGroup::AddMember: Adding unit GUID: %u to group.", member->GetGUIDLow());
+    sLog->outDebug("CreatureGroup::AddMember: Adding unit GUID: %u to group.", member->GetGUIDLow());
 
     m_members[member] = CreatureGroupMap.find(m_groupID)->second;
     member->SetGroup(this);
@@ -224,7 +224,7 @@ void CreatureGroup::MemberAttackStart(Creature *member, Unit *target)
     {
         Creature* pCreature = itr->first;
 
-        sLog.outDebug("CreatureGroup::MemberAttackStart: group member instanceId %u .",member->GetInstanceId());
+        sLog->outDebug("CreatureGroup::MemberAttackStart: group member instanceId %u .",member->GetInstanceId());
 
         //Skip one check
         if (pCreature == member)
@@ -260,7 +260,7 @@ bool CreatureGroup::IsAllowedToRespawn(Creature *member)
             exist = false;
 
     if (exist)
-         sLog.outDebug("CreatureGroup::IsAllowedToRespawn: group member instanceId %u can respawn.",member->GetInstanceId());
+         sLog->outDebug("CreatureGroup::IsAllowedToRespawn: group member instanceId %u can respawn.",member->GetInstanceId());
 
     return exist;
 }

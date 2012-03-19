@@ -76,7 +76,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
             }
         }
 
-        debug_log("TSCR: Instance Old Hillsbrad: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Old Hillsbrad: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
@@ -97,7 +97,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
                 }
             }
         } else
-            debug_log("TSCR: Instance Old Hillsbrad: UpdateOHWorldState, but PlayerList is empty!");
+            sLog->outDebug("TSCR: Instance Old Hillsbrad: UpdateOHWorldState, but PlayerList is empty!");
     }
 
     void OnCreatureCreate(Creature* pCreature, bool /*add*/)
@@ -122,7 +122,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
 
         if (!player)
         {
-            debug_log("TSCR: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any player.", type, data);
+            sLog->outDebug("TSCR: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any player.", type, data);
             return;
         }
 
@@ -138,7 +138,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
                     ++mBarrelCount;
                     UpdateOHWorldState();
 
-                    debug_log("TSCR: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u",mBarrelCount);
+                    sLog->outDebug("TSCR: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u",mBarrelCount);
 
                     Encounter[0] = IN_PROGRESS;
 
@@ -158,7 +158,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
                     {
                         mThrallEventCount++;
                         Encounter[1] = NOT_STARTED;
-                        debug_log("TSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
+                        sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
                         Encounter[2] = NOT_STARTED;
                         Encounter[3] = NOT_STARTED;
                         Encounter[4] = NOT_STARTED;
@@ -171,29 +171,29 @@ struct instance_old_hillsbrad : public ScriptedInstance
                         Encounter[3] = data;
                         Encounter[4] = data;
                         Encounter[5] = data;
-                        debug_log("TSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
+                        sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
                     }
                 }
                 else
                     Encounter[1] = data;
-                debug_log("TSCR: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",data);
                 break;
             }
             case TYPE_THRALL_PART1:
                 Encounter[2] = data;
-                debug_log("TSCR: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",data);
                 break;
             case TYPE_THRALL_PART2:
                 Encounter[3] = data;
-                debug_log("TSCR: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",data);
                 break;
             case TYPE_THRALL_PART3:
                 Encounter[4] = data;
-                debug_log("TSCR: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",data);
                 break;
             case TYPE_THRALL_PART4:
                 Encounter[5] = data;
-                 debug_log("TSCR: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",data);
+                 sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",data);
                 break;
         }
     }

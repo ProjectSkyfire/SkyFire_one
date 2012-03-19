@@ -102,7 +102,7 @@ bool AddonHandler::BuildAddonPacket(WorldPacket *Source, WorldPacket *Target)
 
             AddOnPacked >> crc >> unk7 >> unk6;
 
-            //sLog.outDebug("ADDON: Name:%s CRC:%x Unknown1 :%x Unknown2 :%x", AddonNames.c_str(), crc, unk7, unk6);
+            //sLog->outDebug("ADDON: Name:%s CRC:%x Unknown1 :%x Unknown2 :%x", AddonNames.c_str(), crc, unk7, unk6);
 
             *Target << (uint8)2;
 
@@ -128,7 +128,7 @@ bool AddonHandler::BuildAddonPacket(WorldPacket *Source, WorldPacket *Target)
     }
     else
     {
-        sLog.outError("Addon packet uncompress error :(");
+        sLog->outError("Addon packet uncompress error :(");
         return false;
     }
     return true;
@@ -171,7 +171,7 @@ void AddonHandler::BuildAddonPacket(WorldPacket* Source, WorldPacket* Target, ui
             uint64 CRCCHECK;
             AddOnPacked >> AddonNames >> CRCCHECK >> unk6;
 
-            //sLog.outDebug("ADDON:    Name:%s CRC:%x Unknown:%x",AddonNames.c_str(), CRCCHECK, unk6);
+            //sLog->outDebug("ADDON:    Name:%s CRC:%x Unknown:%x",AddonNames.c_str(), CRCCHECK, unk6);
 
             Addonstr->Name = AddonNames;
             Addonstr->CRC = CRCCHECK;
@@ -182,7 +182,7 @@ void AddonHandler::BuildAddonPacket(WorldPacket* Source, WorldPacket* Target, ui
                 Addonstr->Enabled = m_Addon_Default;        // by default new addons are set from Config file
                 *AddonAllowed = m_Addon_Default;            // Set addon allowed on default value
                 _AddAddon(Addonstr);
-                sLog.outDetail("Found new Addon, Name:%s CRC:%x Unknown:%x",AddonNames.c_str(), CRCCHECK, unk6);
+                sLog->outDetail("Found new Addon, Name:%s CRC:%x Unknown:%x",AddonNames.c_str(), CRCCHECK, unk6);
             }
 
             if (CRCCHECK == 0x4C1C776D01LL)                 // If addon is Standard addon CRC

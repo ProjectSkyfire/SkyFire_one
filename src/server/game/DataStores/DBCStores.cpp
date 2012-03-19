@@ -176,7 +176,7 @@ std::string AcceptableClientBuildsListStr()
 
 static bool LoadDBC_assert_print(uint32 fsize, uint32 rsize, const std::string& filename)
 {
-    sLog.outError("Size of '%s' setted by format string (%u) not equal size of C++ structure (%u).",filename.c_str(),fsize, rsize);
+    sLog->outError("Size of '%s' setted by format string (%u) not equal size of C++ structure (%u).",filename.c_str(),fsize, rsize);
 
     // assert must fail after function call
     return false;
@@ -482,7 +482,7 @@ void LoadDBCStores(const std::string& dataPath)
     // error checks
     if (bad_dbc_files.size() >= DBCFilesCount)
     {
-        sLog.outError("\nIncorrect DataDir value in Trinityd.conf or ALL required *.dbc files (%d) not found by path: %sdbc",DBCFilesCount, dataPath.c_str());
+        sLog->outError("\nIncorrect DataDir value in Trinityd.conf or ALL required *.dbc files (%d) not found by path: %sdbc",DBCFilesCount, dataPath.c_str());
         exit(1);
     }
     else if (!bad_dbc_files.empty())
@@ -491,7 +491,7 @@ void LoadDBCStores(const std::string& dataPath)
         for (std::list<std::string>::iterator i = bad_dbc_files.begin(); i != bad_dbc_files.end(); ++i)
             str += *i + "\n";
 
-        sLog.outError("\nSome required *.dbc files (%u from %d) not found or not compatible:\n%s",bad_dbc_files.size(),DBCFilesCount, str.c_str());
+        sLog->outError("\nSome required *.dbc files (%u from %d) not found or not compatible:\n%s",bad_dbc_files.size(),DBCFilesCount, str.c_str());
         exit(1);
     }
 
@@ -510,12 +510,12 @@ void LoadDBCStores(const std::string& dataPath)
         !sCharTitlesStore.LookupEntry(71)          ||
         !sAreaStore.LookupEntry(1768))
     {
-        sLog.outError("\nYou have _outdated_ DBC files. Please extract correct versions from 2.4.3 client.");
+        sLog->outError("\nYou have _outdated_ DBC files. Please extract correct versions from 2.4.3 client.");
         exit(1);
     }
 
-    sLog.outString();
-    sLog.outString(">> Initialized %d data stores", DBCFilesCount);
+    sLog->outString();
+    sLog->outString(">> Initialized %d data stores", DBCFilesCount);
 }
 
 SimpleFactionsList const* GetFactionTeamList(uint32 faction)

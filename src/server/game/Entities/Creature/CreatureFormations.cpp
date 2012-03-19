@@ -40,13 +40,13 @@ void CreatureFormationManager::AddCreatureToFormation(uint32 formationId, Creatu
     //Add member to an existing formation
     if (itr != map->CreatureFormationHolder.end())
     {
-        sLog.outDebug("Formation found: %u, inserting creature GUID: %u, Formation InstanceID %u", formationId, member->GetGUIDLow(), member->GetInstanceId());
+        sLog->outDebug("Formation found: %u, inserting creature GUID: %u, Formation InstanceID %u", formationId, member->GetGUIDLow(), member->GetInstanceId());
         itr->second->AddMember(member);
     }
     //Create new formation
     else
     {
-        sLog.outDebug("Formation not found: %u. Creating new formation.", formationId);
+        sLog->outDebug("Formation not found: %u. Creating new formation.", formationId);
         CreatureFormation* formation = new CreatureFormation(formationId);
         map->CreatureFormationHolder[formationId] = formation;
         formation->AddMember(member);
@@ -55,7 +55,7 @@ void CreatureFormationManager::AddCreatureToFormation(uint32 formationId, Creatu
 
 void CreatureFormationManager::RemoveCreatureFromFormation(CreatureFormation *formation, Creature *member)
 {
-    sLog.outDebug("Deleting member pointer to GUID: %u from formation %u", formation->GetId(), member->GetDBTableGUIDLow());
+    sLog->outDebug("Deleting member pointer to GUID: %u from formation %u", formation->GetId(), member->GetDBTableGUIDLow());
     formation->RemoveMember(member);
 
     if (formation->isEmpty())
@@ -64,7 +64,7 @@ void CreatureFormationManager::RemoveCreatureFromFormation(CreatureFormation *fo
         if (!map)
             return;
 
-        sLog.outDebug("Deleting formation with InstanceID %u", member->GetInstanceId());
+        sLog->outDebug("Deleting formation with InstanceID %u", member->GetInstanceId());
         map->CreatureFormationHolder.erase(formation->GetId());
         delete formation;
     }
@@ -81,7 +81,7 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (!result)
     {
-        sLog.outErrorDb(" ...an error occured while loading the table creature_formationss (maybe it doesn't exist ?)\n");
+        sLog->outErrorDb(" ...an error occured while loading the table creature_formationss (maybe it doesn't exist ?)\n");
         return;
     }
 
@@ -90,7 +90,7 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (!result)
     {
-        sLog.outErrorDb(" ...an error occured while loading the table creature_formation_data (maybe it doesn't exist ?)\n");
+        sLog->outErrorDb(" ...an error occured while loading the table creature_formation_data (maybe it doesn't exist ?)\n");
         return;
     }
 
@@ -99,7 +99,7 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (result)
     {
-        sLog.outDetail(">> %u Formations without member found, formations skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Formations without member found, formations skipped.",result->Fetch()->GetInt32());
     }
 
     //Check if member without formation exist
@@ -107,7 +107,7 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (result)
     {
-        sLog.outDetail(">> %u Member without formation found, member skipped.",result->Fetch()->GetInt32());
+        sLog->outDetail(">> %u Member without formation found, member skipped.",result->Fetch()->GetInt32());
     }
 
     //Get formations
@@ -115,8 +115,8 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (!result_data)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 creature formations. DB table `creature_formations` is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 creature formations. DB table `creature_formations` is empty.");
         return;
     }
 
@@ -125,8 +125,8 @@ void CreatureFormationManager::LoadCreatureFormations()
 
     if (!result_member)
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 formation formations. DB table `creature_formation_data` is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 formation formations. DB table `creature_formation_data` is empty.");
         return;
     }
 
@@ -169,14 +169,14 @@ void CreatureFormationManager::LoadCreatureFormations()
         // check data correctness
         if (guidSet.find(formation_info->leaderGUID) == guidSet.end())
         {
-            sLog.outErrorDb("creature_formations table leader guid %u incorrect (not exist)", formation_info->leaderGUID);
+            sLog->outErrorDb("creature_formations table leader guid %u incorrect (not exist)", formation_info->leaderGUID);
             delete formation_info;
             return;
         }
 
         CreatureFormationMap[formationId] = formation_info;
 
-        sLog.outDebug("CreatureFormation::LoadCreatureFormations: Load Formation %u with Leader %u and formationAI %u.", formationId, leaderGUID, formationAI);
+        sLog->outDebug("CreatureFormation::LoadCreatureFormations: Load Formation %u with Leader %u and formationAI %u.", formationId, leaderGUID, formationAI);
     }
     while (result_data->NextRow()) ;
 
@@ -201,20 +201,20 @@ void CreatureFormationManager::LoadCreatureFormations()
         // check data correctness
         if (guidSet.find(memberGUID) == guidSet.end())
         {
-            sLog.outErrorDb("creature_formation_data table member guid %u incorrect (not exist)", memberGUID);
+            sLog->outErrorDb("creature_formation_data table member guid %u incorrect (not exist)", memberGUID);
             continue;
         }
 
         CreatureFormationDataMap[memberGUID] = formation_data;
 
-        sLog.outDebug("CreatureFormation::LoadCreatureFormations: Load Member %u for Formation with formationId %u.", memberGUID, formation_data->formationId);
+        sLog->outDebug("CreatureFormation::LoadCreatureFormations: Load Member %u for Formation with formationId %u.", memberGUID, formation_data->formationId);
     }
     while (result_member->NextRow()) ;
 
-    sLog.outString();
-    sLog.outString(">> Loaded " UI64FMTD " formations", total_formations);
-    sLog.outString(">> Loaded " UI64FMTD " creatures in formations", total_member);
-    sLog.outString();
+    sLog->outString();
+    sLog->outString(">> Loaded " UI64FMTD " formations", total_formations);
+    sLog->outString(">> Loaded " UI64FMTD " creatures in formations", total_member);
+    sLog->outString();
 }
 
 void CreatureFormation::AddMember(Creature *member)
@@ -224,7 +224,7 @@ void CreatureFormation::AddMember(Creature *member)
 
     uint32 memberGUID = member->GetDBTableGUIDLow();
 
-    sLog.outDebug("CreatureFormation::AddMember: Adding unit GUID: %u to formation.", memberGUID);
+    sLog->outDebug("CreatureFormation::AddMember: Adding unit GUID: %u to formation.", memberGUID);
 
     Formation *formation;
     formation = new Formation;
@@ -232,7 +232,7 @@ void CreatureFormation::AddMember(Creature *member)
     //Check if it is a leader
     if (member->GetDBTableGUIDLow() == CreatureFormationMap.find(m_formationID)->second->leaderGUID)
     {
-        sLog.outDebug("Unit GUID: %u is formation leader.", memberGUID);
+        sLog->outDebug("Unit GUID: %u is formation leader.", memberGUID);
         m_leader = member;
         formation->follow_dist = 0;
         formation->follow_angle = 0;
@@ -277,7 +277,7 @@ void CreatureFormation::MemberAttackStart(Creature *member, Unit *target)
         Creature* pCreature = itr->first;
 
         if (m_leader) // avoid crash if leader was killed and reset.
-            sLog.outDebug("CreatureFormation::MemberAttackStart: formation instance id %u calls member instid %u", m_leader->GetInstanceId(), member->GetInstanceId());
+            sLog->outDebug("CreatureFormation::MemberAttackStart: formation instance id %u calls member instid %u", m_leader->GetInstanceId(), member->GetInstanceId());
 
         //Skip one check
         if (pCreature == member)
@@ -307,7 +307,7 @@ void CreatureFormation::Reset(bool dismiss)
                 pCreature->GetMotionMaster()->Initialize();
             else
                 pCreature->GetMotionMaster()->MoveIdle(MOTION_SLOT_IDLE);
-            sLog.outDebug("Set %s movement for member GUID: %u", dismiss ? "default" : "idle", pCreature->GetGUIDLow());
+            sLog->outDebug("Set %s movement for member GUID: %u", dismiss ? "default" : "idle", pCreature->GetGUIDLow());
         }
     }
     m_Formed = !dismiss;

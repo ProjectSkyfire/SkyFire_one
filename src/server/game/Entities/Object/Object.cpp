@@ -84,7 +84,7 @@ WorldObject::~WorldObject()
     {
         if (GetTypeId() == TYPEID_CORPSE)
         {
-            sLog.outCrash("Object::~Object Corpse guid="UI64FMTD", type=%d, entry=%u deleted but still in map!!", GetGUID(), ((Corpse*)this)->GetType(), GetEntry());
+            sLog->outCrash("Object::~Object Corpse guid="UI64FMTD", type=%d, entry=%u deleted but still in map!!", GetGUID(), ((Corpse*)this)->GetType(), GetEntry());
             ASSERT(false);
         }
         ResetMap();
@@ -96,13 +96,13 @@ Object::~Object()
     if (IsInWorld())
     {
         // Do NOT call RemoveFromWorld here, if the object is a player it will crash
-        sLog.outCrash("Object::~Object (GUID: %u TypeId: %u) deleted but still in world!!", GetGUIDLow(), GetTypeId());
+        sLog->outCrash("Object::~Object (GUID: %u TypeId: %u) deleted but still in world!!", GetGUIDLow(), GetTypeId());
         ASSERT(false);
     }
 
     if (m_objectUpdated)
     {
-        sLog.outCrash("Object::~Object (GUID: %u TypeId: %u) deleted but still has updated status!!", GetGUIDLow(), GetTypeId());
+        sLog->outCrash("Object::~Object (GUID: %u TypeId: %u) deleted but still has updated status!!", GetGUIDLow(), GetTypeId());
         ASSERT(false);
     }
 
@@ -186,7 +186,7 @@ void Object::BuildCreateUpdateBlockForPlayer(UpdateData *data, Player *target) c
         }
     }
 
-    //sLog.outDebug("BuildCreateUpdate: update-type: %u, object-type: %u got flags: %X, flags2: %X", updatetype, m_objectTypeId, flags, flags2);
+    //sLog->outDebug("BuildCreateUpdate: update-type: %u, object-type: %u got flags: %X, flags2: %X", updatetype, m_objectTypeId, flags, flags2);
 
     ByteBuffer buf(500);
     buf << (uint8)updatetype;
@@ -384,13 +384,13 @@ void Object::_BuildMovementUpdate(ByteBuffer * data, uint8 updateFlags) const
         {
             if (GetTypeId() != TYPEID_PLAYER)
             {
-                sLog.outDebug("_BuildMovementUpdate: MOVEFLAG_SPLINE_ENABLED for non-player");
+                sLog->outDebug("_BuildMovementUpdate: MOVEFLAG_SPLINE_ENABLED for non-player");
                 return;
             }
 
             if (!ToPlayer()->isInFlight())
             {
-                sLog.outDebug("_BuildMovementUpdate: MOVEFLAG_SPLINE_ENABLED but not in flight");
+                sLog->outDebug("_BuildMovementUpdate: MOVEFLAG_SPLINE_ENABLED but not in flight");
                 return;
             }
 
@@ -899,7 +899,7 @@ void Object::SetByteValue(uint16 index, uint8 offset, uint8 value)
 
     if (offset > 4)
     {
-        sLog.outError("Object::SetByteValue: wrong offset %u", offset);
+        sLog->outError("Object::SetByteValue: wrong offset %u", offset);
         return;
     }
 
@@ -925,7 +925,7 @@ void Object::SetUInt16Value(uint16 index, uint8 offset, uint16 value)
 
     if (offset > 2)
     {
-        sLog.outError("Object::SetUInt16Value: wrong offset %u", offset);
+        sLog->outError("Object::SetUInt16Value: wrong offset %u", offset);
         return;
     }
 
@@ -1043,7 +1043,7 @@ void Object::SetByteFlag(uint16 index, uint8 offset, uint8 newFlag)
 
     if (offset > 4)
     {
-        sLog.outError("Object::SetByteFlag: wrong offset %u", offset);
+        sLog->outError("Object::SetByteFlag: wrong offset %u", offset);
         return;
     }
 
@@ -1068,7 +1068,7 @@ void Object::RemoveByteFlag(uint16 index, uint8 offset, uint8 oldFlag)
 
     if (offset > 4)
     {
-        sLog.outError("Object::RemoveByteFlag: wrong offset %u", offset);
+        sLog->outError("Object::RemoveByteFlag: wrong offset %u", offset);
         return;
     }
 
@@ -1089,7 +1089,7 @@ void Object::RemoveByteFlag(uint16 index, uint8 offset, uint8 oldFlag)
 
 bool Object::PrintIndexError(uint32 index, bool set) const
 {
-    sLog.outError("Attempt %s invalid value field: %u (count: %u) for object typeid: %u type mask: %u",(set ? "set value to" : "get value from"),index, m_valuesCount, GetTypeId(),m_objectType);
+    sLog->outError("Attempt %s invalid value field: %u (count: %u) for object typeid: %u type mask: %u",(set ? "set value to" : "get value from"),index, m_valuesCount, GetTypeId(),m_objectType);
 
     // assert must fail after function call
     return false;
@@ -1593,7 +1593,7 @@ void WorldObject::SetMap(Map * map)
         return;
     if (m_currMap)
     {
-        sLog.outCrash("WorldObject::SetMap: obj %u new map %u %u, old map %u %u", (uint32)GetTypeId(), map->GetId(), map->GetInstanceId(), m_currMap->GetId(), m_currMap->GetInstanceId());
+        sLog->outCrash("WorldObject::SetMap: obj %u new map %u %u, old map %u %u", (uint32)GetTypeId(), map->GetId(), map->GetInstanceId(), m_currMap->GetId(), m_currMap->GetInstanceId());
         ASSERT(false);
     }
     m_currMap = map;
@@ -1628,7 +1628,7 @@ void WorldObject::AddObjectToRemoveList()
     Map* map = FindMap();
     if (!map)
     {
-        sLog.outError("Object (TypeId: %u Entry: %u GUID: %u) at attempt add to move list has invalid map (Id: %u).",GetTypeId(),GetEntry(),GetGUIDLow(),GetMapId());
+        sLog->outError("Object (TypeId: %u Entry: %u GUID: %u) at attempt add to move list has invalid map (Id: %u).",GetTypeId(),GetEntry(),GetGUIDLow(),GetMapId());
         return;
     }
 
@@ -1794,7 +1794,7 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
     uint32 pet_number = objmgr.GeneratePetNumber();
     if (!pet->Create(objmgr.GenerateLowGuid(HIGHGUID_PET), map, entry, pet_number))
     {
-        sLog.outError("no such creature entry %u", entry);
+        sLog->outError("no such creature entry %u", entry);
         delete pet;
         return NULL;
     }
@@ -1802,7 +1802,7 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
     pet->Relocate(x, y, z, ang);
     if (!pet->IsPositionValid())
     {
-        sLog.outError("Pet (guidlow %d, entry %d) not summoned. Suggested coordinates isn't valid (X: %f Y: %f)",pet->GetGUIDLow(),pet->GetEntry(),pet->GetPositionX(),pet->GetPositionY());
+        sLog->outError("Pet (guidlow %d, entry %d) not summoned. Suggested coordinates isn't valid (X: %f Y: %f)",pet->GetGUIDLow(),pet->GetEntry(),pet->GetPositionX(),pet->GetPositionY());
         delete pet;
         return NULL;
     }
@@ -1873,7 +1873,7 @@ GameObject* WorldObject::SummonGameObject(uint32 entry, float x, float y, float 
     GameObjectInfo const* goinfo = objmgr.GetGameObjectInfo(entry);
     if (!goinfo)
     {
-        sLog.outErrorDb("Gameobject template %u not found in database!", entry);
+        sLog->outErrorDb("Gameobject template %u not found in database!", entry);
         return NULL;
     }
     Map *map = GetMap();

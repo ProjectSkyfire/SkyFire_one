@@ -41,7 +41,7 @@ void InstanceData::HandleGameObject(uint64 GUID, bool open, GameObject *go)
     if (go)
         go->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
     else
-        debug_log("TSCR: InstanceData: HandleGameObject failed");
+        sLog->outDebug("TSCR: InstanceData: HandleGameObject failed");
 }
 
 bool InstanceData::IsEncounterInProgress() const
@@ -62,7 +62,7 @@ void InstanceData::LoadMinionData(const MinionData *data)
 
         ++data;
     }
-    sLog.outDebug("InstanceData::LoadMinionData: %u minions loaded.", doors.size());
+    sLog->outDebug("InstanceData::LoadMinionData: %u minions loaded.", doors.size());
 }
 
 void InstanceData::LoadDoorData(const DoorData *data)
@@ -74,7 +74,7 @@ void InstanceData::LoadDoorData(const DoorData *data)
 
         ++data;
     }
-    sLog.outDebug("InstanceData::LoadDoorData: %u doors loaded.", doors.size());
+    sLog->outDebug("InstanceData::LoadDoorData: %u doors loaded.", doors.size());
 }
 
 void InstanceData::UpdateMinionState(Creature *minion, EncounterState state)
@@ -166,7 +166,7 @@ bool InstanceData::SetBossState(uint32 id, EncounterState state)
         if (bossInfo->state == TO_BE_DECIDED) // loading
         {
             bossInfo->state = state;
-            //sLog.outError("Inialize boss %u state as %u.", id, (uint32)state);
+            //sLog->outError("Inialize boss %u state as %u.", id, (uint32)state);
             return false;
         }
         else
@@ -230,7 +230,7 @@ void InstanceData::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bo
                 pGo->ResetDoorOrButton();
         }
         else
-            error_log("TSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.",pGo->GetEntry(),pGo->GetGoType());
+            sLog->outError("TSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.",pGo->GetEntry(),pGo->GetGoType());
     }
 }
 

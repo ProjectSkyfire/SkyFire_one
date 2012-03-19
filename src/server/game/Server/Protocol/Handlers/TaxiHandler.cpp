@@ -48,7 +48,7 @@ void WorldSession::SendTaxiStatus(uint64 guid)
     Creature *unit = GetPlayer()->GetMap()->GetCreature(guid);
     if (!unit)
     {
-        sLog.outDebug("WorldSession::SendTaxiStatus - Unit (GUID: %u) not found.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WorldSession::SendTaxiStatus - Unit (GUID: %u) not found.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -78,7 +78,7 @@ void WorldSession::HandleTaxiQueryAvailableNodesOpcode(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_FLIGHTMASTER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleTaxiQueryAvailableNodes - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleTaxiQueryAvailableNodes - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -163,7 +163,7 @@ void WorldSession::HandleActivateTaxiFarOpcode (WorldPacket & recv_data)
     Creature *npc = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_FLIGHTMASTER);
     if (!npc)
     {
-        sLog.outDebug("WORLD: HandleActivateTaxiFarOpcode - Unit (GUID: %u) not found or you can't interact with it.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleActivateTaxiFarOpcode - Unit (GUID: %u) not found or you can't interact with it.", uint32(GUID_LOPART(guid)));
         return;
     }
     std::vector<uint32> nodes;
@@ -265,7 +265,7 @@ void WorldSession::HandleActivateTaxiOpcode(WorldPacket & recv_data)
     Creature *npc = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_FLIGHTMASTER);
     if (!npc)
     {
-        sLog.outDebug("WORLD: HandleActivateTaxiOpcode - Unit (GUID: %u) not found or you can't interact with it.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleActivateTaxiOpcode - Unit (GUID: %u) not found or you can't interact with it.", uint32(GUID_LOPART(guid)));
         return;
     }
 

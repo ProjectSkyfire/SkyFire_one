@@ -34,7 +34,7 @@ void AddItemsSetItem(Player*player, Item *item)
 
     if (!set)
     {
-        sLog.outErrorDb("Item set %u for item (id %u) not found, mods not applied.",setid, proto->ItemId);
+        sLog->outErrorDb("Item set %u for item (id %u) not found, mods not applied.",setid, proto->ItemId);
         return;
     }
 
@@ -95,7 +95,7 @@ void AddItemsSetItem(Player*player, Item *item)
                 SpellEntry const *spellInfo = sSpellStore.LookupEntry(set->spells[x]);
                 if (!spellInfo)
                 {
-                    sLog.outError("WORLD: unknown spell id %u in items set %u effects", set->spells[x],setid);
+                    sLog->outError("WORLD: unknown spell id %u in items set %u effects", set->spells[x],setid);
                     break;
                 }
 
@@ -116,7 +116,7 @@ void RemoveItemsSetItem(Player*player, ItemPrototype const *proto)
 
     if (!set)
     {
-        sLog.outErrorDb("Item set #%u for item #%u not found, mods not removed.",setid, proto->ItemId);
+        sLog->outErrorDb("Item set #%u for item #%u not found, mods not removed.",setid, proto->ItemId);
         return;
     }
 
@@ -275,7 +275,7 @@ void Item::UpdateDuration(Player* owner, uint32 diff)
     if (!GetUInt32Value(ITEM_FIELD_DURATION))
         return;
 
-    sLog.outDebug("Item::UpdateDuration Item (Entry: %u Duration %u Diff %u)",GetEntry(),GetUInt32Value(ITEM_FIELD_DURATION),diff);
+    sLog->outDebug("Item::UpdateDuration Item (Entry: %u Duration %u Diff %u)",GetEntry(),GetUInt32Value(ITEM_FIELD_DURATION),diff);
 
     if (GetUInt32Value(ITEM_FIELD_DURATION) <= diff)
     {
@@ -341,7 +341,7 @@ bool Item::LoadFromDB(uint32 guid, uint64 owner_guid, QueryResult_AutoPtr result
 
     if (!result)
     {
-        sLog.outError("Item (GUID: %u owner: %u) not found in table item_instance, can't load. ",guid, GUID_LOPART(owner_guid));
+        sLog->outError("Item (GUID: %u owner: %u) not found in table item_instance, can't load. ",guid, GUID_LOPART(owner_guid));
         return false;
     }
 
@@ -349,7 +349,7 @@ bool Item::LoadFromDB(uint32 guid, uint64 owner_guid, QueryResult_AutoPtr result
 
     if (!LoadValues(fields[0].GetString()))
     {
-        sLog.outError("Item #%d has invalid data in data field.  Not loaded.",guid);
+        sLog->outError("Item #%d has invalid data in data field.  Not loaded.",guid);
         return false;
     }
 
@@ -520,7 +520,7 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
     // item can have not null only one from field values
     if ((itemProto->RandomProperty) && (itemProto->RandomSuffix))
     {
-        sLog.outErrorDb("Item template %u has RandomProperty == %u and RandomSuffix == %u, but must have one from field =0",itemProto->ItemId, itemProto->RandomProperty, itemProto->RandomSuffix);
+        sLog->outErrorDb("Item template %u has RandomProperty == %u and RandomSuffix == %u, but must have one from field =0",itemProto->ItemId, itemProto->RandomProperty, itemProto->RandomSuffix);
         return 0;
     }
 
@@ -531,7 +531,7 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
         ItemRandomPropertiesEntry const *random_id = sItemRandomPropertiesStore.LookupEntry(randomPropId);
         if (!random_id)
         {
-            sLog.outErrorDb("Enchantment id #%u used but it doesn't have a record in 'ItemRandomProperties.dbc'",randomPropId);
+            sLog->outErrorDb("Enchantment id #%u used but it doesn't have a record in 'ItemRandomProperties.dbc'",randomPropId);
             return 0;
         }
 
@@ -544,7 +544,7 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
         ItemRandomSuffixEntry const *random_id = sItemRandomSuffixStore.LookupEntry(randomPropId);
         if (!random_id)
         {
-            sLog.outErrorDb("Enchantment id #%u used but it doesn't have a record in sItemRandomSuffixStore.",randomPropId);
+            sLog->outErrorDb("Enchantment id #%u used but it doesn't have a record in sItemRandomSuffixStore.",randomPropId);
             return 0;
         }
 
@@ -634,7 +634,7 @@ void Item::AddToUpdateQueueOf(Player *player)
 
     if (player->GetGUID() != GetOwnerGUID())
     {
-        sLog.outDebug("Item::AddToUpdateQueueOf - Owner's guid (%u) and player's guid (%u) don't match!", GUID_LOPART(GetOwnerGUID()), player->GetGUIDLow());
+        sLog->outDebug("Item::AddToUpdateQueueOf - Owner's guid (%u) and player's guid (%u) don't match!", GUID_LOPART(GetOwnerGUID()), player->GetGUIDLow());
         return;
     }
 
@@ -654,7 +654,7 @@ void Item::RemoveFromUpdateQueueOf(Player *player)
 
     if (player->GetGUID() != GetOwnerGUID())
     {
-        sLog.outDebug("Item::RemoveFromUpdateQueueOf - Owner's guid (%u) and player's guid (%u) don't match!", GUID_LOPART(GetOwnerGUID()), player->GetGUIDLow());
+        sLog->outDebug("Item::RemoveFromUpdateQueueOf - Owner's guid (%u) and player's guid (%u) don't match!", GUID_LOPART(GetOwnerGUID()), player->GetGUIDLow());
         return;
     }
 

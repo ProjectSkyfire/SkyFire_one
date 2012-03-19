@@ -59,7 +59,7 @@ public:
     {
         if (!_delaytime)
             return;
-        sLog.outString("Starting up anti-freeze thread (%u seconds max stuck time)...",_delaytime/1000);
+        sLog->outString("Starting up anti-freeze thread (%u seconds max stuck time)...",_delaytime/1000);
         m_loops = 0;
         w_loops = 0;
         m_lastchange = 0;
@@ -77,11 +77,11 @@ public:
             // possible freeze
             else if (getMSTimeDiff(w_lastchange, curtime) > _delaytime)
             {
-                sLog.outError("World Thread is stuck.  Terminating server!");
+                sLog->outError("World Thread is stuck.  Terminating server!");
                 *((uint32 volatile*)NULL) = 0;                       // bang crash
             }
         }
-        sLog.outString("Anti-freeze thread exiting without problems.");
+        sLog->outString("Anti-freeze thread exiting without problems.");
     }
 };
 
@@ -96,24 +96,24 @@ Master::~Master()
 /// Main function
 int Master::Run()
 {
-    sLog.outString("%s (worldserver-daemon)", _FULLVERSION);
-    sLog.outString("<Ctrl-C> to stop.\n");
+    sLog->outString("%s (worldserver-daemon)", _FULLVERSION);
+    sLog->outString("<Ctrl-C> to stop.\n");
 
-    sLog.outString(" ");
-    sLog.outString("   ______  __  __  __  __  ______ __  ______  ______ ");
-    sLog.outString("  /\\  ___\\/\\ \\/ / /\\ \\_\\ \\/\\  ___/\\ \\/\\  == \\/\\  ___\\ ");
-    sLog.outString("  \\ \\___  \\ \\  _'-\\ \\____ \\ \\  __\\ \\ \\ \\  __<\\ \\  __\\ ");
-    sLog.outString("   \\/\\_____\\ \\_\\ \\_\\/\\_____\\ \\_\\  \\ \\_\\ \\_\\ \\_\\ \\_____\\ ");
-    sLog.outString("    \\/_____/\\/_/\\/_/\\/_____/\\/_/   \\/_/\\/_/ /_/\\/_____/ ");
-    sLog.outString("  Project SkyFireEmu 2012(c) Open-sourced Game Emulation ");
-    sLog.outString("           <http://www.projectskyfire.org/> ");
-    sLog.outString(" ");
+    sLog->outString(" ");
+    sLog->outString("   ______  __  __  __  __  ______ __  ______  ______ ");
+    sLog->outString("  /\\  ___\\/\\ \\/ / /\\ \\_\\ \\/\\  ___/\\ \\/\\  == \\/\\  ___\\ ");
+    sLog->outString("  \\ \\___  \\ \\  _'-\\ \\____ \\ \\  __\\ \\ \\ \\  __<\\ \\  __\\ ");
+    sLog->outString("   \\/\\_____\\ \\_\\ \\_\\/\\_____\\ \\_\\  \\ \\_\\ \\_\\ \\_\\ \\_____\\ ");
+    sLog->outString("    \\/_____/\\/_/\\/_/\\/_____/\\/_/   \\/_/\\/_/ /_/\\/_____/ ");
+    sLog->outString("  Project SkyFireEmu 2012(c) Open-sourced Game Emulation ");
+    sLog->outString("           <http://www.projectskyfire.org/> ");
+    sLog->outString(" ");
 
 #ifdef USE_SFMT_FOR_RNG
-    sLog.outString("\n");
-    sLog.outString("SFMT has been enabled as the random number generator, if worldserver");
-    sLog.outString("freezes or crashes randomly, first, try disabling SFMT in CMAKE configuration");
-    sLog.outString("\n");
+    sLog->outString("\n");
+    sLog->outString("SFMT has been enabled as the random number generator, if worldserver");
+    sLog->outString("freezes or crashes randomly, first, try disabling SFMT in CMAKE configuration");
+    sLog->outString("\n");
 #endif //USE_SFMT_FOR_RNG
 
     // worldd PID file creation
@@ -123,11 +123,11 @@ int Master::Run()
         uint32 pid = CreatePIDFile(pidfile);
         if (!pid)
         {
-            sLog.outError("Cannot create PID file %s.\n", pidfile.c_str());
+            sLog->outError("Cannot create PID file %s.\n", pidfile.c_str());
             return 1;
         }
 
-        sLog.outString("Daemon PID: %u\n", pid);
+        sLog->outString("Daemon PID: %u\n", pid);
     }
 
     // Start the databases
@@ -180,17 +180,17 @@ int Master::Run()
 
                 if (!curAff)
                 {
-                    sLog.outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for TrinityCore. Accessible processors bitmask (hex): %x",Aff, appAff);
+                    sLog->outError("Processors marked in UseProcessors bitmask (hex) %x not accessible for TrinityCore. Accessible processors bitmask (hex): %x",Aff, appAff);
                 }
                 else
                 {
                     if (SetProcessAffinityMask(hProcess, curAff))
-                        sLog.outString("Using processors (bitmask, hex): %x", curAff);
+                        sLog->outString("Using processors (bitmask, hex): %x", curAff);
                     else
-                        sLog.outError("Can't set used processors (hex): %x",curAff);
+                        sLog->outError("Can't set used processors (hex): %x",curAff);
                 }
             }
-            sLog.outString();
+            sLog->outString();
         }
 
         bool Prio = sConfig.GetBoolDefault("ProcessPriority", false);
@@ -198,10 +198,10 @@ int Master::Run()
         if (Prio)
         {
             if (SetPriorityClass(hProcess, HIGH_PRIORITY_CLASS))
-                sLog.outString("TrinityCore process priority class set to HIGH");
+                sLog->outString("TrinityCore process priority class set to HIGH");
             else
-                sLog.outError("ERROR: Can't set TrinityCore process priority class.");
-            sLog.outString();
+                sLog->outError("ERROR: Can't set TrinityCore process priority class.");
+            sLog->outString();
         }
     }
     #endif
@@ -238,7 +238,7 @@ int Master::Run()
 
     if (sWorldSocketMgr->StartNetwork (wsport, bind_ip.c_str ()) == -1)
     {
-        sLog.outError("Failed to start network");
+        sLog->outError("Failed to start network");
         World::StopNow(ERROR_EXIT_CODE);
         // go down and shutdown the server
     }
@@ -279,7 +279,7 @@ int Master::Run()
     WorldDatabase.HaltDelayThread();
     LoginDatabase.HaltDelayThread();
 
-    sLog.outString("Halting process...");
+    sLog->outString("Halting process...");
 
     if (cliThread)
     {
@@ -342,20 +342,20 @@ int Master::Run()
 // Initialize connection to the databases
 bool Master::_StartDB()
 {
-    sLog.SetLogDB(false);
+    sLog->SetLogDB(false);
 
     // Get world database info from configuration file
     std::string dbstring = sConfig.GetStringDefault("WorldDatabaseInfo", "");
     if (dbstring.empty())
     {
-        sLog.outError("World database not specified in configuration file");
+        sLog->outError("World database not specified in configuration file");
         return false;
     }
 
     // Initialise the world database
     if (!WorldDatabase.Initialize(dbstring.c_str()))
     {
-        sLog.outError("Cannot connect to world database %s",dbstring.c_str());
+        sLog->outError("Cannot connect to world database %s",dbstring.c_str());
         return false;
     }
 
@@ -363,14 +363,14 @@ bool Master::_StartDB()
     dbstring = sConfig.GetStringDefault("CharacterDatabaseInfo", "");
     if (dbstring.empty())
     {
-        sLog.outError("Character database not specified in configuration file");
+        sLog->outError("Character database not specified in configuration file");
         return false;
     }
 
     // Initialise the Character database
     if (!CharacterDatabase.Initialize(dbstring.c_str()))
     {
-        sLog.outError("Cannot connect to Character database %s",dbstring.c_str());
+        sLog->outError("Cannot connect to Character database %s",dbstring.c_str());
         return false;
     }
 
@@ -378,14 +378,14 @@ bool Master::_StartDB()
     dbstring = sConfig.GetStringDefault("LoginDatabaseInfo", "");
     if (dbstring.empty())
     {
-        sLog.outError("Login database not specified in configuration file");
+        sLog->outError("Login database not specified in configuration file");
         return false;
     }
 
     // Initialise the login database
     if (!LoginDatabase.Initialize(dbstring.c_str()))
     {
-        sLog.outError("Cannot connect to login database %s",dbstring.c_str());
+        sLog->outError("Cannot connect to login database %s",dbstring.c_str());
         return false;
     }
 
@@ -393,15 +393,15 @@ bool Master::_StartDB()
     realmID = sConfig.GetIntDefault("RealmID", 0);
     if (!realmID)
     {
-        sLog.outError("Realm ID not defined in configuration file");
+        sLog->outError("Realm ID not defined in configuration file");
         return false;
     }
-    sLog.outString("Realm running as realm ID %d", realmID);
+    sLog->outString("Realm running as realm ID %d", realmID);
 
     // Initialize the DB logging system
-    sLog.SetLogDBLater(sConfig.GetBoolDefault("EnableLogDB", false)); // set var to enable DB logging once startup finished.
-    sLog.SetLogDB(false);
-    sLog.SetRealmID(realmID);
+    sLog->SetLogDBLater(sConfig.GetBoolDefault("EnableLogDB", false)); // set var to enable DB logging once startup finished.
+    sLog->SetLogDB(false);
+    sLog->SetRealmID(realmID);
 
     // Clean the database before starting
     clearOnlineAccounts();
@@ -411,7 +411,7 @@ bool Master::_StartDB()
 
     sWorld.LoadDBVersion();
 
-    sLog.outString("Using World DB: %s", sWorld.GetDBVersion());
+    sLog->outString("Using World DB: %s", sWorld.GetDBVersion());
     return true;
 }
 

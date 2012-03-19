@@ -48,7 +48,7 @@ Database::Database() : mMysql(NULL)
 
         if (!mysql_thread_safe())
         {
-            sLog.outError("FATAL ERROR: Used MySQL library isn't thread-safe.");
+            sLog->outError("FATAL ERROR: Used MySQL library isn't thread-safe.");
             exit(1);
         }
     }
@@ -84,7 +84,7 @@ bool Database::Initialize(const char *infoString)
     mysqlInit = mysql_init(NULL);
     if (!mysqlInit)
     {
-        sLog.outError("Could not initialize Mysql connection");
+        sLog->outError("Could not initialize Mysql connection");
         return false;
     }
 
@@ -146,14 +146,14 @@ bool Database::Initialize(const char *infoString)
 
     if (mMysql)
     {
-        sLog.outDetail("Connected to MySQL database at %s", host.c_str());
-        sLog.outString("MySQL client library: %s", mysql_get_client_info());
-        sLog.outString("MySQL server ver: %s ", mysql_get_server_info( mMysql));
+        sLog->outDetail("Connected to MySQL database at %s", host.c_str());
+        sLog->outString("MySQL client library: %s", mysql_get_client_info());
+        sLog->outString("MySQL server ver: %s ", mysql_get_server_info( mMysql));
 
         if (!mysql_autocommit(mMysql, 1))
-            sLog.outDetail("AUTOCOMMIT SUCCESSFULLY SET TO 1");
+            sLog->outDetail("AUTOCOMMIT SUCCESSFULLY SET TO 1");
         else
-            sLog.outDetail("AUTOCOMMIT NOT SET TO 1");
+            sLog->outDetail("AUTOCOMMIT NOT SET TO 1");
 
         // set connection properties to UTF8 to properly handle locales for different
         // server configs - core sends data in UTF8, so MySQL must expect UTF8 too
@@ -163,9 +163,9 @@ bool Database::Initialize(const char *infoString)
     #if MYSQL_VERSION_ID >= 50003
         my_bool my_true = (my_bool)1;
         if (mysql_options(mMysql, MYSQL_OPT_RECONNECT, &my_true))
-            sLog.outDetail("Failed to turn on MYSQL_OPT_RECONNECT.");
+            sLog->outDetail("Failed to turn on MYSQL_OPT_RECONNECT.");
         else
-           sLog.outDetail("Successfully turned on MYSQL_OPT_RECONNECT.");
+           sLog->outDetail("Successfully turned on MYSQL_OPT_RECONNECT.");
     #else
         #warning "Your mySQL client lib version does not support reconnecting after a timeout.\nIf this causes you any trouble we advice you to upgrade your mySQL client libs to at least mySQL 5.0.13 to resolve this problem."
     #endif
@@ -173,7 +173,7 @@ bool Database::Initialize(const char *infoString)
     }
     else
     {
-        sLog.outError("Could not connect to MySQL database at %s: %s\n", host.c_str(),mysql_error(mysqlInit));
+        sLog->outError("Could not connect to MySQL database at %s: %s\n", host.c_str(),mysql_error(mysqlInit));
         mysql_close(mysqlInit);
         return false;
     }
@@ -221,7 +221,7 @@ bool Database::PExecuteLog(const char * format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s",format);
         return false;
     }
 
@@ -245,7 +245,7 @@ bool Database::PExecuteLog(const char * format,...)
         else
         {
             // The file could not be opened
-            sLog.outError("SQL-Logging is disabled - Log file for the SQL commands could not be openend: %s",fName);
+            sLog->outError("SQL-Logging is disabled - Log file for the SQL commands could not be openend: %s",fName);
         }
     }
 
@@ -270,14 +270,14 @@ bool Database::_Query(const char *sql, MYSQL_RES **pResult, MYSQL_FIELD **pField
         #endif
         if (mysql_query(mMysql, sql))
         {
-            sLog.outErrorDb("SQL: %s", sql);
-            sLog.outErrorDb("query ERROR: %s", mysql_error(mMysql));
+            sLog->outErrorDb("SQL: %s", sql);
+            sLog->outErrorDb("query ERROR: %s", mysql_error(mMysql));
             return false;
         }
         else
         {
             #ifdef TRINITY_DEBUG
-            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql );
+            sLog->outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql );
             #endif
         }
 
@@ -329,7 +329,7 @@ QueryResult_AutoPtr Database::PQuery(const char *format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s",format);
         return QueryResult_AutoPtr(NULL);
     }
 
@@ -370,7 +370,7 @@ QueryNamedResult* Database::PQueryNamed(const char *format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s",format);
         return false;
     }
 
@@ -411,7 +411,7 @@ bool Database::PExecute(const char * format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s",format);
         return false;
     }
 
@@ -432,14 +432,14 @@ bool Database::DirectExecute(const char* sql)
         #endif
         if (mysql_query(mMysql, sql))
         {
-            sLog.outErrorDb("SQL: %s", sql);
-            sLog.outErrorDb("SQL ERROR: %s", mysql_error(mMysql));
+            sLog->outErrorDb("SQL: %s", sql);
+            sLog->outErrorDb("SQL ERROR: %s", mysql_error(mMysql));
             return false;
         }
         else
         {
             #ifdef TRINITY_DEBUG
-            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
+            sLog->outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
             #endif
         }
     }
@@ -460,7 +460,7 @@ bool Database::DirectPExecute(const char * format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s",format);
         return false;
     }
 
@@ -471,8 +471,8 @@ bool Database::_TransactionCmd(const char *sql)
 {
     if (mysql_query(mMysql, sql))
     {
-        sLog.outError("SQL: %s", sql);
-        sLog.outError("SQL ERROR: %s", mysql_error(mMysql));
+        sLog->outError("SQL: %s", sql);
+        sLog->outError("SQL ERROR: %s", mysql_error(mMysql));
         return false;
     }
     else

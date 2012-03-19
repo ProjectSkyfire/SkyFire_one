@@ -1010,7 +1010,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
                 case 25251: BTAura = 25252; break;
                 case 30335: BTAura = 30339; break;
                 default:
-                    sLog.outError("Spell::EffectSchoolDMG: Spell %u not handled in BTAura",m_spellInfo->Id);
+                    sLog->outError("Spell::EffectSchoolDMG: Spell %u not handled in BTAura",m_spellInfo->Id);
                     break;
             }
             if (BTAura)
@@ -1400,7 +1400,7 @@ void Spell::SearchAreaTarget(std::list<Unit*> &TagUnitMap, float radius, const u
             Unit *target = m_targets.getUnitTarget();
             if (!target)
             {
-                sLog.outError("SPELL: cannot find unit target for spell ID %u\n", m_spellInfo->Id);
+                sLog->outError("SPELL: cannot find unit target for spell ID %u\n", m_spellInfo->Id);
                 return;
             }
             pos = target;
@@ -1429,7 +1429,7 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType)
             SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(m_spellInfo->Id);
             if (lower == upper)
             {
-                sLog.outErrorDb("Spell (ID: %u) (caster Entry: %u) does not have record in spell_script_target", m_spellInfo->Id, m_caster->GetEntry());
+                sLog->outErrorDb("Spell (ID: %u) (caster Entry: %u) does not have record in spell_script_target", m_spellInfo->Id, m_caster->GetEntry());
                 if (IsPositiveSpell(m_spellInfo->Id))
                     return SearchNearbyTarget(range, SPELL_TARGETS_ALLY);
                 else
@@ -1551,7 +1551,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             Unit *target = m_targets.getUnitTarget();
             if (!target)
             {
-                sLog.outError("SPELL: no unit target for spell ID %u", m_spellInfo->Id);
+                sLog->outError("SPELL: no unit target for spell ID %u", m_spellInfo->Id);
                 break;
             }
 
@@ -1698,7 +1698,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             Unit *target = m_targets.getUnitTarget();
             if (!target)
             {
-                sLog.outError("SPELL: no unit target for spell ID %u\n", m_spellInfo->Id);
+                sLog->outError("SPELL: no unit target for spell ID %u\n", m_spellInfo->Id);
                 break;
             }
 
@@ -1758,7 +1758,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
         {
             if (!m_targets.HasDst())
             {
-                sLog.outError("SPELL: no destination for spell ID %u\n", m_spellInfo->Id);
+                sLog->outError("SPELL: no destination for spell ID %u\n", m_spellInfo->Id);
                 break;
             }
 
@@ -1808,7 +1808,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
                             m_targets.setDst(st->target_X, st->target_Y, st->target_Z, st->target_Orientation);
                     }
                     else
-                        sLog.outError("SPELL: unknown target coordinates for spell ID %u\n", m_spellInfo->Id);
+                        sLog->outError("SPELL: unknown target coordinates for spell ID %u\n", m_spellInfo->Id);
                     break;
                 case TARGET_DST_HOME:
                     if (m_caster->GetTypeId() == TYPEID_PLAYER)
@@ -1832,7 +1832,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
         {
             if (!m_originalCaster || !m_originalCaster->GetCurrentSpell(CURRENT_CHANNELED_SPELL))
             {
-                sLog.outError("SPELL: no current channeled spell for spell ID %u", m_spellInfo->Id);
+                sLog->outError("SPELL: no current channeled spell for spell ID %u", m_spellInfo->Id);
                 break;
             }
 
@@ -1842,13 +1842,13 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
                     if (Unit* target = m_originalCaster->GetCurrentSpell(CURRENT_CHANNELED_SPELL)->m_targets.getUnitTarget())
                         AddUnitTarget(target, i);
                     else
-                        sLog.outError("SPELL: cannot find channel spell target for spell ID %u", m_spellInfo->Id);
+                        sLog->outError("SPELL: cannot find channel spell target for spell ID %u", m_spellInfo->Id);
                     break;
                 case TARGET_DEST_CHANNEL:
                     if (m_originalCaster->GetCurrentSpell(CURRENT_CHANNELED_SPELL)->m_targets.HasDst())
                         m_targets = m_originalCaster->GetCurrentSpell(CURRENT_CHANNELED_SPELL)->m_targets;
                     else
-                        sLog.outError("SPELL: cannot find channel spell destination for spell ID %u", m_spellInfo->Id);
+                        sLog->outError("SPELL: cannot find channel spell destination for spell ID %u", m_spellInfo->Id);
                     break;
             }
             break;
@@ -1870,7 +1870,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
                         AddItemTarget(m_targets.getItemTarget(), i);
                     break;
                 default:
-                    sLog.outError("Unhandled spell target %u", cur);
+                    sLog->outError("Unhandled spell target %u", cur);
                     break;
             }
             break;
@@ -1882,7 +1882,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
         Unit *target = m_targets.getUnitTarget();
         if (!target)
         {
-            sLog.outError("SPELL: no chain unit target for spell ID %u", m_spellInfo->Id);
+            sLog->outError("SPELL: no chain unit target for spell ID %u", m_spellInfo->Id);
             return;
         }
 
@@ -1966,7 +1966,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
                 radius = GetSpellRadius(m_spellInfo, i, IsPositiveSpell(m_spellInfo->Id));
                 if (lower == upper)
                 {
-                    sLog.outErrorDb("Spell (ID: %u) (caster Entry: %u) does not have record in spell_script_target", m_spellInfo->Id, m_caster->GetEntry());
+                    sLog->outErrorDb("Spell (ID: %u) (caster Entry: %u) does not have record in spell_script_target", m_spellInfo->Id, m_caster->GetEntry());
 
                     if (IsPositiveEffect(m_spellInfo->Id, i))
                         SearchAreaTarget(unitList, radius, pushType, SPELL_TARGETS_ALLY);
@@ -3219,7 +3219,7 @@ void Spell::TakeCastItem()
     {
         // This code is to avoid a crash
         // I'm not sure, if this is really an error, but I guess every item needs a prototype
-        sLog.outError("Cast item has no item prototype highId=%d, lowId=%d",m_CastItem->GetGUIDHigh(), m_CastItem->GetGUIDLow());
+        sLog->outError("Cast item has no item prototype highId=%d, lowId=%d",m_CastItem->GetGUIDHigh(), m_CastItem->GetGUIDLow());
         return;
     }
 
@@ -3304,7 +3304,7 @@ void Spell::TakePower()
 
     if (m_spellInfo->powerType >= MAX_POWERS)
     {
-        sLog.outError("Spell::TakePower: Unknown power type '%d'", m_spellInfo->powerType);
+        sLog->outError("Spell::TakePower: Unknown power type '%d'", m_spellInfo->powerType);
         return;
     }
 
@@ -3403,18 +3403,18 @@ void Spell::HandleEffects(Unit *pUnitTarget, Item *pItemTarget, GameObject *pGOT
 
     if (eff<TOTAL_SPELL_EFFECTS)
     {
-        //sLog.outDebug("WORLD: Spell FX %d < TOTAL_SPELL_EFFECTS ", eff);
+        //sLog->outDebug("WORLD: Spell FX %d < TOTAL_SPELL_EFFECTS ", eff);
         (*this.*SpellEffects[eff])(i);
     }
     /*
     else
     {
-        sLog.outDebug("WORLD: Spell FX %d > TOTAL_SPELL_EFFECTS ", eff);
+        sLog->outDebug("WORLD: Spell FX %d > TOTAL_SPELL_EFFECTS ", eff);
         if (m_CastItem)
             EffectEnchantItemTmp(i);
         else
         {
-            sLog.outError("SPELL: unknown effect %u spell id %u\n",
+            sLog->outError("SPELL: unknown effect %u spell id %u\n",
                 eff, m_spellInfo->Id);
         }
     }
@@ -3644,7 +3644,7 @@ uint8 Spell::CanCast(bool strict)
                 SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(m_spellInfo->Id);
                 SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(m_spellInfo->Id);
                 if (lower == upper)
-                    sLog.outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = TARGET_UNIT_NEARBY_ENTRY or TARGET_DST_NEARBY_ENTRY, but does not have record in spell_script_target",m_spellInfo->Id);
+                    sLog->outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = TARGET_UNIT_NEARBY_ENTRY or TARGET_DST_NEARBY_ENTRY, but does not have record in spell_script_target",m_spellInfo->Id);
 
                 SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(m_spellInfo->rangeIndex);
                 float range = GetSpellMaxRange(srange);
@@ -4610,7 +4610,7 @@ uint8 Spell::CheckPower()
     // Check valid power type
     if (m_spellInfo->powerType >= MAX_POWERS)
     {
-        sLog.outError("Spell::CheckMana: Unknown power type '%d'", m_spellInfo->powerType);
+        sLog->outError("Spell::CheckMana: Unknown power type '%d'", m_spellInfo->powerType);
         return SPELL_FAILED_UNKNOWN;
     }
     // Check power amount
@@ -5021,7 +5021,7 @@ void Spell::Delayed() // only called in DealDamage()
     else
         m_timer += delaytime;
 
-    sLog.outDetail("Spell %u partially interrupted for (%d) ms at damage",m_spellInfo->Id, delaytime);
+    sLog->outDetail("Spell %u partially interrupted for (%d) ms at damage",m_spellInfo->Id, delaytime);
 
     WorldPacket data(SMSG_SPELL_DELAYED, 8+4);
     data << m_caster->GetPackGUID();
@@ -5331,7 +5331,7 @@ SpellEvent::~SpellEvent()
     }
     else
     {
-        sLog.outError("~SpellEvent: %s %u tried to delete non-deletable spell %u. Was not deleted, causes memory leak.",
+        sLog->outError("~SpellEvent: %s %u tried to delete non-deletable spell %u. Was not deleted, causes memory leak.",
             (m_Spell->GetCaster()->GetTypeId() == TYPEID_PLAYER?"Player":"Creature"), m_Spell->GetCaster()->GetGUIDLow(),m_Spell->m_spellInfo->Id);
     }
 }

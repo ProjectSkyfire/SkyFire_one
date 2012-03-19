@@ -49,7 +49,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
     // possible errors in the coordinate validity check
     if (!MapManager::IsValidMapCoord(loc))
     {
-        sLog.outError("WorldSession::HandleMoveWorldportAckOpcode: player %s (%d) was teleported far to a not valid location. (map:%u, x:%f, y:%f, "
+        sLog->outError("WorldSession::HandleMoveWorldportAckOpcode: player %s (%d) was teleported far to a not valid location. (map:%u, x:%f, y:%f, "
             "z:%f) We port him to his homebind instead..", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow(), loc.GetMapId(), loc.GetPositionX(), loc.GetPositionY(), loc.GetPositionZ());
         // stop teleportation else we would try this again and again in LogoutPlayer...
         GetPlayer()->SetSemaphoreTeleportFar(false);
@@ -72,7 +72,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
     ASSERT(oldMap);
     if (GetPlayer()->IsInWorld())
     {
-        sLog.outCrash("Player is still in world when teleported from map %u! to new map %u", oldMap->GetId(), loc.GetMapId());
+        sLog->outCrash("Player is still in world when teleported from map %u! to new map %u", oldMap->GetId(), loc.GetMapId());
         oldMap->Remove(GetPlayer(), false);
     }
 
@@ -82,7 +82,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
     // while the player is in transit, for example the map may get full
     if (!newMap || !newMap->CanEnter(GetPlayer()))
     {
-        sLog.outError("Map %d could not be created for player %d, porting player to homebind", loc.GetMapId(), GetPlayer()->GetGUIDLow());
+        sLog->outError("Map %d could not be created for player %d, porting player to homebind", loc.GetMapId(), GetPlayer()->GetGUIDLow());
         GetPlayer()->TeleportToHomebind();
         return;
     }
@@ -98,7 +98,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
     GetPlayer()->SendInitialPacketsBeforeAddToMap();
     if (!GetPlayer()->GetMap()->Add(GetPlayer()))
     {
-        sLog.outError("WORLD: failed to teleport player %s (%d) to map %d because of unknown reason!", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow(), loc.GetMapId());
+        sLog->outError("WORLD: failed to teleport player %s (%d) to map %d because of unknown reason!", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow(), loc.GetMapId());
         GetPlayer()->ResetMap();
         GetPlayer()->SetMap(oldMap);
         GetPlayer()->TeleportToHomebind();
@@ -263,7 +263,7 @@ void WorldSession::HandleMovementOpcodes(WorldPacket & recv_data)
 
     /*if (recv_data.size() != recv_data.rpos())
     {
-        sLog.outError("MovementHandler: player %s (guid %d, account %u) sent a packet (opcode %u) that is %u bytes larger than it should be. Kicked as cheater.", _player->GetName(), _player->GetGUIDLow(), _player->GetSession()->GetAccountId(), opcode, recv_data.size() - recv_data.rpos());
+        sLog->outError("MovementHandler: player %s (guid %d, account %u) sent a packet (opcode %u) that is %u bytes larger than it should be. Kicked as cheater.", _player->GetName(), _player->GetGUIDLow(), _player->GetSession()->GetAccountId(), opcode, recv_data.size() - recv_data.rpos());
         KickPlayer();
         return;
     }*/
@@ -388,7 +388,7 @@ void WorldSession::HandleForceSpeedChangeAck(WorldPacket &recv_data)
         case CMSG_FORCE_FLIGHT_SPEED_CHANGE_ACK:        move_type = MOVE_FLIGHT;        force_move_type = MOVE_FLIGHT;      break;
         case CMSG_FORCE_FLIGHT_BACK_SPEED_CHANGE_ACK:   move_type = MOVE_FLIGHT_BACK;   force_move_type = MOVE_FLIGHT_BACK; break;
         default:
-            sLog.outError("WorldSession::HandleForceSpeedChangeAck: Unknown move type opcode: %u", opcode);
+            sLog->outError("WorldSession::HandleForceSpeedChangeAck: Unknown move type opcode: %u", opcode);
             return;
     }
 
@@ -414,7 +414,7 @@ void WorldSession::HandleSetActiveMoverOpcode(WorldPacket &recv_data)
             GetPlayer()->SetMover(mover);
     else
     {
-        sLog.outError("HandleSetActiveMoverOpcode: incorrect mover guid: mover is " UI64FMTD " and should be " UI64FMTD, guid, _player->m_mover->GetGUID());
+        sLog->outError("HandleSetActiveMoverOpcode: incorrect mover guid: mover is " UI64FMTD " and should be " UI64FMTD, guid, _player->m_mover->GetGUID());
         GetPlayer()->SetMover(GetPlayer());
     }
 }

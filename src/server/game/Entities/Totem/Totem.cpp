@@ -78,7 +78,7 @@ void Totem::InitStats(uint32 duration)
         if (modelid)
             SetDisplayId(modelid);
         else
-            sLog.outErrorDb("Totem::Summon: Missing modelid information for entry %u, team %u, totem will use default values.",GetEntry(),m_owner->ToPlayer()->GetTeam());
+            sLog->outErrorDb("Totem::Summon: Missing modelid information for entry %u, team %u, totem will use default values.",GetEntry(),m_owner->ToPlayer()->GetTeam());
     }
 
     // Get spell casted by totem
