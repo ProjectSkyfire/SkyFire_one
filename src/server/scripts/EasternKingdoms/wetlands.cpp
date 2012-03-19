@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -48,7 +49,7 @@ enum eTapokeSlim
 
 struct npc_tapoke_slim_jahnAI : public npc_escortAI
 {
-    npc_tapoke_slim_jahnAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+    npc_tapoke_slim_jahnAI(Creature* creature) : npc_escortAI(creature) { }
 
     bool m_bFriendSummoned;
 
@@ -60,7 +61,7 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 2:
                 if (me->HasStealthAura())
@@ -74,9 +75,9 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void EnterCombat(Unit* /*pWho*/)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_bFriendSummoned && pPlayer)
+        if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_bFriendSummoned && player)
         {
             for (uint8 i = 0; i < 3; ++i)
                 DoCast(me, SPELL_CALL_FRIENDS, true);
@@ -87,8 +88,8 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
 
     void JustSummoned(Creature* pSummoned)
     {
-        if (Player* pPlayer = GetPlayerForEscort())
-            pSummoned->AI()->AttackStart(pPlayer);
+        if (Player* player = GetPlayerForEscort())
+            pSummoned->AI()->AttackStart(player);
     }
 
     void AttackedBy(Unit* pAttacker)
@@ -106,10 +107,10 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
     {
         if (me->GetHealth()*100 < me->GetMaxHealth()*20)
         {
-            if (Player* pPlayer = GetPlayerForEscort())
+            if (Player* player = GetPlayerForEscort())
             {
-                if (pPlayer->GetTypeId() == TYPEID_PLAYER)
-                    CAST_PLR(pPlayer)->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, me);
+                if (player->GetTypeId() == TYPEID_PLAYER)
+                    CAST_PLR(player)->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, me);
 
                 uiDamage = 0;
 
@@ -124,20 +125,20 @@ struct npc_tapoke_slim_jahnAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_tapoke_slim_jahn(Creature* pCreature)
+CreatureAI* GetAI_npc_tapoke_slim_jahn(Creature* creature)
 {
-    return new npc_tapoke_slim_jahnAI(pCreature);
+    return new npc_tapoke_slim_jahnAI(creature);
 }
 
 /*######
 ## npc_mikhail
 ######*/
 
-bool QuestAccept_npc_mikhail(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_mikhail(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT11)
     {
-        Creature* pSlim = pCreature->FindNearestCreature(NPC_TAPOKE_SLIM_JAHN, 25.0f);
+        Creature* pSlim = creature->FindNearestCreature(NPC_TAPOKE_SLIM_JAHN, 25.0f);
 
         if (!pSlim)
             return false;
@@ -146,7 +147,7 @@ bool QuestAccept_npc_mikhail(Player* pPlayer, Creature* pCreature, const Quest* 
             pSlim->CastSpell(pSlim, SPELL_STEALTH, true);
 
         if (npc_tapoke_slim_jahnAI* pEscortAI = CAST_AI(npc_tapoke_slim_jahnAI, pSlim->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
     }
     return false;
 }

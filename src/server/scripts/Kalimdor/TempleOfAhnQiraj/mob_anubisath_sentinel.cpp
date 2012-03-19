@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -122,7 +123,7 @@ struct aqsentinelAI : public ScriptedAI
     {
         if (c == me)
             return;
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (nearby[i] == c)
                 return;
@@ -137,7 +138,7 @@ struct aqsentinelAI : public ScriptedAI
     void GiveBuddyMyList(Creature *c)
     {
         aqsentinelAI *cai = CAST_AI(aqsentinelAI, (c)->AI());
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
             if (nearby[i] && nearby[i] != c)
                 cai->AddBuddyToList(nearby[i]);
         cai->AddBuddyToList(me);
@@ -145,14 +146,14 @@ struct aqsentinelAI : public ScriptedAI
 
     void SendMyListToBuddies()
     {
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
             if (nearby[i])
                 GiveBuddyMyList(nearby[i]);
     }
 
     void CallBuddiesToAttack(Unit *who)
     {
-        for (int i=0; i<3; ++i)
+        for (int i = 0; i < 3; ++i)
         {
             Creature *c = nearby[i];
             if (c)
@@ -170,7 +171,7 @@ struct aqsentinelAI : public ScriptedAI
     void AddSentinelsNear(Unit * /*nears*/)
     {
         std::list<Creature*> assistList;
-        me->GetCreatureListWithEntryInGrid(assistList,15264,70.0f);
+        me->GetCreatureListWithEntryInGrid(assistList, 15264, 70.0f);
 
         if (assistList.empty())
             return;
@@ -224,7 +225,7 @@ struct aqsentinelAI : public ScriptedAI
     {
         if (!me->isDead())
         {
-            for (int i=0; i<3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 if (!nearby[i])
                     continue;
@@ -239,7 +240,7 @@ struct aqsentinelAI : public ScriptedAI
     void GainSentinelAbility(uint32 id)
     {
         const SpellEntry *spell = GetSpellStore()->LookupEntry(id);
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (!spell->Effect[i])
                 continue;
@@ -286,9 +287,9 @@ struct aqsentinelAI : public ScriptedAI
         return NULL;
     }
 };
-CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature* pCreature)
+CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature* creature)
 {
-    return new aqsentinelAI (pCreature);
+    return new aqsentinelAI (creature);
 }
 
 void AddSC_mob_anubisath_sentinel()

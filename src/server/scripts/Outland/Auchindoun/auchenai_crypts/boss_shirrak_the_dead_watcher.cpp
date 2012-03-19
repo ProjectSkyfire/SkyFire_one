@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -71,7 +72,7 @@ struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
     {
         if (summoned && summoned->GetEntry() == ENTRY_FOCUS_FIRE)
         {
-            summoned->CastSpell(summoned,SPELL_FOCUS_FIRE_VISUAL,false);
+            summoned->CastSpell(summoned, SPELL_FOCUS_FIRE_VISUAL, false);
             summoned->setFaction(me->getFaction());
             summoned->SetLevel(me->getLevel());
             summoned->addUnitState(UNIT_STAT_ROOT);
@@ -112,7 +113,7 @@ struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
         //Attractmagic_Timer
         if (Attractmagic_Timer <= diff)
         {
-            DoCast(me,SPELL_ATTRACTMAGIC);
+            DoCast(me, SPELL_ATTRACTMAGIC);
             Attractmagic_Timer = 30000;
             Carnivorousbite_Timer = 1500;
         } else Attractmagic_Timer -= diff;
@@ -120,7 +121,7 @@ struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
         //Carnivorousbite_Timer
         if (Carnivorousbite_Timer <= diff)
         {
-            DoCast(me,SPELL_CARNIVOROUSBITE);
+            DoCast(me, SPELL_CARNIVOROUSBITE);
             Carnivorousbite_Timer = 10000;
         } else Carnivorousbite_Timer -= diff;
 
@@ -128,11 +129,11 @@ struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
         if (FocusFire_Timer <= diff)
         {
             // Summon Focus Fire & Emote
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
             if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
             {
                 focusedTarget = pTarget;
-                me->SummonCreature(ENTRY_FOCUS_FIRE,pTarget->GetPositionX(),pTarget->GetPositionY(),pTarget->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,5500);
+                me->SummonCreature(ENTRY_FOCUS_FIRE, pTarget->GetPositionX(),pTarget->GetPositionY(),pTarget->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN, 5500);
 
                 // Emote
                 std::string *emote = new std::string(EMOTE_FOCUSES_ON);
@@ -149,9 +150,9 @@ struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_shirrak_the_dead_watcher(Creature* pCreature)
+CreatureAI* GetAI_boss_shirrak_the_dead_watcher(Creature* creature)
 {
-    return new boss_shirrak_the_dead_watcherAI (pCreature);
+    return new boss_shirrak_the_dead_watcherAI (creature);
 }
 
 struct mob_focus_fireAI : public ScriptedAI
@@ -183,7 +184,7 @@ struct mob_focus_fireAI : public ScriptedAI
         //FieryBlast_Timer
         if (fiery2 && FieryBlast_Timer <= diff)
         {
-            DoCast(me,SPELL_FIERY_BLAST);
+            DoCast(me, SPELL_FIERY_BLAST);
 
             if (fiery1) fiery1 = false;
             else if (fiery2) fiery2 = false;
@@ -195,9 +196,9 @@ struct mob_focus_fireAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_focus_fire(Creature* pCreature)
+CreatureAI* GetAI_mob_focus_fire(Creature* creature)
 {
-    return new mob_focus_fireAI (pCreature);
+    return new mob_focus_fireAI (creature);
 }
 
 void AddSC_boss_shirrak_the_dead_watcher()

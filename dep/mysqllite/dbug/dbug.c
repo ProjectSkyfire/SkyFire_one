@@ -683,7 +683,7 @@ void FixTraceFlags_helper(CODE_STATE *cs, const char *func,
     It's ok, because cs->framep may only affect DO_TRACE/DONT_TRACE return
     values, but we ignore them here anyway
   */
-  switch(DoTrace(cs)) {
+  switch (DoTrace(cs)) {
   case ENABLE_TRACE:
     framep->level|= TRACE_ON;
     break;
@@ -1658,7 +1658,7 @@ static int DoTrace(CODE_STATE *cs)
 {
   if ((cs->stack->maxdepth == 0 || cs->level <= cs->stack->maxdepth) &&
       InList(cs->stack->processes, cs->process) & (MATCHED|INCLUDE))
-    switch(InList(cs->stack->functions, cs->func)) {
+    switch (InList(cs->stack->functions, cs->func)) {
     case INCLUDE|SUBDIR:  return ENABLE_TRACE;
     case INCLUDE:         return DO_TRACE;
     case MATCHED|SUBDIR:

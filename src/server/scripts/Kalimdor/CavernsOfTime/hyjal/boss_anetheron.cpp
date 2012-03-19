@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -98,7 +99,7 @@ struct boss_anetheronAI : public hyjal_trashAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        switch (urand(0,2))
+        switch (urand(0, 2))
         {
             case 0:
                 DoPlaySoundToSet(me, SOUND_ONSLAY1);
@@ -122,7 +123,7 @@ struct boss_anetheronAI : public hyjal_trashAI
         {
             Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_JAINAPROUDMOORE));
             if (pTarget && pTarget->isAlive())
-                me->AddThreat(pTarget,0.0f);
+                me->AddThreat(pTarget, 0.0f);
         }
     }
 
@@ -169,8 +170,8 @@ struct boss_anetheronAI : public hyjal_trashAI
             if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                 DoCast(pTarget, SPELL_CARRION_SWARM);
 
-            SwarmTimer = urand(45000,60000);
-            switch (urand(0,1))
+            SwarmTimer = urand(45000, 60000);
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_SWARM1);
@@ -188,10 +189,10 @@ struct boss_anetheronAI : public hyjal_trashAI
             for (uint8 i = 0; i < 3; ++i)
             {
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                    pTarget->CastSpell(pTarget,SPELL_SLEEP,true);
+                    pTarget->CastSpell(pTarget, SPELL_SLEEP, true);
             }
             SleepTimer = 60000;
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_SLEEP1);
@@ -206,13 +207,13 @@ struct boss_anetheronAI : public hyjal_trashAI
         if (AuraTimer <= diff)
         {
             DoCast(me, SPELL_VAMPIRIC_AURA, true);
-            AuraTimer = urand(10000,20000);
+            AuraTimer = urand(10000, 20000);
         } else AuraTimer -= diff;
         if (InfernoTimer <= diff)
         {
             DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true), SPELL_INFERNO);
             InfernoTimer = 45000;
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_INFERNO1);
@@ -229,9 +230,9 @@ struct boss_anetheronAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_boss_anetheron(Creature* pCreature)
+CreatureAI* GetAI_boss_anetheron(Creature* creature)
 {
-    return new boss_anetheronAI (pCreature);
+    return new boss_anetheronAI (creature);
 }
 
 #define SPELL_IMMOLATION     31303
@@ -273,7 +274,7 @@ struct mob_towering_infernalAI : public ScriptedAI
     void MoveInLineOfSight(Unit *who)
     {
         if (me->IsWithinDist(who, 50) && !me->isInCombat() && me->IsHostileTo(who))
-            me->Attack(who,false);
+            me->Attack(who, false);
     }
 
     void UpdateAI(const uint32 diff)
@@ -307,9 +308,9 @@ struct mob_towering_infernalAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_towering_infernal(Creature* pCreature)
+CreatureAI* GetAI_mob_towering_infernal(Creature* creature)
 {
-    return new mob_towering_infernalAI (pCreature);
+    return new mob_towering_infernalAI (creature);
 }
 
 void AddSC_boss_anetheron()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -42,38 +43,38 @@ EndContentData */
 #define GOSSIP_HBD4 "Alexstrasza"
 #define GOSSIP_HBD5 "Malygos"
 
-bool GossipHello_npc_braug_dimspirit(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_braug_dimspirit(Player* player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(6627) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(6627) == QUEST_STATUS_INCOMPLETE)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-        pPlayer->SEND_GOSSIP_MENU(5820, pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(5820, creature->GetGUID());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(5819, pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(5819, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_braug_dimspirit(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_braug_dimspirit(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer,6766,false);
+        player->CLOSE_GOSSIP_MENU();
+        creature->CastSpell(player, 6766, false);
     }
     if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->AreaExploredOrEventHappens(6627);
+        player->CLOSE_GOSSIP_MENU();
+        player->AreaExploredOrEventHappens(6627);
     }
     return true;
 }
@@ -103,12 +104,12 @@ struct npc_kaya_flathoofAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 16:
             DoScriptText(SAY_AMBUSH, me);
@@ -116,10 +117,10 @@ struct npc_kaya_flathoofAI : public npc_escortAI
             me->SummonCreature(NPC_GRIMTOTEM_RUFFIAN, -38.85f, -503.77f, -45.90f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
             me->SummonCreature(NPC_GRIMTOTEM_SORCERER, -36.37f, -496.23f, -45.71f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
             break;
-        case 18: me->SetInFront(pPlayer);
-            DoScriptText(SAY_END, me, pPlayer);
-            if (pPlayer)
-                pPlayer->GroupEventHappens(QUEST_PROTECT_KAYA, me);
+        case 18: me->SetInFront(player);
+            DoScriptText(SAY_END, me, player);
+            if (player)
+                player->GroupEventHappens(QUEST_PROTECT_KAYA, me);
             break;
         }
     }
@@ -132,23 +133,23 @@ struct npc_kaya_flathoofAI : public npc_escortAI
     void Reset(){}
 };
 
-bool QuestAccept_npc_kaya_flathoof(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_kaya_flathoof(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_PROTECT_KAYA)
     {
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_kaya_flathoofAI, pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID());
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_kaya_flathoofAI, creature->AI()))
+            pEscortAI->Start(true, false, player->GetGUID());
 
-        DoScriptText(SAY_START, pCreature);
-        pCreature->setFaction(113);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        DoScriptText(SAY_START, creature);
+        creature->setFaction(113);
+        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_kaya_flathoofAI(Creature* pCreature)
+CreatureAI* GetAI_npc_kaya_flathoofAI(Creature* creature)
 {
-    return new npc_kaya_flathoofAI(pCreature);
+    return new npc_kaya_flathoofAI(creature);
 }
 
 /*######

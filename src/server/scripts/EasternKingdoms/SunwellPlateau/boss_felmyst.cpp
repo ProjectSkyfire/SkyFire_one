@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -179,7 +180,7 @@ struct boss_felmystAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        DoScriptText(RAND(YELL_KILL1,YELL_KILL2), me);
+        DoScriptText(RAND(YELL_KILL1, YELL_KILL2), me);
     }
 
     void JustRespawned()
@@ -242,7 +243,7 @@ struct boss_felmystAI : public ScriptedAI
 
     void EnterPhase(PhaseFelmyst NextPhase)
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_GROUND:
             me->CastStop(SPELL_FOG_BREATH);
@@ -268,7 +269,7 @@ struct boss_felmystAI : public ScriptedAI
 
     void HandleFlightSequence()
     {
-        switch(uiFlightCount)
+        switch (uiFlightCount)
         {
         case 0:
             //me->AttackStop();
@@ -417,7 +418,7 @@ struct boss_felmystAI : public ScriptedAI
 
         if (phase == PHASE_GROUND)
         {
-            switch(events.ExecuteEvent())
+            switch (events.ExecuteEvent())
             {
                 case EVENT_BERSERK:
                     DoScriptText(YELL_BERSERK, me);
@@ -426,20 +427,20 @@ struct boss_felmystAI : public ScriptedAI
                     break;
                 case EVENT_CLEAVE:
                     DoCast(me->getVictim(), SPELL_CLEAVE, false);
-                    events.ScheduleEvent(EVENT_CLEAVE, urand(5000,10000));
+                    events.ScheduleEvent(EVENT_CLEAVE, urand(5000, 10000));
                     break;
                 case EVENT_CORROSION:
                     DoCast(me->getVictim(), SPELL_CORROSION, false);
-                    events.ScheduleEvent(EVENT_CORROSION, urand(20000,30000));
+                    events.ScheduleEvent(EVENT_CORROSION, urand(20000, 30000));
                     break;
                 case EVENT_GAS_NOVA:
                     DoCast(me, SPELL_GAS_NOVA, false);
-                    events.ScheduleEvent(EVENT_GAS_NOVA, urand(20000,25000));
+                    events.ScheduleEvent(EVENT_GAS_NOVA, urand(20000, 25000));
                     break;
                 case EVENT_ENCAPSULATE:
                     if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 150, true))
                         DoCast(pTarget, SPELL_ENCAPSULATE_CHANNEL, false);
-                    events.ScheduleEvent(EVENT_ENCAPSULATE, urand(25000,30000));
+                    events.ScheduleEvent(EVENT_ENCAPSULATE, urand(25000, 30000));
                     break;
                 case EVENT_FLIGHT:
                     EnterPhase(PHASE_FLIGHT);
@@ -452,7 +453,7 @@ struct boss_felmystAI : public ScriptedAI
 
         if (phase == PHASE_FLIGHT)
         {
-            switch(events.ExecuteEvent())
+            switch (events.ExecuteEvent())
             {
                 case EVENT_BERSERK:
                     DoScriptText(YELL_BERSERK, me);
@@ -483,14 +484,14 @@ struct boss_felmystAI : public ScriptedAI
         float x, y, z;
         me->GetPosition(x, y, z);
 
-        CellPair pair(Oregon::ComputeCellPair(x, y));
+        CellPair pair(Trinity::ComputeCellPair(x, y));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Oregon::AllCreaturesOfEntryInRange check(me, entry, 100);
-        Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(templist, check);
-        TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+        Trinity::AllCreaturesOfEntryInRange check(me, entry, 100);
+        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
+        TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
         cell.Visit(pair, cSearcher, *(me->GetMap()));
 
         for (std::list<Creature*>::const_iterator i = templist.begin(); i != templist.end(); ++i)
@@ -545,19 +546,19 @@ struct mob_felmyst_trailAI : public ScriptedAI
     void UpdateAI(const uint32 /*diff*/) {}
 };
 
-CreatureAI* GetAI_boss_felmyst(Creature* pCreature)
+CreatureAI* GetAI_boss_felmyst(Creature* creature)
 {
-    return new boss_felmystAI(pCreature);
+    return new boss_felmystAI(creature);
 }
 
-CreatureAI* GetAI_mob_felmyst_vapor(Creature* pCreature)
+CreatureAI* GetAI_mob_felmyst_vapor(Creature* creature)
 {
-    return new mob_felmyst_vaporAI(pCreature);
+    return new mob_felmyst_vaporAI(creature);
 }
 
-CreatureAI* GetAI_mob_felmyst_trail(Creature* pCreature)
+CreatureAI* GetAI_mob_felmyst_trail(Creature* creature)
 {
-    return new mob_felmyst_trailAI(pCreature);
+    return new mob_felmyst_trailAI(creature);
 }
 
 void AddSC_boss_felmyst()

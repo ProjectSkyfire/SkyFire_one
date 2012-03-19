@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -31,7 +32,7 @@
 #include "GossipDef.h"
 #include "Language.h"
 #include "MapManager.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include <fstream>
 #include "ObjectMgr.h"
 #include "InstanceData.h"
@@ -72,7 +73,7 @@ bool ChatHandler::HandleDebugSpellFailCommand(const char* args)
 
 bool ChatHandler::HandleSetPoiCommand(const char* args)
 {
-    Player *pPlayer = m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
     Unit* target = getSelectedUnit();
     if (!target)
     {
@@ -94,8 +95,8 @@ bool ChatHandler::HandleSetPoiCommand(const char* args)
 
     uint32 flags = atol(flags_text);
 
-    sLog.outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon,flags);
-    pPlayer->PlayerTalkClass->SendPointOfInterest(target->GetPositionX(), target->GetPositionY(), Poi_Icon(icon), flags, 30, "Test POI");
+    sLog->outDetail("Command : POI, NPC = %u, icon = %u flags = %u", target->GetGUIDLow(), icon, flags);
+    player->PlayerTalkClass->SendPointOfInterest(target->GetPositionX(), target->GetPositionY(), Poi_Icon(icon), flags, 30, "Test POI");
     return true;
 }
 
@@ -132,7 +133,7 @@ bool ChatHandler::HandleBuyErrorCommand(const char* args)
 bool ChatHandler::HandleSendOpcodeCommand(const char* /*args*/)
 {
     Unit *unit = getSelectedUnit();
-    Player *player = NULL;
+    Player* player = NULL;
     if (!unit || (unit->GetTypeId() != TYPEID_PLAYER))
         player = m_session->GetPlayer();
     else
@@ -214,12 +215,12 @@ bool ChatHandler::HandleSendOpcodeCommand(const char* /*args*/)
         }
         else
         {
-            sLog.outDebug("Sending opcode: unknown type '%s'", type.c_str());
+            sLog->outDebug("Sending opcode: unknown type '%s'", type.c_str());
             break;
         }
     }
     ifs.close();
-    sLog.outDebug("Sending opcode %u", data.GetOpcode());
+    sLog->outDebug("Sending opcode %u", data.GetOpcode());
     data.hexlike();
     unit->ToPlayer()->GetSession()->SendPacket(&data);
     PSendSysMessage(LANG_COMMAND_OPCODESENT, data.GetOpcode(), unit->GetName());
@@ -294,9 +295,9 @@ bool ChatHandler::HandleDebugPlaySoundCommand(const char* args)
     }
 
     if (m_session->GetPlayer()->GetSelection())
-        unit->PlayDistanceSound(dwSoundId,m_session->GetPlayer());
+        unit->PlayDistanceSound(dwSoundId, m_session->GetPlayer());
     else
-        unit->PlayDirectSound(dwSoundId,m_session->GetPlayer());
+        unit->PlayDirectSound(dwSoundId, m_session->GetPlayer());
 
     PSendSysMessage(LANG_YOU_HEAR_SOUND, dwSoundId);
     return true;
@@ -421,7 +422,7 @@ bool ChatHandler::HandleGetItemState(const char* args)
             uint8 bag_slot = container ? container->GetSlot() : uint8(INVENTORY_SLOT_BAG_0);
 
             std::string st;
-            switch(item->GetState())
+            switch (item->GetState())
             {
                 case ITEM_UNCHANGED: st = "unchanged"; break;
                 case ITEM_CHANGED: st = "changed"; break;
@@ -596,13 +597,13 @@ bool ChatHandler::HandleGetItemState(const char* args)
 
 bool ChatHandler::HandleDebugBattlegroundCommand(const char * /*args*/)
 {
-    sBattleGroundMgr.ToggleTesting();
+    sBattleGroundMgr->ToggleTesting();
     return true;
 }
 
 bool ChatHandler::HandleDebugArenaCommand(const char * /*args*/)
 {
-    sBattleGroundMgr.ToggleArenaTesting();
+    sBattleGroundMgr->ToggleArenaTesting();
     return true;
 }
 
@@ -615,14 +616,14 @@ bool ChatHandler::HandleDebugThreatList(const char * /*args*/)
     std::list<HostileReference*>& tlist = target->getThreatManager().getThreatList();
     std::list<HostileReference*>::iterator itr;
     uint32 cnt = 0;
-    PSendSysMessage("Threat list of %s (guid %u)",target->GetName(), target->GetGUIDLow());
+    PSendSysMessage("Threat list of %s (guid %u)", target->GetName(), target->GetGUIDLow());
     for (itr = tlist.begin(); itr != tlist.end(); ++itr)
     {
         Unit* unit = (*itr)->getTarget();
         if (!unit)
             continue;
         ++cnt;
-        PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt,unit->GetName(), unit->GetGUIDLow(), (*itr)->getThreat());
+        PSendSysMessage("   %u.   %s   (guid %u)  - threat %f", cnt, unit->GetName(), unit->GetGUIDLow(), (*itr)->getThreat());
     }
     SendSysMessage("End of threat list.");
     return true;
@@ -635,13 +636,13 @@ bool ChatHandler::HandleDebugHostilRefList(const char * /*args*/)
         target = m_session->GetPlayer();
     HostileReference* ref = target->getHostileRefManager().getFirst();
     uint32 cnt = 0;
-    PSendSysMessage("Hostil reference list of %s (guid %u)",target->GetName(), target->GetGUIDLow());
+    PSendSysMessage("Hostil reference list of %s (guid %u)", target->GetName(), target->GetGUIDLow());
     while (ref)
     {
         if (Unit * unit = ref->getSource()->getOwner())
         {
             ++cnt;
-            PSendSysMessage("   %u.   %s   (guid %u)  - threat %f",cnt,unit->GetName(), unit->GetGUIDLow(), ref->getThreat());
+            PSendSysMessage("   %u.   %s   (guid %u)  - threat %f", cnt, unit->GetName(), unit->GetGUIDLow(), ref->getThreat());
         }
         ref = ref->next();
     }

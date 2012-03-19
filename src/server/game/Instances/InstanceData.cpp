@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -29,7 +30,7 @@ void InstanceData::SaveToDB()
     std::string data = GetSaveData();
     if (data.empty())
         return;
-    CharacterDatabase.escape_string(data);
+    CharacterDatabase.EscapeString(data);
     CharacterDatabase.PExecute("UPDATE instance SET data = '%s' WHERE id = '%d'", data.c_str(), instance->GetInstanceId());
 }
 
@@ -40,7 +41,7 @@ void InstanceData::HandleGameObject(uint64 GUID, bool open, GameObject *go)
     if (go)
         go->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
     else
-        debug_log("OSCR: InstanceData: HandleGameObject failed");
+        sLog->outDebug("TSCR: InstanceData: HandleGameObject failed");
 }
 
 bool InstanceData::IsEncounterInProgress() const
@@ -61,7 +62,7 @@ void InstanceData::LoadMinionData(const MinionData *data)
 
         ++data;
     }
-    sLog.outDebug("InstanceData::LoadMinionData: %u minions loaded.", doors.size());
+    sLog->outDebug("InstanceData::LoadMinionData: %u minions loaded.", doors.size());
 }
 
 void InstanceData::LoadDoorData(const DoorData *data)
@@ -73,7 +74,7 @@ void InstanceData::LoadDoorData(const DoorData *data)
 
         ++data;
     }
-    sLog.outDebug("InstanceData::LoadDoorData: %u doors loaded.", doors.size());
+    sLog->outDebug("InstanceData::LoadDoorData: %u doors loaded.", doors.size());
 }
 
 void InstanceData::UpdateMinionState(Creature *minion, EncounterState state)
@@ -165,7 +166,7 @@ bool InstanceData::SetBossState(uint32 id, EncounterState state)
         if (bossInfo->state == TO_BE_DECIDED) // loading
         {
             bossInfo->state = state;
-            //sLog.outError("Inialize boss %u state as %u.", id, (uint32)state);
+            //sLog->outError("Inialize boss %u state as %u.", id, (uint32)state);
             return false;
         }
         else
@@ -224,12 +225,12 @@ void InstanceData::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bo
         if (pGo->GetGoType() == GAMEOBJECT_TYPE_DOOR || pGo->GetGoType() == GAMEOBJECT_TYPE_BUTTON)
         {
             if (pGo->getLootState() == GO_READY)
-                pGo->UseDoorOrButton(uiWithRestoreTime,bUseAlternativeState);
+                pGo->UseDoorOrButton(uiWithRestoreTime, bUseAlternativeState);
             else if (pGo->getLootState() == GO_ACTIVATED)
                 pGo->ResetDoorOrButton();
         }
         else
-            error_log("OSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.",pGo->GetEntry(),pGo->GetGoType());
+            sLog->outError("TSCR: Script call DoUseDoorOrButton, but gameobject entry %u is type %u.", pGo->GetEntry(), pGo->GetGoType());
     }
 }
 

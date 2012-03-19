@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,15 +18,17 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MOVEMENTGENERATOR_H
-#define OREGON_MOVEMENTGENERATOR_H
+#ifndef TRINITY_MOVEMENTGENERATOR_H
+#define TRINITY_MOVEMENTGENERATOR_H
 
 #include "Define.h"
-#include "Policies/Singleton.h"
+
 #include "Dynamic/ObjectRegistry.h"
 #include "Dynamic/FactoryHolder.h"
 #include "Common.h"
 #include "MotionMaster.h"
+
+#include <ace/Singleton.h>
 
 class Unit;
 
@@ -80,9 +83,9 @@ class MovementGeneratorMedium : public MovementGenerator
         bool Update(T &u, const uint32 &time_diff);
 };
 
-struct SelectableMovement : public FactoryHolder<MovementGenerator,MovementGeneratorType>
+struct SelectableMovement : public FactoryHolder<MovementGenerator, MovementGeneratorType>
 {
-    SelectableMovement(MovementGeneratorType mgt) : FactoryHolder<MovementGenerator,MovementGeneratorType>(mgt) {}
+    SelectableMovement(MovementGeneratorType mgt) : FactoryHolder<MovementGenerator, MovementGeneratorType>(mgt) {}
 };
 
 template<class REAL_MOVEMENT>
@@ -93,8 +96,8 @@ struct MovementGeneratorFactory : public SelectableMovement
     MovementGenerator* Create(void *) const;
 };
 
-typedef FactoryHolder<MovementGenerator,MovementGeneratorType> MovementGeneratorCreator;
-typedef FactoryHolder<MovementGenerator,MovementGeneratorType>::FactoryHolderRegistry MovementGeneratorRegistry;
-typedef FactoryHolder<MovementGenerator,MovementGeneratorType>::FactoryHolderRepository MovementGeneratorRepository;
+typedef FactoryHolder<MovementGenerator, MovementGeneratorType> MovementGeneratorCreator;
+typedef FactoryHolder<MovementGenerator, MovementGeneratorType>::FactoryHolderRegistry MovementGeneratorRegistry;
+typedef FactoryHolder<MovementGenerator, MovementGeneratorType>::FactoryHolderRepository MovementGeneratorRepository;
 #endif
 

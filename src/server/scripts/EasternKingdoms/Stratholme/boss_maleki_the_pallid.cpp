@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -59,7 +60,7 @@ struct boss_maleki_the_pallidAI : public ScriptedAI
     void JustDied(Unit* /*Killer*/)
     {
         if (pInstance)
-            pInstance->SetData(TYPE_PALLID,IN_PROGRESS);
+            pInstance->SetData(TYPE_PALLID, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)
@@ -95,9 +96,9 @@ struct boss_maleki_the_pallidAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_maleki_the_pallid(Creature* pCreature)
+CreatureAI* GetAI_boss_maleki_the_pallid(Creature* creature)
 {
-    return new boss_maleki_the_pallidAI (pCreature);
+    return new boss_maleki_the_pallidAI (creature);
 }
 
 void AddSC_boss_maleki_the_pallid()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -79,7 +80,7 @@ struct npc_lazy_peonAI : public ScriptedAI
             DoScriptText(SAY_SPELL_HIT, me, caster);
             me->RemoveAllAuras();
             if (GameObject* Lumberpile = me->FindNearestGameObject(GO_LUMBERPILE, 20))
-                me->GetMotionMaster()->MovePoint(1,Lumberpile->GetPositionX()-1,Lumberpile->GetPositionY(),Lumberpile->GetPositionZ());
+                me->GetMotionMaster()->MovePoint(1, Lumberpile->GetPositionX()-1, Lumberpile->GetPositionY(),Lumberpile->GetPositionZ());
         }
     }
 
@@ -103,9 +104,9 @@ struct npc_lazy_peonAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_lazy_peon(Creature* pCreature)
+CreatureAI* GetAI_npc_lazy_peon(Creature* creature)
 {
-    return new npc_lazy_peonAI(pCreature);
+    return new npc_lazy_peonAI(creature);
 }
 
 void AddSC_durotar()

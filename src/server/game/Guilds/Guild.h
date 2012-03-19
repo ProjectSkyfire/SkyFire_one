@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_GUILD_H
-#define OREGONCORE_GUILD_H
+#ifndef TRINITY_GUILD_H
+#define TRINITY_GUILD_H
 
 #define WITHDRAW_MONEY_UNLIMITED    0xFFFFFFFF
 #define WITHDRAW_SLOT_UNLIMITED     0xFFFFFFFF
@@ -301,8 +302,8 @@ class Guild
 
         void SetMOTD(std::string motd);
         void SetGINFO(std::string ginfo);
-        void SetPNOTE(uint64 guid,std::string pnote);
-        void SetOFFNOTE(uint64 guid,std::string offnote);
+        void SetPNOTE(uint64 guid, std::string pnote);
+        void SetOFFNOTE(uint64 guid, std::string offnote);
         void SetEmblem(uint32 m_EmblemStyle, uint32 m_EmblemColor, uint32 m_BorderStyle, uint32 m_BorderColor, uint32 m_BackgroundColor);
 
         uint32 GetMemberSize() const { return members.size(); }
@@ -327,7 +328,7 @@ class Guild
             BroadcastEvent(event, 0, str1, str2, str3);
         }
 
-        void CreateRank(std::string m_Name,uint32 rights);
+        void CreateRank(std::string m_Name, uint32 rights);
         void DelRank();
         std::string GetRankName(uint32 rankId);
         uint32 GetRankRights(uint32 rankId);
@@ -391,7 +392,7 @@ class Guild
         void   CreateBankRightForTab(uint32 rankid, uint8 TabId);
         const  GuildBankTab *GetBankTab(uint8 index) { if (index >= m_TabListMap.size()) return NULL; return m_TabListMap[index]; }
         uint32 GetBankRights(uint32 rankId, uint8 TabId) const;
-        bool   IsMemberHaveRights(uint32 LowGuid, uint8 TabId,uint32 rights) const;
+        bool   IsMemberHaveRights(uint32 LowGuid, uint8 TabId, uint32 rights) const;
         bool   CanMemberViewTab(uint32 LowGuid, uint8 TabId) const;
         // Load/unload
         void   LoadGuildBankFromDB();
@@ -421,7 +422,7 @@ class Guild
         bool   AddGBankItemToDB(uint32 GuildId, uint32 BankTab , uint32 BankTabSlot , uint32 GUIDLow, uint32 Entry);
 
     protected:
-        void AddRank(const std::string& name,uint32 rights,uint32 money);
+        void AddRank(const std::string& name, uint32 rights, uint32 money);
 
         uint32 m_Id;
         std::string m_Name;

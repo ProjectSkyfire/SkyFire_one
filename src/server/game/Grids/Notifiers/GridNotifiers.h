@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRIDNOTIFIERS_H
-#define OREGON_GRIDNOTIFIERS_H
+#ifndef TRINITY_GRIDNOTIFIERS_H
+#define TRINITY_GRIDNOTIFIERS_H
 
 #include "ObjectGridLoader.h"
 #include "ByteBuffer.h"
@@ -36,7 +37,7 @@
 class Player;
 //class Map;
 
-namespace Oregon
+namespace Trinity
 {
     struct VisibleNotifier
     {
@@ -186,7 +187,7 @@ namespace Oregon
         WorldObject* &i_object;
         Check &i_check;
 
-        WorldObjectSearcher(WorldObject* & result, Check& check) : i_object(result),i_check(check) {}
+        WorldObjectSearcher(WorldObject* & result, Check& check) : i_object(result), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
         void Visit(PlayerMapType &m);
@@ -203,7 +204,7 @@ namespace Oregon
         std::list<WorldObject*> &i_objects;
         Check& i_check;
 
-        WorldObjectListSearcher(std::list<WorldObject*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        WorldObjectListSearcher(std::list<WorldObject*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(PlayerMapType &m);
         void Visit(CreatureMapType &m);
@@ -261,7 +262,7 @@ namespace Oregon
         GameObject* &i_object;
         Check &i_check;
 
-        GameObjectSearcher(GameObject* & result, Check& check) : i_object(result),i_check(check) {}
+        GameObjectSearcher(GameObject* & result, Check& check) : i_object(result), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
 
@@ -275,7 +276,7 @@ namespace Oregon
         GameObject* &i_object;
         Check& i_check;
 
-        GameObjectLastSearcher(GameObject* & result, Check& check) : i_object(result),i_check(check) {}
+        GameObjectLastSearcher(GameObject* & result, Check& check) : i_object(result), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
 
@@ -288,7 +289,7 @@ namespace Oregon
         std::list<GameObject*> &i_objects;
         Check& i_check;
 
-        GameObjectListSearcher(std::list<GameObject*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        GameObjectListSearcher(std::list<GameObject*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(GameObjectMapType &m);
 
@@ -304,7 +305,7 @@ namespace Oregon
         Unit* &i_object;
         Check & i_check;
 
-        UnitSearcher(Unit* & result, Check & check) : i_object(result),i_check(check) {}
+        UnitSearcher(Unit* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
         void Visit(PlayerMapType &m);
@@ -319,7 +320,7 @@ namespace Oregon
         Unit* &i_object;
         Check & i_check;
 
-        UnitLastSearcher(Unit* & result, Check & check) : i_object(result),i_check(check) {}
+        UnitLastSearcher(Unit* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
         void Visit(PlayerMapType &m);
@@ -334,7 +335,7 @@ namespace Oregon
         std::list<Unit*> &i_objects;
         Check& i_check;
 
-        UnitListSearcher(std::list<Unit*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        UnitListSearcher(std::list<Unit*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(PlayerMapType &m);
         void Visit(CreatureMapType &m);
@@ -350,7 +351,7 @@ namespace Oregon
         Creature* &i_object;
         Check & i_check;
 
-        CreatureSearcher(Creature* & result, Check & check) : i_object(result),i_check(check) {}
+        CreatureSearcher(Creature* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
 
@@ -364,7 +365,7 @@ namespace Oregon
         Creature* &i_object;
         Check & i_check;
 
-        CreatureLastSearcher(Creature* & result, Check & check) : i_object(result),i_check(check) {}
+        CreatureLastSearcher(Creature* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(CreatureMapType &m);
 
@@ -377,7 +378,7 @@ namespace Oregon
         std::list<Creature*> &i_objects;
         Check& i_check;
 
-        CreatureListSearcher(std::list<Creature*> &objects, Check & check) : i_objects(objects),i_check(check) {}
+        CreatureListSearcher(std::list<Creature*> &objects, Check & check) : i_objects(objects), i_check(check) {}
 
         void Visit(CreatureMapType &m);
 
@@ -409,7 +410,7 @@ namespace Oregon
         Player* &i_object;
         Check & i_check;
 
-        PlayerSearcher(Player* & result, Check & check) : i_object(result),i_check(check) {}
+        PlayerSearcher(Player* & result, Check & check) : i_object(result), i_check(check) {}
 
         void Visit(PlayerMapType &m);
 
@@ -424,7 +425,7 @@ namespace Oregon
         Check& i_check;
 
         PlayerListSearcher(std::list<Player*> &objects, Check & check)
-            : i_objects(objects),i_check(check) {}
+            : i_objects(objects), i_check(check) {}
 
         void Visit(PlayerMapType &m);
 
@@ -511,7 +512,7 @@ namespace Oregon
     class GameObjectFocusCheck
     {
         public:
-            GameObjectFocusCheck(Unit const* unit,uint32 focusId) : i_unit(unit), i_focusId(focusId) {}
+            GameObjectFocusCheck(Unit const* unit, uint32 focusId) : i_unit(unit), i_focusId(focusId) {}
             bool operator()(GameObject* go) const
             {
                 if (go->GetGOInfo()->type != GAMEOBJECT_TYPE_SPELL_FOCUS)
@@ -556,7 +557,7 @@ namespace Oregon
     class NearestGameObjectEntryInObjectRangeCheck
     {
         public:
-            NearestGameObjectEntryInObjectRangeCheck(WorldObject const& obj,uint32 entry, float range) : i_obj(obj), i_entry(entry), i_range(range) {}
+            NearestGameObjectEntryInObjectRangeCheck(WorldObject const& obj, uint32 entry, float range) : i_obj(obj), i_entry(entry), i_range(range) {}
             bool operator()(GameObject* go)
             {
                 if (go->GetEntry() == i_entry && i_obj.IsWithinDistInMap(go, i_range))
@@ -579,7 +580,7 @@ namespace Oregon
     class GameObjectWithDbGUIDCheck
     {
         public:
-            GameObjectWithDbGUIDCheck(WorldObject const& obj,uint32 db_guid) : i_obj(obj), i_db_guid(db_guid) {}
+            GameObjectWithDbGUIDCheck(WorldObject const& obj, uint32 db_guid) : i_obj(obj), i_db_guid(db_guid) {}
             bool operator()(GameObject const* go) const
             {
                 return go->GetDBTableGUIDLow() == i_db_guid;
@@ -738,7 +739,7 @@ namespace Oregon
             bool operator()(Unit* u)
             {
                 if (u->isTargetableForAttack() && i_obj->IsWithinDistInMap(u, i_range) &&
-                    !i_funit->IsFriendlyTo(u) && u->isVisibleForOrDetect(i_funit,false))
+                    !i_funit->IsFriendlyTo(u) && u->isVisibleForOrDetect(i_funit, false))
                 {
                     i_range = i_obj->GetDistance(u);        // use found unit range as new range limit for next check
                     return true;
@@ -987,7 +988,7 @@ namespace Oregon
         AllGameObjectsWithEntryInRange(const WorldObject* pObject, uint32 uiEntry, float fMaxRange) : m_pObject(pObject), m_uiEntry(uiEntry), m_fRange(fMaxRange) {}
         bool operator() (GameObject* pGo)
         {
-            if (pGo->GetEntry() == m_uiEntry && m_pObject->IsWithinDist(pGo,m_fRange,false))
+            if (pGo->GetEntry() == m_uiEntry && m_pObject->IsWithinDist(pGo, m_fRange, false))
                 return true;
 
             return false;
@@ -1004,7 +1005,7 @@ namespace Oregon
             AllCreaturesOfEntryInRange(const WorldObject* pObject, uint32 uiEntry, float fMaxRange) : m_pObject(pObject), m_uiEntry(uiEntry), m_fRange(fMaxRange) {}
             bool operator() (Unit* pUnit)
             {
-                if (pUnit->GetEntry() == m_uiEntry && m_pObject->IsWithinDist(pUnit,m_fRange,false))
+                if (pUnit->GetEntry() == m_uiEntry && m_pObject->IsWithinDist(pUnit, m_fRange, false))
                     return true;
 
                 return false;
@@ -1020,10 +1021,10 @@ namespace Oregon
     {
     public:
         PlayerAtMinimumRangeAway(Unit const* unit, float fMinRange) : pUnit(unit), fRange(fMinRange) {}
-        bool operator() (Player* pPlayer)
+        bool operator() (Player* player)
         {
             //No threat list check, must be done explicit if expected to be in combat with creature
-            if (!pPlayer->isGameMaster() && pPlayer->isAlive() && !pUnit->IsWithinDist(pPlayer,fRange,false))
+            if (!player->isGameMaster() && player->isAlive() && !pUnit->IsWithinDist(player, fRange, false))
                 return true;
 
             return false;

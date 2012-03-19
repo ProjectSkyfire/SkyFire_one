@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -68,7 +69,7 @@ struct boss_curatorAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_KILL1,SAY_KILL2), me);
+        DoScriptText(RAND(SAY_KILL1, SAY_KILL2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -150,9 +151,9 @@ struct boss_curatorAI : public ScriptedAI
                     }
                     else
                     {
-                        if (urand(0,1) == 0)
+                        if (urand(0, 1) == 0)
                         {
-                            DoScriptText(RAND(SAY_SUMMON1,SAY_SUMMON2), me);
+                            DoScriptText(RAND(SAY_SUMMON1, SAY_SUMMON2), me);
                         }
                     }
                 }
@@ -183,9 +184,9 @@ struct boss_curatorAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_curator(Creature* pCreature)
+CreatureAI* GetAI_boss_curator(Creature* creature)
 {
-    return new boss_curatorAI (pCreature);
+    return new boss_curatorAI (creature);
 }
 
 void AddSC_boss_curator()

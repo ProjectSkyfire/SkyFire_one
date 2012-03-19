@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -88,7 +89,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     uint32 GetData(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_SELIN_EVENT:          return m_auiEncounter[0];
             case DATA_VEXALLUS_EVENT:       return m_auiEncounter[1];
@@ -102,7 +103,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     void SetData(uint32 identifier, uint32 data)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_SELIN_EVENT:       m_auiEncounter[0] = data;  break;
             case DATA_VEXALLUS_EVENT:
@@ -128,19 +129,19 @@ struct instance_magisters_terrace : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 24723: SelinGUID = pCreature->GetGUID(); break;
-            case 24560: DelrissaGUID = pCreature->GetGUID(); break;
-            case 24722: FelCrystals.push_back(pCreature->GetGUID()); break;
+            case 24723: SelinGUID = creature->GetGUID(); break;
+            case 24560: DelrissaGUID = creature->GetGUID(); break;
+            case 24722: FelCrystals.push_back(creature->GetGUID()); break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 187896:  VexallusDoorGUID = pGo->GetGUID();       break;
             //SunwellRaid Gate 02
@@ -156,7 +157,7 @@ struct instance_magisters_terrace : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_SELIN:                return SelinGUID;
             case DATA_DELRISSA:             return DelrissaGUID;
@@ -172,7 +173,7 @@ struct instance_magisters_terrace : public ScriptedInstance
             {
                 if (FelCrystals.empty())
                 {
-                    error_log("OSCR: Magisters Terrace: No Fel Crystals loaded in Inst Data");
+                    sLog->outError("TSCR: Magisters Terrace: No Fel Crystals loaded in Inst Data");
                     return 0;
                 }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -58,12 +59,12 @@ struct boss_ramstein_the_gorgerAI : public ScriptedAI
     {
         for (uint8 i = 0; i < 30; ++i)
         {
-            if (Creature* mob = me->SummonCreature(C_MINDLESS_UNDEAD,3969.35+irand(-10,10),-3391.87+irand(-10,10),119.11,5.91,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000))
+            if (Creature* mob = me->SummonCreature(C_MINDLESS_UNDEAD, 3969.35+irand(-10, 10),-3391.87+irand(-10, 10),119.11, 5.91, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000))
                 mob->AI()->AttackStart(me->SelectNearestTarget(500));
         }
 
         if (pInstance)
-            pInstance->SetData(TYPE_RAMSTEIN,DONE);
+            pInstance->SetData(TYPE_RAMSTEIN, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -89,9 +90,9 @@ struct boss_ramstein_the_gorgerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ramstein_the_gorger(Creature* pCreature)
+CreatureAI* GetAI_boss_ramstein_the_gorger(Creature* creature)
 {
-    return new boss_ramstein_the_gorgerAI (pCreature);
+    return new boss_ramstein_the_gorgerAI (creature);
 }
 
 void AddSC_boss_ramstein_the_gorger()

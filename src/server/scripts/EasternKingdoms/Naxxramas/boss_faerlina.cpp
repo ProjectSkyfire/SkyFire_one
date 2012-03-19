@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -108,24 +109,24 @@ struct boss_faerlinaAI : public ScriptedAI
         //RainOfFire_Timer
         if (RainOfFire_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_RAINOFFIRE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_RAINOFFIRE);
             RainOfFire_Timer = 16000;
         } else RainOfFire_Timer -= diff;
 
         //Enrage_Timer
         if (Enrage_Timer <= diff)
         {
-            DoCast(me,SPELL_ENRAGE);
+            DoCast(me, SPELL_ENRAGE);
             Enrage_Timer = 61000;
         } else Enrage_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_faerlina(Creature* pCreature)
+CreatureAI* GetAI_boss_faerlina(Creature* creature)
 {
-    return new boss_faerlinaAI (pCreature);
+    return new boss_faerlinaAI (creature);
 }
 
 void AddSC_boss_faerlina()

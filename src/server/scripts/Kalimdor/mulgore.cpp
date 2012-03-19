@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -38,23 +39,23 @@ EndContentData */
 
 #define GOSSIP_SW "Tell me a story, Skorn."
 
-bool GossipHello_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_skorn_whitecloud(Player* player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (!pPlayer->GetQuestRewardStatus(770))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SW, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    if (!player->GetQuestRewardStatus(770))
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SW, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    pPlayer->SEND_GOSSIP_MENU(522, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(522, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_skorn_whitecloud(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_skorn_whitecloud(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
-        pPlayer->SEND_GOSSIP_MENU(523, pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(523, creature->GetGUID());
 
     return true;
 }
@@ -73,7 +74,7 @@ enum eKyle
 
 struct npc_kyle_the_frenziedAI : public ScriptedAI
 {
-    npc_kyle_the_frenziedAI(Creature* pCreature) : ScriptedAI(pCreature) {Reset();}
+    npc_kyle_the_frenziedAI(Creature* creature) : ScriptedAI(creature) {Reset();}
 
     bool m_bEvent;
     bool m_bIsMovingToLunch;
@@ -134,10 +135,10 @@ struct npc_kyle_the_frenziedAI : public ScriptedAI
                 m_uiEventTimer = 5000;
                 ++m_uiEventPhase;
 
-                switch(m_uiEventPhase)
+                switch (m_uiEventPhase)
                 {
                     case 1:
-                        if (Player* pPlayer = Unit::GetPlayer(*me, m_uiPlayerGUID))
+                        if (Player* player = Unit::GetPlayer(*me, m_uiPlayerGUID))
                         {
                             if (GameObject* pGo = GameObject::GetGameObject(*me, SPELL_LUNCH))
                             {
@@ -151,8 +152,8 @@ struct npc_kyle_the_frenziedAI : public ScriptedAI
                         me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
                         break;
                     case 3:
-                        if (Player* pPlayer = Unit::GetPlayer(*me, m_uiPlayerGUID))
-                            pPlayer->TalkedToCreature(me->GetEntry(), me->GetGUID());
+                        if (Player* player = Unit::GetPlayer(*me, m_uiPlayerGUID))
+                            player->TalkedToCreature(me->GetEntry(), me->GetGUID());
 
                         me->UpdateEntry(NPC_KYLE_FRIENDLY);
                         break;
@@ -174,9 +175,9 @@ struct npc_kyle_the_frenziedAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_kyle_the_frenzied(Creature* pCreature)
+CreatureAI* GetAI_npc_kyle_the_frenzied(Creature* creature)
 {
-    return new npc_kyle_the_frenziedAI(pCreature);
+    return new npc_kyle_the_frenziedAI(creature);
 }
 
 /*#####
@@ -281,9 +282,9 @@ struct npc_plains_visionAI  : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_plains_vision(Creature* pCreature)
+CreatureAI* GetAI_npc_plains_vision(Creature* creature)
 {
-      return new npc_plains_visionAI (pCreature);
+      return new npc_plains_visionAI (creature);
 }
 
 /*#####

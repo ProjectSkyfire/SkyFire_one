@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -25,7 +26,7 @@
 #include "DestinationHolderImp.h"
 #include "Map.h"
 #include "Util.h"
-#include "CreatureFormations.h"
+#include "CreatureGroups.h"
 
 #define RUNNING_CHANCE_RANDOMMV 20                                  //will be "1 / RUNNING_CHANCE_RANDOMMV"
 
@@ -44,7 +45,7 @@ template<>
 void
 RandomMovementGenerator<Creature>::_setRandomLocation(Creature &creature)
 {
-    float X,Y,Z,z,nx,ny,nz,ori,dist;
+    float X, Y, Z, z, nx, ny, nz, ori, dist;
 
     creature.GetHomePosition(X, Y, Z, ori);
 
@@ -65,8 +66,8 @@ RandomMovementGenerator<Creature>::_setRandomLocation(Creature &creature)
     ny = Y + distanceY;
 
     // prevent invalid coordinates generation
-    Oregon::NormalizeMapCoord(nx);
-    Oregon::NormalizeMapCoord(ny);
+    Trinity::NormalizeMapCoord(nx);
+    Trinity::NormalizeMapCoord(ny);
 
     dist = (nx - X)*(nx - X) + (ny - Y)*(ny - Y);
 
@@ -135,7 +136,7 @@ void RandomMovementGenerator<Creature>::Initialize(Creature &creature)
     if (!wander_distance)
         wander_distance = creature.GetRespawnRadius();
 
-    if (irand(0,RUNNING_CHANCE_RANDOMMV) > 0)
+    if (irand(0, RUNNING_CHANCE_RANDOMMV) > 0)
         creature.AddUnitMovementFlag(MOVEFLAG_WALK_MODE);
 
     _setRandomLocation(creature);
@@ -177,7 +178,7 @@ bool RandomMovementGenerator<Creature>::Update(Creature &creature, const uint32 
             if (creature.canFly())
                 creature.AddUnitMovementFlag(MOVEFLAG_FLYING2);
             else
-                creature.SetUnitMovementFlags(irand(0,RUNNING_CHANCE_RANDOMMV) > 0 ? MOVEFLAG_WALK_MODE : MOVEFLAG_NONE);
+                creature.SetUnitMovementFlags(irand(0, RUNNING_CHANCE_RANDOMMV) > 0 ? MOVEFLAG_WALK_MODE : MOVEFLAG_NONE);
 
             _setRandomLocation(creature);
         }

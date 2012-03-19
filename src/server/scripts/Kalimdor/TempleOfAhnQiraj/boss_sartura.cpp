@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -95,7 +96,7 @@ struct boss_sarturaAI : public ScriptedAI
             if (WhirlWindRandom_Timer <= diff)
             {
                 //Attack random Gamers
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     AttackStart(pTarget);
 
                 WhirlWindRandom_Timer = 3000 + rand()%4000;
@@ -120,7 +121,7 @@ struct boss_sarturaAI : public ScriptedAI
             if (AggroReset_Timer <= diff)
             {
                 //Attack random Gamers
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     me->TauntApply(pTarget);
 
                     AggroReset = true;
@@ -212,7 +213,7 @@ struct mob_sartura_royal_guardAI : public ScriptedAI
             if (WhirlWindRandom_Timer <= diff)
             {
                 //Attack random Gamers
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     me->TauntApply(pTarget);
 
                 WhirlWindRandom_Timer = 3000 + rand()%4000;
@@ -229,7 +230,7 @@ struct mob_sartura_royal_guardAI : public ScriptedAI
             if (AggroReset_Timer <= diff)
             {
                 //Attack random Gamers
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     AttackStart(pTarget);
 
                 AggroReset = true;
@@ -257,14 +258,14 @@ struct mob_sartura_royal_guardAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sartura(Creature* pCreature)
+CreatureAI* GetAI_boss_sartura(Creature* creature)
 {
-    return new boss_sarturaAI (pCreature);
+    return new boss_sarturaAI (creature);
 }
 
-CreatureAI* GetAI_mob_sartura_royal_guard(Creature* pCreature)
+CreatureAI* GetAI_mob_sartura_royal_guard(Creature* creature)
 {
-    return new mob_sartura_royal_guardAI (pCreature);
+    return new mob_sartura_royal_guardAI (creature);
 }
 
 void AddSC_boss_sartura()

@@ -47,7 +47,7 @@ struct instance_uldaman : public ScriptedInstance
         ironayaSealDoorTimer = 26000;
         keystoneCheck = false;
 
-        for (uint8 i=0; i < ENCOUNTERS; ++i)
+        for (uint8 i = 0; i < ENCOUNTERS; ++i)
             Encounters[i] = NOT_STARTED;
     }
 
@@ -82,14 +82,14 @@ struct instance_uldaman : public ScriptedInstance
                 altarOfTheKeeperTempleDoor = pGo->GetGUID();
 
                 if (Encounters[0] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case ARCHAEDAS_TEMPLE_DOOR:
                 archaedasTempleDoor = pGo->GetGUID();
 
                 if (Encounters[0] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case ANCIENT_VAULT_DOOR:
@@ -98,34 +98,34 @@ struct instance_uldaman : public ScriptedInstance
                 ancientVaultDoor = pGo->GetGUID();
 
                 if (Encounters[1] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case IRONAYA_SEAL_DOOR:
                 ironayaSealDoor = pGo->GetGUID();
 
                 if (Encounters[2] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 break;
 
             case KEYSTONE_GO:
                 keystoneGUID = pGo->GetGUID();
                 if (Encounters[2] == DONE)
                 {
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                     pGo->SetUInt32Value(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
                 }
                 break;
         }
     }
 
-    void SetFrozenState(Creature* pCreature)
+    void SetFrozenState(Creature* creature)
     {
-        pCreature->setFaction(35);
-        pCreature->RemoveAllAuras();
-        //creature->RemoveFlag (UNIT_FIELD_FLAGS,UNIT_FLAG_ANIMATION_FROZEN);
-        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+        creature->setFaction(35);
+        creature->RemoveAllAuras();
+        //creature->RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_ANIMATION_FROZEN);
+        creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
     }
 
     void SetDoor(uint64 guid, bool open)
@@ -134,7 +134,7 @@ struct instance_uldaman : public ScriptedInstance
         if (!pGo)
             return;
 
-        HandleGameObject(NULL,open,pGo);
+        HandleGameObject(NULL, open, pGo);
     }
 
     void BlockGO(uint64 guid)
@@ -152,7 +152,7 @@ struct instance_uldaman : public ScriptedInstance
             Creature *pTarget = instance->GetCreature(*i);
             if (!pTarget || !pTarget->isAlive() || pTarget->getFaction() == 14)
                 continue;
-            pTarget->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_DISABLE_MOVE);
+            pTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
             pTarget->setFaction(14);
             pTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             return;        // only want the first one we find
@@ -174,7 +174,7 @@ struct instance_uldaman : public ScriptedInstance
             if (!pTarget || !pTarget->isAlive() || pTarget->getFaction() == 14)
                 continue;
             archaedas->CastSpell(pTarget, SPELL_AWAKEN_VAULT_WALKER, true);
-            pTarget->CastSpell(pTarget, SPELL_ARCHAEDAS_AWAKEN,true);
+            pTarget->CastSpell(pTarget, SPELL_ARCHAEDAS_AWAKEN, true);
             return;        // only want the first one we find
         }
     }
@@ -221,7 +221,7 @@ struct instance_uldaman : public ScriptedInstance
 
         if (Unit *victim = Unit::GetUnit(*archaedas, target))
         {
-            archaedas->CastSpell(archaedas, SPELL_ARCHAEDAS_AWAKEN,false);
+            archaedas->CastSpell(archaedas, SPELL_ARCHAEDAS_AWAKEN, false);
             whoWokeArchaedasGUID = target;
         }
     }
@@ -233,7 +233,7 @@ struct instance_uldaman : public ScriptedInstance
             return;
 
         ironaya->setFaction(415);
-        ironaya->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_DISABLE_MOVE);
+        ironaya->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
         ironaya->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     }
 
@@ -297,7 +297,7 @@ struct instance_uldaman : public ScriptedInstance
 
     void SetData (uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_ALTAR_DOORS:
                 Encounters[0] = data;
@@ -323,7 +323,7 @@ struct instance_uldaman : public ScriptedInstance
                 break;
 
             case DATA_MINIONS:
-                switch(data)
+                switch (data)
                 {
                     case NOT_STARTED:
                         if (Encounters[0] == DONE) //if players opened the doors
@@ -369,39 +369,39 @@ struct instance_uldaman : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry()) {
+        switch (creature->GetEntry()) {
             case 4857:    // Stone Keeper
-                SetFrozenState (pCreature);
-                stoneKeeper.push_back(pCreature->GetGUID());
+                SetFrozenState (creature);
+                stoneKeeper.push_back(creature->GetGUID());
                 break;
 
             case 7309:    // Earthen Custodian
-                archaedasWallMinions.push_back(pCreature->GetGUID());
+                archaedasWallMinions.push_back(creature->GetGUID());
                 break;
 
             case 7077:    // Earthen Hallshaper
-                archaedasWallMinions.push_back(pCreature->GetGUID());
+                archaedasWallMinions.push_back(creature->GetGUID());
                 break;
 
             case 7076:    // Earthen Guardian
-                earthenGuardian.push_back(pCreature->GetGUID());
+                earthenGuardian.push_back(creature->GetGUID());
                 break;
 
             case 7228:    // Ironaya
-                ironayaGUID = pCreature->GetGUID();
+                ironayaGUID = creature->GetGUID();
 
                 if (Encounters[2] != DONE)
-                    SetFrozenState(pCreature);
+                    SetFrozenState(creature);
                 break;
 
             case 10120:   // Vault Walker
-                vaultWalker.push_back(pCreature->GetGUID());
+                vaultWalker.push_back(creature->GetGUID());
                 break;
 
             case 2748:    // Archaedas
-                archaedasGUID = pCreature->GetGUID();
+                archaedasGUID = creature->GetGUID();
                 break;
         } // end switch
     } // end OnCreatureCreate

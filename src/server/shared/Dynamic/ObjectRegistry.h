@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,12 +18,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_OBJECTREGISTRY_H
-#define OREGON_OBJECTREGISTRY_H
+#ifndef TRINITY_OBJECTREGISTRY_H
+#define TRINITY_OBJECTREGISTRY_H
 
 #include "Define.h"
 #include "UnorderedMap.h"
-#include "Policies/Singleton.h"
+#include "ace/Singleton.h"
 
 #include <string>
 #include <vector>
@@ -92,11 +93,6 @@ class ObjectRegistry
             return i_registeredObjects;
         }
 
-    private:
-        RegistryMapType i_registeredObjects;
-        friend class Oregon::OperatorNew<ObjectRegistry<T, Key> >;
-
-        // protected for friend use since it should be a singleton
         ObjectRegistry() {}
         ~ObjectRegistry()
         {
@@ -104,6 +100,9 @@ class ObjectRegistry
                 delete iter->second;
             i_registeredObjects.clear();
         }
+
+    private:
+       RegistryMapType i_registeredObjects;
 };
 #endif
 

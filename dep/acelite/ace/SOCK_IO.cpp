@@ -34,7 +34,7 @@ ACE_SOCK_IO::recvv (iovec *io_vec,
   ACE_TRACE ("ACE_SOCK_IO::recvv");
 #if defined (FIONREAD)
   io_vec->iov_base = 0;
-  if( ACE::handle_read_ready (this->get_handle (), timeout) != 1 )
+  if ( ACE::handle_read_ready (this->get_handle (), timeout) != 1 )
     {
       return -1;
     }

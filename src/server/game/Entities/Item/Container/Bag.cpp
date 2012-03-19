@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -42,7 +43,7 @@ Bag::~Bag()
         {
             if (item->IsInWorld())
             {
-                sLog.outCrash("Item %u (slot %u, bag slot %u) in bag %u (slot %u, bag slot %u, m_bagslot %u) is to be deleted but is still in world.",
+                sLog->outCrash("Item %u (slot %u, bag slot %u) in bag %u (slot %u, bag slot %u, m_bagslot %u) is to be deleted but is still in world.",
                     item->GetEntry(), (uint32)item->GetSlot(), (uint32)item->GetBagSlot(),
                     GetEntry(), (uint32)GetSlot(), (uint32)GetBagSlot(), (uint32)i);
                 item->RemoveFromWorld();
@@ -71,7 +72,7 @@ void Bag::RemoveFromWorld()
 
 bool Bag::Create(uint32 guidlow, uint32 itemid, Player const* owner)
 {
-    ItemPrototype const * itemProto = objmgr.GetItemPrototype(itemid);
+    ItemPrototype const * itemProto = sObjectMgr->GetItemPrototype(itemid);
 
     if (!itemProto || itemProto->ContainerSlots > MAX_BAG_SIZE)
         return false;
@@ -135,7 +136,7 @@ void Bag::DeleteFromDB()
 uint32 Bag::GetFreeSlots() const
 {
     uint32 slots = 0;
-    for (uint32 i=0; i < GetBagSize(); ++i)
+    for (uint32 i = 0; i < GetBagSize(); ++i)
         if (!m_bagslot[i])
             ++slots;
 
@@ -157,7 +158,7 @@ void Bag::StoreItem(uint8 slot, Item *pItem, bool /*update*/)
 {
     if (slot > MAX_BAG_SIZE)
     {
-        sLog.outError("Player GUID " UI64FMTD " tried to manipulate packets and crash the server.", GetOwnerGUID());
+        sLog->outError("Player GUID " UI64FMTD " tried to manipulate packets and crash the server.", GetOwnerGUID());
         return;
     }
 
@@ -195,7 +196,7 @@ uint32 Bag::GetItemCount(uint32 item, Item* eItem) const
 {
     Item *pItem;
     uint32 count = 0;
-    for (uint32 i=0; i < GetBagSize(); ++i)
+    for (uint32 i = 0; i < GetBagSize(); ++i)
     {
         pItem = m_bagslot[i];
         if (pItem && pItem != eItem && pItem->GetEntry() == item)
@@ -204,7 +205,7 @@ uint32 Bag::GetItemCount(uint32 item, Item* eItem) const
 
     if (eItem && eItem->GetProto()->GemProperties)
     {
-        for (uint32 i=0; i < GetBagSize(); ++i)
+        for (uint32 i = 0; i < GetBagSize(); ++i)
         {
             pItem = m_bagslot[i];
             if (pItem && pItem != eItem && pItem->GetProto()->Socket[0].Color)

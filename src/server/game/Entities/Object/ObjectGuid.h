@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_OBJECT_GUID_H
-#define OREGON_OBJECT_GUID_H
+#ifndef TRINITY_OBJECT_GUID_H
+#define TRINITY_OBJECT_GUID_H
 
 #include "Common.h"
 #include "ByteBuffer.h"
@@ -91,7 +92,7 @@ enum HighGuid
 
 inline bool IsGuidHaveEnPart(uint64 const& guid)
 {
-    switch(GUID_HIPART(guid))
+    switch (GUID_HIPART(guid))
     {
         case HIGHGUID_ITEM:
         case HIGHGUID_PLAYER:
@@ -164,7 +165,7 @@ class ObjectGuid
 
         TypeID GetTypeId()
         {
-            switch(GetHigh())
+            switch (GetHigh())
             {
                 case HIGHGUID_ITEM:         return TYPEID_ITEM;
                 //case HIGHGUID_CONTAINER:    return TYPEID_CONTAINER; HIGHGUID_CONTAINER==HIGHGUID_ITEM currently
@@ -186,7 +187,7 @@ class ObjectGuid
     private:                                                // internal functions
         bool HasEntry() const
         {
-            switch(GetHigh())
+            switch (GetHigh())
             {
                 case HIGHGUID_ITEM:
                 case HIGHGUID_PLAYER:

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,23 +18,23 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_WORLDLOG_H
-#define OREGON_WORLDLOG_H
+#ifndef TRINITY_WORLDLOG_H
+#define TRINITY_WORLDLOG_H
 
 #include "Common.h"
-#include "Policies/Singleton.h"
 #include "Errors.h"
 
+#include <ace/Singleton.h>
 #include <stdarg.h>
 
 // Log packets to a file
-class WorldLog : public Oregon::Singleton<WorldLog, Oregon::ClassLevelLockable<WorldLog, ACE_Thread_Mutex> >
+class WorldLog
 {
-    friend class Oregon::OperatorNew<WorldLog>;
+    friend class ACE_Singleton<WorldLog, ACE_Thread_Mutex>;
     WorldLog();
     WorldLog(const WorldLog &);
     WorldLog& operator=(const WorldLog &);
-    typedef Oregon::ClassLevelLockable<WorldLog, ACE_Thread_Mutex>::Lock Guard;
+    ACE_Thread_Mutex Lock;
 
     // Close the file in destructor
     ~WorldLog();
@@ -52,6 +53,6 @@ class WorldLog : public Oregon::Singleton<WorldLog, Oregon::ClassLevelLockable<W
         bool m_dbWorld;
 };
 
-#define sWorldLog WorldLog::Instance()
+#define sWorldLog ACE_Singleton<WorldLog, ACE_Thread_Mutex>::instance()
 #endif
 

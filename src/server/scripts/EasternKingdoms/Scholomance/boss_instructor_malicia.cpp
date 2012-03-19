@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -88,7 +89,7 @@ struct boss_instructormaliciaAI : public ScriptedAI
         if (Corruption_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget) DoCast(pTarget, SPELL_CORRUPTION);
 
             Corruption_Timer = 24000;
@@ -140,9 +141,9 @@ struct boss_instructormaliciaAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_instructormalicia(Creature* pCreature)
+CreatureAI* GetAI_boss_instructormalicia(Creature* creature)
 {
-    return new boss_instructormaliciaAI (pCreature);
+    return new boss_instructormaliciaAI (creature);
 }
 
 void AddSC_boss_instructormalicia()

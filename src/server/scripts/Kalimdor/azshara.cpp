@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -93,9 +94,9 @@ struct mobs_spitelashesAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mobs_spitelashes(Creature* pCreature)
+CreatureAI* GetAI_mobs_spitelashes(Creature* creature)
 {
-    return new mobs_spitelashesAI (pCreature);
+    return new mobs_spitelashesAI (creature);
 }
 
 /*######
@@ -110,54 +111,54 @@ CreatureAI* GetAI_mobs_spitelashes(Creature* pCreature)
 #define GOSSIP_SELECT_LT4   "I will do this with or your help, Loramus"
 #define GOSSIP_SELECT_LT5   "Yes"
 
-bool GossipHello_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_loramus_thalipedes(Player* player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(2744) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_LT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    if (player->GetQuestStatus(2744) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_LT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    if (pPlayer->GetQuestStatus(3141) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_LT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+    if (player->GetQuestStatus(3141) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_LT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_loramus_thalipedes(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_loramus_thalipedes(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     switch (uiAction)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->AreaExploredOrEventHappens(2744);
+            player->CLOSE_GOSSIP_MENU();
+            player->AreaExploredOrEventHappens(2744);
             break;
 
         case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 21);
-            pPlayer->SEND_GOSSIP_MENU(1813, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 21);
+            player->SEND_GOSSIP_MENU(1813, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+21:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
-            pPlayer->SEND_GOSSIP_MENU(1814, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
+            player->SEND_GOSSIP_MENU(1814, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+22:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 23);
-            pPlayer->SEND_GOSSIP_MENU(1815, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 23);
+            player->SEND_GOSSIP_MENU(1815, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+23:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 24);
-            pPlayer->SEND_GOSSIP_MENU(1816, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 24);
+            player->SEND_GOSSIP_MENU(1816, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+24:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 25);
-            pPlayer->SEND_GOSSIP_MENU(1817, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_LT5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 25);
+            player->SEND_GOSSIP_MENU(1817, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+25:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->AreaExploredOrEventHappens(3141);
+            player->CLOSE_GOSSIP_MENU();
+            player->AreaExploredOrEventHappens(3141);
             break;
     }
     return true;
@@ -319,7 +320,7 @@ struct mob_rizzle_sprysprocketAI : public ScriptedAI
                     me->AI_SendMoveToPacket(3706.39f, -3969.15f, 35.9118f, 0, 0, 0);
                 }
                 //begin swimming and summon depth charges
-                Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
+                Player* player = Unit::GetPlayer(*me, PlayerGUID);
                 DoScriptText(EMOTE_START, me);
                 DoCast(me, SPELL_PERIODIC_DEPTH_CHARGE);
                 me->SetUnitMovementFlags(MOVEFLAG_FLYING2 | MOVEFLAG_SWIMMING);
@@ -340,25 +341,25 @@ struct mob_rizzle_sprysprocketAI : public ScriptedAI
 
         if (Grenade_Timer <= diff)
         {
-            Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
-            if (pPlayer)
+            Player* player = Unit::GetPlayer(*me, PlayerGUID);
+            if (player)
             {
-               DoScriptText(SAY_RIZZLE_GRENADE, me, pPlayer);
-               DoCast(pPlayer, SPELL_RIZZLE_FROST_GRENADE, true);
+               DoScriptText(SAY_RIZZLE_GRENADE, me, player);
+               DoCast(player, SPELL_RIZZLE_FROST_GRENADE, true);
             }
             Grenade_Timer = 30000;
         } else Grenade_Timer -= diff;
 
         if (Check_Timer <= diff)
         {
-            Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID);
-            if (!pPlayer)
+            Player* player = Unit::GetPlayer(*me, PlayerGUID);
+            if (!player)
             {
                 Despawn();
                 return;
             }
-            float dist = me->GetDistance(pPlayer);
-            if (dist < 10 && me->GetPositionX() > pPlayer->GetPositionX() && !Reached)
+            float dist = me->GetDistance(player);
+            if (dist < 10 && me->GetPositionX() > player->GetPositionX() && !Reached)
             {
                 DoScriptText(SAY_RIZZLE_FINAL, me);
                 me->SetUInt32Value(UNIT_NPC_FLAGS, 1);
@@ -372,12 +373,12 @@ struct mob_rizzle_sprysprocketAI : public ScriptedAI
         } else Check_Timer -= diff;
     }
 
-    void SendText(const char *text, Player* pPlayer)
+    void SendText(const char *text, Player* player)
     {
         WorldPacket data(SMSG_SERVER_MESSAGE, 0);              // guess size
         data << text;
-        if (pPlayer)
-            pPlayer->GetSession()->SendPacket(&data);
+        if (player)
+            player->GetSession()->SendPacket(&data);
     }
 
     void AttackStart(Unit *who)
@@ -412,30 +413,30 @@ struct mob_rizzle_sprysprocketAI : public ScriptedAI
     }
 };
 
-bool GossipHello_mob_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature)
+bool GossipHello_mob_rizzle_sprysprocket(Player* player, Creature* creature)
 {
-    if (pPlayer->GetQuestStatus(10994) != QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(10994) != QUEST_STATUS_INCOMPLETE)
         return true;
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_GET_MOONSTONE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->SEND_GOSSIP_MENU(10811, pCreature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_GET_MOONSTONE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->SEND_GOSSIP_MENU(10811, creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_mob_rizzle_sprysprocket(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_mob_rizzle_sprysprocket(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1 && pPlayer->GetQuestStatus(10994) == QUEST_STATUS_INCOMPLETE)
+    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1 && player->GetQuestStatus(10994) == QUEST_STATUS_INCOMPLETE)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, SPELL_GIVE_SOUTHFURY_MOONSTONE, true);
-        CAST_AI(mob_rizzle_sprysprocketAI, pCreature->AI())->Must_Die_Timer = 3000;
-        CAST_AI(mob_rizzle_sprysprocketAI, pCreature->AI())->Must_Die = true;
+        player->CLOSE_GOSSIP_MENU();
+        creature->CastSpell(player, SPELL_GIVE_SOUTHFURY_MOONSTONE, true);
+        CAST_AI(mob_rizzle_sprysprocketAI, creature->AI())->Must_Die_Timer = 3000;
+        CAST_AI(mob_rizzle_sprysprocketAI, creature->AI())->Must_Die = true;
     }
     return true;
 }
 
-CreatureAI* GetAI_mob_rizzle_sprysprocket(Creature* pCreature)
+CreatureAI* GetAI_mob_rizzle_sprysprocket(Creature* creature)
 {
-    return new mob_rizzle_sprysprocketAI (pCreature);
+    return new mob_rizzle_sprysprocketAI (creature);
 }
 
 /*####
@@ -490,9 +491,9 @@ struct mob_depth_chargeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_depth_charge(Creature* pCreature)
+CreatureAI* GetAI_mob_depth_charge(Creature* creature)
 {
-    return new mob_depth_chargeAI (pCreature);
+    return new mob_depth_chargeAI (creature);
 }
 
 void AddSC_azshara()

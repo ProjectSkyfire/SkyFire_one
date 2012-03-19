@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -34,7 +35,7 @@ enum ePoints
     POINT_COMBAT_START  = 0xFFFFFF
 };
 
-FollowerAI::FollowerAI(Creature* pCreature) : ScriptedAI(pCreature),
+FollowerAI::FollowerAI(Creature* creature) : ScriptedAI(creature),
     m_uiLeaderGUID(0),
     m_uiUpdateFollowTimer(2500),
     m_uiFollowState(STATE_FOLLOW_NONE),
@@ -69,7 +70,7 @@ bool FollowerAI::AssistPlayerInCombat(Unit* pWho)
         return false;
 
     //experimental (unknown) flag not present
-    if (!(me->GetCreatureInfo()->type_flags & CREATURE_TYPEFLAGS_UNK13))
+    if (!(me->GetCreatureTemplate()->type_flags & CREATURE_TYPEFLAGS_UNK13))
         return false;
 
     //not a player
@@ -136,9 +137,9 @@ void FollowerAI::JustDied(Unit* /*pKiller*/)
         return;
 
     //TODO: need a better check for quests with time limit.
-    if (Player* pPlayer = GetLeaderForFollower())
+    if (Player* player = GetLeaderForFollower())
     {
-        if (Group* pGroup = pPlayer->GetGroup())
+        if (Group* pGroup = player->GetGroup())
         {
             for (GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
             {
@@ -151,8 +152,8 @@ void FollowerAI::JustDied(Unit* /*pKiller*/)
         }
         else
         {
-            if (pPlayer->GetQuestStatus(m_pQuestForFollow->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
-                pPlayer->FailQuest(m_pQuestForFollow->GetQuestId());
+            if (player->GetQuestStatus(m_pQuestForFollow->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
+                player->FailQuest(m_pQuestForFollow->GetQuestId());
         }
     }
 }
@@ -164,8 +165,8 @@ void FollowerAI::JustRespawned()
     if (!IsCombatMovement())
         SetCombatMovement(true);
 
-    if (me->getFaction() != me->GetCreatureInfo()->faction_A)
-        me->setFaction(me->GetCreatureInfo()->faction_A);
+    if (me->getFaction() != me->GetCreatureTemplate()->faction_A)
+        me->setFaction(me->GetCreatureTemplate()->faction_A);
 
     Reset();
 }
@@ -179,7 +180,7 @@ void FollowerAI::EnterEvadeMode()
 
     if (HasFollowState(STATE_FOLLOW_INPROGRESS))
     {
-        sLog.outDebug("OSCR: FollowerAI left combat, returning to CombatStartPosition.");
+        sLog->outDebug("TSCR: FollowerAI left combat, returning to CombatStartPosition.");
 
         if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() == TARGETED_MOTION_TYPE)
         {
@@ -205,25 +206,25 @@ void FollowerAI::UpdateAI(const uint32 uiDiff)
         {
             if (HasFollowState(STATE_FOLLOW_COMPLETE) && !HasFollowState(STATE_FOLLOW_POSTEVENT))
             {
-                sLog.outDebug("OSCR: FollowerAI is set completed, despawns.");
+                sLog->outDebug("TSCR: FollowerAI is set completed, despawns.");
                 me->ForcedDespawn();
                 return;
             }
 
             bool bIsMaxRangeExceeded = true;
 
-            if (Player* pPlayer = GetLeaderForFollower())
+            if (Player* player = GetLeaderForFollower())
             {
                 if (HasFollowState(STATE_FOLLOW_RETURNING))
                 {
-                    sLog.outDebug("OSCR: FollowerAI is returning to leader.");
+                    sLog->outDebug("TSCR: FollowerAI is returning to leader.");
 
                     RemoveFollowState(STATE_FOLLOW_RETURNING);
-                    me->GetMotionMaster()->MoveFollow(pPlayer, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+                    me->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
                     return;
                 }
 
-                if (Group* pGroup = pPlayer->GetGroup())
+                if (Group* pGroup = player->GetGroup())
                 {
                     for (GroupReference* pRef = pGroup->GetFirstMember(); pRef != NULL; pRef = pRef->next())
                     {
@@ -238,14 +239,14 @@ void FollowerAI::UpdateAI(const uint32 uiDiff)
                 }
                 else
                 {
-                    if (me->IsWithinDistInMap(pPlayer, MAX_PLAYER_DISTANCE))
+                    if (me->IsWithinDistInMap(player, MAX_PLAYER_DISTANCE))
                         bIsMaxRangeExceeded = false;
                 }
             }
 
             if (bIsMaxRangeExceeded)
             {
-                sLog.outDebug("OSCR: FollowerAI failed because player/group was to far away or not found");
+                sLog->outDebug("TSCR: FollowerAI failed because player/group was to far away or not found");
                 me->ForcedDespawn();
                 return;
             }
@@ -288,13 +289,13 @@ void FollowerAI::StartFollow(Player* pLeader, uint32 uiFactionForFollower, const
 {
     if (me->getVictim())
     {
-        sLog.outDebug("OSCR: FollowerAI attempt to StartFollow while in combat.");
+        sLog->outDebug("TSCR: FollowerAI attempt to StartFollow while in combat.");
         return;
     }
 
     if (HasFollowState(STATE_FOLLOW_INPROGRESS))
     {
-        sLog.outError("OSCR: FollowerAI attempt to StartFollow while already following.");
+        sLog->outError("TSCR: FollowerAI attempt to StartFollow while already following.");
         return;
     }
 
@@ -310,7 +311,7 @@ void FollowerAI::StartFollow(Player* pLeader, uint32 uiFactionForFollower, const
     {
         me->GetMotionMaster()->Clear();
         me->GetMotionMaster()->MoveIdle();
-        sLog.outDebug("OSCR: FollowerAI start with WAYPOINT_MOTION_TYPE, set to MoveIdle.");
+        sLog->outDebug("TSCR: FollowerAI start with WAYPOINT_MOTION_TYPE, set to MoveIdle.");
     }
 
     me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
@@ -319,7 +320,7 @@ void FollowerAI::StartFollow(Player* pLeader, uint32 uiFactionForFollower, const
 
     me->GetMotionMaster()->MoveFollow(pLeader, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
 
-    sLog.outDebug("OSCR: FollowerAI start follow %s (GUID " UI64FMTD ")", pLeader->GetName(), m_uiLeaderGUID);
+    sLog->outDebug("TSCR: FollowerAI start follow %s (GUID " UI64FMTD ")", pLeader->GetName(), m_uiLeaderGUID);
 }
 
 Player* FollowerAI::GetLeaderForFollower()
@@ -338,7 +339,7 @@ Player* FollowerAI::GetLeaderForFollower()
 
                     if (pMember && pMember->isAlive() && me->IsWithinDistInMap(pMember, MAX_PLAYER_DISTANCE))
                     {
-                        sLog.outDebug("OSCR: FollowerAI GetLeader changed and returned new leader.");
+                        sLog->outDebug("TSCR: FollowerAI GetLeader changed and returned new leader.");
                         m_uiLeaderGUID = pMember->GetGUID();
                         return pMember;
                         break;
@@ -348,7 +349,7 @@ Player* FollowerAI::GetLeaderForFollower()
         }
     }
 
-    sLog.outDebug("OSCR: FollowerAI GetLeader can not find suitable leader.");
+    sLog->outDebug("TSCR: FollowerAI GetLeader can not find suitable leader.");
     return NULL;
 }
 

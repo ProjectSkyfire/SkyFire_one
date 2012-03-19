@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -30,7 +31,7 @@
 #include "TypeList.h"
 #include <map>
 
-namespace Oregon
+namespace Trinity
 {
     /* ContainerMapList Helpers */
     // count functions
@@ -51,7 +52,7 @@ namespace Oregon
 
     template<class SPECIFIC_TYPE, class T> size_t Count(const ContainerMapList<TypeList<SPECIFIC_TYPE, T> >&elements, SPECIFIC_TYPE* fake)
     {
-        return Count(elements._elements,fake);
+        return Count(elements._elements, fake);
     }
 
     template<class SPECIFIC_TYPE, class H, class T> size_t Count(const ContainerMapList<TypeList<H, T> >&elements, SPECIFIC_TYPE* fake)

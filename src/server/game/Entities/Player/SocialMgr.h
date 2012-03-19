@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,12 +18,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __OREGON_SOCIALMGR_H
-#define __OREGON_SOCIALMGR_H
+#ifndef __TRINITY_SOCIALMGR_H
+#define __TRINITY_SOCIALMGR_H
 
-#include "Policies/Singleton.h"
 #include "Database/DatabaseEnv.h"
 #include "Common.h"
+
+#include <ace/Singleton.h>
 
 class SocialMgr;
 class PlayerSocial;
@@ -138,23 +140,23 @@ class PlayerSocial
 
 class SocialMgr
 {
+    friend class ACE_Singleton<SocialMgr, ACE_Null_Mutex>;
+    SocialMgr();
     public:
-        SocialMgr();
         ~SocialMgr();
         // Misc
         void RemovePlayerSocial(uint32 guid) { m_socialMap.erase(guid); }
 
-        void GetFriendInfo(Player *player, uint32 friendGUID, FriendInfo &friendInfo);
+        void GetFriendInfo(Player* player, uint32 friendGUID, FriendInfo &friendInfo);
         // Packet management
         void MakeFriendStatusPacket(FriendsResult result, uint32 friend_guid, WorldPacket *data);
-        void SendFriendStatus(Player *player, FriendsResult result, uint32 friend_guid, bool broadcast);
-        void BroadcastToFriendListers(Player *player, WorldPacket *packet);
+        void SendFriendStatus(Player* player, FriendsResult result, uint32 friend_guid, bool broadcast);
+        void BroadcastToFriendListers(Player* player, WorldPacket *packet);
         // Loading
         PlayerSocial *LoadFromDB(QueryResult_AutoPtr result, uint32 guid);
     private:
         SocialMap m_socialMap;
 };
 
-#define sSocialMgr Oregon::Singleton<SocialMgr>::Instance()
+#define sSocialMgr ACE_Singleton<SocialMgr, ACE_Null_Mutex>::instance()
 #endif
-

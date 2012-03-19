@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -20,7 +21,7 @@
 #ifndef DEF_HYJAL_H
 #define DEF_HYJAL_H
 
-#define ERROR_INST_DATA     "OSCR: Instance data not set properly for Mount Hyjal. Encounters will be buggy"
+#define ERROR_INST_DATA     "TSCR: Instance data not set properly for Mount Hyjal. Encounters will be buggy"
 
 enum eTypes
 {

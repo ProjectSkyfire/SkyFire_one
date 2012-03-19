@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -29,7 +30,7 @@ void
 ConfusedMovementGenerator<T>::Initialize(T &unit)
 {
     const float wander_distance = 11;
-    float x,y,z;
+    float x, y, z;
     x = unit.GetPositionX();
     y = unit.GetPositionY();
     z = unit.GetPositionZ();
@@ -47,8 +48,8 @@ ConfusedMovementGenerator<T>::Initialize(T &unit)
     {
         float wanderX = x + wander_distance*rand_norm() - wander_distance/2;
         float wanderY = y + wander_distance*rand_norm() - wander_distance/2;
-        Oregon::NormalizeMapCoord(wanderX);
-        Oregon::NormalizeMapCoord(wanderY);
+        Trinity::NormalizeMapCoord(wanderX);
+        Trinity::NormalizeMapCoord(wanderY);
 
         float new_z = map->GetHeight(wanderX, wanderY, z, true);
         if (new_z > INVALID_HEIGHT && unit.IsWithinLOS(wanderX, wanderY, new_z))
@@ -140,7 +141,7 @@ bool ConfusedMovementGenerator<T>::Update(T &unit, const uint32 &diff)
                 // arrived, stop and wait a bit
                 unit.clearUnitState(UNIT_STAT_MOVE);
 
-                i_nextMove = urand(1,MAX_CONF_WAYPOINTS);
+                i_nextMove = urand(1, MAX_CONF_WAYPOINTS);
                 i_nextMoveTime.Reset(urand(0, 1500-1));     // TODO: check the minimum reset time, should be probably higher
             }
         }

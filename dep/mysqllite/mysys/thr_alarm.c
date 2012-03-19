@@ -821,7 +821,7 @@ static void *signal_hand(void *arg __attribute__((unused)))
   printf("server alarm: %d  thread alarm: %d\n",
          THR_SERVER_ALARM, thr_client_alarm);
   DBUG_PRINT("info",("Starting signal and alarm handling thread"));
-  for(;;)
+  for (;;)
   {
     while ((error=my_sigwait(&set,&sig)) == EINTR)
       printf("sigwait restarted\n");

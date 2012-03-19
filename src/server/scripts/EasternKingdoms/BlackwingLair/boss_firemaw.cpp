@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -59,7 +60,7 @@ struct boss_firemawAI : public ScriptedAI
         if (ShadowFlame_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_SHADOWFLAME);
-            ShadowFlame_Timer = urand(15000,18000);
+            ShadowFlame_Timer = urand(15000, 18000);
         } else ShadowFlame_Timer -= diff;
 
         //WingBuffet_Timer
@@ -82,9 +83,9 @@ struct boss_firemawAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_firemaw(Creature* pCreature)
+CreatureAI* GetAI_boss_firemaw(Creature* creature)
 {
-    return new boss_firemawAI (pCreature);
+    return new boss_firemawAI (creature);
 }
 
 void AddSC_boss_firemaw()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -74,7 +75,7 @@ struct instance_scholomance : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_GATE_KIRTONOS:  GateKirtonosGUID = pGo->GetGUID(); break;
             case GO_GATE_GANDLING:  GateGandlingGUID = pGo->GetGUID(); break;
@@ -89,7 +90,7 @@ struct instance_scholomance : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_LORDALEXEIBAROV_DEATH:
                 IsBossDied[0] = true;

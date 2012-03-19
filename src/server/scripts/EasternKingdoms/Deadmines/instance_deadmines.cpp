@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -125,9 +126,9 @@ struct instance_deadmines : public ScriptedInstance
     {
         if (GameObject *pIronCladDoor = instance->GetGameObject(IronCladDoorGUID))
         {
-            Creature *DefiasPirate1 = pIronCladDoor->SummonCreature(657,pIronCladDoor->GetPositionX() - 2,pIronCladDoor->GetPositionY()-7,pIronCladDoor->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
-            Creature *DefiasPirate2 = pIronCladDoor->SummonCreature(657,pIronCladDoor->GetPositionX() + 3,pIronCladDoor->GetPositionY()-6,pIronCladDoor->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
-            Creature *DefiasCompanion = pIronCladDoor->SummonCreature(3450,pIronCladDoor->GetPositionX() + 2,pIronCladDoor->GetPositionY()-6,pIronCladDoor->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+            Creature *DefiasPirate1 = pIronCladDoor->SummonCreature(657, pIronCladDoor->GetPositionX() - 2, pIronCladDoor->GetPositionY()-7, pIronCladDoor->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+            Creature *DefiasPirate2 = pIronCladDoor->SummonCreature(657, pIronCladDoor->GetPositionX() + 3, pIronCladDoor->GetPositionY()-6, pIronCladDoor->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+            Creature *DefiasCompanion = pIronCladDoor->SummonCreature(3450, pIronCladDoor->GetPositionX() + 2, pIronCladDoor->GetPositionY()-6, pIronCladDoor->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
 
             DefiasPirate1GUID = DefiasPirate1->GetGUID();
             DefiasPirate2GUID = DefiasPirate2->GetGUID();
@@ -151,10 +152,10 @@ struct instance_deadmines : public ScriptedInstance
         MoveCreatureInside(pDefiasCompanion);
     }
 
-    void MoveCreatureInside(Creature* pCreature)
+    void MoveCreatureInside(Creature* creature)
     {
-        pCreature->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
-        pCreature->GetMotionMaster()->MovePoint(0, -102.7,-655.9, pCreature->GetPositionZ());
+        creature->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
+        creature->GetMotionMaster()->MovePoint(0, -102.7,-655.9, creature->GetPositionZ());
     }
 
     void ShootCannon()
@@ -237,7 +238,7 @@ struct instance_deadmines : public ScriptedInstance
         WorldPacket data(4);
         data.SetOpcode(SMSG_PLAY_SOUND);
         data << uint32(sound);
-        unit->SendMessageToSet(&data,false);
+        unit->SendMessageToSet(&data, false);
     }
 
     void DoPlaySoundCreature(Unit* unit, uint32 sound)
@@ -245,7 +246,7 @@ struct instance_deadmines : public ScriptedInstance
         WorldPacket data(4);
         data.SetOpcode(SMSG_PLAY_SOUND);
         data << uint32(sound);
-        unit->SendMessageToSet(&data,false);
+        unit->SendMessageToSet(&data, false);
     }
 };
 

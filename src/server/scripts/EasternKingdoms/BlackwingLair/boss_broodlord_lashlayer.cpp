@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -73,14 +74,14 @@ struct boss_broodlordAI : public ScriptedAI
         if (BlastWave_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_BLASTWAVE);
-            BlastWave_Timer = urand(8000,16000);
+            BlastWave_Timer = urand(8000, 16000);
         } else BlastWave_Timer -= diff;
 
         //MortalStrike_Timer
         if (MortalStrike_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_MORTALSTRIKE);
-            MortalStrike_Timer = urand(25000,35000);
+            MortalStrike_Timer = urand(25000, 35000);
         } else MortalStrike_Timer -= diff;
 
         if (KnockBack_Timer <= diff)
@@ -90,7 +91,7 @@ struct boss_broodlordAI : public ScriptedAI
             if (DoGetThreat(me->getVictim()))
                 DoModifyThreatPercent(me->getVictim(),-50);
 
-            KnockBack_Timer = urand(15000,30000);
+            KnockBack_Timer = urand(15000, 30000);
         } else KnockBack_Timer -= diff;
 
         if (EnterEvadeIfOutOfCombatArea(diff))
@@ -99,9 +100,9 @@ struct boss_broodlordAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_broodlord(Creature* pCreature)
+CreatureAI* GetAI_boss_broodlord(Creature* creature)
 {
-    return new boss_broodlordAI (pCreature);
+    return new boss_broodlordAI (creature);
 }
 
 void AddSC_boss_broodlord()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -128,52 +129,52 @@ struct instance_black_temple : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Black Temple: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Black Temple: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-        case 22887:    Najentus = pCreature->GetGUID();                  break;
-        case 23089:    Akama = pCreature->GetGUID();                     break;
-        case 22990:    Akama_Shade = pCreature->GetGUID();               break;
-        case 22841:    ShadeOfAkama = pCreature->GetGUID();              break;
-        case 22898:    Supremus = pCreature->GetGUID();                  break;
-        case 22917:    IllidanStormrage = pCreature->GetGUID();          break;
-        case 22949:    GathiosTheShatterer = pCreature->GetGUID();       break;
-        case 22950:    HighNethermancerZerevor = pCreature->GetGUID();   break;
-        case 22951:    LadyMalande = pCreature->GetGUID();               break;
-        case 22952:    VerasDarkshadow = pCreature->GetGUID();           break;
-        case 23426:    IllidariCouncil = pCreature->GetGUID();           break;
-        case 23499:    BloodElfCouncilVoice = pCreature->GetGUID();      break;
+        case 22887:    Najentus = creature->GetGUID();                  break;
+        case 23089:    Akama = creature->GetGUID();                     break;
+        case 22990:    Akama_Shade = creature->GetGUID();               break;
+        case 22841:    ShadeOfAkama = creature->GetGUID();              break;
+        case 22898:    Supremus = creature->GetGUID();                  break;
+        case 22917:    IllidanStormrage = creature->GetGUID();          break;
+        case 22949:    GathiosTheShatterer = creature->GetGUID();       break;
+        case 22950:    HighNethermancerZerevor = creature->GetGUID();   break;
+        case 22951:    LadyMalande = creature->GetGUID();               break;
+        case 22952:    VerasDarkshadow = creature->GetGUID();           break;
+        case 23426:    IllidariCouncil = creature->GetGUID();           break;
+        case 23499:    BloodElfCouncilVoice = creature->GetGUID();      break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case 185483: NajentusGate = pGo->GetGUID();// Gate past Naj'entus (at the entrance to Supermoose's courtyards)
-            if (Encounters[0] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[0] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 185882: MainTempleDoors = pGo->GetGUID();// Main Temple Doors - right past Supermoose (Supremus)
-            if (Encounters[1] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[1] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 185478: ShadeOfAkamaDoor = pGo->GetGUID();break;
         case 185480: CommonDoor = pGo->GetGUID();
-            if (Encounters[3] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[3] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 186153: TeronDoor = pGo->GetGUID();
-            if (Encounters[3] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[3] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 185892: GuurtogDoor = pGo->GetGUID();
-            if (Encounters[4] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[4] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 185479: TempleDoor = pGo->GetGUID();
-            if (Encounters[5] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[5] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 185482: MotherDoor = pGo->GetGUID();
-            if (Encounters[6] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[6] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 185481: CouncilDoor = pGo->GetGUID();
-            if (Encounters[7] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[7] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 186152: SimpleDoor = pGo->GetGUID();
-            if (Encounters[7] == DONE)HandleGameObject(NULL,true,pGo);break;
+            if (Encounters[7] == DONE)HandleGameObject(NULL, true, pGo);break;
         case 185905: IllidanGate = pGo->GetGUID(); break; // Gate leading to Temple Summit
         case 186261: IllidanDoor[0] = pGo->GetGUID(); break; // Right door at Temple Summit
         case 186262: IllidanDoor[1] = pGo->GetGUID(); break; // Left door at Temple Summit
@@ -182,7 +183,7 @@ struct instance_black_temple : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
         case DATA_HIGHWARLORDNAJENTUS:         return Najentus;
         case DATA_AKAMA:                       return Akama;
@@ -208,7 +209,7 @@ struct instance_black_temple : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_HIGHWARLORDNAJENTUSEVENT:
             if (data == DONE)
@@ -296,7 +297,7 @@ struct instance_black_temple : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_HIGHWARLORDNAJENTUSEVENT:         return Encounters[0];
         case DATA_SUPREMUSEVENT:                    return Encounters[1];

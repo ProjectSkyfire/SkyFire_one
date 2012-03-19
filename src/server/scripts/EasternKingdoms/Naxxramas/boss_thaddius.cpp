@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -122,7 +123,7 @@ struct boss_thaddiusAI : public BossAI
         events.Update(diff);
         while(uint32 eventId = events.ExecuteEvent())
         {
-            switch(eventId)
+            switch (eventId)
             {
                 case EVENT_POLARITY_SHIFT:
                 {
@@ -169,7 +170,7 @@ struct boss_stalaggAI : public BossAI
         events.Update(diff);
         while(uint32 eventId = events.ExecuteEvent())
         {
-            switch(eventId)
+            switch (eventId)
             {
                 case EVENT_CHECK_COIL:
                 {
@@ -230,7 +231,7 @@ struct boss_fuegenAI : public BossAI
         events.Update(diff);
         while(uint32 eventId = events.ExecuteEvent())
         {
-            switch(eventId)
+            switch (eventId)
             {
                 case EVENT_CHECK_COIL:
                 {

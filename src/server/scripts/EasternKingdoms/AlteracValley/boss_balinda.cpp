@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -102,7 +103,7 @@ struct boss_balindaAI : public ScriptedAI
 
     void Reset()
     {
-        uiArcaneExplosionTimer      = urand(5*IN_MILLISECONDS,15*IN_MILLISECONDS);
+        uiArcaneExplosionTimer      = urand(5*IN_MILLISECONDS, 15*IN_MILLISECONDS);
         uiConeOfColdTimer           = 8*IN_MILLISECONDS;
         uiFireBoltTimer             = 1*IN_MILLISECONDS;
         uiFrostboltTimer            = 4*IN_MILLISECONDS;
@@ -125,7 +126,7 @@ struct boss_balindaAI : public ScriptedAI
     void JustSummoned(Creature* summoned)
     {
         ((mob_water_elementalAI*)summoned->AI())->uiBalindaGUID = me->GetGUID();
-        summoned->AI()->AttackStart(SelectTarget(SELECT_TARGET_RANDOM,0, 50, true));
+        summoned->AI()->AttackStart(SelectTarget(SELECT_TARGET_RANDOM, 0, 50, true));
         summoned->setFaction(me->getFaction());
         Summons.Summon(summoned);
     }
@@ -150,25 +151,25 @@ struct boss_balindaAI : public ScriptedAI
         if (uiArcaneExplosionTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_ARCANE_EXPLOSION);
-            uiArcaneExplosionTimer =  urand(5*IN_MILLISECONDS,15*IN_MILLISECONDS);
+            uiArcaneExplosionTimer =  urand(5*IN_MILLISECONDS, 15*IN_MILLISECONDS);
         } else uiArcaneExplosionTimer -= diff;
 
         if (uiConeOfColdTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_CONE_OF_COLD);
-            uiConeOfColdTimer = urand(10*IN_MILLISECONDS,20*IN_MILLISECONDS);
+            uiConeOfColdTimer = urand(10*IN_MILLISECONDS, 20*IN_MILLISECONDS);
         } else uiConeOfColdTimer -= diff;
 
         if (uiFireBoltTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_FIREBALL);
-            uiFireBoltTimer = urand(5*IN_MILLISECONDS,9*IN_MILLISECONDS);
+            uiFireBoltTimer = urand(5*IN_MILLISECONDS, 9*IN_MILLISECONDS);
         } else uiFireBoltTimer -= diff;
 
         if (uiFrostboltTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_FROSTBOLT);
-            uiFrostboltTimer = urand(4*IN_MILLISECONDS,12*IN_MILLISECONDS);
+            uiFrostboltTimer = urand(4*IN_MILLISECONDS, 12*IN_MILLISECONDS);
         } else uiFrostboltTimer -= diff;
 
         // check if creature is not outside of building
@@ -186,9 +187,9 @@ struct boss_balindaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_balinda(Creature* pCreature)
+CreatureAI* GetAI_boss_balinda(Creature* creature)
 {
-    return new boss_balindaAI (pCreature);
+    return new boss_balindaAI (creature);
 }
 
 CreatureAI* GetAI_mob_water_elemental(Creature *_Creature)

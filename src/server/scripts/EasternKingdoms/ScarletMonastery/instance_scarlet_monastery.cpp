@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -67,29 +68,29 @@ struct instance_scarlet_monastery : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case ENTRY_PUMPKIN_SHRINE: PumpkinShrineGUID = pGo->GetGUID();break;
         case 104600: DoorHighInquisitorGUID = pGo->GetGUID(); break;
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case ENTRY_HORSEMAN:    HorsemanGUID = pCreature->GetGUID(); break;
-            case ENTRY_HEAD:        HeadGUID = pCreature->GetGUID(); break;
-            case ENTRY_PUMPKIN:     HorsemanAdds.insert(pCreature->GetGUID());break;
-            case 3976: MograineGUID = pCreature->GetGUID(); break;
-            case 3977: WhitemaneGUID = pCreature->GetGUID(); break;
-            case 3981: VorrelGUID = pCreature->GetGUID(); break;
+            case ENTRY_HORSEMAN:    HorsemanGUID = creature->GetGUID(); break;
+            case ENTRY_HEAD:        HeadGUID = creature->GetGUID(); break;
+            case ENTRY_PUMPKIN:     HorsemanAdds.insert(creature->GetGUID());break;
+            case 3976: MograineGUID = creature->GetGUID(); break;
+            case 3977: WhitemaneGUID = creature->GetGUID(); break;
+            case 3981: VorrelGUID = creature->GetGUID(); break;
         }
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case TYPE_MOGRAINE_AND_WHITE_EVENT:
             if (data == IN_PROGRESS)
@@ -121,7 +122,7 @@ struct instance_scarlet_monastery : public ScriptedInstance
 
     uint64 GetData64(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             //case GAMEOBJECT_PUMPKIN_SHRINE:   return PumpkinShrineGUID;
             //case DATA_HORSEMAN:               return HorsemanGUID;

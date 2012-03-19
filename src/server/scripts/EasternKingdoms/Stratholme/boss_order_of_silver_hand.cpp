@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -63,7 +64,7 @@ struct boss_silver_hand_bossesAI : public ScriptedAI
 
         if (pInstance)
         {
-            switch(me->GetEntry())
+            switch (me->GetEntry())
             {
                 case SH_AELMAR:
                     pInstance->SetData(TYPE_SH_AELMAR, 0);
@@ -92,7 +93,7 @@ struct boss_silver_hand_bossesAI : public ScriptedAI
     {
         if (pInstance)
         {
-            switch(me->GetEntry())
+            switch (me->GetEntry())
             {
                 case SH_AELMAR:
                     pInstance->SetData(TYPE_SH_AELMAR, 2);
@@ -111,7 +112,7 @@ struct boss_silver_hand_bossesAI : public ScriptedAI
                     break;
             }
             if (pInstance->GetData(TYPE_SH_QUEST) && Killer->GetTypeId() == TYPEID_PLAYER)
-                CAST_PLR(Killer)->KilledMonsterCredit(SH_QUEST_CREDIT,me->GetGUID());
+                CAST_PLR(Killer)->KilledMonsterCredit(SH_QUEST_CREDIT, me->GetGUID());
         }
     }
 
@@ -142,9 +143,9 @@ struct boss_silver_hand_bossesAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature* pCreature)
+CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature* creature)
 {
-    return new boss_silver_hand_bossesAI (pCreature);
+    return new boss_silver_hand_bossesAI (creature);
 }
 
 void AddSC_boss_order_of_silver_hand()

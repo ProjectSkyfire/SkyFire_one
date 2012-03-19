@@ -2172,7 +2172,7 @@ ACE::handle_ready (ACE_HANDLE handle,
   fds.fd = handle;
   fds.events = read_ready ? POLLIN : 0;
 
-  if( write_ready )
+  if ( write_ready )
   {
     fds.events |= POLLOUT;
   }

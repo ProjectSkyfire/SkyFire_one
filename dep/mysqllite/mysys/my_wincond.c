@@ -140,7 +140,7 @@ static int legacy_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr
                                            TRUE,  /* signaled initially */
                                            NULL); /* unnamed */
 
-  if( cond->events[SIGNAL] == NULL ||
+  if ( cond->events[SIGNAL] == NULL ||
       cond->events[BROADCAST] == NULL ||
       cond->broadcast_block_event == NULL )
     return ENOMEM;
@@ -204,7 +204,7 @@ static int legacy_cond_signal(pthread_cond_t *cond)
 {
   EnterCriticalSection(&cond->lock_waiting);
 
-  if(cond->waiting > 0)
+  if (cond->waiting > 0)
     SetEvent(cond->events[SIGNAL]);
 
   LeaveCriticalSection(&cond->lock_waiting);
@@ -220,7 +220,7 @@ static int legacy_cond_broadcast(pthread_cond_t *cond)
      there isn't any thread waiting to open the
      block gate after this call has closed it.
    */
-  if(cond->waiting > 0)
+  if (cond->waiting > 0)
   {
     /* Close block gate */
     ResetEvent(cond->broadcast_block_event);

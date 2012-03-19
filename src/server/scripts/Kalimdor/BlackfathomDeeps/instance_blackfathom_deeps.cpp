@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -85,22 +86,22 @@ struct instance_blackfathom_deeps : public ScriptedInstance
         uiDeathTimes = 0;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
             case NPC_TWILIGHT_LORD_KELRIS:
-                m_uiTwilightLordKelrisGUID = pCreature->GetGUID();
+                m_uiTwilightLordKelrisGUID = creature->GetGUID();
                 break;
             case NPC_LORGUS_JETT:
-                pCreature->SetHomePosition(LorgusPosition[urand(0,3)]);
+                creature->SetHomePosition(LorgusPosition[urand(0, 3)]);
                 break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_FIRE_OF_AKU_MAI_1:
                 m_uiShrine1GUID = pGo->GetGUID();
@@ -126,7 +127,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
                 break;
             case GO_AKU_MAI_DOOR:
                 if (m_auiEncounter[2] == DONE)
-                    HandleGameObject(NULL,true,pGo);
+                    HandleGameObject(NULL, true, pGo);
                 m_uiMainDoorGUID = pGo->GetGUID();
                 break;
         }
@@ -134,7 +135,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
 
     void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_GELIHAST:
                 m_auiEncounter[0] = uiData;
@@ -148,7 +149,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
                     if (GameObject *pGo = instance->GetGameObject(m_uiAltarOfTheDeepsGUID))
                     {
                         pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
-                        pGo->SummonCreature(NPC_MORRIDUNE,SpawnsLocation[4], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000);
+                        pGo->SummonCreature(NPC_MORRIDUNE, SpawnsLocation[4], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000);
                     }
                 break;
             case DATA_FIRE:
@@ -197,14 +198,14 @@ struct instance_blackfathom_deeps : public ScriptedInstance
             case DATA_EVENT:
                 uiDeathTimes = uiData;
                 if (uiDeathTimes == 18)
-                    HandleGameObject(m_uiMainDoorGUID,true);
+                    HandleGameObject(m_uiMainDoorGUID, true);
                 break;
         }
     }
 
     uint32 GetData(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_GELIHAST:
                 return m_auiEncounter[0];
@@ -225,7 +226,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
 
     uint64 GetData64(uint32 uiData)
     {
-        switch(uiData)
+        switch (uiData)
         {
             case DATA_TWILIGHT_LORD_KELRIS:
                 return m_uiTwilightLordKelrisGUID;

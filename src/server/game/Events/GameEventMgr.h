@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,12 +18,13 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GAMEEVENT_MGR_H
-#define OREGON_GAMEEVENT_MGR_H
+#ifndef TRINITY_GAMEEVENT_MGR_H
+#define TRINITY_GAMEEVENT_MGR_H
 
 #include "Define.h"
 #include "Creature.h"
 #include "GameObject.h"
+#include "ace/Singleton.h"
 
 #define max_ge_check_delay 86400                            // 1 day in seconds
 
@@ -52,7 +54,7 @@ struct GameEventQuestToEventConditionNum
 
 struct GameEventData
 {
-    GameEventData() : start(1),end(0),nextstart(0),occurence(0),length(0),state(GAMEEVENT_NORMAL) {}
+    GameEventData() : start(1), end(0), nextstart(0), occurence(0), length(0), state(GAMEEVENT_NORMAL) {}
     time_t start;   // occurs after this time
     time_t end;     // occurs before this time
     time_t nextstart; // after this time the follow-up events count this phase completed
@@ -86,8 +88,9 @@ struct NPCVendorEntry
 class Player;
 class GameEventMgr
 {
+    friend class ACE_Singleton<GameEventMgr, ACE_Null_Mutex>;
+    GameEventMgr();
     public:
-        GameEventMgr();
         ~GameEventMgr() {};
         typedef std::set<uint16> ActiveEvents;
         typedef std::vector<GameEventData> GameEventDataMap;
@@ -159,8 +162,8 @@ class GameEventMgr
         bool isSystemInit;
 };
 
-#define gameeventmgr Oregon::Singleton<GameEventMgr>::Instance()
+#define sGameEventMgr ACE_Singleton<GameEventMgr, ACE_Null_Mutex>::instance()
 #endif
 
-bool isGameEventActive(uint16 event_id);
+bool isGameEventActive(uint16 event_id);  // wtf is this outside of /EOF??
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_SPELLAURAS_H
-#define OREGON_SPELLAURAS_H
+#ifndef TRINITY_SPELLAURAS_H
+#define TRINITY_SPELLAURAS_H
 
 #include "SpellAuraDefines.h"
 
@@ -57,9 +58,9 @@ typedef void(Aura::*pAuraHandler)(bool Apply, bool Real);
 //      (percent auras, stats mods, etc)
 // Second rule: Code must be guarded by if (Real) check if it modifies object state (start/stop attack, send packets to client, etc)
 //
-// Other case choice: each code line moved under if (Real) check is Oregon speedup,
-//      each setting object update field code line moved under if (Real) check is significant Oregon speedup, and less server->client data sends
-//      each packet sending code moved under if (Real) check is _large_ Oregon speedup, and lot less server->client data sends
+// Other case choice: each code line moved under if (Real) check is Trinity speedup,
+//      each setting object update field code line moved under if (Real) check is significant Trinity speedup, and less server->client data sends
+//      each packet sending code moved under if (Real) check is _large_ Trinity speedup, and lot less server->client data sends
 
 class Aura
 {
@@ -250,7 +251,7 @@ class Aura
         Unit* GetCaster() const;
         Unit* GetTarget() const { return m_target; }
         void SetTarget(Unit* target) { m_target = target; }
-        void SetLoadedState(uint64 caster_guid,int32 damage,int32 maxduration,int32 duration,int32 charges)
+        void SetLoadedState(uint64 caster_guid, int32 damage, int32 maxduration, int32 duration, int32 charges)
         {
             m_caster_guid = caster_guid;
             m_modifier.m_amount = damage;

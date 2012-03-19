@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -85,7 +86,7 @@ struct boss_renatakiAI : public ScriptedAI
             if (Ambush_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (pTarget)
                 {
                     DoTeleportTo(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
@@ -120,7 +121,7 @@ struct boss_renatakiAI : public ScriptedAI
             if (Aggro_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
             if (DoGetThreat(me->getVictim()))
                 DoModifyThreatPercent(me->getVictim(),-50);
@@ -141,9 +142,9 @@ struct boss_renatakiAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_renataki(Creature* pCreature)
+CreatureAI* GetAI_boss_renataki(Creature* creature)
 {
-    return new boss_renatakiAI (pCreature);
+    return new boss_renatakiAI (creature);
 }
 
 void AddSC_boss_renataki()

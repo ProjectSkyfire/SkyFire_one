@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -35,13 +35,13 @@ class Field
 
         Field();
         Field(Field &f);
-        Field(const char *value, enum DataTypes type);
+        Field(const char* value, enum DataTypes type);
 
         ~Field();
 
         enum DataTypes GetType() const { return mType; }
 
-        const char *GetString() const { return mValue; }
+        const char* GetString() const { return mValue; }
         std::string GetCppString() const
         {
             return mValue ? mValue : "";                    // std::string s = 0 have undefine result in C++
@@ -58,7 +58,18 @@ class Field
             if (mValue)
             {
                 uint64 value;
-                sscanf(mValue,UI64FMTD,&value);
+                sscanf(mValue, UI64FMTD, &value);
+                return value;
+            }
+            else
+                return 0;
+        }
+        uint64 GetInt64() const
+        {
+            if (mValue)
+            {
+                int64 value;
+                sscanf(mValue, SI64FMTD, &value);
                 return value;
             }
             else
@@ -67,10 +78,10 @@ class Field
 
         void SetType(enum DataTypes type) { mType = type; }
 
-        void SetValue(const char *value);
+        void SetValue(const char* value);
 
     private:
-        char *mValue;
+        char* mValue;
         enum DataTypes mType;
 };
 #endif

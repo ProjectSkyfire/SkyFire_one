@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -77,12 +78,13 @@ class WorldSession
         void SizeError(WorldPacket const& packet, uint32 size) const;
 
         void SendPacket(WorldPacket const* packet);
-        void SendNotification(const char *format,...) ATTR_PRINTF(2,3);
-        void SendNotification(int32 string_id,...);
+        void SendNotification(const char *format, ...) ATTR_PRINTF(2, 3);
+        void SendNotification(int32 string_id, ...);
         void SendPetNameInvalid(uint32 error, const std::string& name, DeclinedName *declinedName);
         void SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type);
+        void SendLfgUpdate(uint8 unk1, uint8 unk2, uint8 unk3);
         void SendPartyResult(PartyOperation operation, const std::string& member, PartyResult res);
-        void SendAreaTriggerMessage(const char* Text, ...) ATTR_PRINTF(2,3);
+        void SendAreaTriggerMessage(const char* Text, ...) ATTR_PRINTF(2, 3);
 
         uint32 GetSecurity() const { return _security; }
         uint32 GetAccountId() const { return _accountId; }
@@ -162,8 +164,8 @@ class WorldSession
         void SendAuctionCancelledToBidderMail(AuctionEntry* auction);
 
         //Item Enchantment
-        void SendEnchantmentLog(uint64 Target, uint64 Caster,uint32 ItemID,uint32 SpellID);
-        void SendItemEnchantTimeUpdate(uint64 Playerguid, uint64 Itemguid,uint32 slot,uint32 Duration);
+        void SendEnchantmentLog(uint64 Target, uint64 Caster, uint32 ItemID, uint32 SpellID);
+        void SendItemEnchantTimeUpdate(uint64 Playerguid, uint64 Itemguid, uint32 slot, uint32 Duration);
 
         //Taxi
         void SendTaxiStatus(uint64 guid);
@@ -184,7 +186,7 @@ class WorldSession
         bool LookingForGroup_auto_join;
         bool LookingForGroup_auto_add;
 
-        void BuildPartyMemberStatsChangedPacket(Player *player, WorldPacket *data);
+        void BuildPartyMemberStatsChangedPacket(Player* player, WorldPacket *data);
 
         void DoLootRelease(uint64 lguid);
 
@@ -194,11 +196,11 @@ class WorldSession
         // Locales
         LocaleConstant GetSessionDbcLocale() const { return m_sessionDbcLocale; }
         int GetSessionDbLocaleIndex() const { return m_sessionDbLocaleIndex; }
-        const char *GetOregonString(int32 entry) const;
+        const char *GetSkyFireString(int32 entry) const;
 
         uint32 GetLatency() const { return m_latency; }
         void SetLatency(uint32 latency) { m_latency = latency; }
-        uint32 getDialogStatus(Player *pPlayer, Object* questgiver, uint32 defstatus);
+        uint32 getDialogStatus(Player* player, Object* questgiver, uint32 defstatus);
 
         time_t m_timeOutTime;
         void UpdateTimeOutTime(uint32 diff)
@@ -210,7 +212,7 @@ class WorldSession
         }
         void ResetTimeOutTime()
         {
-            m_timeOutTime = sWorld.getConfig(CONFIG_SOCKET_TIMEOUTTIME);
+            m_timeOutTime = sWorld->getConfig(CONFIG_SOCKET_TIMEOUTTIME);
         }
         bool IsConnectionIdle() const
         {
@@ -517,8 +519,8 @@ class WorldSession
         void HandleResurrectResponseOpcode(WorldPacket& recvPacket);
         void HandleSummonResponseOpcode(WorldPacket& recv_data);
 
-        void HandleChannelJoin(WorldPacket& recvPacket);
-        void HandleChannelLeave(WorldPacket& recvPacket);
+        void HandleJoinChannel(WorldPacket& recvPacket);
+        void HandleLeaveChannel(WorldPacket& recvPacket);
         void HandleChannelList(WorldPacket& recvPacket);
         void HandleChannelPassword(WorldPacket& recvPacket);
         void HandleChannelSetOwner(WorldPacket& recvPacket);
@@ -531,11 +533,12 @@ class WorldSession
         void HandleChannelKick(WorldPacket& recvPacket);
         void HandleChannelBan(WorldPacket& recvPacket);
         void HandleChannelUnban(WorldPacket& recvPacket);
-        void HandleChannelAnnounce(WorldPacket& recvPacket);
+        void HandleChannelAnnouncements(WorldPacket& recvPacket);
         void HandleChannelModerate(WorldPacket& recvPacket);
-        void HandleChannelRosterQuery(WorldPacket& recvPacket);
-        void HandleChannelInfoQuery(WorldPacket& recvPacket);
-        void HandleChannelJoinNotify(WorldPacket& recvPacket);
+        void HandleChannelDeclineInvite(WorldPacket& recvPacket);
+        void HandleChannelDisplayListQuery(WorldPacket& recvPacket);
+        void HandleGetChannelMemberCount(WorldPacket& recvPacket);
+        void HandleSetChannelWatch(WorldPacket& recvPacket);
 
         void HandleCompleteCinema(WorldPacket& recvPacket);
         void HandleNextCinematicCamera(WorldPacket& recvPacket);
@@ -586,14 +589,14 @@ class WorldSession
         void HandleSetLfgOpcode(WorldPacket& recv_data);
         void HandleDungeonDifficultyOpcode(WorldPacket& recv_data);
         void HandleMoveFlyModeChangeAckOpcode(WorldPacket& recv_data);
-        void HandleLfgAutoJoinOpcode(WorldPacket& recv_data);
-        void HandleLfgCancelAutoJoinOpcode(WorldPacket& recv_data);
-        void HandleLfmAutoAddMembersOpcode(WorldPacket& recv_data);
-        void HandleLfmCancelAutoAddmembersOpcode(WorldPacket& recv_data);
+        void HandleLfgSetAutoJoinOpcode(WorldPacket& recv_data);
+        void HandleLfgClearAutoJoinOpcode(WorldPacket& recv_data);
+        void HandleLfmSetAutoFillOpcode(WorldPacket& recv_data);
+        void HandleLfmClearAutoFillOpcode(WorldPacket& recv_data);
         void HandleLfgClearOpcode(WorldPacket& recv_data);
-        void HandleLfmSetNoneOpcode(WorldPacket& recv_data);
-        void HandleLfmSetOpcode(WorldPacket& recv_data);
-        void HandleLfgSetCommentOpcode(WorldPacket& recv_data);
+        void HandleLfmClearOpcode(WorldPacket& recv_data);
+        void HandleSetLfmOpcode(WorldPacket& recv_data);
+        void HandleSetLfgCommentOpcode(WorldPacket& recv_data);
         void HandleChooseTitleOpcode(WorldPacket& recv_data);
         void HandleRealmStateRequestOpcode(WorldPacket& recv_data);
         void HandleTimeSyncResp(WorldPacket& recv_data);
@@ -670,7 +673,7 @@ class WorldSession
         int m_sessionDbLocaleIndex;
         uint32 m_latency;
 
-        ACE_Based::LockedQueue<WorldPacket*,ACE_Thread_Mutex> _recvQueue;
+        ACE_Based::LockedQueue<WorldPacket*, ACE_Thread_Mutex> _recvQueue;
 };
 #endif
 

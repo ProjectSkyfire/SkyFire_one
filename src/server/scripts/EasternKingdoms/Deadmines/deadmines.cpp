@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -32,13 +33,13 @@ EndScriptData */
 # item_Defias_Gunpowder
 #####*/
 
-bool ItemUse_item_defias_gunpowder(Player* pPlayer, Item* pItem, SpellCastTargets const& targets)
+bool ItemUse_item_defias_gunpowder(Player* player, Item* pItem, SpellCastTargets const& targets)
 {
-    ScriptedInstance *pInstance = pPlayer->GetInstanceData();
+    ScriptedInstance *pInstance = player->GetInstanceData();
 
     if (!pInstance)
     {
-        pPlayer->GetSession()->SendNotification("Instance script not initialized");
+        player->GetSession()->SendNotification("Instance script not initialized");
         return true;
     }
     if (pInstance->GetData(EVENT_CANNON) != CANNON_NOT_USED)
@@ -46,7 +47,7 @@ bool ItemUse_item_defias_gunpowder(Player* pPlayer, Item* pItem, SpellCastTarget
     if (targets.getGOTarget() && targets.getGOTarget()->GetTypeId() == TYPEID_GAMEOBJECT && targets.getGOTarget()->GetEntry() == GO_DEFIAS_CANNON)
         pInstance->SetData(EVENT_CANNON, CANNON_GUNPOWDER_USED);
 
-    pPlayer->DestroyItemCount(pItem->GetEntry(), 1, true);
+    player->DestroyItemCount(pItem->GetEntry(), 1, true);
     return true;
 }
 

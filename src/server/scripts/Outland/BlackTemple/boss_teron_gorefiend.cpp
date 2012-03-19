@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -156,7 +157,7 @@ struct mob_shadowy_constructAI : public ScriptedAI
             if (pUnit && pUnit->isAlive())
                 targets.push_back(pUnit);
         }
-        targets.sort(Oregon::ObjectDistanceOrderPred(me));
+        targets.sort(Trinity::ObjectDistanceOrderPred(me));
         Unit *pTarget = targets.front();
         if (pTarget && me->IsWithinDistInMap(pTarget, me->GetAttackDistance(pTarget)))
         {
@@ -263,7 +264,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -277,7 +278,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
     float CalculateRandomLocation(float Loc, uint32 radius)
     {
         float coord = Loc;
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 coord += rand()%radius;
@@ -310,7 +311,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
     {
         /************************************************************************/
         /** NOTE FOR FUTURE DEVELOPER: PROPERLY IMPLEMENT THE GHOST PORTION *****/
-        /**  ONLY AFTER Oregon FULLY IMPLEMENTS MIND CONTROL ABILITIES      *****/
+        /**  ONLY AFTER Trinity FULLY IMPLEMENTS MIND CONTROL ABILITIES      *****/
         /**   THE CURRENT CODE IN THIS FUNCTION IS ONLY THE BEGINNING OF    *****/
         /**    WHAT IS FULLY NECESSARY FOR GOREFIEND TO BE 100% COMPLETE    *****/
         /************************************************************************/
@@ -320,8 +321,8 @@ struct boss_teron_gorefiendAI : public ScriptedAI
             Ghost = Unit::GetUnit((*me), GhostGUID);
         if (Ghost && Ghost->isAlive() && Ghost->HasAura(SPELL_SHADOW_OF_DEATH, 0))
         {
-            /*float x,y,z;
-            Ghost->GetPosition(x,y,z);
+            /*float x, y, z;
+            Ghost->GetPosition(x, y, z);
             Creature* control = me->SummonCreature(CREATURE_GHOST, x, y, z, 0, TEMPSUMMON_TIMED_DESAWN, 30000);
             if (control)
             {
@@ -433,7 +434,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
             if (pTarget)
             {
-                DoScriptText(RAND(SAY_SPECIAL1,SAY_SPECIAL2), me);
+                DoScriptText(RAND(SAY_SPECIAL1, SAY_SPECIAL2), me);
                 DoCast(pTarget, SPELL_INCINERATE);
                 IncinerateTimer = 20000 + rand()%31 * 1000;
             }
@@ -466,7 +467,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
         if (RandomYellTimer <= diff)
         {
-            DoScriptText(RAND(SAY_SPELL1,SAY_SPELL2), me);
+            DoScriptText(RAND(SAY_SPELL1, SAY_SPELL2), me);
             RandomYellTimer = 50000 + rand()%51 * 1000;
         } else RandomYellTimer -= diff;
 
@@ -483,19 +484,19 @@ struct boss_teron_gorefiendAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_doom_blossom(Creature* pCreature)
+CreatureAI* GetAI_mob_doom_blossom(Creature* creature)
 {
-    return new mob_doom_blossomAI(pCreature);
+    return new mob_doom_blossomAI(creature);
 }
 
-CreatureAI* GetAI_mob_shadowy_construct(Creature* pCreature)
+CreatureAI* GetAI_mob_shadowy_construct(Creature* creature)
 {
-    return new mob_shadowy_constructAI(pCreature);
+    return new mob_shadowy_constructAI(creature);
 }
 
-CreatureAI* GetAI_boss_teron_gorefiend(Creature* pCreature)
+CreatureAI* GetAI_boss_teron_gorefiend(Creature* creature)
 {
-    return new boss_teron_gorefiendAI (pCreature);
+    return new boss_teron_gorefiendAI (creature);
 }
 
 void AddSC_boss_teron_gorefiend()

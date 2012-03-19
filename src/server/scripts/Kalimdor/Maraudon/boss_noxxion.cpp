@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -54,7 +55,7 @@ struct boss_noxxionAI : public ScriptedAI
 
     void SummonAdds(Unit* pVictim)
     {
-        if (Creature *Add = DoSpawnCreature(13456, irand(-7,7), irand(-7,7), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000))
+        if (Creature *Add = DoSpawnCreature(13456, irand(-7, 7), irand(-7, 7), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000))
             Add->AI()->AttackStart(pVictim);
     }
 
@@ -118,9 +119,9 @@ struct boss_noxxionAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_noxxion(Creature* pCreature)
+CreatureAI* GetAI_boss_noxxion(Creature* creature)
 {
-    return new boss_noxxionAI (pCreature);
+    return new boss_noxxionAI (creature);
 }
 
 void AddSC_boss_noxxion()

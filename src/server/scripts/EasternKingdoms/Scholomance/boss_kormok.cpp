@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -54,13 +55,13 @@ struct boss_kormokAI : public ScriptedAI
 
     void SummonMinions(Unit* victim)
     {
-        if (Creature *SummonedMinion = DoSpawnCreature(16119, irand(-7,7), irand(-7,7), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+        if (Creature *SummonedMinion = DoSpawnCreature(16119, irand(-7, 7), irand(-7, 7), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
             SummonedMinion->AI()->AttackStart(victim);
     }
 
     void SummonMages(Unit* victim)
     {
-        if (Creature *SummonedMage = DoSpawnCreature(16120, irand(-9,9), irand(-9,9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+        if (Creature *SummonedMage = DoSpawnCreature(16120, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
             SummonedMage->AI()->AttackStart(victim);
     }
 
@@ -107,9 +108,9 @@ struct boss_kormokAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_kormok(Creature* pCreature)
+CreatureAI* GetAI_boss_kormok(Creature* creature)
 {
-    return new boss_kormokAI (pCreature);
+    return new boss_kormokAI (creature);
 }
 
 void AddSC_boss_kormok()

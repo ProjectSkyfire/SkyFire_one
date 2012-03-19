@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -56,17 +57,17 @@ struct instance_zulgurub : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 11347: m_uiLorKhanGUID = pCreature->GetGUID(); break;
-            case 11348: m_uiZathGUID = pCreature->GetGUID(); break;
-            case 14509: m_uiThekalGUID = pCreature->GetGUID(); break;
-            case 11380: m_uiJindoGUID = pCreature->GetGUID(); break;
+            case 11347: m_uiLorKhanGUID = creature->GetGUID(); break;
+            case 11348: m_uiZathGUID = creature->GetGUID(); break;
+            case 14509: m_uiThekalGUID = creature->GetGUID(); break;
+            case 11380: m_uiJindoGUID = creature->GetGUID(); break;
             case 14515:
             if (m_auiEncounter[0] >= IN_PROGRESS)
-                pCreature->DisappearAndDie();
+                creature->DisappearAndDie();
             else
                 m_auiEncounter[0] = IN_PROGRESS;
             break;
@@ -75,7 +76,7 @@ struct instance_zulgurub : public ScriptedInstance
 
     void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_ARLOKK:
                 m_auiEncounter[0] = uiData;
@@ -113,7 +114,7 @@ struct instance_zulgurub : public ScriptedInstance
 
     uint32 GetData(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_ARLOKK:
                 return m_auiEncounter[0];
@@ -137,7 +138,7 @@ struct instance_zulgurub : public ScriptedInstance
 
     uint64 GetData64(uint32 uiData)
     {
-        switch(uiData)
+        switch (uiData)
         {
             case DATA_LORKHAN:
                 return m_uiLorKhanGUID;

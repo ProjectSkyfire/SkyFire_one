@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -17,34 +17,17 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_TIMER_H
-#define OREGON_TIMER_H
+#ifndef TRINITY_TIMER_H
+#define TRINITY_TIMER_H
 
-#include "CompilerDefs.h"
+#include "ace/OS_NS_sys_time.h"
+#include "Common.h"
 
-#if PLATFORM == PLATFORM_WINDOWS
-#   include <ace/config-all.h>
-#   include <mmsystem.h>
-#   include <time.h>
-#else
-# if defined(__APPLE_CC__)
-#   include <time.h>
-# endif
-#   include <sys/time.h>
-#   include <sys/timeb.h>
-#endif
-
-#if PLATFORM == PLATFORM_WINDOWS
-inline uint32 getMSTime() { return GetTickCount(); }
-#else
 inline uint32 getMSTime()
 {
-    struct timeval tv;
-    struct timezone tz;
-    gettimeofday( &tv, &tz );
-    return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+    static const ACE_Time_Value ApplicationStartTime = ACE_OS::gettimeofday();
+    return (ACE_OS::gettimeofday() - ApplicationStartTime).msec();
 }
-#endif
 
 inline uint32 getMSTimeDiff(uint32 oldMSTime, uint32 newMSTime)
 {
@@ -55,19 +38,57 @@ inline uint32 getMSTimeDiff(uint32 oldMSTime, uint32 newMSTime)
         return newMSTime - oldMSTime;
 }
 
-class IntervalTimer
+inline uint32 GetMSTimeDiffToNow(uint32 oldMSTime)
+{
+    return getMSTimeDiff(oldMSTime, getMSTime());
+}
+
+struct IntervalTimer
 {
     public:
-        IntervalTimer() : _interval(0), _current(0) {}
 
-        void Update(time_t diff) { _current += diff; if (_current<0) _current=0;}
-        bool Passed() { return _current >= _interval; }
-        void Reset() { if (_current >= _interval) _current -= _interval;  }
+        IntervalTimer()
+            : _interval(0), _current(0)
+        {
+        }
 
-        void SetCurrent(time_t current) { _current = current; }
-        void SetInterval(time_t interval) { _interval = interval; }
-        time_t GetInterval() const { return _interval; }
-        time_t GetCurrent() const { return _current; }
+        void Update(time_t diff)
+        {
+            _current += diff;
+            if (_current < 0)
+                _current = 0;
+        }
+
+        bool Passed()
+        {
+            return _current >= _interval;
+        }
+
+        void Reset()
+        {
+            if (_current >= _interval)
+                _current -= _interval;
+        }
+
+        void SetCurrent(time_t current)
+        {
+            _current = current;
+        }
+
+        void SetInterval(time_t interval)
+        {
+            _interval = interval;
+        }
+
+        time_t GetInterval() const
+        {
+            return _interval;
+        }
+
+        time_t GetCurrent() const
+        {
+            return _current;
+        }
 
     private:
 
@@ -77,22 +98,70 @@ class IntervalTimer
 
 struct TimeTracker
 {
-    TimeTracker(time_t expiry) : i_expiryTime(expiry) {}
-    void Update(time_t diff) { i_expiryTime -= diff; }
-    bool Passed(void) const { return (i_expiryTime <= 0); }
-    void Reset(time_t interval) { i_expiryTime = interval; }
-    time_t GetExpiry(void) const { return i_expiryTime; }
-    time_t i_expiryTime;
+    public:
+
+        TimeTracker(time_t expiry)
+            : i_expiryTime(expiry)
+        {
+        }
+
+        void Update(time_t diff)
+        {
+            i_expiryTime -= diff;
+        }
+
+        bool Passed() const
+        {
+            return i_expiryTime <= 0;
+        }
+
+        void Reset(time_t interval)
+        {
+            i_expiryTime = interval;
+        }
+
+        time_t GetExpiry() const
+        {
+            return i_expiryTime;
+        }
+
+    private:
+
+        time_t i_expiryTime;
 };
 
 struct TimeTrackerSmall
 {
-    TimeTrackerSmall(int32 expiry) : i_expiryTime(expiry) {}
-    void Update(int32 diff) { i_expiryTime -= diff; }
-    bool Passed(void) const { return (i_expiryTime <= 0); }
-    void Reset(int32 interval) { i_expiryTime = interval; }
-    int32 GetExpiry(void) const { return i_expiryTime; }
-    int32 i_expiryTime;
+    public:
+
+        TimeTrackerSmall(uint32 expiry = 0)
+            : i_expiryTime(expiry)
+        {
+        }
+
+        void Update(int32 diff)
+        {
+            i_expiryTime -= diff;
+        }
+
+        bool Passed() const
+        {
+            return i_expiryTime <= 0;
+        }
+
+        void Reset(uint32 interval)
+        {
+            i_expiryTime = interval;
+        }
+
+        int32 GetExpiry() const
+        {
+            return i_expiryTime;
+        }
+
+    private:
+
+        int32 i_expiryTime;
 };
 
 struct PeriodicTimer
@@ -100,16 +169,16 @@ struct PeriodicTimer
     public:
 
         PeriodicTimer(int32 period, int32 start_time)
-            : i_expireTime(start_time), i_period(period)
+            : i_period(period), i_expireTime(start_time)
         {
         }
 
-        bool Update(const uint32 &diff)
+        bool Update(const uint32 diff)
         {
             if ((i_expireTime -= diff) > 0)
                 return false;
 
-            i_expireTime += i_period > diff ? i_period : diff;
+            i_expireTime += i_period > int32(diff) ? i_period : diff;
             return true;
         }
 
@@ -131,4 +200,3 @@ struct PeriodicTimer
 };
 
 #endif
-

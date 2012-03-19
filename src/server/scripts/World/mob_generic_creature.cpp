@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -101,7 +102,7 @@ struct generic_creatureAI : public ScriptedAI
                 else info = SelectSpell(me->getVictim(), 0, 0, SELECT_TARGET_ANY_ENEMY, 0, 0, 0, 0, SELECT_EFFECT_DONTCARE);
 
                 //50% chance if elite or higher, 20% chance if not, to replace our white hit with a spell
-                if (info && (rand() % (me->GetCreatureInfo()->rank > 1 ? 2 : 5) == 0) && !GlobalCooldown)
+                if (info && (rand() % (me->GetCreatureTemplate()->rank > 1 ? 2 : 5) == 0) && !GlobalCooldown)
                 {
                     //Cast the spell
                     if (Healing)DoCastSpell(me, info);
@@ -141,7 +142,7 @@ struct generic_creatureAI : public ScriptedAI
                     }
 
                     //Cast spell
-                    if (Healing) DoCastSpell(me,info);
+                    if (Healing) DoCastSpell(me, info);
                     else DoCastSpell(me->getVictim(),info);
 
                     //Set our global cooldown
@@ -158,9 +159,9 @@ struct generic_creatureAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_generic_creature(Creature* pCreature)
+CreatureAI* GetAI_generic_creature(Creature* creature)
 {
-    return new generic_creatureAI (pCreature);
+    return new generic_creatureAI (creature);
 }
 
 void AddSC_generic_creature()

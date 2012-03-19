@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -72,7 +73,7 @@ struct boss_interrogator_vishasAI : public ScriptedAI
             return;
 
         //Any other actions to do with vorrel? setStandState?
-        if (Unit *vorrel = Unit::GetUnit(*me,pInstance->GetData64(DATA_VORREL)))
+        if (Unit *vorrel = Unit::GetUnit(*me, pInstance->GetData64(DATA_VORREL)))
             DoScriptText(SAY_TRIGGER_VORREL, vorrel);
     }
 
@@ -105,9 +106,9 @@ struct boss_interrogator_vishasAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_interrogator_vishas(Creature* pCreature)
+CreatureAI* GetAI_boss_interrogator_vishas(Creature* creature)
 {
-    return new boss_interrogator_vishasAI (pCreature);
+    return new boss_interrogator_vishasAI (creature);
 }
 
 void AddSC_boss_interrogator_vishas()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,11 +18,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MAP_H
-#define OREGON_MAP_H
+#ifndef TRINITY_MAP_H
+#define TRINITY_MAP_H
 
 #include "Define.h"
-#include "Policies/ThreadingModel.h"
 
 #include "DBCStructure.h"
 #include "GridDefines.h"
@@ -206,11 +206,11 @@ struct CreatureMover
     float x, y, z, ang;
 };
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 struct InstanceTemplate
@@ -249,7 +249,7 @@ typedef UNORDERED_MAP<Creature*, CreatureMover> CreatureMoveList;
 typedef std::map<uint32/*leaderDBGUID*/, CreatureFormation*>        CreatureFormationHolderType;
 typedef std::map<uint32/*groupId*/, CreatureGroup*>            CreatureGroupHolderType;
 
-class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable<Map, ACE_Thread_Mutex>
+class Map : public GridRefManager<NGridType>
 {
     friend class MapReference;
     public:
@@ -284,19 +284,19 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
         virtual void InitVisibilityDistance();
 
         void PlayerRelocation(Player *, float x, float y, float z, float orientation);
-        void CreatureRelocation(Creature *creature, float x, float y, float z, float ang);
+        void CreatureRelocation(Creature* creature, float x, float y, float z, float ang);
 
         template<class T, class CONTAINER> void Visit(const Cell& cell, TypeContainerVisitor<T, CONTAINER> &visitor);
 
         bool IsRemovalGrid(float x, float y) const
         {
-            GridPair p = Oregon::ComputeGridPair(x, y);
+            GridPair p = Trinity::ComputeGridPair(x, y);
             return !getNGrid(p.x_coord, p.y_coord) || getNGrid(p.x_coord, p.y_coord)->GetGridState() == GRID_STATE_REMOVAL;
         }
 
         bool IsLoaded(float x, float y) const
         {
-            GridPair p = Oregon::ComputeGridPair(x, y);
+            GridPair p = Trinity::ComputeGridPair(x, y);
             return loaded(p);
         }
 
@@ -338,17 +338,17 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
         bool IsInWater(float x, float y, float z, LiquidData *data = 0) const;
         bool IsUnderWater(float x, float y, float z) const;
 
-        static uint32 GetAreaId(uint16 areaflag,uint32 map_id);
-        static uint32 GetZoneId(uint16 areaflag,uint32 map_id);
+        static uint32 GetAreaId(uint16 areaflag, uint32 map_id);
+        static uint32 GetZoneId(uint16 areaflag, uint32 map_id);
 
         uint32 GetAreaId(float x, float y, float z) const
         {
-            return GetAreaId(GetAreaFlag(x,y,z),GetId());
+            return GetAreaId(GetAreaFlag(x, y, z), GetId());
         }
 
         uint32 GetZoneId(float x, float y, float z) const
         {
-            return GetZoneId(GetAreaFlag(x,y,z),GetId());
+            return GetZoneId(GetAreaFlag(x, y, z), GetId());
         }
 
         void MoveAllCreaturesInMoveList();
@@ -420,7 +420,7 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
         CreatureFormationHolderType CreatureFormationHolder;
         CreatureGroupHolderType CreatureGroupHolder;
 
-        void UpdateIteratorBack(Player *player);
+        void UpdateIteratorBack(Player* player);
 
         TempSummon *SummonCreature(uint32 entry, const Position &pos, SummonPropertiesEntry const *properties = NULL, uint32 duration = 0, Unit *summoner = NULL, SpellEntry const* spellInfo = NULL);
         Creature* GetCreature(uint64 guid);
@@ -429,7 +429,7 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
     private:
         void LoadMapAndVMap(int gx, int gy);
         void LoadVMap(int gx, int gy);
-        void LoadMap(int gx,int gy, bool reload = false);
+        void LoadMap(int gx, int gy, bool reload = false);
         GridMap *GetGrid(float x, float y);
 
         void SetTimer(uint32 t) { i_gridExpiry = t < MIN_GRID_DELAY ? MIN_GRID_DELAY : t; }
@@ -439,7 +439,7 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
         void SendInitTransports(Player * player);
         void SendRemoveTransports(Player * player);
 
-        bool CreatureCellRelocation(Creature *creature, Cell new_cell);
+        bool CreatureCellRelocation(Creature* creature, Cell new_cell);
 
         void AddCreatureToMoveList(Creature *c, float x, float y, float z, float ang);
         CreatureMoveList i_creaturesToMove;
@@ -461,8 +461,8 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
             return i_grids[x][y];
         }
 
-        bool isGridObjectDataLoaded(uint32 x, uint32 y) const { return getNGrid(x,y)->isGridObjectDataLoaded(); }
-        void setGridObjectDataLoaded(bool pLoaded, uint32 x, uint32 y) { getNGrid(x,y)->setGridObjectDataLoaded(pLoaded); }
+        bool isGridObjectDataLoaded(uint32 x, uint32 y) const { return getNGrid(x, y)->isGridObjectDataLoaded(); }
+        void setGridObjectDataLoaded(bool pLoaded, uint32 x, uint32 y) { getNGrid(x, y)->setGridObjectDataLoaded(pLoaded); }
 
         void setNGrid(NGridType* grid, uint32 x, uint32 y);
         void ScriptsProcess();
@@ -471,7 +471,7 @@ class Map : public GridRefManager<NGridType>, public Oregon::ObjectLevelLockable
     protected:
         void SetUnloadReferenceLock(const GridPair &p, bool on) { getNGrid(p.x_coord, p.y_coord)->setUnloadReferenceLock(on); }
 
-        typedef Oregon::ObjectLevelLockable<Map, ACE_Thread_Mutex>::Lock Guard;
+        ACE_Thread_Mutex Lock;
 
         MapEntry const* i_mapEntry;
         uint8 i_spawnMode;
@@ -574,7 +574,7 @@ class InstanceMap : public Map
         bool Reset(uint8 method);
         uint32 GetScriptId() { return i_script_id; }
         InstanceData* GetInstanceData() { return i_data; }
-        void PermBindAllPlayers(Player *player);
+        void PermBindAllPlayers(Player* player);
         time_t GetResetTime();
         void UnloadAll();
         bool CanEnter(Player* player);
@@ -627,7 +627,7 @@ Map::Visit(const Cell& cell, TypeContainerVisitor<T, CONTAINER> &visitor)
     const uint32 cell_x = cell.CellX();
     const uint32 cell_y = cell.CellY();
 
-    if (!cell.NoCreate() || loaded(GridPair(x,y)))
+    if (!cell.NoCreate() || loaded(GridPair(x, y)))
     {
         EnsureGridLoaded(cell);
         getNGrid(x, y)->Visit(cell_x, cell_y, visitor);
@@ -638,7 +638,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitAll(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Oregon::ComputeCellPair(x, y));
+    CellPair p(Trinity::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -653,7 +653,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitWorld(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Oregon::ComputeCellPair(x, y));
+    CellPair p(Trinity::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -666,7 +666,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitGrid(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Oregon::ComputeCellPair(x, y));
+    CellPair p(Trinity::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();

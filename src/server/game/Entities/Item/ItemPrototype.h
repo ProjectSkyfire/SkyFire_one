@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -427,7 +428,7 @@ const uint32 MaxItemSubclassValues[MAX_ITEM_CLASS] =
 
 inline uint8 ItemSubClassToDurabilityMultiplierId(uint32 ItemClass, uint32 ItemSubClass)
 {
-    switch(ItemClass)
+    switch (ItemClass)
     {
         case ITEM_CLASS_WEAPON: return ItemSubClass;
         case ITEM_CLASS_ARMOR:  return ItemSubClass + 21;
@@ -435,11 +436,11 @@ inline uint8 ItemSubClassToDurabilityMultiplierId(uint32 ItemClass, uint32 ItemS
     return 0;
 }
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 struct _Damage
@@ -545,7 +546,7 @@ struct ItemPrototype
     // helpers
     bool CanChangeEquipStateInCombat() const
     {
-        switch(InventoryType)
+        switch (InventoryType)
         {
             case INVTYPE_RELIC:
             case INVTYPE_SHIELD:
@@ -553,7 +554,7 @@ struct ItemPrototype
                 return true;
         }
 
-        switch(Class)
+        switch (Class)
         {
             case ITEM_CLASS_WEAPON:
             case ITEM_CLASS_PROJECTILE:

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -20,7 +21,7 @@
 #include "Database/DatabaseEnv.h"
 #include "GridDefines.h"
 #include "WaypointManager.h"
-#include "ProgressBar.h"
+
 #include "MapManager.h"
 
 void WaypointStore::Free()
@@ -40,23 +41,21 @@ void WaypointStore::Load()
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT COUNT(id) FROM waypoint_data");
     if (!result)
     {
-        sLog.outError("an error occured while loading the table waypoint_data (maybe it doesn't exist ?)");
+        sLog->outError("an error occured while loading the table waypoint_data (maybe it doesn't exist ?)");
         exit(1);                                            // Stop server at loading non exited table or not accessable table
     }
 
     records = (*result)[0].GetUInt32();
 
-    result = WorldDatabase.Query("SELECT id,point,position_x,position_y,position_z,move_flag,delay,action,action_chance FROM waypoint_data ORDER BY id, point");
+    result = WorldDatabase.Query("SELECT id, point, position_x, position_y, position_z, move_flag, delay, action, action_chance FROM waypoint_data ORDER BY id, point");
     if (!result)
     {
-        sLog.outErrorDb("The table waypoint_data is empty or corrupted");
+        sLog->outErrorDb("The table waypoint_data is empty or corrupted");
         return;
     }
 
     WaypointPath* path_data = NULL;
     uint32 total_records = result->GetRowCount();
-
-    barGoLink bar(total_records);
     uint32 count = 0;
     Field *fields;
     uint32 last_id = 0;
@@ -65,20 +64,19 @@ void WaypointStore::Load()
     {
         fields = result->Fetch();
         uint32 id = fields[0].GetUInt32();
-        bar.step();
         count++;
         WaypointData *wp = new WaypointData;
 
         if (last_id != id)
             path_data = new WaypointPath;
 
-        float x,y,z;
+        float x, y, z;
         x = fields[2].GetFloat();
         y = fields[3].GetFloat();
         z = fields[4].GetFloat();
 
-        Oregon::NormalizeMapCoord(x);
-        Oregon::NormalizeMapCoord(y);
+        Trinity::NormalizeMapCoord(x);
+        Trinity::NormalizeMapCoord(y);
 
         wp->id = fields[1].GetUInt32();
         wp->x = x;
@@ -97,8 +95,8 @@ void WaypointStore::Load()
         last_id = id;
     } while (result->NextRow()) ;
 
-    sLog.outString();
-    sLog.outString(">> Loaded %u waypoints", count);
+    sLog->outString();
+    sLog->outString(">> Loaded %u waypoints", count);
 }
 
 void WaypointStore::UpdatePath(uint32 id)
@@ -108,7 +106,7 @@ void WaypointStore::UpdatePath(uint32 id)
 
     QueryResult_AutoPtr result;
 
-    result = WorldDatabase.PQuery("SELECT point,position_x,position_y,position_z,move_flag,delay,action,action_chance FROM waypoint_data WHERE id = %u ORDER BY point", id);
+    result = WorldDatabase.PQuery("SELECT point, position_x, position_y, position_z, move_flag, delay, action, action_chance FROM waypoint_data WHERE id = %u ORDER BY point", id);
 
     if (!result)
         return;
@@ -123,13 +121,13 @@ void WaypointStore::UpdatePath(uint32 id)
 
         WaypointData *wp = new WaypointData;
 
-        float x,y,z;
+        float x, y, z;
         x = fields[1].GetFloat();
         y = fields[2].GetFloat();
         z = fields[3].GetFloat();
 
-        Oregon::NormalizeMapCoord(x);
-        Oregon::NormalizeMapCoord(y);
+        Trinity::NormalizeMapCoord(x);
+        Trinity::NormalizeMapCoord(y);
 
         wp->id = fields[0].GetUInt32();
         wp->x = x;

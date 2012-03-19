@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -41,16 +42,16 @@ bool isEventActive()
     return isGameEventActive(HALLOWEEN_EVENTID);
 }
 
-bool GossipHello_npc_innkeeper(Player *pPlayer, Creature *pCreature)
+bool GossipHello_npc_innkeeper(Player* player, Creature* creature)
 {
-    pPlayer->TalkedToCreature(pCreature->GetEntry(),pCreature->GetGUID());
+    player->TalkedToCreature(creature->GetEntry(),creature->GetGUID());
 
-    pPlayer->PrepareGossipMenu(pCreature,0); //send innkeeper menu too
+    player->PrepareGossipMenu(creature, 0); //send innkeeper menu too
 
-    if (isEventActive()&& !pPlayer->HasAura(SPELL_TRICK_OR_TREATED, 0))
+    if (isEventActive()&& !player->HasAura(SPELL_TRICK_OR_TREATED, 0))
     {
         char* localizedEntry;
-        switch (pPlayer->GetSession()->GetSessionDbLocaleIndex())
+        switch (player->GetSession()->GetSessionDbLocaleIndex())
         {
             case 0:
                 localizedEntry=LOCALE_TRICK_OR_TREAT_0;
@@ -68,21 +69,21 @@ bool GossipHello_npc_innkeeper(Player *pPlayer, Creature *pCreature)
                 localizedEntry=LOCALE_TRICK_OR_TREAT_0;
         }
 
-        pPlayer->ADD_GOSSIP_ITEM(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID);
+        player->ADD_GOSSIP_ITEM(0, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID);
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_innkeeper(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID && isEventActive() && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED, 0))
+    if (uiAction == GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID && isEventActive() && !player->HasAura(SPELL_TRICK_OR_TREATED, 0))
     {
-        pPlayer->CastSpell(pPlayer, SPELL_TRICK_OR_TREATED, true);
+        player->CastSpell(player, SPELL_TRICK_OR_TREATED, true);
 
         if (urand(0, 1))
-            pPlayer->CastSpell(pPlayer, SPELL_TREAT, true);
+            player->CastSpell(player, SPELL_TREAT, true);
         else
         {
             int32 trickspell=0;
@@ -116,20 +117,20 @@ bool GossipSelect_npc_innkeeper(Player* pPlayer, Creature* pCreature, uint32 /*u
                     trickspell=24723;                       // skeleton costume
                     break;
             }
-            pPlayer->CastSpell(pPlayer, trickspell, true);
+            player->CastSpell(player, trickspell, true);
         }
-        pPlayer->CLOSE_GOSSIP_MENU();
+        player->CLOSE_GOSSIP_MENU();
         return true;
     }
     //Trininty Gossip core handling dont work...
     else if (uiAction == GOSSIP_OPTION_VENDOR)
     {
-        pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+        player->SEND_VENDORLIST(creature->GetGUID());
     }
     else if (uiAction == GOSSIP_OPTION_INNKEEPER)
     {
-        pPlayer->PlayerTalkClass->CloseGossip();
-        pPlayer->SetBindPoint(pCreature->GetGUID());
+        player->PlayerTalkClass->CloseGossip();
+        player->SetBindPoint(creature->GetGUID());
     }
 
     return true;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -298,7 +299,6 @@ struct map_heightHeader
 #define MAP_LIQUID_TYPE_DARK_WATER  0x10
 #define MAP_LIQUID_TYPE_WMO_WATER   0x20
 
-
 #define MAP_LIQUID_NO_TYPE    0x0001
 #define MAP_LIQUID_NO_HEIGHT  0x0002
 
@@ -361,11 +361,11 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     map.versionMagic = MAP_VERSION_MAGIC;
 
     // Get area flags data
-    for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+    for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
     {
         for (int j=0;j<ADT_CELLS_PER_GRID;j++)
         {
-            adt_MCNK * cell = cells->getMCNK(i,j);
+            adt_MCNK * cell = cells->getMCNK(i, j);
             uint32 areaid = cell->areaid;
             if (areaid && areaid <= maxAreaId)
             {
@@ -412,11 +412,11 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     }
 
     // Get Height map from grid
-    for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+    for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
     {
         for (int j=0;j<ADT_CELLS_PER_GRID;j++)
         {
-            adt_MCNK * cell = cells->getMCNK(i,j);
+            adt_MCNK * cell = cells->getMCNK(i, j);
             if (!cell)
                 continue;
             // Height values for triangles stored in order:
@@ -585,11 +585,11 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     adt_MH2O * h2o = adt.a_grid->getMH2O();
     if (h2o)
     {
-        for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+        for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
         {
             for (int j=0;j<ADT_CELLS_PER_GRID;j++)
             {
-                adt_liquid_header *h = h2o->getLiquidData(i,j);
+                adt_liquid_header *h = h2o->getLiquidData(i, j);
                 if (!h)
                     continue;
 
@@ -653,7 +653,7 @@ bool ConvertADT(char *filename, char *filename2, int cell_y, int cell_x)
     else
     {
         // Get from MCLQ chunk (old)
-        for (int i=0;i<ADT_CELLS_PER_GRID;i++)
+        for (int i = 0;i < ADT_CELLS_PER_GRID;i++)
         {
             for (int j=0;j<ADT_CELLS_PER_GRID;j++)
             {

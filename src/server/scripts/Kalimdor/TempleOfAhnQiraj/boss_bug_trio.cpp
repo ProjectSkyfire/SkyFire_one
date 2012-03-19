@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -173,11 +174,11 @@ struct boss_vemAI : public ScriptedAI
         if (Charge_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget)
             {
                 DoCast(pTarget, SPELL_CHARGE);
-                //me->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true,1);
+                //me->SendMonsterMove(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, true, 1);
                 AttackStart(pTarget);
             }
 
@@ -196,7 +197,7 @@ struct boss_vemAI : public ScriptedAI
         //Enrage_Timer
         if (!Enraged && Enrage_Timer <= diff)
         {
-            DoCast(me,SPELL_ENRAGE);
+            DoCast(me, SPELL_ENRAGE);
             Enraged = true;
         } else Charge_Timer -= diff;
 
@@ -240,8 +241,8 @@ struct boss_yaujAI : public ScriptedAI
 
         for (int i = 0; i < 10;i++)
         {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
-            Creature* Summoned = me->SummonCreature(15621,me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,90000);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            Creature* Summoned = me->SummonCreature(15621, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000);
             if (Summoned && pTarget)
                 ((CreatureAI*)Summoned->AI())->AttackStart(pTarget);
         }
@@ -273,7 +274,7 @@ struct boss_yaujAI : public ScriptedAI
                 Unit *pKri = Unit::GetUnit((*me), pInstance->GetData64(DATA_KRI));
                 Unit *pVem = Unit::GetUnit((*me), pInstance->GetData64(DATA_VEM));
 
-                switch(rand()%3)
+                switch (rand()%3)
                 {
                     case 0:
                         if (pKri)
@@ -313,19 +314,19 @@ struct boss_yaujAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_yauj(Creature* pCreature)
+CreatureAI* GetAI_boss_yauj(Creature* creature)
 {
-    return new boss_yaujAI (pCreature);
+    return new boss_yaujAI (creature);
 }
 
-CreatureAI* GetAI_boss_vem(Creature* pCreature)
+CreatureAI* GetAI_boss_vem(Creature* creature)
 {
-    return new boss_vemAI (pCreature);
+    return new boss_vemAI (creature);
 }
 
-CreatureAI* GetAI_boss_kri(Creature* pCreature)
+CreatureAI* GetAI_boss_kri(Creature* creature)
 {
-    return new boss_kriAI (pCreature);
+    return new boss_kriAI (creature);
 }
 
 void AddSC_bug_trio()

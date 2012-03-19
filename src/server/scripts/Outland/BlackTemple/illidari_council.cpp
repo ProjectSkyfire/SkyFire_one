@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -65,19 +66,19 @@ struct CouncilYells
 
 static CouncilYells CouncilAggro[]=
 {
-    {-1564069, 5000},                                       // Gathios
-    {-1564070, 5500},                                       // Veras
-    {-1564071, 5000},                                       // Malande
-    {-1564072, 0},                                          // Zerevor
+    {-1564069, 5000},                                      // Gathios
+    {-1564070, 5500},                                      // Veras
+    {-1564071, 5000},                                      // Malande
+    {-1564072, 0},                                         // Zerevor
 };
 
 // Need to get proper timers for this later
 static CouncilYells CouncilEnrage[]=
 {
-    {-1564073, 2000},                                       // Gathios
-    {-1564074, 6000},                                       // Veras
-    {-1564075, 5000},                                       // Malande
-    {-1564076, 0},                                          // Zerevor
+    {-1564073, 2000},                                      // Gathios
+    {-1564074, 6000},                                      // Veras
+    {-1564075, 5000},                                      // Malande
+    {-1564076, 0},                                         // Zerevor
 };
 
 // High Nethermancer Zerevor's spells
@@ -150,7 +151,7 @@ struct mob_blood_elf_council_voice_triggerAI : public ScriptedAI
             Council[1] = pInstance->GetData64(DATA_VERASDARKSHADOW);
             Council[2] = pInstance->GetData64(DATA_LADYMALANDE);
             Council[3] = pInstance->GetData64(DATA_HIGHNETHERMANCERZEREVOR);
-        } else error_log(ERROR_INST_DATA);
+        } else sLog->outError(ERROR_INST_DATA);
     }
 
     void EnterCombat(Unit* /*who*/) {}
@@ -379,7 +380,7 @@ struct boss_illidari_councilAI : public ScriptedAI
         }
         else
         {
-            error_log(ERROR_INST_DATA);
+            sLog->outError(ERROR_INST_DATA);
             EnterEvadeMode();
             return;
         }
@@ -396,7 +397,7 @@ struct boss_illidari_councilAI : public ScriptedAI
     {
         if (me->IsNonMeleeSpellCasted(false)) return false;
 
-        DoCast(victim,spellId,triggered);
+        DoCast(victim, spellId, triggered);
         return true;
     }
 
@@ -443,7 +444,7 @@ struct boss_illidari_councilAI : public ScriptedAI
     {
         if (!pInstance)
         {
-            error_log(ERROR_INST_DATA);
+            sLog->outError(ERROR_INST_DATA);
             return;
         }
 
@@ -503,7 +504,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
     void CastAuraOnCouncil()
     {
         uint32 spellid = 0;
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0: spellid = SPELL_DEVOTION_AURA;   break;
             case 1: spellid = SPELL_CHROMATIC_AURA;  break;
@@ -527,7 +528,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
             {
                 if (Unit* pUnit = SelectCouncilMember())
                 {
-                    switch(rand()%2)
+                    switch (rand()%2)
                     {
                         case 0: DoCast(pUnit, SPELL_BLESS_SPELLWARD);  break;
                         case 1: DoCast(pUnit, SPELL_BLESS_PROTECTION); break;
@@ -541,7 +542,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
         {
            if (!me->IsNonMeleeSpellCasted(false))
            {
-                if (me->HasAura(SPELL_SEAL_OF_COMMAND,0))
+                if (me->HasAura(SPELL_SEAL_OF_COMMAND, 0))
                 {
                     if (TryDoCast(me->getVictim(),SPELL_JUDGEMENT_OF_COMMAND))
                     {
@@ -549,7 +550,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
                         JudgeTimer = 45000;
                     }
                 }
-                if (me->HasAura(SPELL_SEAL_OF_BLOOD,0))
+                if (me->HasAura(SPELL_SEAL_OF_BLOOD, 0))
                 {
                     if (TryDoCast(me->getVictim(),SPELL_JUDGEMENT_OF_BLOOD))
                     {
@@ -584,7 +585,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
         {
             if (!me->IsNonMeleeSpellCasted(false))
             {
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                     case 0: DoCast(me, SPELL_SEAL_OF_COMMAND);  break;
                     case 1: DoCast(me, SPELL_SEAL_OF_BLOOD);    break;
@@ -818,14 +819,14 @@ struct boss_veras_darkshadowAI : public boss_illidari_councilAI
         if (!UpdateVictim())
             return;
 
-        if (!me->HasAura(SPELL_VANISH,0))
+        if (!me->HasAura(SPELL_VANISH, 0))
         {
             if (VanishTimer <= diff)
             {
                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
-                    DoCast(me,SPELL_DEADLY_POISON_TRIGGER,true);
-                    DoCast(me,SPELL_VANISH,false);
+                    DoCast(me, SPELL_DEADLY_POISON_TRIGGER, true);
+                    DoCast(me, SPELL_VANISH, false);
 
                     VanishTimer = 25000;
                     DoResetThreat();
@@ -843,10 +844,10 @@ struct boss_veras_darkshadowAI : public boss_illidari_councilAI
                 {
                     if (Unit *pTarget = Unit::GetUnit((*me),EnvenomTargetGUID))
                     {
-                        if (pTarget->HasAura(SPELL_DEADLY_POISON,0))
+                        if (pTarget->HasAura(SPELL_DEADLY_POISON, 0))
                         {
                             if (rand()%3 == 0)
-                                DoCast(pTarget,SPELL_ENVENOM);
+                                DoCast(pTarget, SPELL_ENVENOM);
                         }
                     }
                 }
@@ -860,29 +861,29 @@ CreatureAI* GetAI_mob_blood_elf_council_voice_trigger(Creature* c)
     return new mob_blood_elf_council_voice_triggerAI(c);
 }
 
-CreatureAI* GetAI_mob_illidari_council(Creature* pCreature)
+CreatureAI* GetAI_mob_illidari_council(Creature* creature)
 {
-    return new mob_illidari_councilAI (pCreature);
+    return new mob_illidari_councilAI (creature);
 }
 
-CreatureAI* GetAI_boss_gathios_the_shatterer(Creature* pCreature)
+CreatureAI* GetAI_boss_gathios_the_shatterer(Creature* creature)
 {
-    return new boss_gathios_the_shattererAI (pCreature);
+    return new boss_gathios_the_shattererAI (creature);
 }
 
-CreatureAI* GetAI_boss_lady_malande(Creature* pCreature)
+CreatureAI* GetAI_boss_lady_malande(Creature* creature)
 {
-    return new boss_lady_malandeAI (pCreature);
+    return new boss_lady_malandeAI (creature);
 }
 
-CreatureAI* GetAI_boss_veras_darkshadow(Creature* pCreature)
+CreatureAI* GetAI_boss_veras_darkshadow(Creature* creature)
 {
-    return new boss_veras_darkshadowAI (pCreature);
+    return new boss_veras_darkshadowAI (creature);
 }
 
-CreatureAI* GetAI_boss_high_nethermancer_zerevor(Creature* pCreature)
+CreatureAI* GetAI_boss_high_nethermancer_zerevor(Creature* creature)
 {
-    return new boss_high_nethermancer_zerevorAI (pCreature);
+    return new boss_high_nethermancer_zerevorAI (creature);
 }
 
 void AddSC_boss_illidari_council()

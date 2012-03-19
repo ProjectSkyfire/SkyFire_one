@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -62,10 +63,10 @@ public:
     uint32 id;
     Vec3D pos, rot;
     unsigned int d1, scale;
-    float w,sc;
+    float w, sc;
 
     ModelInstance() {}
-    ModelInstance(MPQFile &f,const char* ModelInstName, uint32 mapID, uint32 tileX, uint32 tileY, FILE *pDirfile);
+    ModelInstance(MPQFile &f, const char* ModelInstName, uint32 mapID, uint32 tileX, uint32 tileY, FILE *pDirfile);
 
 };
 

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -93,12 +94,12 @@ struct instance_razorfen_downs : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*bAdd*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_GONG:
                 uiGongGUID = pGo->GetGUID();
                 if (m_auiEncounter[0] == DONE)
-                    pGo->SetFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
+                    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                 break;
             default:
                 break;
@@ -111,12 +112,12 @@ struct instance_razorfen_downs : public ScriptedInstance
         {
             uiGongWaves = uiData;
 
-            switch(uiGongWaves)
+            switch (uiGongWaves)
             {
                 case 9:
                 case 14:
                     if (GameObject* pGo = instance->GetGameObject(uiGongGUID))
-                        pGo->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
+                        pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
                     break;
                 case 1:
                 case 10:
@@ -127,12 +128,12 @@ struct instance_razorfen_downs : public ScriptedInstance
                     if (!pGo)
                         return;
 
-                    pGo->SetFlag(GAMEOBJECT_FLAGS,GO_FLAG_UNK1);
+                    pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
 
                     uint32 uiCreature = 0;
                     uint8 uiSummonTimes = 0;
 
-                    switch(uiGongWaves)
+                    switch (uiGongWaves)
                     {
                         case 1:
                             uiCreature = CREATURE_TOMB_FIEND;
@@ -149,17 +150,17 @@ struct instance_razorfen_downs : public ScriptedInstance
                             break;
                     }
 
-                    if (Creature* pCreature = pGo->SummonCreature(uiCreature, 2502.635f, 844.140f, 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                    if (Creature* creature = pGo->SummonCreature(uiCreature, 2502.635f, 844.140f, 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
                     {
                         if (uiGongWaves == 10 || uiGongWaves == 1)
                         {
                             for (uint8 i = 0; i < uiSummonTimes; ++i)
                             {
-                                if (Creature* pSummon = pGo->SummonCreature(uiCreature, 2502.635f + float(irand(-5,5)), 844.140f + float(irand(-5,5)), 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
-                                    pSummon->GetMotionMaster()->MovePoint(0,2533.479 + float(irand(-5,5)),870.020 + float(irand(-5,5)),47.678);
+                                if (Creature* pSummon = pGo->SummonCreature(uiCreature, 2502.635f + float(irand(-5, 5)), 844.140f + float(irand(-5, 5)), 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                                    pSummon->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
                             }
                         }
-                        pCreature->GetMotionMaster()->MovePoint(0,2533.479 + float(irand(-5,5)),870.020 + float(irand(-5,5)),47.678);
+                        creature->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
                     }
                     break;
                 }
@@ -179,7 +180,7 @@ struct instance_razorfen_downs : public ScriptedInstance
 
     uint32 GetData(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case DATA_GONG_WAVES:
                 return uiGongWaves;
@@ -190,7 +191,7 @@ struct instance_razorfen_downs : public ScriptedInstance
 
     uint64 GetData64(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case DATA_GONG: return uiGongGUID;
         }

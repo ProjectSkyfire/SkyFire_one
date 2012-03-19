@@ -30,7 +30,7 @@ set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_DEBUG ENABLED_DEBUG_SYNC
 # Set DBUG_OFF and other optional release-only flags for non-debug project types
 foreach(BUILD_TYPE RELEASE RELWITHDEBINFO MINSIZEREL)
   set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_${BUILD_TYPE} DBUG_OFF)
-  if(WITH_FAST_MUTEXES)
+  if (WITH_FAST_MUTEXES)
     set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_${BUILD_TYPE} "MY_PTHREAD_FASTMUTEX=1")
   endif()
 endforeach()
@@ -111,7 +111,7 @@ set(STRINGS_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/strings/strcont.c
   ${CMAKE_CURRENT_SOURCE_DIR}/strings/strappend.c
 )
-if(NOT HAVE_STRNLEN)
+if (NOT HAVE_STRNLEN)
   # OSX does not have strnlen
   set(STRINGS_SOURCES ${STRINGS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/strings/strnlen.c)
 endif()
@@ -229,13 +229,13 @@ set(MYSYS_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/mysys/my_windac.c
   ${CMAKE_CURRENT_SOURCE_DIR}/mysys/my_conio.c
 )
-if(HAVE_ALARM)
+if (HAVE_ALARM)
  set(MYSYS_SOURCES ${MYSYS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/mysys/my_alarm.c)
 endif()
-if(HAVE_LARGE_PAGES)
+if (HAVE_LARGE_PAGES)
  set(MYSYS_SOURCES ${MYSYS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/mysys/my_largepage.c)
 endif()
-if(HAVE_MLOCK)
+if (HAVE_MLOCK)
  set(MYSYS_SOURCES ${MYSYS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/mysys/my_lockmem.c)
 endif()
 

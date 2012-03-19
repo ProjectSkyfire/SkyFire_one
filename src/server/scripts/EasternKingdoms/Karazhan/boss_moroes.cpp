@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -125,7 +126,7 @@ struct boss_moroesAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2,SAY_KILL_3), me);
+        DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
     }
 
     void JustDied(Unit* /*victim*/)
@@ -148,7 +149,7 @@ struct boss_moroesAI : public ScriptedAI
 
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             {
-                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE,0))
+                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE, 0))
                     i->getSource()->RemoveAurasDueToSpell(SPELL_GARROTE);
             }
         }
@@ -159,7 +160,7 @@ struct boss_moroesAI : public ScriptedAI
         DeSpawnAdds();
         if (isAddlistEmpty())
         {
-            Creature *pCreature = NULL;
+            Creature* creature = NULL;
             std::vector<uint32> AddList;
 
             for (uint8 i = 0; i < 6; ++i)
@@ -173,10 +174,10 @@ struct boss_moroesAI : public ScriptedAI
             {
                 uint32 entry = *itr;
 
-                pCreature = me->SummonCreature(entry, Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-                if (pCreature)
+                creature = me->SummonCreature(entry, Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                if (creature)
                 {
-                    AddGUID[i] = pCreature->GetGUID();
+                    AddGUID[i] = creature->GetGUID();
                     AddId[i] = entry;
                 }
                 ++i;
@@ -185,10 +186,10 @@ struct boss_moroesAI : public ScriptedAI
         {
             for (uint8 i = 0; i < 4; ++i)
             {
-                Creature *pCreature = me->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-                if (pCreature)
+                Creature* creature = me->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                if (creature)
                 {
-                    AddGUID[i] = pCreature->GetGUID();
+                    AddGUID[i] = creature->GetGUID();
                 }
             }
         }
@@ -302,10 +303,10 @@ struct boss_moroesAI : public ScriptedAI
         {
             if (Wait_Timer <= diff)
             {
-                DoScriptText(RAND(SAY_SPECIAL_1,SAY_SPECIAL_2), me);
+                DoScriptText(RAND(SAY_SPECIAL_1, SAY_SPECIAL_2), me);
 
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                    pTarget->CastSpell(pTarget, SPELL_GARROTE,true);
+                    pTarget->CastSpell(pTarget, SPELL_GARROTE, true);
 
                 InVanish = false;
             } else Wait_Timer -= diff;
@@ -722,39 +723,39 @@ struct boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
     }
 };
 
-CreatureAI* GetAI_boss_moroes(Creature* pCreature)
+CreatureAI* GetAI_boss_moroes(Creature* creature)
 {
-    return new boss_moroesAI (pCreature);
+    return new boss_moroesAI (creature);
 }
 
-CreatureAI* GetAI_baroness_dorothea_millstipe(Creature* pCreature)
+CreatureAI* GetAI_baroness_dorothea_millstipe(Creature* creature)
 {
-    return new boss_baroness_dorothea_millstipeAI (pCreature);
+    return new boss_baroness_dorothea_millstipeAI (creature);
 }
 
-CreatureAI* GetAI_baron_rafe_dreuger(Creature* pCreature)
+CreatureAI* GetAI_baron_rafe_dreuger(Creature* creature)
 {
-    return new boss_baron_rafe_dreugerAI (pCreature);
+    return new boss_baron_rafe_dreugerAI (creature);
 }
 
-CreatureAI* GetAI_lady_catriona_von_indi(Creature* pCreature)
+CreatureAI* GetAI_lady_catriona_von_indi(Creature* creature)
 {
-    return new boss_lady_catriona_von_indiAI (pCreature);
+    return new boss_lady_catriona_von_indiAI (creature);
 }
 
-CreatureAI* GetAI_lady_keira_berrybuck(Creature* pCreature)
+CreatureAI* GetAI_lady_keira_berrybuck(Creature* creature)
 {
-    return new boss_lady_keira_berrybuckAI (pCreature);
+    return new boss_lady_keira_berrybuckAI (creature);
 }
 
-CreatureAI* GetAI_lord_robin_daris(Creature* pCreature)
+CreatureAI* GetAI_lord_robin_daris(Creature* creature)
 {
-    return new boss_lord_robin_darisAI (pCreature);
+    return new boss_lord_robin_darisAI (creature);
 }
 
-CreatureAI* GetAI_lord_crispin_ference(Creature* pCreature)
+CreatureAI* GetAI_lord_crispin_ference(Creature* creature)
 {
-    return new boss_lord_crispin_ferenceAI (pCreature);
+    return new boss_lord_crispin_ferenceAI (creature);
 }
 
 void AddSC_boss_moroes()

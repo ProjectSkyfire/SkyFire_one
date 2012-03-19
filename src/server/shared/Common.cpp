@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -19,7 +20,7 @@
 
 #include "Common.h"
 
-char const* localeNames[MAX_LOCALE] = {
+char const* localeNames[TOTAL_LOCALES] = {
   "enUS",
   "koKR",
   "frFR",
@@ -33,7 +34,7 @@ char const* localeNames[MAX_LOCALE] = {
 
 LocaleConstant GetLocaleByName(const std::string& name)
 {
-    for (uint32 i = 0; i < MAX_LOCALE; ++i)
+    for (uint32 i = 0; i < TOTAL_LOCALES; ++i)
         if (name==localeNames[i])
             return LocaleConstant(i);
 

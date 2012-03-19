@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -63,7 +63,7 @@ bool WinServiceInstall()
         if (GetModuleFileName( 0, path, sizeof(path)/sizeof(path[0]) ) > 0)
         {
             SC_HANDLE service;
-            std::strcat(path, " -s run");
+            std::strcat(path, " --service");
             service = CreateService(serviceControlManager,
                 serviceName,                                // name of service
                 serviceLongName,                            // service name to display
@@ -226,7 +226,9 @@ void WINAPI ServiceMain(DWORD argc, char *argv[])
         serviceStatus.dwCurrentState = SERVICE_RUNNING;
         SetServiceStatus( serviceStatusHandle, &serviceStatus );
 
-        // service main cycle
+        ////////////////////////
+        // service main cycle //
+        ////////////////////////
 
         m_ServiceStatus = 1;
         argc = 1;
@@ -255,10 +257,9 @@ bool WinServiceRun()
 
     if (!StartServiceCtrlDispatcher(serviceTable))
     {
-        sLog.outError("StartService Failed. Error [%u]", ::GetLastError());
+        sLog->outError("StartService Failed. Error [%u]", ::GetLastError());
         return false;
     }
     return true;
 }
 #endif
-

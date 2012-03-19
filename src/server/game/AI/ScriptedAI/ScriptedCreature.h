@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -31,7 +32,7 @@
 #define CAST_CRE(a)     (SCRIPT_CAST_TYPE<Creature*>(a))
 #define CAST_SUM(a)     (SCRIPT_CAST_TYPE<TempSummon*>(a))
 #define CAST_PET(a)     (SCRIPT_CAST_TYPE<Pet*>(a))
-#define CAST_AI(a,b)    (SCRIPT_CAST_TYPE<a*>(b))
+#define CAST_AI(a, b)    (SCRIPT_CAST_TYPE<a*>(b))
 
 #define GET_SPELL(a)    (const_cast<SpellEntry*>(GetSpellStore()->LookupEntry(a)))
 
@@ -53,7 +54,7 @@ class SummonList : public std::list<uint64>
 
 struct ScriptedAI : public CreatureAI
 {
-    explicit ScriptedAI(Creature* pCreature);
+    explicit ScriptedAI(Creature* creature);
     virtual ~ScriptedAI() {}
 
     //*************

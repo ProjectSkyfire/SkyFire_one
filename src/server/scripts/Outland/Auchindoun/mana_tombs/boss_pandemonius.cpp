@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -68,7 +69,7 @@ struct boss_pandemoniusAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_KILL_1, me); break;
             case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -77,7 +78,7 @@ struct boss_pandemoniusAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -94,7 +95,7 @@ struct boss_pandemoniusAI : public ScriptedAI
         {
             if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                DoCast(pTarget,HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
+                DoCast(pTarget, HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
                 VoidBlast_Timer = 500;
                 ++VoidBlast_Counter;
             }
@@ -115,7 +116,7 @@ struct boss_pandemoniusAI : public ScriptedAI
 
                 DoScriptText(EMOTE_DARK_SHELL, me);
 
-                DoCast(me,HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
+                DoCast(me, HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
                 DarkShell_Timer = 20000;
             } else DarkShell_Timer -= diff;
         }
@@ -124,9 +125,9 @@ struct boss_pandemoniusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_pandemonius(Creature* pCreature)
+CreatureAI* GetAI_boss_pandemonius(Creature* creature)
 {
-    return new boss_pandemoniusAI (pCreature);
+    return new boss_pandemoniusAI (creature);
 }
 
 void AddSC_boss_pandemonius()

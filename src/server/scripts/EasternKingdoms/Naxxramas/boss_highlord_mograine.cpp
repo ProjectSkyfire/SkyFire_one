@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -79,19 +80,19 @@ struct boss_highlord_mograineAI : public ScriptedAI
     {
         if (!me->isInCombat())
         {
-            switch(rand()%3)
+            switch (rand()%3)
             {
                 case 0:
-                    me->MonsterYell(SAY_AGGRO1,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(me,SOUND_AGGRO1);
+                    me->MonsterYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_AGGRO1);
                     break;
                 case 1:
-                    me->MonsterYell(SAY_AGGRO2,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(me,SOUND_AGGRO2);
+                    me->MonsterYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_AGGRO2);
                     break;
                 case 2:
-                    me->MonsterYell(SAY_AGGRO3,LANG_UNIVERSAL,NULL);
-                    DoPlaySoundToSet(me,SOUND_AGGRO3);
+                    me->MonsterYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_AGGRO3);
                     break;
             }
         }
@@ -99,22 +100,22 @@ struct boss_highlord_mograineAI : public ScriptedAI
 
     void KilledUnit()
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0:
-                me->MonsterYell(SAY_SLAY1,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY1);
+                me->MonsterYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY1);
                 break;
             case 1:
-                me->MonsterYell(SAY_SLAY2,LANG_UNIVERSAL,NULL);
-                DoPlaySoundToSet(me,SOUND_SLAY2);
+                me->MonsterYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_SLAY2);
                 break;
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        me->MonsterYell(SAY_DEATH,LANG_UNIVERSAL,NULL);
+        me->MonsterYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_DEATH);
     }
 
@@ -140,7 +141,7 @@ struct boss_highlord_mograineAI : public ScriptedAI
         {
             if (ShieldWall1)
             {
-                DoCast(me,SPELL_SHIELDWALL);
+                DoCast(me, SPELL_SHIELDWALL);
                 ShieldWall1 = false;
             }
         }
@@ -148,7 +149,7 @@ struct boss_highlord_mograineAI : public ScriptedAI
         {
             if (ShieldWall2)
             {
-                DoCast(me,SPELL_SHIELDWALL);
+                DoCast(me, SPELL_SHIELDWALL);
                 ShieldWall2 = false;
             }
         }
@@ -166,9 +167,9 @@ struct boss_highlord_mograineAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_highlord_mograine(Creature* pCreature)
+CreatureAI* GetAI_boss_highlord_mograine(Creature* creature)
 {
-    return new boss_highlord_mograineAI (pCreature);
+    return new boss_highlord_mograineAI (creature);
 }
 
 void AddSC_boss_highlord_mograine()

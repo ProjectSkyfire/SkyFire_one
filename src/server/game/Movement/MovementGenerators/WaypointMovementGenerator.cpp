@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -24,7 +25,7 @@
 #include "Creature.h"
 #include "DestinationHolderImp.h"
 #include "CreatureAI.h"
-#include "CreatureFormations.h"
+#include "CreatureGroups.h"
 #include "Player.h"
 
 template<class T>
@@ -219,7 +220,7 @@ template void WaypointMovementGenerator<Player>::MovementInform(Player &);
 //----------------------------------------------------//
 void FlightPathMovementGenerator::LoadPath(Player &)
 {
-    objmgr.GetTaxiPathNodes(i_pathId, i_path,i_mapIds);
+    sObjectMgr->GetTaxiPathNodes(i_pathId, i_path, i_mapIds);
 }
 
 uint32 FlightPathMovementGenerator::GetPathAtMapEnd() const
@@ -297,7 +298,7 @@ bool FlightPathMovementGenerator::Update(Player &player, const uint32 &diff)
                 ++i_currentNode;
                 if (MovementInProgress())
                 {
-                    DEBUG_LOG("loading node %u for player %s", i_currentNode, player.GetName());
+                    sLog->outDebug("loading node %u for player %s", i_currentNode, player.GetName());
                     if (i_mapIds[i_currentNode] == curMap)
                     {
                         // do not send movement, it was sent already
@@ -342,16 +343,16 @@ void FlightPathMovementGenerator::SetCurrentNodeAfterTeleport()
 void FlightPathMovementGenerator::PreloadEndGrid()
 {
     // used to preload the final grid where the flightmaster is
-    Map *endMap = MapManager::Instance().FindMap(m_endMapId);
+    Map *endMap = sMapMgr->FindMap(m_endMapId);
 
     // Load the grid
     if (endMap)
     {
-        sLog.outDetail("Preloading flightmaster at grid (%f, %f) for map %u", m_endGridX, m_endGridY, m_endMapId);
+        sLog->outDetail("Preloading flightmaster at grid (%f, %f) for map %u", m_endGridX, m_endGridY, m_endMapId);
         endMap->LoadGrid(m_endGridX, m_endGridY);
     }
     else
-        sLog.outDetail("Unable to determine map to preload flightmaster grid");
+        sLog->outDetail("Unable to determine map to preload flightmaster grid");
 }
 
 //

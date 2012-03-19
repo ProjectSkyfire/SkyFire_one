@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -149,7 +150,7 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_SLAY1, me); break;
         case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -172,14 +173,14 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
         StartEvent();
     }
 
-    void ApplyWateryGrave(Unit* pPlayer, uint8 i)
+    void ApplyWateryGrave(Unit* player, uint8 i)
     {
-        switch(i)
+        switch (i)
         {
-        case 0: pPlayer->CastSpell(pPlayer, SPELL_WATERY_GRAVE_1, true); break;
-        case 1: pPlayer->CastSpell(pPlayer, SPELL_WATERY_GRAVE_2, true); break;
-        case 2: pPlayer->CastSpell(pPlayer, SPELL_WATERY_GRAVE_3, true); break;
-        case 3: pPlayer->CastSpell(pPlayer, SPELL_WATERY_GRAVE_4, true); break;
+        case 0: player->CastSpell(player, SPELL_WATERY_GRAVE_1, true); break;
+        case 1: player->CastSpell(player, SPELL_WATERY_GRAVE_2, true); break;
+        case 2: player->CastSpell(player, SPELL_WATERY_GRAVE_3, true); break;
+        case 3: player->CastSpell(player, SPELL_WATERY_GRAVE_4, true); break;
         }
     }
 
@@ -200,7 +201,7 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
             }
             else
             {
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                     case 0: DoScriptText(SAY_SUMMON1, me); break;
                     case 1: DoScriptText(SAY_SUMMON2, me); break;
@@ -256,7 +257,7 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
                     }
                 }
 
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                     case 0: DoScriptText(SAY_SUMMON_BUBL1, me); break;
                     case 1: DoScriptText(SAY_SUMMON_BUBL2, me); break;
@@ -359,13 +360,13 @@ struct mob_water_globuleAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_morogrim_tidewalker(Creature* pCreature)
+CreatureAI* GetAI_boss_morogrim_tidewalker(Creature* creature)
 {
-    return new boss_morogrim_tidewalkerAI (pCreature);
+    return new boss_morogrim_tidewalkerAI (creature);
 }
-CreatureAI* GetAI_mob_water_globule(Creature* pCreature)
+CreatureAI* GetAI_mob_water_globule(Creature* creature)
 {
-    return new mob_water_globuleAI (pCreature);
+    return new mob_water_globuleAI (creature);
 }
 
 void AddSC_boss_morogrim_tidewalker()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -88,15 +89,15 @@ struct boss_sapphironAI : public ScriptedAI
 
                 if (LifeDrain_Timer <= diff)
                 {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                        DoCast(pTarget,SPELL_LIFE_DRAIN);
+                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        DoCast(pTarget, SPELL_LIFE_DRAIN);
                     LifeDrain_Timer = 24000;
                 } else LifeDrain_Timer -= diff;
 
                 if (Blizzard_Timer <= diff)
                 {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                        DoCast(pTarget,SPELL_BLIZZARD);
+                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        DoCast(pTarget, SPELL_BLIZZARD);
                     Blizzard_Timer = 20000;
                 } else Blizzard_Timer -= diff;
 
@@ -121,11 +122,11 @@ struct boss_sapphironAI : public ScriptedAI
                 {
                     if (Icebolt_Timer <= diff && Icebolt_Count < 5)
                     {
-                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                         {
-                            DoCast(pTarget,SPELL_ICEBOLT);
+                            DoCast(pTarget, SPELL_ICEBOLT);
                             ++Icebolt_Count;
-                            error_log("Count incremented");
+                            sLog->outError("Count incremented");
                         }
                         FrostBreath_Timer = 6000;
                         Icebolt_Timer = 4000;
@@ -158,7 +159,7 @@ struct boss_sapphironAI : public ScriptedAI
                     if (Beserk_Timer <= diff)
                     {
                         DoScriptText(EMOTE_ENRAGE, me);
-                        DoCast(me,SPELL_BESERK);
+                        DoCast(me, SPELL_BESERK);
                         Beserk_Timer = 300000;
                     } else Beserk_Timer -= diff;
                 }
@@ -168,9 +169,9 @@ struct boss_sapphironAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sapphiron(Creature* pCreature)
+CreatureAI* GetAI_boss_sapphiron(Creature* creature)
 {
-    return new boss_sapphironAI (pCreature);
+    return new boss_sapphironAI (creature);
 }
 
 void AddSC_boss_sapphiron()

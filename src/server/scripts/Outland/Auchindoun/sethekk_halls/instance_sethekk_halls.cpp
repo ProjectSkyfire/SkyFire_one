@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -76,18 +77,18 @@ struct instance_sethekk_halls : public ScriptedInstance
         return false;
     }
 
-    void OnPlayerEnter(Player* pPlayer)
+    void OnPlayerEnter(Player* player)
     {
-        if ((CAST_PLR(pPlayer)->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE) && !SummonLakka)
+        if ((CAST_PLR(player)->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE) && !SummonLakka)
         {
-            pPlayer->SummonCreature(NPC_LAKKA, SpawnLocation[0].fLocX, SpawnLocation[0].fLocY, SpawnLocation[0].fLocZ, SpawnLocation[0].fOrient, TEMPSUMMON_DEAD_DESPAWN, 0);
+            player->SummonCreature(NPC_LAKKA, SpawnLocation[0].fLocX, SpawnLocation[0].fLocY, SpawnLocation[0].fLocZ, SpawnLocation[0].fOrient, TEMPSUMMON_DEAD_DESPAWN, 0);
             SummonLakka = true;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case IKISS_DOOR: IkissDoorGUID = pGo->GetGUID(); break;
         }
@@ -106,13 +107,13 @@ struct instance_sethekk_halls : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Sethekk Halls: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Sethekk Halls: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_SYTHEVENT:
                 if (Encounter[0] != DONE)
@@ -141,7 +142,7 @@ struct instance_sethekk_halls : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_SYTHEVENT: return Encounter[0];
             case DATA_ANZUEVENT: return Encounter[1];
@@ -201,13 +202,13 @@ InstanceData* GetInstanceData_instance_sethekk_halls(Map* map)
 // this is not escort quest !
 struct npc_lakkaAI : public npc_escortAI
 {
-    npc_lakkaAI(Creature *pCreature) : npc_escortAI(pCreature) {}
+    npc_lakkaAI(Creature* creature) : npc_escortAI(creature) {}
 
     void Reset() { }
 
     void WaypointReached(uint32 uiPointId)
     {
-        switch(uiPointId)
+        switch (uiPointId)
         {
             case 0:
                 me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -219,22 +220,22 @@ struct npc_lakkaAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_lakka(Creature* pCreature)
+CreatureAI* GetAI_npc_lakka(Creature* creature)
 {
-    return new npc_lakkaAI(pCreature);
+    return new npc_lakkaAI(creature);
 }
 
 /*#####
 ## go_lakka_cage
 #####*/
 
-bool GOHello_go_lakka_cage(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_lakka_cage(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE)
     {
         if (Creature* pLakka = pGo->FindNearestCreature( NPC_LAKKA, 5, true))
         {
-            ((npc_lakkaAI*)pLakka->AI())->Start(false, false, pPlayer->GetGUID());
+            ((npc_lakkaAI*)pLakka->AI())->Start(false, false, player->GetGUID());
         }
     }
 

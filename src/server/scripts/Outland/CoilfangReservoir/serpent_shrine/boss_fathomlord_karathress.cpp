@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -130,7 +131,7 @@ struct boss_fathomlord_karathressAI : public ScriptedAI
             RAdvisors[2] = pInstance->GetData64(DATA_CARIBDIS);
             //Respawn of the 3 Advisors
             Creature* pAdvisor = NULL;
-            for (int i=0; i<3; ++i)
+            for (int i = 0; i < 3; ++i)
 
             if (RAdvisors[i])
             {
@@ -190,7 +191,7 @@ struct boss_fathomlord_karathressAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2,SAY_SLAY3), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2, SAY_SLAY3), me);
     }
 
     void JustDied(Unit * /*killer*/)
@@ -408,7 +409,7 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
             pet = true;
             //uint32 spell_id;
             uint32 pet_id;
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0:
                 //spell_id = SPELL_SUMMON_FATHOM_LURKER;
@@ -420,8 +421,8 @@ struct boss_fathomguard_sharkkisAI : public ScriptedAI
                 break;
             }
             //DoCast(me, spell_id, true);
-            Creature *Pet = DoSpawnCreature(pet_id,0,0,0,0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            Creature *Pet = DoSpawnCreature(pet_id, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 15000);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (Pet && pTarget)
             {
                 Pet->AI()->AttackStart(pTarget);
@@ -678,7 +679,7 @@ struct boss_fathomguard_caribdisAI : public ScriptedAI
         Unit* pUnit = NULL;
         if (pInstance)
         {
-            switch(rand()%4)
+            switch (rand()%4)
             {
             case 0:
                 pUnit = Unit::GetUnit((*me), pInstance->GetData64(DATA_KARATHRESS));
@@ -699,24 +700,24 @@ struct boss_fathomguard_caribdisAI : public ScriptedAI
         }
 };
 
-CreatureAI* GetAI_boss_fathomlord_karathress(Creature* pCreature)
+CreatureAI* GetAI_boss_fathomlord_karathress(Creature* creature)
 {
-    return new boss_fathomlord_karathressAI (pCreature);
+    return new boss_fathomlord_karathressAI (creature);
 }
 
-CreatureAI* GetAI_boss_fathomguard_sharkkis(Creature* pCreature)
+CreatureAI* GetAI_boss_fathomguard_sharkkis(Creature* creature)
 {
-    return new boss_fathomguard_sharkkisAI (pCreature);
+    return new boss_fathomguard_sharkkisAI (creature);
 }
 
-CreatureAI* GetAI_boss_fathomguard_tidalvess(Creature* pCreature)
+CreatureAI* GetAI_boss_fathomguard_tidalvess(Creature* creature)
 {
-    return new boss_fathomguard_tidalvessAI (pCreature);
+    return new boss_fathomguard_tidalvessAI (creature);
 }
 
-CreatureAI* GetAI_boss_fathomguard_caribdis(Creature* pCreature)
+CreatureAI* GetAI_boss_fathomguard_caribdis(Creature* creature)
 {
-    return new boss_fathomguard_caribdisAI (pCreature);
+    return new boss_fathomguard_caribdisAI (creature);
 }
 
 void AddSC_boss_fathomlord_karathress()

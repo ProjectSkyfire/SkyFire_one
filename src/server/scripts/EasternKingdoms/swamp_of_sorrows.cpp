@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -51,7 +52,7 @@ enum eGalen
 
 struct npc_galen_goodwardAI : public npc_escortAI
 {
-    npc_galen_goodwardAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+    npc_galen_goodwardAI(Creature* creature) : npc_escortAI(creature) { }
 
     uint32 m_uiPostEventTimer;
 
@@ -62,29 +63,29 @@ struct npc_galen_goodwardAI : public npc_escortAI
 
     void EnterCombat(Unit* )
     {
-        DoScriptText(RAND(GILAN_SAY_UNDER_ATTACK_1,GILAN_SAY_UNDER_ATTACK_2), me);
+        DoScriptText(RAND(GILAN_SAY_UNDER_ATTACK_1, GILAN_SAY_UNDER_ATTACK_2), me);
     }
 
     void WaypointReached(uint32 uiPointId)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        if (!pPlayer)
+        Player* player = GetPlayerForEscort();
+        if (!player)
             return;
 
-        switch(uiPointId)
+        switch (uiPointId)
         {
         case 1:
             DoScriptText(GILAN_SAY_START_2, me);
             break;
         case 16:
             m_uiPostEventTimer = 10000;
-            DoScriptText(GILAN_SAY_END, me, pPlayer);
+            DoScriptText(GILAN_SAY_END, me, player);
             SetRun(true);
-            if (Player* pPlayer = GetPlayerForEscort())
-                pPlayer->GroupEventHappens(QUEST_GALENS_ESCAPE, me);
+            if (Player* player = GetPlayerForEscort())
+                player->GroupEventHappens(QUEST_GALENS_ESCAPE, me);
             break;
         case 17:
-            DoScriptText(GILAN_EMOTE_END_2, me, pPlayer);
+            DoScriptText(GILAN_EMOTE_END_2, me, player);
             break;
         }
     }
@@ -97,9 +98,9 @@ struct npc_galen_goodwardAI : public npc_escortAI
             {
                 if (!me->getVictim() && me->isAlive())
                 {
-                    Player* pPlayer = GetPlayerForEscort();
+                    Player* player = GetPlayerForEscort();
 
-                    DoScriptText(GILAN_EMOTE_END_1, me, pPlayer);
+                    DoScriptText(GILAN_EMOTE_END_1, me, player);
                     Reset();
                     return;
                 }
@@ -112,25 +113,25 @@ struct npc_galen_goodwardAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_galen_goodward(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_galen_goodward(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_GALENS_ESCAPE)
     {
-        pCreature->setFaction(113);
-        DoScriptText(GILAN_SAY_START_1, pCreature);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        creature->setFaction(113);
+        DoScriptText(GILAN_SAY_START_1, creature);
+        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
-        if (GameObject* pGo = pCreature->FindNearestGameObject(GO_GALENS_CAGE, INTERACTION_DISTANCE))
+        if (GameObject* pGo = creature->FindNearestGameObject(GO_GALENS_CAGE, INTERACTION_DISTANCE))
             pGo->UseDoorOrButton();
 
-        if (npc_galen_goodwardAI* pEscortAI = CAST_AI(npc_galen_goodwardAI,pCreature->AI()))
-            pEscortAI->Start(false, false, pPlayer->GetGUID(), pQuest);
+        if (npc_galen_goodwardAI* pEscortAI = CAST_AI(npc_galen_goodwardAI, creature->AI()))
+            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
     }
     return true;
 }
-CreatureAI* GetAI_npc_galen_goodward(Creature *pCreature)
+CreatureAI* GetAI_npc_galen_goodward(Creature* creature)
 {
-    return new npc_galen_goodwardAI(pCreature);
+    return new npc_galen_goodwardAI(creature);
 }
 
 void AddSC_swamp_of_sorrows()

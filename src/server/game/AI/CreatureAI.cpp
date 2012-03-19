@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -45,7 +46,7 @@ void CreatureAI::DoZoneInCombat(Creature* creature)
     Map *map = creature->GetMap();
     if (!map->IsDungeon())                                  //use IsDungeon instead of Instanceable, in case battlegrounds will be instantiated
     {
-        sLog.outError("DoZoneInCombat call for map that isn't an instance (creature entry = %d)", creature->GetTypeId() == TYPEID_UNIT ? creature->ToCreature()->GetEntry() : 0);
+        sLog->outError("DoZoneInCombat call for map that isn't an instance (creature entry = %d)", creature->GetTypeId() == TYPEID_UNIT ? creature->ToCreature()->GetEntry() : 0);
         return;
     }
 
@@ -68,7 +69,7 @@ void CreatureAI::DoZoneInCombat(Creature* creature)
 
     if (!creature->HasReactState(REACT_PASSIVE) && !creature->getVictim())
     {
-        sLog.outError("DoZoneInCombat called for creature that has empty threat list (creature entry = %u)", creature->GetEntry());
+        sLog->outError("DoZoneInCombat called for creature that has empty threat list (creature entry = %u)", creature->GetEntry());
         return;
     }
 
@@ -79,20 +80,20 @@ void CreatureAI::DoZoneInCombat(Creature* creature)
 
     for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
     {
-        if (Player* pPlayer = i->getSource())
+        if (Player* player = i->getSource())
         {
-            if (pPlayer->isGameMaster())
+            if (player->isGameMaster())
                 continue;
 
-            if (pPlayer->isAlive())
+            if (player->isAlive())
             {
-                creature->SetInCombatWith(pPlayer);
-                pPlayer->SetInCombatWith(creature);
-                creature->AddThreat(pPlayer, 0.0f);
+                creature->SetInCombatWith(player);
+                player->SetInCombatWith(creature);
+                creature->AddThreat(player, 0.0f);
             }
 
             /* Causes certain things to never leave the threat list (Priest Lightwell, etc):
-            for (Unit::ControlList::const_iterator itr = pPlayer->m_Controlled.begin(); itr != pPlayer->m_Controlled.end(); ++itr)
+            for (Unit::ControlList::const_iterator itr = player->m_Controlled.begin(); itr != player->m_Controlled.end(); ++itr)
             {
                 creature->SetInCombatWith(*itr);
                 (*itr)->SetInCombatWith(creature);
@@ -121,7 +122,7 @@ void CreatureAI::MoveInLineOfSight(Unit *who)
     if (me->canStartAttack(who))
         AttackStart(who);
     //else if (who->getVictim() && me->IsFriendlyTo(who)
-    //    && me->IsWithinDistInMap(who, sWorld.getConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_RADIUS))
+    //    && me->IsWithinDistInMap(who, sWorld->getConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_RADIUS))
     //    && me->canAttack(who->getVictim()))
     //    AttackStart(who->getVictim());
 }
@@ -160,7 +161,7 @@ void CreatureAI::EnterEvadeMode()
     if (!_EnterEvadeMode())
         return;
 
-    sLog.outDebug("Creature %u enters evade mode.", me->GetEntry());
+    sLog->outDebug("Creature %u enters evade mode.", me->GetEntry());
 
     if (Unit *owner = me->GetCharmerOrOwner())
     {

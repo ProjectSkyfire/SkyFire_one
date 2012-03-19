@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -132,9 +133,9 @@ typedef struct
 
 enum LiquidType
 {
-    LIQUID_TYPE_WATER = 0,
-    LIQUID_TYPE_OCEAN = 1,
-    LIQUID_TYPE_MAGMA = 2,
+    LIQUID_TYPE_WATER = 0, 
+    LIQUID_TYPE_OCEAN = 1, 
+    LIQUID_TYPE_MAGMA = 2, 
     LIQUID_TYPE_SLIME = 3
 };
 

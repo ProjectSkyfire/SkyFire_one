@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -23,7 +24,7 @@
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
 #include "ObjectMgr.h"
-#include "ProgressBar.h"
+
 #include <list>
 #include <vector>
 #include "Util.h"
@@ -58,12 +59,9 @@ void LoadRandomEnchantmentsTable()
 
     if (result)
     {
-        barGoLink bar(result->GetRowCount());
-
         do
         {
             Field *fields = result->Fetch();
-            bar.step();
 
             entry = fields[0].GetUInt32();
             ench = fields[1].GetUInt32();
@@ -75,13 +73,13 @@ void LoadRandomEnchantmentsTable()
             ++count;
         } while (result->NextRow());
 
-        sLog.outString();
-        sLog.outString(">> Loaded %u Item Enchantment definitions", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u Item Enchantment definitions", count);
     }
     else
     {
-        sLog.outString();
-        sLog.outErrorDb(">> Loaded 0 Item Enchantment definitions. DB table item_enchantment_template is empty.");
+        sLog->outString();
+        sLog->outErrorDb(">> Loaded 0 Item Enchantment definitions. DB table item_enchantment_template is empty.");
     }
 }
 
@@ -93,7 +91,7 @@ uint32 GetItemEnchantMod(uint32 entry)
 
     if (tab == RandomItemEnch.end())
     {
-        sLog.outErrorDb("Item RandomProperty / RandomSuffix id #%u used in item_template but it doesn't have records in item_enchantment_template table.",entry);
+        sLog->outErrorDb("Item RandomProperty / RandomSuffix id #%u used in item_template but it doesn't have records in item_enchantment_template table.", entry);
         return 0;
     }
 
@@ -123,7 +121,7 @@ uint32 GetItemEnchantMod(uint32 entry)
 
 uint32 GenerateEnchSuffixFactor(uint32 item_id)
 {
-    ItemPrototype const *itemProto = objmgr.GetItemPrototype(item_id);
+    ItemPrototype const *itemProto = sObjectMgr->GetItemPrototype(item_id);
 
     if (!itemProto)
         return 0;
@@ -135,7 +133,7 @@ uint32 GenerateEnchSuffixFactor(uint32 item_id)
         return 0;
 
     uint32 suffixFactor;
-    switch(itemProto->InventoryType)
+    switch (itemProto->InventoryType)
     {
         // Items of that type don`t have points
         case INVTYPE_NON_EQUIP:

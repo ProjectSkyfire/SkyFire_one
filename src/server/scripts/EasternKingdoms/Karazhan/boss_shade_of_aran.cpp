@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -150,7 +151,7 @@ struct boss_aranAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_KILL1,SAY_KILL2), me);
+        DoScriptText(RAND(SAY_KILL1, SAY_KILL2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -166,7 +167,7 @@ struct boss_aranAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        DoScriptText(RAND(SAY_AGGRO1,SAY_AGGRO2,SAY_AGGRO3), me);
+        DoScriptText(RAND(SAY_AGGRO1, SAY_AGGRO2, SAY_AGGRO3), me);
 
         if (pInstance)
         {
@@ -334,7 +335,7 @@ struct boss_aranAI : public ScriptedAI
 
         if (SecondarySpellTimer <= diff)
         {
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     DoCast(me, SPELL_AOE_CS);
@@ -344,7 +345,7 @@ struct boss_aranAI : public ScriptedAI
                         DoCast(pTarget, SPELL_CHAINSOFICE);
                     break;
             }
-            SecondarySpellTimer = urand(5000,20000);
+            SecondarySpellTimer = urand(5000, 20000);
         } else SecondarySpellTimer -= diff;
 
         if (SuperCastTimer <= diff)
@@ -367,12 +368,12 @@ struct boss_aranAI : public ScriptedAI
                     break;
             }
 
-            LastSuperSpell = Available[urand(0,1)];
+            LastSuperSpell = Available[urand(0, 1)];
 
             switch (LastSuperSpell)
             {
                 case SUPER_AE:
-                    DoScriptText(RAND(SAY_EXPLOSION1,SAY_EXPLOSION2), me);
+                    DoScriptText(RAND(SAY_EXPLOSION1, SAY_EXPLOSION2), me);
 
                     DoCast(me, SPELL_BLINK_CENTER, true);
                     DoCast(me, SPELL_PLAYERPULL, true);
@@ -381,7 +382,7 @@ struct boss_aranAI : public ScriptedAI
                     break;
 
                 case SUPER_FLAME:
-                    DoScriptText(RAND(SAY_FLAMEWREATH1,SAY_FLAMEWREATH2), me);
+                    DoScriptText(RAND(SAY_FLAMEWREATH1, SAY_FLAMEWREATH2), me);
 
                     FlameWreathTimer = 20000;
                     FlameWreathCheckTime = 500;
@@ -394,7 +395,7 @@ struct boss_aranAI : public ScriptedAI
                     break;
 
                 case SUPER_BLIZZARD:
-                    DoScriptText(RAND(SAY_BLIZZARD1,SAY_BLIZZARD2), me);
+                    DoScriptText(RAND(SAY_BLIZZARD1, SAY_BLIZZARD2), me);
 
                     if (Creature* pSpawn = me->SummonCreature(CREATURE_ARAN_BLIZZARD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 25000))
                     {
@@ -404,7 +405,7 @@ struct boss_aranAI : public ScriptedAI
                     break;
             }
 
-            SuperCastTimer = urand(35000,40000);
+            SuperCastTimer = urand(35000, 40000);
         } else SuperCastTimer -= diff;
 
         if (!ElementalsSpawned && me->GetHealth()*100 / me->GetMaxHealth() < 40)
@@ -519,26 +520,26 @@ struct water_elementalAI : public ScriptedAI
         if (CastTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_WATERBOLT);
-            CastTimer = urand(2000,5000);
+            CastTimer = urand(2000, 5000);
         } else CastTimer -= diff;
     }
 };
 
-CreatureAI* GetAI_boss_aran(Creature* pCreature)
+CreatureAI* GetAI_boss_aran(Creature* creature)
 {
-    return new boss_aranAI (pCreature);
+    return new boss_aranAI (creature);
 }
 
-CreatureAI* GetAI_water_elemental(Creature* pCreature)
+CreatureAI* GetAI_water_elemental(Creature* creature)
 {
-    return new water_elementalAI (pCreature);
+    return new water_elementalAI (creature);
 }
 
 // CONVERT TO ACID
-CreatureAI* GetAI_shadow_of_aran(Creature* pCreature)
+CreatureAI* GetAI_shadow_of_aran(Creature* creature)
 {
-    outstring_log("OSCR: Convert simpleAI script for Creature Entry %u to ACID", pCreature->GetEntry());
-    SimpleAI* ai = new SimpleAI (pCreature);
+    sLog->outString("TSCR: Convert simpleAI script for Creature Entry %u to ACID", creature->GetEntry());
+    SimpleAI* ai = new SimpleAI (creature);
 
     ai->Spell[0].Enabled = true;
     ai->Spell[0].Spell_Id = SPELL_SHADOW_PYRO;

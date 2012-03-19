@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -101,11 +102,11 @@ struct boss_overlordwyrmthalakAI : public ScriptedAI
         //Summon two Beserks
         if (!Summoned && me->GetHealth()*100 / me->GetMaxHealth() < 51)
         {
-            Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0, 100, true);
+            Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
 
-            if (Creature *SummonedCreature = me->SummonCreature(9216,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000))
+            if (Creature *SummonedCreature = me->SummonCreature(9216, ADD_1X, ADD_1Y, ADD_1Z, ADD_1O, TEMPSUMMON_TIMED_DESPAWN, 300000))
                 SummonedCreature->AI()->AttackStart(pTarget);
-            if (Creature *SummonedCreature = me->SummonCreature(9268,ADD_2X,ADD_2Y,ADD_2Z,ADD_2O,TEMPSUMMON_TIMED_DESPAWN,300000))
+            if (Creature *SummonedCreature = me->SummonCreature(9268, ADD_2X, ADD_2Y, ADD_2Z, ADD_2O, TEMPSUMMON_TIMED_DESPAWN, 300000))
                 SummonedCreature->AI()->AttackStart(pTarget);
             Summoned = true;
         }
@@ -113,9 +114,9 @@ struct boss_overlordwyrmthalakAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_overlordwyrmthalak(Creature* pCreature)
+CreatureAI* GetAI_boss_overlordwyrmthalak(Creature* creature)
 {
-    return new boss_overlordwyrmthalakAI (pCreature);
+    return new boss_overlordwyrmthalakAI (creature);
 }
 
 void AddSC_boss_overlordwyrmthalak()

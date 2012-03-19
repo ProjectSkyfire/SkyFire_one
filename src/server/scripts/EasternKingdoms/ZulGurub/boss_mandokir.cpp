@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -178,7 +179,7 @@ struct boss_mandokirAI : public ScriptedAI
                         else
                         {
                             DoCast(pUnit, SPELL_CHARGE);
-                            //me->SendMonsterMove(pUnit->GetPositionX(), pUnit->GetPositionY(), pUnit->GetPositionZ(), 0, true,1);
+                            //me->SendMonsterMove(pUnit->GetPositionX(), pUnit->GetPositionY(), pUnit->GetPositionZ(), 0, true, 1);
                             AttackStart(pUnit);
                         }
                     }
@@ -336,14 +337,14 @@ struct mob_ohganAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_mandokir(Creature* pCreature)
+CreatureAI* GetAI_boss_mandokir(Creature* creature)
 {
-    return new boss_mandokirAI (pCreature);
+    return new boss_mandokirAI (creature);
 }
 
-CreatureAI* GetAI_mob_ohgan(Creature* pCreature)
+CreatureAI* GetAI_mob_ohgan(Creature* creature)
 {
-    return new mob_ohganAI (pCreature);
+    return new mob_ohganAI (creature);
 }
 
 void AddSC_boss_mandokir()

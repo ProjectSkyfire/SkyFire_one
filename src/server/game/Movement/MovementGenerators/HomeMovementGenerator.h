@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_HOMEMOVEMENTGENERATOR_H
-#define OREGON_HOMEMOVEMENTGENERATOR_H
+#ifndef TRINITY_HOMEMOVEMENTGENERATOR_H
+#define TRINITY_HOMEMOVEMENTGENERATOR_H
 
 #include "MovementGenerator.h"
 #include "DestinationHolder.h"
@@ -45,7 +46,7 @@ class HomeMovementGenerator<Creature>
         void modifyTravelTime(uint32 travel_time) { i_travel_timer = travel_time; }
         MovementGeneratorType GetMovementGeneratorType() { return HOME_MOTION_TYPE; }
 
-        bool GetDestination(float& x, float& y, float& z) const { i_destinationHolder.GetDestination(x,y,z); return true; }
+        bool GetDestination(float& x, float& y, float& z) const { i_destinationHolder.GetDestination(x, y, z); return true; }
     private:
         void _setTargetLocation(Creature &);
         DestinationHolder< Traveller<Creature> > i_destinationHolder;

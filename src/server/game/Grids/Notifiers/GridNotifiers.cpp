@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -30,7 +31,7 @@
 #include "CellImpl.h"
 #include "SpellAuras.h"
 
-using namespace Oregon;
+using namespace Trinity;
 
 void
 VisibleNotifier::SendToSelf()
@@ -132,7 +133,7 @@ void PlayerRelocationNotifier::Visit(PlayerMapType &m)
 
         vis_guids.erase(plr->GetGUID());
 
-        i_player.UpdateVisibilityOf(plr,i_data,i_visibleNow);
+        i_player.UpdateVisibilityOf(plr, i_data, i_visibleNow);
 
         if (plr->m_seer->isNeedNotify(NOTIFY_VISIBILITY_CHANGED))
             continue;
@@ -151,7 +152,7 @@ void PlayerRelocationNotifier::Visit(CreatureMapType &m)
 
         vis_guids.erase(c->GetGUID());
 
-        i_player.UpdateVisibilityOf(c,i_data,i_visibleNow);
+        i_player.UpdateVisibilityOf(c, i_data, i_visibleNow);
 
         if (relocated_for_ai && !c->isNeedNotify(NOTIFY_VISIBILITY_CHANGED))
             CreatureUnitRelocationWorker(c, &i_player);
@@ -217,7 +218,7 @@ void DelayedUnitRelocation::Visit(PlayerMapType &m)
         if (player != viewPoint && !viewPoint->IsPositionValid())
             continue;
 
-        CellPair pair2(Oregon::ComputeCellPair(viewPoint->GetPositionX(), viewPoint->GetPositionY()));
+        CellPair pair2(Trinity::ComputeCellPair(viewPoint->GetPositionX(), viewPoint->GetPositionY()));
         Cell cell2(pair2);
         //cell.SetNoCreate(); need load cells around viewPoint or player, that's why its commented
 

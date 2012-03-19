@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -48,8 +49,8 @@ struct boss_kelrisAI : public ScriptedAI
 
     void Reset()
     {
-        uiMindBlastTimer = urand(2000,5000);
-        uiSleepTimer = urand(9000,12000);
+        uiMindBlastTimer = urand(2000, 5000);
+        uiSleepTimer = urand(9000, 12000);
         if (pInstance)
             pInstance->SetData(TYPE_KELRIS, NOT_STARTED);
     }
@@ -76,7 +77,7 @@ struct boss_kelrisAI : public ScriptedAI
         if (uiMindBlastTimer < diff)
         {
             DoCastVictim(SPELL_MIND_BLAST);
-            uiMindBlastTimer = urand(7000,9000);
+            uiMindBlastTimer = urand(7000, 9000);
         } else uiMindBlastTimer -= diff;
 
         if (uiSleepTimer < diff)
@@ -86,16 +87,16 @@ struct boss_kelrisAI : public ScriptedAI
                 DoScriptText(SAY_SLEEP, me);
                 DoCast(pTarget, SPELL_SLEEP);
             }
-            uiSleepTimer = urand(15000,20000);
+            uiSleepTimer = urand(15000, 20000);
         } else uiSleepTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_boss_kelris(Creature* pCreature)
+CreatureAI* GetAI_boss_kelris(Creature* creature)
 {
-    return new boss_kelrisAI (pCreature);
+    return new boss_kelrisAI (creature);
 }
 
 void AddSC_boss_kelris()

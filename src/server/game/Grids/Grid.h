@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,11 +18,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRID_H
-#define OREGON_GRID_H
+#ifndef TRINITY_GRID_H
+#define TRINITY_GRID_H
 
 /*
-  Grid is a logical segment of the game world represented inside Oregon.
+  Grid is a logical segment of the game world represented inside Trinity.
   Grid is bind at compile time to a particular type of object which
   we call it the object of interested.  There are many types of loader,
   specially, dynamic loader, static loader, or on-demand loader.  There's
@@ -31,7 +32,6 @@
 */
 
 #include "Define.h"
-#include "Policies/ThreadingModel.h"
 #include "TypeContainer.h"
 #include "TypeContainerVisitor.h"
 
@@ -42,8 +42,7 @@ template
 <
 class ACTIVE_OBJECT,
 class WORLD_OBJECT_TYPES,
-class GRID_OBJECT_TYPES,
-class ThreadModel = Oregon::SingleThreaded<ACTIVE_OBJECT>
+class GRID_OBJECT_TYPES
 >
 class Grid
 {
@@ -108,9 +107,6 @@ class Grid
         }
 
     private:
-
-        typedef typename ThreadModel::Lock Guard;
-        typedef typename ThreadModel::VolatileType VolatileType;
 
         TypeMapContainer<GRID_OBJECT_TYPES> i_container;
         TypeMapContainer<WORLD_OBJECT_TYPES> i_objects;

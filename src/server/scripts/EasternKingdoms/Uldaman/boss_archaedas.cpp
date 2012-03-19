@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -90,7 +91,7 @@ struct boss_archaedasAI : public ScriptedAI
         if (minion && minion->isAlive())
         {
             DoCast (minion, SPELL_AWAKEN_VAULT_WALKER, flag);
-            minion->CastSpell(minion, SPELL_ARCHAEDAS_AWAKEN,true);
+            minion->CastSpell(minion, SPELL_ARCHAEDAS_AWAKEN, true);
         }
     }
 
@@ -98,15 +99,15 @@ struct boss_archaedasAI : public ScriptedAI
     {
         me->setFaction (14);
         me->RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        me->RemoveFlag (UNIT_FIELD_FLAGS,UNIT_FLAG_DISABLE_MOVE);
+        me->RemoveFlag (UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
     }
 
     void SpellHit (Unit* /*caster*/, const SpellEntry *spell)
     {
         // Being woken up from the altar, start the awaken sequence
         if (spell == GetSpellStore()->LookupEntry(SPELL_ARCHAEDAS_AWAKEN)) {
-            me->MonsterYell(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-            DoPlaySoundToSet(me,SOUND_AGGRO);
+            me->MonsterYell(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(me, SOUND_AGGRO);
             Awaken_Timer = 4000;
             wakingUp = true;
         }
@@ -114,7 +115,7 @@ struct boss_archaedasAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        me->MonsterYell(SAY_KILL,LANG_UNIVERSAL, NULL);
+        me->MonsterYell(SAY_KILL, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_KILL);
     }
 
@@ -151,7 +152,7 @@ struct boss_archaedasAI : public ScriptedAI
             ActivateMinion(pInstance->GetData64(8),true);   // EarthenGuardian4
             ActivateMinion(pInstance->GetData64(9),true);   // EarthenGuardian5
             ActivateMinion(pInstance->GetData64(10),false); // EarthenGuardian6
-            me->MonsterYell(SAY_SUMMON,LANG_UNIVERSAL, NULL);
+            me->MonsterYell(SAY_SUMMON, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(me, SOUND_SUMMON);
             guardiansAwake = true;
         }
@@ -188,9 +189,9 @@ struct boss_archaedasAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_archaedas(Creature* pCreature)
+CreatureAI* GetAI_boss_archaedas(Creature* creature)
 {
-    return new boss_archaedasAI (pCreature);
+    return new boss_archaedasAI (creature);
 }
 
 /* ScriptData
@@ -274,9 +275,9 @@ struct mob_archaedas_minionsAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_archaedas_minions(Creature* pCreature)
+CreatureAI* GetAI_mob_archaedas_minions(Creature* creature)
 {
-    return new mob_archaedas_minionsAI (pCreature);
+    return new mob_archaedas_minionsAI (creature);
 }
 
 /* ScriptData
@@ -295,7 +296,7 @@ EndScriptData */
 uint64 altarOfArchaedasCount[5];
 int32 altarOfArchaedasCounter=0;
 
-bool GOHello_go_altar_of_archaedas(Player *player, GameObject* go)
+bool GOHello_go_altar_of_archaedas(Player* player, GameObject* go)
 {
     bool alreadyUsed;
     go->AddUse ();
@@ -329,7 +330,7 @@ bool GOHello_go_altar_of_archaedas(Player *player, GameObject* go)
 
     ScriptedInstance* pInstance = (player->GetInstanceData());
     if (!pInstance) return false;
-    pInstance->SetData64(0,player->GetGUID());     // activate archaedas
+    pInstance->SetData64(0, player->GetGUID());     // activate archaedas
 
     return false;
 }
@@ -380,15 +381,15 @@ struct mob_stonekeepersAI : public ScriptedAI
 
     void JustDied(Unit * /*attacker*/)
     {
-        DoCast (me, SPELL_SELF_DESTRUCT,true);
+        DoCast (me, SPELL_SELF_DESTRUCT, true);
         if (pInstance)
             pInstance->SetData(DATA_STONE_KEEPERS, IN_PROGRESS);    // activate next stonekeeper
     }
 };
 
-CreatureAI* GetAI_mob_stonekeepers(Creature* pCreature)
+CreatureAI* GetAI_mob_stonekeepers(Creature* creature)
 {
-    return new mob_stonekeepersAI (pCreature);
+    return new mob_stonekeepersAI (creature);
 }
 
 /* ScriptData
@@ -405,9 +406,9 @@ EndScriptData */
 static uint64 altarOfTheKeeperCount[5];
 static uint32 altarOfTheKeeperCounter=0;
 
-bool GOHello_go_altar_of_the_keepers(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_altar_of_the_keepers(Player* player, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = pPlayer->GetInstanceData();
+    ScriptedInstance* pInstance = player->GetInstanceData();
     if (!pInstance)
         return true;
 
@@ -418,16 +419,16 @@ bool GOHello_go_altar_of_the_keepers(Player* pPlayer, GameObject* pGo)
     alreadyUsed = false;
     for (uint32 loop=0; loop<5; ++loop)
     {
-        if (altarOfTheKeeperCount[loop] == pPlayer->GetGUID())
+        if (altarOfTheKeeperCount[loop] == player->GetGUID())
             alreadyUsed = true;
     }
     if (!alreadyUsed && altarOfTheKeeperCounter < 5)
-        altarOfTheKeeperCount[altarOfTheKeeperCounter++] = pPlayer->GetGUID();
-    pPlayer->CastSpell (pPlayer, SPELL_BOSS_OBJECT_VISUAL, false);
+        altarOfTheKeeperCount[altarOfTheKeeperCounter++] = player->GetGUID();
+    player->CastSpell (player, SPELL_BOSS_OBJECT_VISUAL, false);
 
     if (altarOfTheKeeperCounter < NUMBER_NEEDED_TO_ACTIVATE)
     {
-        //error_log("not enough people yet, altarOfTheKeeperCounter = %d", altarOfTheKeeperCounter);
+        //sLog->outError("not enough people yet, altarOfTheKeeperCounter = %d", altarOfTheKeeperCounter);
         return false; // not enough people yet
     }
 
@@ -436,8 +437,8 @@ bool GOHello_go_altar_of_the_keepers(Player* pPlayer, GameObject* pGo)
     Unit *pTarget;
     for (uint8 x = 0; x < 5; ++x)
     {
-        pTarget = Unit::GetUnit(*pPlayer, altarOfTheKeeperCount[x]);
-        //error_log("number of people currently activating it: %d", x+1);
+        pTarget = Unit::GetUnit(*player, altarOfTheKeeperCount[x]);
+        //sLog->outError("number of people currently activating it: %d", x+1);
         if (!pTarget)
             continue;
         if (pTarget->IsNonMeleeSpellCasted(true))
@@ -448,11 +449,11 @@ bool GOHello_go_altar_of_the_keepers(Player* pPlayer, GameObject* pGo)
 
     if (count < NUMBER_NEEDED_TO_ACTIVATE)
     {
-        //error_log("still not enough people");
+        //sLog->outError("still not enough people");
         return true; // not enough people
     }
 
-    //error_log ("activating stone keepers");
+    //sLog->outError ("activating stone keepers");
     pInstance->SetData(DATA_STONE_KEEPERS, IN_PROGRESS);        // activate the Stone Keepers
     return true;
 }

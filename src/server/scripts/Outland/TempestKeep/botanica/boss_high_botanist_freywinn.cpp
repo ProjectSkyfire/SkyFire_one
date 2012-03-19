@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -80,18 +81,18 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
 
     void DoSummonSeedling()
     {
-        switch(rand()%4)
+        switch (rand()%4)
         {
-            case 0: DoCast(me,SPELL_PLANT_WHITE); break;
-            case 1: DoCast(me,SPELL_PLANT_GREEN); break;
-            case 2: DoCast(me,SPELL_PLANT_BLUE); break;
-            case 3: DoCast(me,SPELL_PLANT_RED); break;
+            case 0: DoCast(me, SPELL_PLANT_WHITE); break;
+            case 1: DoCast(me, SPELL_PLANT_GREEN); break;
+            case 2: DoCast(me, SPELL_PLANT_BLUE); break;
+            case 3: DoCast(me, SPELL_PLANT_RED); break;
         }
     }
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_KILL_1, me); break;
         case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -110,7 +111,7 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
 
         if (TreeForm_Timer <= diff)
         {
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_TREE_1, me); break;
             case 1: DoScriptText(SAY_TREE_2, me); break;
@@ -121,9 +122,9 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
 
             me->RemoveAllAuras();
 
-            DoCast(me,SPELL_SUMMON_FRAYER,true);
-            DoCast(me,SPELL_TRANQUILITY,true);
-            DoCast(me,SPELL_TREE_FORM,true);
+            DoCast(me, SPELL_SUMMON_FRAYER, true);
+            DoCast(me, SPELL_TRANQUILITY, true);
+            DoCast(me, SPELL_TREE_FORM, true);
 
             me->GetMotionMaster()->MoveIdle();
             MoveFree = false;
@@ -171,7 +172,7 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
             return;
         }
 
-        /*if (me->HasAura(SPELL_TREE_FORM,0) || me->HasAura(SPELL_TRANQUILITY,0))
+        /*if (me->HasAura(SPELL_TREE_FORM, 0) || me->HasAura(SPELL_TRANQUILITY, 0))
             return;*/
 
         //one random seedling every 5 secs, but not in tree form
@@ -185,9 +186,9 @@ struct boss_high_botanist_freywinnAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_high_botanist_freywinn(Creature* pCreature)
+CreatureAI* GetAI_boss_high_botanist_freywinn(Creature* creature)
 {
-    return new boss_high_botanist_freywinnAI (pCreature);
+    return new boss_high_botanist_freywinnAI (creature);
 }
 
 void AddSC_boss_high_botanist_freywinn()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -220,7 +221,7 @@ struct boss_zuljinAI : public ScriptedAI
 
         DoZoneInCombat();
 
-        me->MonsterYell(YELL_INTRO,LANG_UNIVERSAL,NULL);
+        me->MonsterYell(YELL_INTRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_INTRO);
         SpawnAdds();
         EnterPhase(0);
@@ -231,7 +232,7 @@ struct boss_zuljinAI : public ScriptedAI
         if (Intro_Timer)
             return;
 
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
@@ -254,7 +255,7 @@ struct boss_zuljinAI : public ScriptedAI
         Summons.DespawnEntry(CREATURE_COLUMN_OF_FIRE);
 
         if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[3]))
-            Temp->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);
+            Temp->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_DEAD);
     }
 
     void AttackStart(Unit *who)
@@ -288,17 +289,17 @@ struct boss_zuljinAI : public ScriptedAI
 
     void SpawnAdds()
     {
-        Creature *pCreature = NULL;
+        Creature* creature = NULL;
         for (uint8 i = 0; i < 4; ++i)
         {
-            pCreature = me->SummonCreature(SpiritInfo[i].entry, SpiritInfo[i].x, SpiritInfo[i].y, SpiritInfo[i].z, SpiritInfo[i].orient, TEMPSUMMON_DEAD_DESPAWN, 0);
-            if (pCreature)
+            creature = me->SummonCreature(SpiritInfo[i].entry, SpiritInfo[i].x, SpiritInfo[i].y, SpiritInfo[i].z, SpiritInfo[i].orient, TEMPSUMMON_DEAD_DESPAWN, 0);
+            if (creature)
             {
-                pCreature->CastSpell(pCreature, SPELL_SPIRIT_AURA, true);
-                pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                pCreature->addUnitState(UNIT_STAT_STUNNED);
-                SpiritGUID[i] = pCreature->GetGUID();
+                creature->CastSpell(creature, SPELL_SPIRIT_AURA, true);
+                creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                creature->addUnitState(UNIT_STAT_STUNNED);
+                SpiritGUID[i] = creature->GetGUID();
             }
         }
     }
@@ -332,7 +333,7 @@ struct boss_zuljinAI : public ScriptedAI
 
     void EnterPhase(uint32 NextPhase)
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case 0:
             break;
@@ -350,7 +351,7 @@ struct boss_zuljinAI : public ScriptedAI
             if (Phase > 0)
             {
                 if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[Phase - 1]))
-                    Temp->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);
+                    Temp->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_DEAD);
             }
             if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[NextPhase - 1]))
                 Temp->CastSpell(me, SPELL_SIPHON_SOUL, false); // should m cast on temp
@@ -579,9 +580,9 @@ struct boss_zuljinAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_zuljin(Creature* pCreature)
+CreatureAI* GetAI_boss_zuljin(Creature* creature)
 {
-    return new boss_zuljinAI (pCreature);
+    return new boss_zuljinAI (creature);
 }
 
 struct feather_vortexAI : public ScriptedAI
@@ -644,9 +645,9 @@ struct feather_vortexAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_feather_vortexAI(Creature* pCreature)
+CreatureAI* GetAI_feather_vortexAI(Creature* creature)
 {
-    return new feather_vortexAI (pCreature);
+    return new feather_vortexAI (creature);
 }
 
 void AddSC_boss_zuljin()

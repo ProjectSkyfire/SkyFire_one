@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -140,16 +141,16 @@ struct boss_high_king_maulgarAI : public ScriptedAI
 
         Phase2 = false;
 
-        Creature *pCreature = NULL;
+        Creature* creature = NULL;
         for (uint8 i = 0; i < 4; i++)
         {
             if (Council[i])
             {
-                pCreature = (Creature*)(Unit::GetUnit((*me), Council[i]));
-                if (pCreature && !pCreature->isAlive())
+                creature = (Creature*)(Unit::GetUnit((*me), Council[i]));
+                if (creature && !creature->isAlive())
                 {
-                    pCreature->Respawn();
-                    pCreature->AI()->EnterEvadeMode();
+                    creature->Respawn();
+                    creature->AI()->EnterEvadeMode();
                 }
             }
         }
@@ -161,7 +162,7 @@ struct boss_high_king_maulgarAI : public ScriptedAI
 
     void KilledUnit()
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -179,7 +180,7 @@ struct boss_high_king_maulgarAI : public ScriptedAI
 
        void AddDeath()
        {
-            switch(rand()%4)
+            switch (rand()%4)
             {
                 case 0: DoScriptText(SAY_OGRE_DEATH1, me);break;
                 case 1: DoScriptText(SAY_OGRE_DEATH2, me);break;
@@ -715,29 +716,29 @@ struct boss_krosh_firehandAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_high_king_maulgar(Creature* pCreature)
+CreatureAI* GetAI_boss_high_king_maulgar(Creature* creature)
 {
-    return new boss_high_king_maulgarAI (pCreature);
+    return new boss_high_king_maulgarAI (creature);
 }
 
-CreatureAI* GetAI_boss_olm_the_summoner(Creature* pCreature)
+CreatureAI* GetAI_boss_olm_the_summoner(Creature* creature)
 {
-    return new boss_olm_the_summonerAI (pCreature);
+    return new boss_olm_the_summonerAI (creature);
 }
 
-CreatureAI *GetAI_boss_kiggler_the_crazed(Creature* pCreature)
+CreatureAI *GetAI_boss_kiggler_the_crazed(Creature* creature)
 {
-    return new boss_kiggler_the_crazedAI (pCreature);
+    return new boss_kiggler_the_crazedAI (creature);
 }
 
-CreatureAI *GetAI_boss_blindeye_the_seer(Creature* pCreature)
+CreatureAI *GetAI_boss_blindeye_the_seer(Creature* creature)
 {
-    return new boss_blindeye_the_seerAI (pCreature);
+    return new boss_blindeye_the_seerAI (creature);
 }
 
-CreatureAI *GetAI_boss_krosh_firehand(Creature* pCreature)
+CreatureAI *GetAI_boss_krosh_firehand(Creature* creature)
 {
-    return new boss_krosh_firehandAI (pCreature);
+    return new boss_krosh_firehandAI (creature);
 }
 
 void AddSC_boss_high_king_maulgar()

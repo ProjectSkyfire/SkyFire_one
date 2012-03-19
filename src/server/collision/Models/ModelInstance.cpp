@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -38,7 +39,7 @@ namespace VMAP
         if (!iModel)
         {
 #ifdef VMAP_DEBUG
-            DEBUG_LOG("<object not loaded>");
+            sLog->outDebug("<object not loaded>");
 #endif
             return false;
         }
@@ -46,7 +47,7 @@ namespace VMAP
         if (time == G3D::inf())
         {
 #ifdef VMAP_DEBUG
-            DEBUG_LOG("Ray does not hit '%s'", name.c_str());
+            sLog->outDebug("Ray does not hit '%s'", name.c_str());
 #endif
             return false;
         }

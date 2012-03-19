@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -18,14 +18,12 @@
  */
 
 #include "TicketMgr.h"
-#include "Policies/SingletonImp.h"
 #include "World.h"
 #include "ObjectMgr.h"
 #include "Language.h"
 #include "Player.h"
 #include "Common.h"
 #include "ObjectAccessor.h"
-INSTANTIATE_SINGLETON_1(TicketMgr);
 
 GM_Ticket* TicketMgr::GetGMTicket(uint64 ticketGuid)
 {
@@ -59,7 +57,7 @@ GM_Ticket* TicketMgr::GetGMTicketByName(const char* name)
     if (!normalizePlayerName(pname))
         return NULL;
 
-    uint64 playerGuid = objmgr.GetPlayerGUIDByName(pname.c_str());
+    uint64 playerGuid = sObjectMgr->GetPlayerGUIDByName(pname.c_str());
     if (!playerGuid)
         return NULL;
 
@@ -108,9 +106,9 @@ void TicketMgr::LoadGMTickets()
 
     if (!result)
     {
-        ticketmgr.InitTicketID();
-        sLog.outString();
-        sLog.outString(">> GM Tickets table is empty, no tickets were loaded.");
+        sTicketMgr->InitTicketID();
+        sLog->outString();
+        sLog->outString(">> GM Tickets table is empty, no tickets were loaded.");
         return;
     }
 
@@ -138,7 +136,7 @@ void TicketMgr::LoadGMTickets()
         AddGMTicket(ticket, true);
     } while (result->NextRow());
 
-    sWorld.SendGMText(LANG_COMMAND_TICKETRELOAD, result->GetRowCount());
+    sWorld->SendGMText(LANG_COMMAND_TICKETRELOAD, result->GetRowCount());
 }
 
 void TicketMgr::LoadGMSurveys()
@@ -153,7 +151,7 @@ void TicketMgr::LoadGMSurveys()
     else
         m_GMSurveyID = 0;
 
-    sLog.outString(">> Loaded GM Survey count from database.");
+    sLog->outString(">> Loaded GM Survey count from database.");
 }
 
 void TicketMgr::RemoveGMTicket(uint64 ticketGuid, uint64 GMguid)
@@ -185,7 +183,7 @@ void TicketMgr::RemoveGMTicketByPlayer(uint64 playerGuid, uint64 GMguid)
 void TicketMgr::SaveGMTicket(GM_Ticket* ticket)
 {
     std::string msg = ticket->message;
-    CharacterDatabase.escape_string(msg);
+    CharacterDatabase.EscapeString(msg);
     std::stringstream ss;
     ss << "REPLACE INTO gm_tickets (guid, playerGuid, name, message, createtime, map, posX, posY, posZ, timestamp, closed, assignedto, comment, escalated, viewed) VALUES('";
     ss << ticket->guid << "', '";

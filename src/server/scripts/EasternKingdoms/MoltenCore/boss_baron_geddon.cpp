@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -76,7 +77,7 @@ struct boss_baron_geddonAI : public ScriptedAI
         //IgniteMana_Timer
         if (IgniteMana_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_IGNITEMANA);
 
             IgniteMana_Timer = 30000;
@@ -85,7 +86,7 @@ struct boss_baron_geddonAI : public ScriptedAI
         //LivingBomb_Timer
         if (LivingBomb_Timer <= diff)
         {
-           if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+           if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                DoCast(pTarget, SPELL_LIVINGBOMB);
 
             LivingBomb_Timer = 35000;
@@ -94,9 +95,9 @@ struct boss_baron_geddonAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_baron_geddon(Creature* pCreature)
+CreatureAI* GetAI_boss_baron_geddon(Creature* creature)
 {
-    return new boss_baron_geddonAI (pCreature);
+    return new boss_baron_geddonAI (creature);
 }
 
 void AddSC_boss_baron_geddon()

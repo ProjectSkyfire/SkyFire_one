@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -102,10 +103,10 @@ struct mob_fireswornAI : public ScriptedAI
         //Immolate_Timer
         if (Immolate_Timer <= diff)
         {
-             if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+             if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_IMMOLATE);
 
-            Immolate_Timer = urand(5000,10000);
+            Immolate_Timer = urand(5000, 10000);
         } else Immolate_Timer -= diff;
 
         //Cast Erruption and let them die
@@ -119,14 +120,14 @@ struct mob_fireswornAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_garr(Creature* pCreature)
+CreatureAI* GetAI_boss_garr(Creature* creature)
 {
-    return new boss_garrAI (pCreature);
+    return new boss_garrAI (creature);
 }
 
-CreatureAI* GetAI_mob_firesworn(Creature* pCreature)
+CreatureAI* GetAI_mob_firesworn(Creature* creature)
 {
-    return new mob_fireswornAI (pCreature);
+    return new mob_fireswornAI (creature);
 }
 
 void AddSC_boss_garr()

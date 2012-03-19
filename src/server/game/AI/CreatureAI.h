@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_CREATUREAI_H
-#define OREGON_CREATUREAI_H
+#ifndef TRINITY_CREATUREAI_H
+#define TRINITY_CREATUREAI_H
 
 #include "UnitAI.h"
 #include "Common.h"
@@ -132,7 +133,7 @@ class CreatureAI : public UnitAI
 
         void OnCharmed(bool apply);
 
-        //virtual void SpellClick(Player *player) {}
+        //virtual void SpellClick(Player* player) {}
 
         // Called at reaching home after evade
         virtual void JustReachedHome() {}
@@ -140,7 +141,7 @@ class CreatureAI : public UnitAI
         void DoZoneInCombat(Creature* pUnit = NULL);
 
         // Called at text emote receive from player
-        virtual void ReceiveEmote(Player* /*pPlayer*/, uint32 /*text_emote*/) {}
+        virtual void ReceiveEmote(Player* /*player*/, uint32 /*text_emote*/) {}
 
         // == Triggered Actions Requested ==================
 

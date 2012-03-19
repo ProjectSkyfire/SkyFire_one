@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -32,12 +33,12 @@ struct instance_zulfarrak : public ScriptedInstance
         GahzRillaEncounter = NOT_STARTED;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        if (pCreature->GetEntry() == NPC_GAHZRILLA)
+        if (creature->GetEntry() == NPC_GAHZRILLA)
         {
             if (GahzRillaEncounter >= IN_PROGRESS)
-                pCreature->DisappearAndDie();
+                creature->DisappearAndDie();
             else
                 GahzRillaEncounter = IN_PROGRESS;
         }

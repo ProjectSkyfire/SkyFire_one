@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -74,21 +75,21 @@ struct boss_razorgoreAI : public ScriptedAI
         if (Cleave_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_CLEAVE);
-            Cleave_Timer = urand(7000,10000);
+            Cleave_Timer = urand(7000, 10000);
         } else Cleave_Timer -= diff;
 
         //WarStomp_Timer
         if (WarStomp_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_WARSTOMP);
-            WarStomp_Timer = urand(15000,25000);
+            WarStomp_Timer = urand(15000, 25000);
         } else WarStomp_Timer -= diff;
 
         //FireballVolley_Timer
         if (FireballVolley_Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_FIREBALLVOLLEY);
-            FireballVolley_Timer = urand(12000,15000);
+            FireballVolley_Timer = urand(12000, 15000);
         } else FireballVolley_Timer -= diff;
 
         //Conflagration_Timer
@@ -112,9 +113,9 @@ struct boss_razorgoreAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_razorgore(Creature* pCreature)
+CreatureAI* GetAI_boss_razorgore(Creature* creature)
 {
-    return new boss_razorgoreAI (pCreature);
+    return new boss_razorgoreAI (creature);
 }
 
 void AddSC_boss_razorgore()

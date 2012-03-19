@@ -2179,17 +2179,17 @@ bool CollisionDetection::fixedSolidSphereIntersectsFixedTriangle(
 
 #define FINDMINMAX(x0, x1, x2, min, max) \
     min = max = x0;   \
-    if(x1<min) min=x1;\
-    if(x1>max) max=x1;\
-    if(x2<min) min=x2;\
-    if(x2>max) max=x2;
+    if (x1<min) min=x1;\
+    if (x1>max) max=x1;\
+    if (x2<min) min=x2;\
+    if (x2>max) max=x2;
 
 static bool planeBoxOverlap(const Vector3& normal, const Vector3& vert, const Vector3& maxbox)  {
     Vector3 vmin, vmax;
     float v;
 
     // for each axis
-    for(int a = 0; a < 3; ++a) {
+    for (int a = 0; a < 3; ++a) {
         v = vert[a];
 
         if (normal[a] > 0.0f) {
@@ -2215,48 +2215,48 @@ static bool planeBoxOverlap(const Vector3& normal, const Vector3& vert, const Ve
 #define AXISTEST_X01(a, b, fa, fb)   \
     p0 = a*v0[Y] - b*v0[Z];          \
     p2 = a*v2[Y] - b*v2[Z];          \
-    if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} \
+    if (p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} \
     rad = fa * boxhalfsize[Y] + fb * boxhalfsize[Z];   \
-    if(min>rad || max<-rad) return false;
+    if (min>rad || max<-rad) return false;
 
 #define AXISTEST_X2(a, b, fa, fb)    \
     p0 = a*v0[Y] - b*v0[Z];          \
     p1 = a*v1[Y] - b*v1[Z];          \
-    if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;} \
+    if (p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;} \
     rad = fa * boxhalfsize[Y] + fb * boxhalfsize[Z];   \
-    if(min>rad || max<-rad) return false;
+    if (min>rad || max<-rad) return false;
 
 /*======================== Y-tests ========================*/
 
 #define AXISTEST_Y02(a, b, fa, fb)   \
     p0 = -a*v0[X] + b*v0[Z];         \
     p2 = -a*v2[X] + b*v2[Z];         \
-    if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} \
+    if (p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} \
     rad = fa * boxhalfsize[X] + fb * boxhalfsize[Z];   \
-    if(min>rad || max<-rad) return false;
+    if (min>rad || max<-rad) return false;
 
 #define AXISTEST_Y1(a, b, fa, fb)   \
     p0 = -a*v0[X] + b*v0[Z];        \
     p1 = -a*v1[X] + b*v1[Z];        \
-    if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;} \
+    if (p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;} \
     rad = fa * boxhalfsize[X] + fb * boxhalfsize[Z];   \
-    if(min>rad || max<-rad) return false;
+    if (min>rad || max<-rad) return false;
 
 /*======================== Z-tests ========================*/
 
 #define AXISTEST_Z12(a, b, fa, fb)   \
     p1 = a*v1[X] - b*v1[Y];          \
     p2 = a*v2[X] - b*v2[Y];          \
-    if(p2<p1) {min=p2; max=p1;} else {min=p1; max=p2;} \
+    if (p2<p1) {min=p2; max=p1;} else {min=p1; max=p2;} \
     rad = fa * boxhalfsize[X] + fb * boxhalfsize[Y];   \
-    if(min>rad || max<-rad) return false;
+    if (min>rad || max<-rad) return false;
 
 #define AXISTEST_Z0(a, b, fa, fb)   \
     p0 = a*v0[X] - b*v0[Y];   \
     p1 = a*v1[X] - b*v1[Y];           \
-    if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;} \
+    if (p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;} \
     rad = fa * boxhalfsize[X] + fb * boxhalfsize[Y];   \
-    if(min>rad || max<-rad) return false;
+    if (min>rad || max<-rad) return false;
 
 bool CollisionDetection::fixedSolidBoxIntersectsFixedTriangle(
    const AABox& box, const Triangle& tri) {

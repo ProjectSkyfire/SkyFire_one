@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -282,7 +283,7 @@ struct mob_doomfire_targettingAI : public ScriptedAI
         if (ChangeTargetTimer <= diff)
         {
             Unit *pTarget = NULL;
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0:                                     // stalk player
                     pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
@@ -379,7 +380,7 @@ struct boss_archimondeAI : public hyjal_trashAI
 
     void KilledUnit(Unit * victim)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2,SAY_SLAY3), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2, SAY_SLAY3), me);
 
         if (victim && (victim->GetTypeId() == TYPEID_PLAYER))
             GainSoulCharge(CAST_PLR(victim));
@@ -387,7 +388,7 @@ struct boss_archimondeAI : public hyjal_trashAI
 
     void GainSoulCharge(Player* victim)
     {
-        switch(victim->getClass())
+        switch (victim->getClass())
         {
             case CLASS_PRIEST:
             case CLASS_PALADIN:
@@ -406,7 +407,7 @@ struct boss_archimondeAI : public hyjal_trashAI
                 break;
         }
 
-        SoulChargeTimer = urand(2000,30000);
+        SoulChargeTimer = urand(2000, 30000);
         ++SoulChargeCount;
     }
 
@@ -442,7 +443,7 @@ struct boss_archimondeAI : public hyjal_trashAI
         if (targets.empty())
             return false;
 
-        targets.sort(Oregon::ObjectDistanceOrderPred(me));
+        targets.sort(Trinity::ObjectDistanceOrderPred(me));
         Unit *pTarget = targets.front();
         if (pTarget)
         {
@@ -487,7 +488,7 @@ struct boss_archimondeAI : public hyjal_trashAI
         uint32 chargeSpell = 0;
         uint32 unleashSpell = 0;
 
-        switch (urand(0,2))
+        switch (urand(0, 2))
         {
             case 0:
                 chargeSpell = SPELL_SOUL_CHARGE_RED;
@@ -512,7 +513,7 @@ struct boss_archimondeAI : public hyjal_trashAI
         }
 
         if (HasCast)
-            SoulChargeTimer = urand(2000,30000);
+            SoulChargeTimer = urand(2000, 30000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -646,18 +647,18 @@ struct boss_archimondeAI : public hyjal_trashAI
         if (GripOfTheLegionTimer <= diff)
         {
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_GRIP_OF_THE_LEGION);
-            GripOfTheLegionTimer = urand(5000,25000);
+            GripOfTheLegionTimer = urand(5000, 25000);
         } else GripOfTheLegionTimer -= diff;
 
         if (AirBurstTimer <= diff)
         {
-            if (urand(0,1))
+            if (urand(0, 1))
                 DoScriptText(SAY_AIR_BURST1, me);
             else
                 DoScriptText(SAY_AIR_BURST2, me);
 
             DoCast(SelectUnit(SELECT_TARGET_RANDOM, 1), SPELL_AIR_BURST);//not on tank
-            AirBurstTimer = urand(25000,40000);
+            AirBurstTimer = urand(25000, 40000);
         } else AirBurstTimer -= diff;
 
         if (FearTimer <= diff)
@@ -688,24 +689,24 @@ struct boss_archimondeAI : public hyjal_trashAI
     void WaypointReached(uint32 /*i*/){}
 };
 
-CreatureAI* GetAI_boss_archimonde(Creature* pCreature)
+CreatureAI* GetAI_boss_archimonde(Creature* creature)
 {
-    return new boss_archimondeAI (pCreature);
+    return new boss_archimondeAI (creature);
 }
 
-CreatureAI* GetAI_mob_doomfire(Creature* pCreature)
+CreatureAI* GetAI_mob_doomfire(Creature* creature)
 {
-    return new mob_doomfireAI(pCreature);
+    return new mob_doomfireAI(creature);
 }
 
-CreatureAI* GetAI_mob_doomfire_targetting(Creature* pCreature)
+CreatureAI* GetAI_mob_doomfire_targetting(Creature* creature)
 {
-    return new mob_doomfire_targettingAI(pCreature);
+    return new mob_doomfire_targettingAI(creature);
 }
 
-CreatureAI* GetAI_mob_ancient_wisp(Creature* pCreature)
+CreatureAI* GetAI_mob_ancient_wisp(Creature* creature)
 {
-    return new mob_ancient_wispAI(pCreature);
+    return new mob_ancient_wispAI(creature);
 }
 
 void AddSC_boss_archimonde()

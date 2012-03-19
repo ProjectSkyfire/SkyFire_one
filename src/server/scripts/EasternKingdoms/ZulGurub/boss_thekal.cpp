@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -209,13 +210,13 @@ struct boss_thekalAI : public ScriptedAI
                 DoCast(me, SPELL_TIGER_FORM);
                 Resurrect(me);
                 me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                const CreatureInfo *cinfo = me->GetCreatureInfo();
+                const CreatureTemplate *cinfo = me->GetCreatureTemplate();
                 me->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg / 100) * 40)));
                 me->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg / 100) * 40)));
                 me->UpdateDamagePhysical(BASE_ATTACK);
                 DoResetThreat();
                 PhaseTwo = true;
-                DoScriptText(SAY_TRANSFORM,me);
+                DoScriptText(SAY_TRANSFORM, me);
             }
 
             if (ThekalDead)
@@ -623,19 +624,19 @@ struct mob_zealot_zathAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_thekal(Creature* pCreature)
+CreatureAI* GetAI_boss_thekal(Creature* creature)
 {
-    return new boss_thekalAI (pCreature);
+    return new boss_thekalAI (creature);
 }
 
-CreatureAI* GetAI_mob_zealot_lorkhan(Creature* pCreature)
+CreatureAI* GetAI_mob_zealot_lorkhan(Creature* creature)
 {
-    return new mob_zealot_lorkhanAI (pCreature);
+    return new mob_zealot_lorkhanAI (creature);
 }
 
-CreatureAI* GetAI_mob_zealot_zath(Creature* pCreature)
+CreatureAI* GetAI_mob_zealot_zath(Creature* creature)
 {
-    return new mob_zealot_zathAI (pCreature);
+    return new mob_zealot_zathAI (creature);
 }
 
 void AddSC_boss_thekal()

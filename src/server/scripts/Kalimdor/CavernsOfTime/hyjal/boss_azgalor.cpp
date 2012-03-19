@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -91,7 +92,7 @@ struct boss_azgalorAI : public hyjal_trashAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        switch (urand(0,2))
+        switch (urand(0, 2))
         {
             case 0:
                 DoPlaySoundToSet(me, SOUND_ONSLAY1);
@@ -115,7 +116,7 @@ struct boss_azgalorAI : public hyjal_trashAI
         {
             Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_THRALL));
             if (pTarget && pTarget->isAlive())
-                me->AddThreat(pTarget,0.0f);
+                me->AddThreat(pTarget, 0.0f);
         }
     }
 
@@ -158,13 +159,13 @@ struct boss_azgalorAI : public hyjal_trashAI
 
         if (RainTimer <= diff)
         {
-            DoCast(SelectTarget(SELECT_TARGET_RANDOM,0,30,true), SPELL_RAIN_OF_FIRE);
+            DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true), SPELL_RAIN_OF_FIRE);
             RainTimer = 20000+rand()%15000;
         } else RainTimer -= diff;
 
         if (DoomTimer <= diff)
         {
-            DoCast(SelectTarget(SELECT_TARGET_RANDOM,1,100,true), SPELL_DOOM);//never on tank
+            DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true), SPELL_DOOM);//never on tank
             DoomTimer = 45000+rand()%5000;
         } else DoomTimer -= diff;
 
@@ -192,9 +193,9 @@ struct boss_azgalorAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_boss_azgalor(Creature* pCreature)
+CreatureAI* GetAI_boss_azgalor(Creature* creature)
 {
-    return new boss_azgalorAI (pCreature);
+    return new boss_azgalorAI (creature);
 }
 
 #define SPELL_THRASH 12787
@@ -240,8 +241,8 @@ struct mob_lesser_doomguardAI : public hyjal_trashAI
     {
         if (me->IsWithinDist(who, 50) && !me->isInCombat() && me->IsHostileTo(who))
         {
-            me->AddThreat(who,0.0f);
-            me->Attack(who,false);
+            me->AddThreat(who, 0.0f);
+            me->Attack(who, false);
         }
     }
 
@@ -286,9 +287,9 @@ struct mob_lesser_doomguardAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_mob_lesser_doomguard(Creature* pCreature)
+CreatureAI* GetAI_mob_lesser_doomguard(Creature* creature)
 {
-    return new mob_lesser_doomguardAI (pCreature);
+    return new mob_lesser_doomguardAI (creature);
 }
 
 void AddSC_boss_azgalor()

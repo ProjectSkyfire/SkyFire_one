@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -31,7 +32,7 @@
 #include "CellImpl.h"
 
 int
-TotemAI::Permissible(const Creature *creature)
+TotemAI::Permissible(const Creature* creature)
 {
     if (creature->isTotem())
         return PERMIT_BASE_PROACTIVE;
@@ -79,19 +80,19 @@ TotemAI::UpdateAI(const uint32 /*diff*/)
     // Search victim if no, not attackable, or out of range, or friendly (possible in case duel end)
     if (!victim ||
         !victim->isTargetableForAttack() || !i_totem.IsWithinDistInMap(victim, max_range) ||
-        i_totem.IsFriendlyTo(victim) || !victim->isVisibleForOrDetect(&i_totem,false))
+        i_totem.IsFriendlyTo(victim) || !victim->isVisibleForOrDetect(&i_totem, false))
     {
-        CellPair p(Oregon::ComputeCellPair(i_totem.GetPositionX(),i_totem.GetPositionY()));
+        CellPair p(Trinity::ComputeCellPair(i_totem.GetPositionX(), i_totem.GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 
         victim = NULL;
 
-        Oregon::NearestAttackableUnitInObjectRangeCheck u_check(&i_totem, &i_totem, max_range);
-        Oregon::UnitLastSearcher<Oregon::NearestAttackableUnitInObjectRangeCheck> checker(victim, u_check);
+        Trinity::NearestAttackableUnitInObjectRangeCheck u_check(&i_totem, &i_totem, max_range);
+        Trinity::UnitLastSearcher<Trinity::NearestAttackableUnitInObjectRangeCheck> checker(victim, u_check);
 
-        TypeContainerVisitor<Oregon::UnitLastSearcher<Oregon::NearestAttackableUnitInObjectRangeCheck>, GridTypeMapContainer > grid_object_checker(checker);
-        TypeContainerVisitor<Oregon::UnitLastSearcher<Oregon::NearestAttackableUnitInObjectRangeCheck>, WorldTypeMapContainer > world_object_checker(checker);
+        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestAttackableUnitInObjectRangeCheck>, GridTypeMapContainer > grid_object_checker(checker);
+        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestAttackableUnitInObjectRangeCheck>, WorldTypeMapContainer > world_object_checker(checker);
 
         //TODO: Backport mangos-0.12 r638: [7667] Add to CreatureAI field pointing to creature itself
         //cell.Visit(p, grid_object_checker,  *m_creature.GetMap(), *m_creature, max_range);

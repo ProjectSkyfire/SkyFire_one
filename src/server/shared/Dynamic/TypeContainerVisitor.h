@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/> 
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -17,17 +17,17 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_TYPECONTAINERVISITOR_H
-#define OREGON_TYPECONTAINERVISITOR_H
+#ifndef TRINITY_TYPECONTAINERVISITOR_H
+#define TRINITY_TYPECONTAINERVISITOR_H
 
 /*
- * TypeContainerVisitor is implemented as a visitor pattern.  It is
- * a visitor to the TypeMapContainer or ContainerMapList.  The visitor has
+ * @class TypeContainerVisitor is implemented as a visitor pattern.  It is
+ * a visitor to the TypeContainerList or TypeContainerMapList.  The visitor has
  * to overload its types as a visit method is called.
  */
 
 #include "Define.h"
-#include "TypeContainer.h"
+#include "Dynamic/TypeContainer.h"
 
 // forward declaration
 template<class T, class Y> class TypeContainerVisitor;
@@ -37,6 +37,23 @@ template<class VISITOR, class TYPE_CONTAINER> void VisitorHelper(VISITOR &v, TYP
 {
     v.Visit(c);
 };
+
+// terminate condition for container list
+template<class VISITOR> void VisitorHelper(VISITOR &v, ContainerList<TypeNull> &c)
+{
+}
+
+template<class VISITOR, class T> void VisitorHelper(VISITOR &v, ContainerList<T> &c)
+{
+    v.Visit(c._element);
+}
+
+// recursion for container list
+template<class VISITOR, class H, class T> void VisitorHelper(VISITOR &v, ContainerList<TypeList<H, T> > &c)
+{
+    VisitorHelper(v, c._elements);
+    VisitorHelper(v, c._TailElements);
+}
 
 // terminate condition container map list
 template<class VISITOR> void VisitorHelper(VISITOR &/*v*/, ContainerMapList<TypeNull> &/*c*/)
@@ -50,6 +67,23 @@ template<class VISITOR, class T> void VisitorHelper(VISITOR &v, ContainerMapList
 
 // recursion container map list
 template<class VISITOR, class H, class T> void VisitorHelper(VISITOR &v, ContainerMapList<TypeList<H, T> > &c)
+{
+    VisitorHelper(v, c._elements);
+    VisitorHelper(v, c._TailElements);
+}
+
+// array list
+template<class VISITOR, class T> void VisitorHelper(VISITOR &v, ContainerArrayList<T> &c)
+{
+    v.Visit(c._element);
+}
+
+template<class VISITOR> void VisitorHelper(VISITOR &/*v*/, ContainerArrayList<TypeNull> &/*c*/)
+{
+}
+
+// recursion
+template<class VISITOR, class H, class T> void VisitorHelper(VISITOR &v, ContainerArrayList<TypeList<H, T> > &c)
 {
     VisitorHelper(v, c._elements);
     VisitorHelper(v, c._TailElements);

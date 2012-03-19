@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -75,7 +76,7 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
         if (rand()%2)
             return;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_SLAY_1, me); break;
         case 1: DoScriptText(SAY_SLAY_2, me); break;
@@ -101,7 +102,7 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
         //Shadow Power
         if (Shadow_Power_Timer <= diff)
         {
-            DoCast(me,HeroicMode ? H_SPELL_SHADOW_POWER : SPELL_SHADOW_POWER);
+            DoCast(me, HeroicMode ? H_SPELL_SHADOW_POWER : SPELL_SHADOW_POWER);
             Shadow_Power_Timer = 20000 + rand()%8000;
         } else Shadow_Power_Timer -= diff;
 
@@ -116,7 +117,7 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
             if (rand()%2)
                 return;
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_HAMMER_1, me); break;
             case 1: DoScriptText(SAY_HAMMER_2, me); break;
@@ -134,9 +135,9 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature* pCreature)
+CreatureAI* GetAI_boss_gatewatcher_iron_hand(Creature* creature)
 {
-    return new boss_gatewatcher_iron_handAI (pCreature);
+    return new boss_gatewatcher_iron_handAI (creature);
 }
 
 void AddSC_boss_gatewatcher_iron_hand()

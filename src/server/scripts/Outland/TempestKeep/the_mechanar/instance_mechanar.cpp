@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -35,7 +36,7 @@ struct instance_mechanar : public ScriptedInstance
 
     uint32 Encounters[ENCOUNTERS];
 
-    void OnCreatureCreate (Creature *creature, uint32 creature_entry)
+    void OnCreatureCreate (Creature* creature, uint32 creature_entry)
     {
     }
 
@@ -56,7 +57,7 @@ struct instance_mechanar : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_NETHERMANCER_EVENT:   return Encounters[0];
         }
@@ -71,7 +72,7 @@ struct instance_mechanar : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_NETHERMANCER_EVENT:   Encounters[0] = data;   break;
         }

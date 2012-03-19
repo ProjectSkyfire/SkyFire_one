@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -56,7 +57,7 @@ void Corpse::AddToWorld()
 {
     // Register the corpse for guid lookup
     if (!IsInWorld())
-        ObjectAccessor::Instance().AddObject(this);
+        sObjectAccessor->AddObject(this);
 
     Object::AddToWorld();
 }
@@ -65,7 +66,7 @@ void Corpse::RemoveFromWorld()
 {
     // Remove the corpse from the accessor
     if (IsInWorld())
-        ObjectAccessor::Instance().RemoveObject(this);
+        sObjectAccessor->RemoveObject(this);
 
     Object::RemoveFromWorld();
 }
@@ -81,11 +82,11 @@ bool Corpse::Create(uint32 guidlow, Player *owner, uint32 mapid, float x, float 
 {
     ASSERT(owner);
 
-    Relocate(x,y,z,ang);
+    Relocate(x, y, z, ang);
 
     if (!IsPositionValid())
     {
-        sLog.outError("Corpse (guidlow %d, owner %s) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
+        sLog->outError("Corpse (guidlow %d, owner %s) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
             guidlow, owner->GetName(), x, y);
         return false;
     }
@@ -103,7 +104,7 @@ bool Corpse::Create(uint32 guidlow, Player *owner, uint32 mapid, float x, float 
     SetFloatValue(CORPSE_FIELD_FACING, ang);
     SetUInt64Value(CORPSE_FIELD_OWNER, owner->GetGUID());
 
-    m_grid = Oregon::ComputeGridPair(GetPositionX(), GetPositionY());
+    m_grid = Trinity::ComputeGridPair(GetPositionX(), GetPositionY());
 
     return true;
 }
@@ -115,7 +116,7 @@ void Corpse::SaveToDB()
     DeleteFromDB();
 
     std::ostringstream ss;
-    ss  << "INSERT INTO corpse (guid,player,position_x,position_y,position_z,orientation,zone,map,displayId,itemCache,bytes1,bytes2,guild,flags,dynFlags,time,corpse_type,instance) VALUES ("
+    ss  << "INSERT INTO corpse (guid, player, position_x, position_y, position_z, orientation, zone, map, displayId, itemCache, bytes1, bytes2, guild, flags, dynFlags, time, corpse_type, instance) VALUES ("
         << GetGUIDLow() << ", "
         << GUID_LOPART(GetOwnerGUID()) << ", "
         << GetPositionX() << ", "
@@ -147,7 +148,7 @@ void Corpse::DeleteBonesFromWorld()
 
     if (!corpse)
     {
-        sLog.outError("Bones %u not found in world.", GetGUIDLow());
+        sLog->outError("Bones %u not found in world.", GetGUIDLow());
         return;
     }
 
@@ -161,7 +162,7 @@ void Corpse::DeleteFromDB()
         CharacterDatabase.PExecute("DELETE FROM corpse WHERE guid = '%d'", GetGUIDLow());
     else
         // all corpses (not bones)
-        CharacterDatabase.PExecute("DELETE FROM corpse WHERE player = '%d' AND corpse_type <> '0'",  GUID_LOPART(GetOwnerGUID()));
+        CharacterDatabase.PExecute("DELETE FROM corpse WHERE player = '%d' AND corpse_type <> '0'", GUID_LOPART(GetOwnerGUID()));
 }
 
 bool Corpse::LoadFromDB(uint32 guid, Field *fields)
@@ -191,7 +192,7 @@ bool Corpse::LoadFromDB(uint32 guid, Field *fields)
 
     if (m_type >= MAX_CORPSE_TYPE)
     {
-        sLog.outError("Corpse (guidlow %d, owner %d) has wrong corpse type.  Not loaded.",GetGUIDLow(),GUID_LOPART(GetOwnerGUID()));
+        sLog->outError("Corpse (guidlow %d, owner %d) has wrong corpse type.  Not loaded.", GetGUIDLow(), GUID_LOPART(GetOwnerGUID()));
         return false;
     }
 
@@ -207,12 +208,12 @@ bool Corpse::LoadFromDB(uint32 guid, Field *fields)
 
     if (!IsPositionValid())
     {
-        sLog.outError("Corpse (guidlow %d, owner %d) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
+        sLog->outError("Corpse (guidlow %d, owner %d) not created. Suggested coordinates isn't valid (X: %f Y: %f)",
             GetGUIDLow(), GUID_LOPART(GetOwnerGUID()), GetPositionX(), GetPositionY());
         return false;
     }
 
-    m_grid = Oregon::ComputeGridPair(GetPositionX(), GetPositionY());
+    m_grid = Trinity::ComputeGridPair(GetPositionX(), GetPositionY());
     return true;
 }
 

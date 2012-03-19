@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_NGRID_H
-#define OREGON_NGRID_H
+#ifndef TRINITY_NGRID_H
+#define TRINITY_NGRID_H
 
 // NGrid is nothing more than a wrapper of the Grid with an NxN cells
 
@@ -34,10 +35,10 @@ class GridInfo
 public:
     GridInfo()
         : i_timer(0), i_unloadActiveLockCount(0), i_unloadExplicitLock(false), i_unloadReferenceLock(false),
-          vis_Update(0, irand(0,DEFAULT_VISIBILITY_NOTIFY_PERIOD)) {}
+          vis_Update(0, irand(0, DEFAULT_VISIBILITY_NOTIFY_PERIOD)) {}
     GridInfo(time_t expiry, bool unload = true )
         : i_timer(expiry), i_unloadActiveLockCount(0), i_unloadExplicitLock(!unload), i_unloadReferenceLock(false),
-          vis_Update(0, irand(0,DEFAULT_VISIBILITY_NOTIFY_PERIOD)) {}
+          vis_Update(0, irand(0, DEFAULT_VISIBILITY_NOTIFY_PERIOD)) {}
     const TimeTracker& getTimeTracker() const { return i_timer; }
     bool getUnloadLock() const { return i_unloadActiveLockCount || i_unloadExplicitLock || i_unloadReferenceLock; }
     void setUnloadExplicitLock( bool on ) { i_unloadExplicitLock = on; }
@@ -72,14 +73,13 @@ template
 unsigned int N,
 class ACTIVE_OBJECT,
 class WORLD_OBJECT_TYPES,
-class GRID_OBJECT_TYPES,
-class ThreadModel = Oregon::SingleThreaded<ACTIVE_OBJECT>
+class GRID_OBJECT_TYPES
 >
 class NGrid
 {
     public:
 
-        typedef Grid<ACTIVE_OBJECT, WORLD_OBJECT_TYPES, GRID_OBJECT_TYPES, ThreadModel> GridType;
+        typedef Grid<ACTIVE_OBJECT, WORLD_OBJECT_TYPES, GRID_OBJECT_TYPES> GridType;
         NGrid(uint32 id, int32 x, int32 y, time_t expiry, bool unload = true)
             : i_gridId(id), i_x(x), i_y(y), i_cellstate(GRID_STATE_INVALID), i_GridObjectDataLoaded(false)
         {
@@ -107,7 +107,7 @@ class NGrid
         int32 getX() const { return i_x; }
         int32 getY() const { return i_y; }
 
-        void link(GridRefManager<NGrid<N, ACTIVE_OBJECT, WORLD_OBJECT_TYPES, GRID_OBJECT_TYPES, ThreadModel> >* pTo)
+        void link(GridRefManager<NGrid<N, ACTIVE_OBJECT, WORLD_OBJECT_TYPES, GRID_OBJECT_TYPES> >* pTo)
         {
             i_Reference.link(pTo, this);
         }
@@ -176,7 +176,7 @@ class NGrid
 
         uint32 i_gridId;
         GridInfo i_GridInfo;
-        GridReference<NGrid<N, ACTIVE_OBJECT, WORLD_OBJECT_TYPES, GRID_OBJECT_TYPES, ThreadModel> > i_Reference;
+        GridReference<NGrid<N, ACTIVE_OBJECT, WORLD_OBJECT_TYPES, GRID_OBJECT_TYPES> > i_Reference;
         int32 i_x;
         int32 i_y;
         grid_state_t i_cellstate;

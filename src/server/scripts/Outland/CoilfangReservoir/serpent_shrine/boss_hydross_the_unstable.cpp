@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -128,18 +129,18 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
 
     void SummonBeams()
     {
-        Creature* beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-258.333f,-356.34f,22.0499f,5.90835f,TEMPSUMMON_CORPSE_DESPAWN,0);
+        Creature* beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-258.333f,-356.34f, 22.0499f, 5.90835f, TEMPSUMMON_CORPSE_DESPAWN, 0);
         if (beamer)
         {
-            beamer->CastSpell(me,SPELL_BLUE_BEAM,true);
+            beamer->CastSpell(me, SPELL_BLUE_BEAM, true);
             beamer->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
             beamer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             beams[0]=beamer->GetGUID();
         }
-        beamer = beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-219.918f,-371.308f,22.0042f,2.73072f,TEMPSUMMON_CORPSE_DESPAWN,0);
+        beamer = beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-219.918f,-371.308f, 22.0042f, 2.73072f, TEMPSUMMON_CORPSE_DESPAWN, 0);
         if (beamer)
         {
-            beamer->CastSpell(me,SPELL_BLUE_BEAM,true);
+            beamer->CastSpell(me, SPELL_BLUE_BEAM, true);
             beamer->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
             beamer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             beams[1]=beamer->GetGUID();
@@ -147,9 +148,9 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
     }
     void DeSummonBeams()
     {
-        for (uint8 i=0; i<2; ++i)
+        for (uint8 i = 0; i < 2; ++i)
         {
-            Creature* mob = Unit::GetCreature(*me,beams[i]);
+            Creature* mob = Unit::GetCreature(*me, beams[i]);
             if (mob)
             {
                 mob->setDeathState(DEAD);
@@ -169,7 +170,7 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
     {
         if (CorruptedForm)
         {
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0: DoScriptText(SAY_CORRUPT_SLAY1, me); break;
                 case 1: DoScriptText(SAY_CORRUPT_SLAY2, me); break;
@@ -177,7 +178,7 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
         }
         else
         {
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0: DoScriptText(SAY_CLEAN_SLAY1, me); break;
                 case 1: DoScriptText(SAY_CLEAN_SLAY2, me); break;
@@ -190,13 +191,13 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
         if (summoned->GetEntry() == ENTRY_PURE_SPAWN)
         {
             summoned->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, true);
-            summoned->CastSpell(summoned,SPELL_ELEMENTAL_SPAWNIN,true);
+            summoned->CastSpell(summoned, SPELL_ELEMENTAL_SPAWNIN, true);
             Summons.Summon(summoned);
         }
         if (summoned->GetEntry() == ENTRY_TAINTED_SPAWN)
         {
             summoned->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, true);
-            summoned->CastSpell(summoned,SPELL_ELEMENTAL_SPAWNIN,true);
+            summoned->CastSpell(summoned, SPELL_ELEMENTAL_SPAWNIN, true);
             Summons.Summon(summoned);
         }
     }
@@ -306,7 +307,7 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
                 {
                     uint32 mark_spell = NULL;
 
-                    switch(MarkOfHydross_Count)
+                    switch (MarkOfHydross_Count)
                     {
                         case 0:  mark_spell = SPELL_MARK_OF_HYDROSS1; break;
                         case 1:  mark_spell = SPELL_MARK_OF_HYDROSS2; break;
@@ -374,9 +375,9 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hydross_the_unstable(Creature* pCreature)
+CreatureAI* GetAI_boss_hydross_the_unstable(Creature* creature)
 {
-    return new boss_hydross_the_unstableAI (pCreature);
+    return new boss_hydross_the_unstableAI (creature);
 }
 
 void AddSC_boss_hydross_the_unstable()

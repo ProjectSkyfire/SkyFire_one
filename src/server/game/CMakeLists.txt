@@ -1,3 +1,4 @@
+# Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
 # Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
 # Copyright (C) 2008-2012 Trinity <http://www.trinitycore.org/>
 # Copyright (C) 2005-2012 MaNGOS <http://www.getmangos.com/>
@@ -10,7 +11,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-if( USE_COREPCH )
+if ( USE_COREPCH )
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -35,6 +36,7 @@ file(GLOB_RECURSE sources_Maps Maps/*.cpp Maps/*.h)
 file(GLOB_RECURSE sources_Miscellaneous Miscellaneous/*.cpp Miscellaneous/*.h)
 file(GLOB_RECURSE sources_Movement Movement/*.cpp Movement/*.h)
 file(GLOB_RECURSE sources_OutdoorPvP OutdoorPvP/*.cpp OutdoorPvP/*.h)
+file(GLOB_RECURSE sources_Pools Pools/*.cpp Pools/*.h)
 file(GLOB_RECURSE sources_Quests Quests/*.cpp Quests/*.h)
 file(GLOB_RECURSE sources_Scripting Scripting/*.cpp Scripting/*.h)
 file(GLOB_RECURSE sources_Server Server/*.cpp Server/*.h)
@@ -70,6 +72,7 @@ source_group(Maps FILES ${sources_Maps})
 source_group(Miscellaneous FILES ${sources_Miscellaneous})
 source_group(Movement FILES ${sources_Movement})
 source_group(OutdoorPvP FILES ${sources_OutdoorPvP})
+source_group(Pools FILES ${sources_Pools})
 source_group(Quests FILES ${sources_Quests})
 source_group(Scripting FILES ${sources_Scripting})
 source_group(Server FILES ${sources_Server})
@@ -113,6 +116,7 @@ set(game_STAT_SRCS
   ${sources_Miscellaneous}
   ${sources_Movement}
   ${sources_OutdoorPvP}
+  ${sources_Pools}
   ${sources_Quests}
   ${sources_Scripting}
   ${sources_Server}
@@ -142,8 +146,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Packets
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Policies   
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities 
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Accounts
   ${CMAKE_CURRENT_SOURCE_DIR}/Addons
@@ -190,6 +193,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement/Waypoints
   ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP
   ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP/Zones  
+  ${CMAKE_CURRENT_SOURCE_DIR}/Pools
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders
   ${CMAKE_CURRENT_SOURCE_DIR}/Quests
   ${CMAKE_CURRENT_SOURCE_DIR}/Scripting 

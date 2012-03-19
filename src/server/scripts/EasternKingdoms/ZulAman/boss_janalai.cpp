@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -88,18 +89,18 @@ float FireWallCoords[4][4] =
 float hatcherway[2][5][3] =
 {
     {
-        {-87.46f,1170.09f,6},
-        {-74.41f,1154.75f,6},
-        {-52.74f,1153.32f,19},
-        {-33.37f,1172.46f,19},
-        {-33.09f,1203.87f,19}
+        {-87.46f, 1170.09f, 6},
+        {-74.41f, 1154.75f, 6},
+        {-52.74f, 1153.32f, 19},
+        {-33.37f, 1172.46f, 19},
+        {-33.09f, 1203.87f, 19}
     },
     {
-        {-86.57f,1132.85f,6},
-        {-73.94f,1146.00f,6},
-        {-52.29f,1146.51f,19},
-        {-33.57f,1125.72f,19},
-        {-34.29f,1095.22f,19}
+        {-86.57f, 1132.85f, 6},
+        {-73.94f, 1146.00f, 6},
+        {-52.29f, 1146.51f, 19},
+        {-33.57f, 1125.72f, 19},
+        {-34.29f, 1095.22f, 19}
     }
 };
 
@@ -170,7 +171,7 @@ struct boss_janalaiAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
+        DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
     }
 
     void EnterCombat(Unit * /*who*/)
@@ -205,9 +206,9 @@ struct boss_janalaiAI : public ScriptedAI
             for (uint8 j = 0; j < WallNum; j++)
             {
                 if (WallNum == 3)
-                    wall = me->SummonCreature(MOB_FIRE_BOMB, FireWallCoords[i][0],FireWallCoords[i][1]+5*(j-1),FireWallCoords[i][2],FireWallCoords[i][3],TEMPSUMMON_TIMED_DESPAWN,15000);
+                    wall = me->SummonCreature(MOB_FIRE_BOMB, FireWallCoords[i][0],FireWallCoords[i][1]+5*(j-1),FireWallCoords[i][2],FireWallCoords[i][3],TEMPSUMMON_TIMED_DESPAWN, 15000);
                 else
-                    wall = me->SummonCreature(MOB_FIRE_BOMB, FireWallCoords[i][0]-2+4*j,FireWallCoords[i][1],FireWallCoords[i][2],FireWallCoords[i][3],TEMPSUMMON_TIMED_DESPAWN,15000);
+                    wall = me->SummonCreature(MOB_FIRE_BOMB, FireWallCoords[i][0]-2+4*j, FireWallCoords[i][1],FireWallCoords[i][2],FireWallCoords[i][3],TEMPSUMMON_TIMED_DESPAWN, 15000);
                 if (wall) wall->CastSpell(wall, SPELL_FIRE_WALL, true);
             }
         }
@@ -234,18 +235,18 @@ struct boss_janalaiAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Oregon::ComputeCellPair(x, y));
+            CellPair pair(Trinity::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Oregon::AllCreaturesOfEntryInRange check(me, MOB_EGG, 100);
-            Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(templist, check);
-            TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+            Trinity::AllCreaturesOfEntryInRange check(me, MOB_EGG, 100);
+            Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
+            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
 
-        //error_log("Eggs %d at middle", templist.size());
+        //sLog->outError("Eggs %d at middle", templist.size());
         if (!templist.size())
             return false;
 
@@ -266,14 +267,14 @@ struct boss_janalaiAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Oregon::ComputeCellPair(x, y));
+            CellPair pair(Trinity::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Oregon::AllCreaturesOfEntryInRange check(me, MOB_FIRE_BOMB, 100);
-            Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(templist, check);
-            TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+            Trinity::AllCreaturesOfEntryInRange check(me, MOB_FIRE_BOMB, 100);
+            Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
+            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
         for (std::list<Creature*>::const_iterator i = templist.begin(); i != templist.end(); ++i)
@@ -303,7 +304,7 @@ struct boss_janalaiAI : public ScriptedAI
         {
             Boom();
             isBombing = false;
-            BombTimer = urand(20000,40000);
+            BombTimer = urand(20000, 40000);
             me->RemoveAurasDueToSpell(SPELL_FIRE_BOMB_CHANNEL);
             if (EnrageTimer <= 10000)
                 EnrageTimer = 0;
@@ -402,8 +403,8 @@ struct boss_janalaiAI : public ScriptedAI
                 if (HatchAllEggs(0))
                 {
                     DoScriptText(SAY_SUMMON_HATCHER, me);
-                    me->SummonCreature(MOB_AMANI_HATCHER,hatcherway[0][0][0],hatcherway[0][0][1],hatcherway[0][0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
-                    me->SummonCreature(MOB_AMANI_HATCHER,hatcherway[1][0][0],hatcherway[1][0][1],hatcherway[1][0][2],0,TEMPSUMMON_CORPSE_TIMED_DESPAWN,10000);
+                    me->SummonCreature(MOB_AMANI_HATCHER, hatcherway[0][0][0],hatcherway[0][0][1],hatcherway[0][0][2],0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                    me->SummonCreature(MOB_AMANI_HATCHER, hatcherway[1][0][0],hatcherway[1][0][1],hatcherway[1][0][2],0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
                     HatcherTimer = 90000;
                 }
                 else
@@ -427,7 +428,7 @@ struct boss_janalaiAI : public ScriptedAI
 
         if (FireBreathTimer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 me->AttackStop();
                 me->GetMotionMaster()->Clear();
@@ -441,9 +442,9 @@ struct boss_janalaiAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_janalaiAI(Creature* pCreature)
+CreatureAI* GetAI_boss_janalaiAI(Creature* creature)
 {
-    return new boss_janalaiAI(pCreature);
+    return new boss_janalaiAI(creature);
 }
 
 struct mob_janalai_firebombAI : public ScriptedAI
@@ -467,9 +468,9 @@ struct mob_janalai_firebombAI : public ScriptedAI
     void UpdateAI(const uint32 /*diff*/) {}
 };
 
-CreatureAI* GetAI_mob_janalai_firebombAI(Creature* pCreature)
+CreatureAI* GetAI_mob_janalai_firebombAI(Creature* creature)
 {
-    return new mob_janalai_firebombAI(pCreature);
+    return new mob_janalai_firebombAI(creature);
 }
 
 struct mob_amanishi_hatcherAI : public ScriptedAI
@@ -506,18 +507,18 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Oregon::ComputeCellPair(x, y));
+            CellPair pair(Trinity::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Oregon::AllCreaturesOfEntryInRange check(me, 23817, 50);
-            Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange> searcher(templist, check);
-            TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+            Trinity::AllCreaturesOfEntryInRange check(me, 23817, 50);
+            Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
+            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
 
-        //error_log("Eggs %d at %d", templist.size(), side);
+        //sLog->outError("Eggs %d at %d", templist.size(), side);
 
         for (std::list<Creature*>::const_iterator i = templist.begin(); i != templist.end() && num > 0; ++i)
             if ((*i)->GetDisplayId() != 11686)
@@ -557,7 +558,7 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
             if (WaitTimer)
             {
                 me->GetMotionMaster()->Clear();
-                me->GetMotionMaster()->MovePoint(0,hatcherway[side][waypoint][0],hatcherway[side][waypoint][1],hatcherway[side][waypoint][2]);
+                me->GetMotionMaster()->MovePoint(0, hatcherway[side][waypoint][0],hatcherway[side][waypoint][1],hatcherway[side][waypoint][2]);
                 ++waypoint;
                 WaitTimer = 0;
             }
@@ -586,9 +587,9 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* pCreature)
+CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* creature)
 {
-    return new mob_amanishi_hatcherAI(pCreature);
+    return new mob_amanishi_hatcherAI(creature);
 }
 
 struct mob_hatchlingAI : public ScriptedAI
@@ -605,9 +606,9 @@ struct mob_hatchlingAI : public ScriptedAI
     {
         BuffetTimer = 7000;
         if (me->GetPositionY() > 1150)
-            me->GetMotionMaster()->MovePoint(0, hatcherway[0][3][0]+rand()%4-2,1150+rand()%4-2,hatcherway[0][3][2]);
+            me->GetMotionMaster()->MovePoint(0, hatcherway[0][3][0]+rand()%4-2, 1150+rand()%4-2, hatcherway[0][3][2]);
         else
-            me->GetMotionMaster()->MovePoint(0,hatcherway[1][3][0]+rand()%4-2,1150+rand()%4-2,hatcherway[1][3][2]);
+            me->GetMotionMaster()->MovePoint(0, hatcherway[1][3][0]+rand()%4-2, 1150+rand()%4-2, hatcherway[1][3][2]);
 
         me->SetUnitMovementFlags(MOVEFLAG_LEVITATING);
     }
@@ -635,9 +636,9 @@ struct mob_hatchlingAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_hatchlingAI(Creature* pCreature)
+CreatureAI* GetAI_mob_hatchlingAI(Creature* creature)
 {
-    return new mob_hatchlingAI(pCreature);
+    return new mob_hatchlingAI(creature);
 }
 
 struct mob_eggAI : public ScriptedAI
@@ -659,9 +660,9 @@ struct mob_eggAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_eggAI(Creature* pCreature)
+CreatureAI* GetAI_mob_eggAI(Creature* creature)
 {
-    return new mob_eggAI(pCreature);
+    return new mob_eggAI(creature);
 }
 
 void AddSC_boss_janalai()

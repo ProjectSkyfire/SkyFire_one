@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -75,7 +76,7 @@ struct instance_karazhan : public ScriptedInstance
         memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
 
         // 1 - OZ, 2 - HOOD, 3 - RAJ, this never gets altered.
-        m_uiOperaEvent      = urand(1,3);
+        m_uiOperaEvent      = urand(1, 3);
         m_uiOzDeathCount    = 0;
 
         m_uiCurtainGUID         = 0;
@@ -108,13 +109,13 @@ struct instance_karazhan : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch (pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 17229:   m_uiKilrekGUID = pCreature->GetGUID();      break;
-            case 15688:   m_uiTerestianGUID = pCreature->GetGUID();   break;
-            case 15687:   m_uiMoroesGUID = pCreature->GetGUID();      break;
+            case 17229:   m_uiKilrekGUID = creature->GetGUID();      break;
+            case 15688:   m_uiTerestianGUID = creature->GetGUID();   break;
+            case 15687:   m_uiMoroesGUID = creature->GetGUID();      break;
         }
     }
 
@@ -181,7 +182,7 @@ struct instance_karazhan : public ScriptedInstance
 
     void SetData64(uint32 identifier, uint64 data)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_IMAGE_OF_MEDIVH: ImageGUID = data;
             case DATA_NIGHTBANE:       m_uiNightBaneGUID = data;
@@ -190,7 +191,7 @@ struct instance_karazhan : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 183932:   m_uiCurtainGUID          = pGo->GetGUID();         break;
             case 184278:
@@ -220,7 +221,7 @@ struct instance_karazhan : public ScriptedInstance
             case 184281:   m_uiServantsAccessDoor   = pGo->GetGUID();         break;
         }
 
-        switch(m_uiOperaEvent)
+        switch (m_uiOperaEvent)
         {
             //TODO: Set Object visibilities for Opera based on performance
             case EVENT_OZ:
@@ -325,7 +326,7 @@ struct instance_karazhan : public ScriptedInstance
             m_auiEncounter[10] >> m_auiEncounter[11];
         if (dataHead1 != 'K' || dataHead2 != 'Z')
         {
-            error_log("SD2: Karazhan corrupted save uiData.");
+            sLog->outError("SD2: Karazhan corrupted save uiData.");
             for (int i = 0; i < MAX_ENCOUNTER; i++)
                 m_auiEncounter[i] = 0;
         } else OUT_LOAD_INST_DATA_COMPLETE;

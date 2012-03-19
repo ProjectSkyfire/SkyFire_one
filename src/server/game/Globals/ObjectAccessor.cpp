@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -19,7 +20,6 @@
 
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
-#include "Policies/SingletonImp.h"
 #include "Player.h"
 #include "Creature.h"
 #include "GameObject.h"
@@ -40,10 +40,6 @@
 #include "World.h"
 
 #include <cmath>
-
-#define CLASS_LOCK Oregon::ClassLevelLockable<ObjectAccessor, ACE_Thread_Mutex>
-INSTANTIATE_SINGLETON_2(ObjectAccessor, CLASS_LOCK);
-INSTANTIATE_CLASS_MUTEX(ObjectAccessor, ACE_Thread_Mutex);
 
 ObjectAccessor::ObjectAccessor()
 {
@@ -158,7 +154,7 @@ Unit* ObjectAccessor::FindUnit(uint64 guid)
 
 Player* ObjectAccessor::FindPlayerByName(const char* name)
 {
-    Guard guard(*HashMapHolder<Player>::GetLock());
+    ACE_GUARD_RETURN(LockType, g, *HashMapHolder<Player>::GetLock(), NULL);
     HashMapHolder<Player>::MapType& m = HashMapHolder<Player>::GetContainer();
     for (HashMapHolder<Player>::MapType::iterator iter = m.begin(); iter != m.end(); ++iter)
         if (iter->second->IsInWorld() && strcmp(name, iter->second->GetName()) == 0)
@@ -169,7 +165,7 @@ Player* ObjectAccessor::FindPlayerByName(const char* name)
 
 void ObjectAccessor::SaveAllPlayers()
 {
-    Guard guard(*HashMapHolder<Player>::GetLock());
+    ACE_GUARD(LockType, g, *HashMapHolder<Player>::GetLock());
     HashMapHolder<Player>::MapType& m = HashMapHolder<Player>::GetContainer();
     for (HashMapHolder<Player>::MapType::iterator itr = m.begin(); itr != m.end(); ++itr)
         itr->second->SaveToDB();
@@ -177,7 +173,7 @@ void ObjectAccessor::SaveAllPlayers()
 
 Corpse* ObjectAccessor::GetCorpseForPlayerGUID(uint64 guid)
 {
-    Guard guard(i_corpseGuard);
+    ACE_GUARD_RETURN(LockType, guard, i_corpseGuard, NULL);
 
     Player2CorpsesMapType::iterator iter = i_player2corpse.find(guid);
     if (iter == i_player2corpse.end())
@@ -199,17 +195,17 @@ void ObjectAccessor::RemoveCorpse(Corpse* corpse)
 
     // Critical section
     {
-        Guard guard(i_corpseGuard);
+        ACE_GUARD(LockType, g, i_corpseGuard);
 
         Player2CorpsesMapType::iterator iter = i_player2corpse.find(corpse->GetOwnerGUID());
         if (iter == i_player2corpse.end())
             return;
 
         // build mapid*cellid -> guid_set map
-        CellPair cell_pair = Oregon::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
+        CellPair cell_pair = Trinity::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
         uint32 cell_id = (cell_pair.y_coord * TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
-        objmgr.DeleteCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID());
+        sObjectMgr->DeleteCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID());
 
         i_player2corpse.erase(iter);
     }
@@ -221,22 +217,22 @@ void ObjectAccessor::AddCorpse(Corpse* corpse)
 
     // Critical section
     {
-        Guard guard(i_corpseGuard);
+        ACE_GUARD(LockType, g, i_corpseGuard);
 
         ASSERT(i_player2corpse.find(corpse->GetOwnerGUID()) == i_player2corpse.end());
         i_player2corpse[corpse->GetOwnerGUID()] = corpse;
 
         // build mapid*cellid -> guid_set map
-        CellPair cell_pair = Oregon::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
+        CellPair cell_pair = Trinity::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
         uint32 cell_id = (cell_pair.y_coord * TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
-        objmgr.AddCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID(), corpse->GetInstanceId());
+        sObjectMgr->AddCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID(), corpse->GetInstanceId());
     }
 }
 
 void ObjectAccessor::AddCorpsesToGrid(GridPair const& gridpair, GridType& grid, Map* map)
 {
-    Guard guard(i_corpseGuard);
+    ACE_GUARD(LockType, g, i_corpseGuard);
 
     for (Player2CorpsesMapType::iterator iter = i_player2corpse.begin(); iter != i_player2corpse.end(); ++iter)
     {
@@ -261,11 +257,11 @@ Corpse* ObjectAccessor::ConvertCorpseForPlayer(uint64 player_guid, bool insignia
     {
         //in fact this function is called from several places
         //even when player doesn't have a corpse, not an error
-        //sLog.outError("Try remove corpse that not in map for GUID %ul", player_guid);
+        //sLog->outError("Try remove corpse that not in map for GUID %ul", player_guid);
         return NULL;
     }
 
-    DEBUG_LOG("Deleting Corpse and spawned bones.");
+    sLog->outDebug("Deleting Corpse and spawned bones.");
 
     Map *map = corpse->FindMap();
 
@@ -275,7 +271,7 @@ Corpse* ObjectAccessor::ConvertCorpseForPlayer(uint64 player_guid, bool insignia
     // done in removecorpse
     // remove resurrectable corpse from grid object registry (loaded state checked into call)
     // do not load the map if it's not loaded
-    //Map *map = MapManager::Instance().FindMap(corpse->GetMapId(), corpse->GetInstanceId());
+    //Map *map = sMapMgr->FindMap(corpse->GetMapId(), corpse->GetInstanceId());
     //if (map)
     //    map->Remove(corpse, false);
 
@@ -286,7 +282,7 @@ Corpse* ObjectAccessor::ConvertCorpseForPlayer(uint64 player_guid, bool insignia
     // create the bones only if the map and the grid is loaded at the corpse's location
     // ignore bones creating option in case insignia
     if (map && (insignia ||
-        (map->IsBattleGroundOrArena() ? sWorld.getConfig(CONFIG_DEATH_BONES_BG_OR_ARENA) : sWorld.getConfig(CONFIG_DEATH_BONES_WORLD))) &&
+        (map->IsBattleGroundOrArena() ? sWorld->getConfig(CONFIG_DEATH_BONES_BG_OR_ARENA) : sWorld->getConfig(CONFIG_DEATH_BONES_WORLD))) &&
         !map->IsRemovalGrid(corpse->GetPositionX(), corpse->GetPositionY()))
     {
         // Create bones, don't change Corpse
@@ -343,7 +339,7 @@ void ObjectAccessor::Update(uint32 /*diff*/)
 
     // Critical section
     {
-        Guard guard(i_updateGuard);
+        ACE_GUARD(LockType, g, i_updateGuard);
 
         while (!i_objects.empty())
         {

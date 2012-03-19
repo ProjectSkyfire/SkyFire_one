@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -115,7 +116,7 @@ struct instance_stratholme : public ScriptedInstance
             return true;
         }
 
-        debug_log("OSCR: Instance Stratholme: Cannot open slaugther square yet.");
+        sLog->outDebug("TSCR: Instance Stratholme: Cannot open slaugther square yet.");
         return false;
     }
 
@@ -134,28 +135,28 @@ struct instance_stratholme : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-        case C_BARON:           baronGUID = pCreature->GetGUID(); break;
-        case C_YSIDA_TRIGGER:   ysidaTriggerGUID = pCreature->GetGUID(); break;
-        case C_CRYSTAL:         crystalsGUID.insert(pCreature->GetGUID()); break;
+        case C_BARON:           baronGUID = creature->GetGUID(); break;
+        case C_YSIDA_TRIGGER:   ysidaTriggerGUID = creature->GetGUID(); break;
+        case C_CRYSTAL:         crystalsGUID.insert(creature->GetGUID()); break;
         case C_ABOM_BILE:
-        case C_ABOM_VENOM:      abomnationGUID.insert(pCreature->GetGUID()); break;
+        case C_ABOM_VENOM:      abomnationGUID.insert(creature->GetGUID()); break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case GO_SERVICE_ENTRANCE:
             serviceEntranceGUID = pGo->GetGUID();
             break;
         case GO_GAUNTLET_GATE1:
             //weird, but unless flag is set, client will not respond as expected. DB bug?
-            pGo->SetFlag(GAMEOBJECT_FLAGS,GO_FLAG_LOCKED);
+            pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
             gauntletGate1GUID = pGo->GetGUID();
             break;
         case GO_ZIGGURAT1:
@@ -201,17 +202,17 @@ struct instance_stratholme : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case TYPE_BARON_RUN:
-            switch(data)
+            switch (data)
             {
             case IN_PROGRESS:
                 if (Encounter[0] == IN_PROGRESS || Encounter[0] == FAIL)
                     break;
                 Encounter[0] = data;
                 BaronRun_Timer = 2700000;
-                debug_log("OSCR: Instance Stratholme: Baron run in progress.");
+                sLog->outDebug("TSCR: Instance Stratholme: Baron run in progress.");
                 break;
             case FAIL:
                 //may add code to remove aura from players, but in theory the time should be up already and removed.
@@ -222,7 +223,7 @@ struct instance_stratholme : public ScriptedInstance
                 if (Creature* pYsidaT = instance->GetCreature(ysidaTriggerGUID))
                     pYsidaT->SummonCreature(C_YSIDA,
                     pYsidaT->GetPositionX(),pYsidaT->GetPositionY(),pYsidaT->GetPositionZ(),pYsidaT->GetOrientation(),
-                    TEMPSUMMON_TIMED_DESPAWN,1800000);
+                    TEMPSUMMON_TIMED_DESPAWN, 1800000);
                 BaronRun_Timer = 0;
                 break;
             }
@@ -266,13 +267,13 @@ struct instance_stratholme : public ScriptedInstance
                 if (!count)
                 {
                     //a bit itchy, it should close the door after 10 secs, but it doesn't. skipping it for now.
-                    //UpdateGoState(ziggurat4GUID,0,true);
+                    //UpdateGoState(ziggurat4GUID, 0, true);
                     if (Creature* pBaron = instance->GetCreature(baronGUID))
-                        pBaron->SummonCreature(C_RAMSTEIN,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
-                    debug_log("OSCR: Instance Stratholme: Ramstein spawned.");
+                        pBaron->SummonCreature(C_RAMSTEIN, 4032.84,-3390.24, 119.73, 4.71, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
+                    sLog->outDebug("TSCR: Instance Stratholme: Ramstein spawned.");
                 }
                 else
-                    debug_log("OSCR: Instance Stratholme: %u Abomnation left to kill.",count);
+                    sLog->outDebug("TSCR: Instance Stratholme: %u Abomnation left to kill.",count);
             }
 
             if (data == NOT_STARTED)
@@ -281,7 +282,7 @@ struct instance_stratholme : public ScriptedInstance
             if (data == DONE)
             {
                 SlaugtherSquare_Timer = 300000;
-                debug_log("OSCR: Instance Stratholme: Slaugther event will continue in 5 minutes.");
+                sLog->outDebug("TSCR: Instance Stratholme: Slaugther event will continue in 5 minutes.");
             }
             Encounter[4] = data;
             break;
@@ -298,18 +299,18 @@ struct instance_stratholme : public ScriptedInstance
                     {
                         for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                         {
-                            if (Player* pPlayer = itr->getSource())
+                            if (Player* player = itr->getSource())
                             {
-                                if (pPlayer->HasAura(SPELL_BARON_ULTIMATUM, 0))
-                                    pPlayer->RemoveAurasDueToSpell(SPELL_BARON_ULTIMATUM);
+                                if (player->HasAura(SPELL_BARON_ULTIMATUM, 0))
+                                    player->RemoveAurasDueToSpell(SPELL_BARON_ULTIMATUM);
 
-                                if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE)
-                                    pPlayer->AreaExploredOrEventHappens(QUEST_DEAD_MAN_PLEA);
+                                if (player->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE)
+                                    player->AreaExploredOrEventHappens(QUEST_DEAD_MAN_PLEA);
                             }
                         }
                     }
 
-                    SetData(TYPE_BARON_RUN,DONE);
+                    SetData(TYPE_BARON_RUN, DONE);
                 }
             }
             if (data == DONE || data == NOT_STARTED)
@@ -379,7 +380,7 @@ struct instance_stratholme : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-          switch(type)
+          switch (type)
           {
           case TYPE_SH_QUEST:
               if (IsSilverHandDead[0] && IsSilverHandDead[1] && IsSilverHandDead[2] && IsSilverHandDead[3] && IsSilverHandDead[4])
@@ -403,7 +404,7 @@ struct instance_stratholme : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        switch(data)
+        switch (data)
         {
         case DATA_BARON:
             return baronGUID;
@@ -422,7 +423,7 @@ struct instance_stratholme : public ScriptedInstance
                 if (GetData(TYPE_BARON_RUN) != DONE)
                     SetData(TYPE_BARON_RUN, FAIL);
                 BaronRun_Timer = 0;
-                debug_log("OSCR: Instance Stratholme: Baron run event reached end. Event has state %u.",GetData(TYPE_BARON_RUN));
+                sLog->outDebug("TSCR: Instance Stratholme: Baron run event reached end. Event has state %u.",GetData(TYPE_BARON_RUN));
             } else BaronRun_Timer -= diff;
         }
 
@@ -433,11 +434,11 @@ struct instance_stratholme : public ScriptedInstance
                 if (Creature* pBaron = instance->GetCreature(baronGUID))
                 {
                     for (uint8 i = 0; i < 4; ++i)
-                        pBaron->SummonCreature(C_BLACK_GUARD,4032.84,-3390.24,119.73,4.71,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                        pBaron->SummonCreature(C_BLACK_GUARD, 4032.84,-3390.24, 119.73, 4.71, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
 
                     HandleGameObject(ziggurat4GUID, true);
                     HandleGameObject(ziggurat5GUID, true);
-                    debug_log("OSCR: Instance Stratholme: Black guard sentries spawned. Opening gates to baron.");
+                    sLog->outDebug("TSCR: Instance Stratholme: Black guard sentries spawned. Opening gates to baron.");
                 }
                 SlaugtherSquare_Timer = 0;
             } else SlaugtherSquare_Timer -= diff;

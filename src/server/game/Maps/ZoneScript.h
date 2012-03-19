@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -35,7 +36,8 @@ class ZoneScript
         virtual uint32 GetCreatureEntry(uint32 guidlow, const CreatureData *data) { return data->id; }
         virtual uint32 GetGameObjectEntry(uint32 guidlow, uint32 entry) { return entry; }
 
-        virtual void OnCreatureCreate(Creature *, bool add) {}
+        virtual void OnCreatureCreate(Creature* /*creature*/) {}
+        virtual void OnCreatureRemove(Creature* /*creature*/) {}
         virtual void OnGameObjectCreate(GameObject *go, bool add) {}
 
         virtual void OnCreatureDeath(Creature* /*creature*/) {}

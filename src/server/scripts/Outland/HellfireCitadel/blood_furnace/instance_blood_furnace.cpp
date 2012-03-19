@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -105,18 +106,18 @@ struct instance_blood_furnace : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case NPC_BROGGOK: BroggokGUID = pCreature->GetGUID(); break;
-            case NPC_NASCENT_FEL_ORC: NascentOrcGuids.push_back(pCreature->GetGUID()); break;
+            case NPC_BROGGOK: BroggokGUID = creature->GetGUID(); break;
+            case NPC_NASCENT_FEL_ORC: NascentOrcGuids.push_back(creature->GetGUID()); break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool add)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case ENTRY_SEWER1: Sewer1GUID = pGo->GetGUID(); break;
             case ENTRY_SEWER2: Sewer2GUID = pGo->GetGUID(); break;
@@ -145,13 +146,13 @@ struct instance_blood_furnace : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Blood Furnace: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Blood Furnace: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_MAKEREVENT:
                 if (data == IN_PROGRESS)
@@ -243,7 +244,7 @@ struct instance_blood_furnace : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_MAKEREVENT: return Encounter[0];
             case DATA_BROGGOKEVENT: return Encounter[1];
@@ -317,7 +318,7 @@ struct instance_blood_furnace : public ScriptedInstance
                 DoUseDoorOrButton(BroggokEvent[BroggokEventPhase].CellGuid);
                 BroggokEvent[BroggokEventPhase].IsCellOpened = true;
 
-            for(std::set<uint64>::const_iterator itr = BroggokEvent[BroggokEventPhase].SortedOrcGuids.begin(); itr != BroggokEvent[BroggokEventPhase].SortedOrcGuids.end(); ++itr)
+            for (std::set<uint64>::const_iterator itr = BroggokEvent[BroggokEventPhase].SortedOrcGuids.begin(); itr != BroggokEvent[BroggokEventPhase].SortedOrcGuids.end(); ++itr)
             {
                 if (Creature* pOrc = instance->GetCreature(*itr))
                 {
@@ -356,9 +357,9 @@ struct instance_blood_furnace : public ScriptedInstance
         }
     }
 
-    void OnCreatureDeath(Creature* pCreature)
+    void OnCreatureDeath(Creature* creature)
     {
-        if (pCreature->GetEntry() == NPC_NASCENT_FEL_ORC)
+        if (creature->GetEntry() == NPC_NASCENT_FEL_ORC)
         {
             uint8 uiClearedCells = 0;
             for (uint8 i = 0; i < std::min<uint32>(BroggokEventPhase, MAX_ORC_WAVES); ++i)
@@ -369,7 +370,7 @@ struct instance_blood_furnace : public ScriptedInstance
                     continue;
                 }
 
-               if (BroggokEvent[i].SortedOrcGuids.find(pCreature->GetGUID()) != BroggokEvent[i].SortedOrcGuids.end())
+               if (BroggokEvent[i].SortedOrcGuids.find(creature->GetGUID()) != BroggokEvent[i].SortedOrcGuids.end())
                    BroggokEvent[i].KilledOrcCount++;
 
                if (BroggokEvent[i].SortedOrcGuids.size() == BroggokEvent[i].KilledOrcCount)
@@ -443,7 +444,7 @@ InstanceData* GetInstanceData_instance_blood_furnace(Map* map)
     return new instance_blood_furnace(map);
 }
 
-bool GOHello_go_prison_cell_lever(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_prison_cell_lever(Player* player, GameObject* pGo)
 {
     ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
 

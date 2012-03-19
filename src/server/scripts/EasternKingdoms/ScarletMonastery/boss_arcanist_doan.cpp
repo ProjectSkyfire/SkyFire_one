@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -92,7 +93,7 @@ struct boss_arcanist_doanAI : public ScriptedAI
 
         if (Polymorph_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                 DoCast(pTarget, SPELL_POLYMORPH);
 
             Polymorph_Timer = 20000;
@@ -115,9 +116,9 @@ struct boss_arcanist_doanAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_arcanist_doan(Creature* pCreature)
+CreatureAI* GetAI_boss_arcanist_doan(Creature* creature)
 {
-    return new boss_arcanist_doanAI (pCreature);
+    return new boss_arcanist_doanAI (creature);
 }
 
 void AddSC_boss_arcanist_doan()

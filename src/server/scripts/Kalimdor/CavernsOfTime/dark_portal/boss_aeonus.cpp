@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -73,7 +74,7 @@ struct boss_aeonusAI : public ScriptedAI
         //Despawn Time Keeper
         if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
         {
-            if (me->IsWithinDistInMap(who,20.0f))
+            if (me->IsWithinDistInMap(who, 20.0f))
             {
                 DoScriptText(SAY_BANISH, me);
                 me->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -89,14 +90,14 @@ struct boss_aeonusAI : public ScriptedAI
 
          if (pInstance)
          {
-             pInstance->SetData(TYPE_RIFT,DONE);
-             pInstance->SetData(TYPE_MEDIVH,DONE);//FIXME: later should be removed
+             pInstance->SetData(TYPE_RIFT, DONE);
+             pInstance->SetData(TYPE_MEDIVH, DONE);//FIXME: later should be removed
          }
     }
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -135,9 +136,9 @@ struct boss_aeonusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_aeonus(Creature* pCreature)
+CreatureAI* GetAI_boss_aeonus(Creature* creature)
 {
-    return new boss_aeonusAI (pCreature);
+    return new boss_aeonusAI (creature);
 }
 
 void AddSC_boss_aeonus()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -70,7 +71,7 @@ struct boss_shazzrahAI : public ScriptedAI
         if (ShazzrahCurse_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget) DoCast(pTarget, SPELL_SHAZZRAHCURSE);
 
             ShazzrahCurse_Timer = 25000 + rand()%5000;
@@ -95,7 +96,7 @@ struct boss_shazzrahAI : public ScriptedAI
         {
             // Teleporting him to a random gamer and casting Arcane Explosion after that.
             // Blink is not working cause of LoS System we need to do this hardcoded.
-            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0, 100, true))
+            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
             {
                 DoTeleportTo(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
                 DoCast(pTarget, SPELL_ARCANEEXPLOSION);
@@ -108,9 +109,9 @@ struct boss_shazzrahAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_shazzrah(Creature* pCreature)
+CreatureAI* GetAI_boss_shazzrah(Creature* creature)
 {
-    return new boss_shazzrahAI (pCreature);
+    return new boss_shazzrahAI (creature);
 }
 
 void AddSC_boss_shazzrah()

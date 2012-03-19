@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -78,7 +79,7 @@ struct mob_crystalcore_devastatorAI : public ScriptedAI
         //Countercharge_Timer
         if (Countercharge_Timer <= diff)
         {
-            DoCast(this->me,SPELL_COUNTERCHARGE);
+            DoCast(this->me, SPELL_COUNTERCHARGE);
             Countercharge_Timer = 45000;
         } else Countercharge_Timer -= diff;
 
@@ -86,9 +87,9 @@ struct mob_crystalcore_devastatorAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_crystalcore_devastator(Creature* pCreature)
+CreatureAI* GetAI_mob_crystalcore_devastator(Creature* creature)
 {
-    return new mob_crystalcore_devastatorAI (pCreature);
+    return new mob_crystalcore_devastatorAI (creature);
 }
 
 void AddSC_the_eye()

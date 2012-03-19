@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_POINTMOVEMENTGENERATOR_H
-#define OREGON_POINTMOVEMENTGENERATOR_H
+#ifndef TRINITY_POINTMOVEMENTGENERATOR_H
+#define TRINITY_POINTMOVEMENTGENERATOR_H
 
 #include "MovementGenerator.h"
 #include "DestinationHolder.h"
@@ -45,7 +46,7 @@ class PointMovementGenerator
         bool GetDestination(float& x, float& y, float& z) const { x=i_x; y=i_y; z=i_z; return true; }
     private:
         TimeTracker i_nextMoveTime;
-        float i_x,i_y,i_z;
+        float i_x, i_y, i_z;
         uint32 id;
         DestinationHolder< Traveller<T> > i_destinationHolder;
         bool arrived;

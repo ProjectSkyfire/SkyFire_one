@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -61,7 +62,7 @@ struct boss_baroness_anastariAI : public ScriptedAI
      void JustDied(Unit* /*Killer*/)
      {
          if (pInstance)
-             pInstance->SetData(TYPE_BARONESS,IN_PROGRESS);
+             pInstance->SetData(TYPE_BARONESS, IN_PROGRESS);
      }
 
     void UpdateAI(const uint32 diff)
@@ -103,7 +104,7 @@ struct boss_baroness_anastariAI : public ScriptedAI
           if (rand()%100 < 65)
         {
         Unit *pTarget = NULL;
-        pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
         if (pTarget)DoCast(pTarget, SPELL_POSSESS);
         }
         //50 seconds until we should cast this again
@@ -114,9 +115,9 @@ struct boss_baroness_anastariAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_baroness_anastari(Creature* pCreature)
+CreatureAI* GetAI_boss_baroness_anastari(Creature* creature)
 {
-    return new boss_baroness_anastariAI (pCreature);
+    return new boss_baroness_anastariAI (creature);
 }
 
 void AddSC_boss_baroness_anastari()

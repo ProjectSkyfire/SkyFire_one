@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -53,11 +54,11 @@ struct boss_galvangarAI : public ScriptedAI
 
     void Reset()
     {
-        uiCleaveTimer                     = urand(1*IN_MILLISECONDS,9*IN_MILLISECONDS);
-        uiFrighteningShoutTimer           = urand(2*IN_MILLISECONDS,19*IN_MILLISECONDS);
-        uiWhirlwind1Timer                 = urand(1*IN_MILLISECONDS,13*IN_MILLISECONDS);
-        uiWhirlwind2Timer                 = urand(5*IN_MILLISECONDS,20*IN_MILLISECONDS);
-        uiMortalStrikeTimer               = urand(5*IN_MILLISECONDS,20*IN_MILLISECONDS);
+        uiCleaveTimer                     = urand(1*IN_MILLISECONDS, 9*IN_MILLISECONDS);
+        uiFrighteningShoutTimer           = urand(2*IN_MILLISECONDS, 19*IN_MILLISECONDS);
+        uiWhirlwind1Timer                 = urand(1*IN_MILLISECONDS, 13*IN_MILLISECONDS);
+        uiWhirlwind2Timer                 = urand(5*IN_MILLISECONDS, 20*IN_MILLISECONDS);
+        uiMortalStrikeTimer               = urand(5*IN_MILLISECONDS, 20*IN_MILLISECONDS);
         uiResetTimer                      = 5*IN_MILLISECONDS;
     }
 
@@ -79,31 +80,31 @@ struct boss_galvangarAI : public ScriptedAI
         if (uiCleaveTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_CLEAVE);
-            uiCleaveTimer =  urand(10*IN_MILLISECONDS,16*IN_MILLISECONDS);
+            uiCleaveTimer =  urand(10*IN_MILLISECONDS, 16*IN_MILLISECONDS);
         } else uiCleaveTimer -= diff;
 
         if (uiFrighteningShoutTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_FRIGHTENING_SHOUT);
-            uiFrighteningShoutTimer = urand(10*IN_MILLISECONDS,15*IN_MILLISECONDS);
+            uiFrighteningShoutTimer = urand(10*IN_MILLISECONDS, 15*IN_MILLISECONDS);
         } else uiFrighteningShoutTimer -= diff;
 
         if (uiWhirlwind1Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_WHIRLWIND1);
-            uiWhirlwind1Timer = urand(6*IN_MILLISECONDS,10*IN_MILLISECONDS);
+            uiWhirlwind1Timer = urand(6*IN_MILLISECONDS, 10*IN_MILLISECONDS);
         } else uiWhirlwind1Timer -= diff;
 
         if (uiWhirlwind2Timer <= diff)
         {
             DoCast(me->getVictim(), SPELL_WHIRLWIND2);
-            uiWhirlwind2Timer = urand(10*IN_MILLISECONDS,25*IN_MILLISECONDS);
+            uiWhirlwind2Timer = urand(10*IN_MILLISECONDS, 25*IN_MILLISECONDS);
         } else uiWhirlwind2Timer -= diff;
 
         if (uiMortalStrikeTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_MORTAL_STRIKE);
-            uiMortalStrikeTimer = urand(10*IN_MILLISECONDS,30*IN_MILLISECONDS);
+            uiMortalStrikeTimer = urand(10*IN_MILLISECONDS, 30*IN_MILLISECONDS);
         } else uiMortalStrikeTimer -= diff;
 
         // check if creature is not outside of building
@@ -121,9 +122,9 @@ struct boss_galvangarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_galvangar(Creature* pCreature)
+CreatureAI* GetAI_boss_galvangar(Creature* creature)
 {
-    return new boss_galvangarAI (pCreature);
+    return new boss_galvangarAI (creature);
 }
 
 void AddSC_boss_galvangar()

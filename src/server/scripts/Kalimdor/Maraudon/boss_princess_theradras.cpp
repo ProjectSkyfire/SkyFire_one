@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -54,7 +55,7 @@ struct boss_ptheradrasAI : public ScriptedAI
 
     void JustDied(Unit* /*killer*/)
     {
-        me->SummonCreature(12238,28.067f,61.875f,-123.405f,4.67f,TEMPSUMMON_TIMED_DESPAWN,600000);
+        me->SummonCreature(12238, 28.067f, 61.875f,-123.405f, 4.67f, TEMPSUMMON_TIMED_DESPAWN, 600000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -73,7 +74,7 @@ struct boss_ptheradrasAI : public ScriptedAI
         if (Boulder_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget)
                 DoCast(pTarget, SPELL_BOULDER);
             Boulder_Timer = 10000;
@@ -96,9 +97,9 @@ struct boss_ptheradrasAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ptheradras(Creature* pCreature)
+CreatureAI* GetAI_boss_ptheradras(Creature* creature)
 {
-    return new boss_ptheradrasAI (pCreature);
+    return new boss_ptheradrasAI (creature);
 }
 
 void AddSC_boss_ptheradras()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -106,7 +107,7 @@ namespace VMAP
 
             // possibly move this code to StaticMapTree class
             std::map<uint32, uint32> modelNodeIdx;
-            for (uint32 i=0; i<mapSpawns.size(); ++i)
+            for (uint32 i = 0; i < mapSpawns.size(); ++i)
                 modelNodeIdx.insert(pair<uint32, uint32>(mapSpawns[i]->ID, i));
 
             // write map tree file
@@ -259,9 +260,9 @@ namespace VMAP
         int readOperation = 1;
 
         // temporary use defines to simplify read/check code (close file and return at fail)
-        #define READ_OR_RETURN(V,S) if (fread((V), (S), 1, rf) != 1) { \
+        #define READ_OR_RETURN(V, S) if (fread((V), (S), 1, rf) != 1) { \
                                         fclose(rf); printf("readfail, op = %i\n", readOperation); return(false); }readOperation++;
-        #define CMP_OR_RETURN(V,S)  if (strcmp((V),(S)) != 0)        { \
+        #define CMP_OR_RETURN(V, S)  if (strcmp((V),(S)) != 0)        { \
                                         fclose(rf); printf("cmpfail, %s!=%s\n", V, S);return(false); }
 
         READ_OR_RETURN(&ident, 8);
@@ -365,9 +366,9 @@ namespace VMAP
         int readOperation = 1;
 
         // temporary use defines to simplify read/check code (close file and return at fail)
-        #define READ_OR_RETURN(V,S) if (fread((V), (S), 1, rf) != 1) { \
+        #define READ_OR_RETURN(V, S) if (fread((V), (S), 1, rf) != 1) { \
                                         fclose(rf); printf("readfail, op = %i\n", readOperation); return(false); }readOperation++;
-        #define CMP_OR_RETURN(V,S)  if (strcmp((V),(S)) != 0)        { \
+        #define CMP_OR_RETURN(V, S)  if (strcmp((V),(S)) != 0)        { \
                                         fclose(rf); printf("cmpfail, %s!=%s\n", V, S);return(false); }
 
         READ_OR_RETURN(&ident, 8);
@@ -427,7 +428,7 @@ namespace VMAP
             {
                 uint16 *indexarray = new uint16[nindexes];
                 READ_OR_RETURN(indexarray, nindexes*sizeof(uint16));
-                for (uint32 i=0; i<nindexes; i+=3)
+                for (uint32 i = 0; i < nindexes; i+=3)
                 {
                     triangles.push_back(MeshTriangle(indexarray[i], indexarray[i+1], indexarray[i+2]));
                 }
@@ -445,7 +446,7 @@ namespace VMAP
             {
                 float *vectorarray = new float[nvectors*3];
                 READ_OR_RETURN(vectorarray, nvectors*sizeof(float)*3);
-                for (uint32 i=0; i<nvectors; ++i)
+                for (uint32 i = 0; i < nvectors; ++i)
                 {
                     vertexArray.push_back( Vector3(vectorarray + 3*i) );
                 }

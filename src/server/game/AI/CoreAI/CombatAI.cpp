@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -20,7 +21,7 @@
 #include "CombatAI.h"
 #include "SpellMgr.h"
 
-int AggressorAI::Permissible(const Creature *creature)
+int AggressorAI::Permissible(const Creature* creature)
 {
     // have some hostile factions, it will be selected by IsHostileTo check at MoveInLineOfSight
     if (!creature->isCivilian() && !creature->IsNeutralToAll())
@@ -38,7 +39,7 @@ void AggressorAI::UpdateAI(const uint32 /*diff*/)
 }
 
 // some day we will delete these useless things
-int CombatAI::Permissible(const Creature *creature)
+int CombatAI::Permissible(const Creature* creature)
 {
     return PERMIT_BASE_NO;
 }

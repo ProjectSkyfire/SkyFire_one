@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -160,7 +161,7 @@ struct boss_sacrolashAI : public ScriptedAI
     void KilledUnit(Unit * /*victim*/)
     {
         if (rand()%4 == 0)
-            DoScriptText(RAND(YELL_SAC_KILL_1,YELL_SAC_KILL_2), me);
+            DoScriptText(RAND(YELL_SAC_KILL_1, YELL_SAC_KILL_2), me);
     }
 
     void JustDied(Unit* /*Killer*/)
@@ -177,9 +178,9 @@ struct boss_sacrolashAI : public ScriptedAI
             me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
     }
 
-    void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+    void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_SHADOW_BLADES:
         case SPELL_SHADOW_NOVA:
@@ -195,7 +196,7 @@ struct boss_sacrolashAI : public ScriptedAI
 
     void HandleTouchedSpells(Unit *pTarget, uint32 TouchedType)
     {
-        switch(TouchedType)
+        switch (TouchedType)
         {
         case SPELL_FLAME_TOUCHED:
             if (!pTarget->HasAura(SPELL_DARK_FLAME, 0))
@@ -294,13 +295,13 @@ struct boss_sacrolashAI : public ScriptedAI
         {
             Unit *pTarget = NULL;
             Creature* temp = NULL;
-            for (uint8 i = 0; i<3; ++i)
+            for (uint8 i = 0; i < 3; ++i)
             {
                 pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                temp = DoSpawnCreature(MOB_SHADOW_IMAGE,0,0,0,0,TEMPSUMMON_CORPSE_DESPAWN,10000);
+                temp = DoSpawnCreature(MOB_SHADOW_IMAGE, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 10000);
                 if (temp && pTarget)
                 {
-                    temp->AddThreat(pTarget,1000000);//don't change target(healers)
+                    temp->AddThreat(pTarget, 1000000);//don't change target(healers)
                     temp->AI()->AttackStart(pTarget);
                 }
             }
@@ -337,9 +338,9 @@ struct boss_sacrolashAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sacrolash(Creature* pCreature)
+CreatureAI* GetAI_boss_sacrolash(Creature* creature)
 {
-    return new boss_sacrolashAI (pCreature);
+    return new boss_sacrolashAI (creature);
 };
 
 struct boss_alythessAI : public Scripted_NoMovementAI
@@ -451,7 +452,7 @@ struct boss_alythessAI : public Scripted_NoMovementAI
     {
         if (rand()%4 == 0)
         {
-            DoScriptText(RAND(YELL_ALY_KILL_1,YELL_ALY_KILL_2), me);
+            DoScriptText(RAND(YELL_ALY_KILL_1, YELL_ALY_KILL_2), me);
         }
     }
 
@@ -468,9 +469,9 @@ struct boss_alythessAI : public Scripted_NoMovementAI
             me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
     }
 
-    void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+    void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_BLAZE:
             pTarget->CastSpell(pTarget, SPELL_BLAZE_SUMMON, true);
@@ -486,7 +487,7 @@ struct boss_alythessAI : public Scripted_NoMovementAI
 
     void HandleTouchedSpells(Unit *pTarget, uint32 TouchedType)
     {
-        switch(TouchedType)
+        switch (TouchedType)
         {
         case SPELL_FLAME_TOUCHED:
             if (!pTarget->HasAura(SPELL_DARK_FLAME, 0))
@@ -662,9 +663,9 @@ struct boss_alythessAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_boss_alythess(Creature* pCreature)
+CreatureAI* GetAI_boss_alythess(Creature* creature)
 {
-    return new boss_alythessAI (pCreature);
+    return new boss_alythessAI (creature);
 };
 
 struct mob_shadow_imageAI : public ScriptedAI
@@ -685,9 +686,9 @@ struct mob_shadow_imageAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/){}
 
-    void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+    void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_SHADOW_FURY:
         case SPELL_DARK_STRIKE:
@@ -697,7 +698,7 @@ struct mob_shadow_imageAI : public ScriptedAI
                 {
                     pTarget->RemoveAurasDueToSpell(SPELL_FLAME_TOUCHED);
                     pTarget->CastSpell(pTarget, SPELL_DARK_FLAME, true);
-                } else pTarget->CastSpell(pTarget,SPELL_DARK_TOUCHED,true);
+                } else pTarget->CastSpell(pTarget, SPELL_DARK_TOUCHED, true);
             }
             break;
         }
@@ -736,9 +737,9 @@ struct mob_shadow_imageAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_shadow_image(Creature* pCreature)
+CreatureAI* GetAI_mob_shadow_image(Creature* creature)
 {
-    return new mob_shadow_imageAI (pCreature);
+    return new mob_shadow_imageAI (creature);
 };
 
 void AddSC_boss_eredar_twins()

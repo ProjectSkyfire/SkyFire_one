@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -50,7 +51,7 @@ const float m_afToForestLoc[] = {10648.7f, 1790.63f, 1324.08f};
 
 struct npc_mistAI : public FollowerAI
 {
-    npc_mistAI(Creature* pCreature) : FollowerAI(pCreature) { }
+    npc_mistAI(Creature* creature) : FollowerAI(creature) { }
 
     uint32 m_uiPostEventTimer;
     uint32 m_uiPhasePostEvent;
@@ -73,10 +74,10 @@ struct npc_mistAI : public FollowerAI
         {
             if (me->IsWithinDistInMap(pWho, INTERACTION_DISTANCE))
             {
-                if (Player* pPlayer = GetLeaderForFollower())
+                if (Player* player = GetLeaderForFollower())
                 {
-                    if (pPlayer->GetQuestStatus(QUEST_MIST) == QUEST_STATUS_INCOMPLETE)
-                        pPlayer->GroupEventHappens(QUEST_MIST, me);
+                    if (player->GetQuestStatus(QUEST_MIST) == QUEST_STATUS_INCOMPLETE)
+                        player->GroupEventHappens(QUEST_MIST, me);
                 }
 
                 AryniaGUID = pWho->GetGUID();
@@ -113,7 +114,7 @@ struct npc_mistAI : public FollowerAI
                         return;
                     }
 
-                    switch(m_uiPhasePostEvent)
+                    switch (m_uiPhasePostEvent)
                     {
                     case 0:
                         DoScriptText(SAY_AT_HOME, pArynia);
@@ -137,17 +138,17 @@ struct npc_mistAI : public FollowerAI
     }
 };
 
-CreatureAI* GetAI_npc_mist(Creature* pCreature)
+CreatureAI* GetAI_npc_mist(Creature* creature)
 {
-    return new npc_mistAI(pCreature);
+    return new npc_mistAI(creature);
 }
 
-bool QuestAccept_npc_mist(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+bool QuestAccept_npc_mist(Player* player, Creature* creature, Quest const* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MIST)
     {
-        if (npc_mistAI* pMistAI = CAST_AI(npc_mistAI, pCreature->AI()))
-            pMistAI->StartFollow(pPlayer, FACTION_DARNASSUS, pQuest);
+        if (npc_mistAI* pMistAI = CAST_AI(npc_mistAI, creature->AI()))
+            pMistAI->StartFollow(player, FACTION_DARNASSUS, pQuest);
     }
 
     return true;

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -58,11 +59,11 @@ EndContentData */
 
 const float ShadowmoonChannelers[5][4]=
 {
-    {302,-87,-24.4f,0.157f},
-    {321,-63.5f,-24.6f,4.887f},
-    {346,-74.5f,-24.6f,3.595f},
-    {344,-103.5f,-24.5f,2.356f},
-    {316,-109,-24.6f,1.257f}
+    {302,-87,-24.4f, 0.157f},
+    {321,-63.5f,-24.6f, 4.887f},
+    {346,-74.5f,-24.6f, 3.595f},
+    {344,-103.5f,-24.5f, 2.356f},
+    {316,-109,-24.6f, 1.257f}
 };
 
 class BurningNovaAura : public Aura
@@ -77,7 +78,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
     {
         pInstance = c->GetInstanceData();
         HeroicMode = me->GetMap()->IsHeroic();
-        for (int i=0; i<5; ++i) Channelers[i] = 0;
+        for (int i = 0; i < 5; ++i) Channelers[i] = 0;
     }
 
     ScriptedInstance* pInstance;
@@ -121,7 +122,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         if (rand()%2)
             return;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_KILL_1, me); break;
             case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -133,14 +134,14 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         if (who && !addYell)
         {
             addYell = true;
-            switch(rand()%3)
+            switch (rand()%3)
             {
                 case 0: DoScriptText(SAY_ADD_AGGRO_1, me); break;
                 case 1: DoScriptText(SAY_ADD_AGGRO_2, me); break;
                 default: DoScriptText(SAY_ADD_AGGRO_3, me); break;
             }
         }
-        for (int i=0; i<5; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (who && channeler && !channeler->isInCombat())
@@ -150,7 +151,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
 
     void ChannelerDied(Unit* killer)
     {
-        for (int i=0; i<5; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (channeler && channeler->isAlive())
@@ -169,7 +170,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         SummonChannelers();
         if (!channeler1) return NULL;
         int i;
-        for (i=0; i<5; ++i)
+        for (i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (channeler && channeler->GetGUID() == channeler1->GetGUID())
@@ -180,11 +181,11 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
 
     void SummonChannelers()
     {
-        for (int i=0; i<5; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             Creature *channeler = Unit::GetCreature(*me, Channelers[i]);
             if (!channeler || channeler->isDead())
-                channeler = me->SummonCreature(ENTRY_CHANNELER,ShadowmoonChannelers[i][0],ShadowmoonChannelers[i][1],ShadowmoonChannelers[i][2],ShadowmoonChannelers[i][3],TEMPSUMMON_CORPSE_TIMED_DESPAWN,300000);
+                channeler = me->SummonCreature(ENTRY_CHANNELER, ShadowmoonChannelers[i][0],ShadowmoonChannelers[i][1],ShadowmoonChannelers[i][2],ShadowmoonChannelers[i][3],TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000);
             if (channeler)
                 Channelers[i] = channeler->GetGUID();
             else
@@ -206,7 +207,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
             if (check_Timer <= diff)
             {
                 if (!me->IsNonMeleeSpellCasted(false))
-                    DoCast(me,SPELL_EVOCATION);
+                    DoCast(me, SPELL_EVOCATION);
                 check_Timer = 5000;
             } else check_Timer -= diff;
             return;
@@ -216,7 +217,7 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         {
             if (Firenova_Timer <= diff)
             {
-                DoCast(me,HeroicMode ? H_SPELL_FIRE_NOVA : SPELL_FIRE_NOVA,true);
+                DoCast(me, HeroicMode ? H_SPELL_FIRE_NOVA : SPELL_FIRE_NOVA, true);
                 Firenova = false;
                 ShadowVolley_Timer = 2000;
             } else Firenova_Timer -=diff;
@@ -226,13 +227,13 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
 
         if (ShadowVolley_Timer <= diff)
         {
-            DoCast(me,HeroicMode ? H_SPELL_SHADOW_BOLT_VOLLEY : SPELL_SHADOW_BOLT_VOLLEY);
+            DoCast(me, HeroicMode ? H_SPELL_SHADOW_BOLT_VOLLEY : SPELL_SHADOW_BOLT_VOLLEY);
             ShadowVolley_Timer = 5000+rand()%8000;
         } else ShadowVolley_Timer -=diff;
 
         if (Corruption_Timer <= diff)
         {
-            DoCast(me,SPELL_CORRUPTION);
+            DoCast(me, SPELL_CORRUPTION);
             Corruption_Timer = 30000+rand()%20000;
         } else Corruption_Timer -=diff;
 
@@ -265,9 +266,9 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_kelidan_the_breaker(Creature* pCreature)
+CreatureAI* GetAI_boss_kelidan_the_breaker(Creature* creature)
 {
-    return new boss_kelidan_the_breakerAI (pCreature);
+    return new boss_kelidan_the_breakerAI (creature);
 }
 
 /*######
@@ -330,7 +331,7 @@ struct mob_shadowmoon_channelerAI : public ScriptedAI
                     {
                         uint64 channeler = CAST_AI(boss_kelidan_the_breakerAI, Kelidan->AI())->GetChanneled(me);
                         if (Unit *channeled = Unit::GetUnit(*me, channeler))
-                            DoCast(channeled,SPELL_CHANNELING);
+                            DoCast(channeled, SPELL_CHANNELING);
                     }
                 check_Timer = 5000;
             } else check_Timer -= diff;
@@ -340,7 +341,7 @@ struct mob_shadowmoon_channelerAI : public ScriptedAI
         if (MarkOfShadow_Timer <= diff)
         {
             if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget,SPELL_MARK_OF_SHADOW);
+                DoCast(pTarget, SPELL_MARK_OF_SHADOW);
             MarkOfShadow_Timer = 15000+rand()%5000;
         } else MarkOfShadow_Timer -=diff;
 
@@ -354,9 +355,9 @@ struct mob_shadowmoon_channelerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_shadowmoon_channeler(Creature* pCreature)
+CreatureAI* GetAI_mob_shadowmoon_channeler(Creature* creature)
 {
-    return new mob_shadowmoon_channelerAI (pCreature);
+    return new mob_shadowmoon_channelerAI (creature);
 }
 
 void AddSC_boss_kelidan_the_breaker()

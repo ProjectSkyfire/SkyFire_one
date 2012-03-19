@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -74,22 +75,22 @@ struct instance_magtheridons_lair : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
         case 17257:
-            MagtheridonGUID = pCreature->GetGUID();
+            MagtheridonGUID = creature->GetGUID();
             break;
         case 17256:
-            ChannelerGUID.insert(pCreature->GetGUID());
+            ChannelerGUID.insert(creature->GetGUID());
             break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case 181713:
             pGo->SetUInt32Value(GAMEOBJECT_FLAGS, 0);
@@ -111,7 +112,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
 
     uint64 GetData64(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_MAGTHERIDON:
             return MagtheridonGUID;
@@ -121,7 +122,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_MAGTHERIDON_EVENT:
             Encounters[0] = data;
@@ -134,7 +135,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
             }
             break;
         case DATA_CHANNELER_EVENT:
-            switch(data)
+            switch (data)
             {
             case NOT_STARTED: // Reset all channelers once one is reset.
                 if (Encounters[1] != NOT_STARTED)

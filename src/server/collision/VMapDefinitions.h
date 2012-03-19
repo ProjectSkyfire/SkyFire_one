@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -34,12 +35,12 @@ namespace VMAP
 #ifndef NO_CORE_FUNCS
     #include "Errors.h"
     #include "Log.h"
-    #define ERROR_LOG(...) sLog.outError(__VA_ARGS__);
-    #define DETAIL_LOG(...) sLog.outDetail(__VA_ARGS__);
+    #define ERROR_LOG(...) sLog->outError(__VA_ARGS__);
+    #define DETAIL_LOG(...) sLog->outDetail(__VA_ARGS__);
 #else
     #include <assert.h>
     #define ASSERT(x) assert(x)
-    #define DEBUG_LOG(...) do{ printf(__VA_ARGS__); printf("\n"); } while(0)
+    #define sLog->outDebug(...) do{ printf(__VA_ARGS__); printf("\n"); } while(0)
     #define DETAIL_LOG(...) do{ printf(__VA_ARGS__); printf("\n"); } while(0)
     #define ERROR_LOG(...) do{ printf("ERROR:"); printf(__VA_ARGS__); printf("\n"); } while(0)
 #endif

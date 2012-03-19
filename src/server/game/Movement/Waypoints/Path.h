@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_PATH_H
-#define OREGONCORE_PATH_H
+#ifndef TRINITY_PATH_H
+#define TRINITY_PATH_H
 
 #include "Common.h"
 #include <vector>
@@ -28,7 +29,7 @@ class Path
     public:
         struct PathNode
         {
-            float x,y,z;
+            float x, y, z;
         };
 
         void SetLength(const unsigned int sz)
@@ -41,7 +42,7 @@ class Path
         void Resize(unsigned int sz) { i_nodes.resize(sz); }
         void Clear(void) { i_nodes.clear(); }
         PathNode const* GetNodes(uint32 start = 0) const { return &i_nodes[start]; }
-        float GetTotalLength() const { return GetTotalLength(0,Size()); }
+        float GetTotalLength() const { return GetTotalLength(0, Size()); }
         float GetTotalLength(uint32 start, uint32 end) const
         {
             float len = 0, xd, yd, zd;

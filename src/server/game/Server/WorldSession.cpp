@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -30,7 +31,7 @@
 #include "Guild.h"
 #include "World.h"
 #include "ObjectAccessor.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "OutdoorPvPMgr.h"
 #include "MapManager.h"
 #include "Chat.h"
@@ -40,8 +41,8 @@
 // WorldSession constructor
 WorldSession::WorldSession(uint32 id, WorldSocket *sock, uint32 sec, uint8 expansion, time_t mute_time, LocaleConstant locale) :
 LookingForGroup_auto_join(false), LookingForGroup_auto_add(false), m_muteTime(mute_time),
-_player(NULL), m_Socket(sock),_security(sec), _accountId(id), m_expansion(expansion),
-m_sessionDbcLocale(sWorld.GetAvailableDbcLocale(locale)), m_sessionDbLocaleIndex(objmgr.GetIndexForLocale(locale)),
+_player(NULL), m_Socket(sock), _security(sec), _accountId(id), m_expansion(expansion),
+m_sessionDbcLocale(sWorld->GetAvailableDbcLocale(locale)), m_sessionDbLocaleIndex(sObjectMgr->GetIndexForLocale(locale)),
 _logoutTime(0), m_inQueue(false), m_playerLoading(false), m_playerLogout(false), m_playerRecentlyLogout(false), m_playerSave(false),
 m_latency(0), m_timeOutTime(0)
 {
@@ -50,7 +51,7 @@ m_latency(0), m_timeOutTime(0)
         m_Address = sock->GetRemoteAddress();
         sock->AddReference();
         ResetTimeOutTime();
-        LoginDatabase.PExecute("UPDATE account SET active_realm_id = %d WHERE id = %u;", realmID, GetAccountId());
+        LoginDatabase.PExecute("UPDATE account SET online = 1 WHERE id = %u;", GetAccountId());
     }
 }
 
@@ -74,13 +75,12 @@ WorldSession::~WorldSession()
     while (_recvQueue.next(packet))
         delete packet;
 
-    LoginDatabase.PExecute("UPDATE account SET active_realm_id = 0 WHERE id = %u;", GetAccountId());
-    CharacterDatabase.PExecute("UPDATE characters SET online = 0 WHERE account = %u;", GetAccountId());
+    LoginDatabase.PExecute("UPDATE account SET online = 0 WHERE id = %u;", GetAccountId());
 }
 
 void WorldSession::SizeError(WorldPacket const& packet, uint32 size) const
 {
-    sLog.outError("Client (account %u) send packet %s (%u) with size " SIZEFMTD " but expected %u (attempt crash server?), skipped",
+    sLog->outError("Client (account %u) send packet %s (%u) with size " SIZEFMTD " but expected %u (attempt crash server?), skipped",
         GetAccountId(), LookupOpcodeName(packet.GetOpcode()), packet.GetOpcode(), packet.size(), size);
 }
 
@@ -96,7 +96,7 @@ void WorldSession::SendPacket(WorldPacket const* packet)
     if (!m_Socket)
         return;
 
-    #ifdef OREGON_DEBUG
+    #ifdef TRINITY_DEBUG
 
     // Code for network use statistic
     static uint64 sendPacketCount = 0;
@@ -122,15 +122,15 @@ void WorldSession::SendPacket(WorldPacket const* packet)
     {
         uint64 minTime = uint64(cur_time - lastTime);
         uint64 fullTime = uint64(lastTime - firstTime);
-        sLog.outDetail("Send all time packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f time: %u",sendPacketCount,sendPacketBytes,float(sendPacketCount)/fullTime,float(sendPacketBytes)/fullTime,uint32(fullTime));
-        sLog.outDetail("Send last min packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f",sendLastPacketCount,sendLastPacketBytes,float(sendLastPacketCount)/minTime,float(sendLastPacketBytes)/minTime);
+        sLog->outDetail("Send all time packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f time: %u", sendPacketCount, sendPacketBytes, float(sendPacketCount)/fullTime, float(sendPacketBytes)/fullTime, uint32(fullTime));
+        sLog->outDetail("Send last min packets count: " UI64FMTD " bytes: " UI64FMTD " avr.count/sec: %f avr.bytes/sec: %f", sendLastPacketCount, sendLastPacketBytes, float(sendLastPacketCount)/minTime, float(sendLastPacketBytes)/minTime);
 
         lastTime = cur_time;
         sendLastPacketCount = 1;
         sendLastPacketBytes = packet->wpos();               // wpos is real written size
     }
 
-    #endif                                                  // !OREGON_DEBUG
+    #endif                                                  // !TRINITY_DEBUG
 
     if (m_Socket->SendPacket(*packet) == -1)
         m_Socket->CloseSocket();
@@ -145,7 +145,7 @@ void WorldSession::QueuePacket(WorldPacket* new_packet)
 // Logging helper for unexpected opcodes
 void WorldSession::LogUnexpectedOpcode(WorldPacket* packet, const char *reason)
 {
-    sLog.outError("SESSION: received unexpected opcode %s (0x%.4X) %s",
+    sLog->outError("SESSION: received unexpected opcode %s (0x%.4X) %s",
         LookupOpcodeName(packet->GetOpcode()),
         packet->GetOpcode(),
         reason);
@@ -154,10 +154,10 @@ void WorldSession::LogUnexpectedOpcode(WorldPacket* packet, const char *reason)
 // Logging helper for unexpected opcodes
 void WorldSession::LogUnprocessedTail(WorldPacket *packet)
 {
-    sLog.outError("SESSION: opcode %s (0x%.4X) has unprocessed tail data (read stop at %u from %u)",
+    sLog->outError("SESSION: opcode %s (0x%.4X) has unprocessed tail data (read stop at %u from %u)",
         LookupOpcodeName(packet->GetOpcode()),
         packet->GetOpcode(),
-        packet->rpos(),packet->wpos());
+        packet->rpos(), packet->wpos());
 }
 
 // Update the WorldSession (triggered by World update)
@@ -177,14 +177,14 @@ bool WorldSession::Update(uint32 diff)
     while (m_Socket && !m_Socket->IsClosed() && _recvQueue.next(packet))
     {
         /*#if 1
-        sLog.outError("MOEP: %s (0x%.4X)",
+        sLog->outError("MOEP: %s (0x%.4X)",
                         LookupOpcodeName(packet->GetOpcode()),
                         packet->GetOpcode());
         #endif*/
 
         if (packet->GetOpcode() >= NUM_MSG_TYPES)
         {
-            sLog.outError("SESSION: received invalid opcode %s (0x%.4X)",
+            sLog->outError("SESSION: received invalid opcode %s (0x%.4X)",
                 LookupOpcodeName(packet->GetOpcode()),
                 packet->GetOpcode());
         }
@@ -228,7 +228,7 @@ bool WorldSession::Update(uint32 diff)
                         ExecuteOpcode(opHandle, packet);
                         break;
                     case STATUS_NEVER:
-                        sLog.outError("SESSION: received not allowed opcode %s (0x%.4X)",
+                        sLog->outError("SESSION: received not allowed opcode %s (0x%.4X)",
                             LookupOpcodeName(packet->GetOpcode()),
                             packet->GetOpcode());
                         break;
@@ -236,11 +236,11 @@ bool WorldSession::Update(uint32 diff)
             }
             catch(ByteBufferException &)
             {
-                sLog.outError("WorldSession::Update ByteBufferException occured while parsing a packet (opcode: %u) from client %s, accountid=%i. Skipped packet.",
+                sLog->outError("WorldSession::Update ByteBufferException occured while parsing a packet (opcode: %u) from client %s, accountid=%i. Skipped packet.",
                         packet->GetOpcode(), GetRemoteAddress().c_str(), GetAccountId());
-                if (sLog.IsOutDebug())
+                if (sLog->IsOutDebug())
                 {
-                    sLog.outDebug("Dumping error causing packet:");
+                    sLog->outDebug("Dumping error causing packet:");
                     packet->hexlike();
                 }
             }
@@ -318,13 +318,13 @@ void WorldSession::LogoutPlayer(bool Save)
 
             // give honor to all attackers from set like group case
             for (std::set<Player*>::const_iterator itr = aset.begin(); itr != aset.end(); ++itr)
-                (*itr)->RewardHonor(_player,aset.size());
+                (*itr)->RewardHonor(_player, aset.size());
 
             // give bg rewards and update counters like kill by first from attackers
             // this can't be called for all attackers.
             if (!aset.empty())
                 if (BattleGround *bg = _player->GetBattleGround())
-                    bg->HandleKillPlayer(_player,*aset.begin());
+                    bg->HandleKillPlayer(_player, *aset.begin());
         }
         else if (_player->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
         {
@@ -352,19 +352,19 @@ void WorldSession::LogoutPlayer(bool Save)
         while (_player->IsBeingTeleportedFar())
             HandleMoveWorldportAckOpcode();
 
-        sOutdoorPvPMgr.HandlePlayerLeaveZone(_player,_player->GetZoneId());
+        sOutdoorPvPMgr->HandlePlayerLeaveZone(_player, _player->GetZoneId());
 
-        for (int i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
+        for (int i = 0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
         {
             if (int32 bgTypeId = _player->GetBattleGroundQueueId(i))
             {
                 _player->RemoveBattleGroundQueueId(bgTypeId);
-                sBattleGroundMgr.m_BattleGroundQueues[ bgTypeId ].RemovePlayer(_player->GetGUID(), true);
+                sBattleGroundMgr->m_BattleGroundQueues[ bgTypeId ].RemovePlayer(_player->GetGUID(), true);
             }
         }
 
         // If the player is in a guild, update the guild roster and broadcast a logout message to other guild members
-        if (Guild *guild = objmgr.GetGuildById(_player->GetGuildId()))
+        if (Guild *guild = sObjectMgr->GetGuildById(_player->GetGuildId()))
         {
             guild->LoadPlayerStatsByGuid(_player->GetGUID());
             guild->UpdateLogoutTime(_player->GetGUID());
@@ -406,8 +406,8 @@ void WorldSession::LogoutPlayer(bool Save)
             _player->GetGroup()->SendUpdate();
 
         // Broadcast a logout message to the player's friends
-        sSocialMgr.SendFriendStatus(_player, FRIEND_OFFLINE, _player->GetGUIDLow(), true);
-        sSocialMgr.RemovePlayerSocial (_player->GetGUIDLow ());
+        sSocialMgr->SendFriendStatus(_player, FRIEND_OFFLINE, _player->GetGUIDLow(), true);
+        sSocialMgr->RemovePlayerSocial (_player->GetGUIDLow ());
 
         // Remove the player from the world
         // the player may not be in the world when logging out
@@ -426,11 +426,11 @@ void WorldSession::LogoutPlayer(bool Save)
         //No SQL injection as AccountId is uint32
         CharacterDatabase.PExecute("UPDATE characters SET online = 0 WHERE account = '%u'",
             GetAccountId());
-        sLog.outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
+        sLog->outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
     }
 
     //Hook for OnLogout Event
-    sScriptMgr.OnLogout(_player);
+    sScriptMgr->OnLogout(_player);
 
     m_playerLogout = false;
     m_playerSave = false;
@@ -464,7 +464,7 @@ void WorldSession::SendAreaTriggerMessage(const char* Text, ...)
     SendPacket(&data);
 }
 
-void WorldSession::SendNotification(const char *format,...)
+void WorldSession::SendNotification(const char *format, ...)
 {
     if (format)
     {
@@ -481,9 +481,9 @@ void WorldSession::SendNotification(const char *format,...)
     }
 }
 
-void WorldSession::SendNotification(int32 string_id,...)
+void WorldSession::SendNotification(int32 string_id, ...)
 {
-    char const* format = GetOregonString(string_id);
+    char const* format = GetSkyFireString(string_id);
     if (format)
     {
         va_list ap;
@@ -499,35 +499,35 @@ void WorldSession::SendNotification(int32 string_id,...)
     }
 }
 
-const char * WorldSession::GetOregonString(int32 entry) const
+const char * WorldSession::GetSkyFireString(int32 entry) const
 {
-    return objmgr.GetOregonString(entry,GetSessionDbLocaleIndex());
+    return sObjectMgr->GetSkyFireString(entry, GetSessionDbLocaleIndex());
 }
 
 void WorldSession::Handle_NULL(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received unhandled opcode %s (0x%.4X)",
+    sLog->outError("SESSION: received unhandled opcode %s (0x%.4X)",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }
 
 void WorldSession::Handle_EarlyProccess(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received opcode %s (0x%.4X) that must be processed in WorldSocket::OnRead",
+    sLog->outError("SESSION: received opcode %s (0x%.4X) that must be processed in WorldSocket::OnRead",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }
 
 void WorldSession::Handle_ServerSide(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received server-side opcode %s (0x%.4X)",
+    sLog->outError("SESSION: received server-side opcode %s (0x%.4X)",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }
 
 void WorldSession::Handle_Deprecated(WorldPacket& recvPacket)
 {
-    sLog.outError("SESSION: received deprecated opcode %s (0x%.4X)",
+    sLog->outError("SESSION: received deprecated opcode %s (0x%.4X)",
         LookupOpcodeName(recvPacket.GetOpcode()),
         recvPacket.GetOpcode());
 }

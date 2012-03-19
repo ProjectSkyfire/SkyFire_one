@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -66,7 +67,7 @@ struct npc_cairne_bloodhoofAI : public ScriptedAI
 
         if (BerserkerCharge_Timer <= diff)
         {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget)
                 DoCast(pTarget, SPELL_BERSERKER_CHARGE);
             BerserkerCharge_Timer = 25000;
@@ -99,30 +100,30 @@ struct npc_cairne_bloodhoofAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_npc_cairne_bloodhoof(Creature* pCreature)
+CreatureAI* GetAI_npc_cairne_bloodhoof(Creature* creature)
 {
-    return new npc_cairne_bloodhoofAI (pCreature);
+    return new npc_cairne_bloodhoofAI (creature);
 }
 
-bool GossipHello_npc_cairne_bloodhoof(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_cairne_bloodhoof(Player* player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(925) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HCB, GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO);
+    if (player->GetQuestStatus(925) == QUEST_STATUS_INCOMPLETE)
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HCB, GOSSIP_SENDER_MAIN, GOSSIP_SENDER_INFO);
 
-    pPlayer->SEND_GOSSIP_MENU(7013, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(7013, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_cairne_bloodhoof(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_cairne_bloodhoof(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_SENDER_INFO)
     {
-        pPlayer->CastSpell(pPlayer, 23123, false);
-        pPlayer->SEND_GOSSIP_MENU(7014, pCreature->GetGUID());
+        player->CastSpell(player, 23123, false);
+        player->SEND_GOSSIP_MENU(7014, creature->GetGUID());
     }
     return true;
 }

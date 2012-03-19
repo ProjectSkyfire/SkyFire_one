@@ -74,7 +74,7 @@ size_t my_pread(File Filedes, uchar *Buffer, size_t Count, my_off_t offset,
 #endif
     error= (readbytes != Count);
 #endif
-    if(error)
+    if (error)
     {
       my_errno= errno ? errno : -1;
       if (errno == 0 || (readbytes != (size_t) -1 &&
@@ -158,7 +158,7 @@ size_t my_pwrite(File Filedes, const uchar *Buffer, size_t Count,
 #else
     writtenbytes= pwrite(Filedes, Buffer, Count, offset);
 #endif
-    if(writtenbytes == Count)
+    if (writtenbytes == Count)
       break;
     my_errno= errno;
     if (writtenbytes != (size_t) -1)

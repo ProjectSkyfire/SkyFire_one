@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -19,7 +20,6 @@
 
 #include "MapManager.h"
 #include "InstanceSaveMgr.h"
-#include "Policies/SingletonImp.h"
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
 #include "ObjectAccessor.h"
@@ -32,16 +32,12 @@
 #include "Corpse.h"
 #include "ObjectMgr.h"
 
-#define CLASS_LOCK Oregon::ClassLevelLockable<MapManager, ACE_Thread_Mutex>
-INSTANTIATE_SINGLETON_2(MapManager, CLASS_LOCK);
-INSTANTIATE_CLASS_MUTEX(MapManager, ACE_Thread_Mutex);
-
 extern GridState* si_GridStates[];                          // debugging code, should be deleted some day
 
 MapManager::MapManager()
 {
-    i_gridCleanUpDelay = sWorld.getConfig(CONFIG_INTERVAL_GRIDCLEAN);
-    i_timer.SetInterval(sWorld.getConfig(CONFIG_INTERVAL_MAPUPDATE));
+    i_gridCleanUpDelay = sWorld->getConfig(CONFIG_INTERVAL_GRIDCLEAN);
+    i_timer.SetInterval(sWorld->getConfig(CONFIG_INTERVAL_MAPUPDATE));
 }
 
 MapManager::~MapManager()
@@ -66,7 +62,7 @@ void MapManager::Initialize()
 
         i_GridStateErrorCount = 0;
     }
-    int num_threads(sWorld.getConfig(CONFIG_NUMTHREADS));
+    int num_threads(sWorld->getConfig(CONFIG_NUMTHREADS));
     // Start mtmaps if needed.
     if (num_threads > 0 && m_updater.activate(num_threads) == -1)
         abort();
@@ -84,15 +80,15 @@ void MapManager::InitializeVisibilityDistanceInfo()
 void MapManager::checkAndCorrectGridStatesArray()
 {
     bool ok = true;
-    for (int i=0; i<MAX_GRID_STATE; i++)
+    for (int i = 0; i < MAX_GRID_STATE; i++)
     {
         if (i_GridStates[i] != si_GridStates[i])
         {
-            sLog.outError("MapManager::checkGridStates(), GridState: si_GridStates is currupt !!!");
+            sLog->outError("sMapMgr->checkGridStates(), GridState: si_GridStates is currupt !!!");
             ok = false;
             si_GridStates[i] = i_GridStates[i];
         }
-        #ifdef OREGON_DEBUG
+        #ifdef TRINITY_DEBUG
         // inner class checking only when compiled with debug
         if (!si_GridStates[i]->checkMagic())
         {
@@ -113,7 +109,7 @@ Map* MapManager::_createBaseMap(uint32 id)
 
     if (m == NULL)
     {
-        Guard guard(*this);
+        ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
 
         const MapEntry* entry = sMapStore.LookupEntry(id);
         if (entry && entry->Instanceable())
@@ -134,7 +130,7 @@ Map* MapManager::_createBaseMap(uint32 id)
 Map* MapManager::CreateMap(uint32 id, const WorldObject* obj, uint32 instanceId)
 {
     ASSERT(obj);
-    //if (!obj->IsInWorld()) sLog.outError("GetMap: called for map %d with object (typeid %d, guid %d, mapid %d, instanceid %d) who is not in world!", id, obj->GetTypeId(), obj->GetGUIDLow(), obj->GetMapId(), obj->GetInstanceId());
+    //if (!obj->IsInWorld()) sLog->outError("GetMap: called for map %d with object (typeid %d, guid %d, mapid %d, instanceid %d) who is not in world!", id, obj->GetTypeId(), obj->GetGUIDLow(), obj->GetMapId(), obj->GetInstanceId());
     Map *m = _createBaseMap(id);
 
     if (m && (obj->GetTypeId() == TYPEID_PLAYER) && m->Instanceable()) m = ((MapInstanced*)m)->CreateInstance(id, (Player*)obj);
@@ -171,7 +167,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
         if (entry->IsRaid())
         {
             // GMs can avoid raid limitations
-            if (!player->isGameMaster() && !sWorld.getConfig(CONFIG_INSTANCE_IGNORE_RAID))
+            if (!player->isGameMaster() && !sWorld->getConfig(CONFIG_INSTANCE_IGNORE_RAID))
             {
                 // can only enter in a raid group
                 Group* group = player->GetGroup();
@@ -179,8 +175,8 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                 {
                     // probably there must be special opcode, because client has this string constant in GlobalStrings.lua
                     // TODO: this is not a good place to send the message
-                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetOregonString(810), mapName);
-                    sLog.outDebug("MAP: Player '%s' must be in a raid group to enter instance of '%s'", player->GetName(), mapName);
+                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetSkyFireString(810), mapName);
+                    sLog->outDebug("MAP: Player '%s' must be in a raid group to enter instance of '%s'", player->GetName(), mapName);
                     return false;
                 }
             }
@@ -205,31 +201,31 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                     if (instance_map == mapid)
                         break;
 
-                    InstanceTemplate const* instance = objmgr.GetInstanceTemplate(instance_map);
+                    InstanceTemplate const* instance = sObjectMgr->GetInstanceTemplate(instance_map);
                     instance_map = instance ? instance->parent : 0;
                 }
                 while (instance_map);
 
                 if (!instance_map)
                 {
-                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetOregonString(811), mapName);
-                    sLog.outDebug("MAP: Player '%s' doesn't has a corpse in instance '%s' and can't enter", player->GetName(), mapName);
+                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetSkyFireString(811), mapName);
+                    sLog->outDebug("MAP: Player '%s' doesn't has a corpse in instance '%s' and can't enter", player->GetName(), mapName);
                     return false;
                 }
-                sLog.outDebug("MAP: Player '%s' has corpse in instance '%s' and can enter", player->GetName(), mapName);
+                sLog->outDebug("MAP: Player '%s' has corpse in instance '%s' and can enter", player->GetName(), mapName);
             }
             else
             {
-                sLog.outDebug("Map::CanEnter - player '%s' is dead but doesn't have a corpse!", player->GetName());
+                sLog->outDebug("Map::CanEnter - player '%s' is dead but doesn't have a corpse!", player->GetName());
             }
         }
 
         // Requirements
-        InstanceTemplate const* instance = objmgr.GetInstanceTemplate(mapid);
+        InstanceTemplate const* instance = sObjectMgr->GetInstanceTemplate(mapid);
         if (!instance)
             return false;
 
-        return player->Satisfy(objmgr.GetAccessRequirement(instance->access_id), mapid, true);
+        return player->Satisfy(sObjectMgr->GetAccessRequirement(instance->access_id), mapid, true);
     }
     else
         return true;
@@ -255,7 +251,7 @@ void MapManager::Update(time_t diff)
     for (iter = i_maps.begin(); iter != i_maps.end(); ++iter)
         iter->second->DelayedUpdate(uint32(i_timer.GetCurrent()));
 
-    ObjectAccessor::Instance().Update(i_timer.GetCurrent());
+    sObjectAccessor->Update(i_timer.GetCurrent());
     for (TransportSet::iterator iter = m_Transports.begin(); iter != m_Transports.end(); ++iter)
         (*iter)->Update(i_timer.GetCurrent());
 
@@ -266,20 +262,20 @@ void MapManager::DoDelayedMovesAndRemoves()
 {
 }
 
-bool MapManager::ExistMapAndVMap(uint32 mapid, float x,float y)
+bool MapManager::ExistMapAndVMap(uint32 mapid, float x, float y)
 {
-    GridPair p = Oregon::ComputeGridPair(x,y);
+    GridPair p = Trinity::ComputeGridPair(x, y);
 
     int gx=63-p.x_coord;
     int gy=63-p.y_coord;
 
-    return Map::ExistMap(mapid,gx,gy) && Map::ExistVMap(mapid,gx,gy);
+    return Map::ExistMap(mapid, gx, gy) && Map::ExistVMap(mapid, gx, gy);
 }
 
 bool MapManager::IsValidMAP(uint32 mapid)
 {
     MapEntry const* mEntry = sMapStore.LookupEntry(mapid);
-    return mEntry && (!mEntry->Instanceable() || objmgr.GetInstanceTemplate(mapid));
+    return mEntry && (!mEntry->Instanceable() || sObjectMgr->GetInstanceTemplate(mapid));
 }
 
 void MapManager::UnloadAll()
@@ -308,7 +304,7 @@ void MapManager::InitMaxInstanceId()
 
 uint32 MapManager::GetNumInstances()
 {
-    Guard guard(*this);
+    ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
 
     uint32 ret = 0;
     for (MapMapType::iterator itr = i_maps.begin(); itr != i_maps.end(); ++itr)
@@ -325,7 +321,7 @@ uint32 MapManager::GetNumInstances()
 
 uint32 MapManager::GetNumPlayersInInstances()
 {
-    Guard guard(*this);
+    ACE_GUARD_RETURN(ACE_Thread_Mutex, Guard, Lock, NULL);
 
     uint32 ret = 0;
     for (MapMapType::iterator itr = i_maps.begin(); itr != i_maps.end(); ++itr)

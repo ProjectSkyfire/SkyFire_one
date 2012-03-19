@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -21,10 +22,10 @@
 #define __InstanceSaveMgr_H
 
 #include "Define.h"
-#include "Policies/Singleton.h"
 #include "UnorderedMap.h"
 #include "Database/DatabaseEnv.h"
 
+#include <ace/Singleton.h>
 #include <ace/Thread_Mutex.h>
 #include <list>
 #include <map>
@@ -80,8 +81,8 @@ class InstanceSave
 
         /* online players bound to the instance (perm/solo)
            does not include the members of the group unless they have permanent saves */
-        void AddPlayer(Player *player) { m_playerList.push_back(player); }
-        bool RemovePlayer(Player *player) { m_playerList.remove(player); return UnloadIfEmpty(); }
+        void AddPlayer(Player* player) { m_playerList.push_back(player); }
+        bool RemovePlayer(Player* player) { m_playerList.remove(player); return UnloadIfEmpty(); }
         /* all groups bound to the instance */
         void AddGroup(Group *group) { m_groupList.push_back(group); }
         bool RemoveGroup(Group *group) { m_groupList.remove(group); return UnloadIfEmpty(); }
@@ -112,18 +113,19 @@ class InstanceSave
         bool m_canReset;
 };
 
-class InstanceSaveManager : public Oregon::Singleton<InstanceSaveManager, Oregon::ClassLevelLockable<InstanceSaveManager, ACE_Thread_Mutex> >
+class InstanceSaveManager
 {
+    friend class ACE_Singleton<InstanceSaveManager, ACE_Null_Mutex>;
     friend class InstanceSave;
-    public:
-        InstanceSaveManager();
-        ~InstanceSaveManager();
+public:
+    InstanceSaveManager() : lock_instLists(false) {};
+    ~InstanceSaveManager();
 
         typedef std::map<uint32 /*InstanceId*/, InstanceSave*> InstanceSaveMap;
         typedef UNORDERED_MAP<uint32 /*InstanceId*/, InstanceSave*> InstanceSaveHashMap;
         typedef std::map<uint32 /*mapId*/, InstanceSaveMap> InstanceSaveMapMap;
 
-        /* resetTime is a global propery of each (raid/heroic) map
+        /* resetTime is a global property of each (raid/heroic) map
            all instances of that map reset at the same time */
         struct InstResetEvent
         {
@@ -160,7 +162,7 @@ class InstanceSaveManager : public Oregon::Singleton<InstanceSaveManager, Oregon
         void _ResetOrWarnAll(uint32 mapid, bool warn, uint32 timeleft);
         void _ResetInstance(uint32 mapid, uint32 instanceId);
         void _ResetSave(InstanceSaveHashMap::iterator &itr);
-        void _DelHelper(DatabaseType &db, const char *fields, const char *table, const char *queryTail,...);
+        void _DelHelper(DatabaseType &db, const char *fields, const char *table, const char *queryTail, ...);
         // used during global instance resets
         bool lock_instLists;
         // fast lookup by instance id
@@ -170,6 +172,6 @@ class InstanceSaveManager : public Oregon::Singleton<InstanceSaveManager, Oregon
         ResetTimeQueue m_resetTimeQueue;
 };
 
-#define sInstanceSaveManager Oregon::Singleton<InstanceSaveManager>::Instance()
+#define sInstanceSaveMgr ACE_Singleton<InstanceSaveManager, ACE_Thread_Mutex>::instance()
 #endif
 

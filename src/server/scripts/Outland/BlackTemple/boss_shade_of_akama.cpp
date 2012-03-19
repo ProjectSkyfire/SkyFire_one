@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -65,10 +66,10 @@ static Location AkamaWP[]=
 
 static Location BrokenCoords[]=
 {
-    {541.375916f, 401.439575f, M_PI, 112.783997f},             // The place where Akama channels
-    {534.130005f, 352.394531f, 2.164150f, 112.783737f},         // Behind a 'pillar' which is behind the east alcove
-    {499.621185f, 341.534729f, 1.652856f, 112.783730f},         // East Alcove
-    {499.151093f, 461.036438f, 4.770888f, 112.78370f},          // West Alcove
+    {541.375916f, 401.439575f, M_PI, 112.783997f},            // The place where Akama channels
+    {534.130005f, 352.394531f, 2.164150f, 112.783737f},        // Behind a 'pillar' which is behind the east alcove
+    {499.621185f, 341.534729f, 1.652856f, 112.783730f},        // East Alcove
+    {499.151093f, 461.036438f, 4.770888f, 112.78370f},         // West Alcove
 };
 
 static Location BrokenWP[]=
@@ -154,7 +155,7 @@ struct mob_ashtongue_sorcererAI : public ScriptedAI
             Creature* Shade = Unit::GetCreature((*me), ShadeGUID);
             if (Shade && Shade->isAlive() && me->isAlive())
             {
-                if (me->IsWithinDist(Shade, 20,false))
+                if (me->IsWithinDist(Shade, 20, false))
                 {
                     me->GetMotionMaster()->Clear(false);
                     me->GetMotionMaster()->MoveIdle();
@@ -177,7 +178,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
         AkamaGUID = pInstance ? pInstance->GetData64(DATA_AKAMA_SHADE) : 0;
         me->setActive(true);//if view distance is too low
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
     }
 
     ScriptedInstance* pInstance;
@@ -292,7 +293,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
                         }
                     }
                 }
-            } else error_log("SD2 ERROR: No Channelers are stored in the list. This encounter will not work properly");
+            } else sLog->outError("SD2 ERROR: No Channelers are stored in the list. This encounter will not work properly");
         }
     }
 
@@ -311,13 +312,13 @@ struct boss_shade_of_akamaAI : public ScriptedAI
         if (reseting)
             return;
 
-        debug_log("OSCR: Increasing Death Count for Shade of Akama encounter");
+        sLog->outDebug("TSCR: Increasing Death Count for Shade of Akama encounter");
         ++DeathCount;
         me->RemoveSingleAuraFromStack(SPELL_SHADE_SOUL_CHANNEL_2, 0);
         if (guid)
         {
             if (Sorcerers.empty())
-                error_log("SD2 ERROR: Shade of Akama - attempt to remove guid %u from Sorcerers list but list is already empty", guid);
+                sLog->outError("SD2 ERROR: Shade of Akama - attempt to remove guid %u from Sorcerers list but list is already empty", guid);
             else  Sorcerers.remove(guid);
         }
     }
@@ -368,7 +369,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
     void FindChannelers()
     {
         std::list<Creature*> ChannelerList;
-        me->GetCreatureListWithEntryInGrid(ChannelerList,CREATURE_CHANNELER,50.0f);
+        me->GetCreatureListWithEntryInGrid(ChannelerList, CREATURE_CHANNELER, 50.0f);
 
         if (!ChannelerList.empty())
         {
@@ -376,17 +377,17 @@ struct boss_shade_of_akamaAI : public ScriptedAI
             {
                 CAST_AI(mob_ashtongue_channelerAI, (*itr)->AI())->ShadeGUID = me->GetGUID();
                 Channelers.push_back((*itr)->GetGUID());
-                debug_log("OSCR: Shade of Akama Grid Search found channeler %u. Adding to list", (*itr)->GetGUID());
+                sLog->outDebug("TSCR: Shade of Akama Grid Search found channeler %u. Adding to list", (*itr)->GetGUID());
             }
         }
-        else error_log("SD2 ERROR: Grid Search was unable to find any channelers. Shade of Akama encounter will be buggy");
+        else sLog->outError("SD2 ERROR: Grid Search was unable to find any channelers. Shade of Akama encounter will be buggy");
     }
 
     void SetSelectableChannelers()
     {
         if (Channelers.empty())
         {
-            error_log("SD2 ERROR: Channeler List is empty, Shade of Akama encounter will be buggy");
+            sLog->outError("SD2 ERROR: Channeler List is empty, Shade of Akama encounter will be buggy");
             return;
         }
 
@@ -424,7 +425,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
                         if (Creature* Akama = Unit::GetCreature(*me, AkamaGUID))
                         {
                             float x, y, z;
-                            Akama->GetPosition(x,y,z);
+                            Akama->GetPosition(x, y, z);
                             // They move towards AKama
                             Defender->GetMotionMaster()->MovePoint(0, x, y, z);
                             Defender->AI()->AttackStart(Akama);
@@ -510,7 +511,7 @@ void mob_ashtongue_channelerAI::JustDied(Unit* /*killer*/)
     Creature* Shade = (Unit::GetCreature((*me), ShadeGUID));
     if (Shade && Shade->isAlive())
         CAST_AI(boss_shade_of_akamaAI, Shade->AI())->IncrementDeathCount();
-    else error_log("SD2 ERROR: Channeler dead but unable to increment DeathCount for Shade of Akama.");
+    else sLog->outError("SD2 ERROR: Channeler dead but unable to increment DeathCount for Shade of Akama.");
 }
 
 void mob_ashtongue_sorcererAI::JustDied(Unit* /*killer*/)
@@ -518,7 +519,7 @@ void mob_ashtongue_sorcererAI::JustDied(Unit* /*killer*/)
     Creature* Shade = (Unit::GetCreature((*me), ShadeGUID));
     if (Shade && Shade->isAlive())
         CAST_AI(boss_shade_of_akamaAI, Shade->AI())->IncrementDeathCount(me->GetGUID());
-    else error_log("SD2 ERROR: Sorcerer dead but unable to increment DeathCount for Shade of Akama.");
+    else sLog->outError("SD2 ERROR: Sorcerer dead but unable to increment DeathCount for Shade of Akama.");
 }
 
 struct npc_akamaAI : public ScriptedAI
@@ -624,7 +625,7 @@ struct npc_akamaAI : public ScriptedAI
         if (type != POINT_MOTION_TYPE)
             return;
 
-        switch(id)
+        switch (id)
         {
         case 0: ++WayPointId; break;
 
@@ -753,7 +754,7 @@ struct npc_akamaAI : public ScriptedAI
         if (SoulRetrieveTimer)
             if (SoulRetrieveTimer <= diff)
             {
-                switch(EndingTalkCount)
+                switch (EndingTalkCount)
                 {
                 case 0:
                     me->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
@@ -828,46 +829,46 @@ struct npc_akamaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_shade_of_akama(Creature* pCreature)
+CreatureAI* GetAI_boss_shade_of_akama(Creature* creature)
 {
-    return new boss_shade_of_akamaAI (pCreature);
+    return new boss_shade_of_akamaAI (creature);
 }
 
-CreatureAI* GetAI_mob_ashtongue_channeler(Creature* pCreature)
+CreatureAI* GetAI_mob_ashtongue_channeler(Creature* creature)
 {
-    return new mob_ashtongue_channelerAI (pCreature);
+    return new mob_ashtongue_channelerAI (creature);
 }
 
-CreatureAI* GetAI_mob_ashtongue_sorcerer(Creature* pCreature)
+CreatureAI* GetAI_mob_ashtongue_sorcerer(Creature* creature)
 {
-    return new mob_ashtongue_sorcererAI (pCreature);
+    return new mob_ashtongue_sorcererAI (creature);
 }
 
-CreatureAI* GetAI_npc_akama_shade(Creature* pCreature)
+CreatureAI* GetAI_npc_akama_shade(Creature* creature)
 {
-    return new npc_akamaAI (pCreature);
+    return new npc_akamaAI (creature);
 }
 
-bool GossipSelect_npc_akama(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_akama(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        CAST_AI(npc_akamaAI, pCreature->AI())->BeginEvent(pPlayer);
+        player->CLOSE_GOSSIP_MENU();
+        CAST_AI(npc_akamaAI, creature->AI())->BeginEvent(player);
     }
 
     return true;
 }
 
-bool GossipHello_npc_akama(Player *player, Creature* pCreature)
+bool GossipHello_npc_akama(Player* player, Creature* creature)
 {
-    ScriptedInstance* pInstance = (pCreature->GetInstanceData());
+    ScriptedInstance* pInstance = (creature->GetInstanceData());
 
     if (pInstance && pInstance->GetData(DATA_SHADEOFAKAMAEVENT) == NOT_STARTED)
     {
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
-    player->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(907, creature->GetGUID());
     return true;
 }
 

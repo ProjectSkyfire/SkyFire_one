@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -24,6 +25,9 @@
 #include "CompilerDefs.h"
 #include "DBCStructure.h"
 
+#include <ace/Singleton.h>
+//#include <ace/Atomic_Op.h>
+
 class Player;
 class Creature;
 class CreatureAI;
@@ -39,7 +43,7 @@ struct ItemPrototype;
 
 #define MAX_SCRIPTS         5000                            //72 bytes each (approx 351kb)
 #define VISIBLE_RANGE       (166.0f)                        //MAX visible range (size of grid)
-#define DEFAULT_TEXT        "<Oregon Script Text Entry Missing!>"
+#define DEFAULT_TEXT        "<Trinity Script Text Entry Missing!>"
 
 struct Script
 {
@@ -86,37 +90,43 @@ struct Script
 
 class ScriptMgr
 {
-    public:
-        ScriptMgr();
-        ~ScriptMgr();
+    friend class ACE_Singleton<ScriptMgr, ACE_Null_Mutex>;
+    friend class ScriptObject;
+
+private:
+
+    ScriptMgr();
+    virtual ~ScriptMgr();
+
+public: /* Initialization */
 
         void ScriptsInit();
         void LoadDatabase();
         char const* ScriptsVersion();
 
     //event handlers
-        void OnLogin(Player *pPlayer);
-        void OnLogout(Player *pPlayer);
-        void OnPVPKill(Player *killer, Player *killed);
-        bool GossipHello (Player * pPlayer, Creature* pCreature);
-        bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction);
-        bool GossipSelectWithCode(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction, const char* sCode);
-        bool GOSelect(Player* pPlayer, GameObject* pGO, uint32 uiSender, uint32 uiAction);
-        bool GOSelectWithCode(Player* pPlayer, GameObject* pGO, uint32 uiSender, uint32 uiAction, const char* sCode);
-        bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-        bool QuestSelect(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-        bool QuestComplete(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
-        bool ChooseReward(Player* pPlayer, Creature* pCreature, Quest const* pQuest, uint32 opt);
-        uint32 NPCDialogStatus(Player* pPlayer, Creature* pCreature);
-        uint32 GODialogStatus(Player* pPlayer, GameObject* pGO);
-        bool ItemHello(Player* pPlayer, Item* pItem, Quest const* pQuest);
-        bool ItemQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest);
-        bool GOHello(Player* pPlayer, GameObject* pGO);
-        bool GOQuestAccept(Player* pPlayer, GameObject* pGO, Quest const* pQuest);
-        bool GOChooseReward(Player* pPlayer, GameObject* pGO, Quest const* pQuest, uint32 opt);
-        bool AreaTrigger(Player* pPlayer,AreaTriggerEntry const* atEntry);
-        CreatureAI* GetAI(Creature* pCreature);
-        bool ItemUse(Player* pPlayer, Item* pItem, SpellCastTargets const& targets);
+        void OnLogin(Player* player);
+        void OnLogout(Player* player);
+        void OnPVPKill(Player* killer, Player *killed);
+        bool GossipHello (Player * player, Creature* creature);
+        bool GossipSelect(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction);
+        bool GossipSelectWithCode(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction, const char* sCode);
+        bool GOSelect(Player* player, GameObject* pGO, uint32 uiSender, uint32 uiAction);
+        bool GOSelectWithCode(Player* player, GameObject* pGO, uint32 uiSender, uint32 uiAction, const char* sCode);
+        bool QuestAccept(Player* player, Creature* creature, Quest const* pQuest);
+        bool QuestSelect(Player* player, Creature* creature, Quest const* pQuest);
+        bool QuestComplete(Player* player, Creature* creature, Quest const* pQuest);
+        bool ChooseReward(Player* player, Creature* creature, Quest const* pQuest, uint32 opt);
+        uint32 NPCDialogStatus(Player* player, Creature* creature);
+        uint32 GODialogStatus(Player* player, GameObject* pGO);
+        bool ItemHello(Player* player, Item* pItem, Quest const* pQuest);
+        bool ItemQuestAccept(Player* player, Item* pItem, Quest const* pQuest);
+        bool GOHello(Player* player, GameObject* pGO);
+        bool GOQuestAccept(Player* player, GameObject* pGO, Quest const* pQuest);
+        bool GOChooseReward(Player* player, GameObject* pGO, Quest const* pQuest, uint32 opt);
+        bool AreaTrigger(Player* player, AreaTriggerEntry const* atEntry);
+        CreatureAI* GetAI(Creature* creature);
+        bool ItemUse(Player* player, Item* pItem, SpellCastTargets const& targets);
         bool EffectDummyCreature(Unit *caster, uint32 spellId, uint32 effIndex, Creature *crTarget);
         InstanceData* CreateInstanceData(Map *map);
 };
@@ -125,11 +135,11 @@ class ScriptMgr
 void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
 
 #if COMPILER == COMPILER_GNU
-#define FUNC_PTR(name,callconvention,returntype,parameters)    typedef returntype(*name)parameters __attribute__ ((callconvention));
+#define FUNC_PTR(name, callconvention, returntype, parameters)    typedef returntype(*name)parameters __attribute__ ((callconvention));
 #else
 #define FUNC_PTR(name, callconvention, returntype, parameters)    typedef returntype(callconvention *name)parameters;
 #endif
 
-#define sScriptMgr Oregon::Singleton<ScriptMgr>::Instance()
+#define sScriptMgr ACE_Singleton<ScriptMgr, ACE_Null_Mutex>::instance()
 #endif
 

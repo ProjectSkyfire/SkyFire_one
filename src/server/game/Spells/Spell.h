@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -89,7 +90,7 @@ enum SpellNotifyPushType
 
 bool IsQuestTameSpell(uint32 spellId);
 
-namespace Oregon
+namespace Trinity
 {
     struct SpellNotifierCreatureAndPlayer;
 }
@@ -113,7 +114,7 @@ class SpellCastTargets
         void read(ByteBuffer& data, Unit *caster);
         void write(ByteBuffer& data) const;
 
-        SpellCastTargetsReader ReadForCaster(Unit* caster) { return SpellCastTargetsReader(*this,caster); }
+        SpellCastTargetsReader ReadForCaster(Unit* caster) { return SpellCastTargetsReader(*this, caster); }
 
         SpellCastTargets& operator=(const SpellCastTargets &target)
         {
@@ -198,7 +199,7 @@ inline ByteBuffer& operator<< (ByteBuffer& buf, SpellCastTargets const& targets)
 
 inline ByteBuffer& operator>> (ByteBuffer& buf, SpellCastTargetsReader const& targets)
 {
-    targets.targets.read(buf,targets.caster);
+    targets.targets.read(buf, targets.caster);
     return buf;
 }
 
@@ -242,7 +243,7 @@ enum SpellTargets
 
 class Spell
 {
-    friend struct Oregon::SpellNotifierCreatureAndPlayer;
+    friend struct Trinity::SpellNotifierCreatureAndPlayer;
     friend void Unit::SetCurrentCastedSpell(Spell * pSpell);
     public:
 
@@ -372,7 +373,7 @@ class Spell
         uint8 CheckPower();
         uint8 CheckCasterAuras() const;
 
-        int32 CalculateDamage(uint8 i, Unit* target) { return m_caster->CalculateSpellDamage(m_spellInfo,i,m_currentBasePoints[i],target); }
+        int32 CalculateDamage(uint8 i, Unit* target) { return m_caster->CalculateSpellDamage(m_spellInfo, i, m_currentBasePoints[i], target); }
 
         bool HaveTargetsForEffect(uint8 effect) const;
         void Delayed();
@@ -406,7 +407,7 @@ class Spell
         void SendResurrectRequest(Player* target);
         void SendPlaySpellVisual(uint32 SpellID);
 
-        void HandleEffects(Unit *pUnitTarget,Item *pItemTarget,GameObject *pGOTarget,uint32 i, float DamageMultiplier = 1.0);
+        void HandleEffects(Unit *pUnitTarget, Item *pItemTarget, GameObject *pGOTarget, uint32 i, float DamageMultiplier = 1.0);
         void HandleThreatSpells(uint32 spellId);
         //void HandleAddAura(Unit* Target);
 
@@ -612,7 +613,7 @@ class Spell
         bool m_skipCheck;
 };
 
-namespace Oregon
+namespace Trinity
 {
     struct SpellNotifierCreatureAndPlayer
     {
@@ -688,7 +689,7 @@ namespace Oregon
                     default: continue;
                 }
 
-                switch(i_push_type)
+                switch (i_push_type)
                 {
                     case PUSH_IN_FRONT:
                         if (i_caster->isInFrontInMap((Unit*)(itr->getSource()), i_radius, M_PI/3))

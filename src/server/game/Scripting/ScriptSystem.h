@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -79,12 +80,11 @@ class SystemMgr
         typedef UNORDERED_MAP<uint32, std::vector<ScriptPointMove> > PointMoveMap;
 
         //Database
-        void LoadVersion();
         void LoadScriptTexts();
         void LoadScriptTextsCustom();
         void LoadScriptWaypoints();
 
-        //Retrive from storage
+        //Retrieve from storage
         StringTextData const* GetTextData(int32 uiTextId) const
         {
             TextDataMap::const_iterator itr = m_mTextDataMap.find(uiTextId);

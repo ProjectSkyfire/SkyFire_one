@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -89,7 +90,7 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_SLAY_1, me); break;
         case 1: DoScriptText(SAY_SLAY_2, me); break;
@@ -117,7 +118,7 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
             for (int i = 0; i < 3;i++)
             {
                 Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                Creature* Wraith = me->SummonCreature(21062,me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                Creature* Wraith = me->SummonCreature(21062, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                 if (pTarget && Wraith)
                     Wraith->AI()->AttackStart(pTarget);
             }
@@ -139,15 +140,15 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
 
         if (Domination_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
             {
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                 case 0: DoScriptText(SAY_DOMINATION_1, me); break;
                 case 1: DoScriptText(SAY_DOMINATION_2, me); break;
                 }
 
-                DoCast(pTarget,SPELL_DOMINATION);
+                DoCast(pTarget, SPELL_DOMINATION);
             }
                 Domination_Timer = 25000 + rand()%5000;
             } else Domination_Timer -= diff;
@@ -172,9 +173,9 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* pCreature)
+CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* creature)
 {
-    return new boss_pathaleon_the_calculatorAI (pCreature);
+    return new boss_pathaleon_the_calculatorAI (creature);
 }
 
 struct mob_nether_wraithAI : public ScriptedAI
@@ -207,8 +208,8 @@ struct mob_nether_wraithAI : public ScriptedAI
 
         if (ArcaneMissiles_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(pTarget,SPELL_ARCANE_MISSILES);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                DoCast(pTarget, SPELL_ARCANE_MISSILES);
             else
                 DoCast(me->getVictim(),SPELL_ARCANE_MISSILES);
 
@@ -219,7 +220,7 @@ struct mob_nether_wraithAI : public ScriptedAI
         {
             if (Detonation_Timer <= diff)
             {
-                DoCast(me,SPELL_DETONATION);
+                DoCast(me, SPELL_DETONATION);
                 Detonation = true;
             } else Detonation_Timer -= diff;
         }
@@ -236,9 +237,9 @@ struct mob_nether_wraithAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mob_nether_wraith(Creature* pCreature)
+CreatureAI* GetAI_mob_nether_wraith(Creature* creature)
 {
-    return new mob_nether_wraithAI (pCreature);
+    return new mob_nether_wraithAI (creature);
 }
 
 void AddSC_boss_pathaleon_the_calculator()

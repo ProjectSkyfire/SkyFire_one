@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -160,7 +161,7 @@ struct boss_kalecgosAI : public ScriptedAI
         FrostBreathTimer = 15000;
         WildMagicTimer = 10000;
         TailLashTimer = 25000;
-        SpectralBlastTimer = urand(20000,25000);
+        SpectralBlastTimer = urand(20000, 25000);
         CheckTimer = 1000;
         ResetTimer = 30000;
 
@@ -261,7 +262,7 @@ struct boss_kalecgosAI : public ScriptedAI
                     }
                     else
                     {
-                        error_log("OSCR: Didn't find Shathrowar. Kalecgos event reseted.");
+                        sLog->outError("TSCR: Didn't find Shathrowar. Kalecgos event reseted.");
                         EnterEvadeMode();
                         return;
                     }
@@ -309,7 +310,7 @@ struct boss_kalecgosAI : public ScriptedAI
                 advance(i, rand()%targetList.size());
                 if ((*i))
                 {
-                    (*i)->CastSpell((*i), SPELL_SPECTRAL_BLAST,true);
+                    (*i)->CastSpell((*i), SPELL_SPECTRAL_BLAST, true);
                     SpectralBlastTimer = 20000+rand()%5000;
                 } else SpectralBlastTimer = 1000;
             } else SpectralBlastTimer -= diff;
@@ -349,10 +350,10 @@ struct boss_kalecgosAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_EVIL_SLAY1,SAY_EVIL_SLAY2), me);
+        DoScriptText(RAND(SAY_EVIL_SLAY1, SAY_EVIL_SLAY2), me);
     }
 
-    void MovementInform(uint32 type,uint32 /*id*/)
+    void MovementInform(uint32 type, uint32 /*id*/)
     {
         if (type != POINT_MOTION_TYPE)
             return;
@@ -366,9 +367,9 @@ struct boss_kalecgosAI : public ScriptedAI
             {
                 for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                 {
-                    Player* pPlayer = itr->getSource();
-                    if (pPlayer)
-                        ((InstanceMap*)me->GetMap())->PermBindAllPlayers(pPlayer);
+                    Player* player = itr->getSource();
+                    if (player)
+                        ((InstanceMap*)me->GetMap())->PermBindAllPlayers(player);
                 }
             }
         }
@@ -381,7 +382,7 @@ struct boss_kalecgosAI : public ScriptedAI
 
     void GoodEnding()
     {
-        switch(TalkSequence)
+        switch (TalkSequence)
         {
         case 1:
             me->setFaction(35);
@@ -393,7 +394,7 @@ struct boss_kalecgosAI : public ScriptedAI
             break;
         case 3:
             me->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
-            me->GetMotionMaster()->MovePoint(0,FLY_X,FLY_Y,FLY_Z);
+            me->GetMotionMaster()->MovePoint(0, FLY_X, FLY_Y, FLY_Z);
             TalkTimer = 600000;
             break;
         default:
@@ -403,7 +404,7 @@ struct boss_kalecgosAI : public ScriptedAI
 
     void BadEnding()
     {
-        switch(TalkSequence)
+        switch (TalkSequence)
         {
         case 1:
             DoScriptText(SAY_EVIL_ENRAGE, me);
@@ -411,7 +412,7 @@ struct boss_kalecgosAI : public ScriptedAI
             break;
         case 2:
             me->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
-            me->GetMotionMaster()->MovePoint(0,FLY_X,FLY_Y,FLY_Z);
+            me->GetMotionMaster()->MovePoint(0, FLY_X, FLY_Y, FLY_Z);
             TalkTimer = 15000;
             break;
         case 3:
@@ -505,7 +506,7 @@ struct boss_sathrovarrAI : public ScriptedAI
             EnterEvadeMode();
             return;
         }
-        DoScriptText(RAND(SAY_SATH_SLAY1,SAY_SATH_SLAY2), me);
+        DoScriptText(RAND(SAY_SATH_SLAY1, SAY_SATH_SLAY2), me);
     }
 
     void JustDied(Unit * /*killer*/)
@@ -534,7 +535,7 @@ struct boss_sathrovarrAI : public ScriptedAI
             {
                 if (i->getSource()->HasAura(AURA_SPECTRAL_REALM, 0))
                     i->getSource()->RemoveAurasDueToSpell(AURA_SPECTRAL_REALM);
-                i->getSource()->TeleportTo(me->GetMap()->GetId(),i->getSource()->GetPositionX(),i->getSource()->GetPositionY(),DRAGON_REALM_Z+5,i->getSource()->GetOrientation());
+                i->getSource()->TeleportTo(me->GetMap()->GetId(),i->getSource()->GetPositionX(),i->getSource()->GetPositionY(),DRAGON_REALM_Z+5, i->getSource()->GetOrientation());
             }
         }
     }
@@ -696,7 +697,7 @@ struct boss_kalecAI : public ScriptedAI
 
         if (YellTimer <= diff)
         {
-            switch(YellSequence)
+            switch (YellSequence)
             {
             case 0:
                 DoScriptText(SAY_GOOD_AGGRO, me);
@@ -738,7 +739,7 @@ struct boss_kalecAI : public ScriptedAI
     }
 };
 
-bool GOkalecgos_teleporter(Player* pPlayer, GameObject* pGo)
+bool GOkalecgos_teleporter(Player* player, GameObject* pGo)
 {
     uint32 SpectralPlayers = 0;
     Map* pMap = pGo->GetMap();
@@ -749,26 +750,26 @@ bool GOkalecgos_teleporter(Player* pPlayer, GameObject* pGo)
         if (i->getSource() && i->getSource()->GetPositionZ() < DEMON_REALM_Z + 5)
             ++SpectralPlayers;
     }
-    if (pPlayer->HasAura(AURA_SPECTRAL_EXHAUSTION, 0) || (MAX_PLAYERS_IN_SPECTRAL_REALM && SpectralPlayers >= MAX_PLAYERS_IN_SPECTRAL_REALM))
-        pPlayer->GetSession()->SendNotification(GO_FAILED);
+    if (player->HasAura(AURA_SPECTRAL_EXHAUSTION, 0) || (MAX_PLAYERS_IN_SPECTRAL_REALM && SpectralPlayers >= MAX_PLAYERS_IN_SPECTRAL_REALM))
+        player->GetSession()->SendNotification(GO_FAILED);
     else
-        pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_SPECTRAL, true);
+        player->CastSpell(player, SPELL_TELEPORT_SPECTRAL, true);
     return true;
 }
 
-CreatureAI* GetAI_boss_kalecgos(Creature* pCreature)
+CreatureAI* GetAI_boss_kalecgos(Creature* creature)
 {
-    return new boss_kalecgosAI (pCreature);
+    return new boss_kalecgosAI (creature);
 }
 
-CreatureAI* GetAI_boss_Sathrovarr(Creature* pCreature)
+CreatureAI* GetAI_boss_Sathrovarr(Creature* creature)
 {
-    return new boss_sathrovarrAI (pCreature);
+    return new boss_sathrovarrAI (creature);
 }
 
-CreatureAI* GetAI_boss_kalec(Creature* pCreature)
+CreatureAI* GetAI_boss_kalec(Creature* creature)
 {
-    return new boss_kalecAI (pCreature);
+    return new boss_kalecAI (creature);
 }
 
 void AddSC_boss_kalecgos()

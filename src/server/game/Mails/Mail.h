@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MAIL_H
-#define OREGON_MAIL_H
+#ifndef TRINITY_MAIL_H
+#define TRINITY_MAIL_H
 
 #include "Common.h"
 #include <map>
@@ -103,7 +104,7 @@ class MailReceiver
     public: // Constructors
         explicit MailReceiver(uint32 receiver_lowguid) : m_receiver(NULL), m_receiver_lowguid(receiver_lowguid) {}
         MailReceiver(Player* receiver);
-        MailReceiver(Player* receiver,uint32 receiver_lowguid);
+        MailReceiver(Player* receiver, uint32 receiver_lowguid);
     public: // Accessors
         Player* GetPlayer() const { return m_receiver; }
         uint32 GetPlayerGUIDLow() const { return m_receiver_lowguid; }

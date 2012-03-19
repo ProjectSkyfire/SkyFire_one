@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -90,7 +91,7 @@ public:
     uint16 nBatchB;
     uint32 nBatchC, fogIdx, liquidType, groupWMOID;
 
-    int mopy_size,moba_size;
+    int mopy_size, moba_size;
     int LiquEx_size;
     unsigned int nVertices; // number when loaded
     int nTriangles; // number when loaded
@@ -127,10 +128,10 @@ public:
     WMOGroup *wmo;
     Vec3D pos;
     Vec3D pos2, pos3, rot;
-    uint32 indx,id, d2, d3;
+    uint32 indx, id, d2, d3;
     int doodadset;
 
-    WMOInstance(MPQFile &f,const char* WmoInstName, uint32 mapID, uint32 tileX, uint32 tileY, FILE *pDirfile);
+    WMOInstance(MPQFile &f, const char* WmoInstName, uint32 mapID, uint32 tileX, uint32 tileY, FILE *pDirfile);
 
     static void reset();
 };

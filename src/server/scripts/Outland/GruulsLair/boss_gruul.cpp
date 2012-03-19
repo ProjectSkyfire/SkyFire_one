@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -102,7 +103,7 @@ struct boss_gruulAI : public ScriptedAI
 
     void KilledUnit()
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_SLAY1, me); break;
         case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -120,7 +121,7 @@ struct boss_gruulAI : public ScriptedAI
         // Gruul can cast this spell up to 30 times
         if (Growth_Timer <= diff)
         {
-            DoCast(me,SPELL_GROWTH);
+            DoCast(me, SPELL_GROWTH);
             DoScriptText(EMOTE_GROW, me);
             Growth_Timer = 30000;
         } else Growth_Timer -= diff;
@@ -129,7 +130,7 @@ struct boss_gruulAI : public ScriptedAI
         {
             if (GroundSlamTimer <= diff)
             {
-                switch(GroundSlamStage)
+                switch (GroundSlamStage)
                 {
                     case 0:
                     {
@@ -155,7 +156,7 @@ struct boss_gruulAI : public ScriptedAI
 
                             if (target && target2)
                             {
-                                switch(rand()%2)
+                                switch (rand()%2)
                                 {
                                     case 0: target2->CastSpell(target, SPELL_MAGNETIC_PULL, true, NULL, NULL, me->GetGUID()); break;
                                     case 1: target2->CastSpell(target, SPELL_KNOCK_BACK, true, NULL, NULL, me->GetGUID()); break;
@@ -242,10 +243,10 @@ struct boss_gruulAI : public ScriptedAI
             if (HurtfulStrike_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
+                pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
 
                 if (pTarget && me->IsWithinMeleeRange(me->getVictim()))
-                    DoCast(pTarget,SPELL_HURTFUL_STRIKE);
+                    DoCast(pTarget, SPELL_HURTFUL_STRIKE);
                 else
                     DoCast(me->getVictim(),SPELL_HURTFUL_STRIKE);
 
@@ -262,8 +263,8 @@ struct boss_gruulAI : public ScriptedAI
             // Cave In
             if (CaveIn_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(pTarget,SPELL_CAVE_IN);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_CAVE_IN);
 
                 CaveIn_Timer = 20000;
             } else CaveIn_Timer -= diff;
@@ -286,9 +287,9 @@ struct boss_gruulAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gruul(Creature* pCreature)
+CreatureAI* GetAI_boss_gruul(Creature* creature)
 {
-    return new boss_gruulAI (pCreature);
+    return new boss_gruulAI (creature);
 }
 
 void AddSC_boss_gruul()

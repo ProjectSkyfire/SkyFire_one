@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -33,7 +34,7 @@ class WorldSocketMgr
 {
 public:
   friend class WorldSocket;
-  friend class ACE_Singleton<WorldSocketMgr,ACE_Thread_Mutex>;
+  friend class ACE_Singleton<WorldSocketMgr, ACE_Thread_Mutex>;
 
   // Start network, listen at address:port .
   int StartNetwork (ACE_UINT16 port, const char* address);
@@ -66,7 +67,7 @@ private:
   ACE_Event_Handler* m_Acceptor;
 };
 
-#define sWorldSocketMgr WorldSocketMgr::Instance()
+#define sWorldSocketMgr ACE_Singleton<WorldSocketMgr, ACE_Thread_Mutex>::instance()
 
 #endif
 

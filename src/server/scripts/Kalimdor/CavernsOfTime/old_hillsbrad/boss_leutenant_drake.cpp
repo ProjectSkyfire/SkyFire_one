@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -32,7 +33,7 @@ EndScriptData */
 ## go_barrel_old_hillsbrad
 ######*/
 
-bool GOHello_go_barrel_old_hillsbrad(Player *player, GameObject* _GO)
+bool GOHello_go_barrel_old_hillsbrad(Player* player, GameObject* _GO)
 {
     ScriptedInstance* pInstance = _GO->GetInstanceData();
 
@@ -125,7 +126,7 @@ struct boss_lieutenant_drakeAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -177,9 +178,9 @@ struct boss_lieutenant_drakeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_lieutenant_drake(Creature* pCreature)
+CreatureAI* GetAI_boss_lieutenant_drake(Creature* creature)
 {
-    return new boss_lieutenant_drakeAI (pCreature);
+    return new boss_lieutenant_drakeAI (creature);
 }
 
 void AddSC_boss_lieutenant_drake()

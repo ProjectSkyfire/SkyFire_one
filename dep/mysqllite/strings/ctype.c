@@ -197,7 +197,7 @@ static int cs_leave(MY_XML_PARSER *st,const char *attr, size_t len)
   int    state= s ? s->state : 0;
   int    rc;
 
-  switch(state){
+  switch (state){
   case _CS_COLLATION:
     rc= i->add_collation ? i->add_collation(&i->cs) : MY_XML_OK;
     break;

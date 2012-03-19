@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -91,7 +92,7 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_SLAY_1, me); break;
             case 1: DoScriptText(SAY_SLAY_2, me); break;
@@ -101,7 +102,7 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -117,14 +118,14 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
     {
         DoScriptText(SAY_MECHANICS, me);
 
-        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,5,5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
-        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
-        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,-5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+        DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,-5,-5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
 
         if (rand()%2)
-            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,5,-7,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC, 5,-7, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
         if (rand()%2)
-            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC,7,-5,0,0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
+            DoSpawnCreature(ENTRY_STREAMRIGGER_MECHANIC, 7,-5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 240000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -140,8 +141,8 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
 
         if (Saw_Blade_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(pTarget,SPELL_SAW_BLADE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                DoCast(pTarget, SPELL_SAW_BLADE);
             else
                 DoCast(me->getVictim(),SPELL_SAW_BLADE);
 
@@ -186,9 +187,9 @@ struct boss_mekgineer_steamriggerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature* pCreature)
+CreatureAI* GetAI_boss_mekgineer_steamrigger(Creature* creature)
 {
-    return new boss_mekgineer_steamriggerAI (pCreature);
+    return new boss_mekgineer_steamriggerAI (creature);
 }
 
 #define SPELL_DISPEL_MAGIC          17201
@@ -240,14 +241,14 @@ struct mob_steamrigger_mechanicAI : public ScriptedAI
                             //me->GetMotionMaster()->MovementExpired();
                             //me->GetMotionMaster()->MoveIdle();
 
-                            DoCast(me,HeroicMode ? H_SPELL_REPAIR : SPELL_REPAIR, true);
+                            DoCast(me, HeroicMode ? H_SPELL_REPAIR : SPELL_REPAIR, true);
                         }
                         Repair_Timer = 5000;
                     }
                     else
                     {
                         //me->GetMotionMaster()->MovementExpired();
-                        //me->GetMotionMaster()->MoveFollow(pMekgineer,0,0);
+                        //me->GetMotionMaster()->MoveFollow(pMekgineer, 0, 0);
                     }
                 }
             } else Repair_Timer = 5000;
@@ -260,9 +261,9 @@ struct mob_steamrigger_mechanicAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_steamrigger_mechanic(Creature* pCreature)
+CreatureAI* GetAI_mob_steamrigger_mechanic(Creature* creature)
 {
-    return new mob_steamrigger_mechanicAI (pCreature);
+    return new mob_steamrigger_mechanicAI (creature);
 }
 
 void AddSC_boss_mekgineer_steamrigger()

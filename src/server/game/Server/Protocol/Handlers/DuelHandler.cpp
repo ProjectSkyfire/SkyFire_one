@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -40,23 +41,23 @@ void WorldSession::HandleDuelAcceptedOpcode(WorldPacket& recvPacket)
     if (pl == pl->duel->initiator || !plTarget || pl == plTarget || pl->duel->startTime != 0 || plTarget->duel->startTime != 0)
         return;
 
-    //sLog.outDebug("WORLD: received CMSG_DUEL_ACCEPTED");
-    DEBUG_LOG("Player 1 is: %u (%s)", pl->GetGUIDLow(),pl->GetName());
-    DEBUG_LOG("Player 2 is: %u (%s)", plTarget->GetGUIDLow(),plTarget->GetName());
+    //sLog->outDebug("WORLD: received CMSG_DUEL_ACCEPTED");
+    sLog->outDebug("Player 1 is: %u (%s)", pl->GetGUIDLow(), pl->GetName());
+    sLog->outDebug("Player 2 is: %u (%s)", plTarget->GetGUIDLow(), plTarget->GetName());
 
     time_t now = time(NULL);
     pl->duel->startTimer = now;
     plTarget->duel->startTimer = now;
 
-    if (sWorld.getConfig(CONFIG_DUEL_MOD))
+    if (sWorld->getConfig(CONFIG_DUEL_MOD))
     {
         pl->ResetAllPowers();
         plTarget->ResetAllPowers();
 
-        if (sWorld.getConfig(CONFIG_DUEL_CD_RESET) && !pl->GetMap()->IsDungeon())
+        if (sWorld->getConfig(CONFIG_DUEL_CD_RESET) && !pl->GetMap()->IsDungeon())
             pl->RemoveArenaSpellCooldowns();
 
-        if (sWorld.getConfig(CONFIG_DUEL_CD_RESET) && !plTarget->GetMap()->IsDungeon())
+        if (sWorld->getConfig(CONFIG_DUEL_CD_RESET) && !plTarget->GetMap()->IsDungeon())
             plTarget->RemoveArenaSpellCooldowns();
     }
 
@@ -68,7 +69,7 @@ void WorldSession::HandleDuelAcceptedOpcode(WorldPacket& recvPacket)
 
 void WorldSession::HandleDuelCancelledOpcode(WorldPacket& recvPacket)
 {
-    //sLog.outDebug("WORLD: received CMSG_DUEL_CANCELLED");
+    //sLog->outDebug("WORLD: received CMSG_DUEL_CANCELLED");
 
     recvPacket >> Unused<uint64>();                         // guid
 

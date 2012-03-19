@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -38,7 +39,7 @@ struct boss_gelihastAI : public ScriptedAI
 
     void Reset()
     {
-        uiNetTimer = urand(2000,4000);
+        uiNetTimer = urand(2000, 4000);
         if (pInstance)
             pInstance->SetData(TYPE_GELIHAST, NOT_STARTED);
     }
@@ -63,16 +64,16 @@ struct boss_gelihastAI : public ScriptedAI
         if (uiNetTimer < diff)
         {
             DoCastVictim(SPELL_NET);
-            uiNetTimer = urand(4000,7000);
+            uiNetTimer = urand(4000, 7000);
         } else uiNetTimer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
 
-CreatureAI* GetAI_boss_gelihast(Creature* pCreature)
+CreatureAI* GetAI_boss_gelihast(Creature* creature)
 {
-    return new boss_gelihastAI (pCreature);
+    return new boss_gelihastAI (creature);
 }
 
 void AddSC_boss_gelihast()

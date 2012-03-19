@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,16 +18,16 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_COMMON_H
-#define OREGONCORE_COMMON_H
+#ifndef TRINITY_COMMON_H
+#define TRINITY_COMMON_H
 
 // config.h needs to be included 1st
-// TODO this thingy looks like hack ,but its not, need to
+// TODO this thingy looks like hack , but its not, need to
 // make separate header however, because It makes mess here.
 #ifdef HAVE_CONFIG_H
 // Remove Some things that we will define
 // This is in case including another config.h
-// before Oregon config.h
+// before Trinity config.h
 #ifdef PACKAGE
 #undef PACKAGE
 #endif //PACKAGE
@@ -187,20 +188,6 @@ enum AccountTypes
     SEC_CONSOLE        = 4                                  // must be always last in list, accounts must have less security level always also
 };
 
-// Used in core/realm
-enum RealmFlags
-{
-    REALM_FLAG_NONE         = 0x00,
-    REALM_FLAG_INVALID      = 0x01,
-    REALM_FLAG_OFFLINE      = 0x02,
-    REALM_FLAG_SPECIFYBUILD = 0x04,                         // client will show realm version in RealmList screen in form "RealmName (major.minor.revision.build)"
-    REALM_FLAG_UNK1         = 0x08,
-    REALM_FLAG_UNK2         = 0x10,
-    REALM_FLAG_NEW_PLAYERS  = 0x20,
-    REALM_FLAG_RECOMMENDED  = 0x40,
-    REALM_FLAG_FULL         = 0x80
-};
-
 enum LocaleConstant
 {
     LOCALE_enUS = 0,                                        // also enGB
@@ -214,9 +201,9 @@ enum LocaleConstant
     LOCALE_ruRU = 8
 };
 
-const uint8 MAX_LOCALE = 9;
+const uint8 TOTAL_LOCALES = 9;
 
-extern char const* localeNames[MAX_LOCALE];
+extern char const* localeNames[TOTAL_LOCALES];
 
 LocaleConstant GetLocaleByName(const std::string& name);
 

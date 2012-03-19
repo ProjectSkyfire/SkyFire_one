@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -270,7 +271,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
@@ -318,18 +319,18 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
     {
         for (uint8 i = 0; i < 4; ++i)
         {
-            Creature *pCreature = (Unit::GetCreature((*me), AddGUID[i]));
-            if (!pCreature || !pCreature->isAlive())
+            Creature* creature = (Unit::GetCreature((*me), AddGUID[i]));
+            if (!creature || !creature->isAlive())
             {
-                if (pCreature) pCreature->setDeathState(DEAD);
-                pCreature = me->SummonCreature(AddEntry[i], Pos_X[i], POS_Y, POS_Z, ORIENT, TEMPSUMMON_DEAD_DESPAWN, 0);
-                if (pCreature) AddGUID[i] = pCreature->GetGUID();
+                if (creature) creature->setDeathState(DEAD);
+                creature = me->SummonCreature(AddEntry[i], Pos_X[i], POS_Y, POS_Z, ORIENT, TEMPSUMMON_DEAD_DESPAWN, 0);
+                if (creature) AddGUID[i] = creature->GetGUID();
             }
             else
             {
-                pCreature->AI()->EnterEvadeMode();
-                pCreature->GetMap()->CreatureRelocation(me, Pos_X[i], POS_Y, POS_Z, ORIENT);
-                pCreature->StopMoving();
+                creature->AI()->EnterEvadeMode();
+                creature->GetMap()->CreatureRelocation(me, Pos_X[i], POS_Y, POS_Z, ORIENT);
+                creature->StopMoving();
             }
         }
     }
@@ -373,7 +374,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
             //me->AddAura(44132, me);
             me->MonsterYell(YELL_DRAIN_POWER, LANG_UNIVERSAL, NULL);
             DoPlaySoundToSet(me, SOUND_YELL_DRAIN_POWER);
-            DrainPower_Timer = urand(40000,55000);    // must cast in 60 sec, or buff/debuff will disappear
+            DrainPower_Timer = urand(40000, 55000);    // must cast in 60 sec, or buff/debuff will disappear
         } else DrainPower_Timer -= diff;
 
         if (SpiritBolts_Timer <= diff)
@@ -412,7 +413,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
                 //me->SetUInt32Value(UNIT_CHANNEL_SPELL, SPELL_SIPHON_SOUL);
 
                 PlayerGUID = pTarget->GetGUID();
-                PlayerAbility_Timer = urand(8000,10000);
+                PlayerAbility_Timer = urand(8000, 10000);
                 PlayerClass = pTarget->getClass() - 1;
 
                 if (PlayerClass == 10)
@@ -430,7 +431,7 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
             //if (pTarget && pTarget->isAlive())
             //{
                 UseAbility();
-                PlayerAbility_Timer = urand(8000,10000);
+                PlayerAbility_Timer = urand(8000, 10000);
             //}
         } else PlayerAbility_Timer -= diff;
 
@@ -439,9 +440,9 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
     void UseAbility()
     {
-        uint32 random = urand(0,2);
+        uint32 random = urand(0, 2);
         Unit *pTarget = NULL;
-        switch(PlayerAbility[PlayerClass][random].target)
+        switch (PlayerAbility[PlayerClass][random].target)
         {
             case ABILITY_TARGET_SELF:
                 pTarget = me;
@@ -570,7 +571,7 @@ struct boss_alyson_antilleAI : public boss_hexlord_addAI
             }
             else
             {
-                if (urand(0,1))
+                if (urand(0, 1))
                     pTarget = DoSelectLowestHpFriendly(50, 0);
                 else
                     pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
@@ -582,7 +583,7 @@ struct boss_alyson_antilleAI : public boss_hexlord_addAI
 
         /*if (dispelmagic_timer <= diff)
         {
-        if (urand(0,1))
+        if (urand(0, 1))
         {
             Unit *pTarget = SelectTarget();
 
@@ -821,49 +822,49 @@ struct boss_koraggAI : public boss_hexlord_addAI
     }
 };
 
-CreatureAI* GetAI_boss_hex_lord_malacrass(Creature* pCreature)
+CreatureAI* GetAI_boss_hex_lord_malacrass(Creature* creature)
 {
-    return new boss_hex_lord_malacrassAI (pCreature);
+    return new boss_hex_lord_malacrassAI (creature);
 }
 
-CreatureAI* GetAI_boss_thurg(Creature* pCreature)
+CreatureAI* GetAI_boss_thurg(Creature* creature)
 {
-    return new boss_thurgAI (pCreature);
+    return new boss_thurgAI (creature);
 }
 
-CreatureAI* GetAI_boss_alyson_antille(Creature* pCreature)
+CreatureAI* GetAI_boss_alyson_antille(Creature* creature)
 {
-    return new boss_alyson_antilleAI (pCreature);
+    return new boss_alyson_antilleAI (creature);
 }
 
-CreatureAI* GetAI_boss_gazakroth(Creature* pCreature)
+CreatureAI* GetAI_boss_gazakroth(Creature* creature)
 {
-    return new boss_gazakrothAI (pCreature);
+    return new boss_gazakrothAI (creature);
 }
 
-CreatureAI* GetAI_boss_lord_raadan(Creature* pCreature)
+CreatureAI* GetAI_boss_lord_raadan(Creature* creature)
 {
-    return new boss_lord_raadanAI (pCreature);
+    return new boss_lord_raadanAI (creature);
 }
 
-CreatureAI* GetAI_boss_darkheart(Creature* pCreature)
+CreatureAI* GetAI_boss_darkheart(Creature* creature)
 {
-    return new boss_darkheartAI (pCreature);
+    return new boss_darkheartAI (creature);
 }
 
-CreatureAI* GetAI_boss_slither(Creature* pCreature)
+CreatureAI* GetAI_boss_slither(Creature* creature)
 {
-    return new boss_slitherAI (pCreature);
+    return new boss_slitherAI (creature);
 }
 
-CreatureAI* GetAI_boss_fenstalker(Creature* pCreature)
+CreatureAI* GetAI_boss_fenstalker(Creature* creature)
 {
-    return new boss_fenstalkerAI (pCreature);
+    return new boss_fenstalkerAI (creature);
 }
 
-CreatureAI* GetAI_boss_koragg(Creature* pCreature)
+CreatureAI* GetAI_boss_koragg(Creature* creature)
 {
-    return new boss_koraggAI (pCreature);
+    return new boss_koraggAI (creature);
 }
 void AddSC_boss_hex_lord_malacrass()
 {

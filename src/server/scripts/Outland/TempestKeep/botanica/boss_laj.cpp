@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -74,7 +75,7 @@ struct boss_lajAI : public ScriptedAI
 
     void DoTransform()
     {
-        switch(rand()%5)
+        switch (rand()%5)
         {
             case 0:
                 me->SetDisplayId(MODEL_DEFAULT);
@@ -121,23 +122,23 @@ struct boss_lajAI : public ScriptedAI
 
     void DoSummons()
     {
-        switch(rand()%4)
+        switch (rand()%4)
         {
             case 0:
-                DoCast(me,SPELL_SUMMON_LASHER_1,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_1,true);
+                DoCast(me, SPELL_SUMMON_LASHER_1, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_1, true);
                 break;
             case 1:
-                DoCast(me,SPELL_SUMMON_LASHER_2,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_2,true);
+                DoCast(me, SPELL_SUMMON_LASHER_2, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_2, true);
                 break;
             case 2:
-                DoCast(me,SPELL_SUMMON_LASHER_3,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_3,true);
+                DoCast(me, SPELL_SUMMON_LASHER_3, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_3, true);
                 break;
             case 3:
-                DoCast(me,SPELL_SUMMON_LASHER_4,true);
-                DoCast(me,SPELL_SUMMON_FLAYER_4,true);
+                DoCast(me, SPELL_SUMMON_LASHER_4, true);
+                DoCast(me, SPELL_SUMMON_FLAYER_4, true);
                 break;
         }
         CanSummon = false;
@@ -176,7 +177,7 @@ struct boss_lajAI : public ScriptedAI
 
         if (Teleport_Timer <= diff)
         {
-            DoCast(me,SPELL_TELEPORT_SELF);
+            DoCast(me, SPELL_TELEPORT_SELF);
             Teleport_Timer = 30000+rand()%10000;
             CanSummon = true;
         } else Teleport_Timer -= diff;
@@ -191,9 +192,9 @@ struct boss_lajAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_laj(Creature* pCreature)
+CreatureAI* GetAI_boss_laj(Creature* creature)
 {
-    return new boss_lajAI (pCreature);
+    return new boss_lajAI (creature);
 }
 
 void AddSC_boss_laj()

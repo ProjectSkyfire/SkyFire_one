@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -158,7 +159,7 @@ namespace VMAP
         if ((iFlags[tx + ty*iTilesX] & 0x0F) == 0x0F)
             return false;
 
-        // (dx, dy) coordinates inside tile, in [0,1]^2
+        // (dx, dy) coordinates inside tile, in [0, 1]^2
         float dx = tx_f - (float)tx;
         float dy = ty_f - (float)ty;
 
@@ -166,7 +167,7 @@ namespace VMAP
 
             ^ dy
             |
-          1 x---------x (1,1)
+          1 x---------x (1, 1)
             | (b)   / |
             |     /   |
             |   /     |
@@ -499,7 +500,7 @@ namespace VMAP
 
         bool result = true;
         uint32 chunkSize, count;
-        result = fwrite(VMAP_MAGIC,1,8,wf) == 8;
+        result = fwrite(VMAP_MAGIC, 1, 8, wf) == 8;
         if (result && fwrite("WMOD", 1, 4, wf) != 4) result = false;
         chunkSize = sizeof(uint32) + sizeof(uint32);
         if (result && fwrite(&chunkSize, sizeof(uint32), 1, wf) != 1) result = false;
@@ -513,7 +514,7 @@ namespace VMAP
             //chunkSize = sizeof(uint32)+ sizeof(GroupModel)*count;
             //if (result && fwrite(&chunkSize, sizeof(uint32), 1, wf) != 1) result = false;
             if (result && fwrite(&count, sizeof(uint32), 1, wf) != 1) result = false;
-            for (uint32 i=0; i<groupModels.size() && result; ++i)
+            for (uint32 i = 0; i < groupModels.size() && result; ++i)
                 result = groupModels[i].writeToFile(wf);
 
             // write group BIH
@@ -548,7 +549,7 @@ namespace VMAP
             if (result && fread(&count, sizeof(uint32), 1, rf) != 1) result = false;
             if (result) groupModels.resize(count);
             //if (result && fread(&groupModels[0], sizeof(GroupModel), count, rf) != count) result = false;
-            for (uint32 i=0; i<count && result; ++i)
+            for (uint32 i = 0; i < count && result; ++i)
                 result = groupModels[i].readFromFile(rf);
 
             // read group BIH

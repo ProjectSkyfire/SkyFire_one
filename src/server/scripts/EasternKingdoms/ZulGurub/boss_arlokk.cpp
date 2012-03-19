@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -54,9 +55,9 @@ enum eEnums
 
 struct boss_arlokkAI : public ScriptedAI
 {
-    boss_arlokkAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_arlokkAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance *pInstance;
@@ -172,7 +173,7 @@ struct boss_arlokkAI : public ScriptedAI
                     MarkedTargetGUID = pMarkedTarget->GetGUID();
                 }
                 else
-                    error_log("OSCR: boss_arlokk could not acquire pMarkedTarget.");
+                    sLog->outError("TSCR: boss_arlokk could not acquire pMarkedTarget.");
 
                 m_uiMark_Timer = 15000;
             }
@@ -258,7 +259,7 @@ struct boss_arlokkAI : public ScriptedAI
                 me->SetDisplayId(MODEL_ID_PANTHER);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-                const CreatureInfo *cinfo = me->GetCreatureInfo();
+                const CreatureTemplate *cinfo = me->GetCreatureTemplate();
                 me->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg +((cinfo->mindmg / 100) * 35)));
                 me->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg +((cinfo->maxdmg / 100) * 35)));
                 me->UpdateDamagePhysical(BASE_ATTACK);
@@ -266,7 +267,7 @@ struct boss_arlokkAI : public ScriptedAI
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
                     AttackStart(pTarget);
-                    DoCast(pTarget,SPELL_BACKSTAB);
+                    DoCast(pTarget, SPELL_BACKSTAB);
                 }
 
                 m_bIsPhaseTwo = true;
@@ -286,9 +287,9 @@ struct mob_prowlerAI : public ScriptedAI
     uint32 m_uiThrash_Timer;
     uint32 m_uiUpdateTarget_Timer;
 
-    mob_prowlerAI(Creature* pCreature) : ScriptedAI(pCreature)
+    mob_prowlerAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance *pInstance;
@@ -327,14 +328,14 @@ struct mob_prowlerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_arlokk(Creature* pCreature)
+CreatureAI* GetAI_boss_arlokk(Creature* creature)
 {
-    return new boss_arlokkAI (pCreature);
+    return new boss_arlokkAI (creature);
 }
 
-CreatureAI* GetAI_mob_prowler(Creature* pCreature)
+CreatureAI* GetAI_mob_prowler(Creature* creature)
 {
-    return new mob_prowlerAI (pCreature);
+    return new mob_prowlerAI (creature);
 }
 
 void AddSC_boss_arlokk()

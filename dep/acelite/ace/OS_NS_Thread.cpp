@@ -662,7 +662,7 @@ TSS_Cleanup_Instance::TSS_Cleanup_Instance (Purpose purpose)
     ptr_ = instance_;
     ++reference_count_;
   }
-  else if(purpose == DESTROY)
+  else if (purpose == DESTROY)
   {
     if (instance_ != 0)
     {
@@ -792,7 +792,7 @@ ACE_TSS_Cleanup::thread_exit (void)
         if (info.key_in_use () && this_thread_keys->is_set(info.key_))
           {
             // defer deleting the in-use key until all others have been deleted
-            if(info.key_ != this->in_use_)
+            if (info.key_ != this->in_use_)
               {
                 destructor[d_count] = 0;
                 tss_obj[d_count] = 0;
@@ -5246,7 +5246,7 @@ add_to_argv (int& argc, char** argv, int max_args, char* string)
                 }
 
               // Skip over whitespace in between arguments
-              for(++i; i < length && ACE_OS::ace_isspace (string[i]); ++i)
+              for (++i; i < length && ACE_OS::ace_isspace (string[i]); ++i)
                 {
                 }
 

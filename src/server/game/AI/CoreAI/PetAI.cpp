@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -29,7 +30,7 @@
 #include "World.h"
 #include "Util.h"
 
-int PetAI::Permissible(const Creature *creature)
+int PetAI::Permissible(const Creature* creature)
 {
     if (creature->isPet())
         return PERMIT_BASE_SPECIAL;
@@ -60,7 +61,7 @@ void PetAI::_stopAttack()
 {
     if (!me->isAlive())
     {
-        DEBUG_LOG("Creature stoped attacking cuz his dead [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug("Creature stoped attacking cuz his dead [guid=%u]", me->GetGUIDLow());
         me->GetMotionMaster()->Clear();
         me->GetMotionMaster()->MoveIdle();
         me->CombatStop();
@@ -89,7 +90,7 @@ void PetAI::UpdateAI(const uint32 diff)
     {
         if (_needToStop())
         {
-            DEBUG_LOG("Pet AI stoped attacking [guid=%u]", me->GetGUIDLow());
+            sLog->outDebug("Pet AI stoped attacking [guid=%u]", me->GetGUIDLow());
             _stopAttack();
             return;
         }
@@ -106,7 +107,7 @@ void PetAI::UpdateAI(const uint32 diff)
             HandleReturnMovement();
     }
     else if (owner && !me->hasUnitState(UNIT_STAT_FOLLOW)) // no charm info and no victim
-        me->GetMotionMaster()->MoveFollow(owner,PET_FOLLOW_DIST, me->GetFollowAngle());
+        me->GetMotionMaster()->MoveFollow(owner, PET_FOLLOW_DIST, me->GetFollowAngle());
 
     if (!me->GetCharmInfo())
         return;
@@ -170,7 +171,7 @@ void PetAI::UpdateAI(const uint32 diff)
                 bool spellUsed = false;
                 for (std::set<uint64>::const_iterator tar = m_AllySet.begin(); tar != m_AllySet.end(); ++tar)
                 {
-                    Unit* Target = ObjectAccessor::GetUnit(*me,*tar);
+                    Unit* Target = ObjectAccessor::GetUnit(*me, *tar);
 
                     //only buff targets that are in combat, unless the spell can only be cast while out of combat
                     if (!Target)
@@ -295,13 +296,13 @@ void PetAI::AttackStart(Unit *target)
 
     // We can attack, should we chase or not?
     if (me->GetCharmInfo()->HasCommandState(COMMAND_FOLLOW))
-        DoAttack(target,true); // FOLLOW, attack with chase
+        DoAttack(target, true); // FOLLOW, attack with chase
     else
     {
         if (me->GetCharmInfo()->IsCommandAttack())
-            DoAttack(target,true); // STAY or FOLLOW, player clicked "attack" so attack with chase
+            DoAttack(target, true); // STAY or FOLLOW, player clicked "attack" so attack with chase
         else
-            DoAttack(target,false); // STAY, target in range, attack not clicked so attack without chase
+            DoAttack(target, false); // STAY, target in range, attack not clicked so attack without chase
     }
 }
 
@@ -337,12 +338,12 @@ void PetAI::HandleReturnMovement()
             // Return to previous position where stay was clicked
             if (!me->GetCharmInfo()->IsCommandAttack())
             {
-                float x,y,z;
+                float x, y, z;
 
                 me->GetCharmInfo()->GetStayPosition(x, y, z);
                 me->GetCharmInfo()->SetIsReturning(true);
                 me->GetMotionMaster()->Clear();
-                me->GetMotionMaster()->MovePoint(me->GetGUIDLow(),x,y,z);
+                me->GetMotionMaster()->MovePoint(me->GetGUIDLow(), x, y, z);
             }
         }
     }
@@ -373,7 +374,7 @@ void PetAI::DoAttack(Unit *target, bool chase)
 
     if (chase)
     {
-        if (me->Attack(target,true))
+        if (me->Attack(target, true))
         {
             me->GetCharmInfo()->SetIsAtStay(false);
             me->GetCharmInfo()->SetIsFollowing(false);
@@ -387,7 +388,7 @@ void PetAI::DoAttack(Unit *target, bool chase)
         me->GetCharmInfo()->SetIsAtStay(true);
         me->GetCharmInfo()->SetIsFollowing(false);
         me->GetCharmInfo()->SetIsReturning(false);
-        me->Attack(target,true);
+        me->Attack(target, true);
     }
 }
 

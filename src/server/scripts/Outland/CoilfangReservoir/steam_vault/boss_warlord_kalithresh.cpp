@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -75,17 +76,17 @@ struct mob_naga_distillerAI : public ScriptedAI
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        DoCast(me,SPELL_WARLORDS_RAGE_NAGA,true);
+        DoCast(me, SPELL_WARLORDS_RAGE_NAGA, true);
 
         if (pInstance)
-            pInstance->SetData(TYPE_DISTILLER,IN_PROGRESS);
+            pInstance->SetData(TYPE_DISTILLER, IN_PROGRESS);
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (me->GetHealth() <= damage)
             if (pInstance)
-                pInstance->SetData(TYPE_DISTILLER,DONE);
+                pInstance->SetData(TYPE_DISTILLER, DONE);
     }
 };
 
@@ -116,7 +117,7 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO1, me); break;
             case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -129,7 +130,7 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -138,19 +139,19 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
 
     Creature* SelectCreatureInGrid(uint32 entry, float range)
     {
-        Creature* pCreature = NULL;
+        Creature* creature = NULL;
 
-        CellPair pair(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+        CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
-        Oregon::CreatureLastSearcher<Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(pCreature, creature_check);
-        TypeContainerVisitor<Oregon::CreatureLastSearcher<Oregon::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+        Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
+        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
+        TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
         cell.Visit(pair, creature_searcher,*(me->GetMap()));
 
-        return pCreature;
+        return creature;
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -181,7 +182,7 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
             if (distiller)
             {
                 DoScriptText(SAY_REGEN, me);
-                DoCast(me,SPELL_WARLORDS_RAGE);
+                DoCast(me, SPELL_WARLORDS_RAGE);
                 ((mob_naga_distillerAI*)distiller->AI())->StartRageGen(me);
             }
             Rage_Timer = 3000+rand()%15000;
@@ -197,8 +198,8 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
         //Impale_Timer
         if (Impale_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_IMPALE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_IMPALE);
 
             Impale_Timer = 7500+rand()%5000;
         } else Impale_Timer -= diff;
@@ -207,14 +208,14 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_naga_distiller(Creature* pCreature)
+CreatureAI* GetAI_mob_naga_distiller(Creature* creature)
 {
-    return new mob_naga_distillerAI (pCreature);
+    return new mob_naga_distillerAI (creature);
 }
 
-CreatureAI* GetAI_boss_warlord_kalithresh(Creature* pCreature)
+CreatureAI* GetAI_boss_warlord_kalithresh(Creature* creature)
 {
-    return new boss_warlord_kalithreshAI (pCreature);
+    return new boss_warlord_kalithreshAI (creature);
 }
 
 void AddSC_boss_warlord_kalithresh()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -71,7 +72,7 @@ struct boss_void_reaverAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_SLAY1, me); break;
         case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -105,7 +106,7 @@ struct boss_void_reaverAI : public ScriptedAI
         {
             DoCast(me->getVictim(),SPELL_POUNDING);
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_POUNDING1, me); break;
             case 1: DoScriptText(SAY_POUNDING2, me); break;
@@ -156,7 +157,7 @@ struct boss_void_reaverAI : public ScriptedAI
         //Berserk
         if (Berserk_Timer <= diff && !Enraged)
         {
-            DoCast(me,SPELL_BERSERK);
+            DoCast(me, SPELL_BERSERK);
             Enraged = true;
         } else Berserk_Timer -= diff;
 
@@ -164,9 +165,9 @@ struct boss_void_reaverAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_void_reaver(Creature* pCreature)
+CreatureAI* GetAI_boss_void_reaver(Creature* creature)
 {
-    return new boss_void_reaverAI (pCreature);
+    return new boss_void_reaverAI (creature);
 }
 
 void AddSC_boss_void_reaver()

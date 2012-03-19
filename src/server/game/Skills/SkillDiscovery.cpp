@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -19,13 +20,13 @@
 
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
-#include "ProgressBar.h"
-#include "Policies/SingletonImp.h"
+
 #include "ObjectAccessor.h"
 #include "World.h"
 #include "Util.h"
 #include "SkillDiscovery.h"
 #include "SpellMgr.h"
+
 #include <map>
 
 struct SkillDiscoveryEntry
@@ -56,14 +57,11 @@ void LoadSkillDiscoveryTable()
 
     if (result)
     {
-        barGoLink bar(result->GetRowCount());
-
         std::ostringstream ssNonDiscoverableEntries;
 
         do
         {
             Field *fields = result->Fetch();
-            bar.step();
 
             uint32 spellId         = fields[0].GetUInt32();
             int32  reqSkillOrSpell = fields[1].GetInt32();
@@ -80,13 +78,13 @@ void LoadSkillDiscoveryTable()
                 SpellEntry const* spellEntry = sSpellStore.LookupEntry(reqSkillOrSpell);
                 if (!spellEntry)
                 {
-                    sLog.outErrorDb("Spell (ID: %u) has invalid spell (ID: %i) in reqSpell field in skill_discovery_template table",spellId,reqSkillOrSpell);
+                    sLog->outErrorDb("Spell (ID: %u) has invalid spell (ID: %i) in reqSpell field in skill_discovery_template table", spellId, reqSkillOrSpell);
                     continue;
                 }
 
                 if (spellEntry->Mechanic != MECHANIC_DISCOVERY)
                 {
-                    sLog.outErrorDb("Spell (ID: %u) does not have MECHANIC_DISCOVERY (28) value in Mechanic field in spell.dbc but listed in skill_discovery_template table",spellId);
+                    sLog->outErrorDb("Spell (ID: %u) does not have MECHANIC_DISCOVERY (28) value in Mechanic field in spell.dbc but listed in skill_discovery_template table", spellId);
                     continue;
                 }
 
@@ -94,12 +92,12 @@ void LoadSkillDiscoveryTable()
             }
             else if (reqSkillOrSpell == 0)                 // skill case
             {
-                SkillLineAbilityMap::const_iterator lower = spellmgr.GetBeginSkillLineAbilityMap(spellId);
-                SkillLineAbilityMap::const_iterator upper = spellmgr.GetEndSkillLineAbilityMap(spellId);
+                SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spellId);
+                SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spellId);
 
                 if (lower == upper)
                 {
-                    sLog.outErrorDb("Spell (ID: %u) not listed in SkillLineAbility.dbc but listed with reqSpell=0 in skill_discovery_template table",spellId);
+                    sLog->outErrorDb("Spell (ID: %u) not listed in SkillLineAbility.dbc but listed with reqSpell=0 in skill_discovery_template table", spellId);
                     continue;
                 }
 
@@ -110,21 +108,21 @@ void LoadSkillDiscoveryTable()
             }
             else
             {
-                sLog.outErrorDb("Spell (ID: %u) has negative value in reqSpell field in skill_discovery_template table",spellId);
+                sLog->outErrorDb("Spell (ID: %u) has negative value in reqSpell field in skill_discovery_template table", spellId);
                 continue;
             }
             ++count;
         } while (result->NextRow());
 
-        sLog.outString();
-        sLog.outString(">> Loaded %u skill discovery definitions", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u skill discovery definitions", count);
         if (!ssNonDiscoverableEntries.str().empty())
-            sLog.outErrorDb("Some items can't be successfully discovered: has chance field value < 0.000001 in skill_discovery_template DB table . List:\n%s",ssNonDiscoverableEntries.str().c_str());
+            sLog->outErrorDb("Some items can't be successfully discovered: has chance field value < 0.000001 in skill_discovery_template DB table . List:\n%s", ssNonDiscoverableEntries.str().c_str());
     }
     else
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 skill discovery definitions. DB table skill_discovery_template is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 skill discovery definitions. DB table skill_discovery_template is empty.");
     }
 }
 
@@ -137,7 +135,7 @@ uint32 GetSkillDiscoverySpell(uint32 skillId, uint32 spellId, Player* player)
     {
         for (SkillDiscoveryList::iterator item_iter = tab->second.begin(); item_iter != tab->second.end(); ++item_iter)
         {
-            if (roll_chance_f(item_iter->chance * sWorld.getRate(RATE_SKILL_DISCOVERY))
+            if (roll_chance_f(item_iter->chance * sWorld->getRate(RATE_SKILL_DISCOVERY))
                 && !player->HasSpell(item_iter->spellId))
                 return item_iter->spellId;
         }
@@ -151,7 +149,7 @@ uint32 GetSkillDiscoverySpell(uint32 skillId, uint32 spellId, Player* player)
     {
         for (SkillDiscoveryList::iterator item_iter = tab->second.begin(); item_iter != tab->second.end(); ++item_iter)
         {
-            if (roll_chance_f(item_iter->chance * sWorld.getRate(RATE_SKILL_DISCOVERY))
+            if (roll_chance_f(item_iter->chance * sWorld->getRate(RATE_SKILL_DISCOVERY))
                 && !player->HasSpell(item_iter->spellId))
                 return item_iter->spellId;
         }

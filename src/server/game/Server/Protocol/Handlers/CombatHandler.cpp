@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -30,16 +31,16 @@ void WorldSession::HandleAttackSwingOpcode(WorldPacket & recv_data)
     ObjectGuid guid;
     recv_data >> guid;
 
-    DEBUG_LOG("WORLD: Recvd CMSG_ATTACKSWING Message %s", guid.GetString().c_str());
+    sLog->outDebug("WORLD: Recvd CMSG_ATTACKSWING Message %s", guid.GetString().c_str());
 
     Unit *pEnemy = ObjectAccessor::GetUnit(*_player, guid.GetRawValue());
 
     if (!pEnemy)
     {
         if (!guid.IsUnit())
-            sLog.outError("WORLD: %s isn't player, pet or creature", guid.GetString().c_str());
+            sLog->outError("WORLD: %s isn't player, pet or creature", guid.GetString().c_str());
         else
-            sLog.outError("WORLD: Enemy %s not found", guid.GetString().c_str());
+            sLog->outError("WORLD: Enemy %s not found", guid.GetString().c_str());
 
         // stop attack state at client
         SendAttackStop(NULL);
@@ -48,14 +49,14 @@ void WorldSession::HandleAttackSwingOpcode(WorldPacket & recv_data)
 
     if (!_player->canAttack(pEnemy))
     {
-        sLog.outError("WORLD: Enemy %s is friendly",guid.GetString().c_str());
+        sLog->outError("WORLD: Enemy %s is friendly", guid.GetString().c_str());
 
         // stop attack state at client
         SendAttackStop(pEnemy);
         return;
     }
 
-    _player->Attack(pEnemy,true);
+    _player->Attack(pEnemy, true);
 }
 
 void WorldSession::HandleAttackStopOpcode(WorldPacket & /*recv_data*/)
@@ -70,7 +71,7 @@ void WorldSession::HandleSetSheathedOpcode(WorldPacket & recv_data)
 
     if (sheathed >= MAX_SHEATH_STATE)
     {
-        sLog.outError("Unknown sheath state %u ??",sheathed);
+        sLog->outError("Unknown sheath state %u ??", sheathed);
         return;
     }
 

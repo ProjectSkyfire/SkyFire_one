@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -47,7 +48,7 @@ void guardAI::Reset()
 void guardAI::EnterCombat(Unit *who)
 {
     if (me->GetEntry() == 15184)
-        DoScriptText(RAND(SAY_GUARD_SIL_AGGRO1,SAY_GUARD_SIL_AGGRO2,SAY_GUARD_SIL_AGGRO3), me, who);
+        DoScriptText(RAND(SAY_GUARD_SIL_AGGRO1, SAY_GUARD_SIL_AGGRO2, SAY_GUARD_SIL_AGGRO3), me, who);
 
     if (SpellEntry const *spell = me->reachWithSpellAttack(who))
         DoCastSpell(who, spell);
@@ -151,8 +152,8 @@ void guardAI::UpdateAI(const uint32 diff)
                 }
 
                 //Cast spell
-                if (Healing) DoCastSpell(me,info);
-                else DoCastSpell(me->getVictim(),info);
+                if (Healing) DoCastSpell(me, info);
+                else DoCastSpell(me->getVictim(), info);
 
                 //Set our global cooldown
                 GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
@@ -170,7 +171,7 @@ void guardAI::UpdateAI(const uint32 diff)
 
 void guardAI::DoReplyToTextEmote(uint32 em)
 {
-    switch(em)
+    switch (em)
     {
         case TEXTEMOTE_KISS:    me->HandleEmoteCommand(EMOTE_ONESHOT_BOW);    break;
         case TEXTEMOTE_WAVE:    me->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);   break;
@@ -181,15 +182,15 @@ void guardAI::DoReplyToTextEmote(uint32 em)
     }
 }
 
-void guardAI_orgrimmar::ReceiveEmote(Player* pPlayer, uint32 text_emote)
+void guardAI_orgrimmar::ReceiveEmote(Player* player, uint32 text_emote)
 {
-    if (pPlayer->GetTeam() == HORDE)
+    if (player->GetTeam() == HORDE)
         DoReplyToTextEmote(text_emote);
 }
 
-void guardAI_stormwind::ReceiveEmote(Player* pPlayer, uint32 text_emote)
+void guardAI_stormwind::ReceiveEmote(Player* player, uint32 text_emote)
 {
-    if (pPlayer->GetTeam() == ALLIANCE)
+    if (player->GetTeam() == ALLIANCE)
         DoReplyToTextEmote(text_emote);
 }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_GRIDDEFINES_H
-#define OREGON_GRIDDEFINES_H
+#ifndef TRINITY_GRIDDEFINES_H
+#define TRINITY_GRIDDEFINES_H
 
 #include "Common.h"
 #include "NGrid.h"
@@ -66,7 +67,7 @@ typedef GridRefManager<DynamicObject>   DynamicObjectMapType;
 typedef GridRefManager<GameObject>      GameObjectMapType;
 typedef GridRefManager<Player>          PlayerMapType;
 
-typedef Grid<Player, AllWorldObjectTypes,AllGridObjectTypes> GridType;
+typedef Grid<Player, AllWorldObjectTypes, AllGridObjectTypes> GridType;
 typedef NGrid<MAX_NUMBER_OF_CELLS, Player, AllWorldObjectTypes, AllGridObjectTypes> NGridType;
 
 typedef TypeMapContainer<AllGridObjectTypes> GridTypeMapContainer;
@@ -125,7 +126,7 @@ struct CoordPair
 typedef CoordPair<MAX_NUMBER_OF_GRIDS> GridPair;
 typedef CoordPair<TOTAL_NUMBER_OF_CELLS_PER_MAP> CellPair;
 
-namespace Oregon
+namespace Trinity
 {
     template<class RET_TYPE, int CENTER_VAL>
         inline RET_TYPE Compute(float x, float y, float center_offset, float size)
@@ -181,12 +182,12 @@ namespace Oregon
 
     inline bool IsValidMapCoord(float x, float y, float z)
     {
-        return IsValidMapCoord(x,y) && finite(z);
+        return IsValidMapCoord(x, y) && finite(z);
     }
 
     inline bool IsValidMapCoord(float x, float y, float z, float o)
     {
-        return IsValidMapCoord(x,y,z) && finite(o);
+        return IsValidMapCoord(x, y, z) && finite(o);
     }
 }
 #endif

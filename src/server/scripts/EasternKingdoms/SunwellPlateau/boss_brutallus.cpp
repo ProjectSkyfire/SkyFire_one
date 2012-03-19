@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -120,7 +121,7 @@ struct boss_brutallusAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        DoScriptText(RAND(YELL_KILL1,YELL_KILL2,YELL_KILL3), me);
+        DoScriptText(RAND(YELL_KILL1, YELL_KILL2, YELL_KILL3), me);
     }
 
     void JustDied(Unit* /*Killer*/)
@@ -130,9 +131,9 @@ struct boss_brutallusAI : public ScriptedAI
         if (pInstance)
         {
             pInstance->SetData(DATA_BRUTALLUS_EVENT, DONE);
-            float x,y,z;
-            me->GetPosition(x,y,z);
-            me->SummonCreature(FELMYST, x,y, z+30, me->GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN, 0);
+            float x, y, z;
+            me->GetPosition(x, y, z);
+            me->SummonCreature(FELMYST, x, y, z+30, me->GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN, 0);
         }
     }
 
@@ -146,7 +147,7 @@ struct boss_brutallusAI : public ScriptedAI
     {
         if (!Intro || IsIntro)
             return;
-        error_log("Start Intro");
+        sLog->outError("Start Intro");
         Creature *Madrigosa = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_MADRIGOSA) : 0);
         if (Madrigosa)
         {
@@ -161,7 +162,7 @@ struct boss_brutallusAI : public ScriptedAI
         }else
         {
             //Madrigosa not found, end intro
-            error_log("Madrigosa was not found");
+            sLog->outError("Madrigosa was not found");
             EndIntro();
         }
     }
@@ -171,7 +172,7 @@ struct boss_brutallusAI : public ScriptedAI
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         Intro = false;
         IsIntro = false;
-        error_log("End Intro");
+        sLog->outError("End Intro");
     }
 
     void AttackStart(Unit* pWho)
@@ -307,7 +308,7 @@ struct boss_brutallusAI : public ScriptedAI
 
         if (StompTimer <= diff)
         {
-            DoScriptText(RAND(YELL_LOVE1,YELL_LOVE2,YELL_LOVE3), me);
+            DoScriptText(RAND(YELL_LOVE1, YELL_LOVE2, YELL_LOVE3), me);
             DoCast(me->getVictim(), SPELL_STOMP);
             StompTimer = 30000;
         } else StompTimer -= diff;
@@ -322,7 +323,7 @@ struct boss_brutallusAI : public ScriptedAI
                     (*i)->CastSpell((*i), SPELL_BURN, true);
                     break;
                 }
-            BurnTimer = urand(60000,180000);
+            BurnTimer = urand(60000, 180000);
         } else BurnTimer -= diff;
 
         if (BerserkTimer <= diff && !Enraged)
@@ -336,9 +337,9 @@ struct boss_brutallusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_brutallus(Creature* pCreature)
+CreatureAI* GetAI_boss_brutallus(Creature* creature)
 {
-    return new boss_brutallusAI (pCreature);
+    return new boss_brutallusAI (creature);
 }
 
 void AddSC_boss_brutallus()

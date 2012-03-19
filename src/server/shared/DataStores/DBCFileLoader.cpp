@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -41,29 +42,29 @@ bool DBCFileLoader::Load(const char *filename, const char *fmt)
     FILE * f=fopen(filename,"rb");
     if (!f)return false;
 
-    if (fread(&header,4,1,f)!=1)                             // Number of records
+    if (fread(&header, 4, 1, f)!=1)                             // Number of records
         return false;
 
     EndianConvert(header);
     if (header!=0x43424457)
         return false;                                       //'WDBC'
 
-    if (fread(&recordCount,4,1,f)!=1)                        // Number of records
+    if (fread(&recordCount, 4, 1, f)!=1)                        // Number of records
         return false;
 
     EndianConvert(recordCount);
 
-    if (fread(&fieldCount,4,1,f)!=1)                         // Number of fields
+    if (fread(&fieldCount, 4, 1, f)!=1)                         // Number of fields
         return false;
 
     EndianConvert(fieldCount);
 
-    if (fread(&recordSize,4,1,f)!=1)                         // Size of a record
+    if (fread(&recordSize, 4, 1, f)!=1)                         // Size of a record
         return false;
 
     EndianConvert(recordSize);
 
-    if (fread(&stringSize,4,1,f)!=1)                         // String size
+    if (fread(&stringSize, 4, 1, f)!=1)                         // String size
         return false;
 
     EndianConvert(stringSize);
@@ -82,7 +83,7 @@ bool DBCFileLoader::Load(const char *filename, const char *fmt)
     data = new unsigned char[recordSize*recordCount+stringSize];
     stringTable = data + recordSize*recordCount;
 
-    if (fread(data,recordSize*recordCount+stringSize,1,f)!=1)
+    if (fread(data, recordSize*recordCount+stringSize, 1, f)!=1)
         return false;
 
     fclose(f);
@@ -103,12 +104,12 @@ DBCFileLoader::Record DBCFileLoader::getRecord(size_t id)
     return Record(*this, data + id*recordSize);
 }
 
-uint32 DBCFileLoader::GetFormatRecordSize(const char * format,int32* index_pos)
+uint32 DBCFileLoader::GetFormatRecordSize(const char * format, int32* index_pos)
 {
     uint32 recordsize = 0;
     int32 i = -1;
     for (uint32 x=0; format[x]; ++x)
-        switch(format[x])
+        switch (format[x])
         {
             case FT_FLOAT:
             case FT_INT:
@@ -138,7 +139,7 @@ uint32 DBCFileLoader::GetFormatRecordSize(const char * format,int32* index_pos)
 char* DBCFileLoader::AutoProduceData(const char* format, uint32& records, char**& indexTable)
 {
     /*
-    format STRING, NA, FLOAT,NA,INT <=>
+    format STRING, NA, FLOAT, NA, INT <=>
     struct{
     char* field0,
     float field1,
@@ -169,7 +170,7 @@ char* DBCFileLoader::AutoProduceData(const char* format, uint32& records, char**
         ++maxi;
         records=maxi;
         indexTable=new ptr[maxi];
-        memset(indexTable,0,maxi*sizeof(ptr));
+        memset(indexTable, 0, maxi*sizeof(ptr));
     }
     else
     {
@@ -192,7 +193,7 @@ char* DBCFileLoader::AutoProduceData(const char* format, uint32& records, char**
 
         for (uint32 x=0; x<fieldCount; x++)
         {
-            switch(format[x])
+            switch (format[x])
             {
                 case FT_FLOAT:
                     *((float*)(&dataTable[offset]))=getRecord(y).getFloat(x);
@@ -224,14 +225,14 @@ char* DBCFileLoader::AutoProduceStrings(const char* format, char* dataTable)
         return NULL;
 
     char* stringPool= new char[stringSize];
-    memcpy(stringPool,stringTable,stringSize);
+    memcpy(stringPool, stringTable, stringSize);
 
     uint32 offset=0;
 
     for (uint32 y =0; y<recordCount; y++)
     {
         for (uint32 x=0; x<fieldCount; x++)
-            switch(format[x])
+            switch (format[x])
         {
             case FT_FLOAT:
             case FT_IND:

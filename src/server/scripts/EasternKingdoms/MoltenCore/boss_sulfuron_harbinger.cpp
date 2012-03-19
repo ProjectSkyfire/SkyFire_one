@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -77,7 +78,7 @@ struct boss_sulfuronAI : public ScriptedAI
         if (Inspire_Timer <= diff)
         {
             Creature *pTarget = NULL;
-            std::list<Creature*> pList = DoFindFriendlyMissingBuff(45.0f,SPELL_INSPIRE);
+            std::list<Creature*> pList = DoFindFriendlyMissingBuff(45.0f, SPELL_INSPIRE);
             if (!pList.empty())
             {
                 std::list<Creature*>::const_iterator i = pList.begin();
@@ -104,7 +105,7 @@ struct boss_sulfuronAI : public ScriptedAI
         if (Flamespear_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget) DoCast(pTarget, SPELL_FLAMESPEAR);
 
             Flamespear_Timer = 12000 + rand()%4000;
@@ -161,7 +162,7 @@ struct mob_flamewaker_priestAI : public ScriptedAI
         if (ShadowWordPain_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget) DoCast(pTarget, SPELL_SHADOWWORDPAIN);
 
             ShadowWordPain_Timer = 18000+rand()%8000;
@@ -171,7 +172,7 @@ struct mob_flamewaker_priestAI : public ScriptedAI
         if (Immolate_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget) DoCast(pTarget, SPELL_IMMOLATE);
 
             Immolate_Timer = 15000+rand()%10000;
@@ -181,14 +182,14 @@ struct mob_flamewaker_priestAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_sulfuron(Creature* pCreature)
+CreatureAI* GetAI_boss_sulfuron(Creature* creature)
 {
-    return new boss_sulfuronAI (pCreature);
+    return new boss_sulfuronAI (creature);
 }
 
-CreatureAI* GetAI_mob_flamewaker_priest(Creature* pCreature)
+CreatureAI* GetAI_mob_flamewaker_priest(Creature* creature)
 {
-    return new mob_flamewaker_priestAI (pCreature);
+    return new mob_flamewaker_priestAI (creature);
 }
 
 void AddSC_boss_sulfuron()

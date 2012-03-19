@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -66,7 +67,7 @@ struct boss_selin_fireheartAI : public ScriptedAI
             for (uint8 i = 0; i < size; ++i)
             {
                 uint64 guid = pInstance->GetData64(DATA_FEL_CRYSTAL);
-                debug_log("OSCR: Selin: Adding Fel Crystal %u to list", guid);
+                sLog->outDebug("TSCR: Selin: Adding Fel Crystal %u to list", guid);
                 Crystals.push_back(guid);
             }
         }
@@ -112,7 +113,7 @@ struct boss_selin_fireheartAI : public ScriptedAI
                                                             // Small door opened after event are expected to be closed by default
             // Set Inst data for encounter
             pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
-        } else error_log(ERROR_INST_DATA);
+        } else sLog->outError(ERROR_INST_DATA);
 
         DrainLifeTimer = 3000 + rand()%4000;
         DrainManaTimer = DrainLifeTimer + 5000;
@@ -193,7 +194,7 @@ struct boss_selin_fireheartAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
+        DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2), me);
     }
 
     void MovementInform(uint32 type, uint32 id)
@@ -212,7 +213,7 @@ struct boss_selin_fireheartAI : public ScriptedAI
             else
             {
                 // Make an error message in case something weird happened here
-                error_log("OSCR: Selin Fireheart unable to drain crystal as the crystal is either dead or despawned");
+                sLog->outError("TSCR: Selin Fireheart unable to drain crystal as the crystal is either dead or despawned");
                 DrainingCrystal = false;
             }
         }
@@ -308,9 +309,9 @@ struct boss_selin_fireheartAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_selin_fireheart(Creature* pCreature)
+CreatureAI* GetAI_boss_selin_fireheart(Creature* creature)
 {
-    return new boss_selin_fireheartAI (pCreature);
+    return new boss_selin_fireheartAI (creature);
 };
 
 struct mob_fel_crystalAI : public ScriptedAI
@@ -343,13 +344,13 @@ struct mob_fel_crystalAI : public ScriptedAI
                     }
                 }
             }
-        } else error_log(ERROR_INST_DATA);
+        } else sLog->outError(ERROR_INST_DATA);
     }
 };
 
-CreatureAI* GetAI_mob_fel_crystal(Creature* pCreature)
+CreatureAI* GetAI_mob_fel_crystal(Creature* creature)
 {
-    return new mob_fel_crystalAI (pCreature);
+    return new mob_fel_crystalAI (creature);
 };
 
 void AddSC_boss_selin_fireheart()

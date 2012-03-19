@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -58,10 +59,10 @@ class HostileRefManager : public RefManager<Unit, ThreatManager>
         void setOnlineOfflineState(bool pIsOnline);
 
         // set state for one reference, defined by Unit
-        void setOnlineOfflineState(Unit *pCreature,bool pIsOnline);
+        void setOnlineOfflineState(Unit *creature, bool pIsOnline);
 
         // delete one reference, defined by Unit
-        void deleteReference(Unit *pCreature);
+        void deleteReference(Unit *creature);
 };
 //=================================================
 #endif

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -28,7 +29,7 @@
 #include "Opcodes.h"
 #include "Spell.h"
 #include "SpellAuras.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "MapManager.h"
 #include "Totem.h"
 #include "TemporarySummon.h"
@@ -59,7 +60,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    sLog.outDetail("WORLD: CMSG_USE_ITEM packet, bagIndex: %u, slot: %u, spell_count: %u , cast_count: %u, Item: %u, data length = %i", bagIndex, slot, spell_count, cast_count, pItem->GetEntry(), recvPacket.size());
+    sLog->outDetail("WORLD: CMSG_USE_ITEM packet, bagIndex: %u, slot: %u, spell_count: %u , cast_count: %u, Item: %u, data length = %i", bagIndex, slot, spell_count, cast_count, pItem->GetEntry(), recvPacket.size());
 
     ItemPrototype const *proto = pItem->GetProto();
     if (!proto)
@@ -91,7 +92,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
         pUser->InArena())
     {
         recvPacket.rpos(recvPacket.wpos());                 // prevent spam at not read packet tail
-        pUser->SendEquipError(EQUIP_ERR_NOT_DURING_ARENA_MATCH,pItem,NULL);
+        pUser->SendEquipError(EQUIP_ERR_NOT_DURING_ARENA_MATCH, pItem, NULL);
         return;
     }
 
@@ -104,7 +105,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
                 if (IsNonCombatSpell(spellInfo))
                 {
                     recvPacket.rpos(recvPacket.wpos());     // prevent spam at not read packet tail
-                    pUser->SendEquipError(EQUIP_ERR_NOT_IN_COMBAT,pItem,NULL);
+                    pUser->SendEquipError(EQUIP_ERR_NOT_IN_COMBAT, pItem, NULL);
                     return;
                 }
             }
@@ -126,7 +127,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
     recvPacket >> targets.ReadForCaster(pUser);
 
     //Note: If script stop casting it must send appropriate data to client to prevent stuck item in gray state.
-    if (!sScriptMgr.ItemUse(pUser,pItem,targets))
+    if (!sScriptMgr->ItemUse(pUser, pItem, targets))
     {
         // no script or script not process request by self
 
@@ -138,8 +139,8 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
             SpellEntry const *spellInfo = sSpellStore.LookupEntry(SPELL_ID_GENERIC_LEARN);
             if (!spellInfo)
             {
-                sLog.outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, SPELL_ID_GENERIC_LEARN);
-                pUser->SendEquipError(EQUIP_ERR_NONE,pItem,NULL);
+                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ", proto->ItemId, SPELL_ID_GENERIC_LEARN);
+                pUser->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
                 return;
             }
 
@@ -169,7 +170,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
             SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellData.SpellId);
             if (!spellInfo)
             {
-                sLog.outError("Item (Entry: %u) has invalid spell id %u, ignoring ",proto->ItemId, spellData.SpellId);
+                sLog->outError("Item (Entry: %u) has invalid spell id %u, ignoring ", proto->ItemId, spellData.SpellId);
                 continue;
             }
 
@@ -191,14 +192,14 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
 
 void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
 {
-    sLog.outDetail("WORLD: CMSG_OPEN_ITEM packet, data length = %i",recvPacket.size());
+    sLog->outDetail("WORLD: CMSG_OPEN_ITEM packet, data length = %i", recvPacket.size());
 
     Player* pUser = _player;
     uint8 bagIndex, slot;
 
     recvPacket >> bagIndex >> slot;
 
-    sLog.outDetail("bagIndex: %u, slot: %u",bagIndex,slot);
+    sLog->outDetail("bagIndex: %u, slot: %u", bagIndex, slot);
 
     Item *pItem = pUser->GetItemByPos(bagIndex, slot);
     if (!pItem)
@@ -223,7 +224,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
         if (!lockInfo)
         {
             pUser->SendEquipError(EQUIP_ERR_ITEM_LOCKED, pItem, NULL);
-            sLog.outError("WORLD::OpenItem: item [guid = %u] has an unknown lockId: %u!", pItem->GetGUIDLow(), lockId);
+            sLog->outError("WORLD::OpenItem: item [guid = %u] has an unknown lockId: %u!", pItem->GetGUIDLow(), lockId);
             return;
         }
 
@@ -251,14 +252,14 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
         }
         else
         {
-            sLog.outError("Wrapped item %u does not have record in character_gifts table and will be deleted", pItem->GetGUIDLow());
+            sLog->outError("Wrapped item %u does not have record in character_gifts table and will be deleted", pItem->GetGUIDLow());
             pUser->DestroyItem(pItem->GetBagSlot(), pItem->GetSlot(), true);
             return;
         }
         CharacterDatabase.PExecute("DELETE FROM character_gifts WHERE item_guid = '%u'", pItem->GetGUIDLow());
     }
     else
-        pUser->SendLoot(pItem->GetGUID(),LOOT_CORPSE);
+        pUser->SendLoot(pItem->GetGUID(), LOOT_CORPSE);
 }
 
 void WorldSession::HandleGameObjectUseOpcode(WorldPacket & recv_data)
@@ -267,13 +268,13 @@ void WorldSession::HandleGameObjectUseOpcode(WorldPacket & recv_data)
 
     recv_data >> guid;
 
-    DEBUG_LOG("WORLD: Recvd CMSG_GAMEOBJ_USE Message [guid=%u]", GUID_LOPART(guid));
+    sLog->outDebug("WORLD: Recvd CMSG_GAMEOBJ_USE Message [guid=%u]", GUID_LOPART(guid));
 
     GameObject *obj = GetPlayer()->GetMap()->GetGameObject(guid);
     if (!obj)
         return;
 
-    if (sScriptMgr.GOHello(_player, obj))
+    if (sScriptMgr->GOHello(_player, obj))
         return;
 
     obj->Use(_player);
@@ -286,14 +287,14 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
     recvPacket >> spellId;
     recvPacket >> cast_count;
 
-    DEBUG_LOG("WORLD: got cast spell packet, spellId - %u, cast_count: %u data length = %i",
+    sLog->outDebug("WORLD: got cast spell packet, spellId - %u, cast_count: %u data length = %i",
         spellId, cast_count, recvPacket.size());
 
     SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellId);
 
     if (!spellInfo)
     {
-        sLog.outError("WORLD: unknown spell id %u", spellId);
+        sLog->outError("WORLD: unknown spell id %u", spellId);
         return;
     }
 
@@ -317,7 +318,7 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
     if (Unit* target = targets.getUnitTarget())
     {
         // if rank not found then function return NULL but in explicit cast case original spell can be casted and later failed with appropriate error message
-        if (SpellEntry const *actualSpellInfo = spellmgr.SelectAuraRankForPlayerLevel(spellInfo, target->getLevel()))
+        if (SpellEntry const *actualSpellInfo = sSpellMgr->SelectAuraRankForPlayerLevel(spellInfo, target->getLevel()))
             spellInfo = actualSpellInfo;
     }
 
@@ -338,7 +339,7 @@ void WorldSession::HandleCancelCastOpcode(WorldPacket& recvPacket)
     recvPacket >> spellId;
 
     if (_player->IsNonMeleeSpellCasted(false))
-        _player->InterruptNonMeleeSpells(false,spellId,false);
+        _player->InterruptNonMeleeSpells(false, spellId, false);
 }
 
 void WorldSession::HandleCancelAuraOpcode(WorldPacket& recvPacket)
@@ -382,21 +383,21 @@ void WorldSession::HandlePetCancelAuraOpcode(WorldPacket& recvPacket)
     SpellEntry const *spellInfo = sSpellStore.LookupEntry(spellId);
     if (!spellInfo)
     {
-        sLog.outError("WORLD: unknown PET spell id %u", spellId);
+        sLog->outError("WORLD: unknown PET spell id %u", spellId);
         return;
     }
 
-    Creature* pet=ObjectAccessor::GetCreatureOrPet(*_player,guid);
+    Creature* pet=ObjectAccessor::GetCreatureOrPet(*_player, guid);
 
     if (!pet)
     {
-        sLog.outError("Pet %u not exist.", uint32(GUID_LOPART(guid)));
+        sLog->outError("Pet %u not exist.", uint32(GUID_LOPART(guid)));
         return;
     }
 
     if (pet != GetPlayer()->GetGuardianPet() && pet != GetPlayer()->GetCharm())
     {
-        sLog.outError("HandlePetCancelAura.Pet %u isn't pet of player %s", uint32(GUID_LOPART(guid)),GetPlayer()->GetName());
+        sLog->outError("HandlePetCancelAura.Pet %u isn't pet of player %s", uint32(GUID_LOPART(guid)), GetPlayer()->GetName());
         return;
     }
 
@@ -449,13 +450,13 @@ void WorldSession::HandleTotemDestroy(WorldPacket& recvPacket)
 
 void WorldSession::HandleSelfResOpcode(WorldPacket & /*recv_data*/)
 {
-    DEBUG_LOG("WORLD: CMSG_SELF_RES");                  // empty opcode
+    sLog->outDebug("WORLD: CMSG_SELF_RES");                  // empty opcode
 
     if (_player->GetUInt32Value(PLAYER_SELF_RES_SPELL))
     {
         SpellEntry const *spellInfo = sSpellStore.LookupEntry(_player->GetUInt32Value(PLAYER_SELF_RES_SPELL));
         if (spellInfo)
-            _player->CastSpell(_player, spellInfo, false,0);
+            _player->CastSpell(_player, spellInfo, false, 0);
 
         _player->SetUInt32Value(PLAYER_SELF_RES_SPELL, 0);
     }

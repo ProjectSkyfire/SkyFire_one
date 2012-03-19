@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -103,7 +104,7 @@ struct boss_nefarianAI : public ScriptedAI
 
     void EnterCombat(Unit * who)
     {
-        DoScriptText(RAND(SAY_XHEALTH,SAY_AGGRO,SAY_SHADOWFLAME), me);
+        DoScriptText(RAND(SAY_XHEALTH, SAY_AGGRO, SAY_SHADOWFLAME), me);
 
         DoCast(who, SPELL_SHADOWFLAME_INITIAL);
         DoZoneInCombat();
@@ -165,7 +166,7 @@ struct boss_nefarianAI : public ScriptedAI
             //On official it is based on what classes are currently on the hostil list
             //but we can't do that yet so just randomly call one
 
-            switch (urand(0,8))
+            switch (urand(0, 8))
             {
                 case 0:
                     DoScriptText(SAY_MAGE, me);
@@ -218,9 +219,9 @@ struct boss_nefarianAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_nefarian(Creature* pCreature)
+CreatureAI* GetAI_boss_nefarian(Creature* creature)
 {
-    return new boss_nefarianAI (pCreature);
+    return new boss_nefarianAI (creature);
 }
 
 void AddSC_boss_nefarian()

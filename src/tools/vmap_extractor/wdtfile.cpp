@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -33,7 +34,7 @@ char * wdtGetPlainName(char * FileName)
 
 WDTFile::WDTFile(char* file_name, char* file_name1):WDT(file_name)
 {
-    filename.append(file_name1,strlen(file_name1));
+    filename.append(file_name1, strlen(file_name1));
 }
 
 bool WDTFile::init(char *map_id, unsigned int mapID)
@@ -58,7 +59,7 @@ bool WDTFile::init(char *map_id, unsigned int mapID)
 
     while (!WDT.isEof())
     {
-        WDT.read(fourcc,4);
+        WDT.read(fourcc, 4);
         WDT.read(&size, 4);
 
         flipcc(fourcc);
@@ -83,7 +84,7 @@ bool WDTFile::init(char *map_id, unsigned int mapID)
                 {
                     string path(p);
                     char* s=wdtGetPlainName(p);
-                    fixnamen(s,strlen(s));
+                    fixnamen(s, strlen(s));
                     p=p+strlen(p)+1;
                     gWmoInstansName[q++] = s;
                 }
@@ -101,11 +102,11 @@ bool WDTFile::init(char *map_id, unsigned int mapID)
                 fake_mapname = "65 65 ";
                 //gWMO_mapname = fake_mapname + filename;
                 gWMO_mapname = fake_mapname + std::string(map_id);
-                for (int i=0; i<gnWMO; ++i)
+                for (int i = 0; i < gnWMO; ++i)
                 {
                     int id;
                     WDT.read(&id, 4);
-                    WMOInstance inst(WDT,gWmoInstansName[id].c_str(),mapID, 65, 65, dirfile);
+                    WMOInstance inst(WDT, gWmoInstansName[id].c_str(),mapID, 65, 65, dirfile);
                 }
                 delete[] gWmoInstansName;
             }

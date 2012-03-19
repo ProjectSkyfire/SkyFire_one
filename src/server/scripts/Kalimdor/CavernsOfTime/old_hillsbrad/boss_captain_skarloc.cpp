@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -76,7 +77,7 @@ struct boss_captain_skarlocAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -143,9 +144,9 @@ struct boss_captain_skarlocAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_captain_skarloc(Creature* pCreature)
+CreatureAI* GetAI_boss_captain_skarloc(Creature* creature)
 {
-    return new boss_captain_skarlocAI (pCreature);
+    return new boss_captain_skarlocAI (creature);
 }
 
 void AddSC_boss_captain_skarloc()

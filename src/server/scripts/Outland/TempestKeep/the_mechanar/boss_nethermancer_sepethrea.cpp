@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -86,7 +87,7 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_SLAY1, me); break;
         case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -129,7 +130,7 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
                 if (rand()%2)
                     return;
 
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                 case 0: DoScriptText(SAY_DRAGONS_BREATH_1, me); break;
                 case 1: DoScriptText(SAY_DRAGONS_BREATH_2, me); break;
@@ -156,9 +157,9 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature* pCreature)
+CreatureAI* GetAI_boss_nethermancer_sepethrea(Creature* creature)
 {
-    return new boss_nethermancer_sepethreaAI (pCreature);
+    return new boss_nethermancer_sepethreaAI (creature);
 }
 
 #define SPELL_INFERNO                   35268
@@ -219,7 +220,7 @@ struct mob_ragin_flamesAI : public ScriptedAI
 
         if (!onlyonce)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 me->GetMotionMaster()->MoveChase(pTarget);
             onlyonce = true;
         }
@@ -233,16 +234,16 @@ struct mob_ragin_flamesAI : public ScriptedAI
 
         if (flame_timer <= diff)
         {
-            DoCast(me,SPELL_FIRE_TAIL);
+            DoCast(me, SPELL_FIRE_TAIL);
             flame_timer = 500;
         } else flame_timer -=diff;
 
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mob_ragin_flames(Creature* pCreature)
+CreatureAI* GetAI_mob_ragin_flames(Creature* creature)
 {
-    return new mob_ragin_flamesAI (pCreature);
+    return new mob_ragin_flamesAI (creature);
 }
 void AddSC_boss_nethermancer_sepethrea()
 {

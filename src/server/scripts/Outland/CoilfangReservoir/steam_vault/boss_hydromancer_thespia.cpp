@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -79,7 +80,7 @@ struct boss_thespiaAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY_1, me); break;
             case 1: DoScriptText(SAY_SLAY_2, me); break;
@@ -88,7 +89,7 @@ struct boss_thespiaAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -108,10 +109,10 @@ struct boss_thespiaAI : public ScriptedAI
         if (LightningCloud_Timer <= diff)
         {
             //cast twice in Heroic mode
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_LIGHTNING_CLOUD);
             if (HeroicMode)
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_LIGHTNING_CLOUD);
             LightningCloud_Timer = 15000+rand()%10000;
         } else LightningCloud_Timer -=diff;
@@ -119,7 +120,7 @@ struct boss_thespiaAI : public ScriptedAI
         //LungBurst_Timer
         if (LungBurst_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_LUNG_BURST);
             LungBurst_Timer = 7000+rand()%5000;
         } else LungBurst_Timer -=diff;
@@ -128,10 +129,10 @@ struct boss_thespiaAI : public ScriptedAI
         if (EnvelopingWinds_Timer <= diff)
         {
             //cast twice in Heroic mode
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_ENVELOPING_WINDS);
             if (HeroicMode)
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_ENVELOPING_WINDS);
             EnvelopingWinds_Timer = 10000+rand()%5000;
         } else EnvelopingWinds_Timer -=diff;
@@ -173,14 +174,14 @@ struct mob_coilfang_waterelementalAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_thespiaAI(Creature* pCreature)
+CreatureAI* GetAI_boss_thespiaAI(Creature* creature)
 {
-    return new boss_thespiaAI (pCreature);
+    return new boss_thespiaAI (creature);
 }
 
-CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* pCreature)
+CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* creature)
 {
-    return new mob_coilfang_waterelementalAI (pCreature);
+    return new mob_coilfang_waterelementalAI (creature);
 }
 
 void AddSC_boss_hydromancer_thespia()

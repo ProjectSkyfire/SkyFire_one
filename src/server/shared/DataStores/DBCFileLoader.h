@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -25,14 +26,14 @@
 
 enum
 {
-    FT_NA='x',                                              //not used or unknown, 4 byte size
-    FT_NA_BYTE='X',                                         //not used or unknown, byte
-    FT_STRING='s',                                          //char*
-    FT_FLOAT='f',                                           //float
-    FT_INT='i',                                             //uint32
-    FT_BYTE='b',                                            //uint8
-    FT_SORT='d',                                            //sorted by this field, field is not included
-    FT_IND='n',                                             //the same,but parsed to data
+    FT_NA='x',                                             //not used or unknown, 4 byte size
+    FT_NA_BYTE='X',                                        //not used or unknown, byte
+    FT_STRING='s',                                         //char*
+    FT_FLOAT='f',                                          //float
+    FT_INT='i',                                            //uint32
+    FT_BYTE='b',                                           //uint8
+    FT_SORT='d',                                           //sorted by this field, field is not included
+    FT_IND='n',                                            //the same, but parsed to data
     FT_LOGIC='l'                                            //Logical (boolean)
 };
 

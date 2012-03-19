@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -74,25 +75,25 @@ struct instance_shadow_labyrinth : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case REFECTORY_DOOR: RefectoryDoorGUID = pGo->GetGUID(); break;
         case SCREAMING_HALL_DOOR: ScreamingHallDoorGUID = pGo->GetGUID(); break;
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
             case 18732:
-                GrandmasterVorpil = pCreature->GetGUID();
+                GrandmasterVorpil = creature->GetGUID();
                 break;
             case 18796:
-                if (pCreature->isAlive())
+                if (creature->isAlive())
                 {
                     ++FelOverseerCount;
-                    debug_log("OSCR: Shadow Labyrinth: counting %u Fel Overseers.",FelOverseerCount);
+                    sLog->outDebug("TSCR: Shadow Labyrinth: counting %u Fel Overseers.",FelOverseerCount);
                 }
                 break;
         }
@@ -111,13 +112,13 @@ struct instance_shadow_labyrinth : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Shadow Labyrinth: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Shadow Labyrinth: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_HELLMAW:
                 if (Encounter[0] != DONE)
@@ -125,16 +126,16 @@ struct instance_shadow_labyrinth : public ScriptedInstance
                 break;
             case TYPE_OVERSEER:
                 if (data != DONE)
-                    error_log("OSCR: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
+                    sLog->outError("TSCR: Shadow Labyrinth: TYPE_OVERSEER did not expect other data than DONE");
                 if (FelOverseerCount)
                 {
                     --FelOverseerCount;
-                    debug_log("OSCR: Shadow Labyrinth: %u Fel Overseers left to kill.",FelOverseerCount);
+                    sLog->outDebug("TSCR: Shadow Labyrinth: %u Fel Overseers left to kill.",FelOverseerCount);
                 }
                 if (FelOverseerCount == 0)
                 {
                     Encounter[1] = DONE;
-                    debug_log("OSCR: Shadow Labyrinth: TYPE_OVERSEER == DONE");
+                    sLog->outDebug("TSCR: Shadow Labyrinth: TYPE_OVERSEER == DONE");
                 }
                 break;
 
@@ -172,7 +173,7 @@ struct instance_shadow_labyrinth : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_HELLMAW: return Encounter[0];
             case TYPE_OVERSEER: return Encounter[1];
@@ -251,9 +252,9 @@ struct mob_fel_overseerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_fel_overseer(Creature* pCreature)
+CreatureAI* GetAI_mob_fel_overseer(Creature* creature)
 {
-    return new mob_fel_overseerAI (pCreature);
+    return new mob_fel_overseerAI (creature);
 }
 
 void AddSC_instance_shadow_labyrinth()

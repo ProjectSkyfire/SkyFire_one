@@ -1,62 +1,30 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
+ * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 #include "Util.h"
 
 #include "utf8.h"
-#ifdef USE_SFMT_FOR_RNG
-#include "SFMT.h"
-#else
+//#include "SFMT.h"
 #include "MersenneTwister.h"
-#endif  // USE_SFMT
 #include <ace/TSS_T.h>
-#include <ace/INET_Addr.h>
 
-#ifdef USE_SFMT_FOR_RNG
-typedef ACE_TSS<SFMTRand> SFMTRandTSS;
-static SFMTRandTSS sfmtRand;
-
-int32 irand (int32 min, int32 max)
-{
-    return int32(sfmtRand->IRandom(min, max));
-}
-
-uint32 urand (uint32 min, uint32 max)
-{
-    return sfmtRand->URandom(min, max);
-}
-
-int32 rand32 ()
-{
-    return int32(sfmtRand->BRandom());
-}
-
-double rand_norm(void)
-{
-    return sfmtRand->Random();
-}
-
-double rand_chance (void)
-{
-    return sfmtRand->Random() * 100.0;
-}
-#else
 typedef ACE_TSS<MTRand> MTRandTSS;
 static MTRandTSS mtRand;
 
@@ -84,7 +52,6 @@ double rand_chance (void)
 {
     return mtRand->randExc (100.0);
 }
-#endif  // USE_SFMT_FOR_RNG
 
 Tokens StrSplit(const std::string &src, const std::string &sep)
 {
@@ -172,16 +139,12 @@ uint32 TimeStringToSecs(const std::string& timestring)
     {
         if (isdigit(*itr))
         {
-            std::string str;                                //very complicated typecast char->const char*; is there no better way?
-            str += *itr;
-            const char* tmp = str.c_str();
-
             buffer*=10;
-            buffer+=atoi(tmp);
+            buffer+= (*itr)-'0';
         }
         else
         {
-            switch(*itr)
+            switch (*itr)
             {
                 case 'd': multiplier = DAY;     break;
                 case 'h': multiplier = HOUR;    break;
@@ -212,7 +175,7 @@ std::string TimeToTimestampStr(time_t t)
     return std::string(buf);
 }
 
-// Check if the string is a valid ip address representation
+/// Check if the string is a valid ip address representation
 bool IsIPAddress(char const* ipaddress)
 {
     if (!ipaddress)
@@ -223,7 +186,7 @@ bool IsIPAddress(char const* ipaddress)
     return inet_addr(ipaddress) != INADDR_NONE;
 }
 
-// create PID file
+/// create PID file
 uint32 CreatePIDFile(const std::string& filename)
 {
     FILE * pid_file = fopen (filename.c_str(), "w" );
@@ -283,8 +246,9 @@ bool Utf8toWStr(char const* utf8str, size_t csize, wchar_t* wstr, size_t& wsize)
         size_t len = utf8::distance(utf8str,utf8str+csize);
         if (len > wsize)
         {
+            if (wsize > 0)
+                wstr[0] = L'\0';
             wsize = 0;
-            wstr = L"";
             return false;
         }
 
@@ -294,8 +258,9 @@ bool Utf8toWStr(char const* utf8str, size_t csize, wchar_t* wstr, size_t& wsize)
     }
     catch(std::exception)
     {
+        if (wsize > 0)
+            wstr[0] = L'\0';
         wsize = 0;
-        wstr = L"";
         return false;
     }
 
@@ -455,16 +420,42 @@ bool Utf8FitTo(const std::string& str, std::wstring search)
     return true;
 }
 
+void utf8printf(FILE *out, const char *str, ...)
+{
+    va_list ap;
+    va_start(ap, str);
+    vutf8printf(out, str, &ap);
+    va_end(ap);
+}
+
+void vutf8printf(FILE *out, const char *str, va_list* ap)
+{
+#if PLATFORM == PLATFORM_WINDOWS
+    char temp_buf[32*1024];
+    wchar_t wtemp_buf[32*1024];
+
+    size_t temp_len = vsnprintf(temp_buf, 32*1024, str, *ap);
+
+    size_t wtemp_len = 32*1024-1;
+    Utf8toWStr(temp_buf, temp_len, wtemp_buf, wtemp_len);
+
+    CharToOemBuffW(&wtemp_buf[0], &temp_buf[0], wtemp_len+1);
+    fprintf(out, temp_buf);
+#else
+    vfprintf(out, str, *ap);
+#endif
+}
+
 void hexEncodeByteArray(uint8* bytes, uint32 arrayLen, std::string& result)
 {
     std::ostringstream ss;
-    for (uint32 i=0; i<arrayLen; ++i)
+    for (uint32 i = 0; i < arrayLen; ++i)
     {
         for (uint8 j=0; j<2; ++j)
         {
             unsigned char nibble = 0x0F & (bytes[i]>>((1-j)*4));
             char encodedNibble;
-            if(nibble < 0x0A)
+            if (nibble < 0x0A)
                 encodedNibble = '0'+nibble;
             else
                 encodedNibble = 'A'+nibble-0x0A;
@@ -473,3 +464,4 @@ void hexEncodeByteArray(uint8* bytes, uint32 arrayLen, std::string& result)
     }
     result = ss.str();
 }
+

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -86,9 +87,9 @@ struct boss_magmusAI : public ScriptedAI
             pInstance->HandleGameObject(pInstance->GetData64(DATA_THRONE_DOOR), true);
     }
 };
-CreatureAI* GetAI_boss_magmus(Creature* pCreature)
+CreatureAI* GetAI_boss_magmus(Creature* creature)
 {
-    return new boss_magmusAI (pCreature);
+    return new boss_magmusAI (creature);
 }
 
 void AddSC_boss_magmus()

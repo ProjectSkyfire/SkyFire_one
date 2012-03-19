@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -86,8 +87,8 @@ struct boss_huhuranAI : public ScriptedAI
         // Wyvern Timer
         if (Wyvern_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_WYVERNSTING);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_WYVERNSTING);
             Wyvern_Timer = 15000 + rand()%17000;
         } else Wyvern_Timer -= diff;
 
@@ -135,9 +136,9 @@ struct boss_huhuranAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_huhuran(Creature* pCreature)
+CreatureAI* GetAI_boss_huhuran(Creature* creature)
 {
-    return new boss_huhuranAI (pCreature);
+    return new boss_huhuranAI (creature);
 }
 
 void AddSC_boss_huhuran()

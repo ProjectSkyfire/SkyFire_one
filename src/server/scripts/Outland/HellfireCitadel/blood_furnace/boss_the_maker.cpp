@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -62,7 +63,7 @@ struct boss_the_makerAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -75,7 +76,7 @@ struct boss_the_makerAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_KILL_1, me); break;
             case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -97,8 +98,8 @@ struct boss_the_makerAI : public ScriptedAI
 
         if (ExplodingBreaker_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,HeroicMode ? SPELL_EXPLODING_BREAKER_H : SPELL_EXPLODING_BREAKER);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, HeroicMode ? SPELL_EXPLODING_BREAKER_H : SPELL_EXPLODING_BREAKER);
             ExplodingBreaker_Timer = 9000+rand()%2000;
         }
         else ExplodingBreaker_Timer -=diff;
@@ -106,8 +107,8 @@ struct boss_the_makerAI : public ScriptedAI
         if (Domination_Timer <= diff)
         {
             Unit *pTarget;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
-            DoCast(pTarget,SPELL_DOMINATION);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            DoCast(pTarget, SPELL_DOMINATION);
             Domination_Timer = 60000;
         }
         else Domination_Timer -=diff;
@@ -116,9 +117,9 @@ struct boss_the_makerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_the_makerAI(Creature* pCreature)
+CreatureAI* GetAI_boss_the_makerAI(Creature* creature)
 {
-    return new boss_the_makerAI (pCreature);
+    return new boss_the_makerAI (creature);
 }
 
 void AddSC_boss_the_maker()

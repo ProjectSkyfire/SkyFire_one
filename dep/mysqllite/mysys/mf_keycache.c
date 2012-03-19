@@ -564,7 +564,7 @@ int resize_key_cache(KEY_CACHE *keycache, uint key_cache_block_size,
   if (!keycache->key_cache_inited)
     DBUG_RETURN(keycache->disk_blocks);
 
-  if(key_cache_block_size == keycache->key_cache_block_size &&
+  if (key_cache_block_size == keycache->key_cache_block_size &&
      use_mem == keycache->key_cache_mem_size)
   {
     change_key_cache_param(keycache, division_limit, age_threshold);
@@ -3309,13 +3309,13 @@ static void free_block(KEY_CACHE *keycache, BLOCK_LINK *block)
   /* Assert that the block is not in the LRU ring. */
   DBUG_ASSERT(!block->next_used && !block->prev_used);
   /*
-    IMHO the below condition (if()) makes no sense. I can't see how it
+    IMHO the below condition (if ()) makes no sense. I can't see how it
     could be possible that free_block() is entered with a NULL hash_link
     pointer. The only place where it can become NULL is in free_block()
     (or before its first use ever, but for those blocks free_block() is
     not called). I don't remove the conditional as it cannot harm, but
     place an DBUG_ASSERT to confirm my hypothesis. Eventually the
-    condition (if()) can be removed.
+    condition (if ()) can be removed.
   */
   DBUG_ASSERT(block->hash_link && block->hash_link->block == block);
   if (block->hash_link)

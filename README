@@ -1,8 +1,12 @@
-= Oregon Core -- General information =
+= SkyFireONE 2.4.3 -- General information =
 
-Copyright (C) Oregon Core (http://www.oregoncore.com)
+Copyright (C) SkyFireEMU  (http://www.projectskyfire.org)
+Copyright (C) Cactus      (http://www.cactusemu.com)
+Copyright (C) TrinityCore (http://www.trinitycore.org)
+Copyright (C) MaNGOS      (http://www.getmangos.com)
 
-  Oregon Core is free software; you can redistribute it and/or modify
+
+  SkyFireEMU is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
@@ -16,8 +20,8 @@ Copyright (C) Oregon Core (http://www.oregoncore.com)
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-  In addition, as a special exception, the Oregon Core project
-  gives permission to link the code of its release of Oregon Core with
+  In addition, as a special exception, the SkyFireEMU project
+  gives permission to link the code of its release of SkyFireEMU with
   the OpenSSL project's "OpenSSL" library (or with modified versions of
   it that use the same license as the "OpenSSL" library), and distribute
   the linked executables.  You must obey the GNU General Public License
@@ -26,18 +30,30 @@ Copyright (C) Oregon Core (http://www.oregoncore.com)
   file, but you are not obligated to do so.  If you do not wish to do
   so, delete this exception statement from your version.
 
-Oregon Core is a World of Warcraft game server emulator. It is derived
-from Trinity Core, and is based on the
-code of that project.
+SkyFireEMU is a MMORPG Framework based mostly on C++. It is completely 
+open source, and is community supported. It is derived
+from CactusCore, TrinityCore, and MaNGOS, the Massive Network Game Object Servers, 
+and is based on the code of there projects with extensive changes over time to optimize, 
+improve and cleanup the codebase at the same time as improving the ingame mechanics
+and functionality. If you wish to contribute ideas or code please visit 
+our site linked below or make pull requests to our github repo at 
+https://github.com/ProjectSkyfire/SkyFireEMU/
 
-For further information on the Oregon Core project, please visit our
-project website at http://www.oregoncore.com.
+For further information on the Project SkyFireEMU, please visit our
+project website at http://www.projectskyfire.org/
 
-API documentation can be obtained by running the "make doc" command inside
-the doc directory.
+For further information on the TrinityCore project, please visit the
+project website at http://www.TrinityCore.org
 
-SQL files to create the database can be found in the sql directory. Files
+For further information on the MaNGOS project, please visit the
+project website at http://www.getmangos.com/.
+
+For further information on the Cactus project, please visit the
+project website at http://www.cactusemu.com/.
+
+SQL files to create the database can be found in the database directory. Files
 to update your database from an older revision/version can be found in the
-sql/updates directory.
+database/updates directory.
 
-See the INSTALL.Linux file for installation instructions under Linux.
+Our Bug Tracker is located here.
+<Disabled...core is in development, this will open when we're given public support>

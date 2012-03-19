@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -111,10 +112,10 @@ struct boss_vexallusAI : public ScriptedAI
     void JustSummoned(Creature *summoned)
     {
         if (Unit *temp = SelectUnit(SELECT_TARGET_RANDOM, 0))
-            summoned->GetMotionMaster()->MoveFollow(temp,0,0);
+            summoned->GetMotionMaster()->MoveFollow(temp, 0, 0);
 
         //spells are SUMMON_TYPE_GUARDIAN, so using setOwner should be ok
-        summoned->CastSpell(summoned,SPELL_ENERGY_BOLT,false,0,0,me->GetGUID());
+        summoned->CastSpell(summoned, SPELL_ENERGY_BOLT, false, 0, 0, me->GetGUID());
     }
 
     void UpdateAI(const uint32 diff)
@@ -185,9 +186,9 @@ struct boss_vexallusAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_vexallus(Creature* pCreature)
+CreatureAI* GetAI_boss_vexallus(Creature* creature)
 {
-    return new boss_vexallusAI (pCreature);
+    return new boss_vexallusAI (creature);
 };
 
 struct mob_pure_energyAI : public ScriptedAI
@@ -210,9 +211,9 @@ struct mob_pure_energyAI : public ScriptedAI
     void AttackStart(Unit * /*who*/) {}
 };
 
-CreatureAI* GetAI_mob_pure_energy(Creature* pCreature)
+CreatureAI* GetAI_mob_pure_energy(Creature* creature)
 {
-    return new mob_pure_energyAI (pCreature);
+    return new mob_pure_energyAI (creature);
 };
 
 void AddSC_boss_vexallus()

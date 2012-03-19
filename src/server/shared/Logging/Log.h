@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -17,11 +17,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_LOG_H
-#define OREGONCORE_LOG_H
+#ifndef TRINITYCORE_LOG_H
+#define TRINITYCORE_LOG_H
 
 #include "Common.h"
-#include "Policies/Singleton.h"
+#include <ace/Singleton.h>
 #include "Database/DatabaseEnv.h"
 
 class Config;
@@ -80,9 +80,9 @@ enum ColorTypes
 
 const int Colors = int(WHITE)+1;
 
-class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Thread_Mutex> >
+class Log
 {
-    friend class Oregon::OperatorNew<Log>;
+    friend class ACE_Singleton<Log, ACE_Thread_Mutex>;
     Log();
     ~Log();
 
@@ -102,6 +102,7 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         void outBasic( const char * str, ... )                  ATTR_PRINTF(2,3);
         void outDetail( const char * str, ... )                 ATTR_PRINTF(2,3);
         void outDebug( const char * str, ... )                  ATTR_PRINTF(2,3);
+        void outStaticDebug( const char * str, ... )            ATTR_PRINTF(2, 3);
         void outDebugInLine( const char * str, ... )            ATTR_PRINTF(2,3);
         void outErrorDb( const char * str, ... )                ATTR_PRINTF(2,3);
         void outChar( const char * str, ... )                   ATTR_PRINTF(2,3);
@@ -110,6 +111,8 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         void outChat( const char * str, ... )                   ATTR_PRINTF(2,3);
         void outArena( const char * str, ... )                  ATTR_PRINTF(2,3);
         void outCharDump( const char * str, uint32 account_id, uint32 guid, const char * name );
+        void outSQLDev( const char * str, ... )                 ATTR_PRINTF(2, 3);
+        void outSQLDriver( const char* str, ... )               ATTR_PRINTF(2, 3);
 
         static void outTimestamp(FILE* file);
         static std::string GetTimestampStr();
@@ -117,6 +120,7 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         void SetLogLevel(char * Level);
         void SetLogFileLevel(char * Level);
         void SetDBLogLevel(char * Level);
+        void SetSQLDriverQueryLogging(bool newStatus) { m_sqlDriverQueryLogging = newStatus; }
         void SetRealmID(uint32 id) { realm = id; }
 
         uint32 getLogFilter() const { return m_logFilter; }
@@ -127,6 +131,7 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         bool GetLogDBLater() { return m_enableLogDBLater; }
         void SetLogDB(bool enable) { m_enableLogDB = enable; }
         void SetLogDBLater(bool value) { m_enableLogDBLater = value; }
+        bool GetSQLDriverQueryLogging() const { return m_sqlDriverQueryLogging; }
     private:
         FILE* openLogFile(char const* configFileName,char const* configTimeStampFlag, char const* mode);
         FILE* openGmlogPerAccount(uint32 account);
@@ -138,8 +143,10 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         FILE* dberLogfile;
         FILE* chatLogfile;
         FILE* arenaLogFile;
+        FILE* sqlLogFile;
+        FILE* sqlDevLogFile;
 
-        // cache values for after initilization use (like gm log per account case)
+        // cache values for after initialization use (like gm log per account case)
         std::string m_logsDir;
         std::string m_logsTimestamp;
 
@@ -156,6 +163,10 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         ColorTypes m_colors[4];
 
         // log levels:
+        // false: errors only, true: full query logging
+        bool m_sqlDriverQueryLogging;
+
+        // log levels:
         // 0 minimum/string, 1 basic/error, 2 detail, 3 full/debug
         uint8 m_dbLogLevel;
         uint8 m_logLevel;
@@ -166,21 +177,11 @@ class Log : public Oregon::Singleton<Log, Oregon::ClassLevelLockable<Log, ACE_Th
         bool m_dbGM;
         bool m_dbChat;
         bool m_charLog_Dump;
+        bool m_charLog_Dump_Separate;
+        std::string m_dumpsDir;
 };
 
-#define sLog Oregon::Singleton<Log>::Instance()
+#define sLog ACE_Singleton<Log, ACE_Thread_Mutex>::instance()
 
-#ifdef OREGON_DEBUG
-#define DEBUG_LOG Oregon::Singleton<Log>::Instance().outDebug
-#else
-#define DEBUG_LOG
-#endif
-
-// primary for script library
-#define outstring_log Oregon::Singleton<Log>::Instance().outString
-#define detail_log Oregon::Singleton<Log>::Instance().outDetail
-#define debug_log Oregon::Singleton<Log>::Instance().outDebug
-#define error_log Oregon::Singleton<Log>::Instance().outError
-#define error_db_log Oregon::Singleton<Log>::Instance().outErrorDb
 #endif
 

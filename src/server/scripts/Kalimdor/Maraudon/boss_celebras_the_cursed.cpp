@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -61,7 +62,7 @@ struct celebras_the_cursedAI : public ScriptedAI
         if (Wrath_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget)
                 DoCast(pTarget, SPELL_WRATH);
             Wrath_Timer = 8000;
@@ -85,9 +86,9 @@ struct celebras_the_cursedAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_celebras_the_cursed(Creature* pCreature)
+CreatureAI* GetAI_celebras_the_cursed(Creature* creature)
 {
-    return new celebras_the_cursedAI (pCreature);
+    return new celebras_the_cursedAI (creature);
 }
 
 void AddSC_boss_celebras_the_cursed()

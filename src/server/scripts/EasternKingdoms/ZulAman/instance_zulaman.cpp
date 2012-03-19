@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -108,9 +109,9 @@ struct instance_zulaman : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
         case 23578://janalai
         case 23863://zuljin
@@ -123,7 +124,7 @@ struct instance_zulaman : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 186303:
                 HalazziDoorExitGUID = pGo->GetGUID();
@@ -206,7 +207,7 @@ struct instance_zulaman : public ScriptedInstance
         ss << "S " << BossKilled << " " << ChestLooted << " " << QuestMinute;
         char* data = new char[ss.str().length()+1];
         strcpy(data, ss.str().c_str());
-        //error_log("OSCR: Zul'aman saved, %s.", data);
+        //sLog->outError("TSCR: Zul'aman saved, %s.", data);
         return data;
     }
 
@@ -214,22 +215,22 @@ struct instance_zulaman : public ScriptedInstance
     {
         if (!load) return;
         std::istringstream ss(load);
-        //error_log("OSCR: Zul'aman loaded, %s.", ss.str().c_str());
+        //sLog->outError("TSCR: Zul'aman loaded, %s.", ss.str().c_str());
         char dataHead; // S
         uint16 data1, data2, data3;
         ss >> dataHead >> data1 >> data2 >> data3;
-        //error_log("OSCR: Zul'aman loaded, %d %d %d.", data1, data2, data3);
+        //sLog->outError("TSCR: Zul'aman loaded, %d %d %d.", data1, data2, data3);
         if (dataHead == 'S')
         {
             BossKilled = data1;
             ChestLooted = data2;
             QuestMinute = data3;
-        } else error_log("OSCR: Zul'aman: corrupted save data.");
+        } else sLog->outError("TSCR: Zul'aman: corrupted save data.");
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_NALORAKKEVENT:
             Encounters[0] = data;
@@ -311,7 +312,7 @@ struct instance_zulaman : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_NALORAKKEVENT: return Encounters[0];
         case DATA_AKILZONEVENT:  return Encounters[1];

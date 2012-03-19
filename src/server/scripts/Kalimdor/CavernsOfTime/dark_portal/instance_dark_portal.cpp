@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -111,7 +112,7 @@ struct instance_dark_portal : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Black Portal: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Black Portal: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
@@ -124,16 +125,16 @@ struct instance_dark_portal : public ScriptedInstance
             for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
             {
                 if (Player* player = itr->getSource())
-                    player->SendUpdateWorldState(id,state);
+                    player->SendUpdateWorldState(id, state);
             }
-        } else debug_log("OSCR: Instance Black Portal: UpdateBMWorldState, but PlayerList is empty!");
+        } else sLog->outDebug("TSCR: Instance Black Portal: UpdateBMWorldState, but PlayerList is empty!");
     }
 
     void InitWorldState(bool Enable = true)
     {
-        UpdateBMWorldState(WORLD_STATE_BM,Enable ? 1 : 0);
-        UpdateBMWorldState(WORLD_STATE_BM_SHIELD,100);
-        UpdateBMWorldState(WORLD_STATE_BM_RIFT,0);
+        UpdateBMWorldState(WORLD_STATE_BM, Enable ? 1 : 0);
+        UpdateBMWorldState(WORLD_STATE_BM_SHIELD, 100);
+        UpdateBMWorldState(WORLD_STATE_BM_RIFT, 0);
     }
 
     bool IsEncounterInProgress()
@@ -144,18 +145,18 @@ struct instance_dark_portal : public ScriptedInstance
         return false;
     }
 
-    void OnPlayerEnter(Player *player)
+    void OnPlayerEnter(Player* player)
     {
         if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
             return;
 
-        player->SendUpdateWorldState(WORLD_STATE_BM,0);
+        player->SendUpdateWorldState(WORLD_STATE_BM, 0);
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        if (pCreature->GetEntry() == C_MEDIVH)
-            MedivhGUID = pCreature->GetGUID();
+        if (creature->GetEntry() == C_MEDIVH)
+            MedivhGUID = creature->GetGUID();
     }
 
     //what other conditions to check?
@@ -169,7 +170,7 @@ struct instance_dark_portal : public ScriptedInstance
 
     uint8 GetRiftWaveId()
     {
-        switch(mRiftPortalCount)
+        switch (mRiftPortalCount)
         {
         case 6:
             mRiftWaveId = 2;
@@ -186,25 +187,25 @@ struct instance_dark_portal : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        Player *player = GetPlayerInMap();
+        Player* player = GetPlayerInMap();
 
         if (!player)
         {
-            debug_log("OSCR: Instance Black Portal: SetData (Type: %u Data %u) cannot find any player.", type, data);
+            sLog->outDebug("TSCR: Instance Black Portal: SetData (Type: %u Data %u) cannot find any player.", type, data);
             return;
         }
 
-        switch(type)
+        switch (type)
         {
         case TYPE_MEDIVH:
             if (data == SPECIAL && Encounter[0] == IN_PROGRESS)
             {
                 --mShieldPercent;
-                UpdateBMWorldState(WORLD_STATE_BM_SHIELD,mShieldPercent);
+                UpdateBMWorldState(WORLD_STATE_BM_SHIELD, mShieldPercent);
 
                 if (!mShieldPercent)
                 {
-                    if (Unit *medivh = Unit::GetUnit(*player,MedivhGUID))
+                    if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
                     {
                         if (medivh->isAlive())
                         {
@@ -219,7 +220,7 @@ struct instance_dark_portal : public ScriptedInstance
             {
                 if (data == IN_PROGRESS)
                 {
-                    debug_log("OSCR: Instance Dark Portal: Starting event.");
+                    sLog->outDebug("TSCR: Instance Dark Portal: Starting event.");
                     InitWorldState();
                     Encounter[1] = IN_PROGRESS;
                     NextPortal_Timer = 15000;
@@ -228,10 +229,10 @@ struct instance_dark_portal : public ScriptedInstance
                 if (data == DONE)
                 {
                     //this may be completed further out in the post-event
-                    if (Unit *medivh = Unit::GetUnit(*player,MedivhGUID))
+                    if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
                     {
-                        player->GroupEventHappens(QUEST_OPENING_PORTAL,medivh);
-                        player->GroupEventHappens(QUEST_MASTER_TOUCH,medivh);
+                        player->GroupEventHappens(QUEST_OPENING_PORTAL, medivh);
+                        player->GroupEventHappens(QUEST_MASTER_TOUCH, medivh);
                     }
                 }
 
@@ -252,7 +253,7 @@ struct instance_dark_portal : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case TYPE_MEDIVH:
             return Encounter[0];
@@ -281,7 +282,7 @@ struct instance_dark_portal : public ScriptedInstance
         if (entry == RIFT_BOSS)
             entry = RandRiftBoss();
 
-        debug_log("OSCR: Instance Dark Portal: Summoning rift boss entry %u.",entry);
+        sLog->outDebug("TSCR: Instance Dark Portal: Summoning rift boss entry %u.",entry);
 
         Position pos;
         source->GetRandomNearPosition(pos, 10.0f);
@@ -292,30 +293,30 @@ struct instance_dark_portal : public ScriptedInstance
         if (Unit *summon = source->SummonCreature(entry, pos, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))
             return summon;
 
-        debug_log("OSCR: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
+        sLog->outDebug("TSCR: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
         return NULL;
     }
 
     void DoSpawnPortal()
     {
-        Player *player = GetPlayerInMap();
+        Player* player = GetPlayerInMap();
         if (!player)
             return;
 
-        if (Unit *medivh = Unit::GetUnit(*player,MedivhGUID))
+        if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
         {
             for (uint8 i = 0; i < 4; i++)
             {
                 int tmp = rand()%4;
                 if (tmp != CurrentRiftId)
                 {
-                    debug_log("OSCR: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp,CurrentRiftId);
+                    sLog->outDebug("TSCR: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp, CurrentRiftId);
 
                     CurrentRiftId = tmp;
 
                     Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
                         PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
-                        TEMPSUMMON_CORPSE_DESPAWN,0);
+                        TEMPSUMMON_CORPSE_DESPAWN, 0);
                     if (temp)
                     {
                         temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -325,12 +326,12 @@ struct instance_dark_portal : public ScriptedInstance
                         {
                             if (boss->GetEntry() == C_AEONUS)
                             {
-                                boss->AddThreat(medivh,0.0f);
+                                boss->AddThreat(medivh, 0.0f);
                             }
                             else
                             {
-                                boss->AddThreat(temp,0.0f);
-                                temp->CastSpell(boss,SPELL_RIFT_CHANNEL,false);
+                                boss->AddThreat(temp, 0.0f);
+                                temp->CastSpell(boss, SPELL_RIFT_CHANNEL, false);
                             }
                         }
                     }
@@ -357,7 +358,7 @@ struct instance_dark_portal : public ScriptedInstance
             if (NextPortal_Timer <= diff)
             {
                 ++mRiftPortalCount;
-                UpdateBMWorldState(WORLD_STATE_BM_RIFT,mRiftPortalCount);
+                UpdateBMWorldState(WORLD_STATE_BM_RIFT, mRiftPortalCount);
 
                 DoSpawnPortal();
                 NextPortal_Timer = RiftWaves[GetRiftWaveId()].NextPortalTime;

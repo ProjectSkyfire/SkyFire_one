@@ -161,7 +161,7 @@ ACE_Streambuf::underflow (void)
           if (out_waiting () && syncout () == EOF)
             return EOF;
 
-          if( ! pbase() )
+          if ( ! pbase() )
             {
               delete [] pbase_saved_;
               (void) reset_put_buffer();

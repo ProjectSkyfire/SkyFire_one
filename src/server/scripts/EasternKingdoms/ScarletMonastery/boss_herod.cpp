@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -107,16 +108,16 @@ struct boss_herodAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_herod(Creature* pCreature)
+CreatureAI* GetAI_boss_herod(Creature* creature)
 {
-    return new boss_herodAI(pCreature);
+    return new boss_herodAI(creature);
 }
 
 struct mob_scarlet_traineeAI : public npc_escortAI
 {
     mob_scarlet_traineeAI(Creature *c) : npc_escortAI(c)
     {
-        Start_Timer = urand(1000,6000);
+        Start_Timer = urand(1000, 6000);
     }
 
     uint32 Start_Timer;
@@ -131,7 +132,7 @@ struct mob_scarlet_traineeAI : public npc_escortAI
         {
             if (Start_Timer <= diff)
             {
-                Start(true,true);
+                Start(true, true);
                 Start_Timer = 0;
             } else Start_Timer -= diff;
         }
@@ -140,9 +141,9 @@ struct mob_scarlet_traineeAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_mob_scarlet_trainee(Creature* pCreature)
+CreatureAI* GetAI_mob_scarlet_trainee(Creature* creature)
 {
-    return new mob_scarlet_traineeAI(pCreature);
+    return new mob_scarlet_traineeAI(creature);
 }
 
 void AddSC_boss_herod()

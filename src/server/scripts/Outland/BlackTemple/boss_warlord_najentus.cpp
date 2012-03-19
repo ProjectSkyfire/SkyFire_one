@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -105,7 +106,7 @@ struct boss_najentusAI : public ScriptedAI
     {
         if (me->IsNonMeleeSpellCasted(false)) return false;
 
-        DoCast(victim,spellId,triggered);
+        DoCast(victim, spellId, triggered);
         return true;
     }
 
@@ -121,10 +122,10 @@ struct boss_najentusAI : public ScriptedAI
 
     void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
     {
-        switch(spell->Id)
+        switch (spell->Id)
         {
         case SPELL_NEEDLE_SPINE:
-            me->CastSpell(pTarget,SPELL_NEEDLE_SPINE_DMG,true);
+            me->CastSpell(pTarget, SPELL_NEEDLE_SPINE_DMG, true);
             break;
         }
     }
@@ -182,7 +183,7 @@ struct boss_najentusAI : public ScriptedAI
             }
         } else TidalShieldTimer -= diff;
 
-        if (!me->HasAura(SPELL_BERSERK,0))
+        if (!me->HasAura(SPELL_BERSERK, 0))
         {
             if (EnrageTimer <= diff)
             {
@@ -193,7 +194,7 @@ struct boss_najentusAI : public ScriptedAI
 
         if (SpecialYellTimer <= diff)
         {
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_SPECIAL1, me); break;
             case 1: DoScriptText(SAY_SPECIAL2, me); break;
@@ -205,7 +206,7 @@ struct boss_najentusAI : public ScriptedAI
         {
             if (!me->IsNonMeleeSpellCasted(false))
             {
-                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 80,true);
+                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 80, true);
                 if (!pTarget) pTarget = me->getVictim();
                 if (pTarget)
                 {
@@ -214,7 +215,7 @@ struct boss_najentusAI : public ScriptedAI
                     //must let target summon, otherwise you cannot click the spine
                     pTarget->SummonGameObject(GOBJECT_SPINE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), me->GetOrientation(), 0, 0, 0, 0, 0);
 
-                    switch(rand()%2)
+                    switch (rand()%2)
                     {
                     case 0: DoScriptText(SAY_NEEDLE1, me); break;
                     case 1: DoScriptText(SAY_NEEDLE2, me); break;
@@ -240,21 +241,21 @@ struct boss_najentusAI : public ScriptedAI
     }
 };
 
-bool GOHello_go_najentus_spine(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_najentus_spine(Player* player, GameObject* pGo)
 {
     if (ScriptedInstance* pInstance = pGo->GetInstanceData())
         if (Creature* Najentus = Unit::GetCreature(*pGo, pInstance->GetData64(DATA_HIGHWARLORDNAJENTUS)))
             if (CAST_AI(boss_najentusAI, Najentus->AI())->RemoveImpalingSpine())
             {
-                pPlayer->CastSpell(pPlayer, SPELL_CREATE_NAJENTUS_SPINE, true);
+                player->CastSpell(player, SPELL_CREATE_NAJENTUS_SPINE, true);
                 pGo->AddObjectToRemoveList();
             }
     return true;
 }
 
-CreatureAI* GetAI_boss_najentus(Creature* pCreature)
+CreatureAI* GetAI_boss_najentus(Creature* creature)
 {
-    return new boss_najentusAI (pCreature);
+    return new boss_najentusAI (creature);
 }
 
 void AddSC_boss_najentus()

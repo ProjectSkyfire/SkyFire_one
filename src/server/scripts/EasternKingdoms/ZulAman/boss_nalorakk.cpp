@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -135,11 +136,11 @@ struct boss_nalorakkAI : public ScriptedAI
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             inMove = false;
             waitTimer = 0;
-            me->SetSpeed(MOVE_RUN,2);
+            me->SetSpeed(MOVE_RUN, 2);
             me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
         } else
         {
-            (*me).GetMotionMaster()->MovePoint(0,NalorakkWay[7][0],NalorakkWay[7][1],NalorakkWay[7][2]);
+            (*me).GetMotionMaster()->MovePoint(0, NalorakkWay[7][0],NalorakkWay[7][1],NalorakkWay[7][2]);
         }
 
         if (pInstance)
@@ -162,14 +163,14 @@ struct boss_nalorakkAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Oregon::ComputeCellPair(x, y));
+            CellPair pair(Trinity::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Oregon::AllFriendlyCreaturesInGrid check(me);
-            Oregon::CreatureListSearcher<Oregon::AllFriendlyCreaturesInGrid> searcher(templist, check);
-            TypeContainerVisitor<Oregon::CreatureListSearcher<Oregon::AllFriendlyCreaturesInGrid>, GridTypeMapContainer> cSearcher(searcher);
+            Trinity::AllFriendlyCreaturesInGrid check(me);
+            Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid> searcher(templist, check);
+            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
 
@@ -204,7 +205,7 @@ struct boss_nalorakkAI : public ScriptedAI
             {
                 if (!inMove)
                 {
-                    switch(MovePhase)
+                    switch (MovePhase)
                     {
                         case 0:
                             if (me->IsWithinDistInMap(who, 50))
@@ -212,7 +213,7 @@ struct boss_nalorakkAI : public ScriptedAI
                                 me->MonsterYell(YELL_NALORAKK_WAVE1, LANG_UNIVERSAL, NULL);
                                 DoPlaySoundToSet(me, SOUND_NALORAKK_WAVE1);
 
-                                (*me).GetMotionMaster()->MovePoint(1,NalorakkWay[1][0],NalorakkWay[1][1],NalorakkWay[1][2]);
+                                (*me).GetMotionMaster()->MovePoint(1, NalorakkWay[1][0],NalorakkWay[1][1],NalorakkWay[1][2]);
                                 MovePhase ++;
                                 inMove = true;
 
@@ -225,7 +226,7 @@ struct boss_nalorakkAI : public ScriptedAI
                                 me->MonsterYell(YELL_NALORAKK_WAVE2, LANG_UNIVERSAL, NULL);
                                 DoPlaySoundToSet(me, SOUND_NALORAKK_WAVE2);
 
-                                (*me).GetMotionMaster()->MovePoint(3,NalorakkWay[3][0],NalorakkWay[3][1],NalorakkWay[3][2]);
+                                (*me).GetMotionMaster()->MovePoint(3, NalorakkWay[3][0],NalorakkWay[3][1],NalorakkWay[3][2]);
                                 MovePhase ++;
                                 inMove = true;
 
@@ -238,7 +239,7 @@ struct boss_nalorakkAI : public ScriptedAI
                                 me->MonsterYell(YELL_NALORAKK_WAVE3, LANG_UNIVERSAL, NULL);
                                 DoPlaySoundToSet(me, SOUND_NALORAKK_WAVE3);
 
-                                (*me).GetMotionMaster()->MovePoint(6,NalorakkWay[6][0],NalorakkWay[6][1],NalorakkWay[6][2]);
+                                (*me).GetMotionMaster()->MovePoint(6, NalorakkWay[6][0],NalorakkWay[6][1],NalorakkWay[6][2]);
                                 MovePhase ++;
                                 inMove = true;
 
@@ -280,13 +281,13 @@ struct boss_nalorakkAI : public ScriptedAI
         if (pInstance)
             pInstance->SetData(DATA_NALORAKKEVENT, DONE);
 
-        me->MonsterYell(YELL_DEATH,LANG_UNIVERSAL,NULL);
+        me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_YELL_DEATH);
     }
 
     void KilledUnit(Unit* /*victim*/)
     {
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
@@ -312,7 +313,7 @@ struct boss_nalorakkAI : public ScriptedAI
             if (MovePhase != id)
                 return;
 
-            switch(MovePhase)
+            switch (MovePhase)
             {
                 case 2:
                     me->SetOrientation(3.1415f*2);
@@ -346,7 +347,7 @@ struct boss_nalorakkAI : public ScriptedAI
                 if (waitTimer <= diff)
                 {
                     (*me).GetMotionMaster()->MovementExpired();
-                    (*me).GetMotionMaster()->MovePoint(MovePhase,NalorakkWay[MovePhase][0],NalorakkWay[MovePhase][1],NalorakkWay[MovePhase][2]);
+                    (*me).GetMotionMaster()->MovePoint(MovePhase, NalorakkWay[MovePhase][0],NalorakkWay[MovePhase][1],NalorakkWay[MovePhase][2]);
                     waitTimer = 0;
                 } else waitTimer -= diff;
         }
@@ -443,9 +444,9 @@ struct boss_nalorakkAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nalorakk(Creature* pCreature)
+CreatureAI* GetAI_boss_nalorakk(Creature* creature)
 {
-    return new boss_nalorakkAI (pCreature);
+    return new boss_nalorakkAI (creature);
 }
 
 void AddSC_boss_nalorakk()

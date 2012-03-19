@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -320,55 +321,55 @@ struct npc_disciple_of_naralexAI : public npc_escortAI
     }
 };
 
-CreatureAI* GetAI_npc_disciple_of_naralex(Creature* pCreature)
+CreatureAI* GetAI_npc_disciple_of_naralex(Creature* creature)
 {
-    return new npc_disciple_of_naralexAI(pCreature);
+    return new npc_disciple_of_naralexAI(creature);
 }
 
-bool GossipHello_npc_disciple_of_naralex(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_disciple_of_naralex(Player* player, Creature* creature)
 {
-    ScriptedInstance *pInstance = pCreature->GetInstanceData();
+    ScriptedInstance *pInstance = creature->GetInstanceData();
 
     if (pInstance)
     {
-        pCreature->CastSpell(pPlayer, SPELL_MARK_OF_THE_WILD_RANK_2, true);
+        creature->CastSpell(player, SPELL_MARK_OF_THE_WILD_RANK_2, true);
         if ((pInstance->GetData(TYPE_LORD_COBRAHN) == DONE) && (pInstance->GetData(TYPE_LORD_PYTHAS) == DONE) &&
             (pInstance->GetData(TYPE_LADY_ANACONDRA) == DONE) && (pInstance->GetData(TYPE_LORD_SERPENTIS) == DONE))
         {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NARALEX, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_ID_START_2, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_NARALEX, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->SEND_GOSSIP_MENU(GOSSIP_ID_START_2, creature->GetGUID());
 
             if (!pInstance->GetData(TYPE_NARALEX_YELLED))
             {
-                DoScriptText(SAY_AT_LAST, pCreature);
+                DoScriptText(SAY_AT_LAST, creature);
                 pInstance->SetData(TYPE_NARALEX_YELLED, 1);
             }
         }
         else
         {
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_ID_START_1, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(GOSSIP_ID_START_1, creature->GetGUID());
         }
     }
     return true;
 }
 
-bool GossipSelect_npc_disciple_of_naralex(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_disciple_of_naralex(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
-    ScriptedInstance *pInstance = pCreature->GetInstanceData();
+    ScriptedInstance *pInstance = creature->GetInstanceData();
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
+        player->CLOSE_GOSSIP_MENU();
         if (pInstance)
             pInstance->SetData(TYPE_NARALEX_EVENT, IN_PROGRESS);
 
-        DoScriptText(SAY_MAKE_PREPARATIONS, pCreature);
+        DoScriptText(SAY_MAKE_PREPARATIONS, creature);
 
-        pCreature->setFaction(250);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        creature->setFaction(250);
+        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
-        CAST_AI(npc_escortAI, (pCreature->AI()))->Start(false, false, pPlayer->GetGUID());
-        CAST_AI(npc_escortAI, (pCreature->AI()))->SetDespawnAtFar(false);
-        CAST_AI(npc_escortAI, (pCreature->AI()))->SetDespawnAtEnd(false);
+        CAST_AI(npc_escortAI, (creature->AI()))->Start(false, false, player->GetGUID());
+        CAST_AI(npc_escortAI, (creature->AI()))->SetDespawnAtFar(false);
+        CAST_AI(npc_escortAI, (creature->AI()))->SetDespawnAtEnd(false);
     }
     return true;
 }

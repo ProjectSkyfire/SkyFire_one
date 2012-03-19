@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -20,20 +20,18 @@
 #include "Creature.h"
 #include "CreatureGroups.h"
 #include "ObjectMgr.h"
-#include "ProgressBar.h"
-#include "Policies/SingletonImp.h"
+
 #include "CreatureAI.h"
 
 #define MAX_DESYNC 5.0f
 
-INSTANTIATE_SINGLETON_1(CreatureGroupManager);
-
 CreatureGroupInfoType   CreatureGroupMap;
-CreatureGroupDataType   CreatureGroupDataMap;
 
-void CreatureGroupManager::AddCreatureToGroup(uint32 groupId, Creature *member)
+namespace FormationMgr
 {
-    Map *map = member->FindMap();
+void AddCreatureToGroup(uint32 groupId, Creature* member)
+{
+    Map* map = member->FindMap();
     if (!map)
         return;
 
@@ -42,231 +40,208 @@ void CreatureGroupManager::AddCreatureToGroup(uint32 groupId, Creature *member)
     //Add member to an existing group
     if (itr != map->CreatureGroupHolder.end())
     {
-        sLog.outDebug("Group found: %u, inserting creature GUID: %u, Group InstanceID %u", groupId, member->GetGUIDLow(), member->GetInstanceId());
+        sLog->outDebug("Group found: %u, inserting creature GUID: %u, Group InstanceID %u", groupId, member->GetGUIDLow(), member->GetInstanceId());
         itr->second->AddMember(member);
     }
     //Create new group
     else
     {
-        sLog.outDebug("Group not found: %u. Creating new group.", groupId);
+        sLog->outDebug("Group not found: %u. Creating new group.", groupId);
         CreatureGroup* group = new CreatureGroup(groupId);
         map->CreatureGroupHolder[groupId] = group;
         group->AddMember(member);
     }
 }
 
-void CreatureGroupManager::RemoveCreatureFromGroup(CreatureGroup *group, Creature *member)
+void RemoveCreatureFromGroup(CreatureGroup* group, Creature* member)
 {
-    sLog.outDebug("Deleting member pointer to GUID: %u from group %u", group->GetId(), member->GetDBTableGUIDLow());
+    sLog->outDebug("Deleting member pointer to GUID: %u from group %u", group->GetId(), member->GetDBTableGUIDLow());
     group->RemoveMember(member);
 
     if (group->isEmpty())
     {
-        Map *map = member->FindMap();
+        Map* map = member->FindMap();
         if (!map)
             return;
 
-        sLog.outDebug("Deleting group with InstanceID %u", member->GetInstanceId());
+        sLog->outDebug("Deleting group with InstanceID %u", member->GetInstanceId());
         map->CreatureGroupHolder.erase(group->GetId());
         delete group;
     }
 }
 
-void CreatureGroupManager::LoadCreatureGroups()
+void LoadCreatureFormations()
 {
-    //Clear existing map
-    for (CreatureGroupInfoType::iterator itr = CreatureGroupMap.begin(); itr != CreatureGroupMap.end(); ++itr)
-       delete itr->second;
+    uint32 oldMSTime = getMSTime();
+
+    for (CreatureGroupInfoType::iterator itr = CreatureGroupMap.begin(); itr != CreatureGroupMap.end(); ++itr) // for reload case
+        delete itr->second;
     CreatureGroupMap.clear();
-    CreatureGroupDataMap.clear();
-
-    //Check Integrity of the table
-    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT MAX(groupId) FROM creature_groups");
-
-    if (!result)
-    {
-        sLog.outErrorDb(" ...an error occured while loading the table creature_groups (maybe it doesn't exist ?)\n");
-        return;
-    }
 
     //Get group data
-    result = WorldDatabase.Query("SELECT MAX(groupId) FROM creature_group_data");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT leaderGUID, memberGUID, dist, angle, groupAI FROM creature_formations ORDER BY leaderGUID");
 
     if (!result)
     {
-        sLog.outErrorDb(" ...an error occured while loading the table creature_group_data (maybe it doesn't exist ?)\n");
+        sLog->outErrorDb(">>  Loaded 0 creatures in formations. DB table `creature_formations` is empty!");
+        sLog->outString();
         return;
     }
 
-    //Check if groups without member exist
-    result = WorldDatabase.Query("SELECT COUNT(groupId) FROM creature_groups WHERE groupId NOT IN (SELECT groupId FROM creature_group_data)");
+    uint32 count = 0;
+    Field* fields;
+    FormationInfo* group_member;
 
-    if (result)
-    {
-        sLog.outDetail(">> %u Groups without member found, groups skipped.",result->Fetch()->GetInt32());
-    }
-
-    //Check if member without group exist
-    result = WorldDatabase.Query("SELECT COUNT(groupId) FROM creature_group_data WHERE groupId NOT IN (SELECT groupId FROM creature_groups)");
-
-    if (result)
-    {
-        sLog.outDetail(">> %u Member without group found, member skipped.",result->Fetch()->GetInt32());
-    }
-
-    //Get groups
-    QueryResult_AutoPtr result_data = WorldDatabase.Query("SELECT groupId, leaderGUID, groupType FROM creature_groups WHERE groupId IN (SELECT groupId FROM creature_group_data) ORDER BY groupId");
-
-    if (!result_data)
-    {
-        barGoLink bar(1);
-        bar.step();
-        sLog.outString();
-        sLog.outString(">> Loaded 0 creature groups. DB table `creature_groups` is empty.");
-        return;
-    }
-
-    //Get member
-    QueryResult_AutoPtr result_member = WorldDatabase.Query("SELECT groupId, memberGUID FROM creature_group_data WHERE groupId IN (SELECT groupId FROM creature_groups) ORDER BY groupId");
-
-    if (!result_member)
-    {
-        barGoLink bar(1);
-        bar.step();
-        sLog.outString();
-        sLog.outString(">> Loaded 0 creature groups. DB table `creature_group_data` is empty.");
-        return;
-    }
-
-    //Loading groups...
-    uint64 total_groups = result_data->GetRowCount();
-    uint64 total_member = result_member->GetRowCount();
-
-    barGoLink bar(total_groups+total_member);
-    Field *fields;
-    std::set<uint32> guidSet;
-
-    GroupInfo *group_member;
     do
     {
-        fields = result_data->Fetch();
-        bar.step();
+        fields = result->Fetch();
 
         //Load group member data
-        uint32 groupId = fields[0].GetUInt32();
-        uint32 leaderGUID = fields[1].GetUInt32();
-        uint8  groupType = fields[2].GetUInt8();
-
-        group_member                        = new GroupInfo;
-        group_member->leaderGUID            = leaderGUID;
-        group_member->groupType             = groupType;
-
-        // check data correctness
-        if (guidSet.find(group_member->leaderGUID) == guidSet.end())
+        group_member                        = new FormationInfo;
+        group_member->leaderGUID            = fields[0].GetUInt32();
+        uint32 memberGUID                   = fields[1].GetUInt32();
+        group_member->groupAI               = fields[4].GetUInt8();
+        //If creature is group leader we may skip loading of dist/angle
+        if (group_member->leaderGUID != memberGUID)
         {
-            sLog.outErrorDb("creature_groups table leader guid %u incorrect (not exist)", group_member->leaderGUID);
-            delete group_member;
-            return;
+            group_member->follow_dist       = fields[2].GetFloat();
+            group_member->follow_angle      = fields[3].GetFloat() * M_PI / 180;
+        }
+        else
+        {
+            group_member->follow_dist       = 0;
+            group_member->follow_angle      = 0;
         }
 
-        CreatureGroupMap[groupId] = group_member;
+        // check data correctness
+        {
+            if(!sObjectMgr->GetCreatureData(group_member->leaderGUID))
+            {
+                sLog->outErrorDb("creature_formations table leader guid %u incorrect (not exist)", group_member->leaderGUID);
+                delete group_member;
+                continue;
+            }
 
-        sLog.outDebug("CreatureGroup::LoadCreatureGroups: Load Group %u with Leader %u and groupType %u.", groupId, leaderGUID, groupType);
+            if(!sObjectMgr->GetCreatureData(memberGUID))
+            {
+                sLog->outErrorDb("creature_formations table member guid %u incorrect (not exist)", memberGUID);
+                delete group_member;
+                continue;
+            }
+        }
+
+        CreatureGroupMap[memberGUID] = group_member;
+        ++count;
     }
-    while (result_data->NextRow()) ;
+    while (result->NextRow()) ;
 
-    //Loading member...
-    do
+    sLog->outString(">> Loaded %u creatures in formations in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+    sLog->outString();
+}
+} // Namespace
+
+void CreatureGroup::AddMember(Creature* member)
+{
+    sLog->outDebug("CreatureGroup::AddMember: Adding unit GUID: %u.", member->GetGUIDLow());
+
+    //Check if it is a leader
+    if (member->GetDBTableGUIDLow() == m_groupID)
     {
-        fields = result_member->Fetch();
-        bar.step();
-
-        //Load group member data
-        uint32 groupId = fields[0].GetUInt32();
-        uint32 memberGUID = fields[1].GetUInt32();
-
-        // check data correctness
-        if (guidSet.find(memberGUID) == guidSet.end())
-        {
-            sLog.outErrorDb("creature_group_data table member guid %u incorrect (not exist)", memberGUID);
-            continue;
-        }
-
-        CreatureGroupDataMap[memberGUID] = groupId;
-
-        sLog.outDebug("CreatureGroup::LoadCreatureGroups: Load Member %u for Group with groupId %u.", memberGUID, groupId);
+        sLog->outDebug("Unit GUID: %u is formation leader. Adding group.", member->GetGUIDLow());
+        m_leader = member;
     }
-    while (result_member->NextRow()) ;
 
-    sLog.outString();
-    sLog.outString(">> Loaded " UI64FMTD " groups", total_groups);
-    sLog.outString(">> Loaded " UI64FMTD " creatures in groups", total_member);
-    sLog.outString();
+    m_members[member] = CreatureGroupMap.find(member->GetDBTableGUIDLow())->second;
+    member->SetFormation(this);
 }
 
-void CreatureGroup::AddMember(Creature *member)
+void CreatureGroup::RemoveMember(Creature* member)
 {
-    if (!member)
-        return;
-
-    sLog.outDebug("CreatureGroup::AddMember: Adding unit GUID: %u to group.", member->GetGUIDLow());
-
-    m_members[member] = CreatureGroupMap.find(m_groupID)->second;
-    member->SetGroup(this);
-}
-
-void CreatureGroup::RemoveMember(Creature *member)
-{
-    if (!member)
-        return;
+    if (m_leader == member)
+        m_leader = NULL;
 
     m_members.erase(member);
-    member->SetGroup(NULL);
+    member->SetFormation(NULL);
 }
 
-void CreatureGroup::MemberAttackStart(Creature *member, Unit *target)
+void CreatureGroup::MemberAttackStart(Creature* member, Unit* target)
 {
+    uint8 groupAI = CreatureGroupMap[member->GetDBTableGUIDLow()]->groupAI;
+    if (!groupAI)
+        return;
+
+    if (groupAI == 1 && member != m_leader)
+        return;
+
     for (CreatureGroupMemberType::iterator itr = m_members.begin(); itr != m_members.end(); ++itr)
     {
-        Creature* pCreature = itr->first;
-
-        sLog.outDebug("CreatureGroup::MemberAttackStart: group member instanceId %u .",member->GetInstanceId());
+        if (m_leader) // avoid crash if leader was killed and reset.
+            sLog->outDebug("GROUP ATTACK: group instance id %u calls member instid %u", m_leader->GetInstanceId(), member->GetInstanceId());
 
         //Skip one check
-        if (pCreature == member)
+        if (itr->first == member)
             continue;
 
-        if (!pCreature->isAlive())
+        if (!itr->first->isAlive())
             continue;
 
-        if (pCreature->getVictim())
+        if (itr->first->getVictim())
             continue;
 
-        if (pCreature->canAttack(target))
-            pCreature->AI()->AttackStart(target);
+        if (itr->first->canAttack(target) && itr->first->AI())
+            itr->first->AI()->AttackStart(target);
     }
 }
 
-bool CreatureGroup::IsAllowedToRespawn(Creature *member)
+void CreatureGroup::FormationReset(bool dismiss)
 {
-    uint8 groupType = CreatureGroupMap[m_groupID]->groupType;
-
-    if (!member->GetMap()->IsRaid() || groupType == 0)
-        return false;
-
-    bool exist = false;
-    //Check if at least one groupmember lives if no -> no respawn.
     for (CreatureGroupMemberType::iterator itr = m_members.begin(); itr != m_members.end(); ++itr)
-        if (itr->first->isAlive())
-            exist = true;
+    {
+        if (itr->first != m_leader && itr->first->isAlive())
+        {
+            if (dismiss)
+                itr->first->GetMotionMaster()->Initialize();
+            else
+                itr->first->GetMotionMaster()->MoveIdle();
+            sLog->outDebug("Set %s movement for member GUID: %u", dismiss ? "default" : "idle", itr->first->GetGUIDLow());
+        }
+    }
+    m_Formed = !dismiss;
+}
 
-    //Check if an groupmember is in combat, if yes -> no respawn.
+void CreatureGroup::LeaderMoveTo(float x, float y, float z)
+{
+    //! To do: This should probably get its own movement generator or use WaypointMovementGenerator.
+    //! If the leader's path is known, member's path can be plotted as well using formation offsets.
+    if (!m_leader)
+        return;
+
+    float pathangle = atan2(m_leader->GetPositionY() - y, m_leader->GetPositionX() - x);
+
     for (CreatureGroupMemberType::iterator itr = m_members.begin(); itr != m_members.end(); ++itr)
-        if (itr->first->isInCombat())
-            exist = false;
+    {
+        Creature* member = itr->first;
+        if (member == m_leader || !member->isAlive() || member->getVictim())
+            continue;
 
-    if (exist)
-         sLog.outDebug("CreatureGroup::IsAllowedToRespawn: group member instanceId %u can respawn.",member->GetInstanceId());
+        float angle = itr->second->follow_angle;
+        float dist = itr->second->follow_dist;
 
-    return exist;
+        float dx = x + cos(angle + pathangle) * dist;
+        float dy = y + sin(angle + pathangle) * dist;
+        float dz = z;
+
+        Trinity::NormalizeMapCoord(dx);
+        Trinity::NormalizeMapCoord(dy);
+
+        member->UpdateGroundPositionZ(dx, dy, dz);
+
+        if (member->IsWithinDist(m_leader, dist + MAX_DESYNC))
+            member->SetUnitMovementFlags(m_leader->GetUnitMovementFlags());
+        else
+            member->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
+
+        member->GetMotionMaster()->MovePoint(0, dx, dy, dz);
+        member->SetHomePosition(dx, dy, dz, pathangle);
+    }
 }

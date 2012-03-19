@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,12 +18,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_FORMULAS_H
-#define OREGON_FORMULAS_H
+#ifndef TRINITY_FORMULAS_H
+#define TRINITY_FORMULAS_H
 
 #include "World.h"
 
-namespace Oregon
+namespace Trinity
 {
     namespace Honor
     {
@@ -104,17 +105,17 @@ namespace Oregon
         {
             if (u->GetTypeId() == TYPEID_UNIT && (
                 ((Creature*)u)->isTotem() || ((Creature*)u)->isPet() ||
-                (((Creature*)u)->GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_NO_XP_AT_KILL)))
+                (((Creature*)u)->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_NO_XP_AT_KILL)))
                 return 0;
 
-            uint32 xp_gain= BaseGain(pl->getLevel(), u->getLevel(), GetContentLevelsForMapAndZone(u->GetMapId(),u->GetZoneId()));
+            uint32 xp_gain= BaseGain(pl->getLevel(), u->getLevel(), GetContentLevelsForMapAndZone(u->GetMapId(), u->GetZoneId()));
             if (xp_gain == 0)
                 return 0;
 
             if (u->GetTypeId() == TYPEID_UNIT && ((Creature*)u)->isElite())
                 xp_gain *= 2;
 
-            return (uint32)(xp_gain*sWorld.getRate(RATE_XP_KILL));
+            return (uint32)(xp_gain*sWorld->getRate(RATE_XP_KILL));
         }
 
         inline uint32 xp_Diff(uint32 lvl)
@@ -160,7 +161,7 @@ namespace Oregon
             }else
             {
                 // level higher than 70 is not supported
-                xp = (uint32)(779700 * (pow(sWorld.getRate(RATE_XP_PAST_70), (int32)lvl - 69)));
+                xp = (uint32)(779700 * (pow(sWorld->getRate(RATE_XP_PAST_70), (int32)lvl - 69)));
                 return ((xp < 0x7fffffff) ? xp : 0x7fffffff);
             }
 
@@ -186,7 +187,7 @@ namespace Oregon
             }
             else
             {
-                switch(count)
+                switch (count)
                 {
                     case 0:
                     case 1:

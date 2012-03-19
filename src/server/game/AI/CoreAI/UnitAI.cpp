@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -93,12 +94,12 @@ inline bool SelectTargetHelper(const Unit * me, const Unit * target, const bool 
     {
         if (aura > 0)
         {
-            if (!target->HasAura(aura,0))
+            if (!target->HasAura(aura, 0))
                 return false;
         }
         else
         {
-            if (target->HasAura(aura,0))
+            if (target->HasAura(aura, 0))
                 return false;
         }
     }
@@ -132,7 +133,7 @@ Unit* UnitAI::SelectTarget(SelectAggroTarget targetType, uint32 position, float 
     if (targetType == SELECT_TARGET_NEAREST || targetType == SELECT_TARGET_FARTHEST)
         targetList.sort(TargetDistanceOrder(me));
 
-    switch(targetType)
+    switch (targetType)
     {
         case SELECT_TARGET_NEAREST:
         case SELECT_TARGET_TOPAGGRO:
@@ -203,8 +204,8 @@ float UnitAI::DoGetSpellMaxRange(uint32 spellId, bool positive)
 void UnitAI::DoCast(uint32 spellId)
 {
     Unit *target = NULL;
-    //sLog.outError("aggre %u %u", spellId, (uint32)AISpellInfo[spellId].target);
-    switch(AISpellInfo[spellId].target)
+    //sLog->outError("aggre %u %u", spellId, (uint32)AISpellInfo[spellId].target);
+    switch (AISpellInfo[spellId].target)
     {
         default:
         case AITARGET_SELF:     target = me; break;

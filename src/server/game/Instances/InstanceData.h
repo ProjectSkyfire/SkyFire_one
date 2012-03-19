@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_INSTANCE_DATA_H
-#define OREGON_INSTANCE_DATA_H
+#ifndef TRINITY_INSTANCE_DATA_H
+#define TRINITY_INSTANCE_DATA_H
 
 #include "ZoneScript.h"
 //#include "GameObject.h"
@@ -116,8 +117,8 @@ class InstanceData : public ZoneScript
         virtual void OnPlayerEnter(Player *) {}
 
         //Handle open / close objects
-        //use HandleGameObject(NULL,boolen,GO); in OnObjectCreate in instance scripts
-        //use HandleGameObject(GUID,boolen,NULL); in any other script
+        //use HandleGameObject(NULL, boolen, GO); in OnObjectCreate in instance scripts
+        //use HandleGameObject(GUID, boolen, NULL); in any other script
         void HandleGameObject(uint64 GUID, bool open, GameObject *go = NULL);
 
         //change active state of doors or buttons

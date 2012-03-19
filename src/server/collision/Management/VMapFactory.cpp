@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -33,7 +34,7 @@ namespace VMAP
             char lc = str[str.length()-1];
             if (lc == '\r' || lc == '\n' || lc == ' ' || lc == '"' || lc == '\'')
             {
-                str = str.substr(0,str.length()-1);
+                str = str.substr(0, str.length()-1);
             }
             else
             {
@@ -45,7 +46,7 @@ namespace VMAP
             char lc = str[0];
             if (lc == ' ' || lc == '"' || lc == '\'')
             {
-                str = str.substr(1,str.length()-1);
+                str = str.substr(1, str.length()-1);
             }
             else
             {
@@ -62,7 +63,7 @@ namespace VMAP
     {
         bool result = false;
         unsigned int i;
-        for (i=pStartPos;i<pString.size(); ++i)
+        for (i=pStartPos;i < pString.size(); ++i)
         {
             if (pString[i] == ',')
             {

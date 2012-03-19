@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -42,9 +43,9 @@ EndContentData */
 #define SPELL_ANCIENT_DESPAIR       19369
 #define SPELL_ANCIENT_HYSTERIA      19372
 
-CreatureAI* GetAI_mob_ancient_core_hound(Creature* pCreature)
+CreatureAI* GetAI_mob_ancient_core_hound(Creature* creature)
 {
-    SimpleAI *ai = new SimpleAI(pCreature);
+    SimpleAI *ai = new SimpleAI(creature);
 
     ai->Spell[0].Enabled          = true;
     ai->Spell[0].Spell_Id         = SPELL_CONE_OF_FIRE;
@@ -52,8 +53,8 @@ CreatureAI* GetAI_mob_ancient_core_hound(Creature* pCreature)
     ai->Spell[0].First_Cast       = 10000;
     ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
-    uint32 RandDebuff = RAND(SPELL_GROUND_STOMP,SPELL_ANCIENT_DREAD,SPELL_CAUTERIZING_FLAMES,
-                             SPELL_WITHERING_HEAT,SPELL_ANCIENT_DESPAIR,SPELL_ANCIENT_HYSTERIA);
+    uint32 RandDebuff = RAND(SPELL_GROUND_STOMP, SPELL_ANCIENT_DREAD, SPELL_CAUTERIZING_FLAMES,
+                             SPELL_WITHERING_HEAT, SPELL_ANCIENT_DESPAIR, SPELL_ANCIENT_HYSTERIA);
 
     ai->Spell[1].Enabled          = true;
     ai->Spell[1].Spell_Id         = RandDebuff;

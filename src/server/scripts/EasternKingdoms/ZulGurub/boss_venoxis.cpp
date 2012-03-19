@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -165,7 +166,7 @@ struct boss_venoxisAI : public ScriptedAI
                     me->InterruptNonMeleeSpells(false);
                     DoCast(me, SPELL_SNAKE_FORM);
                     me->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.0f);
-                    const CreatureInfo *cinfo = me->GetCreatureInfo();
+                    const CreatureTemplate *cinfo = me->GetCreatureTemplate();
                     me->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg + ((cinfo->mindmg / 100) * 25)));
                     me->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg + ((cinfo->maxdmg / 100) * 25)));
                     me->UpdateDamagePhysical(BASE_ATTACK);
@@ -205,9 +206,9 @@ struct boss_venoxisAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_venoxis(Creature* pCreature)
+CreatureAI* GetAI_boss_venoxis(Creature* creature)
 {
-    return new boss_venoxisAI (pCreature);
+    return new boss_venoxisAI (creature);
 }
 
 void AddSC_boss_venoxis()

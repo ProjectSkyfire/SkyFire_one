@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -154,7 +155,7 @@ struct boss_maexxnaAI : public ScriptedAI
             Creature* Wrap = NULL;
             if (pTarget)
             {
-                switch(i)
+                switch (i)
                 {
                     case 0:
                         DoTeleportPlayer(pTarget, LOC_X1, LOC_Y1, LOC_Z1, pTarget->GetOrientation());
@@ -221,7 +222,7 @@ struct boss_maexxnaAI : public ScriptedAI
         //Enrage if not already enraged and below 30%
         if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 30)
         {
-            DoCast(me,SPELL_FRENZY);
+            DoCast(me, SPELL_FRENZY);
             Enraged = true;
         }
 
@@ -229,14 +230,14 @@ struct boss_maexxnaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_webwrap(Creature* pCreature)
+CreatureAI* GetAI_mob_webwrap(Creature* creature)
 {
-    return new mob_webwrapAI (pCreature);
+    return new mob_webwrapAI (creature);
 }
 
-CreatureAI* GetAI_boss_maexxna(Creature* pCreature)
+CreatureAI* GetAI_boss_maexxna(Creature* creature)
 {
-    return new boss_maexxnaAI (pCreature);
+    return new boss_maexxnaAI (creature);
 }
 
 void AddSC_boss_maexxna()

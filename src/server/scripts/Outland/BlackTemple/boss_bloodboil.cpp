@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -125,10 +126,10 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
 
         Charge_Timer = 30000;
 
-        DoCast(me,SPELL_ACIDIC_WOUND,true);
+        DoCast(me, SPELL_ACIDIC_WOUND, true);
 
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
     }
 
     void EnterCombat(Unit * /*who*/)
@@ -141,7 +142,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+        DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2), me);
     }
 
     void JustDied(Unit * /*victim*/)
@@ -171,7 +172,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
         }
 
         //Sort the list of players
-        targets.sort(Oregon::ObjectDistanceOrderPred(me, false));
+        targets.sort(Trinity::ObjectDistanceOrderPred(me, false));
         //Resize so we only get top 5
         targets.resize(5);
 
@@ -208,7 +209,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
             if (EnrageTimer <= diff)
             {
                 DoCast(me, SPELL_BERSERK);
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                 case 0: DoScriptText(SAY_ENRAGE1, me); break;
                 case 1: DoScriptText(SAY_ENRAGE2, me); break;
@@ -269,7 +270,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
                 FelGeyserTimer = 30000;
             } else FelGeyserTimer -= diff;
 
-            if (me->getVictim()->IsImmunedToDamage(SPELL_SCHOOL_MASK_ALL,true))
+            if (me->getVictim()->IsImmunedToDamage(SPELL_SCHOOL_MASK_ALL, true))
                 me->getThreatManager().modifyThreatPercent(me->getVictim(),-100);
         }
 
@@ -289,19 +290,19 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
                     me->AddThreat(pTarget, 50000000.0f);
                     pTarget->CastSpell(me, SPELL_TAUNT_GURTOGG, true);
                     me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-                    me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+                    me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
 
                     // If VMaps are disabled, this spell can call the whole instance
                     DoCast(me, SPELL_INSIGNIFIGANCE, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_1, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_2, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_3, true);
-                    DoCast(pTarget,SPELL_FEL_RAGE_SCALE, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_1, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_2, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_3, true);
+                    DoCast(pTarget, SPELL_FEL_RAGE_SCALE, true);
 
                     //Cast this without triggered so that it appears in combat logs and shows visual.
                     DoCast(me, SPELL_FEL_RAGE_SELF);
 
-                    DoScriptText(RAND(SAY_SPECIAL1,SAY_SPECIAL2), me);
+                    DoScriptText(RAND(SAY_SPECIAL1, SAY_SPECIAL2), me);
 
                     FelGeyserTimer = 1000;
                     PhaseChangeTimer = 30000;
@@ -319,7 +320,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
                 EjectTimer += 2000;
                 PhaseChangeTimer = 65000;
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-                me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+                me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
             }
         } else PhaseChangeTimer -= diff;
 
@@ -327,9 +328,9 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_gurtogg_bloodboil(Creature* pCreature)
+CreatureAI* GetAI_boss_gurtogg_bloodboil(Creature* creature)
 {
-    return new boss_gurtogg_bloodboilAI (pCreature);
+    return new boss_gurtogg_bloodboilAI (creature);
 }
 
 void AddSC_boss_gurtogg_bloodboil()

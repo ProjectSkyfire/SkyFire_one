@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -68,34 +69,34 @@ struct instance_gnomeregan : public ScriptedInstance
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*bAdd*/)
+    void OnCreatureCreate(Creature* creature, bool /*bAdd*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case NPC_BLASTMASTER_EMI_SHORTFUSE: uiBastmasterEmiShortfuseGUID = pCreature->GetGUID(); break;
+            case NPC_BLASTMASTER_EMI_SHORTFUSE: uiBastmasterEmiShortfuseGUID = creature->GetGUID(); break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*bAdd*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case GO_CAVE_IN_LEFT:
                 uiCaveInLeftGUID = pGo->GetGUID();
                 if (m_auiEncounter[0] == DONE || m_auiEncounter[0] == NOT_STARTED)
-                    HandleGameObject(NULL,false,pGo);
+                    HandleGameObject(NULL, false, pGo);
                 break;
             case GO_CAVE_IN_RIGHT:
                 uiCaveInRightGUID = pGo->GetGUID();
                 if (m_auiEncounter[0] == DONE || m_auiEncounter[0] == NOT_STARTED)
-                    HandleGameObject(NULL,false,pGo);
+                    HandleGameObject(NULL, false, pGo);
                 break;
         }
     }
 
     void SetData(uint32 uiType, uint32 uiData)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_EVENT:
                 m_auiEncounter[0] = uiData;
@@ -107,7 +108,7 @@ struct instance_gnomeregan : public ScriptedInstance
 
     uint32 GetData(uint32 uiType, uint32 /*uiData*/)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case TYPE_EVENT:    return m_auiEncounter[0];
         }
@@ -115,7 +116,7 @@ struct instance_gnomeregan : public ScriptedInstance
 
     uint64 GetData64(uint32 uiType)
     {
-        switch(uiType)
+        switch (uiType)
         {
             case DATA_GO_CAVE_IN_LEFT:              return uiCaveInLeftGUID;
             case DATA_GO_CAVE_IN_RIGHT:             return uiCaveInRightGUID;

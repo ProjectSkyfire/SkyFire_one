@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -113,15 +114,15 @@ struct boss_azuregosAI : public ScriptedAI
         //ManaStorm_Timer
         if (ManaStorm_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_MANASTORM);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_MANASTORM);
             ManaStorm_Timer = 7500 + rand()%5000;
         } else ManaStorm_Timer -= diff;
 
         //Reflect_Timer
         if (Reflect_Timer <= diff)
         {
-            DoCast(me,SPELL_REFLECT);
+            DoCast(me, SPELL_REFLECT);
             Reflect_Timer = 20000 + rand()%15000;
         } else Reflect_Timer -= diff;
 
@@ -142,9 +143,9 @@ struct boss_azuregosAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_azuregos(Creature* pCreature)
+CreatureAI* GetAI_boss_azuregos(Creature* creature)
 {
-    return new boss_azuregosAI (pCreature);
+    return new boss_azuregosAI (creature);
 }
 
 void AddSC_boss_azuregos()

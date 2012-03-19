@@ -77,7 +77,7 @@ static char my_xml_ctype[256]=
 
 static const char *lex2str(int lex)
 {
-  switch(lex)
+  switch (lex)
   {
     case MY_XML_EOF:      return "END-OF-INPUT";
     case MY_XML_STRING:   return "STRING";

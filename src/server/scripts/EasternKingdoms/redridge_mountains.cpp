@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -42,7 +43,7 @@ enum eCorporalKeeshan
 
 struct npc_corporal_keeshanAI : public npc_escortAI
 {
-    npc_corporal_keeshanAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+    npc_corporal_keeshanAI(Creature* creature) : npc_escortAI(creature) {}
 
     uint32 uiPhase;
     uint32 uiTimer;
@@ -59,15 +60,15 @@ struct npc_corporal_keeshanAI : public npc_escortAI
 
     void WaypointReached(uint32 uiI)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
         if (uiI >= 65 && me->GetUnitMovementFlags() == MOVEFLAG_WALK_MODE)
             me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
 
-        switch(uiI)
+        switch (uiI)
         {
             case 39:
                 SetEscortPaused(true);
@@ -78,7 +79,7 @@ struct npc_corporal_keeshanAI : public npc_escortAI
                 me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
                 break;
             case 115:
-                pPlayer->AreaExploredOrEventHappens(QUEST_MISSING_IN_ACTION);
+                player->AreaExploredOrEventHappens(QUEST_MISSING_IN_ACTION);
                 uiTimer = 2000;
                 uiPhase = 4;
                 break;
@@ -96,7 +97,7 @@ struct npc_corporal_keeshanAI : public npc_escortAI
         {
             if (uiTimer <= uiDiff)
             {
-                switch(uiPhase)
+                switch (uiPhase)
                 {
                     case 1:
                         me->SetStandState(UNIT_STAND_STATE_SIT);
@@ -104,12 +105,12 @@ struct npc_corporal_keeshanAI : public npc_escortAI
                         uiPhase = 2;
                         break;
                     case 2:
-                        DoScriptText(SAY_CORPORAL_2,me);
+                        DoScriptText(SAY_CORPORAL_2, me);
                         uiTimer = 15000;
                         uiPhase = 3;
                         break;
                     case 3:
-                        DoScriptText(SAY_CORPORAL_3,me);
+                        DoScriptText(SAY_CORPORAL_3, me);
                         me->SetStandState(UNIT_STAND_STATE_STAND);
                         SetEscortPaused(false);
                         uiTimer = 0;
@@ -146,20 +147,20 @@ struct npc_corporal_keeshanAI : public npc_escortAI
     }
 };
 
-bool QuestAccept_npc_corporal_keeshan(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
+bool QuestAccept_npc_corporal_keeshan(Player* player, Creature* creature, Quest const *pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_MISSING_IN_ACTION)
     {
-        CAST_AI(npc_corporal_keeshanAI,pCreature->AI())->Start(true, false, pPlayer->GetGUID(),pQuest);
-        DoScriptText(SAY_CORPORAL_1, pCreature);
+        CAST_AI(npc_corporal_keeshanAI, creature->AI())->Start(true, false, player->GetGUID(),pQuest);
+        DoScriptText(SAY_CORPORAL_1, creature);
     }
 
     return false;
 }
 
-CreatureAI* GetAI_npc_corporal_keeshan(Creature* pCreature)
+CreatureAI* GetAI_npc_corporal_keeshan(Creature* creature)
 {
-    return new npc_corporal_keeshanAI(pCreature);
+    return new npc_corporal_keeshanAI(creature);
 }
 
 void AddSC_redridge_mountains()

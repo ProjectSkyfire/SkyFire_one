@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -75,7 +76,7 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -109,7 +110,7 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_KILL_1, me); break;
             case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -139,8 +140,8 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
         {
             DoScriptText(SAY_SURGE, me);
 
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_SURGE);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_SURGE);
 
             Surge_Timer = 5000+rand()%8000;
         } else Surge_Timer -= diff;
@@ -149,7 +150,7 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
         {
             if (Retaliation_Timer <= diff)
             {
-                DoCast(me,SPELL_RETALIATION);
+                DoCast(me, SPELL_RETALIATION);
                 Retaliation_Timer = 30000;
             } else Retaliation_Timer -= diff;
         }
@@ -167,9 +168,9 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_watchkeeper_gargolmarAI(Creature* pCreature)
+CreatureAI* GetAI_boss_watchkeeper_gargolmarAI(Creature* creature)
 {
-    return new boss_watchkeeper_gargolmarAI (pCreature);
+    return new boss_watchkeeper_gargolmarAI (creature);
 }
 
 void AddSC_boss_watchkeeper_gargolmar()

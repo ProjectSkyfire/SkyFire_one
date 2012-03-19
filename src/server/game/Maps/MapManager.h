@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,23 +18,23 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MAPMANAGER_H
-#define OREGON_MAPMANAGER_H
+#ifndef TRINITY_MAPMANAGER_H
+#define TRINITY_MAPMANAGER_H
 
 #include "Define.h"
-#include "Policies/Singleton.h"
 #include "Common.h"
 #include "Map.h"
 #include "GridStates.h"
 #include "MapUpdater.h"
 
+#include <ace/Singleton.h>
 #include <ace/Thread_Mutex.h>
 
 class Transport;
 
-class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockable<MapManager, ACE_Thread_Mutex> >
+class MapManager
 {
-    friend class Oregon::OperatorNew<MapManager>;
+    friend class ACE_Singleton<MapManager, ACE_Thread_Mutex>;
     typedef UNORDERED_MAP<uint32, Map*> MapMapType;
     typedef std::pair<UNORDERED_MAP<uint32, Map*>::iterator, bool>  MapMapPair;
 
@@ -48,8 +49,8 @@ class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockab
             Map const* m = CreateBaseMap(mapid);
             return m->GetAreaFlag(x, y, z);
         }
-        uint32 GetAreaId(uint32 mapid, float x, float y, float z) { return Map::GetAreaId(GetAreaFlag(mapid, x, y, z),mapid); }
-        uint32 GetZoneId(uint32 mapid, float x, float y, float z) { return Map::GetZoneId(GetAreaFlag(mapid, x, y, z),mapid); }
+        uint32 GetAreaId(uint32 mapid, float x, float y, float z) { return Map::GetAreaId(GetAreaFlag(mapid, x, y, z), mapid); }
+        uint32 GetZoneId(uint32 mapid, float x, float y, float z) { return Map::GetZoneId(GetAreaFlag(mapid, x, y, z), mapid); }
 
         void Initialize(void);
         void Update(time_t);
@@ -77,19 +78,19 @@ class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockab
         static bool ExistMapAndVMap(uint32 mapid, float x, float y);
         static bool IsValidMAP(uint32 mapid);
 
-        static bool IsValidMapCoord(uint32 mapid, float x,float y)
+        static bool IsValidMapCoord(uint32 mapid, float x, float y)
         {
-            return IsValidMAP(mapid) && Oregon::IsValidMapCoord(x,y);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x, y);
         }
 
-        static bool IsValidMapCoord(uint32 mapid, float x,float y,float z)
+        static bool IsValidMapCoord(uint32 mapid, float x, float y, float z)
         {
-            return IsValidMAP(mapid) && Oregon::IsValidMapCoord(x,y,z);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x, y, z);
         }
 
-        static bool IsValidMapCoord(uint32 mapid, float x,float y,float z,float o)
+        static bool IsValidMapCoord(uint32 mapid, float x, float y, float z, float o)
         {
-            return IsValidMAP(mapid) && Oregon::IsValidMapCoord(x,y,z,o);
+            return IsValidMAP(mapid) && Trinity::IsValidMapCoord(x, y, z, o);
         }
 
         static bool IsValidMapCoord(WorldLocation const& loc)
@@ -150,7 +151,7 @@ class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockab
             return (iter == i_maps.end() ? NULL : iter->second);
         }
 
-        typedef Oregon::ClassLevelLockable<MapManager, ACE_Thread_Mutex>::Lock Guard;
+        ACE_Thread_Mutex Lock;
         uint32 i_gridCleanUpDelay;
         MapMapType i_maps;
         IntervalTimer i_timer;
@@ -158,5 +159,7 @@ class MapManager : public Oregon::Singleton<MapManager, Oregon::ClassLevelLockab
         uint32 i_MaxInstanceId;
         MapUpdater m_updater;
 };
-#endif
 
+#define sMapMgr ACE_Singleton<MapManager, ACE_Thread_Mutex>::instance()
+
+#endif

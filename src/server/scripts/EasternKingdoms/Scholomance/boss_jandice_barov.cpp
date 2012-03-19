@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -56,7 +57,7 @@ struct boss_jandicebarovAI : public ScriptedAI
 
     void SummonIllusions(Unit* victim)
     {
-        if (Creature *Illusion = DoSpawnCreature(11439, irand(-9,9), irand(-9,9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
+        if (Creature *Illusion = DoSpawnCreature(11439, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
             Illusion->AI()->AttackStart(victim);
     }
 
@@ -104,7 +105,7 @@ struct boss_jandicebarovAI : public ScriptedAI
             Unit *pTarget = NULL;
             for (uint8 i = 0; i < 10; ++i)
             {
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 if (pTarget)
                     SummonIllusions(pTarget);
             }
@@ -177,14 +178,14 @@ struct mob_illusionofjandicebarovAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_jandicebarov(Creature* pCreature)
+CreatureAI* GetAI_boss_jandicebarov(Creature* creature)
 {
-    return new boss_jandicebarovAI (pCreature);
+    return new boss_jandicebarovAI (creature);
 }
 
-CreatureAI* GetAI_mob_illusionofjandicebarov(Creature* pCreature)
+CreatureAI* GetAI_mob_illusionofjandicebarov(Creature* creature)
 {
-    return new mob_illusionofjandicebarovAI (pCreature);
+    return new mob_illusionofjandicebarovAI (creature);
 }
 
 void AddSC_boss_jandicebarov()

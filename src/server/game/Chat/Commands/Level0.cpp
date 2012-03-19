@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -82,27 +83,27 @@ bool ChatHandler::HandleStartCommand(const char* /*args*/)
     }
 
     // cast spell Stuck
-    chr->CastSpell(chr,7355,false);
+    chr->CastSpell(chr, 7355, false);
     return true;
 }
 
 bool ChatHandler::HandleServerInfoCommand(const char* /*args*/)
 {
-    uint32 activeClientsNum = sWorld.GetActiveSessionCount();
-    uint32 queuedClientsNum = sWorld.GetQueuedSessionCount();
-    uint32 maxActiveClientsNum = sWorld.GetMaxActiveSessionCount();
-    uint32 maxQueuedClientsNum = sWorld.GetMaxQueuedSessionCount();
-    std::string str = secsToTimeString(sWorld.GetUptime());
-    uint32 updateTime = sWorld.GetUpdateTime();
+    uint32 activeClientsNum = sWorld->GetActiveSessionCount();
+    uint32 queuedClientsNum = sWorld->GetQueuedSessionCount();
+    uint32 maxActiveClientsNum = sWorld->GetMaxActiveSessionCount();
+    uint32 maxQueuedClientsNum = sWorld->GetMaxQueuedSessionCount();
+    std::string str = secsToTimeString(sWorld->GetUptime());
+    uint32 updateTime = sWorld->GetUpdateTime();
 
     PSendSysMessage(_FULLVERSION);
     //if (m_session)
-    //    full = _FULLVERSION(REVISION_DATE,REVISION_TIME,"|cffffffff|Hurl:" REVISION_ID "|h" REVISION_ID "|h|r");
+    //    full = _FULLVERSION(REVISION_DATE, REVISION_TIME, "|cffffffff|Hurl:" REVISION_ID "|h" REVISION_ID "|h|r");
     //else
-    //    full = _FULLVERSION(REVISION_DATE,REVISION_TIME,REVISION_ID);
+    //    full = _FULLVERSION(REVISION_DATE, REVISION_TIME, REVISION_ID);
 
     //SendSysMessage(full);
-    //PSendSysMessage(LANG_USING_WORLD_DB,sWorld.GetDBVersion());
+    //PSendSysMessage(LANG_USING_WORLD_DB, sWorld->GetDBVersion());
     PSendSysMessage(LANG_CONNECTED_USERS, activeClientsNum, maxActiveClientsNum, queuedClientsNum, maxQueuedClientsNum);
     PSendSysMessage(LANG_UPTIME, str.c_str());
     PSendSysMessage("Update time diff: %u.", updateTime);
@@ -134,7 +135,7 @@ bool ChatHandler::HandleDismountCommand(const char* /*args*/)
 
 bool ChatHandler::HandleSaveCommand(const char* /*args*/)
 {
-    Player *player=m_session->GetPlayer();
+    Player* player = m_session->GetPlayer();
 
     // save GM account without delay and output message (testing, etc)
     if (m_session->GetSecurity())
@@ -145,8 +146,8 @@ bool ChatHandler::HandleSaveCommand(const char* /*args*/)
     }
 
     // save or plan save after 20 sec (logout delay) if current next save time more this value and _not_ output any messages to prevent cheat planning
-    uint32 save_interval = sWorld.getConfig(CONFIG_INTERVAL_SAVE);
-    if (save_interval == 0 || save_interval > 20*IN_MILLISECONDS && player->GetSaveTimer() <= save_interval - 20*IN_MILLISECONDS)
+    uint32 save_interval = sWorld->getConfig(CONFIG_INTERVAL_SAVE);
+    if (save_interval == 0 || save_interval > 20 * IN_MILLISECONDS && player->GetSaveTimer() <= save_interval - 20 * IN_MILLISECONDS)
         player->SaveToDB();
 
     return true;
@@ -156,12 +157,12 @@ bool ChatHandler::HandleGMListIngameCommand(const char* /*args*/)
 {
     bool first = true;
 
-    ObjectAccessor::Guard guard(*HashMapHolder<Player>::GetLock());
-    HashMapHolder<Player>::MapType &m = ObjectAccessor::Instance().GetPlayers();
+    ACE_GUARD_RETURN(ACE_Thread_Mutex, guard, *HashMapHolder<Player>::GetLock(), true);
+    HashMapHolder<Player>::MapType &m = sObjectAccessor->GetPlayers();
     for (HashMapHolder<Player>::MapType::iterator itr = m.begin(); itr != m.end(); ++itr)
     {
         if (itr->second->GetSession()->GetSecurity() &&
-            (itr->second->isGameMaster() || sWorld.getConfig(CONFIG_GM_IN_GM_LIST)) &&
+            (itr->second->isGameMaster() || sWorld->getConfig(CONFIG_GM_IN_GM_LIST)) &&
             (!m_session || itr->second->IsVisibleGloballyFor(m_session->GetPlayer())))
         {
             if (first)
@@ -212,7 +213,7 @@ bool ChatHandler::HandleAccountPasswordCommand(const char* args)
 
     AccountOpResult result = sAccountMgr->ChangePassword(m_session->GetAccountId(), password_new);
 
-    switch(result)
+    switch (result)
     {
         case AOR_OK:
             SendSysMessage(LANG_COMMAND_PASSWORD);
@@ -242,14 +243,14 @@ bool ChatHandler::HandleAccountLockCommand(const char* args)
     std::string argstr = (char*)args;
     if (argstr == "on")
     {
-        LoginDatabase.PExecute("UPDATE account SET locked = '1' WHERE id = '%d'",m_session->GetAccountId());
+        LoginDatabase.PExecute("UPDATE account SET locked = '1' WHERE id = '%d'", m_session->GetAccountId());
         PSendSysMessage(LANG_COMMAND_ACCLOCKLOCKED);
         return true;
     }
 
     if (argstr == "off")
     {
-        LoginDatabase.PExecute("UPDATE account SET locked = '0' WHERE id = '%d'",m_session->GetAccountId());
+        LoginDatabase.PExecute("UPDATE account SET locked = '0' WHERE id = '%d'", m_session->GetAccountId());
         PSendSysMessage(LANG_COMMAND_ACCLOCKUNLOCKED);
         return true;
     }
@@ -261,7 +262,7 @@ bool ChatHandler::HandleAccountLockCommand(const char* args)
 // Display the 'Message of the day' for the realm
 bool ChatHandler::HandleServerMotdCommand(const char* /*args*/)
 {
-    PSendSysMessage(LANG_MOTD_CURRENT, sWorld.GetMotd());
+    PSendSysMessage(LANG_MOTD_CURRENT, sWorld->GetMotd());
     return true;
 }
 

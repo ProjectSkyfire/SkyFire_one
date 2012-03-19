@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -20,15 +20,15 @@
 #ifndef _CHANNEL_H
 #define _CHANNEL_H
 
-#include <list>
-#include <map>
-#include <string>
-
 #include "Common.h"
-
+#include "Language.h"
 #include "Opcodes.h"
 #include "Player.h"
 #include "WorldPacket.h"
+
+#include <list>
+#include <map>
+#include <string>
 
 enum ChatNotify
 {
@@ -152,11 +152,13 @@ class Channel
     BannedList  banned;
     bool        m_announce;
     bool        m_moderate;
+    bool        m_public;
     std::string m_name;
     std::string m_password;
     uint8       m_flags;
     uint32      m_channelId;
     uint64      m_ownerGUID;
+    bool        m_IsSaved;
 
     private:
         // initial packet data (notify type and channel name)
@@ -184,7 +186,7 @@ class Channel
         void MakeBanned(WorldPacket *data);                                     //? 0x13
         void MakePlayerBanned(WorldPacket *data, uint64 bad, uint64 good);      //? 0x14
         void MakePlayerUnbanned(WorldPacket *data, uint64 bad, uint64 good);    //? 0x15
-        void MakePlayerNotBanned(WorldPacket *data, uint64 guid);               //? 0x16
+        void MakePlayerNotBanned(WorldPacket *data, const std::string& name);   //? 0x16
         void MakePlayerAlreadyMember(WorldPacket *data, uint64 guid);           //+ 0x17
         void MakeInvite(WorldPacket *data, uint64 guid);                        //? 0x18
         void MakeInviteWrongFaction(WorldPacket *data);                         //? 0x19
@@ -192,7 +194,7 @@ class Channel
         void MakeInvalidName(WorldPacket *data);                                //? 0x1B
         void MakeNotModerated(WorldPacket *data);                               //? 0x1C
         void MakePlayerInvited(WorldPacket *data, const std::string& name);     //+ 0x1D
-        void MakePlayerInviteBanned(WorldPacket *data, uint64 guid);            //? 0x1E
+        void MakePlayerInviteBanned(WorldPacket *data, const std::string &name);//? 0x1E
         void MakeThrottled(WorldPacket *data);                                  //? 0x1F
         void MakeNotInArea(WorldPacket *data);                                  //? 0x20
         void MakeNotInLfg(WorldPacket *data);                                   //? 0x21
@@ -203,9 +205,12 @@ class Channel
         void SendToAllButOne(WorldPacket *data, uint64 who);
         void SendToOne(WorldPacket *data, uint64 who);
 
-        bool IsOn(uint64 who) const { return players.count(who) != 0; }
+        bool IsOn(uint64 who) const { return players.find(who) != players.end(); }
+        bool IsBanned(uint64 guid) const { return banned.find(guid) != banned.end(); }
 
-        bool IsBanned(const uint64 guid) const {return banned.count(guid) != 0; }
+        bool _UpdateStringInDB(const std::string& colName, const std::string& colValue) const;
+        bool _UpdateIntInDB(const std::string& colName, int colValue) const;
+        void _UpdateBanListInDB() const;
 
         uint8 GetPlayerFlags(uint64 p) const
         {
@@ -243,7 +248,8 @@ class Channel
         }
 
     public:
-        Channel(const std::string& name, uint32 channel_id);
+        uint32 m_Team;
+        Channel(const std::string& name, uint32 channel_id, uint32 Team = 0);
         std::string GetName() const { return m_name; }
         uint32 GetChannelId() const { return m_channelId; }
         bool IsConstant() const { return m_channelId != 0; }

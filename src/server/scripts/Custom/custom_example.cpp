@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -95,8 +96,8 @@ struct custom_exampleAI : public ScriptedAI
     void EnterCombat(Unit *who)
     {
         //Say some stuff
-        me->MonsterSay(SAY_AGGRO,LANG_UNIVERSAL,NULL);
-        DoPlaySoundToSet(me,8280);
+        me->MonsterSay(SAY_AGGRO, LANG_UNIVERSAL, NULL);
+        DoPlaySoundToSet(me, 8280);
     }
 
     //*** HANDLED FUNCTION ***
@@ -113,28 +114,28 @@ struct custom_exampleAI : public ScriptedAI
                 switch (rand()%5)
                 {
                     case 0:
-                        me->MonsterYell(SAY_RANDOM_0,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(me,8831);  //8831 is the index of the sound we are playing. You find these numbers in SoundEntries.dbc
+                        me->MonsterYell(SAY_RANDOM_0, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(me, 8831);  //8831 is the index of the sound we are playing. You find these numbers in SoundEntries.dbc
                         break;
 
                     case 1:
-                        me->MonsterYell(SAY_RANDOM_1,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(me,8818);
+                        me->MonsterYell(SAY_RANDOM_1, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(me, 8818);
                         break;
 
                     case 2:
-                        me->MonsterYell(SAY_RANDOM_2,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(me,8041);
+                        me->MonsterYell(SAY_RANDOM_2, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(me, 8041);
                         break;
 
                     case 3:
-                        me->MonsterYell(SAY_RANDOM_3,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(me,8581);
+                        me->MonsterYell(SAY_RANDOM_3, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(me, 8581);
                         break;
 
                     case 4:
-                        me->MonsterYell(SAY_RANDOM_4,LANG_UNIVERSAL,NULL);
-                        DoPlaySoundToSet(me,8791);
+                        me->MonsterYell(SAY_RANDOM_4, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(me, 8791);
                         break;
                 }
 
@@ -144,7 +145,7 @@ struct custom_exampleAI : public ScriptedAI
             //Rebuff timer
             if (Rebuff_Timer <= diff)
             {
-                DoCast(me,SPELL_BUFF);
+                DoCast(me, SPELL_BUFF);
                 Rebuff_Timer = 900000;                      //Rebuff agian in 15 minutes
             } else Rebuff_Timer -= diff;
         }
@@ -189,8 +190,8 @@ struct custom_exampleAI : public ScriptedAI
             if (Beserk_Timer <= diff)
         {
             //Say our line then cast uber death spell
-            DoPlaySoundToSet(me,8588);
-            me->MonsterYell(SAY_BESERK,LANG_UNIVERSAL,me->getVictim()->GetGUID());
+            DoPlaySoundToSet(me, 8588);
+            me->MonsterYell(SAY_BESERK, LANG_UNIVERSAL, me->getVictim()->GetGUID());
             DoCast(me->getVictim(),SPELL_BESERK);
 
             //Cast our beserk spell agian in 12 seconds if we didn't kill everyone
@@ -203,15 +204,15 @@ struct custom_exampleAI : public ScriptedAI
         {
             //Go to next phase
             Phase++;
-            me->MonsterYell(SAY_PHASE,LANG_UNIVERSAL,NULL);
-            DoCast(me,SPELL_ENRAGE);
+            me->MonsterYell(SAY_PHASE, LANG_UNIVERSAL, NULL);
+            DoCast(me, SPELL_ENRAGE);
         } else Phase_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 
     //Our Recive emote function
-    void ReceiveEmote(Player* pPlayer, uint32 emote)
+    void ReceiveEmote(Player* player, uint32 emote)
     {
         me->HandleEmoteCommand(emote);
 
@@ -225,37 +226,37 @@ struct custom_exampleAI : public ScriptedAI
 
 //This is the GetAI method used by all scripts that involve AI
 //It is called every time a new creature using this script is created
-CreatureAI* GetAI_custom_example(Creature* pCreature)
+CreatureAI* GetAI_custom_example(Creature* creature)
 {
-    return new custom_exampleAI (pCreature);
+    return new custom_exampleAI (creature);
 }
 
 //This function is called when the player clicks an option on the gossip menu
-void SendDefaultMenu_custom_example(Player* pPlayer, Creature* pCreature, uint32 uiAction)
+void SendDefaultMenu_custom_example(Player* player, Creature* creature, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
     {
         //Set our faction to hostile twoards all
-        pCreature->setFaction(24);
-        pCreature->Attack(pPlayer, true);
-        pPlayer->PlayerTalkClass->CloseGossip();
+        creature->setFaction(24);
+        creature->Attack(player, true);
+        player->PlayerTalkClass->CloseGossip();
     }
 }
 
 //This function is called when the player clicks an option on the gossip menu
-bool GossipSelect_custom_example(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+bool GossipSelect_custom_example(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
 {
     if (uiSender == GOSSIP_SENDER_MAIN)
-        SendDefaultMenu_custom_example(pPlayer, pCreature, uiAction);
+        SendDefaultMenu_custom_example(player, creature, uiAction);
 
     return true;
 }
 
 //This function is called when the player opens the gossip menu
-bool GossipHello_custom_example(Player* pPlayer, Creature* pCreature)
+bool GossipHello_custom_example(Player* player, Creature* creature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 
     return true;
 }

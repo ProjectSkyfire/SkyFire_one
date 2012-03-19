@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -78,9 +79,9 @@ bool adt_MCIN::prepareLoadedData()
         return false;
 
     // Check cells data
-    for (int i=0; i<ADT_CELLS_PER_GRID;i++)
+    for (int i = 0; i < ADT_CELLS_PER_GRID;i++)
         for (int j=0; j<ADT_CELLS_PER_GRID;j++)
-            if (cells[i][j].offsMCNK && !getMCNK(i,j)->prepareLoadedData())
+            if (cells[i][j].offsMCNK && !getMCNK(i, j)->prepareLoadedData())
                 return false;
 
     return true;
@@ -92,7 +93,7 @@ bool adt_MH2O::prepareLoadedData()
         return false;
 
     // Check liquid data
-//    for (int i=0; i<ADT_CELLS_PER_GRID;i++)
+//    for (int i = 0; i < ADT_CELLS_PER_GRID;i++)
 //        for (int j=0; j<ADT_CELLS_PER_GRID;j++)
 
     return true;

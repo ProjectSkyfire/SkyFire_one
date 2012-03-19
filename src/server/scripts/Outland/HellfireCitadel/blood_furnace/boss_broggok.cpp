@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -124,7 +125,7 @@ struct boss_broggokAI : public ScriptedAI
 
         if (PoisonSpawn_Timer <= diff)
         {
-            DoCast(me,SPELL_POISON_CLOUD);
+            DoCast(me, SPELL_POISON_CLOUD);
             PoisonSpawn_Timer = 20000;
         } else PoisonSpawn_Timer -=diff;
 
@@ -132,9 +133,9 @@ struct boss_broggokAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_broggokAI(Creature* pCreature)
+CreatureAI* GetAI_boss_broggokAI(Creature* creature)
 {
-    return new boss_broggokAI (pCreature);
+    return new boss_broggokAI (creature);
 }
 
 /*######
@@ -208,9 +209,9 @@ struct mob_nascent_orcAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_nascent_orc(Creature* pCreature)
+CreatureAI* GetAI_mob_nascent_orc(Creature* creature)
 {
-    return new mob_nascent_orcAI (pCreature);
+    return new mob_nascent_orcAI (creature);
 }
 
 /*######
@@ -232,16 +233,16 @@ struct mob_broggok_poisoncloudAI : public ScriptedAI
 
     void Reset()
     {
-        DoCast(me,HeroicMode ? SPELL_POISON_H : SPELL_POISON);
+        DoCast(me, HeroicMode ? SPELL_POISON_H : SPELL_POISON);
     }
 
     void AttackedBy(Unit* who) {}
     void AttackStart(Unit *who) {}
 };
 
-CreatureAI* GetAI_mob_broggok_poisoncloud(Creature* pCreature)
+CreatureAI* GetAI_mob_broggok_poisoncloud(Creature* creature)
 {
-    return new mob_broggok_poisoncloudAI (pCreature);
+    return new mob_broggok_poisoncloudAI (creature);
 }
 
 void AddSC_boss_broggok()

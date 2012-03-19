@@ -225,7 +225,7 @@ ACE_OS::uname (ACE_utsname *name)
 
   return ACE_OS::hostname (name->nodename, maxnamelen);
 #elif defined (INTEGRITY)
-  if(!name) {
+  if (!name) {
     errno = EFAULT;
     return -1;
   }

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -82,7 +83,7 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
     void Reset()
     {
         if (!Intro)
-            me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
         IsImage33 = false;
         IsImage66 = false;
@@ -110,7 +111,7 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
         if (pInstance)
-            pInstance->SetData(TYPE_HARBINGERSKYRISS,DONE);
+            pInstance->SetData(TYPE_HARBINGERSKYRISS, DONE);
     }
 
     void JustSummoned(Creature *summon)
@@ -132,7 +133,7 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
         if (victim->GetEntry() == 21436)
             return;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_KILL_1, me); break;
         case 1: DoScriptText(SAY_KILL_2, me); break;
@@ -161,29 +162,29 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
 
             if (Intro_Timer <= diff)
             {
-                switch(Intro_Phase)
+                switch (Intro_Phase)
                 {
                     case 1:
                          DoScriptText(SAY_INTRO, me);
-                        if (GameObject* Sphere = GameObject::GetGameObject(*me,pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                        if (GameObject* Sphere = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_SPHERE_SHIELD)))
                             Sphere->SetGoState(GO_STATE_ACTIVE);
                         ++Intro_Phase;
                         Intro_Timer = 25000;
                         break;
                     case 2:
                         DoScriptText(SAY_AGGRO, me);
-                        if (Unit *mellic = Unit::GetUnit(*me,pInstance->GetData64(DATA_MELLICHAR)))
+                        if (Unit *mellic = Unit::GetUnit(*me, pInstance->GetData64(DATA_MELLICHAR)))
                         {
                             //should have a better way to do this. possibly spell exist.
                             mellic->setDeathState(JUST_DIED);
                             mellic->SetHealth(0);
-                            pInstance->SetData(TYPE_SHIELD_OPEN,IN_PROGRESS);
+                            pInstance->SetData(TYPE_SHIELD_OPEN, IN_PROGRESS);
                         }
                         ++Intro_Phase;
                         Intro_Timer = 3000;
                         break;
                     case 3:
-                        me->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                         Intro = true;
                         break;
                 }
@@ -206,8 +207,8 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
 
         if (MindRend_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(pTarget,HeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                DoCast(pTarget, HeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
             else
                 DoCast(me->getVictim(),HeroicMode ? H_SPELL_MIND_REND : SPELL_MIND_REND);
 
@@ -219,14 +220,14 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 return;
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_FEAR_1, me); break;
             case 1: DoScriptText(SAY_FEAR_2, me); break;
             }
 
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(pTarget,SPELL_FEAR);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                DoCast(pTarget, SPELL_FEAR);
             else
                 DoCast(me->getVictim(),SPELL_FEAR);
 
@@ -238,14 +239,14 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 return;
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
             case 0: DoScriptText(SAY_MIND_1, me); break;
             case 1: DoScriptText(SAY_MIND_2, me); break;
             }
 
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                DoCast(pTarget,HeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                DoCast(pTarget, HeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
             else
                 DoCast(me->getVictim(),HeroicMode ? H_SPELL_DOMINATION : SPELL_DOMINATION);
 
@@ -259,8 +260,8 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
                 if (me->IsNonMeleeSpellCasted(false))
                     return;
 
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-                    DoCast(pTarget,H_SPELL_MANA_BURN);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                    DoCast(pTarget, H_SPELL_MANA_BURN);
 
                 ManaBurn_Timer = 16000+rand()%16000;
             } else ManaBurn_Timer -=diff;
@@ -270,9 +271,9 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_harbinger_skyriss(Creature* pCreature)
+CreatureAI* GetAI_boss_harbinger_skyriss(Creature* creature)
 {
-    return new boss_harbinger_skyrissAI (pCreature);
+    return new boss_harbinger_skyrissAI (creature);
 }
 
 #define SPELL_MIND_REND_IMAGE   36929
@@ -294,9 +295,9 @@ struct boss_harbinger_skyriss_illusionAI : public ScriptedAI
     void EnterCombat(Unit *who) { }
 };
 
-CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature* pCreature)
+CreatureAI* GetAI_boss_harbinger_skyriss_illusion(Creature* creature)
 {
-    return new boss_harbinger_skyriss_illusionAI (pCreature);
+    return new boss_harbinger_skyriss_illusionAI (creature);
 }
 
 void AddSC_boss_harbinger_skyriss()

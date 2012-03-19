@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -94,7 +95,7 @@ struct boss_supremusAI : public ScriptedAI
         summons.DespawnAll();
 
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
     }
 
     void EnterCombat(Unit *who)
@@ -187,7 +188,7 @@ struct boss_supremusAI : public ScriptedAI
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                 {
                     if (me->GetDistance2d(me->getVictim()) < 40)
-                        me->CastSpell(me->getVictim(),SPELL_CHARGE,false);
+                        me->CastSpell(me->getVictim(),SPELL_CHARGE, false);
 
                     DoResetThreat();
                     me->AddThreat(pTarget, 5000000.0f);
@@ -217,7 +218,7 @@ struct boss_supremusAI : public ScriptedAI
                 me->SetSpeed(MOVE_RUN, 1.2f);
                 DoZoneInCombat();
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
-                me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, false);
+                me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
             }
             else
             {
@@ -229,7 +230,7 @@ struct boss_supremusAI : public ScriptedAI
                 me->SetSpeed(MOVE_RUN, 0.9f);
                 DoZoneInCombat();
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
-                me->ApplySpellImmune(0, IMMUNITY_EFFECT,SPELL_EFFECT_ATTACK_ME, true);
+                me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
             }
         } else PhaseSwitchTimer -= diff;
 
@@ -286,19 +287,19 @@ struct npc_volcanoAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_supremus(Creature* pCreature)
+CreatureAI* GetAI_boss_supremus(Creature* creature)
 {
-    return new boss_supremusAI (pCreature);
+    return new boss_supremusAI (creature);
 }
 
-CreatureAI* GetAI_molten_flame(Creature* pCreature)
+CreatureAI* GetAI_molten_flame(Creature* creature)
 {
-    return new molten_flameAI (pCreature);
+    return new molten_flameAI (creature);
 }
 
-CreatureAI* GetAI_npc_volcano(Creature* pCreature)
+CreatureAI* GetAI_npc_volcano(Creature* creature)
 {
-    return new npc_volcanoAI (pCreature);
+    return new npc_volcanoAI (creature);
 }
 
 void AddSC_boss_supremus()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -54,7 +55,7 @@ struct npc_blood_knight_stillbladeAI : public ScriptedAI
     {
         lifeTimer = 120000;
         me->SetStandState(UNIT_STAND_STATE_DEAD);
-        me->SetUInt32Value(UNIT_FIELD_BYTES_1,7);   // lay down
+        me->SetUInt32Value(UNIT_FIELD_BYTES_1, 7);   // lay down
         spellHit = false;
     }
 
@@ -93,9 +94,9 @@ struct npc_blood_knight_stillbladeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_blood_knight_stillblade(Creature* pCreature)
+CreatureAI* GetAI_npc_blood_knight_stillblade(Creature* creature)
 {
-    return new npc_blood_knight_stillbladeAI (pCreature);
+    return new npc_blood_knight_stillbladeAI (creature);
 }
 
 void AddSC_silvermoon_city()

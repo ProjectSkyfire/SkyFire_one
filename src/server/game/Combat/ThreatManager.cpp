@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -138,7 +139,7 @@ void HostileReference::updateOnlineStatus()
         online = getTarget()->isInAccessiblePlaceFor(creature);
         if (!online)
         {
-            if (creature->IsWithinCombatRange(getTarget(),MELEE_RANGE))
+            if (creature->IsWithinCombatRange(getTarget(), MELEE_RANGE))
                 online = true;                              // not accessible but stays online
         }
         else
@@ -251,7 +252,7 @@ void ThreatContainer::modifyThreatPercent(Unit *pVictim, int32 pPercent)
 
 bool HostileReferenceSortPredicate(const HostileReference* lhs, const HostileReference* rhs)
 {
-    // std::list::sort ordering predicate must be: (Pred(x,y)&&Pred(y,x)) == false
+    // std::list::sort ordering predicate must be: (Pred(x, y)&&Pred(y, x)) == false
     return lhs->getThreat() > rhs->getThreat();             // reverse sorting
 }
 
@@ -470,7 +471,7 @@ void ThreatManager::processThreatEvent(ThreatRefStatusChangeEvent* threatRefStat
 
     HostileReference* hostileReference = threatRefStatusChangeEvent->getReference();
 
-    switch(threatRefStatusChangeEvent->getType())
+    switch (threatRefStatusChangeEvent->getType())
     {
         case UEV_THREAT_REF_THREAT_CHANGE:
             if ((getCurrentVictim() == hostileReference && threatRefStatusChangeEvent->getFValue()<0.0f) ||

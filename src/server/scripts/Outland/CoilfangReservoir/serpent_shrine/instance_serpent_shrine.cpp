@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -48,7 +49,7 @@ EndScriptData */
 5 - Lady Vashj Event
 */
 
-bool GOHello_go_bridge_console(Player* /*pPlayer*/, GameObject* pGo)
+bool GOHello_go_bridge_console(Player* /*player*/, GameObject* pGo)
 {
     ScriptedInstance* pInstance = pGo->GetInstanceData();
 
@@ -154,32 +155,32 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
                 return;
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             {
-                if (Player* pPlayer = i->getSource())
+                if (Player* player = i->getSource())
                 {
-                    if (pPlayer->isAlive() && /*i->getSource()->GetPositionZ() <= -21.434931f*/pPlayer->IsInWater())
+                    if (player->isAlive() && /*i->getSource()->GetPositionZ() <= -21.434931f*/player->IsInWater())
                     {
                         if (Water == WATERSTATE_SCALDING)
                         {
-                            if (!pPlayer->HasAura(SPELL_SCALDINGWATER, 0))
+                            if (!player->HasAura(SPELL_SCALDINGWATER, 0))
                             {
-                                pPlayer->CastSpell(pPlayer, SPELL_SCALDINGWATER,true);
+                                player->CastSpell(player, SPELL_SCALDINGWATER, true);
                             }
                         } else if (Water == WATERSTATE_FRENZY)
                         {
                             //spawn frenzy
                             if (DoSpawnFrenzy)
                             {
-                                if (Creature* frenzy = pPlayer->SummonCreature(MOB_COILFANG_FRENZY,pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ(),pPlayer->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,2000))
+                                if (Creature* frenzy = player->SummonCreature(MOB_COILFANG_FRENZY, player->GetPositionX(),player->GetPositionY(),player->GetPositionZ(),player->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 2000))
                                 {
-                                    frenzy->Attack(pPlayer,false);
+                                    frenzy->Attack(player, false);
                                     frenzy->AddUnitMovementFlag(MOVEFLAG_SWIMMING | MOVEFLAG_LEVITATING);
                                 }
                                 DoSpawnFrenzy = false;
                             }
                         }
                     }
-                    if (!pPlayer->IsInWater())
-                        pPlayer->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
+                    if (!player->IsInWater())
+                        player->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
                 }
             }
             WaterCheckTimer = 500;//remove stress from core
@@ -193,7 +194,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 184568:
                 ControlConsole = pGo->GetGUID();
@@ -224,17 +225,17 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
         }
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 21212: LadyVashj = pCreature->GetGUID();            break;
-            case 21214: Karathress = pCreature->GetGUID();           break;
-            case 21966: Sharkkis = pCreature->GetGUID();             break;
-            case 21217: LurkerBelow = pCreature->GetGUID();          break;
-            case 21965: Tidalvess = pCreature->GetGUID();            break;
-            case 21964: Caribdis = pCreature->GetGUID();             break;
-            case 21215: LeotherasTheBlind = pCreature->GetGUID();    break;
+            case 21212: LadyVashj = creature->GetGUID();            break;
+            case 21214: Karathress = creature->GetGUID();           break;
+            case 21966: Sharkkis = creature->GetGUID();             break;
+            case 21217: LurkerBelow = creature->GetGUID();          break;
+            case 21965: Tidalvess = creature->GetGUID();            break;
+            case 21964: Caribdis = creature->GetGUID();             break;
+            case 21215: LeotherasTheBlind = creature->GetGUID();    break;
         }
     }
 
@@ -248,7 +249,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_THELURKERBELOW:           return LurkerBelow;
             case DATA_SHARKKIS:                 return Sharkkis;
@@ -265,7 +266,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
         case DATA_STRANGE_POOL:
             {
@@ -317,7 +318,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_HYDROSSTHEUNSTABLEEVENT:  return m_auiEncounter[0];
             case DATA_LEOTHERASTHEBLINDEVENT:   return m_auiEncounter[1];

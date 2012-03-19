@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -78,23 +79,23 @@ struct instance_the_eye : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 20064: ThaladredTheDarkener = pCreature->GetGUID(); break;
-            case 20063: MasterEngineerTelonicus = pCreature->GetGUID(); break;
-            case 20062: GrandAstromancerCapernian = pCreature->GetGUID(); break;
-            case 20060: LordSanguinar = pCreature->GetGUID(); break;
-            case 19622: Kaelthas = pCreature->GetGUID(); break;
-            case 18805: Astromancer = pCreature->GetGUID(); break;
-            case 19514: Alar = pCreature->GetGUID(); break;
+            case 20064: ThaladredTheDarkener = creature->GetGUID(); break;
+            case 20063: MasterEngineerTelonicus = creature->GetGUID(); break;
+            case 20062: GrandAstromancerCapernian = creature->GetGUID(); break;
+            case 20060: LordSanguinar = creature->GetGUID(); break;
+            case 19622: Kaelthas = creature->GetGUID(); break;
+            case 18805: Astromancer = creature->GetGUID(); break;
+            case 19514: Alar = creature->GetGUID(); break;
         }
     }
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_THALADREDTHEDARKENER:         return ThaladredTheDarkener;
             case DATA_LORDSANGUINAR:                return LordSanguinar;
@@ -109,7 +110,7 @@ struct instance_the_eye : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_ALAREVENT:
                 AlarEventPhase = data;
@@ -136,7 +137,7 @@ struct instance_the_eye : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_ALAREVENT:    return AlarEventPhase;
             case DATA_HIGHASTROMANCERSOLARIANEVENT: return Encounters[1];

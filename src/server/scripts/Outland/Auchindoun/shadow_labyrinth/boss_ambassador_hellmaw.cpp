@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -76,13 +77,13 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
         {
             if (pInstance->GetData(TYPE_HELLMAW) == NOT_STARTED)
             {
-                DoCast(me,SPELL_BANISH);
+                DoCast(me, SPELL_BANISH);
                 IsBanished = true;
             }
-            else pInstance->SetData(TYPE_HELLMAW,FAIL);
+            else pInstance->SetData(TYPE_HELLMAW, FAIL);
             if (pInstance->GetData(TYPE_OVERSEER) == DONE)
             {
-                if (me->HasAura(SPELL_BANISH,0))
+                if (me->HasAura(SPELL_BANISH, 0))
                     me->RemoveAurasDueToSpell(SPELL_BANISH);
                 Intro = true;
             }
@@ -91,7 +92,7 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit *who)
     {
-        if (me->HasAura(SPELL_BANISH,0))
+        if (me->HasAura(SPELL_BANISH, 0))
             return;
 
         ScriptedAI::MoveInLineOfSight(who);
@@ -107,7 +108,7 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
     {
         DoScriptText(SAY_INTRO, me);
 
-        if (me->HasAura(SPELL_BANISH,0))
+        if (me->HasAura(SPELL_BANISH, 0))
             me->RemoveAurasDueToSpell(SPELL_BANISH);
 
         IsBanished = false;
@@ -119,7 +120,7 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO1, me); break;
             case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -129,7 +130,7 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -176,13 +177,13 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
 
         if (CorrosiveAcid_Timer <= diff)
         {
-            DoCast(me,SPELL_CORROSIVE_ACID);
+            DoCast(me, SPELL_CORROSIVE_ACID);
             CorrosiveAcid_Timer = 25000;
         } else CorrosiveAcid_Timer -= diff;
 
         if (Fear_Timer <= diff)
         {
-            DoCast(me,SPELL_FEAR);
+            DoCast(me, SPELL_FEAR);
             Fear_Timer = 35000;
         } else Fear_Timer -= diff;
 
@@ -190,16 +191,16 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
         {
             if (Enrage_Timer <= diff)
             {
-                DoCast(me,SPELL_ENRAGE);
+                DoCast(me, SPELL_ENRAGE);
             } else Enrage_Timer -= diff;
         }*/
 
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* pCreature)
+CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* creature)
 {
-    return new boss_ambassador_hellmawAI (pCreature);
+    return new boss_ambassador_hellmawAI (creature);
 }
 
 void AddSC_boss_ambassador_hellmaw()

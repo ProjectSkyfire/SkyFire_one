@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -86,7 +87,7 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 DoPlaySoundToSet(me, SOUND_ONSLAY1);
@@ -106,7 +107,7 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
         {
             Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_JAINAPROUDMOORE));
             if (pTarget && pTarget->isAlive())
-                me->AddThreat(pTarget,0.0f);
+                me->AddThreat(pTarget, 0.0f);
         }
     }
 
@@ -157,7 +158,7 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
         {
             DoCast(me->getVictim(), SPELL_DEATH_AND_DECAY);
             DecayTimer = 60000+rand()%20000;
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_DECAY1);
@@ -173,7 +174,7 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
         {
             DoCast(me->getVictim(), SPELL_FROST_NOVA);
             NovaTimer = 30000+rand()%15000;
-            switch (urand(0,1))
+            switch (urand(0, 1))
             {
                 case 0:
                     DoPlaySoundToSet(me, SOUND_NOVA1);
@@ -187,7 +188,7 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
         } else NovaTimer -= diff;
         if (IceboltTimer <= diff)
         {
-            DoCast(SelectTarget(SELECT_TARGET_RANDOM,0,40,true), SPELL_ICEBOLT);
+            DoCast(SelectTarget(SELECT_TARGET_RANDOM, 0, 40, true), SPELL_ICEBOLT);
             IceboltTimer = 11000+rand()%20000;
         } else IceboltTimer -= diff;
 
@@ -195,9 +196,9 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
     }
 };
 
-CreatureAI* GetAI_boss_rage_winterchill(Creature* pCreature)
+CreatureAI* GetAI_boss_rage_winterchill(Creature* creature)
 {
-    return new boss_rage_winterchillAI (pCreature);
+    return new boss_rage_winterchillAI (creature);
 }
 
 void AddSC_boss_rage_winterchill()

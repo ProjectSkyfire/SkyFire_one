@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -98,7 +99,7 @@ struct instance_mount_hyjal : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case 182060:
                 HordeGate = pGo->GetGUID();
@@ -122,24 +123,24 @@ struct instance_mount_hyjal : public ScriptedInstance
         HandleGameObject(DoorGUID, open, NULL);
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 17767: RageWinterchill = pCreature->GetGUID(); break;
-            case 17808: Anetheron = pCreature->GetGUID(); break;
-            case 17888: Kazrogal = pCreature->GetGUID();  break;
-            case 17842: Azgalor = pCreature->GetGUID(); break;
-            case 17968: Archimonde = pCreature->GetGUID(); break;
-            case 17772: JainaProudmoore = pCreature->GetGUID(); break;
-            case 17852: Thrall = pCreature->GetGUID(); break;
-            case 17948: TyrandeWhisperwind = pCreature->GetGUID(); break;
+            case 17767: RageWinterchill = creature->GetGUID(); break;
+            case 17808: Anetheron = creature->GetGUID(); break;
+            case 17888: Kazrogal = creature->GetGUID();  break;
+            case 17842: Azgalor = creature->GetGUID(); break;
+            case 17968: Archimonde = creature->GetGUID(); break;
+            case 17772: JainaProudmoore = creature->GetGUID(); break;
+            case 17852: Thrall = creature->GetGUID(); break;
+            case 17948: TyrandeWhisperwind = creature->GetGUID(); break;
         }
     }
 
     uint64 GetData64(uint32 identifier)
     {
-        switch(identifier)
+        switch (identifier)
         {
             case DATA_RAGEWINTERCHILL: return RageWinterchill;
             case DATA_ANETHERON: return Anetheron;
@@ -156,7 +157,7 @@ struct instance_mount_hyjal : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_RAGEWINTERCHILLEVENT: Encounters[0] = data; break;
             case DATA_ANETHERONEVENT:
@@ -171,12 +172,12 @@ struct instance_mount_hyjal : public ScriptedInstance
                         if (ArchiYell)break;
                         ArchiYell = true;
 
-                        Creature* pCreature = instance->GetCreature(Azgalor);
-                        if (pCreature)
+                        Creature* creature = instance->GetCreature(Azgalor);
+                        if (creature)
                         {
-                            Creature* pUnit = pCreature->SummonCreature(21987,pCreature->GetPositionX(),pCreature->GetPositionY(),pCreature->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,10000);
+                            Creature* pUnit = creature->SummonCreature(21987, creature->GetPositionX(),creature->GetPositionY(),creature->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN, 10000);
 
-                            Map* pMap = pCreature->GetMap();
+                            Map* pMap = creature->GetMap();
                             if (pMap->IsDungeon() && pUnit)
                             {
                                 pUnit->SetVisibility(VISIBILITY_OFF);
@@ -189,7 +190,7 @@ struct instance_mount_hyjal : public ScriptedInstance
                                      if (i->getSource())
                                      {
                                         WorldPacket data(SMSG_MESSAGECHAT, 200);
-                                        pUnit->BuildMonsterChat(&data,CHAT_MSG_MONSTER_YELL,YELL_EFFORTS,0,YELL_EFFORTS_NAME,i->getSource()->GetGUID());
+                                        pUnit->BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, YELL_EFFORTS, 0, YELL_EFFORTS_NAME, i->getSource()->GetGUID());
                                         i->getSource()->GetSession()->SendPacket(&data);
 
                                         WorldPacket data2(SMSG_PLAY_SOUND, 4);
@@ -212,12 +213,12 @@ struct instance_mount_hyjal : public ScriptedInstance
                 break;
             case DATA_ALLIANCE_RETREAT:
                 allianceRetreat = data;
-                OpenDoor(HordeGate,true);
+                OpenDoor(HordeGate, true);
                 SaveToDB();
                 break;
             case DATA_HORDE_RETREAT:
                 hordeRetreat = data;
-                OpenDoor(ElfGate,true);
+                OpenDoor(ElfGate, true);
                 SaveToDB();
                 break;
             case DATA_RAIDDAMAGE:
@@ -230,7 +231,7 @@ struct instance_mount_hyjal : public ScriptedInstance
                 break;
         }
 
-         debug_log("OSCR: Instance Hyjal: Instance data updated for event %u (Data=%u)",type,data);
+         sLog->outDebug("TSCR: Instance Hyjal: Instance data updated for event %u (Data=%u)",type, data);
 
         if (data == DONE)
             SaveToDB();
@@ -238,7 +239,7 @@ struct instance_mount_hyjal : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_RAGEWINTERCHILLEVENT: return Encounters[0];
             case DATA_ANETHERONEVENT:      return Encounters[1];
@@ -262,9 +263,9 @@ struct instance_mount_hyjal : public ScriptedInstance
                 for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                 {
                     if (Player* player = itr->getSource())
-                        player->SendUpdateWorldState(id,state);
+                        player->SendUpdateWorldState(id, state);
                 }
-        } else debug_log("OSCR: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
+        } else sLog->outDebug("TSCR: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
     }
 
     std::string GetSaveData()

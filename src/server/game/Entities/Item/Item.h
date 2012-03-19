@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_ITEM_H
-#define OREGONCORE_ITEM_H
+#ifndef TRINITY_ITEM_H
+#define TRINITY_ITEM_H
 
 #include "Common.h"
 #include "Object.h"
@@ -209,7 +210,7 @@ class Item : public Object
         void SetOwnerGUID(uint64 guid) { SetUInt64Value(ITEM_FIELD_OWNER, guid); }
         Player* GetOwner()const;
 
-        void SetBinding(bool val) { ApplyModFlag(ITEM_FIELD_FLAGS,ITEM_FLAGS_BINDED,val); }
+        void SetBinding(bool val) { ApplyModFlag(ITEM_FIELD_FLAGS, ITEM_FLAGS_BINDED, val); }
         bool IsSoulBound() const { return HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAGS_BINDED); }
         bool IsBindedNotWith(uint64 guid) const { return IsSoulBound() && GetOwnerGUID() != guid; }
         bool IsBoundByEnchant() const;
@@ -266,7 +267,7 @@ class Item : public Object
 
         // spell charges (signed but stored as unsigned)
         int32 GetSpellCharges(uint8 index/*0..5*/ = 0) const { return GetInt32Value(ITEM_FIELD_SPELL_CHARGES + index); }
-        void  SetSpellCharges(uint8 index/*0..5*/, int32 value) { SetInt32Value(ITEM_FIELD_SPELL_CHARGES + index,value); }
+        void  SetSpellCharges(uint8 index/*0..5*/, int32 value) { SetInt32Value(ITEM_FIELD_SPELL_CHARGES + index, value); }
 
         Loot loot;
         bool m_lootGenerated;
@@ -274,8 +275,8 @@ class Item : public Object
         // Update States
         ItemUpdateState GetState() const { return uState; }
         void SetState(ItemUpdateState state, Player *forplayer = NULL);
-        void AddToUpdateQueueOf(Player *player);
-        void RemoveFromUpdateQueueOf(Player *player);
+        void AddToUpdateQueueOf(Player* player);
+        void RemoveFromUpdateQueueOf(Player* player);
         bool IsInUpdateQueue() const { return uQueuePos != -1; }
         uint16 GetQueuePos() const { return uQueuePos; }
         void FSetState(ItemUpdateState state)               // forced

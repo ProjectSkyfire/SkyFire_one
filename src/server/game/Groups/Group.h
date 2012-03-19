@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_GROUP_H
-#define OREGONCORE_GROUP_H
+#ifndef TRINITY_GROUP_H
+#define TRINITY_GROUP_H
 
 #include "GroupReference.h"
 #include "GroupRefManager.h"
@@ -90,7 +91,7 @@ enum GroupUpdateFlags
 };
 
 #define GROUP_UPDATE_FLAGS_COUNT          20
-                                                                // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15,16,17,18,19
+                                                                // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
 static const uint8 GroupUpdateLength[GROUP_UPDATE_FLAGS_COUNT] = { 0, 2, 2, 2, 1, 2, 2, 2, 2, 4, 8, 8, 1, 2, 2, 2, 1, 2, 2, 8};
 
 class InstanceSave;
@@ -158,10 +159,10 @@ class Group
         bool   Create(const uint64 &guid, const char * name);
         bool   LoadGroupFromDB(const uint64 &leaderGuid, QueryResult_AutoPtr result = QueryResult_AutoPtr(NULL), bool loadMembers = true);
         bool   LoadMemberFromDB(uint32 guidLow, uint8 subgroup, bool assistant);
-        bool   AddInvite(Player *player);
-        uint32 RemoveInvite(Player *player);
+        bool   AddInvite(Player* player);
+        uint32 RemoveInvite(Player* player);
         void   RemoveAllInvites();
-        bool   AddLeaderInvite(Player *player);
+        bool   AddLeaderInvite(Player* player);
         bool   AddMember(const uint64 &guid, const char* name);
                                                             // method: 0=just remove, 1=kick
         uint32 RemoveMember(const uint64 &guid, const uint8 &method);
@@ -208,13 +209,13 @@ class Group
         Player* GetInvited(const uint64& guid) const;
         Player* GetInvited(const std::string& name) const;
 
-        bool SameSubGroup(uint64 guid1,const uint64& guid2) const
+        bool SameSubGroup(uint64 guid1, const uint64& guid2) const
         {
             member_citerator mslot2 = _getMemberCSlot(guid2);
             if (mslot2 == m_memberSlots.end())
                 return false;
 
-            return SameSubGroup(guid1,&*mslot2);
+            return SameSubGroup(guid1, &*mslot2);
         }
 
         bool SameSubGroup(uint64 guid1, MemberSlot const* slot2) const
@@ -236,7 +237,7 @@ class Group
         MemberSlotList const& GetMemberSlots() const { return m_memberSlots; }
         GroupReference* GetFirstMember() { return m_memberMgr.getFirst(); }
         uint32 GetMembersCount() const { return m_memberSlots.size(); }
-        void GetDataForXPAtKill(Unit const* victim, uint32& count,uint32& sum_level, Player* & member_with_max_level, Player* & not_gray_member_with_max_level);
+        void GetDataForXPAtKill(Unit const* victim, uint32& count, uint32& sum_level, Player* & member_with_max_level, Player* & not_gray_member_with_max_level);
         uint8  GetMemberGroup(uint64 guid) const
         {
             member_citerator mslot = _getMemberCSlot(guid);
@@ -253,7 +254,7 @@ class Group
         uint32 CanJoinBattleGroundQueue(uint32 bgTypeId, uint32 bgQueueType, uint32 MinPlayerCount, uint32 MaxPlayerCount, bool isRated, uint32 arenaSlot);
 
         void ChangeMembersGroup(const uint64 &guid, const uint8 &group);
-        void ChangeMembersGroup(Player *player, const uint8 &group);
+        void ChangeMembersGroup(Player* player, const uint8 &group);
 
         void SetAssistant(uint64 guid, const bool &state)
         {
@@ -290,7 +291,7 @@ class Group
         //void SendInit(WorldSession *session);
         void SendTargetIconList(WorldSession *session);
         void SendUpdate();
-        void UpdatePlayerOutOfRange(Player* pPlayer);
+        void UpdatePlayerOutOfRange(Player* player);
                                                             // ignore: GUID of player that will be ignored
         void BroadcastPacket(WorldPacket *packet, bool ignorePlayersInBGRaid, int group=-1, uint64 ignore=0);
         void BroadcastReadyCheck(WorldPacket *packet);
@@ -348,7 +349,7 @@ class Group
         bool _setMainTank(const uint64 &guid);
         bool _setMainAssistant(const uint64 &guid);
 
-        void _homebindIfInstance(Player *player);
+        void _homebindIfInstance(Player* player);
 
         void _initRaidSubGroupsCounter()
         {

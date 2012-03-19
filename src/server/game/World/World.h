@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -22,10 +22,10 @@
 
 #include "Common.h"
 #include "Timer.h"
-#include "Policies/Singleton.h"
 #include "SharedDefines.h"
 #include "QueryResult.h"
 
+#include <ace/Singleton.h>
 #include <ace/Atomic_Op.h>
 #include <map>
 #include <set>
@@ -133,6 +133,8 @@ enum WorldConfigs
     CONFIG_GM_LOGIN_STATE,
     CONFIG_GM_VISIBLE_STATE,
     CONFIG_GM_CHAT,
+    CONFIG_GM_LEVEL_IN_GM_LIST,
+    CONFIG_GM_LEVEL_IN_WHO_LIST,
     CONFIG_GM_WISPERING_TO,
     CONFIG_GM_IN_GM_LIST,
     CONFIG_GM_IN_WHO_LIST,
@@ -389,7 +391,7 @@ enum ScriptCommands
     SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT    = 21,               // source = WorldObject (if present used as a search center), datalong = script id, datalong2 = unit lowguid, dataint = script table to use (see ScriptsType)
     SCRIPT_COMMAND_KILL                  = 22,               // source/target = Creature, dataint = remove corpse attribute
 
-    //Oregon only
+    //Trinity only
     SCRIPT_COMMAND_ORIENTATION           = 30,               // source = Unit, target (datalong > 0) = Unit, datalong = > 0 turn source to face target, o = orientation
     SCRIPT_COMMAND_EQUIP                 = 31,               // soucre = Creature, datalong = equipment id
     SCRIPT_COMMAND_MODEL                 = 32,               // source = Creature, datalong = model id
@@ -447,12 +449,12 @@ class World
         void RemoveWeather(uint32 zone_id);
 
         // Get the active session server limit (or security level limitations)
-        uint32 GetPlayerAmountLimit() const { return m_playerLimit >= 0 ? m_playerLimit : 0; }
         AccountTypes GetPlayerSecurityLimit() const { return m_allowedSecurityLevel < 0 ? SEC_PLAYER : m_allowedSecurityLevel; }
         void SetPlayerSecurityLimit(AccountTypes sec) { m_allowedSecurityLevel = (sec < SEC_PLAYER ? SEC_PLAYER : sec); }
 
-        // Set the active session server limit (or security level limitation)
-        void SetPlayerLimit(int32 limit, bool needUpdate = false);
+        // Active session server limit
+        void SetPlayerAmountLimit(uint32 limit) { m_playerLimit = limit; }
+        uint32 GetPlayerAmountLimit() const { return m_playerLimit; }
 
         //player Queue
         typedef std::list<WorldSession*> Queue;
@@ -525,12 +527,12 @@ class World
 
         void UpdateSessions(time_t diff);
         // Set a server rate (see #Rates)
-        void setRate(Rates rate,float value) { rate_values[rate]=value; }
+        void setRate(Rates rate, float value) { rate_values[rate]=value; }
         // Get a server rate (see #Rates)
         float getRate(Rates rate) const { return rate_values[rate]; }
 
         // Set a server configuration element (see #WorldConfigs)
-        void setConfig(uint32 index,uint32 value)
+        void setConfig(uint32 index, uint32 value)
         {
             if (index<CONFIG_VALUE_COUNT)
                 m_configs[index]=value;
@@ -634,6 +636,8 @@ class World
         DisconnectMap m_disconnects;
         uint32 m_maxActiveSessionCount;
         uint32 m_maxQueuedSessionCount;
+        uint32 m_PlayerCount;
+        uint32 m_MaxPlayerCount;
 
         std::string m_newCharString;
 
@@ -686,6 +690,6 @@ class World
 
 extern uint32 realmID;
 
-#define sWorld Oregon::Singleton<World>::Instance()
+#define sWorld ACE_Singleton<World, ACE_Null_Mutex>::instance()
 #endif
 

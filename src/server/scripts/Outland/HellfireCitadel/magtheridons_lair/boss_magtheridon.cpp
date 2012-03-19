@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -504,7 +505,7 @@ struct mob_hellfire_channelerAI : public ScriptedAI
 };
 
 //Manticron Cube
-bool GOHello_go_Manticron_Cube(Player *player, GameObject* _GO)
+bool GOHello_go_Manticron_Cube(Player* player, GameObject* _GO)
 {
     ScriptedInstance* pInstance =_GO->GetInstanceData();
     if (!pInstance) return true;
@@ -523,19 +524,19 @@ bool GOHello_go_Manticron_Cube(Player *player, GameObject* _GO)
     return true;
 }
 
-CreatureAI* GetAI_boss_magtheridon(Creature* pCreature)
+CreatureAI* GetAI_boss_magtheridon(Creature* creature)
 {
-    return new boss_magtheridonAI(pCreature);
+    return new boss_magtheridonAI(creature);
 }
 
-CreatureAI* GetAI_mob_hellfire_channeler(Creature* pCreature)
+CreatureAI* GetAI_mob_hellfire_channeler(Creature* creature)
 {
-    return new mob_hellfire_channelerAI(pCreature);
+    return new mob_hellfire_channelerAI(creature);
 }
 
-CreatureAI* GetAI_mob_abyssalAI(Creature* pCreature)
+CreatureAI* GetAI_mob_abyssalAI(Creature* creature)
 {
-    return new mob_abyssalAI(pCreature);
+    return new mob_abyssalAI(creature);
 }
 
 void AddSC_boss_magtheridon()

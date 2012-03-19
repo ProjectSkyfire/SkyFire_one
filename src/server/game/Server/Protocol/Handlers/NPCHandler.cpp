@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -35,8 +36,8 @@
 #include "Creature.h"
 #include "MapManager.h"
 #include "Pet.h"
-#include "BattleGroundMgr.h"
-#include "BattleGround.h"
+#include "BattlegroundMgr.h"
+#include "Battleground.h"
 #include "Guild.h"
 #include "ScriptMgr.h"
 
@@ -45,10 +46,10 @@ void WorldSession::HandleTabardVendorActivateOpcode(WorldPacket & recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_TABARDDESIGNER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TABARDDESIGNER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleTabardVendorActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleTabardVendorActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -68,15 +69,15 @@ void WorldSession::SendTabardVendorActivate(uint64 guid)
 
 void WorldSession::HandleBankerActivateOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug( "WORLD: Received CMSG_BANKER_ACTIVATE");
+    sLog->outDebug( "WORLD: Received CMSG_BANKER_ACTIVATE");
 
     uint64 guid;
     recv_data >> guid;
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_BANKER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_BANKER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleBankerActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleBankerActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -104,18 +105,18 @@ void WorldSession::HandleTrainerListOpcode(WorldPacket & recv_data)
 
 void WorldSession::SendTrainerList(uint64 guid)
 {
-    std::string str = GetOregonString(LANG_NPC_TAINER_HELLO);
+    std::string str = GetSkyFireString(LANG_NPC_TAINER_HELLO);
     SendTrainerList(guid, str);
 }
 
 void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 {
-    sLog.outDebug("WORLD: SendTrainerList");
+    sLog->outDebug("WORLD: SendTrainerList");
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid,UNIT_NPC_FLAG_TRAINER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: SendTrainerList - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: SendTrainerList - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -124,21 +125,21 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
         GetPlayer()->RemoveSpellsCausingAura(SPELL_AURA_FEIGN_DEATH);
 
     // trainer list loaded at check;
-    if (!unit->isCanTrainingOf(_player,true))
+    if (!unit->isCanTrainingOf(_player, true))
         return;
 
-    CreatureInfo const *ci = unit->GetCreatureInfo();
+    CreatureTemplate const *ci = unit->GetCreatureTemplate();
 
     if (!ci)
     {
-        sLog.outDebug("WORLD: SendTrainerList - (GUID: %u) NO CREATUREINFO!",GUID_LOPART(guid));
+        sLog->outDebug("WORLD: SendTrainerList - (GUID: %u) NO CREATUREINFO!", GUID_LOPART(guid));
         return;
     }
 
     TrainerSpellData const* trainer_spells = unit->GetTrainerSpells();
     if (!trainer_spells)
     {
-        sLog.outDebug("WORLD: SendTrainerList - Training spells not found for creature (GUID: %u Entry: %u)",
+        sLog->outDebug("WORLD: SendTrainerList - Training spells not found for creature (GUID: %u Entry: %u)",
             GUID_LOPART(guid), unit->GetEntry());
         return;
     }
@@ -163,10 +164,10 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 
         ++count;
 
-        bool primary_prof_first_rank = spellmgr.IsPrimaryProfessionFirstRankSpell(tSpell->spell);
+        bool primary_prof_first_rank = sSpellMgr->IsPrimaryProfessionFirstRankSpell(tSpell->spell);
 
-        SpellChainNode const* chain_node = spellmgr.GetSpellChainNode(tSpell->spell);
-        uint32 req_spell = spellmgr.GetSpellRequired(tSpell->spell);
+        SpellChainNode const* chain_node = sSpellMgr->GetSpellChainNode(tSpell->spell);
+        uint32 req_spell = sSpellMgr->GetSpellRequired(tSpell->spell);
 
         data << uint32(tSpell->spell);
         data << uint8(_player->GetTrainerSpellState(tSpell));
@@ -184,7 +185,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 
     data << strTitle;
 
-    data.put<uint32>(count_pos,count);
+    data.put<uint32>(count_pos, count);
     SendPacket(&data);
 }
 
@@ -194,12 +195,12 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket & recv_data)
     uint32 spellId = 0;
 
     recv_data >> guid >> spellId;
-    sLog.outDebug("WORLD: Received CMSG_TRAINER_BUY_SPELL NpcGUID=%u, learn spell id is: %u",uint32(GUID_LOPART(guid)), spellId);
+    sLog->outDebug("WORLD: Received CMSG_TRAINER_BUY_SPELL NpcGUID=%u, learn spell id is: %u", uint32(GUID_LOPART(guid)), spellId);
 
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleTrainerBuySpellOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleTrainerBuySpellOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -207,7 +208,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket & recv_data)
     if (GetPlayer()->hasUnitState(UNIT_STAT_DIED))
         GetPlayer()->RemoveSpellsCausingAura(SPELL_AURA_FEIGN_DEATH);
 
-    if (!unit->isCanTrainingOf(_player,true))
+    if (!unit->isCanTrainingOf(_player, true))
         return;
 
     // check present spell in trainer spell list
@@ -251,7 +252,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket & recv_data)
 
 void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: Received CMSG_GOSSIP_HELLO");
+    sLog->outDebug("WORLD: Received CMSG_GOSSIP_HELLO");
 
     uint64 guid;
     recv_data >> guid;
@@ -259,7 +260,7 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_NONE);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleGossipHelloOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleGossipHelloOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -280,22 +281,22 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
         if (bg)
         {
             bg->AddPlayerToResurrectQueue(unit->GetGUID(), _player->GetGUID());
-            sBattleGroundMgr.SendAreaSpiritHealerQueryOpcode(_player, bg, unit->GetGUID());
+            sBattleGroundMgr->SendAreaSpiritHealerQueryOpcode(_player, bg, unit->GetGUID());
             return;
         }
     }
 
-    if (!sScriptMgr.GossipHello(_player, unit))
+    if (!sScriptMgr->GossipHello(_player, unit))
     {
         _player->TalkedToCreature(unit->GetEntry(), unit->GetGUID());
-        _player->PrepareGossipMenu(unit, unit->GetCreatureInfo()->GossipMenuId);
+        _player->PrepareGossipMenu(unit, unit->GetCreatureTemplate()->GossipMenuId);
         _player->SendPreparedGossip(unit);
     }
 }
 
 /*void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: CMSG_GOSSIP_SELECT_OPTION");
+    sLog->outDebug("WORLD: CMSG_GOSSIP_SELECT_OPTION");
 
     uint32 option;
     uint32 unk;
@@ -306,15 +307,15 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
 
     if (_player->PlayerTalkClass->GossipOptionCoded(option))
     {
-        sLog.outDebug("reading string");
+        sLog->outDebug("reading string");
         recv_data >> code;
-        sLog.outDebug("string read: %s", code.c_str());
+        sLog->outDebug("string read: %s", code.c_str());
     }
 
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_NONE);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleGossipSelectOptionOpcode - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleGossipSelectOptionOpcode - Unit (GUID: %u) not found or you can't interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -324,19 +325,19 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
 
     if (!code.empty())
     {
-        if (!sScriptMgr.GossipSelectWithCode(_player, unit, _player->PlayerTalkClass->GossipOptionSender (option), _player->PlayerTalkClass->GossipOptionAction(option), code.c_str()))
+        if (!sScriptMgr->GossipSelectWithCode(_player, unit, _player->PlayerTalkClass->GossipOptionSender (option), _player->PlayerTalkClass->GossipOptionAction(option), code.c_str()))
             unit->OnGossipSelect (_player, option);
     }
     else
     {
-        if (!sScriptMgr.GossipSelect (_player, unit, _player->PlayerTalkClass->GossipOptionSender (option), _player->PlayerTalkClass->GossipOptionAction (option)))
+        if (!sScriptMgr->GossipSelect (_player, unit, _player->PlayerTalkClass->GossipOptionSender (option), _player->PlayerTalkClass->GossipOptionAction (option)))
            unit->OnGossipSelect (_player, option);
     }
 }*/
 
 void WorldSession::HandleSpiritHealerActivateOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: CMSG_SPIRIT_HEALER_ACTIVATE");
+    sLog->outDebug("WORLD: CMSG_SPIRIT_HEALER_ACTIVATE");
 
     uint64 guid;
 
@@ -345,7 +346,7 @@ void WorldSession::HandleSpiritHealerActivateOpcode(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_SPIRITHEALER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleSpiritHealerActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleSpiritHealerActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
         return;
     }
 
@@ -360,13 +361,13 @@ void WorldSession::SendSpiritResurrect()
 {
     _player->ResurrectPlayer(0.5f, true);
 
-    _player->DurabilityLossAll(0.25f,true);
+    _player->DurabilityLossAll(0.25f, true);
 
     // get corpse nearest graveyard
     WorldSafeLocsEntry const *corpseGrave = NULL;
     Corpse *corpse = _player->GetCorpse();
     if (corpse)
-        corpseGrave = objmgr.GetClosestGraveYard(
+        corpseGrave = sObjectMgr->GetClosestGraveYard(
             corpse->GetPositionX(), corpse->GetPositionY(), corpse->GetPositionZ(), corpse->GetMapId(), _player->GetTeam());
 
     // now can spawn bones
@@ -375,7 +376,7 @@ void WorldSession::SendSpiritResurrect()
     // teleport to nearest from corpse graveyard, if different from nearest to player ghost
     if (corpseGrave)
     {
-        WorldSafeLocsEntry const *ghostGrave = objmgr.GetClosestGraveYard(
+        WorldSafeLocsEntry const *ghostGrave = sObjectMgr->GetClosestGraveYard(
             _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetMapId(), _player->GetTeam());
 
         if (corpseGrave != ghostGrave)
@@ -397,10 +398,10 @@ void WorldSession::HandleBinderActivateOpcode(WorldPacket & recv_data)
     if (!GetPlayer()->IsInWorld() || !GetPlayer()->isAlive())
         return;
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID,UNIT_NPC_FLAG_INNKEEPER);
+    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_INNKEEPER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleBinderActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
+        sLog->outDebug("WORLD: HandleBinderActivateOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
         return;
     }
 
@@ -431,7 +432,7 @@ void WorldSession::SendBindPoint(Creature *npc)
 //Need fix
 void WorldSession::HandleListStabledPetsOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: Recv MSG_LIST_STABLED_PETS");
+    sLog->outDebug("WORLD: Recv MSG_LIST_STABLED_PETS");
     uint64 npcGUID;
 
     recv_data >> npcGUID;
@@ -439,7 +440,7 @@ void WorldSession::HandleListStabledPetsOpcode(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_STABLEMASTER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleListStabledPetsOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
+        sLog->outDebug("WORLD: HandleListStabledPetsOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
         return;
     }
 
@@ -456,7 +457,7 @@ void WorldSession::HandleListStabledPetsOpcode(WorldPacket & recv_data)
 
 void WorldSession::SendStablePet(uint64 guid)
 {
-    sLog.outDebug("WORLD: Recv MSG_LIST_STABLED_PETS Send.");
+    sLog->outDebug("WORLD: Recv MSG_LIST_STABLED_PETS Send.");
 
     WorldPacket data(MSG_LIST_STABLED_PETS, 200);           // guess size
     data << uint64 (guid);
@@ -481,7 +482,7 @@ void WorldSession::SendStablePet(uint64 guid)
     }
 
     //                                                            0      1     2   3      4      5        6
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id, entry, level, loyalty, name FROM character_pet WHERE owner = '%u' AND slot > 0 AND slot < 3",_player->GetGUIDLow());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id, entry, level, loyalty, name FROM character_pet WHERE owner = '%u' AND slot > 0 AND slot < 3", _player->GetGUIDLow());
 
     if (result)
     {
@@ -506,7 +507,7 @@ void WorldSession::SendStablePet(uint64 guid)
 
 void WorldSession::HandleStablePet(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: Recv CMSG_STABLE_PET");
+    sLog->outDebug("WORLD: Recv CMSG_STABLE_PET");
     uint64 npcGUID;
 
     recv_data >> npcGUID;
@@ -517,7 +518,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_STABLEMASTER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleStablePet - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
+        sLog->outDebug("WORLD: HandleStablePet - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
         return;
     }
 
@@ -539,7 +540,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
 
     uint32 free_slot = 1;
 
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner,slot,id FROM character_pet WHERE owner = '%u'  AND slot > 0 AND slot < 3 ORDER BY slot ",_player->GetGUIDLow());
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT owner, slot, id FROM character_pet WHERE owner = '%u'  AND slot > 0 AND slot < 3 ORDER BY slot ", _player->GetGUIDLow());
     if (result)
     {
         do
@@ -555,7 +556,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
 
     if (free_slot > 0 && free_slot <= GetPlayer()->m_stableSlots)
     {
-        _player->RemovePet(pet,PetSaveMode(free_slot));
+        _player->RemovePet(pet, PetSaveMode(free_slot));
         data << uint8(0x08);
     }
     else
@@ -566,7 +567,7 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
 
 void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: Recv CMSG_UNSTABLE_PET.");
+    sLog->outDebug("WORLD: Recv CMSG_UNSTABLE_PET.");
     uint64 npcGUID;
     uint32 petnumber;
 
@@ -575,7 +576,7 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_STABLEMASTER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleUnstablePet - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
+        sLog->outDebug("WORLD: HandleUnstablePet - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
         return;
     }
 
@@ -596,18 +597,18 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
 
     // delete dead pet
     if (pet)
-        _player->RemovePet(pet,PET_SAVE_AS_DELETED);
+        _player->RemovePet(pet, PET_SAVE_AS_DELETED);
 
     Pet *newpet = NULL;
 
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT entry FROM character_pet WHERE owner = '%u' AND id = '%u' AND slot > 0 AND slot < 3",_player->GetGUIDLow(),petnumber);
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT entry FROM character_pet WHERE owner = '%u' AND id = '%u' AND slot > 0 AND slot < 3", _player->GetGUIDLow(), petnumber);
     if (result)
     {
         Field *fields = result->Fetch();
         uint32 petentry = fields[0].GetUInt32();
 
         newpet = new Pet(_player, HUNTER_PET);
-        if (!newpet->LoadPetFromDB(_player,petentry,petnumber))
+        if (!newpet->LoadPetFromDB(_player, petentry, petnumber))
         {
             delete newpet;
             newpet = NULL;
@@ -623,7 +624,7 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
 
 void WorldSession::HandleBuyStableSlot(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: Recv CMSG_BUY_STABLE_SLOT.");
+    sLog->outDebug("WORLD: Recv CMSG_BUY_STABLE_SLOT.");
     uint64 npcGUID;
 
     recv_data >> npcGUID;
@@ -631,7 +632,7 @@ void WorldSession::HandleBuyStableSlot(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_STABLEMASTER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleBuyStableSlot - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
+        sLog->outDebug("WORLD: HandleBuyStableSlot - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
         return;
     }
 
@@ -661,12 +662,12 @@ void WorldSession::HandleBuyStableSlot(WorldPacket & recv_data)
 
 void WorldSession::HandleStableRevivePet(WorldPacket &/* recv_data */)
 {
-    sLog.outDebug("HandleStableRevivePet: Not implemented");
+    sLog->outDebug("HandleStableRevivePet: Not implemented");
 }
 
 void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: Recv CMSG_STABLE_SWAP_PET.");
+    sLog->outDebug("WORLD: Recv CMSG_STABLE_SWAP_PET.");
     uint64 npcGUID;
     uint32 pet_number;
 
@@ -675,7 +676,7 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_STABLEMASTER);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleStableSwapPet - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
+        sLog->outDebug("WORLD: HandleStableSwapPet - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
         return;
     }
 
@@ -691,7 +692,7 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
         return;
 
     // find swapped pet slot in stable
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT slot,entry FROM character_pet WHERE owner = '%u' AND id = '%u'",_player->GetGUIDLow(),pet_number);
+    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT slot, entry FROM character_pet WHERE owner = '%u' AND id = '%u'", _player->GetGUIDLow(), pet_number);
     if (!result)
         return;
 
@@ -701,11 +702,11 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
     uint32 petentry = fields[1].GetUInt32();
 
     // move alive pet to slot or delele dead pet
-    _player->RemovePet(pet,pet->isAlive() ? PetSaveMode(slot) : PET_SAVE_AS_DELETED);
+    _player->RemovePet(pet, pet->isAlive() ? PetSaveMode(slot) : PET_SAVE_AS_DELETED);
 
     // summon unstabled pet
     Pet *newpet = new Pet(_player);
-    if (!newpet->LoadPetFromDB(_player,petentry,pet_number))
+    if (!newpet->LoadPetFromDB(_player, petentry, pet_number))
     {
         delete newpet;
         data << uint8(0x06);
@@ -718,7 +719,7 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
 
 void WorldSession::HandleRepairItemOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: CMSG_REPAIR_ITEM");
+    sLog->outDebug("WORLD: CMSG_REPAIR_ITEM");
 
     uint64 npcGUID, itemGUID;
     uint8 guildBank;                                        // new in 2.3.2, bool that means from guild bank money
@@ -728,7 +729,7 @@ void WorldSession::HandleRepairItemOpcode(WorldPacket & recv_data)
     Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(npcGUID, UNIT_NPC_FLAG_REPAIR);
     if (!unit)
     {
-        sLog.outDebug("WORLD: HandleRepairItemOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
+        sLog->outDebug("WORLD: HandleRepairItemOpcode - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(npcGUID)));
         return;
     }
 
@@ -742,25 +743,25 @@ void WorldSession::HandleRepairItemOpcode(WorldPacket & recv_data)
     uint32 TotalCost = 0;
     if (itemGUID)
     {
-        sLog.outDebug("ITEM: Repair item, itemGUID = %u, npcGUID = %u", GUID_LOPART(itemGUID), GUID_LOPART(npcGUID));
+        sLog->outDebug("ITEM: Repair item, itemGUID = %u, npcGUID = %u", GUID_LOPART(itemGUID), GUID_LOPART(npcGUID));
 
         Item* item = _player->GetItemByGuid(itemGUID);
 
         if (item)
-            TotalCost= _player->DurabilityRepair(item->GetPos(),true,discountMod,guildBank>0?true:false);
+            TotalCost= _player->DurabilityRepair(item->GetPos(), true, discountMod, guildBank>0?true:false);
     }
     else
     {
-        sLog.outDebug("ITEM: Repair all items, npcGUID = %u", GUID_LOPART(npcGUID));
+        sLog->outDebug("ITEM: Repair all items, npcGUID = %u", GUID_LOPART(npcGUID));
 
-        TotalCost = _player->DurabilityRepairAll(true,discountMod,guildBank>0?true:false);
+        TotalCost = _player->DurabilityRepairAll(true, discountMod, guildBank>0?true:false);
     }
     if (guildBank)
     {
         uint32 GuildId = _player->GetGuildId();
         if (!GuildId)
             return;
-        Guild *pGuild = objmgr.GetGuildById(GuildId);
+        Guild *pGuild = sObjectMgr->GetGuildById(GuildId);
         if (!pGuild)
             return;
         pGuild->LogBankEvent(GUILD_BANK_LOG_REPAIR_MONEY, 0, _player->GetGUIDLow(), TotalCost);

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -36,46 +37,46 @@ EndContentData */
 
 #define GOSSIP_ITEM_BEACON  "Please make me a Cenarion Beacon"
 
-bool GossipHello_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npcs_riverbreeze_and_silversky(Player* player, Creature* creature)
 {
-    uint32 eCreature = pCreature->GetEntry();
+    uint32 eCreature = creature->GetEntry();
 
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
     if (eCreature == 9528)
     {
-        if (pPlayer->GetQuestRewardStatus(4101))
+        if (player->GetQuestRewardStatus(4101))
         {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            pPlayer->SEND_GOSSIP_MENU(2848, pCreature->GetGUID());
-        } else if (pPlayer->GetTeam() == HORDE)
-        pPlayer->SEND_GOSSIP_MENU(2845, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->SEND_GOSSIP_MENU(2848, creature->GetGUID());
+        } else if (player->GetTeam() == HORDE)
+        player->SEND_GOSSIP_MENU(2845, creature->GetGUID());
         else
-            pPlayer->SEND_GOSSIP_MENU(2844, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(2844, creature->GetGUID());
     }
 
     if (eCreature == 9529)
     {
-        if (pPlayer->GetQuestRewardStatus(4102))
+        if (player->GetQuestRewardStatus(4102))
         {
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-            pPlayer->SEND_GOSSIP_MENU(2849, pCreature->GetGUID());
-        } else if (pPlayer->GetTeam() == ALLIANCE)
-        pPlayer->SEND_GOSSIP_MENU(2843, pCreature->GetGUID());
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->SEND_GOSSIP_MENU(2849, creature->GetGUID());
+        } else if (player->GetTeam() == ALLIANCE)
+        player->SEND_GOSSIP_MENU(2843, creature->GetGUID());
         else
-            pPlayer->SEND_GOSSIP_MENU(2842, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(2842, creature->GetGUID());
     }
 
     return true;
 }
 
-bool GossipSelect_npcs_riverbreeze_and_silversky(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npcs_riverbreeze_and_silversky(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer, 15120, false);
+        player->CLOSE_GOSSIP_MENU();
+        creature->CastSpell(player, 15120, false);
     }
     return true;
 }

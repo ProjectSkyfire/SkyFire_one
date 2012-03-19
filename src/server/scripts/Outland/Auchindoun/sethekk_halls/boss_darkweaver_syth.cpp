@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -94,7 +95,7 @@ struct boss_darkweaver_sythAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -118,7 +119,7 @@ struct boss_darkweaver_sythAI : public ScriptedAI
         if (rand()%2)
             return;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY_1, me); break;
             case 1: DoScriptText(SAY_SLAY_2, me); break;
@@ -127,7 +128,7 @@ struct boss_darkweaver_sythAI : public ScriptedAI
 
     void JustSummoned(Creature *summoned)
     {
-        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             summoned->AI()->AttackStart(pTarget);
     }
 
@@ -138,10 +139,10 @@ struct boss_darkweaver_sythAI : public ScriptedAI
         if (me->IsNonMeleeSpellCasted(false))
             me->InterruptNonMeleeSpells(false);
 
-        DoCast(me,SPELL_SUMMON_SYTH_ARCANE,true);   //front
-        DoCast(me,SPELL_SUMMON_SYTH_FIRE,true);     //back
-        DoCast(me,SPELL_SUMMON_SYTH_FROST,true);    //left
-        DoCast(me,SPELL_SUMMON_SYTH_SHADOW,true);   //right
+        DoCast(me, SPELL_SUMMON_SYTH_ARCANE, true);   //front
+        DoCast(me, SPELL_SUMMON_SYTH_FIRE, true);     //back
+        DoCast(me, SPELL_SUMMON_SYTH_FROST, true);    //left
+        DoCast(me, SPELL_SUMMON_SYTH_SHADOW, true);   //right
     }
 
     void UpdateAI(const uint32 diff)
@@ -169,40 +170,40 @@ struct boss_darkweaver_sythAI : public ScriptedAI
 
         if (flameshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_FLAME_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_FLAME_SHOCK);
 
             flameshock_timer = 10000 + rand()%5000;
         } else flameshock_timer -= diff;
 
         if (arcaneshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_ARCANE_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_ARCANE_SHOCK);
 
             arcaneshock_timer = 10000 + rand()%5000;
         } else arcaneshock_timer -= diff;
 
         if (frostshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_FROST_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_FROST_SHOCK);
 
             frostshock_timer = 10000 + rand()%5000;
         } else frostshock_timer -= diff;
 
         if (shadowshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_SHADOW_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_SHADOW_SHOCK);
 
             shadowshock_timer = 10000 + rand()%5000;
         } else shadowshock_timer -= diff;
 
         if (chainlightning_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_CHAIN_LIGHTNING);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_CHAIN_LIGHTNING);
 
             chainlightning_timer = 25000;
         } else chainlightning_timer -= diff;
@@ -211,9 +212,9 @@ struct boss_darkweaver_sythAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_darkweaver_syth(Creature* pCreature)
+CreatureAI* GetAI_boss_darkweaver_syth(Creature* creature)
 {
-    return new boss_darkweaver_sythAI (pCreature);
+    return new boss_darkweaver_sythAI (creature);
 }
 
 /* ELEMENTALS */
@@ -246,16 +247,16 @@ struct mob_syth_fireAI : public ScriptedAI
 
         if (flameshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_FLAME_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_FLAME_SHOCK);
 
             flameshock_timer = 5000;
         } else flameshock_timer -= diff;
 
         if (flamebuffet_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_FLAME_BUFFET);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_FLAME_BUFFET);
 
             flamebuffet_timer = 5000;
         } else flamebuffet_timer -= diff;
@@ -264,9 +265,9 @@ struct mob_syth_fireAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_fire(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_fire(Creature* creature)
 {
-    return new mob_syth_fireAI (pCreature);
+    return new mob_syth_fireAI (creature);
 }
 
 struct mob_syth_arcaneAI : public ScriptedAI
@@ -297,16 +298,16 @@ struct mob_syth_arcaneAI : public ScriptedAI
 
         if (arcaneshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_ARCANE_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_ARCANE_SHOCK);
 
             arcaneshock_timer = 5000;
         } else arcaneshock_timer -= diff;
 
         if (arcanebuffet_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_ARCANE_BUFFET);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_ARCANE_BUFFET);
 
             arcanebuffet_timer = 5000;
         } else arcanebuffet_timer -= diff;
@@ -315,9 +316,9 @@ struct mob_syth_arcaneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_arcane(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_arcane(Creature* creature)
 {
-    return new mob_syth_arcaneAI (pCreature);
+    return new mob_syth_arcaneAI (creature);
 }
 
 struct mob_syth_frostAI : public ScriptedAI
@@ -348,16 +349,16 @@ struct mob_syth_frostAI : public ScriptedAI
 
         if (frostshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_FROST_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_FROST_SHOCK);
 
             frostshock_timer = 5000;
         } else frostshock_timer -= diff;
 
         if (frostbuffet_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_FROST_BUFFET);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_FROST_BUFFET);
 
             frostbuffet_timer = 5000;
         } else frostbuffet_timer -= diff;
@@ -366,9 +367,9 @@ struct mob_syth_frostAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_frost(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_frost(Creature* creature)
 {
-    return new mob_syth_frostAI (pCreature);
+    return new mob_syth_frostAI (creature);
 }
 
 struct mob_syth_shadowAI : public ScriptedAI
@@ -399,16 +400,16 @@ struct mob_syth_shadowAI : public ScriptedAI
 
         if (shadowshock_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_SHADOW_SHOCK);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_SHADOW_SHOCK);
 
             shadowshock_timer = 5000;
         } else shadowshock_timer -= diff;
 
         if (shadowbuffet_timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_SHADOW_BUFFET);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_SHADOW_BUFFET);
 
             shadowbuffet_timer = 5000;
         } else shadowbuffet_timer -= diff;
@@ -417,9 +418,9 @@ struct mob_syth_shadowAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_syth_shadow(Creature* pCreature)
+CreatureAI* GetAI_mob_syth_shadow(Creature* creature)
 {
-    return new mob_syth_shadowAI (pCreature);
+    return new mob_syth_shadowAI (creature);
 }
 
 void AddSC_boss_darkweaver_syth()

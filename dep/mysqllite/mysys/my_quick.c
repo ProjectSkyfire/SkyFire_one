@@ -31,7 +31,7 @@ size_t my_quick_read(File Filedes,uchar *Buffer,size_t Count,myf MyFlags)
 #else
   readbytes= read(Filedes, Buffer, Count);
 #endif
-  if(readbytes != Count)
+  if (readbytes != Count)
   {
 #ifndef DBUG_OFF
     if ((readbytes == 0 || readbytes == (size_t) -1) && errno == EINTR)

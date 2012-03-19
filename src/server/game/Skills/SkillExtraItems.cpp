@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -20,7 +21,7 @@
 #include "SkillExtraItems.h"
 #include "Database/DatabaseEnv.h"
 #include "Log.h"
-#include "ProgressBar.h"
+
 #include "Player.h"
 #include <map>
 
@@ -46,7 +47,7 @@ struct SkillExtraItemEntry
 };
 
 // map to store the extra item creation info, the key is the spellId of the creation spell, the mapped value is the assigned SkillExtraItemEntry
-typedef std::map<uint32,SkillExtraItemEntry> SkillExtraItemMap;
+typedef std::map<uint32, SkillExtraItemEntry> SkillExtraItemMap;
 
 SkillExtraItemMap SkillExtraItemStore;
 
@@ -62,39 +63,36 @@ void LoadSkillExtraItemTable()
 
     if (result)
     {
-        barGoLink bar(result->GetRowCount());
-
         do
         {
             Field *fields = result->Fetch();
-            bar.step();
 
             uint32 spellId = fields[0].GetUInt32();
 
             if (!sSpellStore.LookupEntry(spellId))
             {
-                sLog.outError("Skill specialization %u has non-existent spell id in skill_extra_item_template!", spellId);
+                sLog->outError("Skill specialization %u has non-existent spell id in skill_extra_item_template!", spellId);
                 continue;
             }
 
             uint32 requiredSpecialization = fields[1].GetUInt32();
             if (!sSpellStore.LookupEntry(requiredSpecialization))
             {
-                sLog.outError("Skill specialization %u has invalid required specialization spell id %u in skill_extra_item_template!", spellId,requiredSpecialization);
+                sLog->outError("Skill specialization %u has invalid required specialization spell id %u in skill_extra_item_template!", spellId, requiredSpecialization);
                 continue;
             }
 
             float additionalCreateChance = fields[2].GetFloat();
             if (additionalCreateChance <= 0.0f)
             {
-                sLog.outError("Skill specialization %u has too low additional create chance in skill_extra_item_template!", spellId);
+                sLog->outError("Skill specialization %u has too low additional create chance in skill_extra_item_template!", spellId);
                 continue;
             }
 
             uint8 additionalMaxNum = fields[3].GetUInt8();
             if (!additionalMaxNum)
             {
-                sLog.outError("Skill specialization %u has 0 max number of extra items in skill_extra_item_template!", spellId);
+                sLog->outError("Skill specialization %u has 0 max number of extra items in skill_extra_item_template!", spellId);
                 continue;
             }
 
@@ -107,13 +105,13 @@ void LoadSkillExtraItemTable()
             ++count;
         } while (result->NextRow());
 
-        sLog.outString();
-        sLog.outString(">> Loaded %u spell specialization definitions", count);
+        sLog->outString();
+        sLog->outString(">> Loaded %u spell specialization definitions", count);
     }
     else
     {
-        sLog.outString();
-        sLog.outString(">> Loaded 0 spell specialization definitions. DB table skill_extra_item_template is empty.");
+        sLog->outString();
+        sLog->outString(">> Loaded 0 spell specialization definitions. DB table skill_extra_item_template is empty.");
     }
 }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -37,7 +38,7 @@ enum EventAI_Type
     EVENT_T_TIMER                   = 0,                    // InitialMin, InitialMax, RepeatMin, RepeatMax
     EVENT_T_TIMER_OOC               = 1,                    // InitialMin, InitialMax, RepeatMin, RepeatMax
     EVENT_T_HP                      = 2,                    // HPMax%, HPMin%, RepeatMin, RepeatMax
-    EVENT_T_MANA                    = 3,                    // ManaMax%,ManaMin% RepeatMin, RepeatMax
+    EVENT_T_MANA                    = 3,                    // ManaMax%, ManaMin% RepeatMin, RepeatMax
     EVENT_T_AGGRO                   = 4,                    // NONE
     EVENT_T_KILL                    = 5,                    // RepeatMin, RepeatMax
     EVENT_T_DEATH                   = 6,                    // NONE
@@ -109,9 +110,9 @@ enum EventAI_ActionType
     ACTION_T_DIE                        = 37,               // No Params
     ACTION_T_ZONE_COMBAT_PULSE          = 38,               // No Params
     ACTION_T_CALL_FOR_HELP              = 39,               // Radius
-    ACTION_T_SET_SHEATH                 = 40,               // Sheath (0-passive,1-melee,2-ranged)
+    ACTION_T_SET_SHEATH                 = 40,               // Sheath (0-passive, 1-melee, 2-ranged)
     ACTION_T_FORCE_DESPAWN              = 41,               // No Params
-    ACTION_T_SET_INVINCIBILITY_HP_LEVEL = 42,               // MinHpValue, format(0-flat,1-percent from max health)
+    ACTION_T_SET_INVINCIBILITY_HP_LEVEL = 42,               // MinHpValue, format(0-flat, 1-percent from max health)
 
     ACTION_T_SET_ACTIVE                 = 101,  //Apply
     ACTION_T_SET_AGGRESSIVE             = 102,  //Apply
@@ -592,7 +593,7 @@ class CreatureEventAI : public CreatureAI
         void SpellHit(Unit* pUnit, const SpellEntry* pSpell);
         void DamageTaken(Unit* done_by, uint32& damage);
         void UpdateAI(const uint32 diff);
-        void ReceiveEmote(Player* pPlayer, uint32 text_emote);
+        void ReceiveEmote(Player* player, uint32 text_emote);
         static int Permissible(const Creature *);
 
         bool ProcessEvent(CreatureEventAIHolder& pHolder, Unit* pActionInvoker = NULL);
@@ -625,4 +626,3 @@ class CreatureEventAI : public CreatureAI
         uint32 InvinceabilityHpLevel;                       // Minimal health level allowed at damage apply
 };
 #endif
-

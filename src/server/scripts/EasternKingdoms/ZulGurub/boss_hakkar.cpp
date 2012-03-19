@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -124,7 +125,7 @@ struct boss_hakkarAI : public ScriptedAI
         //CauseInsanity_Timer
         /*if (CauseInsanity_Timer <= diff)
         {
-        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
         DoCast(pTarget, SPELL_CAUSEINSANITY);
 
         CauseInsanity_Timer = 35000 + rand()%8000;
@@ -133,7 +134,7 @@ struct boss_hakkarAI : public ScriptedAI
         //WillOfHakkar_Timer
         if (WillOfHakkar_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_WILLOFHAKKAR);
 
             WillOfHakkar_Timer = 25000 + rand()%10000;
@@ -236,9 +237,9 @@ struct boss_hakkarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_hakkar(Creature* pCreature)
+CreatureAI* GetAI_boss_hakkar(Creature* creature)
 {
-    return new boss_hakkarAI (pCreature);
+    return new boss_hakkarAI (creature);
 }
 
 void AddSC_boss_hakkar()

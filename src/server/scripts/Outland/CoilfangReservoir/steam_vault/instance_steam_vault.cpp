@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -39,7 +40,7 @@ EndScriptData */
 3 - Warlord Kalithresh Event
 */
 
-bool GOHello_go_main_chambers_access_panel(Player *player, GameObject* _GO)
+bool GOHello_go_main_chambers_access_panel(Player* player, GameObject* _GO)
 {
     ScriptedInstance* pInstance = _GO->GetInstanceData();
 
@@ -47,10 +48,10 @@ bool GOHello_go_main_chambers_access_panel(Player *player, GameObject* _GO)
         return false;
 
     if (_GO->GetEntry() == ACCESS_PANEL_HYDRO && (pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE || pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL))
-        pInstance->SetData(TYPE_HYDROMANCER_THESPIA,SPECIAL);
+        pInstance->SetData(TYPE_HYDROMANCER_THESPIA, SPECIAL);
 
     if (_GO->GetEntry() == ACCESS_PANEL_MEK && (pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE || pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL))
-        pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER,SPECIAL);
+        pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, SPECIAL);
 
     return true;
 }
@@ -104,23 +105,23 @@ struct instance_steam_vault : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Steamvault: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Steamvault: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-            case 17797: ThespiaGUID = pCreature->GetGUID(); break;
-            case 17796: MekgineerGUID = pCreature->GetGUID(); break;
-            case 17798: KalithreshGUID = pCreature->GetGUID(); break;
+            case 17797: ThespiaGUID = creature->GetGUID(); break;
+            case 17796: MekgineerGUID = creature->GetGUID(); break;
+            case 17798: KalithreshGUID = creature->GetGUID(); break;
         }
     }
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
             case MAIN_CHAMBERS_DOOR: MainChambersDoor = pGo->GetGUID(); break;
             case ACCESS_PANEL_HYDRO: AccessPanelHydro = pGo->GetGUID(); break;
@@ -130,43 +131,43 @@ struct instance_steam_vault : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        Player *player = GetPlayerInMap();
+        Player* player = GetPlayerInMap();
 
         if (!player)
         {
-            debug_log("OSCR: Instance Steamvault: SetData (Type: %u Data %u) cannot find any player.", type, data);
+            sLog->outDebug("TSCR: Instance Steamvault: SetData (Type: %u Data %u) cannot find any player.", type, data);
             return;
         }
 
-        switch(type)
+        switch (type)
         {
             case TYPE_HYDROMANCER_THESPIA:
                 if (data == SPECIAL)
                 {
-                    if (GameObject *_go = GameObject::GetGameObject(*player,AccessPanelHydro))
+                    if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelHydro))
                         _go->SetGoState(GO_STATE_ACTIVE);
 
                     if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
                     {
-                        if (GameObject *_go = GameObject::GetGameObject(*player,MainChambersDoor))
+                        if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
                             _go->SetGoState(GO_STATE_ACTIVE);
                     }
-                    debug_log("OSCR: Instance Steamvault: Access panel used.");
+                    sLog->outDebug("TSCR: Instance Steamvault: Access panel used.");
                 }
                 Encounter[0] = data;
                 break;
             case TYPE_MEKGINEER_STEAMRIGGER:
                 if (data == SPECIAL)
                 {
-                    if (GameObject *_go = GameObject::GetGameObject(*player,AccessPanelMek))
+                    if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelMek))
                         _go->SetGoState(GO_STATE_ACTIVE);
 
                     if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
                     {
-                     if (GameObject *_go = GameObject::GetGameObject(*player,MainChambersDoor))
+                     if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
                       _go->SetGoState(GO_STATE_ACTIVE);
                     }
-                    debug_log("OSCR: Instance Steamvault: Access panel used.");
+                    sLog->outDebug("TSCR: Instance Steamvault: Access panel used.");
                 }
                 Encounter[1] = data;
                 break;
@@ -184,7 +185,7 @@ struct instance_steam_vault : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case TYPE_HYDROMANCER_THESPIA:
                 return Encounter[0];
@@ -200,7 +201,7 @@ struct instance_steam_vault : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        switch(data)
+        switch (data)
         {
             case DATA_THESPIA:
                 return ThespiaGUID;

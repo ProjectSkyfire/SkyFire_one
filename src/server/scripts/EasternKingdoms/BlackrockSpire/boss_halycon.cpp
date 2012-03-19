@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -76,16 +77,16 @@ struct boss_halyconAI : public ScriptedAI
         //Summon Gizrul
         if (!Summoned && me->GetHealth()*100 / me->GetMaxHealth() < 25)
         {
-            me->SummonCreature(10268,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
+            me->SummonCreature(10268, ADD_1X, ADD_1Y, ADD_1Z, ADD_1O, TEMPSUMMON_TIMED_DESPAWN, 300000);
             Summoned = true;
         }
 
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_halycon(Creature* pCreature)
+CreatureAI* GetAI_boss_halycon(Creature* creature)
 {
-    return new boss_halyconAI (pCreature);
+    return new boss_halyconAI (creature);
 }
 
 void AddSC_boss_halycon()

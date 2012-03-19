@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -18,17 +18,16 @@
  */
 
 #include "DatabaseEnv.h"
-#include "Config.h"
+#include "Configuration/Config.h"
 
 #include "Common.h"
 #include "UpdateFields.h"
 
 #include "Util.h"
-#include "Policies/SingletonImp.h"
 #include "Define.h"
 #include "Threading.h"
-#include "Database/SqlDelayThread.h"
-#include "Database/SqlOperations.h"
+#include "SqlDelayThread.h"
+#include "SqlOperations.h"
 #include "Timer.h"
 
 #include <ctime>
@@ -47,7 +46,7 @@ Database::Database() : mMysql(NULL)
 
         if (!mysql_thread_safe())
         {
-            sLog.outError("FATAL ERROR: Used MySQL library isn't thread-safe.");
+            sLog->outError("FATAL ERROR: Used MySQL library isn't thread-safe.");
             exit(1);
         }
     }
@@ -66,24 +65,24 @@ Database::~Database()
         mysql_library_end();
 }
 
-bool Database::Initialize(const char *infoString)
+bool Database::Initialize(const char* infoString)
 {
     // Enable logging of SQL commands (usally only GM commands)
     // (See method: PExecuteLog)
-    m_logSQL = sConfig.GetBoolDefault("LogSQL", false);
-    m_logsDir = sConfig.GetStringDefault("LogsDir","");
+    m_logSQL = ConfigMgr::GetBoolDefault("LogSQL", false);
+    m_logsDir = ConfigMgr::GetStringDefault("LogsDir","");
     if (!m_logsDir.empty())
     {
-        if ((m_logsDir.at(m_logsDir.length()-1)!='/') && (m_logsDir.at(m_logsDir.length()-1)!='\\'))
+        if ((m_logsDir.at(m_logsDir.length() -1) !='/') && (m_logsDir.at(m_logsDir.length() -1) !='\\'))
             m_logsDir.append("/");
     }
 
     tranThread = NULL;
-    MYSQL *mysqlInit;
+    MYSQL* mysqlInit;
     mysqlInit = mysql_init(NULL);
     if (!mysqlInit)
     {
-        sLog.outError("Could not initialize Mysql connection");
+        sLog->outError("Could not initialize Mysql connection");
         return false;
     }
 
@@ -112,20 +111,20 @@ bool Database::Initialize(const char *infoString)
 
     mysql_options(mysqlInit, MYSQL_SET_CHARSET_NAME, "utf8");
     #ifdef _WIN32
-    if (host==".")                                           // named pipe use option (Windows)
+    if (host == ".")      // named pipe use option (Windows)
     {
         unsigned int opt = MYSQL_PROTOCOL_PIPE;
         mysql_options(mysqlInit, MYSQL_OPT_PROTOCOL, (char const*)&opt);
         port = 0;
         unix_socket = 0;
     }
-    else                                                    // generic case
+    else     // generic case
     {
         port = atoi(port_or_socket.c_str());
         unix_socket = 0;
     }
     #else
-    if (host==".")                                           // socket use option (Unix/Linux)
+    if (host == ".")      // socket use option (Unix/Linux)
     {
         unsigned int opt = MYSQL_PROTOCOL_SOCKET;
         mysql_options(mysqlInit, MYSQL_OPT_PROTOCOL, (char const*)&opt);
@@ -133,7 +132,7 @@ bool Database::Initialize(const char *infoString)
         port = 0;
         unix_socket = port_or_socket.c_str();
     }
-    else                                                    // generic case
+    else     // generic case
     {
         port = atoi(port_or_socket.c_str());
         unix_socket = 0;
@@ -145,14 +144,14 @@ bool Database::Initialize(const char *infoString)
 
     if (mMysql)
     {
-        sLog.outDetail("Connected to MySQL database at %s", host.c_str());
-        sLog.outString("MySQL client library: %s", mysql_get_client_info());
-        sLog.outString("MySQL server ver: %s ", mysql_get_server_info( mMysql));
+        sLog->outDetail("Connected to MySQL database at %s", host.c_str());
+        sLog->outString("MySQL client library: %s", mysql_get_client_info());
+        sLog->outString("MySQL server ver: %s ", mysql_get_server_info(mMysql));
 
         if (!mysql_autocommit(mMysql, 1))
-            sLog.outDetail("AUTOCOMMIT SUCCESSFULLY SET TO 1");
+            sLog->outDetail("AUTOCOMMIT SUCCESSFULLY SET TO 1");
         else
-            sLog.outDetail("AUTOCOMMIT NOT SET TO 1");
+            sLog->outDetail("AUTOCOMMIT NOT SET TO 1");
 
         // set connection properties to UTF8 to properly handle locales for different
         // server configs - core sends data in UTF8, so MySQL must expect UTF8 too
@@ -160,19 +159,19 @@ bool Database::Initialize(const char *infoString)
         PExecute("SET CHARACTER SET `utf8`");
 
     #if MYSQL_VERSION_ID >= 50003
-        my_bool my_true = (my_bool)1;
+        my_bool my_true = (my_bool) 1;
         if (mysql_options(mMysql, MYSQL_OPT_RECONNECT, &my_true))
-            sLog.outDetail("Failed to turn on MYSQL_OPT_RECONNECT.");
+            sLog->outDetail("Failed to turn on MYSQL_OPT_RECONNECT.");
         else
-           sLog.outDetail("Successfully turned on MYSQL_OPT_RECONNECT.");
+           sLog->outDetail("Successfully turned on MYSQL_OPT_RECONNECT.");
     #else
-        #warning "Your mySQL client lib version does not support reconnecting after a timeout.\nIf this causes you any trouble we advice you to upgrade your mySQL client libs to at least mySQL 5.0.13 to resolve this problem."
+        #warning "Your mySQL client lib version does not support reconnecting after a timeout.\nIf this causes you any trouble we advice you to upgrade your mySQL client libs to at least mySQL 6.0 to resolve this problem."
     #endif
         return true;
     }
     else
     {
-        sLog.outError("Could not connect to MySQL database at %s: %s\n", host.c_str(),mysql_error(mysqlInit));
+        sLog->outError("Could not connect to MySQL database at %s: %s\n", host.c_str(), mysql_error(mysqlInit));
         mysql_close(mysqlInit);
         return false;
     }
@@ -188,18 +187,18 @@ void Database::ThreadEnd()
     mysql_thread_end();
 }
 
-void Database::escape_string(std::string& str)
+void Database::EscapeString(std::string& str)
 {
     if (str.empty())
         return;
 
-    char* buf = new char[str.size()*2+1];
-    escape_string(buf,str.c_str(),str.size());
+    char* buf = new char[str.size()*2 + 1];
+    EscapeString(buf,str.c_str(), str.size());
     str = buf;
     delete[] buf;
 }
 
-unsigned long Database::escape_string(char *to, const char *from, unsigned long length)
+unsigned long Database::EscapeString(char* to, const char* from, unsigned long length)
 {
     if (!mMysql || !to || !from || !length)
         return 0;
@@ -207,7 +206,7 @@ unsigned long Database::escape_string(char *to, const char *from, unsigned long 
     return(mysql_real_escape_string(mMysql, to, from, length));
 }
 
-bool Database::PExecuteLog(const char * format,...)
+bool Database::PExecuteLog(const char* format, ...)
 {
     if (!format)
         return false;
@@ -218,9 +217,9 @@ bool Database::PExecuteLog(const char * format,...)
     int res = vsnprintf(szQuery, MAX_QUERY_LEN, format, ap);
     va_end(ap);
 
-    if (res==-1)
+    if (res == -1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s", format);
         return false;
     }
 
@@ -231,10 +230,10 @@ bool Database::PExecuteLog(const char * format,...)
         time(&curr);                                        // get current time_t value
         local=*(localtime(&curr));                          // dereference and assign
         char fName[128];
-        sprintf(fName, "%04d-%02d-%02d_logSQL.sql", local.tm_year+1900, local.tm_mon+1, local.tm_mday);
+        sprintf(fName, "%04d-%02d-%02d_logSQL.sql", local.tm_year + 1900, local.tm_mon + 1, local.tm_mday);
 
         FILE* log_file;
-        std::string logsDir_fname = m_logsDir+fName;
+        std::string logsDir_fname = m_logsDir + fName;
         log_file = fopen(logsDir_fname.c_str(), "a");
         if (log_file)
         {
@@ -244,14 +243,14 @@ bool Database::PExecuteLog(const char * format,...)
         else
         {
             // The file could not be opened
-            sLog.outError("SQL-Logging is disabled - Log file for the SQL commands could not be openend: %s",fName);
+            sLog->outError("SQL-Logging is disabled - Log file for the SQL commands could not be opened: %s", fName);
         }
     }
 
     return Execute(szQuery);
 }
 
-void Database::SetResultQueue(SqlResultQueue * queue)
+void Database::SetResultQueue(SqlResultQueue* queue)
 {
     m_queryQueues[ACE_Based::Thread::current()] = queue;
 }
@@ -269,14 +268,14 @@ bool Database::_Query(const char *sql, MYSQL_RES **pResult, MYSQL_FIELD **pField
         #endif
         if (mysql_query(mMysql, sql))
         {
-            sLog.outErrorDb("SQL: %s", sql);
-            sLog.outErrorDb("query ERROR: %s", mysql_error(mMysql));
+            sLog->outErrorDb("SQL: %s", sql);
+            sLog->outErrorDb("query ERROR: %s", mysql_error(mMysql));
             return false;
         }
         else
         {
             #ifdef TRINITY_DEBUG
-            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s,getMSTime()), sql );
+            sLog->outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql );
             #endif
         }
 
@@ -298,24 +297,24 @@ bool Database::_Query(const char *sql, MYSQL_RES **pResult, MYSQL_FIELD **pField
     return true;
 }
 
-QueryResult_AutoPtr Database::Query(const char *sql)
+QueryResult_AutoPtr Database::Query(const char* sql)
 {
-    MYSQL_RES *result = NULL;
-    MYSQL_FIELD *fields = NULL;
+    MYSQL_RES* result = NULL;
+    MYSQL_FIELD* fields = NULL;
     uint64 rowCount = 0;
     uint32 fieldCount = 0;
 
     if (!_Query(sql, &result, &fields, &rowCount, &fieldCount))
         return QueryResult_AutoPtr(NULL);
 
-    QueryResult *queryResult = new QueryResult(result, fields, rowCount, fieldCount);
+    QueryResult* queryResult = new QueryResult(result, fields, rowCount, fieldCount);
 
     queryResult->NextRow();
 
     return QueryResult_AutoPtr(queryResult);
 }
 
-QueryResult_AutoPtr Database::PQuery(const char *format,...)
+QueryResult_AutoPtr Database::PQuery(const char* format, ...)
 {
     if (!format)
         return QueryResult_AutoPtr(NULL);
@@ -328,17 +327,17 @@ QueryResult_AutoPtr Database::PQuery(const char *format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s", format);
         return QueryResult_AutoPtr(NULL);
     }
 
     return Query(szQuery);
 }
 
-QueryNamedResult* Database::QueryNamed(const char *sql)
+QueryNamedResult* Database::QueryNamed(const char* sql)
 {
-    MYSQL_RES *result = NULL;
-    MYSQL_FIELD *fields = NULL;
+    MYSQL_RES* result = NULL;
+    MYSQL_FIELD* fields = NULL;
     uint64 rowCount = 0;
     uint32 fieldCount = 0;
 
@@ -349,14 +348,14 @@ QueryNamedResult* Database::QueryNamed(const char *sql)
     for (uint32 i = 0; i < fieldCount; i++)
          names[i] = fields[i].name;
 
-    QueryResult *queryResult = new QueryResult(result, fields, rowCount, fieldCount);
+    QueryResult* queryResult = new QueryResult(result, fields, rowCount, fieldCount);
 
     queryResult->NextRow();
 
     return new QueryNamedResult(queryResult, names);
 }
 
-QueryNamedResult* Database::PQueryNamed(const char *format,...)
+QueryNamedResult* Database::PQueryNamed(const char* format, ...)
 {
     if (!format)
         return NULL;
@@ -369,14 +368,14 @@ QueryNamedResult* Database::PQueryNamed(const char *format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s", format);
         return false;
     }
 
     return QueryNamed(szQuery);
 }
 
-bool Database::Execute(const char *sql)
+bool Database::Execute(const char* sql)
 {
     if (!mMysql)
         return false;
@@ -397,7 +396,7 @@ bool Database::Execute(const char *sql)
     return true;
 }
 
-bool Database::PExecute(const char * format,...)
+bool Database::PExecute(const char* format, ...)
 {
     if (!format)
         return false;
@@ -410,11 +409,30 @@ bool Database::PExecute(const char * format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s", format);
         return false;
     }
 
     return Execute(szQuery);
+}
+
+bool Database::_UpdateDataBlobValue(const uint32 guid, const uint32 field, const int32 value)
+{
+    return PExecute(
+        "UPDATE characters SET data="
+        "CONCAT(SUBSTRING_INDEX(`data`,' ',%u),' ',"
+        "GREATEST(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`,' ',%u),' ',-1)+%i,0),"
+        "' ',SUBSTRING_INDEX(`data`,' ',%i)) WHERE guid=%u",
+        field, field+1, value, -int32(PLAYER_END-field), guid);
+}
+
+bool Database::_SetDataBlobValue(const uint32 guid, const uint32 field, const uint32 value)
+{
+    return PExecute(
+        "UPDATE characters SET data="
+        "CONCAT(SUBSTRING_INDEX(`data`,' ',%u),' ',"
+        "%u,' ',SUBSTRING_INDEX(`data`,' ',%i)) WHERE guid=%u",
+        field, value, -int32(PLAYER_END-field), guid);
 }
 
 bool Database::DirectExecute(const char* sql)
@@ -426,19 +444,19 @@ bool Database::DirectExecute(const char* sql)
         // guarded block for thread-safe mySQL request
         ACE_Guard<ACE_Thread_Mutex> query_connection_guard(mMutex);
 
-        #ifdef OREGON_DEBUG
+        #ifdef TRINITY_DEBUG
         uint32 _s = getMSTime();
         #endif
         if (mysql_query(mMysql, sql))
         {
-            sLog.outErrorDb("SQL: %s", sql);
-            sLog.outErrorDb("SQL ERROR: %s", mysql_error(mMysql));
+            sLog->outErrorDb("SQL: %s", sql);
+            sLog->outErrorDb("SQL ERROR: %s", mysql_error(mMysql));
             return false;
         }
         else
         {
-            #ifdef OREGON_DEBUG
-            sLog.outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s,getMSTime()), sql);
+            #ifdef TRINITY_DEBUG
+            sLog->outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
             #endif
         }
     }
@@ -446,7 +464,7 @@ bool Database::DirectExecute(const char* sql)
     return true;
 }
 
-bool Database::DirectPExecute(const char * format,...)
+bool Database::DirectPExecute(const char* format, ...)
 {
     if (!format)
         return false;
@@ -459,23 +477,60 @@ bool Database::DirectPExecute(const char * format,...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s", format);
         return false;
     }
 
     return DirectExecute(szQuery);
 }
 
-bool Database::_TransactionCmd(const char *sql)
+bool Database::CheckRequiredField(char const* table_name, char const* required_name)
+{
+    // check required field
+    QueryResult_AutoPtr result = PQuery("SELECT %s FROM %s LIMIT 1", required_name, table_name);
+    if (result)
+        return true;
+
+    // check fail, prepare readabale error message
+
+    // search current required_* field in DB
+    QueryNamedResult* result2 = PQueryNamed("SELECT* FROM %s LIMIT 1", table_name);
+    if (result2)
+    {
+        QueryFieldNames const& namesMap = result2->GetFieldNames();
+        std::string reqName;
+        for (QueryFieldNames::const_iterator itr = namesMap.begin(); itr != namesMap.end(); ++itr)
+        {
+            if (itr->substr(0, 9) == "required_")
+            {
+                reqName =* itr;
+                break;
+            }
+        }
+
+        delete result2;
+
+        if (!reqName.empty())
+        {
+            sLog->outErrorDb("Table `%s` have field `%s` but expected `%s`! Not all sql updates applied?", table_name, reqName.c_str(), required_name);
+        return false;
+        }
+    }
+            sLog->outErrorDb("Table `%s` not have required_* field but expected `%s`! Not all sql updates applied?", table_name, required_name);
+
+    return false;
+}
+
+bool Database::_TransactionCmd(const char* sql)
 {
     if (mysql_query(mMysql, sql))
     {
-        sLog.outError("SQL: %s", sql);
-        sLog.outError("SQL ERROR: %s", mysql_error(mMysql));
+        sLog->outError("SQL: %s", sql);
+        sLog->outError("SQL ERROR: %s", mysql_error(mMysql));
         return false;
     }
     else
-        DEBUG_LOG("SQL: %s", sql);
+        sLog->outDebug("SQL: %s", sql);
 
     return true;
 }

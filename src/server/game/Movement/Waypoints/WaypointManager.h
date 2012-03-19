@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_WAYPOINTMANAGER_H
-#define OREGON_WAYPOINTMANAGER_H
+#ifndef TRINITY_WAYPOINTMANAGER_H
+#define TRINITY_WAYPOINTMANAGER_H
 
 #include <ace/Singleton.h>
 #include <ace/Null_Mutex.h>
@@ -27,7 +28,7 @@
 struct WaypointData
 {
     uint32 id;
-    float x,y,z;
+    float x, y, z;
     bool run;
     uint32 delay;
     uint32 event_id;

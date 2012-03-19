@@ -73,7 +73,7 @@ File create_temp_file(char *to, const char *dir, const char *prefix,
    */
    if (!dir)
    {
-     if(GetTempPath(sizeof(path_buf), path_buf) > 0)
+     if (GetTempPath(sizeof(path_buf), path_buf) > 0)
        dir = path_buf;
    }
    /*

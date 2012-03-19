@@ -1935,7 +1935,7 @@ ACE_Log_Msg::log (const ACE_TCHAR *format_str,
                       (bp, bspace, format, wchar_t_str);
                   else
                     this_len = ACE_OS::sprintf (bp, format, wchar_t_str);
-                  if(sizeof(ACE_OS::WChar) != sizeof(wchar_t))
+                  if (sizeof(ACE_OS::WChar) != sizeof(wchar_t))
                     {
                       delete [] wchar_t_str;
                     }

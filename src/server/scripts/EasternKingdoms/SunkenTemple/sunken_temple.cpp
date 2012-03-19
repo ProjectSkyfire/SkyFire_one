@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2012 kb_z
  *
@@ -34,12 +35,12 @@ EndContentData */
 # at_malfurion_Stormrage_trigger
 #####*/
 
-bool AreaTrigger_at_malfurion_stormrage(Player* pPlayer, const AreaTriggerEntry * /*at*/)
+bool AreaTrigger_at_malfurion_stormrage(Player* player, const AreaTriggerEntry * /*at*/)
 {
-    if (ScriptedInstance* pInstance = pPlayer->GetInstanceData())
+    if (ScriptedInstance* pInstance = player->GetInstanceData())
     {
-        if (!pPlayer->FindNearestCreature(15362,15))
-            pPlayer->SummonCreature(15362, pPlayer->GetPositionX(), pPlayer->GetPositionY(), pPlayer->GetPositionZ(), -1.52, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
+        if (!player->FindNearestCreature(15362, 15))
+            player->SummonCreature(15362, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), -1.52, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
         return false;
     }
 return false;
@@ -48,12 +49,12 @@ return false;
 # go_atalai_statue
 #####*/
 
-bool GOHello_go_atalai_statue(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_atalai_statue(Player* player, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = pPlayer->GetInstanceData();
+    ScriptedInstance* pInstance = player->GetInstanceData();
     if (!pInstance)
         return false;
-    pInstance->SetData(EVENT_STATE,pGo->GetEntry());
+    pInstance->SetData(EVENT_STATE, pGo->GetEntry());
     return false;
 }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -111,13 +112,13 @@ void HostileRefManager::deleteReferences()
 //=================================================
 // delete one reference, defined by Unit
 
-void HostileRefManager::deleteReference(Unit *pCreature)
+void HostileRefManager::deleteReference(Unit *creature)
 {
     HostileReference* ref = getFirst();
     while (ref)
     {
         HostileReference* nextRef = ref->next();
-        if (ref->getSource()->getOwner() == pCreature)
+        if (ref->getSource()->getOwner() == creature)
         {
             ref->removeReference();
             delete ref;
@@ -130,13 +131,13 @@ void HostileRefManager::deleteReference(Unit *pCreature)
 //=================================================
 // set state for one reference, defined by Unit
 
-void HostileRefManager::setOnlineOfflineState(Unit *pCreature,bool pIsOnline)
+void HostileRefManager::setOnlineOfflineState(Unit *creature, bool pIsOnline)
 {
     HostileReference* ref = getFirst();
     while (ref)
     {
         HostileReference* nextRef = ref->next();
-        if (ref->getSource()->getOwner() == pCreature)
+        if (ref->getSource()->getOwner() == creature)
         {
             ref->setOnlineOfflineState(pIsOnline);
             break;

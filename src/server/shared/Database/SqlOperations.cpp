@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -84,7 +85,7 @@ void SqlQuery::Execute(Database *db)
 void SqlResultQueue::Update()
 {
     // execute the callbacks waiting in the synchronization queue
-    Oregon::IQueryCallback* callback;
+    Trinity::IQueryCallback* callback;
     while (next(callback))
     {
         callback->Execute();
@@ -92,7 +93,7 @@ void SqlResultQueue::Update()
     }
 }
 
-bool SqlQueryHolder::Execute(Oregon::IQueryCallback * callback, SqlDelayThread *thread, SqlResultQueue *queue)
+bool SqlQueryHolder::Execute(Trinity::IQueryCallback * callback, SqlDelayThread *thread, SqlResultQueue *queue)
 {
     if (!callback || !thread || !queue)
         return false;
@@ -108,14 +109,14 @@ bool SqlQueryHolder::SetQuery(size_t index, const char *sql)
 {
     if (m_queries.size() <= index)
     {
-        sLog.outError("Query index (%u) out of range (size: %u) for query: %s",index,(uint32)m_queries.size(),sql);
+        sLog->outError("Query index (%u) out of range (size: %u) for query: %s",index,(uint32)m_queries.size(),sql);
         return false;
     }
 
     if (m_queries[index].first != NULL)
     {
-        sLog.outError("Attempt assign query to holder index (%u) where other query stored (Old: [%s] New: [%s])",
-            index,m_queries[index].first,sql);
+        sLog->outError("Attempt assign query to holder index (%u) where other query stored (Old: [%s] New: [%s])",
+            index, m_queries[index].first, sql);
         return false;
     }
 
@@ -128,7 +129,7 @@ bool SqlQueryHolder::SetPQuery(size_t index, const char *format, ...)
 {
     if (!format)
     {
-        sLog.outError("Query (index: %u) is empty.",index);
+        sLog->outError("Query (index: %u) is empty.",index);
         return false;
     }
 
@@ -140,11 +141,11 @@ bool SqlQueryHolder::SetPQuery(size_t index, const char *format, ...)
 
     if (res==-1)
     {
-        sLog.outError("SQL Query truncated (and not execute) for format: %s",format);
+        sLog->outError("SQL Query truncated (and not execute) for format: %s",format);
         return false;
     }
 
-    return SetQuery(index,szQuery);
+    return SetQuery(index, szQuery);
 }
 
 QueryResult_AutoPtr SqlQueryHolder::GetResult(size_t index)

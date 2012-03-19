@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -47,7 +48,7 @@ bool Player::UpdateStats(Stats stat)
             pet->UpdateStats(stat);
     }
 
-    switch(stat)
+    switch (stat)
     {
         case STAT_STRENGTH:
             UpdateAttackPowerAndDamage();
@@ -160,7 +161,7 @@ void Player::UpdateArmor()
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
     // Druid Enrage armor reduction
-    if (HasAura(5229,0))
+    if (HasAura(5229, 0))
         value -= (m_form == FORM_DIREBEAR) ? 0.16*value : 0.27*value;
 
     SetArmor(int32(value));
@@ -236,13 +237,13 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
         index_mod = UNIT_FIELD_RANGED_ATTACK_POWER_MODS;
         index_mult = UNIT_FIELD_RANGED_ATTACK_POWER_MULTIPLIER;
 
-        switch(getClass())
+        switch (getClass())
         {
             case CLASS_HUNTER: val2 = level * 2.0f + GetStat(STAT_AGILITY) - 10.0f;    break;
             case CLASS_ROGUE:  val2 = level        + GetStat(STAT_AGILITY) - 10.0f;    break;
             case CLASS_WARRIOR:val2 = level        + GetStat(STAT_AGILITY) - 10.0f;    break;
             case CLASS_DRUID:
-                switch(m_form)
+                switch (m_form)
                 {
                     case FORM_CAT:
                     case FORM_BEAR:
@@ -257,7 +258,7 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
     }
     else
     {
-        switch(getClass())
+        switch (getClass())
         {
             case CLASS_WARRIOR: val2 = level*3.0f + GetStat(STAT_STRENGTH)*2.0f                    - 20.0f; break;
             case CLASS_PALADIN: val2 = level*3.0f + GetStat(STAT_STRENGTH)*2.0f                    - 20.0f; break;
@@ -268,7 +269,7 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
             {
                 //Check if Predatory Strikes is skilled
                 float mLevelMult = 0.0;
-                switch(m_form)
+                switch (m_form)
                 {
                     case FORM_CAT:
                     case FORM_BEAR:
@@ -290,7 +291,7 @@ void Player::UpdateAttackPowerAndDamage(bool ranged)
                     default: break;
                 }
 
-                switch(m_form)
+                switch (m_form)
                 {
                     case FORM_CAT:
                         val2 = getLevel()*(mLevelMult+2.0f) + GetStat(STAT_STRENGTH)*2.0f + GetStat(STAT_AGILITY) - 20.0f; break;
@@ -358,7 +359,7 @@ void Player::CalculateMinMaxDamage(WeaponAttackType attType, bool normalized, fl
     UnitMods unitMod;
     UnitMods attPower;
 
-    switch(attType)
+    switch (attType)
     {
         case BASE_ATTACK:
         default:
@@ -375,7 +376,7 @@ void Player::CalculateMinMaxDamage(WeaponAttackType attType, bool normalized, fl
             break;
     }
 
-    float att_speed = GetAPMultiplier(attType,normalized);
+    float att_speed = GetAPMultiplier(attType, normalized);
 
     float base_value  = GetModifierValue(unitMod, BASE_VALUE) + GetTotalAttackPowerValue(attType)/ 14.0f * att_speed;
     float base_pct    = GetModifierValue(unitMod, BASE_PCT);
@@ -419,22 +420,22 @@ void Player::UpdateDamagePhysical(WeaponAttackType attType)
     float mindamage;
     float maxdamage;
 
-    CalculateMinMaxDamage(attType,false,mindamage,maxdamage);
+    CalculateMinMaxDamage(attType, false, mindamage, maxdamage);
 
-    switch(attType)
+    switch (attType)
     {
         case BASE_ATTACK:
         default:
-            SetStatFloatValue(UNIT_FIELD_MINDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE, maxdamage);
             break;
         case OFF_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, maxdamage);
             break;
         case RANGED_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE, maxdamage);
             break;
     }
 }
@@ -471,7 +472,7 @@ void Player::UpdateCritPercentage(WeaponAttackType attType)
     uint16 index;
     CombatRating cr;
 
-    switch(attType)
+    switch (attType)
     {
         case OFF_ATTACK:
             modGroup = OFFHAND_CRIT_PERCENTAGE;
@@ -596,7 +597,7 @@ void Player::UpdateExpertise(WeaponAttackType attack)
     if (expertise < 0)
         expertise = 0;
 
-    switch(attack)
+    switch (attack)
     {
         case BASE_ATTACK: SetUInt32Value(PLAYER_EXPERTISE, expertise);         break;
         case OFF_ATTACK:  SetUInt32Value(PLAYER_OFFHAND_EXPERTISE, expertise); break;
@@ -759,7 +760,7 @@ void Creature::UpdateAttackPowerAndDamage(bool ranged)
 void Creature::UpdateDamagePhysical(WeaponAttackType attType)
 {
     UnitMods unitMod;
-    switch(attType)
+    switch (attType)
     {
         case BASE_ATTACK:
         default:
@@ -798,20 +799,20 @@ void Creature::UpdateDamagePhysical(WeaponAttackType attType)
     float mindamage = ((base_value + weapon_mindamage) * base_pct + total_value) * total_pct ;
     float maxdamage = ((base_value + weapon_maxdamage) * base_pct + total_value) * total_pct ;
 
-    switch(attType)
+    switch (attType)
     {
         case BASE_ATTACK:
         default:
-            SetStatFloatValue(UNIT_FIELD_MINDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXDAMAGE, maxdamage);
             break;
         case OFF_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE, maxdamage);
             break;
         case RANGED_ATTACK:
-            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE,mindamage);
-            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE,maxdamage);
+            SetStatFloatValue(UNIT_FIELD_MINRANGEDDAMAGE, mindamage);
+            SetStatFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE, maxdamage);
             break;
     }
 }
@@ -845,7 +846,7 @@ bool Pet::UpdateStats(Stats stat)
 
     SetStat(stat, int32(value));
 
-    switch(stat)
+    switch (stat)
     {
         case STAT_STRENGTH:         UpdateAttackPowerAndDamage();        break;
         case STAT_AGILITY:          UpdateArmor();                       break;
@@ -1056,7 +1057,7 @@ void Pet::UpdateDamagePhysical(WeaponAttackType attType)
     //  Pet's base damage changes depending on happiness
     if (getPetType() == HUNTER_PET && attType == BASE_ATTACK)
     {
-        switch(GetHappinessState())
+        switch (GetHappinessState())
         {
             case HAPPY:
                 // 125% of normal damage

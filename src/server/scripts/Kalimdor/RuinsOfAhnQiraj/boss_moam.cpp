@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -48,7 +49,7 @@ struct boss_moamAI : public ScriptedAI
 
     void Reset()
     {
-        i=0;
+        i = 0;
         j=0;
         pTarget = NULL;
         TRAMPLE_Timer = 30000;
@@ -107,9 +108,9 @@ struct boss_moamAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_moam(Creature* pCreature)
+CreatureAI* GetAI_boss_moam(Creature* creature)
 {
-    return new boss_moamAI (pCreature);
+    return new boss_moamAI (creature);
 }
 
 void AddSC_boss_moam()

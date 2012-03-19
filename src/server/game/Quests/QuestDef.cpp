@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -133,7 +134,7 @@ Quest::Quest(Field * questRecord)
     m_rewitemscount = 0;
     m_rewchoiceitemscount = 0;
 
-    for (int i=0; i < QUEST_OBJECTIVES_COUNT; i++)
+    for (int i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
     {
         if (ReqItemId[i])
             ++m_reqitemscount;
@@ -141,26 +142,26 @@ Quest::Quest(Field * questRecord)
             ++m_reqCreatureOrGOcount;
     }
 
-    for (int i=0; i < QUEST_REWARDS_COUNT; i++)
+    for (int i = 0; i < QUEST_REWARDS_COUNT; i++)
     {
         if (RewItemId[i])
             ++m_rewitemscount;
     }
 
-    for (int i=0; i < QUEST_REWARD_CHOICES_COUNT; i++)
+    for (int i = 0; i < QUEST_REWARD_CHOICES_COUNT; i++)
     {
         if (RewChoiceItemId[i])
             ++m_rewchoiceitemscount;
     }
 }
 
-uint32 Quest::XPValue (Player *pPlayer) const
+uint32 Quest::XPValue (Player* player) const
 {
-    if (pPlayer)
+    if (player)
     {
         if (RewMoneyMaxLevel > 0)
         {
-            uint32 pLevel = pPlayer->getLevel();
+            uint32 pLevel = player->getLevel();
             uint32 qLevel = (QuestLevel > 0) ? QuestLevel : pLevel;
             float fullxp = 0;
             if (qLevel >= 65)
@@ -198,6 +199,6 @@ int32 Quest::GetRewOrReqMoney() const
     if (RewOrReqMoney <= 0)
         return RewOrReqMoney;
 
-    return int32(RewOrReqMoney * sWorld.getRate(RATE_DROP_MONEY));
+    return int32(RewOrReqMoney * sWorld->getRate(RATE_DROP_MONEY));
 }
 

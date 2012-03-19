@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -229,7 +230,7 @@ struct boss_twinemperorsAI : public ScriptedAI
 
             Map *thismap = me->GetMap();
             thismap->CreatureRelocation(pOtherBoss, me->GetPositionX(),
-                me->GetPositionY(),    me->GetPositionZ(), me->GetOrientation());
+                me->GetPositionY(),   me->GetPositionZ(), me->GetOrientation());
             thismap->CreatureRelocation(me, other_x, other_y, other_z, other_o);
 
             SetAfterTeleport();
@@ -333,7 +334,7 @@ struct boss_twinemperorsAI : public ScriptedAI
 
     Creature *RespawnNearbyBugsAndGetOne()
     {
-        CellPair p(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+        CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
@@ -341,8 +342,8 @@ struct boss_twinemperorsAI : public ScriptedAI
         std::list<Creature*> unitList;
 
         AnyBugCheck u_check(me, 150);
-        Oregon::CreatureListSearcher<AnyBugCheck> searcher(unitList, u_check);
-        TypeContainerVisitor<Oregon::CreatureListSearcher<AnyBugCheck>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+        Trinity::CreatureListSearcher<AnyBugCheck> searcher(unitList, u_check);
+        TypeContainerVisitor<Trinity::CreatureListSearcher<AnyBugCheck>, GridTypeMapContainer >  grid_creature_searcher(searcher);
         cell.Visit(p, grid_creature_searcher, *(me->GetMap()));
 
         Creature *nearb = NULL;
@@ -445,7 +446,7 @@ struct boss_veknilashAI : public boss_twinemperorsAI
         pTarget->setFaction(14);
         ((CreatureAI*)pTarget->AI())->AttackStart(me->getThreatManager().getHostileTarget());
         SpellEntry *spell = (SpellEntry *)GetSpellStore()->LookupEntry(SPELL_MUTATE_BUG);
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (!spell->Effect[i])
                 continue;
@@ -474,7 +475,7 @@ struct boss_veknilashAI : public boss_twinemperorsAI
         {
             Unit* randomMelee = SelectTarget(SELECT_TARGET_RANDOM, 0, NOMINAL_MELEE_RANGE, true);
             if (randomMelee)
-                DoCast(randomMelee,SPELL_UPPERCUT);
+                DoCast(randomMelee, SPELL_UPPERCUT);
             UpperCut_Timer = 15000+rand()%15000;
         } else UpperCut_Timer -= diff;
 
@@ -528,7 +529,7 @@ struct boss_veklorAI : public boss_twinemperorsAI
     {
         pTarget->setFaction(14);
         SpellEntry *spell = (SpellEntry *)GetSpellStore()->LookupEntry(SPELL_EXPLODEBUG);
-        for (int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (!spell->Effect[i])
                 continue;
@@ -567,7 +568,7 @@ struct boss_veklorAI : public boss_twinemperorsAI
             Unit *pTarget = NULL;
             pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 45, true);
             if (pTarget)
-                DoCast(pTarget,SPELL_BLIZZARD);
+                DoCast(pTarget, SPELL_BLIZZARD);
             Blizzard_Timer = 15000+rand()%15000;
         } else Blizzard_Timer -= diff;
 
@@ -576,7 +577,7 @@ struct boss_veklorAI : public boss_twinemperorsAI
             Unit *mvic;
             if ((mvic=SelectTarget(SELECT_TARGET_NEAREST, 0, NOMINAL_MELEE_RANGE, true)) != NULL)
             {
-                DoCast(mvic,SPELL_ARCANEBURST);
+                DoCast(mvic, SPELL_ARCANEBURST);
                 ArcaneBurst_Timer = 5000;
             }
         } else ArcaneBurst_Timer -= diff;
@@ -615,14 +616,14 @@ struct boss_veklorAI : public boss_twinemperorsAI
     }
 };
 
-CreatureAI* GetAI_boss_veknilash(Creature* pCreature)
+CreatureAI* GetAI_boss_veknilash(Creature* creature)
 {
-    return new boss_veknilashAI (pCreature);
+    return new boss_veknilashAI (creature);
 }
 
-CreatureAI* GetAI_boss_veklor(Creature* pCreature)
+CreatureAI* GetAI_boss_veklor(Creature* creature)
 {
-    return new boss_veklorAI (pCreature);
+    return new boss_veklorAI (creature);
 }
 
 void AddSC_boss_twinemperors()

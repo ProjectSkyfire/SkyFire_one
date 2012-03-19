@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -139,7 +140,7 @@ struct npc_draenei_survivorAI : public ScriptedAI
                 //set creature health
                 me->SetHealth(int(me->GetMaxHealth()*.1));
                 // ley down
-                me->SetUInt32Value(UNIT_FIELD_BYTES_1,3);
+                me->SetUInt32Value(UNIT_FIELD_BYTES_1, 3);
             }
             else ResetlifeTimer -= diff;
         }
@@ -197,9 +198,9 @@ struct npc_draenei_survivorAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_npc_draenei_survivor(Creature* pCreature)
+CreatureAI* GetAI_npc_draenei_survivor(Creature* creature)
 {
-    return new npc_draenei_survivorAI (pCreature);
+    return new npc_draenei_survivorAI (creature);
 }
 
 /*######
@@ -258,28 +259,28 @@ struct npc_engineer_spark_overgrindAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature* pCreature)
+CreatureAI* GetAI_npc_engineer_spark_overgrind(Creature* creature)
 {
-    return new npc_engineer_spark_overgrindAI (pCreature);
+    return new npc_engineer_spark_overgrindAI (creature);
 }
 
-bool GossipHello_npc_engineer_spark_overgrind(Player *player, Creature* pCreature)
+bool GossipHello_npc_engineer_spark_overgrind(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(9537) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_FIGHT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_engineer_spark_overgrind(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_engineer_spark_overgrind(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF)
     {
         player->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(14);
-        DoScriptText(ATTACK_YELL, pCreature, player);
-        ((npc_engineer_spark_overgrindAI*)pCreature->AI())->AttackStart(player);
+        creature->setFaction(14);
+        DoScriptText(ATTACK_YELL, creature, player);
+        ((npc_engineer_spark_overgrindAI*)creature->AI())->AttackStart(player);
     }
     return true;
 }
@@ -313,9 +314,9 @@ struct npc_injured_draeneiAI : public ScriptedAI
     {
     }
 };
-CreatureAI* GetAI_npc_injured_draenei(Creature* pCreature)
+CreatureAI* GetAI_npc_injured_draenei(Creature* creature)
 {
-    return new npc_injured_draeneiAI (pCreature);
+    return new npc_injured_draeneiAI (creature);
 }
 
 /*######
@@ -340,26 +341,26 @@ struct npc_magwinAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        Player* pPlayer = GetPlayerForEscort();
+        Player* player = GetPlayerForEscort();
 
-        if (!pPlayer)
+        if (!player)
             return;
 
-        switch(i)
+        switch (i)
         {
         case 0:
-            DoScriptText(SAY_START, me, pPlayer);
+            DoScriptText(SAY_START, me, player);
             break;
         case 17:
-            DoScriptText(SAY_PROGRESS, me, pPlayer);
+            DoScriptText(SAY_PROGRESS, me, player);
             break;
         case 28:
-            DoScriptText(SAY_END1, me, pPlayer);
+            DoScriptText(SAY_END1, me, player);
             break;
         case 29:
-            DoScriptText(EMOTE_HUG, me, pPlayer);
-            DoScriptText(SAY_END2, me, pPlayer);
-            pPlayer->GroupEventHappens(QUEST_A_CRY_FOR_SAY_HELP,me);
+            DoScriptText(EMOTE_HUG, me, player);
+            DoScriptText(SAY_END2, me, player);
+            player->GroupEventHappens(QUEST_A_CRY_FOR_SAY_HELP, me);
             break;
         }
     }
@@ -372,20 +373,20 @@ struct npc_magwinAI : public npc_escortAI
     void Reset() { }
 };
 
-bool QuestAccept_npc_magwin(Player* pPlayer, Creature* pCreature, Quest const* quest)
+bool QuestAccept_npc_magwin(Player* player, Creature* creature, Quest const* quest)
 {
     if (quest->GetQuestId() == QUEST_A_CRY_FOR_SAY_HELP)
     {
-        pCreature->setFaction(113);
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_escortAI, pCreature->AI()))
-            pEscortAI->Start(true, false, pPlayer->GetGUID());
+        creature->setFaction(113);
+        if (npc_escortAI* pEscortAI = CAST_AI(npc_escortAI, creature->AI()))
+            pEscortAI->Start(true, false, player->GetGUID());
     }
     return true;
 }
 
-CreatureAI* GetAI_npc_magwinAI(Creature* pCreature)
+CreatureAI* GetAI_npc_magwinAI(Creature* creature)
 {
-    return new npc_magwinAI(pCreature);
+    return new npc_magwinAI(creature);
 }
 
 /*######
@@ -447,7 +448,7 @@ struct npc_geezleAI : public ScriptedAI
     {
         Unit* Spark = Unit::GetUnit((*me), SparkGUID);
 
-        switch(Step)
+        switch (Step)
         {
         case 0: return 99999;
         case 1:
@@ -475,7 +476,7 @@ struct npc_geezleAI : public ScriptedAI
             return 20000;
         case 10:
             if (Spark)
-                Spark->DealDamage(Spark,Spark->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                Spark->DealDamage(Spark, Spark->GetHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
             //DespawnNagaFlag(false);
             me->SetVisibility(VISIBILITY_OFF);
         default: return 99999999;
@@ -485,7 +486,7 @@ struct npc_geezleAI : public ScriptedAI
     void DespawnNagaFlag(bool despawn)
     {
         std::list<GameObject*> FlagList;
-        me->GetGameObjectListWithEntryInGrid(FlagList,GO_NAGA_FLAG, 100.0f);
+        me->GetGameObjectListWithEntryInGrid(FlagList, GO_NAGA_FLAG, 100.0f);
 
         if (!FlagList.empty())
         {
@@ -497,7 +498,7 @@ struct npc_geezleAI : public ScriptedAI
                 else
                     (*itr)->Respawn();
             }
-        } else error_log("SD2 ERROR: FlagList is empty!");
+        } else sLog->outError("SD2 ERROR: FlagList is empty!");
     }
 
     void UpdateAI(const uint32 diff)
@@ -512,9 +513,9 @@ struct npc_geezleAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_geezleAI(Creature* pCreature)
+CreatureAI* GetAI_npc_geezleAI(Creature* creature)
 {
-    return new npc_geezleAI(pCreature);
+    return new npc_geezleAI(creature);
 }
 
 /*######
@@ -567,9 +568,9 @@ struct mob_nestlewood_owlkinAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_nestlewood_owlkinAI(Creature* pCreature)
+CreatureAI* GetAI_mob_nestlewood_owlkinAI(Creature* creature)
 {
-    return new mob_nestlewood_owlkinAI (pCreature);
+    return new mob_nestlewood_owlkinAI (creature);
 }
 
 enum eRavegerCage
@@ -582,15 +583,15 @@ enum eRavegerCage
     QUEST_STRENGTH_ONE      = 9582
 };
 
-bool go_ravager_cage(Player* pPlayer, GameObject* pGo)
+bool go_ravager_cage(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_STRENGTH_ONE) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_STRENGTH_ONE) == QUEST_STATUS_INCOMPLETE)
     {
         if (Creature* ravager = pGo->FindNearestCreature(NPC_DEATH_RAVAGER, 5.0f, true))
         {
-            ravager->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+            ravager->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             ravager->SetReactState(REACT_AGGRESSIVE);
-            ravager->AI()->AttackStart(pPlayer);
+            ravager->AI()->AttackStart(player);
         }
     }
     return true ;
@@ -635,9 +636,9 @@ struct npc_death_ravagerAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_death_ravagerAI(Creature* pCreature)
+CreatureAI* GetAI_npc_death_ravagerAI(Creature* creature)
 {
-    return new npc_death_ravagerAI(pCreature);
+    return new npc_death_ravagerAI(creature);
 }
 
 /*########
@@ -680,22 +681,22 @@ struct npc_stillpine_capitiveAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_stillpine_capitiveAI(Creature* pCreature)
+CreatureAI* GetAI_npc_stillpine_capitiveAI(Creature* creature)
 {
-    return new npc_stillpine_capitiveAI(pCreature);
+    return new npc_stillpine_capitiveAI(creature);
 }
 
-bool go_bristlelimb_cage(Player* pPlayer, GameObject* pGo)
+bool go_bristlelimb_cage(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_THE_PROPHECY_OF_AKIDA) == QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_THE_PROPHECY_OF_AKIDA) == QUEST_STATUS_INCOMPLETE)
     {
-        Creature* pCreature = pGo->FindNearestCreature(NPC_STILLPINE_CAPITIVE, 5.0f, true);
-        if (pCreature)
+        Creature* creature = pGo->FindNearestCreature(NPC_STILLPINE_CAPITIVE, 5.0f, true);
+        if (creature)
         {
-            DoScriptText(RAND(CAPITIVE_SAY_1, CAPITIVE_SAY_2, CAPITIVE_SAY_3), pCreature, pPlayer);
-            pCreature->GetMotionMaster()->MoveFleeing(pPlayer, 3500);
-            pPlayer->KilledMonsterCredit(pCreature->GetEntry(), pCreature->GetGUID());
-            CAST_AI(npc_stillpine_capitiveAI, pCreature->AI())->FleeTimer = 3500;
+            DoScriptText(RAND(CAPITIVE_SAY_1, CAPITIVE_SAY_2, CAPITIVE_SAY_3), creature, player);
+            creature->GetMotionMaster()->MoveFleeing(player, 3500);
+            player->KilledMonsterCredit(creature->GetEntry(), creature->GetGUID());
+            CAST_AI(npc_stillpine_capitiveAI, creature->AI())->FleeTimer = 3500;
             return false;
         }
     }

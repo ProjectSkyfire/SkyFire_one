@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_CELLIMPL_H
-#define OREGON_CELLIMPL_H
+#ifndef TRINITY_CELLIMPL_H
+#define TRINITY_CELLIMPL_H
 
 #include "Cell.h"
 #include "Map.h"
@@ -54,7 +55,7 @@ Cell::Visit(const CellPair& standing_cell, TypeContainerVisitor<T, CONTAINER> &v
     CellPair begin_cell = standing_cell;
     CellPair end_cell = standing_cell;
 
-    switch(district)
+    switch (district)
     {
         case ALL_DISTRICT:
         {
@@ -120,7 +121,7 @@ Cell::Visit(const CellPair& standing_cell, TypeContainerVisitor<T, CONTAINER> &v
     {
         for (uint32 y = begin_cell.y_coord; y <= end_cell.y_coord; y++)
         {
-            CellPair cell_pair(x,y);
+            CellPair cell_pair(x, y);
             Cell r_zone(cell_pair);
             r_zone.data.Part.nocreate = data.Part.nocreate;
             m.Visit(r_zone, visitor);
@@ -218,7 +219,7 @@ Cell::Visit(const CellPair& standing_cell, TypeContainerVisitor<T, CONTAINER> &v
     {
         for (uint32 y = begin_cell.y_coord; y <= end_cell.y_coord; ++y)
         {
-            CellPair cell_pair(x,y);
+            CellPair cell_pair(x, y);
             //lets skip standing cell since we already visited it
             if (cell_pair != standing_cell)
             {
@@ -254,7 +255,7 @@ Cell::VisitCircle(TypeContainerVisitor<T, CONTAINER> &visitor, Map &m, const Cel
     {
         for (uint32 y = begin_cell.y_coord; y <= end_cell.y_coord; ++y)
         {
-            CellPair cell_pair(x,y);
+            CellPair cell_pair(x, y);
             Cell r_zone(cell_pair);
             r_zone.data.Part.nocreate = data.Part.nocreate;
             m.Visit(r_zone, visitor);

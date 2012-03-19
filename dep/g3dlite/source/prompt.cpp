@@ -270,7 +270,7 @@ struct PromptParams {
 
 INT_PTR CALLBACK PromptDlgProc(HWND hDlg, UINT msg,
                                WPARAM wParam, LPARAM lParam) {
-  switch(msg) {
+  switch (msg) {
     case WM_INITDIALOG:
       {
         PromptParams *params = (PromptParams*)lParam;

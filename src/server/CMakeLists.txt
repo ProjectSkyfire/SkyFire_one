@@ -1,4 +1,5 @@
-# Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+# Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
 # Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
@@ -25,7 +26,7 @@ if( SERVERS )
   add_subdirectory(shared)
   add_subdirectory(game)
   add_subdirectory(collision)
-  add_subdirectory(oregonrealm)
+  add_subdirectory(authserver)
   add_subdirectory(scripts)
   add_subdirectory(worldserver)
 else()

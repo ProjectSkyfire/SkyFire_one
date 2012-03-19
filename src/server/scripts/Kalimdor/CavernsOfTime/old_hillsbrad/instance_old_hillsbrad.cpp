@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -75,7 +76,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Old Hillsbrad: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Old Hillsbrad: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
@@ -89,43 +90,43 @@ struct instance_old_hillsbrad : public ScriptedInstance
             {
                 if (Player* player = itr->getSource())
                 {
-                    player->SendUpdateWorldState(WORLD_STATE_OH,mBarrelCount);
+                    player->SendUpdateWorldState(WORLD_STATE_OH, mBarrelCount);
 
                     if (mBarrelCount == 5)
-                        player->KilledMonsterCredit(LODGE_QUEST_TRIGGER,0);
+                        player->KilledMonsterCredit(LODGE_QUEST_TRIGGER, 0);
                 }
             }
         } else
-            debug_log("OSCR: Instance Old Hillsbrad: UpdateOHWorldState, but PlayerList is empty!");
+            sLog->outDebug("TSCR: Instance Old Hillsbrad: UpdateOHWorldState, but PlayerList is empty!");
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
             case THRALL_ENTRY:
-                ThrallGUID = pCreature->GetGUID();
+                ThrallGUID = creature->GetGUID();
                 break;
             case TARETHA_ENTRY:
-                TarethaGUID = pCreature->GetGUID();
+                TarethaGUID = creature->GetGUID();
                 break;
         case EPOCH_ENTRY:
-        EpochGUID = pCreature->GetGUID();
+        EpochGUID = creature->GetGUID();
         break;
         }
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        Player *player = GetPlayerInMap();
+        Player* player = GetPlayerInMap();
 
         if (!player)
         {
-            debug_log("OSCR: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any player.", type, data);
+            sLog->outDebug("TSCR: Instance Old Hillsbrad: SetData (Type: %u Data %u) cannot find any player.", type, data);
             return;
         }
 
-        switch(type)
+        switch (type)
         {
             case TYPE_BARREL_DIVERSION:
             {
@@ -137,13 +138,13 @@ struct instance_old_hillsbrad : public ScriptedInstance
                     ++mBarrelCount;
                     UpdateOHWorldState();
 
-                    debug_log("OSCR: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u",mBarrelCount);
+                    sLog->outDebug("TSCR: Instance Old Hillsbrad: go_barrel_old_hillsbrad count %u",mBarrelCount);
 
                     Encounter[0] = IN_PROGRESS;
 
                     if (mBarrelCount == 5)
                     {
-                    player->SummonCreature(DRAKE_ENTRY,2128.43f,71.01f,64.42f,1.74f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,1800000);
+                    player->SummonCreature(DRAKE_ENTRY, 2128.43f, 71.01f, 64.42f, 1.74f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 1800000);
                     Encounter[0] = DONE;
                     }
                 }
@@ -157,7 +158,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
                     {
                         mThrallEventCount++;
                         Encounter[1] = NOT_STARTED;
-                        debug_log("OSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
+                        sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
                         Encounter[2] = NOT_STARTED;
                         Encounter[3] = NOT_STARTED;
                         Encounter[4] = NOT_STARTED;
@@ -170,36 +171,36 @@ struct instance_old_hillsbrad : public ScriptedInstance
                         Encounter[3] = data;
                         Encounter[4] = data;
                         Encounter[5] = data;
-                        debug_log("OSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
+                        sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event failed %u times. Resetting all sub-events.",mThrallEventCount);
                     }
                 }
                 else
                     Encounter[1] = data;
-                debug_log("OSCR: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall escort event adjusted to data %u.",data);
                 break;
             }
             case TYPE_THRALL_PART1:
                 Encounter[2] = data;
-                debug_log("OSCR: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part I adjusted to data %u.",data);
                 break;
             case TYPE_THRALL_PART2:
                 Encounter[3] = data;
-                debug_log("OSCR: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part II adjusted to data %u.",data);
                 break;
             case TYPE_THRALL_PART3:
                 Encounter[4] = data;
-                debug_log("OSCR: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",data);
+                sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part III adjusted to data %u.",data);
                 break;
             case TYPE_THRALL_PART4:
                 Encounter[5] = data;
-                 debug_log("OSCR: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",data);
+                 sLog->outDebug("TSCR: Instance Old Hillsbrad: Thrall event part IV adjusted to data %u.",data);
                 break;
         }
     }
 
     uint32 GetData(uint32 data)
     {
-        switch(data)
+        switch (data)
         {
             case TYPE_BARREL_DIVERSION:
                 return Encounter[0];
@@ -219,7 +220,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        switch(data)
+        switch (data)
         {
             case DATA_THRALL:
                 return ThrallGUID;

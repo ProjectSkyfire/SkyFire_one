@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -243,7 +244,7 @@ struct Yells
 {
     uint32 sound;
     char* text;
-    uint32 pCreature, timer, emote;
+    uint32 creature, timer, emote;
     bool Talk;
 };
 
@@ -400,7 +401,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
     void SummonedCreatureDespawn(Creature* summon)
     {
-        if (summon->GetCreatureInfo()->Entry == FLAME_OF_AZZINOTH)
+        if (summon->GetCreatureTemplate()->Entry == FLAME_OF_AZZINOTH)
         {
             for (uint8 i = 0; i < 2; ++i)
                 if (summon->GetGUID() == FlameGUID[i])
@@ -466,7 +467,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
     {
         if (victim == me) return;
         // TODO: Find better way to handle emote
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
         case 0:
             me->MonsterYell(SAY_KILL1, LANG_UNIVERSAL, victim->GetGUID());
@@ -515,22 +516,22 @@ struct boss_illidan_stormrageAI : public ScriptedAI
     {
         Timer[EVENT_TALK_SEQUENCE] = Conversation[count].timer;
 
-        Creature* pCreature = NULL;
-        if (Conversation[count].pCreature == ILLIDAN_STORMRAGE)
-            pCreature = me;
-        else if (Conversation[count].pCreature == AKAMA)
-            pCreature = (Unit::GetCreature((*me), AkamaGUID));
-        else if (Conversation[count].pCreature == MAIEV_SHADOWSONG)
-            pCreature = (Unit::GetCreature((*me), MaievGUID));
+        Creature* creature = NULL;
+        if (Conversation[count].creature == ILLIDAN_STORMRAGE)
+            creature = me;
+        else if (Conversation[count].creature == AKAMA)
+            creature = (Unit::GetCreature((*me), AkamaGUID));
+        else if (Conversation[count].creature == MAIEV_SHADOWSONG)
+            creature = (Unit::GetCreature((*me), MaievGUID));
 
-        if (pCreature)
+        if (creature)
         {
             if (Conversation[count].emote)
-                pCreature->HandleEmoteCommand(Conversation[count].emote); // Make the creature do some animation!
+                creature->HandleEmoteCommand(Conversation[count].emote); // Make the creature do some animation!
             if (Conversation[count].text)
-                pCreature->MonsterYell(Conversation[count].text, LANG_UNIVERSAL, 0); // Have the creature yell out some text
+                creature->MonsterYell(Conversation[count].text, LANG_UNIVERSAL, 0); // Have the creature yell out some text
             if (Conversation[count].sound)
-                DoPlaySoundToSet(pCreature, Conversation[count].sound); // Play some sound on the creature
+                DoPlaySoundToSet(creature, Conversation[count].sound); // Play some sound on the creature
         }
     }
 
@@ -541,7 +542,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
     void HandleTalkSequence();
     void HandleFlightSequence()
     {
-        switch(FlightCount)
+        switch (FlightCount)
         {
         case 1://lift off
             me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
@@ -574,7 +575,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
             me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
             me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
             {
-                uint8 i=0;
+                uint8 i = 0;
                 Creature* Glaive = me->SummonCreature(BLADE_OF_AZZINOTH, GlaivePosition[i].x, GlaivePosition[i].y, GlaivePosition[i].z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 if (Glaive)
                 {
@@ -669,7 +670,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
             me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
         }
 
-        switch(TransformCount)
+        switch (TransformCount)
         {
         case 2:
             DoResetThreat();
@@ -711,7 +712,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
                 else Timer[i] -= diff;
         }
 
-        switch(Phase)
+        switch (Phase)
         {
         case PHASE_NORMAL:
             if (HPPCT(me) < 65)
@@ -749,7 +750,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
         if (Phase == PHASE_NORMAL || Phase == PHASE_NORMAL_2 || Phase == PHASE_NORMAL_MAIEV && !me->HasAura(SPELL_CAGED, 0))
         {
-            switch(Event)
+            switch (Event)
             {
                 //PHASE_NORMAL
             case EVENT_BERSERK:
@@ -823,7 +824,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
         if (Phase == PHASE_FLIGHT)
         {
-            switch(Event)
+            switch (Event)
             {
             case EVENT_FIREBALL:
                 DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_FIREBALL);
@@ -856,7 +857,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 
         if (Phase == PHASE_DEMON)
         {
-            switch(Event)
+            switch (Event)
             {
             case EVENT_SHADOW_BLAST:
                 me->GetMotionMaster()->Clear(false);
@@ -1145,7 +1146,7 @@ struct npc_akama_illidanAI : public ScriptedAI
     {
         if (!pInstance)
             return;
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_CHANNEL:
             BeginChannel();
@@ -1207,7 +1208,7 @@ struct npc_akama_illidanAI : public ScriptedAI
 
     void HandleTalkSequence()
     {
-        switch(TalkCount)
+        switch (TalkCount)
         {
         case 0:
             if (GETCRE(Illidan, IllidanGUID))
@@ -1242,7 +1243,7 @@ struct npc_akama_illidanAI : public ScriptedAI
                 return;
         }
 
-        switch(ChannelCount)
+        switch (ChannelCount)
         {
         case 0: // channel failed
             me->InterruptNonMeleeSpells(true);
@@ -1255,8 +1256,8 @@ struct npc_akama_illidanAI : public ScriptedAI
             break;
         case 2: // spirit help
             DoCast(Channel, SPELL_AKAMA_DOOR_CHANNEL);
-            Spirit[0]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL,false);
-            Spirit[1]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL,false);
+            Spirit[0]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL, false);
+            Spirit[1]->CastSpell(Channel, SPELL_DEATHSWORN_DOOR_CHANNEL, false);
             Timer = 5000;
             break;
         case 3: //open the gate
@@ -1290,7 +1291,7 @@ struct npc_akama_illidanAI : public ScriptedAI
 
     void HandleWalkSequence()
     {
-        switch(WalkCount)
+        switch (WalkCount)
         {
         case 6:
             for (uint8 i = 0; i < 2; ++i)
@@ -1338,7 +1339,7 @@ struct npc_akama_illidanAI : public ScriptedAI
 
         if (Event)
         {
-            switch(Phase)
+            switch (Phase)
             {
             case PHASE_CHANNEL:
                 if (JustCreated)
@@ -1468,7 +1469,7 @@ struct boss_maievAI : public ScriptedAI
 
     void EnterPhase(PhaseIllidan NextPhase)//This is in fact Illidan's phase.
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_TALK_SEQUENCE:
             if (Timer[EVENT_MAIEV_STEALTH])
@@ -1547,7 +1548,7 @@ struct boss_maievAI : public ScriptedAI
                 else Timer[i] -= diff;
             }
 
-            switch(Event)
+            switch (Event)
             {
             case EVENT_MAIEV_STEALTH:
                 {
@@ -1608,20 +1609,20 @@ struct boss_maievAI : public ScriptedAI
     }
 };
 
-bool GossipSelect_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_akama_at_illidan(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF) // Time to begin the Event
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        CAST_AI(npc_akama_illidanAI, pCreature->AI())->EnterPhase(PHASE_CHANNEL);
+        player->CLOSE_GOSSIP_MENU();
+        CAST_AI(npc_akama_illidanAI, creature->AI())->EnterPhase(PHASE_CHANNEL);
     }
     return true;
 }
 
-bool GossipHello_npc_akama_at_illidan(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_akama_at_illidan(Player* player, Creature* creature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    pPlayer->SEND_GOSSIP_MENU(10465, pCreature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    player->SEND_GOSSIP_MENU(10465, creature->GetGUID());
 
     return true;
 }
@@ -1690,10 +1691,10 @@ struct cage_trap_triggerAI : public ScriptedAI
     }
 };
 
-bool GOHello_cage_trap(Player* pPlayer, GameObject* pGo)
+bool GOHello_cage_trap(Player* player, GameObject* pGo)
 {
     float x, y, z;
-    pPlayer->GetPosition(x, y, z);
+    player->GetPosition(x, y, z);
 
     // Grid search for nearest live Creature of entry 23304 within 10 yards
     if (Creature* pTrigger = pGo->FindNearestCreature(23304, 10.0f))
@@ -1871,7 +1872,7 @@ void boss_illidan_stormrageAI::Reset()
 void boss_illidan_stormrageAI::JustSummoned(Creature* summon)
 {
     Summons.Summon(summon);
-    switch(summon->GetEntry())
+    switch (summon->GetEntry())
     {
     case PARASITIC_SHADOWFIEND:
         {
@@ -1917,7 +1918,7 @@ void boss_illidan_stormrageAI::JustSummoned(Creature* summon)
 
 void boss_illidan_stormrageAI::HandleTalkSequence()
 {
-    switch(TalkCount)
+    switch (TalkCount)
     {
     case 0:
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -1986,7 +1987,7 @@ void boss_illidan_stormrageAI::HandleTalkSequence()
         {
             Maiev->CastSpell(Maiev, SPELL_TELEPORT_VISUAL, true);
             Maiev->setDeathState(JUST_DIED);
-            me->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);
+            me->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_DEAD);
         }
         break;
     case 21: // Kill ourself.
@@ -2068,14 +2069,14 @@ void boss_illidan_stormrageAI::SummonMaiev()
     {
         EnterEvadeMode();
         me->MonsterTextEmote(EMOTE_UNABLE_TO_SUMMON, 0);
-        error_log("SD2 ERROR: Unable to summon Maiev Shadowsong (entry: 23197). Check your database to see if you have the proper SQL for Maiev Shadowsong (entry: 23197)");
+        sLog->outError("SD2 ERROR: Unable to summon Maiev Shadowsong (entry: 23197). Check your database to see if you have the proper SQL for Maiev Shadowsong (entry: 23197)");
     }
 }
 
 void boss_illidan_stormrageAI::EnterPhase(PhaseIllidan NextPhase)
 {
     DoZoneInCombat();
-    switch(NextPhase)
+    switch (NextPhase)
     {
     case PHASE_NORMAL:
     case PHASE_NORMAL_2:
@@ -2157,44 +2158,44 @@ void boss_illidan_stormrageAI::EnterPhase(PhaseIllidan NextPhase)
     Event = EVENT_NULL;
 }
 
-CreatureAI* GetAI_boss_illidan_stormrage(Creature* pCreature)
+CreatureAI* GetAI_boss_illidan_stormrage(Creature* creature)
 {
-    return new boss_illidan_stormrageAI (pCreature);
+    return new boss_illidan_stormrageAI (creature);
 }
 
-CreatureAI* GetAI_npc_akama_at_illidan(Creature* pCreature)
+CreatureAI* GetAI_npc_akama_at_illidan(Creature* creature)
 {
-    return new npc_akama_illidanAI(pCreature);
+    return new npc_akama_illidanAI(creature);
 }
 
-CreatureAI* GetAI_boss_maiev(Creature* pCreature)
+CreatureAI* GetAI_boss_maiev(Creature* creature)
 {
-    return new boss_maievAI (pCreature);
+    return new boss_maievAI (creature);
 }
 
-CreatureAI* GetAI_mob_flame_of_azzinoth(Creature* pCreature)
+CreatureAI* GetAI_mob_flame_of_azzinoth(Creature* creature)
 {
-    return new flame_of_azzinothAI (pCreature);
+    return new flame_of_azzinothAI (creature);
 }
 
-CreatureAI* GetAI_cage_trap_trigger(Creature* pCreature)
+CreatureAI* GetAI_cage_trap_trigger(Creature* creature)
 {
-    return new cage_trap_triggerAI (pCreature);
+    return new cage_trap_triggerAI (creature);
 }
 
-CreatureAI* GetAI_shadow_demon(Creature* pCreature)
+CreatureAI* GetAI_shadow_demon(Creature* creature)
 {
-    return new shadow_demonAI (pCreature);
+    return new shadow_demonAI (creature);
 }
 
-CreatureAI* GetAI_blade_of_azzinoth(Creature* pCreature)
+CreatureAI* GetAI_blade_of_azzinoth(Creature* creature)
 {
-    return new blade_of_azzinothAI (pCreature);
+    return new blade_of_azzinothAI (creature);
 }
 
-CreatureAI* GetAI_parasitic_shadowfiend(Creature* pCreature)
+CreatureAI* GetAI_parasitic_shadowfiend(Creature* creature)
 {
-    return new mob_parasitic_shadowfiendAI (pCreature);
+    return new mob_parasitic_shadowfiendAI (creature);
 }
 
 void AddSC_boss_illidan()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -82,7 +83,7 @@ struct boss_jindoAI : public ScriptedAI
         if (HealingWard_Timer <= diff)
         {
             //DoCast(me, SPELL_POWERFULLHEALINGWARD);
-            me->SummonCreature(14987, me->GetPositionX()+3, me->GetPositionY()-2, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,30000);
+            me->SummonCreature(14987, me->GetPositionX()+3, me->GetPositionY()-2, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
             HealingWard_Timer = 14000 + rand()%6000;
         } else HealingWard_Timer -= diff;
 
@@ -100,7 +101,7 @@ struct boss_jindoAI : public ScriptedAI
         //Casting the delusion curse with a shade. So shade will attack the same target with the curse.
         if (Delusions_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
                 DoCast(pTarget, SPELL_DELUSIONSOFJINDO);
 
@@ -116,10 +117,10 @@ struct boss_jindoAI : public ScriptedAI
         if (Teleport_Timer <= diff)
         {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
             {
-                DoTeleportPlayer(pTarget, -11583.7783f,-1249.4278f,77.5471f,4.745f);
+                DoTeleportPlayer(pTarget, -11583.7783f,-1249.4278f, 77.5471f, 4.745f);
 
                 if (DoGetThreat(me->getVictim()))
                     DoModifyThreatPercent(pTarget,-100);
@@ -228,19 +229,19 @@ struct mob_shade_of_jindoAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_jindo(Creature* pCreature)
+CreatureAI* GetAI_boss_jindo(Creature* creature)
 {
-    return new boss_jindoAI (pCreature);
+    return new boss_jindoAI (creature);
 }
 
-CreatureAI* GetAI_mob_healing_ward(Creature* pCreature)
+CreatureAI* GetAI_mob_healing_ward(Creature* creature)
 {
-    return new mob_healing_wardAI (pCreature);
+    return new mob_healing_wardAI (creature);
 }
 
-CreatureAI* GetAI_mob_shade_of_jindo(Creature* pCreature)
+CreatureAI* GetAI_mob_shade_of_jindo(Creature* creature)
 {
-    return new mob_shade_of_jindoAI (pCreature);
+    return new mob_shade_of_jindoAI (creature);
 }
 
 void AddSC_boss_jindo()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_SHAREDDEFINES_H
-#define OREGON_SHAREDDEFINES_H
+#ifndef TRINITY_SHAREDDEFINES_H
+#define TRINITY_SHAREDDEFINES_H
 
 #include "Define.h"
 #include <cassert>
@@ -784,7 +785,7 @@ enum DispelType
 
 #define DISPEL_ALL_MASK ((1<<DISPEL_MAGIC) | (1<<DISPEL_CURSE) | (1<<DISPEL_DISEASE) | (1<<DISPEL_POISON))
 
-//To all Immune system,if target has immunes,
+//To all Immune system, if target has immunes,
 //some spell that related to ImmuneToDispel or ImmuneToSchool or ImmuneToDamage type can't cast to it,
 //some spell_effects that related to ImmuneToEffect<effect>(only this effect in the spell) can't cast to it,
 //some aura(related to Mechanics or ImmuneToState<aura>) can't apply to it.
@@ -1704,7 +1705,7 @@ enum QuestSort
 
 inline uint8 ClassByQuestSort(int32 QuestSort)
 {
-    switch(QuestSort)
+    switch (QuestSort)
     {
         case QUEST_SORT_WARLOCK: return CLASS_WARLOCK;
         case QUEST_SORT_WARRIOR: return CLASS_WARRIOR;
@@ -1865,7 +1866,7 @@ enum SkillType
 
 inline uint32 SkillByQuestSort(int32 QuestSort)
 {
-    switch(QuestSort)
+    switch (QuestSort)
     {
         case QUEST_SORT_HERBALISM:      return SKILL_HERBALISM;
         case QUEST_SORT_FISHING:        return SKILL_FISHING;
@@ -2272,7 +2273,7 @@ enum MailResponseResult
 // others will not and opposite
 // will only support WoW and WoW:TBC 2.4.3 client build 8606...
 
-#define EXPECTED_OREGONCORE_CLIENT_BUILD        {8606, 0}
+#define EXPECTED_TRINITY_CLIENT_BUILD        {8606, 0}
 
 #endif
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -16,18 +17,16 @@
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include "DBCStores.h"
-#include "Policies/SingletonImp.h"
-#include "Log.h"
-#include "ProgressBar.h"
-#include "SharedDefines.h"
 
+#include "DBCStores.h"
+#include "Log.h"
+#include "SharedDefines.h"
 #include "DBCfmt.h"
 
 #include <map>
 
-typedef std::map<uint16,uint32> AreaFlagByAreaID;
-typedef std::map<uint32,uint32> AreaFlagByMapID;
+typedef std::map<uint16, uint32> AreaFlagByAreaID;
+typedef std::map<uint32, uint32> AreaFlagByMapID;
 
 struct WMOAreaTableTripple
 {
@@ -74,7 +73,7 @@ DBCStorage <DurabilityCostsEntry> sDurabilityCostsStore(DurabilityCostsfmt);
 DBCStorage <EmotesEntry> sEmotesStore(EmotesEntryfmt);
 DBCStorage <EmotesTextEntry> sEmotesTextStore(EmotesTextEntryfmt);
 
-typedef std::map<uint32,SimpleFactionsList> FactionTeamMap;
+typedef std::map<uint32, SimpleFactionsList> FactionTeamMap;
 static FactionTeamMap sFactionTeamMap;
 DBCStorage <FactionEntry> sFactionStore(FactionEntryfmt);
 DBCStorage <FactionTemplateEntry> sFactionTemplateStore(FactionTemplateEntryfmt);
@@ -131,7 +130,7 @@ TalentSpellPosMap sTalentSpellPosMap;
 DBCStorage <TalentTabEntry> sTalentTabStore(TalentTabEntryfmt);
 
 // store absolute bit position for first rank for talent inspect
-typedef std::map<uint32,uint32> TalentInspectMap;
+typedef std::map<uint32, uint32> TalentInspectMap;
 static TalentInspectMap sTalentPosInInspect;
 static TalentInspectMap sTalentTabSizeInInspect;
 static uint32 sTalentTabPages[12/*MAX_CLASSES*/][3];
@@ -156,7 +155,7 @@ typedef std::list<std::string> StoreProblemList;
 
 bool IsAcceptableClientBuild(uint32 build)
 {
-    int accepted_versions[] = EXPECTED_OREGONCORE_CLIENT_BUILD;
+    int accepted_versions[] = EXPECTED_TRINITY_CLIENT_BUILD;
     for (int i = 0; accepted_versions[i]; ++i)
         if (build == accepted_versions[i])
             return true;
@@ -167,31 +166,30 @@ bool IsAcceptableClientBuild(uint32 build)
 std::string AcceptableClientBuildsListStr()
 {
     std::ostringstream data;
-    int accepted_versions[] = EXPECTED_OREGONCORE_CLIENT_BUILD;
+    int accepted_versions[] = EXPECTED_TRINITY_CLIENT_BUILD;
     for (int i = 0; accepted_versions[i]; ++i)
         data << accepted_versions[i] << " ";
     return data.str();
 }
 
-static bool LoadDBC_assert_print(uint32 fsize,uint32 rsize, const std::string& filename)
+static bool LoadDBC_assert_print(uint32 fsize, uint32 rsize, const std::string& filename)
 {
-    sLog.outError("Size of '%s' setted by format string (%u) not equal size of C++ structure (%u).",filename.c_str(),fsize,rsize);
+    sLog->outError("Size of '%s' setted by format string (%u) not equal size of C++ structure (%u).", filename.c_str(), fsize, rsize);
 
     // assert must fail after function call
     return false;
 }
 
 template<class T>
-inline void LoadDBC(uint32& availableDbcLocales,barGoLink& bar, StoreProblemList& errlist, DBCStorage<T>& storage, const std::string& dbc_path, const std::string& filename)
+inline void LoadDBC(uint32& availableDbcLocales, StoreProblemList& errlist, DBCStorage<T>& storage, const std::string& dbc_path, const std::string& filename)
 {
     // compatibility format and C++ structure sizes
-    ASSERT(DBCFileLoader::GetFormatRecordSize(storage.GetFormat()) == sizeof(T) || LoadDBC_assert_print(DBCFileLoader::GetFormatRecordSize(storage.GetFormat()),sizeof(T),filename));
+    ASSERT(DBCFileLoader::GetFormatRecordSize(storage.GetFormat()) == sizeof(T) || LoadDBC_assert_print(DBCFileLoader::GetFormatRecordSize(storage.GetFormat()), sizeof(T), filename));
 
     std::string dbc_filename = dbc_path + filename;
     if (storage.Load(dbc_filename.c_str()))
     {
-        bar.step();
-        for (uint8 i = 0; i < MAX_LOCALE; ++i)
+        for (uint8 i = 0; i < TOTAL_LOCALES; ++i)
         {
             if (!(availableDbcLocales & (1 << i)))
                 continue;
@@ -204,11 +202,11 @@ inline void LoadDBC(uint32& availableDbcLocales,barGoLink& bar, StoreProblemList
     else
     {
         // sort problematic dbc to (1) non compatible and (2) non-existed
-        FILE * f=fopen(dbc_filename.c_str(),"rb");
+        FILE * f=fopen(dbc_filename.c_str(), "rb");
         if (f)
         {
             char buf[100];
-            snprintf(buf,100," (exists, but has %d fields instead %d) Wrong client version of DBC files?",storage.GetFieldCount(),strlen(storage.GetFormat()));
+            snprintf(buf, 100, " (exists, but has %d fields instead %d) Wrong client version of DBC files?", storage.GetFieldCount(), strlen(storage.GetFormat()));
             errlist.push_back(dbc_filename + buf);
             fclose(f);
         }
@@ -223,12 +221,10 @@ void LoadDBCStores(const std::string& dataPath)
 
     const uint32 DBCFilesCount = 60;
 
-    barGoLink bar(DBCFilesCount);
-
     StoreProblemList bad_dbc_files;
     uint32 availableDbcLocales = 0xFFFFFFFF;
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sAreaStore,                dbcPath,"AreaTable.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sAreaStore,                dbcPath, "AreaTable.dbc");
 
     // must be after sAreaStore loading
     for (uint32 i = 0; i < sAreaStore.GetNumRows(); ++i)           // areaflag numbered from 0
@@ -236,34 +232,34 @@ void LoadDBCStores(const std::string& dataPath)
         if (AreaTableEntry const* area = sAreaStore.LookupEntry(i))
         {
             // fill AreaId->DBC records
-            sAreaFlagByAreaID.insert(AreaFlagByAreaID::value_type(uint16(area->ID),area->exploreFlag));
+            sAreaFlagByAreaID.insert(AreaFlagByAreaID::value_type(uint16(area->ID), area->exploreFlag));
 
             // fill MapId->DBC records ( skip sub zones and continents)
             if (area->zone == 0 && area->mapid != 0 && area->mapid != 1 && area->mapid != 530)
-                sAreaFlagByMapID.insert(AreaFlagByMapID::value_type(area->mapid,area->exploreFlag));
+                sAreaFlagByMapID.insert(AreaFlagByMapID::value_type(area->mapid, area->exploreFlag));
         }
     }
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sAreaTriggerStore,         dbcPath,"AreaTrigger.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sAuctionHouseStore,        dbcPath,"AuctionHouse.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sBankBagSlotPricesStore,   dbcPath,"BankBagSlotPrices.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sBattlemasterListStore,    dbcPath,"BattlemasterList.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sCharStartOutfitStore,     dbcPath,"CharStartOutfit.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sAreaTriggerStore,         dbcPath, "AreaTrigger.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sAuctionHouseStore,        dbcPath, "AuctionHouse.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sBankBagSlotPricesStore,   dbcPath, "BankBagSlotPrices.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sBattlemasterListStore,    dbcPath, "BattlemasterList.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sCharStartOutfitStore,     dbcPath, "CharStartOutfit.dbc");
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sCharTitlesStore,          dbcPath,"CharTitles.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sChatChannelsStore,        dbcPath,"ChatChannels.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sChrClassesStore,          dbcPath,"ChrClasses.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sChrRacesStore,            dbcPath,"ChrRaces.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sCinematicSequencesStore,  dbcPath,"CinematicSequences.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sCreatureDisplayInfoStore, dbcPath,"CreatureDisplayInfo.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sCreatureFamilyStore,      dbcPath,"CreatureFamily.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sCreatureSpellDataStore,   dbcPath,"CreatureSpellData.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sDurabilityCostsStore,     dbcPath,"DurabilityCosts.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sDurabilityQualityStore,   dbcPath,"DurabilityQuality.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sEmotesStore,              dbcPath,"Emotes.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sEmotesTextStore,          dbcPath,"EmotesText.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sFactionStore,             dbcPath,"Faction.dbc");
-    for (uint32 i=0;i<sFactionStore.GetNumRows(); ++i)
+    LoadDBC(availableDbcLocales, bad_dbc_files, sCharTitlesStore,          dbcPath, "CharTitles.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sChatChannelsStore,        dbcPath, "ChatChannels.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sChrClassesStore,          dbcPath, "ChrClasses.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sChrRacesStore,            dbcPath, "ChrRaces.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sCinematicSequencesStore,  dbcPath, "CinematicSequences.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sCreatureDisplayInfoStore, dbcPath, "CreatureDisplayInfo.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sCreatureFamilyStore,      dbcPath, "CreatureFamily.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sCreatureSpellDataStore,   dbcPath, "CreatureSpellData.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sDurabilityCostsStore,     dbcPath, "DurabilityCosts.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sDurabilityQualityStore,   dbcPath, "DurabilityQuality.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sEmotesStore,              dbcPath, "Emotes.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sEmotesTextStore,          dbcPath, "EmotesText.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sFactionStore,             dbcPath, "Faction.dbc");
+    for (uint32 i = 0;i < sFactionStore.GetNumRows(); ++i)
     {
         FactionEntry const * faction = sFactionStore.LookupEntry(i);
         if (faction && faction->team)
@@ -273,37 +269,37 @@ void LoadDBCStores(const std::string& dataPath)
         }
     }
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sFactionTemplateStore,     dbcPath,"FactionTemplate.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGemPropertiesStore,       dbcPath,"GemProperties.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sFactionTemplateStore,     dbcPath, "FactionTemplate.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGemPropertiesStore,       dbcPath, "GemProperties.dbc");
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtCombatRatingsStore,     dbcPath,"gtCombatRatings.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtCombatRatingsStore,     dbcPath, "gtCombatRatings.dbc");
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtChanceToMeleeCritBaseStore, dbcPath,"gtChanceToMeleeCritBase.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtChanceToMeleeCritStore, dbcPath,"gtChanceToMeleeCrit.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtChanceToMeleeCritBaseStore, dbcPath, "gtChanceToMeleeCritBase.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtChanceToMeleeCritStore, dbcPath, "gtChanceToMeleeCrit.dbc");
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtChanceToSpellCritBaseStore, dbcPath,"gtChanceToSpellCritBase.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtChanceToSpellCritStore, dbcPath,"gtChanceToSpellCrit.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtChanceToSpellCritBaseStore, dbcPath, "gtChanceToSpellCritBase.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtChanceToSpellCritStore, dbcPath, "gtChanceToSpellCrit.dbc");
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtOCTRegenHPStore,        dbcPath,"gtOCTRegenHP.dbc");
-    //LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtOCTRegenMPStore,        dbcPath,"gtOCTRegenMP.dbc");       -- not used currently
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtRegenHPPerSptStore,     dbcPath,"gtRegenHPPerSpt.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sGtRegenMPPerSptStore,     dbcPath,"gtRegenMPPerSpt.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sItemStore,                dbcPath,"Item.dbc");
-    //LoadDBC(availableDbcLocales,bar,bad_dbc_files,sItemDisplayInfoStore,     dbcPath,"ItemDisplayInfo.dbc");     -- not used currently
-    //LoadDBC(availableDbcLocales,bar,bad_dbc_files,sItemCondExtCostsStore,    dbcPath,"ItemCondExtCosts.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sItemExtendedCostStore,    dbcPath,"ItemExtendedCost.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sItemRandomPropertiesStore,dbcPath,"ItemRandomProperties.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sItemRandomSuffixStore,    dbcPath,"ItemRandomSuffix.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sItemSetStore,             dbcPath,"ItemSet.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sLockStore,                dbcPath,"Lock.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sMailTemplateStore,        dbcPath,"MailTemplate.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sMapStore,                 dbcPath,"Map.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sQuestSortStore,           dbcPath,"QuestSort.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sRandomPropertiesPointsStore, dbcPath,"RandPropPoints.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSkillLineStore,           dbcPath,"SkillLine.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSkillLineAbilityStore,    dbcPath,"SkillLineAbility.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSoundEntriesStore,        dbcPath,"SoundEntries.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellStore,               dbcPath,"Spell.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtOCTRegenHPStore,        dbcPath, "gtOCTRegenHP.dbc");
+    //LoadDBC(availableDbcLocales, bad_dbc_files, sGtOCTRegenMPStore,        dbcPath, "gtOCTRegenMP.dbc");       -- not used currently
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtRegenHPPerSptStore,     dbcPath, "gtRegenHPPerSpt.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sGtRegenMPPerSptStore,     dbcPath, "gtRegenMPPerSpt.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sItemStore,                dbcPath, "Item.dbc");
+    //LoadDBC(availableDbcLocales, bad_dbc_files, sItemDisplayInfoStore,     dbcPath, "ItemDisplayInfo.dbc");     -- not used currently
+    //LoadDBC(availableDbcLocales, bad_dbc_files, sItemCondExtCostsStore,    dbcPath, "ItemCondExtCosts.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sItemExtendedCostStore,    dbcPath, "ItemExtendedCost.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sItemRandomPropertiesStore, dbcPath, "ItemRandomProperties.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sItemRandomSuffixStore,    dbcPath, "ItemRandomSuffix.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sItemSetStore,             dbcPath, "ItemSet.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sLockStore,                dbcPath, "Lock.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sMailTemplateStore,        dbcPath, "MailTemplate.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sMapStore,                 dbcPath, "Map.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sQuestSortStore,           dbcPath, "QuestSort.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sRandomPropertiesPointsStore, dbcPath, "RandPropPoints.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSkillLineStore,           dbcPath, "SkillLine.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSkillLineAbilityStore,    dbcPath, "SkillLineAbility.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSoundEntriesStore,        dbcPath, "SoundEntries.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellStore,               dbcPath, "Spell.dbc");
     for (uint32 i = 1; i < sSpellStore.GetNumRows(); ++i)
     {
         SpellEntry const * spell = sSpellStore.LookupEntry(i);
@@ -312,8 +308,8 @@ void LoadDBCStores(const std::string& dataPath)
 
         // DBC not support uint64 fields but SpellEntry have SpellFamilyFlags mapped at 2 uint32 fields
         // uint32 field already converted to bigendian if need, but must be swapped for correct uint64 bigendian view
-        #if OREGON_ENDIAN == OREGON_BIGENDIAN
-        std::swap(*((uint32*)(&spell->SpellFamilyFlags)),*(((uint32*)(&spell->SpellFamilyFlags))+1));
+        #if TRINITY_ENDIAN == TRINITY_BIGENDIAN
+        std::swap(*((uint32*)(&spell->SpellFamilyFlags)), *(((uint32*)(&spell->SpellFamilyFlags))+1));
         #endif
     }
 
@@ -342,17 +338,17 @@ void LoadDBCStores(const std::string& dataPath)
         }
     }
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellCastTimesStore,      dbcPath,"SpellCastTimes.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellDurationStore,       dbcPath,"SpellDuration.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellFocusObjectStore,    dbcPath,"SpellFocusObject.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellItemEnchantmentStore,dbcPath,"SpellItemEnchantment.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellItemEnchantmentConditionStore,dbcPath,"SpellItemEnchantmentCondition.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellRadiusStore,         dbcPath,"SpellRadius.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellRangeStore,          dbcPath,"SpellRange.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSpellShapeshiftStore,     dbcPath,"SpellShapeshiftForm.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sStableSlotPricesStore,    dbcPath,"StableSlotPrices.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sSummonPropertiesStore,    dbcPath,"SummonProperties.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sTalentStore,              dbcPath,"Talent.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellCastTimesStore,      dbcPath, "SpellCastTimes.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellDurationStore,       dbcPath, "SpellDuration.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellFocusObjectStore,    dbcPath, "SpellFocusObject.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellItemEnchantmentStore, dbcPath, "SpellItemEnchantment.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellItemEnchantmentConditionStore, dbcPath, "SpellItemEnchantmentCondition.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellRadiusStore,         dbcPath, "SpellRadius.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellRangeStore,          dbcPath, "SpellRange.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSpellShapeshiftStore,     dbcPath, "SpellShapeshiftForm.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sStableSlotPricesStore,    dbcPath, "StableSlotPrices.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sSummonPropertiesStore,    dbcPath, "SummonProperties.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sTalentStore,              dbcPath, "Talent.dbc");
 
     // create talent spells set
     for (unsigned int i = 0; i < sTalentStore.GetNumRows(); ++i)
@@ -361,16 +357,16 @@ void LoadDBCStores(const std::string& dataPath)
         if (!talentInfo) continue;
         for (int j = 0; j < 5; j++)
             if (talentInfo->RankID[j])
-                sTalentSpellPosMap[talentInfo->RankID[j]] = TalentSpellPos(i,j);
+                sTalentSpellPosMap[talentInfo->RankID[j]] = TalentSpellPos(i, j);
     }
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sTalentTabStore,           dbcPath,"TalentTab.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sTalentTabStore,           dbcPath, "TalentTab.dbc");
 
     // prepare fast data access to bit pos of talent ranks for use at inspecting
     {
         // fill table by amount of talent ranks and fill sTalentTabBitSizeInInspect
-        // store in with (row,col,talent)->size key for correct sorting by (row,col)
-        typedef std::map<uint32,uint32> TalentBitSize;
+        // store in with (row, col, talent)->size key for correct sorting by (row, col)
+        typedef std::map<uint32, uint32> TalentBitSize;
         TalentBitSize sTalentBitSize;
         for (uint32 i = 1; i < sTalentStore.GetNumRows(); ++i)
         {
@@ -431,10 +427,10 @@ void LoadDBCStores(const std::string& dataPath)
         }
     }
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sTaxiNodesStore,           dbcPath,"TaxiNodes.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sTaxiNodesStore,           dbcPath, "TaxiNodes.dbc");
 
     // Initialize global taxinodes mask
-    memset(sTaxiNodesMask,0,sizeof(sTaxiNodesMask));
+    memset(sTaxiNodesMask, 0, sizeof(sTaxiNodesMask));
     for (uint32 i = 1; i < sTaxiNodesStore.GetNumRows(); ++i)
     {
         if (sTaxiNodesStore.LookupEntry(i))
@@ -445,14 +441,14 @@ void LoadDBCStores(const std::string& dataPath)
         }
     }
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sTaxiPathStore,            dbcPath,"TaxiPath.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sTaxiPathStore,            dbcPath, "TaxiPath.dbc");
     for (uint32 i = 1; i < sTaxiPathStore.GetNumRows(); ++i)
         if (TaxiPathEntry const* entry = sTaxiPathStore.LookupEntry(i))
-            sTaxiPathSetBySource[entry->from][entry->to] = TaxiPathBySourceAndDestination(entry->ID,entry->price);
+            sTaxiPathSetBySource[entry->from][entry->to] = TaxiPathBySourceAndDestination(entry->ID, entry->price);
     uint32 pathCount = sTaxiPathStore.GetNumRows();
 
     //## TaxiPathNode.dbc ## Loaded only for initialization different structures
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sTaxiPathNodeStore,        dbcPath,"TaxiPathNode.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sTaxiPathNodeStore,        dbcPath, "TaxiPathNode.dbc");
     // Calculate path nodes count
     std::vector<uint32> pathLength;
     pathLength.resize(pathCount);                           // 0 and some other indexes not used
@@ -466,11 +462,11 @@ void LoadDBCStores(const std::string& dataPath)
     // fill data
     for (uint32 i = 1; i < sTaxiPathNodeStore.GetNumRows(); ++i)
         if (TaxiPathNodeEntry const* entry = sTaxiPathNodeStore.LookupEntry(i))
-            sTaxiPathNodesByPath[entry->path][entry->index] = TaxiPathNode(entry->mapid,entry->x,entry->y,entry->z,entry->actionFlag,entry->delay);
+            sTaxiPathNodesByPath[entry->path][entry->index] = TaxiPathNode(entry->mapid, entry->x, entry->y, entry->z, entry->actionFlag, entry->delay);
     sTaxiPathNodeStore.Clear();
 
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sTotemCategoryStore,       dbcPath,"TotemCategory.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sWMOAreaTableStore,        dbcPath,"WMOAreaTable.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sTotemCategoryStore,       dbcPath, "TotemCategory.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sWMOAreaTableStore,        dbcPath, "WMOAreaTable.dbc");
     for (uint32 i = 0; i < sWMOAreaTableStore.GetNumRows(); ++i)
     {
         if (WMOAreaTableEntry const* entry = sWMOAreaTableStore.LookupEntry(i))
@@ -478,13 +474,13 @@ void LoadDBCStores(const std::string& dataPath)
             sWMOAreaInfoByTripple.insert(WMOAreaInfoByTripple::value_type(WMOAreaTableTripple(entry->rootId, entry->adtId, entry->groupId), entry));
         }
     }
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sWorldMapAreaStore,        dbcPath,"WorldMapArea.dbc");
-    LoadDBC(availableDbcLocales,bar,bad_dbc_files,sWorldSafeLocsStore,       dbcPath,"WorldSafeLocs.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sWorldMapAreaStore,        dbcPath, "WorldMapArea.dbc");
+    LoadDBC(availableDbcLocales, bad_dbc_files, sWorldSafeLocsStore,       dbcPath, "WorldSafeLocs.dbc");
 
     // error checks
     if (bad_dbc_files.size() >= DBCFilesCount)
     {
-        sLog.outError("\nIncorrect DataDir value in Oregond.conf or ALL required *.dbc files (%d) not found by path: %sdbc",DBCFilesCount,dataPath.c_str());
+        sLog->outError("\nIncorrect DataDir value in Trinityd.conf or ALL required *.dbc files (%d) not found by path: %sdbc", DBCFilesCount, dataPath.c_str());
         exit(1);
     }
     else if (!bad_dbc_files.empty())
@@ -493,7 +489,7 @@ void LoadDBCStores(const std::string& dataPath)
         for (std::list<std::string>::iterator i = bad_dbc_files.begin(); i != bad_dbc_files.end(); ++i)
             str += *i + "\n";
 
-        sLog.outError("\nSome required *.dbc files (%u from %d) not found or not compatible:\n%s",bad_dbc_files.size(),DBCFilesCount,str.c_str());
+        sLog->outError("\nSome required *.dbc files (%u from %d) not found or not compatible:\n%s", bad_dbc_files.size(), DBCFilesCount, str.c_str());
         exit(1);
     }
 
@@ -512,12 +508,12 @@ void LoadDBCStores(const std::string& dataPath)
         !sCharTitlesStore.LookupEntry(71)          ||
         !sAreaStore.LookupEntry(1768))
     {
-        sLog.outError("\nYou have _outdated_ DBC files. Please extract correct versions from 2.4.3 client.");
+        sLog->outError("\nYou have _outdated_ DBC files. Please extract correct versions from 2.4.3 client.");
         exit(1);
     }
 
-    sLog.outString();
-    sLog.outString(">> Initialized %d data stores", DBCFilesCount);
+    sLog->outString();
+    sLog->outString(">> Initialized %d data stores", DBCFilesCount);
 }
 
 SimpleFactionsList const* GetFactionTeamList(uint32 faction)
@@ -581,7 +577,7 @@ AreaTableEntry const* GetAreaEntryByAreaID(uint32 area_id)
     return sAreaStore.LookupEntry(areaflag);
 }
 
-AreaTableEntry const* GetAreaEntryByAreaFlagAndMap(uint32 area_flag,uint32 map_id)
+AreaTableEntry const* GetAreaEntryByAreaFlagAndMap(uint32 area_flag, uint32 map_id)
 {
     if (area_flag)
         return sAreaStore.LookupEntry(area_flag);
@@ -614,7 +610,7 @@ uint32 GetVirtualMapForMapAndZone(uint32 mapid, uint32 zoneId)
 
 ContentLevels GetContentLevelsForMapAndZone(uint32 mapid, uint32 zoneId)
 {
-    mapid = GetVirtualMapForMapAndZone(mapid,zoneId);
+    mapid = GetVirtualMapForMapAndZone(mapid, zoneId);
     if (mapid < 2)
         return CONTENT_1_60;
 
@@ -622,7 +618,7 @@ ContentLevels GetContentLevelsForMapAndZone(uint32 mapid, uint32 zoneId)
     if (!mapEntry)
         return CONTENT_1_60;
 
-    switch(mapEntry->Expansion())
+    switch (mapEntry->Expansion())
     {
         default: return CONTENT_1_60;
         case 1:  return CONTENT_61_70;
@@ -661,7 +657,7 @@ bool IsTotemCategoryCompatiableWith(uint32 itemTotemCategoryId, uint32 requiredT
     return (itemEntry->categoryMask & reqEntry->categoryMask) == reqEntry->categoryMask;
 }
 
-void Zone2MapCoordinates(float& x,float& y,uint32 zone)
+void Zone2MapCoordinates(float& x, float& y, uint32 zone)
 {
     WorldMapAreaEntry const* maEntry = sWorldMapAreaStore.LookupEntry(zone);
 
@@ -669,12 +665,12 @@ void Zone2MapCoordinates(float& x,float& y,uint32 zone)
     if (!maEntry)
         return;
 
-    std::swap(x,y);                                         // at client map coords swapped
+    std::swap(x, y);                                         // at client map coords swapped
     x = x*((maEntry->x2-maEntry->x1)/100)+maEntry->x1;
     y = y*((maEntry->y2-maEntry->y1)/100)+maEntry->y1;      // client y coord from top to down
 }
 
-void Map2ZoneCoordinates(float& x,float& y,uint32 zone)
+void Map2ZoneCoordinates(float& x, float& y, uint32 zone)
 {
     WorldMapAreaEntry const* maEntry = sWorldMapAreaStore.LookupEntry(zone);
 
@@ -684,7 +680,7 @@ void Map2ZoneCoordinates(float& x,float& y,uint32 zone)
 
     x = (x-maEntry->x1)/((maEntry->x2-maEntry->x1)/100);
     y = (y-maEntry->y1)/((maEntry->y2-maEntry->y1)/100);    // client y coord from top to down
-    std::swap(x,y);                                         // client have map coords swapped
+    std::swap(x, y);                                         // client have map coords swapped
 }
 
 uint32 GetTalentInspectBitPosInTab(uint32 talentId)

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -45,7 +46,7 @@ void TempSummon::Update(uint32 diff)
         UnSummon();
         return;
     }
-    switch(m_type)
+    switch (m_type)
     {
         case TEMPSUMMON_MANUAL_DESPAWN:
             break;
@@ -160,7 +161,7 @@ void TempSummon::Update(uint32 diff)
         }
         default:
             UnSummon();
-            sLog.outError("Temporary summoned creature (entry: %u) has unknown type %u. ",GetEntry(),m_type);
+            sLog->outError("Temporary summoned creature (entry: %u) has unknown type %u. ", GetEntry(), m_type);
             break;
     }
 }
@@ -251,7 +252,7 @@ void TempSummon::RemoveFromWorld()
                     owner->m_SummonSlot[slot] = 0;
 
     //if (GetOwnerGUID())
-    //    sLog.outError("Unit %u has owner guid when removed from world", GetEntry());
+    //    sLog->outError("Unit %u has owner guid when removed from world", GetEntry());
 
     Creature::RemoveFromWorld();
 }

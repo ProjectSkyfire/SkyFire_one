@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -26,7 +27,7 @@
 
 void WorldSession::HandleVoiceSettingsOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: CMSG_VOICE_SETTINGS");
+    sLog->outDebug("WORLD: CMSG_VOICE_SETTINGS");
     // uint8 isVoiceEnabled, uint8 isMicrophoneEnabled
     recv_data.read_skip<uint8>();
     recv_data.read_skip<uint8>();
@@ -35,14 +36,14 @@ void WorldSession::HandleVoiceSettingsOpcode(WorldPacket & recv_data)
 
 void WorldSession::HandleChannelEnableVoiceOpcode(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: CMSG_CHANNEL_ENABLE_VOICE");
+    sLog->outDebug("WORLD: CMSG_CHANNEL_ENABLE_VOICE");
     // Enable Voice button in channel context menu
     recv_data.hexlike();
 }
 
 void WorldSession::HandleChannelVoiceChatQuery(WorldPacket & recv_data)
 {
-    sLog.outDebug("WORLD: CMSG_CHANNEL_VOICE_CHAT_QUERY");
+    sLog->outDebug("WORLD: CMSG_CHANNEL_VOICE_CHAT_QUERY");
     recv_data.read_skip<uint32>();
     recv_data.read_skip<char*>();
     recv_data.hexlike();

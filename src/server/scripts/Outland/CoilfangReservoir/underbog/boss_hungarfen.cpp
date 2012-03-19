@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -61,14 +62,14 @@ struct boss_hungarfenAI : public ScriptedAI
         {
             if (!Root)
             {
-                DoCast(me,SPELL_FOUL_SPORES);
+                DoCast(me, SPELL_FOUL_SPORES);
                 Root = true;
             }
         }
 
         if (Mushroom_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 me->SummonCreature(17990, pTarget->GetPositionX()+float(rand()%8), pTarget->GetPositionY()+float(rand()%8), pTarget->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
             else
                 me->SummonCreature(17990, me->GetPositionX()+float(rand()%8), me->GetPositionY()+float(rand()%8), me->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
@@ -78,17 +79,17 @@ struct boss_hungarfenAI : public ScriptedAI
 
         if (AcidGeyser_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_ACID_GEYSER);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_ACID_GEYSER);
             AcidGeyser_Timer = 10000+rand()%7500;
         } else AcidGeyser_Timer -= diff;
 
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_hungarfen(Creature* pCreature)
+CreatureAI* GetAI_boss_hungarfen(Creature* creature)
 {
-    return new boss_hungarfenAI (pCreature);
+    return new boss_hungarfenAI (creature);
 }
 
 #define SPELL_SPORE_CLOUD       34168
@@ -109,8 +110,8 @@ struct mob_underbog_mushroomAI : public ScriptedAI
         Grow_Timer = 0;
         Shrink_Timer = 20000;
 
-        DoCast(me,SPELL_PUTRID_MUSHROOM,true);
-        DoCast(me,SPELL_SPORE_CLOUD,true);
+        DoCast(me, SPELL_PUTRID_MUSHROOM, true);
+        DoCast(me, SPELL_SPORE_CLOUD, true);
     }
 
     void MoveInLineOfSight(Unit *who) { return; }
@@ -126,7 +127,7 @@ struct mob_underbog_mushroomAI : public ScriptedAI
 
         if (Grow_Timer <= diff)
         {
-            DoCast(me,SPELL_GROW);
+            DoCast(me, SPELL_GROW);
             Grow_Timer = 3000;
         } else Grow_Timer -= diff;
 
@@ -137,9 +138,9 @@ struct mob_underbog_mushroomAI : public ScriptedAI
         } else Shrink_Timer -= diff;
     }
 };
-CreatureAI* GetAI_mob_underbog_mushroom(Creature* pCreature)
+CreatureAI* GetAI_mob_underbog_mushroom(Creature* creature)
 {
-    return new mob_underbog_mushroomAI (pCreature);
+    return new mob_underbog_mushroomAI (creature);
 }
 
 void AddSC_boss_hungarfen()

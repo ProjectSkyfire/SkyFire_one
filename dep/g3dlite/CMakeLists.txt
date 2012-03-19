@@ -54,7 +54,7 @@ set(g3dlib_STAT_SRCS
   source/Vector4.cpp
 )
 
-if(WIN32)
+if (WIN32)
   include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/dep/zlib

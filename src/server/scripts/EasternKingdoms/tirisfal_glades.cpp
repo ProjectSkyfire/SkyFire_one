@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -46,9 +47,9 @@ enum eCalvin
 
 struct npc_calvin_montagueAI : public ScriptedAI
 {
-    npc_calvin_montagueAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_calvin_montagueAI(Creature* creature) : ScriptedAI(creature)
     {
-        m_uiNormFaction = pCreature->getFaction();
+        m_uiNormFaction = creature->getFaction();
         Reset();
     }
 
@@ -103,15 +104,15 @@ struct npc_calvin_montagueAI : public ScriptedAI
                 return;
             }
 
-            switch(m_uiPhase)
+            switch (m_uiPhase)
             {
                 case 1:
                     DoScriptText(SAY_COMPLETE, me);
                     ++m_uiPhase;
                     break;
                 case 2:
-                    if (Player* pPlayer = Unit::GetPlayer(*me, m_uiPlayerGUID))
-                        pPlayer->AreaExploredOrEventHappens(QUEST_590);
+                    if (Player* player = Unit::GetPlayer(*me, m_uiPlayerGUID))
+                        player->AreaExploredOrEventHappens(QUEST_590);
 
                     DoCast(me, SPELL_DRINK, true);
                     ++m_uiPhase;
@@ -131,17 +132,17 @@ struct npc_calvin_montagueAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_calvin_montague(Creature* pCreature)
+CreatureAI* GetAI_npc_calvin_montague(Creature* creature)
 {
-    return new npc_calvin_montagueAI(pCreature);
+    return new npc_calvin_montagueAI(creature);
 }
 
-bool QuestAccept_npc_calvin_montague(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
+bool QuestAccept_npc_calvin_montague(Player* player, Creature* creature, const Quest* pQuest)
 {
     if (pQuest->GetQuestId() == QUEST_590)
     {
-        pCreature->setFaction(FACTION_HOSTILE);
-        pCreature->AI()->AttackStart(pPlayer);
+        creature->setFaction(FACTION_HOSTILE);
+        creature->AI()->AttackStart(player);
     }
     return true;
 }
@@ -159,30 +160,30 @@ enum eMausoleum
     GO_DOOR         = 176594
 };
 
-bool GOHello_go_mausoleum_door(Player* pPlayer, GameObject* /*pGo*/)
+bool GOHello_go_mausoleum_door(Player* player, GameObject* /*pGo*/)
 {
-    if (pPlayer->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
         return false;
 
-    if (GameObject* pTrigger = pPlayer->FindNearestGameObject(GO_TRIGGER, 30.0f))
+    if (GameObject* pTrigger = player->FindNearestGameObject(GO_TRIGGER, 30.0f))
     {
         pTrigger->SetGoState(GO_STATE_READY);
-        pPlayer->SummonCreature(NPC_ULAG, 2390.26f, 336.47f, 40.01f, 2.26f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 300000);
+        player->SummonCreature(NPC_ULAG, 2390.26f, 336.47f, 40.01f, 2.26f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 300000);
         return false;
     }
 
     return false;
 }
 
-bool GOHello_go_mausoleum_trigger(Player* pPlayer, GameObject* pGo)
+bool GOHello_go_mausoleum_trigger(Player* player, GameObject* pGo)
 {
-    if (pPlayer->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
+    if (player->GetQuestStatus(QUEST_ULAG) != QUEST_STATUS_INCOMPLETE)
         return false;
 
-    if (GameObject* pDoor = pPlayer->FindNearestGameObject(GO_DOOR, 30.0f))
+    if (GameObject* pDoor = player->FindNearestGameObject(GO_DOOR, 30.0f))
     {
         pGo->SetGoState(GO_STATE_ACTIVE);
-        pDoor->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
+        pDoor->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
         return true;
     }
 

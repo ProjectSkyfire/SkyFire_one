@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -48,30 +49,30 @@ enum eEnums
 #define GOSSIP_ITEM_TEA     "Teach me the cooking recipe"
 #define GOSSIP_ITEM_POTION  "Teach me the alchemy recipe"
 
-bool GossipHello_npc_henry_stern (Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_henry_stern (Player* player, Creature* creature)
 {
-    if (pPlayer->GetBaseSkillValue(SKILL_COOKING) >= 175 && !pPlayer->HasSpell(SPELL_GOLDTHORN_TEA))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    if (player->GetBaseSkillValue(SKILL_COOKING) >= 175 && !player->HasSpell(SPELL_GOLDTHORN_TEA))
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    if (pPlayer->GetBaseSkillValue(SKILL_ALCHEMY) >= 180 && !pPlayer->HasSpell(SPELL_MIGHT_TROLLS_BLOOD_POTION))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_POTION, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+    if (player->GetBaseSkillValue(SKILL_ALCHEMY) >= 180 && !player->HasSpell(SPELL_MIGHT_TROLLS_BLOOD_POTION))
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_POTION, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_henry_stern (Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_henry_stern (Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
     {
-        pPlayer->CastSpell(pPlayer, SPELL_TEACHING_GOLDTHORN_TEA, true);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_TEA_ANSWER, pCreature->GetGUID());
+        player->CastSpell(player, SPELL_TEACHING_GOLDTHORN_TEA, true);
+        player->SEND_GOSSIP_MENU(GOSSIP_TEXT_TEA_ANSWER, creature->GetGUID());
     }
 
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 2)
     {
-        pPlayer->CastSpell(pPlayer, SPELL_TEACHING_MIGHTY_TROLLS_BLOOD_POTION, true);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXT_POTION_ANSWER, pCreature->GetGUID());
+        player->CastSpell(player, SPELL_TEACHING_MIGHTY_TROLLS_BLOOD_POTION, true);
+        player->SEND_GOSSIP_MENU(GOSSIP_TEXT_POTION_ANSWER, creature->GetGUID());
     }
 
     return true;
@@ -81,14 +82,14 @@ bool GossipSelect_npc_henry_stern (Player* pPlayer, Creature* pCreature, uint32 
 ## go_gong
 ######*/
 
-bool GOHello_go_gong(Player* /*pPlayer*/, GameObject* pGO)
+bool GOHello_go_gong(Player* /*player*/, GameObject* pGO)
 {
     //basic support, not blizzlike data is missing...
     ScriptedInstance* pInstance = pGO->GetInstanceData();
 
     if (pInstance)
     {
-        pInstance->SetData(DATA_GONG_WAVES,pInstance->GetData(DATA_GONG_WAVES)+1);
+        pInstance->SetData(DATA_GONG_WAVES, pInstance->GetData(DATA_GONG_WAVES)+1);
         return true;
     }
 
@@ -102,9 +103,9 @@ enum eTombCreature
 
 struct npc_tomb_creatureAI : public ScriptedAI
 {
-    npc_tomb_creatureAI(Creature* pCreature) : ScriptedAI(pCreature)
+    npc_tomb_creatureAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance* pInstance;
@@ -113,7 +114,7 @@ struct npc_tomb_creatureAI : public ScriptedAI
 
     void Reset()
     {
-        uiWebTimer = urand(5000,8000);
+        uiWebTimer = urand(5000, 8000);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -127,7 +128,7 @@ struct npc_tomb_creatureAI : public ScriptedAI
             if (uiWebTimer <= uiDiff)
             {
                 DoCast(me->getVictim(), SPELL_WEB);
-                uiWebTimer = urand(7000,16000);
+                uiWebTimer = urand(7000, 16000);
             } else uiWebTimer -= uiDiff;
         }
 
@@ -137,13 +138,13 @@ struct npc_tomb_creatureAI : public ScriptedAI
     void JustDied(Unit* /*pKiller*/)
     {
         if (pInstance)
-            pInstance->SetData(DATA_GONG_WAVES,pInstance->GetData(DATA_GONG_WAVES)+1);
+            pInstance->SetData(DATA_GONG_WAVES, pInstance->GetData(DATA_GONG_WAVES)+1);
     }
 };
 
-CreatureAI* GetAI_npc_tomb_creature(Creature* pCreature)
+CreatureAI* GetAI_npc_tomb_creature(Creature* creature)
 {
-    return new npc_tomb_creatureAI (pCreature);
+    return new npc_tomb_creatureAI (creature);
 }
 
 void AddSC_razorfen_downs()

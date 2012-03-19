@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -25,8 +26,9 @@
 
 class CreatureEventAIMgr
 {
+    friend class ACE_Singleton<CreatureEventAIMgr, ACE_Null_Mutex>;
+    CreatureEventAIMgr(){};
     public:
-        CreatureEventAIMgr(){};
         ~CreatureEventAIMgr(){};
 
         void LoadCreatureEventAI_Texts(bool check_entry_use);
@@ -46,6 +48,6 @@ class CreatureEventAIMgr
         CreatureEventAI_TextMap    m_CreatureEventAI_TextMap;
 };
 
-#define CreatureEAI_Mgr Oregon::Singleton<CreatureEventAIMgr>::Instance()
-#endif
+#define CreatureEAI_Mgr ACE_Singleton<CreatureEventAIMgr, ACE_Null_Mutex>::instance()
 
+#endif

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -65,7 +66,7 @@ struct npc_converted_sentryAI : public ScriptedAI
         {
             if (Timer <= diff)
             {
-                uint32 i = urand(1,2);
+                uint32 i = urand(1, 2);
                 if (i == 1)
                     DoScriptText(SAY_CONVERTED_1, me);
                 else
@@ -79,9 +80,9 @@ struct npc_converted_sentryAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_npc_converted_sentry(Creature* pCreature)
+CreatureAI* GetAI_npc_converted_sentry(Creature* creature)
 {
-    return new npc_converted_sentryAI (pCreature);
+    return new npc_converted_sentryAI (creature);
 }
 
 /*######
@@ -136,9 +137,9 @@ struct npc_greengill_slaveAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_greengill_slaveAI(Creature* pCreature)
+CreatureAI* GetAI_npc_greengill_slaveAI(Creature* creature)
 {
-    return new npc_greengill_slaveAI(pCreature);
+    return new npc_greengill_slaveAI(creature);
 }
 
 void AddSC_isle_of_queldanas()

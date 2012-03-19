@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -38,24 +39,24 @@ EndContentData */
 #define SPELL_TELEPORT      41566                           // s41566 - Teleport to Ashtongue NPC's
 #define GOSSIP_OLUM1        "Teleport me to the other Ashtongue Deathsworn"
 
-bool GossipHello_npc_spirit_of_olum(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_spirit_of_olum(Player* player, Creature* creature)
 {
-    ScriptedInstance* pInstance = pCreature->GetInstanceData();
+    ScriptedInstance* pInstance = creature->GetInstanceData();
 
     if (pInstance && (pInstance->GetData(DATA_SUPREMUSEVENT) >= DONE) && (pInstance->GetData(DATA_HIGHWARLORDNAJENTUSEVENT) >= DONE))
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_OLUM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_OLUM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
     return true;
 }
 
-bool GossipSelect_npc_spirit_of_olum(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_spirit_of_olum(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-        pPlayer->CLOSE_GOSSIP_MENU();
+        player->CLOSE_GOSSIP_MENU();
 
-    pPlayer->InterruptNonMeleeSpells(false);
-    pPlayer->CastSpell(pPlayer, SPELL_TELEPORT, false);
+    player->InterruptNonMeleeSpells(false);
+    player->CastSpell(player, SPELL_TELEPORT, false);
     return true;
 }
 

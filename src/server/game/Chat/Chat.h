@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_CHAT_H
-#define OREGONCORE_CHAT_H
+#ifndef TRINITY_CHAT_H
+#define TRINITY_CHAT_H
 
 #include "SharedDefines.h"
 
@@ -59,16 +60,16 @@ class ChatHandler
             FillMessageData(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, 0, message);
         }
 
-        static char* LineFromMessage(char*& pos) { char* start = strtok(pos,"\n"); pos = NULL; return start; }
+        static char* LineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = NULL; return start; }
 
         // function with different implementation for chat/console
-        virtual const char *GetOregonString(int32 entry) const;
+        virtual const char *GetSkyFireString(int32 entry) const;
         virtual void SendSysMessage(const char *str);
 
         char* extractQuotedArg(char* args);
 
         void SendSysMessage(int32     entry);
-        void PSendSysMessage(const char *format, ...) ATTR_PRINTF(2,3);
+        void PSendSysMessage(const char *format, ...) ATTR_PRINTF(2, 3);
         void PSendSysMessage(int32     entry, ...);
         std::string PGetParseString(int32 entry, ...);
 
@@ -106,7 +107,6 @@ class ChatHandler
         bool HandleAccountSetPasswordCommand(const char* args);
 
         bool HandleHelpCommand(const char* args);
-        bool HandleAHBotOptionsCommand(const char * args);
         bool HandleCommandsCommand(const char* args);
         bool HandleStartCommand(const char* args);
         bool HandleDismountCommand(const char* args);
@@ -114,9 +114,9 @@ class ChatHandler
         bool HandleGMListIngameCommand(const char* args);
         bool HandleGMListFullCommand(const char* args);
 
-        bool HandleNamegoCommand(const char* args);
-        bool HandleGonameCommand(const char* args);
-        bool HandleGroupgoCommand(const char* args);
+        bool HandleSummonCommand(const char* args);
+        bool HandleAppearCommand(const char* args);
+        bool HandleGroupSummonCommand(const char* args);
         bool HandleRecallCommand(const char* args);
         bool HandleNameAnnounceCommand(const char* args);
         bool HandleGMNameAnnounceCommand(const char* args);
@@ -223,7 +223,6 @@ class ChatHandler
         bool HandleNpcYellCommand(const char* args);
         bool HandleNpcSetDeathStateCommand(const char* args);
         bool HandleNpcAddFormationCommand(const char* args);
-        bool HandleNpcAddGroupCommand(const char* args);
         bool HandleNpcSetLinkCommand(const char* args);
 
         //----------------------------------------------------------
@@ -272,7 +271,7 @@ class ChatHandler
         bool HandleReloadLootTemplatesProspectingCommand(const char* args);
         bool HandleReloadLootTemplatesReferenceCommand(const char* args);
         bool HandleReloadLootTemplatesSkinningCommand(const char* args);
-        bool HandleReloadOregonStringCommand(const char* args);
+        bool HandleReloadSkyFireStringCommand(const char* args);
         bool HandleReloadNpcGossipCommand(const char* args);
         bool HandleReloadNpcTrainerCommand(const char* args);
         bool HandleReloadNpcVendorCommand(const char* args);
@@ -321,9 +320,13 @@ class ChatHandler
         bool HandleServerRestartCommand(const char* args);
         bool HandleServerSetLogLevelCommand(const char* args);
         bool HandleServerSetMotdCommand(const char* args);
-        bool HandleServerSetDiffTimeCommand(const char* args);
         bool HandleServerShutDownCommand(const char* args);
         bool HandleServerShutDownCancelCommand(const char* args);
+        //bool HandleServerSetClosedCommand(const char* args);
+        bool HandleServerToggleQueryLogging(const char* args);
+
+        bool HandleServerSetLogFileLevelCommand(const char* args);
+        bool HandleServerSetDiffTimeCommand(const char* args);
 
         bool HandleAddHonorCommand(const char* args);
         bool HandleHonorAddKillCommand(const char* args);
@@ -531,14 +534,14 @@ class ChatHandler
         GameTele const* extractGameTeleFromLink(char* text);
         bool GetPlayerGroupAndGUIDByName(const char* cname, Player* &plr, Group* &group, uint64 &guid, bool offline = false);
 
-        GameObject* GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid,uint32 entry);
+        GameObject* GetObjectGlobalyWithGuidOrNearWithDbGuid(uint32 lowguid, uint32 entry);
 
         // Utility methods for commands
         bool LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 limit);
         bool HandleBanListHelper(QueryResult_AutoPtr result);
-        bool HandleBanHelper(BanMode mode,char const* args);
+        bool HandleBanHelper(BanMode mode, char const* args);
         bool HandleBanInfoHelper(uint32 accountid, char const* accountname);
-        bool HandleUnBanHelper(BanMode mode,char const* args);
+        bool HandleUnBanHelper(BanMode mode, char const* args);
 
         /**
          * Stores informations about a deleted character
@@ -574,7 +577,7 @@ class CliHandler : public ChatHandler
         explicit CliHandler(void* callbackArg, Print* zprint) : m_callbackArg(callbackArg), m_print(zprint) {}
 
         // overwrite functions
-        const char *GetOregonString(int32 entry) const;
+        const char *GetSkyFireString(int32 entry) const;
         bool isAvailable(ChatCommand const& cmd) const;
         void SendSysMessage(const char *str);
         char const* GetName() const;

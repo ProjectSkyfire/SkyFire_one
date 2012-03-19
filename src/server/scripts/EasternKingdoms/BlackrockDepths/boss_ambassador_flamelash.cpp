@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -48,7 +49,7 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
 
     void SummonSpirits(Unit* victim)
     {
-        if (Creature *Spirit = DoSpawnCreature(9178, irand(-9,9), irand(-9,9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
+        if (Creature *Spirit = DoSpawnCreature(9178, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
             Spirit->AI()->AttackStart(victim);
     }
 
@@ -79,9 +80,9 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_ambassador_flamelash(Creature* pCreature)
+CreatureAI* GetAI_boss_ambassador_flamelash(Creature* creature)
 {
-    return new boss_ambassador_flamelashAI (pCreature);
+    return new boss_ambassador_flamelashAI (creature);
 }
 
 void AddSC_boss_ambassador_flamelash()

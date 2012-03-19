@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -50,7 +51,7 @@ struct instance_ramparts : public ScriptedInstance
         return false;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/) { }
+    void OnCreatureCreate(Creature* creature, bool /*add*/) { }
 
     void OnGameObjectCreate(GameObject* pGo, bool add) { }
 
@@ -67,13 +68,13 @@ struct instance_ramparts : public ScriptedInstance
             }
         }
 
-        debug_log("OSCR: Instance Hellfire Ramparts: GetPlayerInMap, but PlayerList is empty!");
+        sLog->outDebug("TSCR: Instance Hellfire Ramparts: GetPlayerInMap, but PlayerList is empty!");
         return NULL;
     }
 
     void SetData(uint32 type, uint32 data)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_GARGOLMAR:
                 if (Encounter[0] != DONE)
@@ -98,7 +99,7 @@ struct instance_ramparts : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
             case DATA_GARGOLMAR: return Encounter[0];
             case DATA_OMOR: return Encounter[1];

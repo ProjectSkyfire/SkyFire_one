@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,10 +18,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __OREGON_LANGUAGE_H
-#define __OREGON_LANGUAGE_H
+#ifndef __TRINITY_LANGUAGE_H
+#define __TRINITY_LANGUAGE_H
 
-enum OregonStrings
+enum SkyFireStrings
 {
     // for chat commands
     LANG_SELECT_CHAR_OR_CREATURE        = 1,
@@ -730,7 +731,9 @@ enum OregonStrings
     LANG_CHARACTER_DELETED_SKIP_FULL    = 1020,
     LANG_CHARACTER_DELETED_SKIP_NAME    = 1021,
     LANG_CHARACTER_DELETED_LIST_LINE_CHAT = 1022,
-    // Room for more level 4              1023-1099 not used
+    LANG_SQLDRIVER_QUERY_LOGGING_ENABLED  = 1023,
+    LANG_SQLDRIVER_QUERY_LOGGING_DISABLED = 1024,
+    // Room for more level 4              1025-1099 not used
 
     // Level 3 (continue)
     LANG_ACCOUNT_SETADDON               = 1100,
@@ -830,7 +833,7 @@ enum OregonStrings
     LANG_COMMAND_TICKETLISTADDCOMMENT   = 2024,
     LANG_COMMAND_TICKETLISTAGECREATE    = 2025,
 
-    // Oregon strings                     5000-9999
+    // Trinity strings                     5000-9999
     LANG_COMMAND_FREEZE                 = 5000,
     LANG_COMMAND_FREEZE_ERROR           = 5001,
     LANG_COMMAND_FREEZE_WRONG           = 5002,
@@ -841,7 +844,10 @@ enum OregonStrings
     LANG_INSTANCE_MUST_RAID_GRP         = 5007,
     LANG_INSTANCE_NOT_AS_GHOST          = 5008,
     LANG_COMMAND_PLAYED_TO_ALL          = 5009,
-    // Room for more Oregon strings       5010-9999
+    LANG_CHANNEL_NOT_PUBLIC             = 5010,
+    LANG_CHANNEL_PUBLIC_CHANGED         = 5011,
+    // Room for more Trinity strings       5012-9999
+
     // Used for GM Announcements
     LANG_GM_BROADCAST                    = 6613,
     LANG_GM_NOTIFY                       = 6614,

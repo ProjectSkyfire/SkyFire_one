@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -296,14 +297,14 @@ struct mob_batriderAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_jeklik(Creature* pCreature)
+CreatureAI* GetAI_boss_jeklik(Creature* creature)
 {
-    return new boss_jeklikAI (pCreature);
+    return new boss_jeklikAI (creature);
 }
 
-CreatureAI* GetAI_mob_batrider(Creature* pCreature)
+CreatureAI* GetAI_mob_batrider(Creature* creature)
 {
-    return new mob_batriderAI (pCreature);
+    return new mob_batriderAI (creature);
 }
 
 void AddSC_boss_jeklik()

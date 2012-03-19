@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -146,7 +147,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_KILL1, me); break;
         case 1: DoScriptText(SAY_KILL2, me); break;
@@ -193,7 +194,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
     {
         float z;
 
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: z = 1; break;
             case 1: z = -1; break;
@@ -232,7 +233,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
             if (Wrath_Timer <= diff)
             {
                 me->InterruptNonMeleeSpells(false);
-                DoCast(SelectTarget(SELECT_TARGET_RANDOM,1,100,true), SPELL_WRATH_OF_THE_ASTROMANCER, true);
+                DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true), SPELL_WRATH_OF_THE_ASTROMANCER, true);
                 Wrath_Timer = 20000+rand()%5000;
             } else Wrath_Timer -= diff;
 
@@ -277,7 +278,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
                 //After these 50 seconds she portals to the middle of the room and disappears, leaving 3 light portals behind.
                 me->GetMotionMaster()->Clear();
                 me->GetMap()->CreatureRelocation(me, SolarianPos[0], SolarianPos[1], SolarianPos[2], SolarianPos[3]);
-                for (int i=0; i<=2; ++i)
+                for (int i = 0; i <= 2; ++i)
                 {
                     if (!i)
                     {
@@ -300,7 +301,7 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
                     Portals[2][0] = Portals[2][0]+7*i;
                     Portals[2][1] = Portal_Y(Portals[2][0], LARGE_PORTAL_RADIUS);
                 }
-                for (int i=0; i<=2; i++)
+                for (int i = 0; i <= 2; i++)
                 {
                     Creature* Summoned = me->SummonCreature(ASTROMANCER_SOLARIAN_SPOTLIGHT, Portals[i][0], Portals[i][1], Portals[i][2], CENTER_O, TEMPSUMMON_TIMED_DESPAWN, Phase2_Timer+Phase3_Timer+AppearDelay_Timer+1700);
                     if (Summoned)
@@ -320,8 +321,8 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
             if (Phase2_Timer <= diff)
             {
                 Phase = 3;
-                for (int i=0; i<=2; i++)
-                    for (int j=1; j<=4; j++)
+                for (int i = 0; i <= 2; i++)
+                    for (int j = 1; j <= 4; j++)
                         SummonMinion(SOLARIUM_AGENT, Portals[i][0], Portals[i][1], Portals[i][2]);
 
                 DoScriptText(SAY_SUMMON1, me);
@@ -424,7 +425,7 @@ struct mob_solarium_priestAI : public ScriptedAI
         {
             Unit *pTarget = NULL;
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0:
                     if (pInstance)
@@ -437,7 +438,7 @@ struct mob_solarium_priestAI : public ScriptedAI
 
             if (pTarget)
             {
-                DoCast(pTarget,SOLARIUM_HEAL);
+                DoCast(pTarget, SOLARIUM_HEAL);
                 healTimer = 9000;
             }
         } else healTimer -= diff;
@@ -458,14 +459,14 @@ struct mob_solarium_priestAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_solarium_priest(Creature* pCreature)
+CreatureAI* GetAI_mob_solarium_priest(Creature* creature)
 {
-    return new mob_solarium_priestAI (pCreature);
+    return new mob_solarium_priestAI (creature);
 }
 
-CreatureAI* GetAI_boss_high_astromancer_solarian(Creature* pCreature)
+CreatureAI* GetAI_boss_high_astromancer_solarian(Creature* creature)
 {
-    return new boss_high_astromancer_solarianAI (pCreature);
+    return new boss_high_astromancer_solarianAI (creature);
 }
 
 void AddSC_boss_high_astromancer_solarian()

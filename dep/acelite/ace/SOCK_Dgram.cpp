@@ -50,7 +50,7 @@ ACE_SOCK_Dgram::recv (iovec *io_vec,
 {
   ACE_TRACE ("ACE_SOCK_Dgram::recv");
 #if defined (FIONREAD)
-  if( ACE::handle_read_ready (this->get_handle (), timeout) != 1 )
+  if ( ACE::handle_read_ready (this->get_handle (), timeout) != 1 )
     {
       return -1;
     }
@@ -424,7 +424,7 @@ ACE_SOCK_Dgram::recv (void *buf,
                       int flags,
                       const ACE_Time_Value *timeout) const
 {
-  if( ACE::handle_read_ready (this->get_handle (), timeout) == 1 )
+  if ( ACE::handle_read_ready (this->get_handle (), timeout) == 1 )
     {
       // Goes fine, call <recv> to get data
       return this->recv (buf, n, addr, flags);
@@ -443,7 +443,7 @@ ACE_SOCK_Dgram::send (const void *buf,
                       const ACE_Time_Value *timeout) const
 {
   // Check the status of the current socket.
-  if( ACE::handle_write_ready (this->get_handle (), timeout) == 1 )
+  if ( ACE::handle_write_ready (this->get_handle (), timeout) == 1 )
     {
       // Goes fine, call <send> to transmit the data.
       return this->send (buf, n, addr, flags);

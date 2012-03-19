@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -74,7 +75,7 @@ struct boss_murmurAI : public Scripted_NoMovementAI
     void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
     {
         if (pTarget && pTarget->isAlive() && spell && spell->Id == SPELL_SONIC_BOOM_EFFECT)
-            me->DealDamage(pTarget,(pTarget->GetHealth()*90)/100,NULL,SPELL_DIRECT_DAMAGE,SPELL_SCHOOL_MASK_NATURE,spell);
+            me->DealDamage(pTarget,(pTarget->GetHealth()*90)/100, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NATURE, spell);
     }
 
     void UpdateAI(const uint32 diff)
@@ -102,7 +103,7 @@ struct boss_murmurAI : public Scripted_NoMovementAI
         // Murmur's Touch
         if (MurmursTouch_Timer <= diff)
         {
-            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0,80,true))
+            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 80, true))
                 DoCast(pTarget, SPELL_MURMURS_TOUCH);
             MurmursTouch_Timer = 30000;
         } else MurmursTouch_Timer -= diff;
@@ -110,7 +111,7 @@ struct boss_murmurAI : public Scripted_NoMovementAI
         // Resonance
         if (Resonance_Timer <= diff)
         {
-            if (!me->IsWithinMeleeRange(SelectTarget(SELECT_TARGET_NEAREST,0,20,true)))
+            if (!me->IsWithinMeleeRange(SelectTarget(SELECT_TARGET_NEAREST, 0, 20, true)))
                 DoCast(me, SPELL_RESONANCE);
             Resonance_Timer = 5000;
         } else Resonance_Timer -= diff;
@@ -118,7 +119,7 @@ struct boss_murmurAI : public Scripted_NoMovementAI
         // Magnetic Pull
         if (MagneticPull_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
                 {
                     DoCast(pTarget, SPELL_MAGNETIC_PULL);
@@ -144,7 +145,7 @@ struct boss_murmurAI : public Scripted_NoMovementAI
             // Sonic Shock
             if (SonicShock_Timer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0,20,false))
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 20, false))
                     if (pTarget->isAlive())
                         DoCast(pTarget, SPELL_SONIC_SHOCK);
                 SonicShock_Timer = 10000+rand()%10000;
@@ -170,9 +171,9 @@ struct boss_murmurAI : public Scripted_NoMovementAI
     }
 };
 
-CreatureAI* GetAI_boss_murmur(Creature* pCreature)
+CreatureAI* GetAI_boss_murmur(Creature* creature)
 {
-    return new boss_murmurAI (pCreature);
+    return new boss_murmurAI (creature);
 }
 
 void AddSC_boss_murmur()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -56,9 +57,9 @@ enum eEnums
 
 struct boss_scarlet_commander_mograineAI : public ScriptedAI
 {
-    boss_scarlet_commander_mograineAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_scarlet_commander_mograineAI(Creature* creature) : ScriptedAI(creature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance* m_pInstance;
@@ -82,7 +83,7 @@ struct boss_scarlet_commander_mograineAI : public ScriptedAI
 
         if (m_pInstance)
             if (me->isAlive())
-                m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT,NOT_STARTED);
+                m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, NOT_STARTED);
 
         m_bHasDied = false;
         m_bHeal = false;
@@ -124,7 +125,7 @@ struct boss_scarlet_commander_mograineAI : public ScriptedAI
         {
             m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, IN_PROGRESS);
 
-            Whitemane->GetMotionMaster()->MovePoint(1,1163.113370,1398.856812,32.527786);
+            Whitemane->GetMotionMaster()->MovePoint(1, 1163.113370, 1398.856812, 32.527786);
 
             me->GetMotionMaster()->MovementExpired();
             me->GetMotionMaster()->MoveIdle();
@@ -209,9 +210,9 @@ struct boss_scarlet_commander_mograineAI : public ScriptedAI
 
 struct boss_high_inquisitor_whitemaneAI : public ScriptedAI
 {
-    boss_high_inquisitor_whitemaneAI(Creature* pCreature) : ScriptedAI(pCreature)
+    boss_high_inquisitor_whitemaneAI(Creature* creature) : ScriptedAI(creature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = creature->GetInstanceData();
     }
 
     ScriptedInstance* m_pInstance;
@@ -335,14 +336,14 @@ struct boss_high_inquisitor_whitemaneAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_scarlet_commander_mograine(Creature* pCreature)
+CreatureAI* GetAI_boss_scarlet_commander_mograine(Creature* creature)
 {
-    return new boss_scarlet_commander_mograineAI (pCreature);
+    return new boss_scarlet_commander_mograineAI (creature);
 }
 
-CreatureAI* GetAI_boss_high_inquisitor_whitemane(Creature* pCreature)
+CreatureAI* GetAI_boss_high_inquisitor_whitemane(Creature* creature)
 {
-    return new boss_high_inquisitor_whitemaneAI (pCreature);
+    return new boss_high_inquisitor_whitemaneAI (creature);
 }
 
 void AddSC_boss_mograine_and_whitemane()

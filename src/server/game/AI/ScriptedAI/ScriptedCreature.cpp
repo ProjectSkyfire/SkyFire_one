@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -93,8 +94,8 @@ void SummonList::DespawnAll()
     }
 }
 
-ScriptedAI::ScriptedAI(Creature* pCreature) : CreatureAI(pCreature),
-    me(pCreature),
+ScriptedAI::ScriptedAI(Creature* creature) : CreatureAI(creature),
+    me(creature),
     IsFleeing(false),
     m_bCombatMovement(true),
     m_uiEvadeCheckCooldown(2500)
@@ -164,7 +165,7 @@ void ScriptedAI::DoPlaySoundToSet(WorldObject* pSource, uint32 uiSoundId)
 
     if (!GetSoundEntriesStore()->LookupEntry(uiSoundId))
     {
-        error_log("OSCR: Invalid soundId %u used in DoPlaySoundToSet (Source: TypeId %u, GUID %u)", uiSoundId, pSource->GetTypeId(), pSource->GetGUIDLow());
+        sLog->outError("TSCR: Invalid soundId %u used in DoPlaySoundToSet (Source: TypeId %u, GUID %u)", uiSoundId, pSource->GetTypeId(), pSource->GetGUIDLow());
         return;
     }
 
@@ -190,17 +191,17 @@ Unit* ScriptedAI::SelectUnit(SelectAggroTarget pTarget, uint32 uiPosition)
     {
     case SELECT_TARGET_RANDOM:
         advance (itr , uiPosition +  (rand() % (threatlist.size() - uiPosition)));
-        return Unit::GetUnit((*me),(*itr)->getUnitGuid());
+        return Unit::GetUnit((*me), (*itr)->getUnitGuid());
         break;
 
     case SELECT_TARGET_TOPAGGRO:
         advance (itr , uiPosition);
-        return Unit::GetUnit((*me),(*itr)->getUnitGuid());
+        return Unit::GetUnit((*me), (*itr)->getUnitGuid());
         break;
 
     case SELECT_TARGET_BOTTOMAGGRO:
         advance (ritr , uiPosition);
-        return Unit::GetUnit((*me),(*ritr)->getUnitGuid());
+        return Unit::GetUnit((*me), (*ritr)->getUnitGuid());
         break;
 
     default:
@@ -409,7 +410,7 @@ void ScriptedAI::DoResetThreat()
 {
     if (!me->CanHaveThreatList() || me->getThreatManager().isThreatListEmpty())
     {
-        error_log("OSCR: DoResetThreat called for creature that either cannot have threat list or has empty threat list (me entry = %d)", me->GetEntry());
+        sLog->outError("TSCR: DoResetThreat called for creature that either cannot have threat list or has empty threat list (me entry = %d)", me->GetEntry());
         return;
     }
 
@@ -452,7 +453,7 @@ void ScriptedAI::DoTeleportPlayer(Unit* pUnit, float fX, float fY, float fZ, flo
     if (!pUnit || pUnit->GetTypeId() != TYPEID_PLAYER)
     {
         if (pUnit)
-            error_log("OSCR: Creature %u (Entry: %u) Tried to teleport non-player unit (Type: %u GUID: %u) to x: %f y:%f z: %f o: %f. Aborted.", me->GetGUID(), me->GetEntry(), pUnit->GetTypeId(), pUnit->GetGUID(), fX, fY, fZ, fO);
+            sLog->outError("TSCR: Creature %u (Entry: %u) Tried to teleport non-player unit (Type: %u GUID: %u) to x: %f y:%f z: %f o: %f. Aborted.", me->GetGUID(), me->GetEntry(), pUnit->GetTypeId(), pUnit->GetGUID(), fX, fY, fZ, fO);
         return;
     }
 
@@ -475,8 +476,8 @@ void ScriptedAI::DoTeleportAll(float fX, float fY, float fZ, float fO)
 Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 {
     Unit* pUnit = NULL;
-    Oregon::MostHPMissingInRange u_check(me, fRange, uiMinHPDiff);
-    Oregon::UnitLastSearcher<Oregon::MostHPMissingInRange> searcher(pUnit, u_check);
+    Trinity::MostHPMissingInRange u_check(me, fRange, uiMinHPDiff);
+    Trinity::UnitLastSearcher<Trinity::MostHPMissingInRange> searcher(pUnit, u_check);
     me->VisitNearbyObject(fRange, searcher);
 
     return pUnit;
@@ -485,8 +486,8 @@ Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 {
     std::list<Creature*> pList;
-    Oregon::FriendlyCCedInRange u_check(me, fRange);
-    Oregon::CreatureListSearcher<Oregon::FriendlyCCedInRange> searcher(pList, u_check);
+    Trinity::FriendlyCCedInRange u_check(me, fRange);
+    Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange> searcher(pList, u_check);
     me->VisitNearbyObject(fRange, searcher);
     return pList;
 }
@@ -494,36 +495,36 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float fRange, uint32 uiSpellid)
 {
     std::list<Creature*> pList;
-    Oregon::FriendlyMissingBuffInRange u_check(me, fRange, uiSpellid);
-    Oregon::CreatureListSearcher<Oregon::FriendlyMissingBuffInRange> searcher(pList, u_check);
+    Trinity::FriendlyMissingBuffInRange u_check(me, fRange, uiSpellid);
+    Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange> searcher(pList, u_check);
     me->VisitNearbyObject(fRange, searcher);
     return pList;
 }
 
 Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
 {
-    Player* pPlayer = NULL;
+    Player* player = NULL;
 
-    CellPair pair(Oregon::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Oregon::PlayerAtMinimumRangeAway check(me, fMinimumRange);
-    Oregon::PlayerSearcher<Oregon::PlayerAtMinimumRangeAway> searcher(pPlayer, check);
-    TypeContainerVisitor<Oregon::PlayerSearcher<Oregon::PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
+    Trinity::PlayerAtMinimumRangeAway check(me, fMinimumRange);
+    Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway> searcher(player, check);
+    TypeContainerVisitor<Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(me->GetMap()));
 
-    return pPlayer;
+    return player;
 }
 
 void ScriptedAI::SetEquipmentSlots(bool bLoadDefault, int32 uiMainHand, int32 uiOffHand, int32 uiRanged)
 {
     if (bLoadDefault)
     {
-        if (CreatureInfo const* pInfo = GetCreatureTemplateStore(me->GetEntry()))
-            me->LoadEquipment(pInfo->equipmentId,true);
+        if (CreatureTemplate const* pInfo = GetCreatureTemplateStore(me->GetEntry()))
+            me->LoadEquipment(pInfo->equipmentId, true);
 
         return;
     }
@@ -570,7 +571,7 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
     float fY = me->GetPositionY();
     float fZ = me->GetPositionZ();
 
-    switch(me->GetEntry())
+    switch (me->GetEntry())
     {
         case NPC_BROODLORD:                                         // broodlord (not move down stairs)
             if (fZ > 448.60f)
@@ -589,7 +590,7 @@ bool ScriptedAI::EnterEvadeIfOutOfCombatArea(const uint32 uiDiff)
                 return false;
             break;
         default:
-            error_log("OSCR: EnterEvadeIfOutOfCombatArea used for creature entry %u, but does not have any definition.", me->GetEntry());
+            sLog->outError("TSCR: EnterEvadeIfOutOfCombatArea used for creature entry %u, but does not have any definition.", me->GetEntry());
             return false;
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_CREATURE_H
-#define OREGONCORE_CREATURE_H
+#ifndef TRINITY_CREATURE_H
+#define TRINITY_CREATURE_H
 
 #include "Common.h"
 #include "Unit.h"
@@ -127,16 +128,16 @@ enum SummonMask
     SUMMON_MASK_CONTROLABLE_GUARDIAN  = 0x00000080,
 };
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 #define MAX_KILL_CREDIT 2
 // from `creature_template` table
-struct CreatureInfo
+struct CreatureTemplate
 {
     uint32  Entry;
     uint32  HeroicEntry;
@@ -401,7 +402,7 @@ struct TrainerSpellData
 
 typedef std::list<GossipOption> GossipOptionList;
 
-typedef std::map<uint32,time_t> CreatureSpellCooldowns;
+typedef std::map<uint32, time_t> CreatureSpellCooldowns;
 
 // max different by z coordinate for creature aggro reaction
 #define CREATURE_Z_ATTACK_RANGE 3
@@ -422,11 +423,11 @@ class Creature : public Unit, public GridObject<Creature>
 
         bool Create(uint32 guidlow, Map *map, uint32 Entry, uint32 team, float x, float y, float z, float ang, const CreatureData *data = NULL);
         bool LoadCreaturesAddon(bool reload = false);
-        void SelectLevel(const CreatureInfo *cinfo);
+        void SelectLevel(const CreatureTemplate *cinfo);
         void LoadEquipment(uint32 equip_entry, bool force=false);
 
         uint32 GetDBTableGUIDLow() const { return m_DBTableGuid; }
-        char const* GetSubName() const { return GetCreatureInfo()->SubName; }
+        char const* GetSubName() const { return GetCreatureTemplate()->SubName; }
 
         void Update(uint32 time);                         // overwrited Unit::Update
         void GetRespawnCoord(float &x, float &y, float &z, float* ori = NULL, float* dist =NULL) const;
@@ -440,19 +441,19 @@ class Creature : public Unit, public GridObject<Creature>
         bool isTotem() const    { return m_summonMask & SUMMON_MASK_TOTEM; }
 
         void SetCorpseDelay(uint32 delay) { m_corpseDelay = delay; }
-        bool isRacialLeader() const { return GetCreatureInfo()->RacialLeader; }
-        bool isCivilian() const { return GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_CIVILIAN; }
-        bool isTrigger() const { return GetCreatureInfo()->flags_extra & CREATURE_FLAG_EXTRA_TRIGGER; }
-        bool canWalk() const { return GetCreatureInfo()->InhabitType & INHABIT_GROUND; }
-        bool canSwim() const { return GetCreatureInfo()->InhabitType & INHABIT_WATER; }
-        bool canFly()  const { return GetCreatureInfo()->InhabitType & INHABIT_AIR; }
+        bool isRacialLeader() const { return GetCreatureTemplate()->RacialLeader; }
+        bool isCivilian() const { return GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_CIVILIAN; }
+        bool isTrigger() const { return GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_TRIGGER; }
+        bool canWalk() const { return GetCreatureTemplate()->InhabitType & INHABIT_GROUND; }
+        bool canSwim() const { return GetCreatureTemplate()->InhabitType & INHABIT_WATER; }
+        bool canFly()  const { return GetCreatureTemplate()->InhabitType & INHABIT_AIR; }
         void SetReactState(ReactStates st) { m_reactState = st; }
         ReactStates GetReactState() { return m_reactState; }
         bool HasReactState(ReactStates state) const { return (m_reactState == state); }
         // TODO RENAME THIS!!!!!
         bool isCanTrainingOf(Player* player, bool msg) const;
         bool isCanInteractWithBattleMaster(Player* player, bool msg) const;
-        bool isCanTrainingAndResetTalentsOf(Player* pPlayer) const;
+        bool isCanTrainingAndResetTalentsOf(Player* player) const;
         bool IsOutOfThreatArea(Unit* pVictim) const;
         bool IsImmunedToSpell(SpellEntry const* spellInfo, bool useCharges = false);
                                                             // redefine Unit::IsImmunedToSpell
@@ -463,7 +464,7 @@ class Creature : public Unit, public GridObject<Creature>
             if (isPet())
                 return false;
 
-            uint32 rank = GetCreatureInfo()->rank;
+            uint32 rank = GetCreatureTemplate()->rank;
             return rank != CREATURE_ELITE_NORMAL && rank != CREATURE_ELITE_RARE;
         }
 
@@ -472,7 +473,7 @@ class Creature : public Unit, public GridObject<Creature>
             if (isPet())
                 return false;
 
-            return GetCreatureInfo()->rank == CREATURE_ELITE_WORLDBOSS;
+            return GetCreatureTemplate()->rank == CREATURE_ELITE_WORLDBOSS;
         }
 
         uint32 getLevelForTarget(Unit const* target) const; // overwrite Unit::getLevelForTarget for boss level support
@@ -518,7 +519,7 @@ class Creature : public Unit, public GridObject<Creature>
 
         TrainerSpellData const* GetTrainerSpells() const;
 
-        CreatureInfo const *GetCreatureInfo() const { return m_creatureInfo; }
+        CreatureTemplate const *GetCreatureTemplate() const { return m_creatureInfo; }
         CreatureData const *GetCreatureData() const { return m_creatureData; }
         CreatureDataAddon const* GetCreatureAddon() const;
 
@@ -527,14 +528,14 @@ class Creature : public Unit, public GridObject<Creature>
         uint32 GetScriptId();
 
         void setEmoteState(uint8 emote) { m_emoteState = emote; };
-        void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text,language,TargetGuid); }
-        void Yell(const char* text, uint32 language, uint64 TargetGuid) { MonsterYell(text,language,TargetGuid); }
-        void TextEmote(const char* text, uint64 TargetGuid, bool IsBossEmote = false) { MonsterTextEmote(text,TargetGuid,IsBossEmote); }
-        void Whisper(const char* text, uint64 receiver, bool IsBossWhisper = false) { MonsterWhisper(text,receiver,IsBossWhisper); }
-        void Say(int32 textId, uint32 language, uint64 TargetGuid) { MonsterSay(textId,language,TargetGuid); }
-        void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId,language,TargetGuid); }
-        void TextEmote(int32 textId, uint64 TargetGuid, bool IsBossEmote = false) { MonsterTextEmote(textId,TargetGuid,IsBossEmote); }
-        void Whisper(int32 textId, uint64 receiver, bool IsBossWhisper = false) { MonsterWhisper(textId,receiver,IsBossWhisper); }
+        void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text, language, TargetGuid); }
+        void Yell(const char* text, uint32 language, uint64 TargetGuid) { MonsterYell(text, language, TargetGuid); }
+        void TextEmote(const char* text, uint64 TargetGuid, bool IsBossEmote = false) { MonsterTextEmote(text, TargetGuid, IsBossEmote); }
+        void Whisper(const char* text, uint64 receiver, bool IsBossWhisper = false) { MonsterWhisper(text, receiver, IsBossWhisper); }
+        void Say(int32 textId, uint32 language, uint64 TargetGuid) { MonsterSay(textId, language, TargetGuid); }
+        void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId, language, TargetGuid); }
+        void TextEmote(int32 textId, uint64 TargetGuid, bool IsBossEmote = false) { MonsterTextEmote(textId, TargetGuid, IsBossEmote); }
+        void Whisper(int32 textId, uint64 receiver, bool IsBossWhisper = false) { MonsterWhisper(textId, receiver, IsBossWhisper); }
 
         // overwrite WorldObject function for proper name localization
         const char* GetNameForLocaleIdx(int32 locale_idx) const;
@@ -639,12 +640,8 @@ class Creature : public Unit, public GridObject<Creature>
         void UpdateWaypointID(uint32 wpID){m_waypointID = wpID;}
 
         void SearchFormation();
-        CreatureFormation *GetFormation() {return m_formation;}
-        void SetFormation(CreatureFormation *formation) {m_formation = formation;}
-
-        void SearchGroup();
-        CreatureGroup *GetGroup() {return m_group;}
-        void SetGroup(CreatureGroup *group) {m_group = group;}
+        CreatureGroup* GetFormation() {return m_formation;}
+        void SetFormation(CreatureGroup* formation) {m_formation = formation;}
 
         Unit *SelectVictim();
 
@@ -661,7 +658,7 @@ class Creature : public Unit, public GridObject<Creature>
 
         float m_SightDistance, m_CombatDistance;
     protected:
-        bool CreateFromProto(uint32 guidlow,uint32 Entry,uint32 team, const CreatureData *data = NULL);
+        bool CreateFromProto(uint32 guidlow, uint32 Entry, uint32 team, const CreatureData *data = NULL);
         bool InitEntry(uint32 entry, uint32 team=ALLIANCE, const CreatureData* data=NULL);
 
         // vendor items
@@ -714,11 +711,11 @@ class Creature : public Unit, public GridObject<Creature>
         uint32 m_path_id;
 
         //Formation var
-        CreatureFormation *m_formation;
+        CreatureGroup* m_formation;
         //Group var
         CreatureGroup *m_group;
 
-        CreatureInfo const* m_creatureInfo;                 // in heroic mode can different from ObjMgr::GetCreatureTemplate(GetEntry())
+        CreatureTemplate const* m_creatureInfo;                 // in heroic mode can different from ObjMgr::GetCreatureTemplate(GetEntry())
 };
 
 class AssistDelayEvent : public BasicEvent

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -81,7 +82,7 @@ struct boss_doomlordkazzakAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
         case 0: DoScriptText(SAY_AGGRO1, me); break;
         case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -94,9 +95,9 @@ struct boss_doomlordkazzakAI : public ScriptedAI
          if (victim->GetTypeId() != TYPEID_PLAYER)
              return;
 
-            DoCast(me,SPELL_CAPTURESOUL);
+            DoCast(me, SPELL_CAPTURESOUL);
 
-            switch(rand()%3)
+            switch (rand()%3)
             {
             case 0: DoScriptText(SAY_KILL1, me); break;
             case 1: DoScriptText(SAY_KILL2, me); break;
@@ -158,7 +159,7 @@ struct boss_doomlordkazzakAI : public ScriptedAI
         if (Enrage_Timer <= diff)
         {
             DoScriptText(EMOTE_FRENZY, me);
-            DoCast(me,SPELL_ENRAGE);
+            DoCast(me, SPELL_ENRAGE);
             Enrage_Timer = 30000;
         } else Enrage_Timer -= diff;
 
@@ -172,9 +173,9 @@ struct boss_doomlordkazzakAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_doomlordkazzak(Creature* pCreature)
+CreatureAI* GetAI_boss_doomlordkazzak(Creature* creature)
 {
-    return new boss_doomlordkazzakAI (pCreature);
+    return new boss_doomlordkazzakAI (creature);
 }
 
 void AddSC_boss_doomlordkazzak()

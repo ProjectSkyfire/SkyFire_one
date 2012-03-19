@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -40,7 +41,7 @@ struct boss_aku_maiAI : public ScriptedAI
 
     void Reset()
     {
-        uiPoisonCloudTimer = urand(5000,9000);
+        uiPoisonCloudTimer = urand(5000, 9000);
         bIsEnraged = false;
         if (pInstance)
             pInstance->SetData(TYPE_AKU_MAI, NOT_STARTED);
@@ -66,12 +67,12 @@ struct boss_aku_maiAI : public ScriptedAI
         if (uiPoisonCloudTimer < diff)
         {
             DoCastVictim(SPELL_POISON_CLOUD);
-            uiPoisonCloudTimer = urand(25000,50000);
+            uiPoisonCloudTimer = urand(25000, 50000);
         } else uiPoisonCloudTimer -= diff;
 
         if (!bIsEnraged && HealthBelowPct(30))
         {
-            DoCast(me,SPELL_FRENZIED_RAGE);
+            DoCast(me, SPELL_FRENZIED_RAGE);
             bIsEnraged = true;
         }
 
@@ -79,9 +80,9 @@ struct boss_aku_maiAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_aku_mai(Creature* pCreature)
+CreatureAI* GetAI_boss_aku_mai(Creature* creature)
 {
-    return new boss_aku_maiAI (pCreature);
+    return new boss_aku_maiAI (creature);
 }
 
 void AddSC_boss_aku_mai()

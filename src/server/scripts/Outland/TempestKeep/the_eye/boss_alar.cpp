@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -27,7 +28,7 @@ EndScriptData */
 #include "ScriptPCH.h"
 #include "the_eye.h"
 
-#define SPELL_FLAME_BUFFET            34121 // Flame Buffet - every 1,5 secs in phase 1 if there is no victim in melee range and after Dive Bomb in phase 2 with same conditions
+#define SPELL_FLAME_BUFFET            34121 // Flame Buffet - every 1, 5 secs in phase 1 if there is no victim in melee range and after Dive Bomb in phase 2 with same conditions
 #define SPELL_FLAME_QUILLS            34229 // Randomly after changing position in phase after watching tonns of movies, set probability 20%
 #define SPELL_REBIRTH                 34342 // Rebirth - beginning of second phase(after loose all health in phase 1)
 #define SPELL_REBIRTH_2               35369 // Rebirth(another, without healing to full HP) - after Dive Bomb in phase 2
@@ -223,7 +224,7 @@ struct boss_alarAI : public ScriptedAI
                         AfterMoving = false;
                     }
 
-                    switch(WaitEvent)
+                    switch (WaitEvent)
                     {
                     case WE_PLATFORM:
                         Platforms_Move_Timer = 30000+rand()%5000;
@@ -422,9 +423,9 @@ struct boss_alarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_alar(Creature* pCreature)
+CreatureAI* GetAI_boss_alar(Creature* creature)
 {
-    return new boss_alarAI(pCreature);
+    return new boss_alarAI(creature);
 }
 
 struct mob_ember_of_alarAI : public ScriptedAI
@@ -482,9 +483,9 @@ struct mob_ember_of_alarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_ember_of_alar(Creature* pCreature)
+CreatureAI* GetAI_mob_ember_of_alar(Creature* creature)
 {
-    return new mob_ember_of_alarAI(pCreature);
+    return new mob_ember_of_alarAI(creature);
 }
 
 struct mob_flame_patch_alarAI : public ScriptedAI
@@ -497,9 +498,9 @@ struct mob_flame_patch_alarAI : public ScriptedAI
     void UpdateAI(const uint32 /*diff*/) {}
 };
 
-CreatureAI* GetAI_mob_flame_patch_alar(Creature* pCreature)
+CreatureAI* GetAI_mob_flame_patch_alar(Creature* creature)
 {
-    return new mob_flame_patch_alarAI(pCreature);
+    return new mob_flame_patch_alarAI(creature);
 }
 
 void AddSC_boss_alar()

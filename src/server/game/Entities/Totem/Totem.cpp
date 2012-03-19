@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -56,7 +57,7 @@ void Totem::InitStats(uint32 duration)
 {
     Minion::InitStats(duration);
 
-    CreatureInfo const *cinfo = GetCreatureInfo();
+    CreatureTemplate const *cinfo = GetCreatureTemplate();
     if (m_owner->GetTypeId() == TYPEID_PLAYER && cinfo)
     {
         uint32 modelid = 0;
@@ -77,7 +78,7 @@ void Totem::InitStats(uint32 duration)
         if (modelid)
             SetDisplayId(modelid);
         else
-            sLog.outErrorDb("Totem::Summon: Missing modelid information for entry %u, team %u, totem will use default values.",GetEntry(),m_owner->ToPlayer()->GetTeam());
+            sLog->outErrorDb("Totem::Summon: Missing modelid information for entry %u, team %u, totem will use default values.", GetEntry(), m_owner->ToPlayer()->GetTeam());
     }
 
     // Get spell casted by totem
@@ -149,7 +150,7 @@ void Totem::UnSummon()
 bool Totem::IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const
 {
     // TODO: possibly all negative auras immuned?
-    switch(spellInfo->EffectApplyAuraName[index])
+    switch (spellInfo->EffectApplyAuraName[index])
     {
         case SPELL_AURA_PERIODIC_DAMAGE:
         case SPELL_AURA_PERIODIC_LEECH:

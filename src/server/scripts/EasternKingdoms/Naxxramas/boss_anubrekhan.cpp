@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -76,7 +77,7 @@ struct boss_anubrekhanAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
         case 0: DoScriptText(SAY_AGGRO1, me); break;
         case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -88,7 +89,7 @@ struct boss_anubrekhanAI : public ScriptedAI
     {
             if (!HasTaunted && me->IsWithinDistInMap(who, 60.0f))
             {
-                switch(rand()%5)
+                switch (rand()%5)
                 {
                 case 0: DoScriptText(SAY_GREET, me); break;
                 case 1: DoScriptText(SAY_TAUNT1, me); break;
@@ -111,10 +112,10 @@ struct boss_anubrekhanAI : public ScriptedAI
         {
             //Cast Impale on a random target
             //Do NOT cast it when we are afflicted by locust swarm
-            if (!me->HasAura(SPELL_LOCUSTSWARM,1))
+            if (!me->HasAura(SPELL_LOCUSTSWARM, 1))
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                    DoCast(pTarget,SPELL_IMPALE);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_IMPALE);
             }
 
             Impale_Timer = 15000;
@@ -137,9 +138,9 @@ struct boss_anubrekhanAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_boss_anubrekhan(Creature* pCreature)
+CreatureAI* GetAI_boss_anubrekhan(Creature* creature)
 {
-    return new boss_anubrekhanAI (pCreature);
+    return new boss_anubrekhanAI (creature);
 }
 
 void AddSC_boss_anubrekhan()

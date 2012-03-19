@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -24,7 +25,7 @@
 #include "World.h"
 #include "CreatureAIImpl.h"
 
-int GuardAI::Permissible(const Creature *creature)
+int GuardAI::Permissible(const Creature* creature)
 {
     if (creature->isGuard())
         return PERMIT_BASE_SPECIAL;
@@ -47,7 +48,7 @@ void GuardAI::MoveInLineOfSight(Unit *u)
         u->isInAccessiblePlaceFor(me))
     {
         float attackRadius = me->GetAttackDistance(u);
-        if (me->IsWithinDistInMap(u,attackRadius))
+        if (me->IsWithinDistInMap(u, attackRadius))
         {
             //Need add code to let guard support player
             AttackStart(u);
@@ -60,7 +61,7 @@ void GuardAI::EnterEvadeMode()
 {
     if (!me->isAlive())
     {
-        DEBUG_LOG("Creature stopped attacking because he's dead [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug("Creature stopped attacking because he's dead [guid=%u]", me->GetGUIDLow());
         me->GetMotionMaster()->MoveIdle();
 
         i_state = STATE_NORMAL;
@@ -75,23 +76,23 @@ void GuardAI::EnterEvadeMode()
 
     if (!victim)
     {
-        DEBUG_LOG("Creature stopped attacking because victim is non exist [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug("Creature stopped attacking because victim is non exist [guid=%u]", me->GetGUIDLow());
     }
     else if (!victim ->isAlive())
     {
-        DEBUG_LOG("Creature stopped attacking because victim is dead [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug("Creature stopped attacking because victim is dead [guid=%u]", me->GetGUIDLow());
     }
     else if (victim ->HasStealthAura())
     {
-        DEBUG_LOG("Creature stopped attacking because victim is using stealth [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug("Creature stopped attacking because victim is using stealth [guid=%u]", me->GetGUIDLow());
     }
     else if (victim ->isInFlight())
     {
-        DEBUG_LOG("Creature stopped attacking because victim is flying away [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug("Creature stopped attacking because victim is flying away [guid=%u]", me->GetGUIDLow());
     }
     else
     {
-        DEBUG_LOG("Creature stopped attacking because victim outran him [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug("Creature stopped attacking because victim outran him [guid=%u]", me->GetGUIDLow());
     }
 
     me->RemoveAllAuras();
@@ -125,8 +126,8 @@ void GuardAI::UpdateAI(const uint32 /*diff*/)
 
 bool GuardAI::IsVisible(Unit *pl) const
 {
-    return me->IsWithinDistInMap(pl,sWorld.getConfig(CONFIG_SIGHT_GUARDER))
-        && pl->isVisibleForOrDetect(me,true);
+    return me->IsWithinDistInMap(pl, sWorld->getConfig(CONFIG_SIGHT_GUARDER))
+        && pl->isVisibleForOrDetect(me, true);
 }
 
 void GuardAI::JustDied(Unit *killer)

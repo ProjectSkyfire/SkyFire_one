@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -89,16 +90,16 @@ EndScriptData */
 #define CREATURE_CYCLONE        18412
 #define CREATURE_CRONE          18168
 
-void SummonCroneIfReady(ScriptedInstance* pInstance, Creature* pCreature)
+void SummonCroneIfReady(ScriptedInstance* pInstance, Creature* creature)
 {
     pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, SPECIAL);  // Increment DeathCount
 
     if (pInstance->GetData(DATA_OPERA_OZ_DEATHCOUNT) == 4)
     {
-        if (Creature* pCrone = pCreature->SummonCreature(CREATURE_CRONE, -10891.96f, -1755.95f, pCreature->GetPositionZ(), 4.64f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
+        if (Creature* pCrone = creature->SummonCreature(CREATURE_CRONE, -10891.96f, -1755.95f, creature->GetPositionZ(), 4.64f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
         {
-            if (pCreature->getVictim())
-                pCrone->AI()->AttackStart(pCreature->getVictim());
+            if (creature->getVictim())
+                pCrone->AI()->AttackStart(creature->getVictim());
         }
     }
 };
@@ -533,19 +534,19 @@ struct boss_roarAI : public ScriptedAI
         if (MangleTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_MANGLE);
-            MangleTimer = urand(5000,8000);
+            MangleTimer = urand(5000, 8000);
         } else MangleTimer -= diff;
 
         if (ShredTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_SHRED);
-            ShredTimer = urand(10000,15000);
+            ShredTimer = urand(10000, 15000);
         } else ShredTimer -= diff;
 
         if (ScreamTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_FRIGHTENED_SCREAM);
-            ScreamTimer = urand(20000,30000);
+            ScreamTimer = urand(20000, 30000);
         } else ScreamTimer -= diff;
 
         DoMeleeAttackIfReady();
@@ -577,7 +578,7 @@ struct boss_croneAI : public ScriptedAI
 
     void EnterCombat(Unit* /*who*/)
     {
-        DoScriptText(RAND(SAY_CRONE_AGGRO,SAY_CRONE_AGGRO2), me);
+        DoScriptText(RAND(SAY_CRONE_AGGRO, SAY_CRONE_AGGRO2), me);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
     }
@@ -607,7 +608,7 @@ struct boss_croneAI : public ScriptedAI
 
         if (CycloneTimer <= diff)
         {
-            if (Creature* Cyclone = DoSpawnCreature(CREATURE_CYCLONE, urand(0,9), urand(0,9), 0, 0, TEMPSUMMON_TIMED_DESPAWN, 15000))
+            if (Creature* Cyclone = DoSpawnCreature(CREATURE_CYCLONE, urand(0, 9), urand(0, 9), 0, 0, TEMPSUMMON_TIMED_DESPAWN, 15000))
                 Cyclone->CastSpell(Cyclone, SPELL_CYCLONE_VISUAL, true);
             CycloneTimer = 30000;
         } else CycloneTimer -= diff;
@@ -649,44 +650,44 @@ struct mob_cycloneAI : public ScriptedAI
             Position pos;
             me->GetRandomNearPosition(pos, 10);
             me->GetMotionMaster()->MovePoint(0, pos);
-            MoveTimer = urand(5000,8000);
+            MoveTimer = urand(5000, 8000);
         } else MoveTimer -= diff;
     }
 };
 
-CreatureAI* GetAI_boss_dorothee(Creature* pCreature)
+CreatureAI* GetAI_boss_dorothee(Creature* creature)
 {
-    return new boss_dorotheeAI(pCreature);
+    return new boss_dorotheeAI(creature);
 }
 
-CreatureAI* GetAI_boss_strawman(Creature* pCreature)
+CreatureAI* GetAI_boss_strawman(Creature* creature)
 {
-    return new boss_strawmanAI(pCreature);
+    return new boss_strawmanAI(creature);
 }
 
-CreatureAI* GetAI_boss_tinhead(Creature* pCreature)
+CreatureAI* GetAI_boss_tinhead(Creature* creature)
 {
-    return new boss_tinheadAI(pCreature);
+    return new boss_tinheadAI(creature);
 }
 
-CreatureAI* GetAI_boss_roar(Creature* pCreature)
+CreatureAI* GetAI_boss_roar(Creature* creature)
 {
-    return new boss_roarAI(pCreature);
+    return new boss_roarAI(creature);
 }
 
-CreatureAI* GetAI_boss_crone(Creature* pCreature)
+CreatureAI* GetAI_boss_crone(Creature* creature)
 {
-    return new boss_croneAI(pCreature);
+    return new boss_croneAI(creature);
 }
 
-CreatureAI* GetAI_mob_tito(Creature* pCreature)
+CreatureAI* GetAI_mob_tito(Creature* creature)
 {
-    return new mob_titoAI(pCreature);
+    return new mob_titoAI(creature);
 }
 
-CreatureAI* GetAI_mob_cyclone(Creature* pCreature)
+CreatureAI* GetAI_mob_cyclone(Creature* creature)
 {
-    return new mob_cycloneAI(pCreature);
+    return new mob_cycloneAI(creature);
 }
 
 /**************************************/
@@ -709,22 +710,22 @@ CreatureAI* GetAI_mob_cyclone(Creature* pCreature)
 /**** The Wolf's Entry ****/
 #define CREATURE_BIG_BAD_WOLF           17521
 
-bool GossipHello_npc_grandmother(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_grandmother(Player* player, Creature* creature)
 {
-    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_GRANDMA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-    pPlayer->SEND_GOSSIP_MENU(8990, pCreature->GetGUID());
+    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_GRANDMA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+    player->SEND_GOSSIP_MENU(8990, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_grandmother(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_grandmother(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF)
     {
-        if (Creature* pBigBadWolf = pCreature->SummonCreature(CREATURE_BIG_BAD_WOLF, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
-            pBigBadWolf->AI()->AttackStart(pPlayer);
+        if (Creature* pBigBadWolf = creature->SummonCreature(CREATURE_BIG_BAD_WOLF, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR*2*IN_MILLISECONDS))
+            pBigBadWolf->AI()->AttackStart(player);
 
-        pCreature->ForcedDespawn();
+        creature->ForcedDespawn();
     }
 
     return true;
@@ -832,20 +833,20 @@ struct boss_bigbadwolfAI : public ScriptedAI
         if (FearTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_TERRIFYING_HOWL);
-            FearTimer = urand(25000,35000);
+            FearTimer = urand(25000, 35000);
         } else FearTimer -= diff;
 
         if (SwipeTimer <= diff)
         {
             DoCast(me->getVictim(), SPELL_WIDE_SWIPE);
-            SwipeTimer = urand(25000,30000);
+            SwipeTimer = urand(25000, 30000);
         } else SwipeTimer -= diff;
     }
 };
 
-CreatureAI* GetAI_boss_bigbadwolf(Creature* pCreature)
+CreatureAI* GetAI_boss_bigbadwolf(Creature* creature)
 {
-    return new boss_bigbadwolfAI(pCreature);
+    return new boss_bigbadwolfAI(creature);
 }
 
 /**********************************************/
@@ -895,15 +896,15 @@ enum RAJPhase
     PHASE_BOTH          = 2,
 };
 
-void PretendToDie(Creature* pCreature)
+void PretendToDie(Creature* creature)
 {
-    pCreature->InterruptNonMeleeSpells(true);
-    pCreature->RemoveAllAuras();
-    pCreature->SetHealth(0);
-    pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    pCreature->GetMotionMaster()->MovementExpired(false);
-    pCreature->GetMotionMaster()->MoveIdle();
-    pCreature->SetStandState(UNIT_STAND_STATE_DEAD);
+    creature->InterruptNonMeleeSpells(true);
+    creature->RemoveAllAuras();
+    creature->SetHealth(0);
+    creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+    creature->GetMotionMaster()->MovementExpired(false);
+    creature->GetMotionMaster()->MoveIdle();
+    creature->SetStandState(UNIT_STAND_STATE_DEAD);
 };
 
 void Resurrect(Creature *pTarget)
@@ -1149,7 +1150,7 @@ void boss_julianneAI::DamageTaken(Unit* /*done_by*/, uint32 &damage)
 
     if (Phase == PHASE_ROMULO)
     {
-        error_log("OSCR: boss_julianneAI: cannot take damage in PHASE_ROMULO, why was i here?");
+        sLog->outError("TSCR: boss_julianneAI: cannot take damage in PHASE_ROMULO, why was i here?");
         damage = 0;
         return;
     }
@@ -1183,7 +1184,7 @@ void boss_julianneAI::DamageTaken(Unit* /*done_by*/, uint32 &damage)
             return;
         }
     }
-    error_log("OSCR: boss_julianneAI: DamageTaken reach end of code, that should not happen.");
+    sLog->outError("TSCR: boss_julianneAI: DamageTaken reach end of code, that should not happen.");
 }
 
 void boss_romuloAI::DamageTaken(Unit* /*done_by*/, uint32 &damage)
@@ -1237,7 +1238,7 @@ void boss_romuloAI::DamageTaken(Unit* /*done_by*/, uint32 &damage)
         }
     }
 
-    error_log("OSCR: boss_romuloAI: DamageTaken reach end of code, that should not happen.");
+    sLog->outError("TSCR: boss_romuloAI: DamageTaken reach end of code, that should not happen.");
 }
 
 void boss_julianneAI::UpdateAI(const uint32 diff)
@@ -1330,31 +1331,31 @@ void boss_julianneAI::UpdateAI(const uint32 diff)
     {
         if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
             DoCast(pTarget, SPELL_BLINDING_PASSION);
-        BlindingPassionTimer = urand(30000,45000);
+        BlindingPassionTimer = urand(30000, 45000);
     } else BlindingPassionTimer -= diff;
 
     if (DevotionTimer <= diff)
     {
         DoCast(me, SPELL_DEVOTION);
-        DevotionTimer = urand(15000,45000);
+        DevotionTimer = urand(15000, 45000);
     } else DevotionTimer -= diff;
 
     if (PowerfulAttractionTimer <= diff)
     {
         DoCast(SelectUnit(SELECT_TARGET_RANDOM, 0), SPELL_POWERFUL_ATTRACTION);
-        PowerfulAttractionTimer = urand(5000,30000);
+        PowerfulAttractionTimer = urand(5000, 30000);
     } else PowerfulAttractionTimer -= diff;
 
     if (EternalAffectionTimer <= diff)
     {
-        if (urand(0,1) && SummonedRomulo)
+        if (urand(0, 1) && SummonedRomulo)
         {
             Creature* Romulo = (Unit::GetCreature((*me), RomuloGUID));
             if (Romulo && Romulo->isAlive() && !RomuloDead)
                 DoCast(Romulo, SPELL_ETERNAL_AFFECTION);
         } else DoCast(me, SPELL_ETERNAL_AFFECTION);
 
-        EternalAffectionTimer = urand(45000,60000);
+        EternalAffectionTimer = urand(45000, 60000);
     } else EternalAffectionTimer -= diff;
 
     DoMeleeAttackIfReady();
@@ -1387,40 +1388,40 @@ void boss_romuloAI::UpdateAI(const uint32 diff)
         if (pTarget && !me->HasInArc(M_PI, pTarget))
         {
             DoCast(pTarget, SPELL_BACKWARD_LUNGE);
-            BackwardLungeTimer = urand(15000,30000);
+            BackwardLungeTimer = urand(15000, 30000);
         }
     } else BackwardLungeTimer -= diff;
 
     if (DaringTimer <= diff)
     {
         DoCast(me, SPELL_DARING);
-        DaringTimer = urand(20000,40000);
+        DaringTimer = urand(20000, 40000);
     } else DaringTimer -= diff;
 
     if (DeadlySwatheTimer <= diff)
     {
         if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
             DoCast(pTarget, SPELL_DEADLY_SWATHE);
-        DeadlySwatheTimer = urand(15000,25000);
+        DeadlySwatheTimer = urand(15000, 25000);
     } else DeadlySwatheTimer -= diff;
 
     if (PoisonThrustTimer <= diff)
     {
         DoCast(me->getVictim(), SPELL_POISON_THRUST);
-        PoisonThrustTimer = urand(10000,20000);
+        PoisonThrustTimer = urand(10000, 20000);
     } else PoisonThrustTimer -= diff;
 
     DoMeleeAttackIfReady();
 }
 
-CreatureAI* GetAI_boss_julianne(Creature* pCreature)
+CreatureAI* GetAI_boss_julianne(Creature* creature)
 {
-    return new boss_julianneAI(pCreature);
+    return new boss_julianneAI(creature);
 }
 
-CreatureAI* GetAI_boss_romulo(Creature* pCreature)
+CreatureAI* GetAI_boss_romulo(Creature* creature)
 {
-    return new boss_romuloAI(pCreature);
+    return new boss_romuloAI(creature);
 }
 
 void AddSC_bosses_opera()

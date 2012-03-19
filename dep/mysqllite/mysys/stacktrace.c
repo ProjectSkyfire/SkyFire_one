@@ -485,7 +485,7 @@ static void get_symbol_path(char *path, size_t size)
   */
   GetModuleFileName(NULL, pdb_debug_dir, MAX_PATH);
   p= strrchr(pdb_debug_dir, '\\');
-  if(p)
+  if (p)
   {
     *p= 0;
     strcat_s(pdb_debug_dir, sizeof(pdb_debug_dir), "\\debug;");
@@ -527,7 +527,7 @@ static void get_symbol_path(char *path, size_t size)
 
   /* Add _NT_SYMBOL_PATH, if present. */
   envvar= getenv("_NT_SYMBOL_PATH");
-  if(envvar)
+  if (envvar)
   {
     strcat_s(path, size, envvar);
   }
@@ -553,7 +553,7 @@ void my_print_stacktrace(uchar* unused1, ulong unused2)
   STACKFRAME64 frame={0};
   static char symbol_path[MAX_SYMBOL_PATH];
 
-  if(!exception_ptrs)
+  if (!exception_ptrs)
     return;
 
   /* Copy context, as stackwalking on original will unwind the stack */
@@ -584,7 +584,7 @@ void my_print_stacktrace(uchar* unused1, ulong unused2)
   package.sym.MaxNameLength= sizeof(package.name);
 
   /*Walk the stack, output useful information*/
-  for(i= 0; i< STACKWALK_MAX_FRAMES;i++)
+  for (i= 0; i< STACKWALK_MAX_FRAMES;i++)
   {
     DWORD64 function_offset= 0;
     DWORD line_offset= 0;
@@ -593,13 +593,13 @@ void my_print_stacktrace(uchar* unused1, ulong unused2)
     BOOL have_symbol= FALSE;
     BOOL have_source= FALSE;
 
-    if(!StackWalk64(machine, hProcess, hThread, &frame, &context, 0, 0, 0 ,0))
+    if (!StackWalk64(machine, hProcess, hThread, &frame, &context, 0, 0, 0 ,0))
       break;
     addr= frame.AddrPC.Offset;
 
     have_module= SymGetModuleInfo64(hProcess,addr,&module);
 #ifdef _M_IX86
-    if(!have_module)
+    if (!have_module)
     {
       /*
         ModuleInfo structure has been "compatibly" extended in releases after XP,
@@ -616,24 +616,24 @@ void my_print_stacktrace(uchar* unused1, ulong unused2)
     have_source= SymGetLineFromAddr64(hProcess, addr, &line_offset, &line);
 
     fprintf(stderr, "%p    ", addr);
-    if(have_module)
+    if (have_module)
     {
       char *base_image_name= strrchr(module.ImageName, '\\');
-      if(base_image_name)
+      if (base_image_name)
         base_image_name++;
       else
         base_image_name= module.ImageName;
       fprintf(stderr, "%s!", base_image_name);
     }
-    if(have_symbol)
+    if (have_symbol)
       fprintf(stderr, "%s()", package.sym.Name);
-    else if(have_module)
+    else if (have_module)
       fprintf(stderr, "???");
 
-    if(have_source)
+    if (have_source)
     {
       char *base_file_name= strrchr(line.FileName, '\\');
-      if(base_file_name)
+      if (base_file_name)
         base_file_name++;
       else
         base_file_name= line.FileName;
@@ -656,14 +656,14 @@ void my_write_core(int unused)
   MINIDUMP_EXCEPTION_INFORMATION info;
   HANDLE hFile;
 
-  if(!exception_ptrs)
+  if (!exception_ptrs)
     return;
 
   info.ExceptionPointers= exception_ptrs;
   info.ClientPointers= FALSE;
   info.ThreadId= GetCurrentThreadId();
 
-  if(GetModuleFileName(NULL, path, sizeof(path)))
+  if (GetModuleFileName(NULL, path, sizeof(path)))
   {
     _splitpath(path, NULL, NULL,dump_fname,NULL);
     strncat(dump_fname, ".dmp", sizeof(dump_fname));
@@ -671,10 +671,10 @@ void my_write_core(int unused)
 
   hFile= CreateFile(dump_fname, GENERIC_WRITE, 0, 0, CREATE_ALWAYS,
     FILE_ATTRIBUTE_NORMAL, 0);
-  if(hFile)
+  if (hFile)
   {
     /* Create minidump */
-    if(MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
+    if (MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
       hFile, MiniDumpNormal, &info, 0, 0))
     {
       fprintf(stderr, "Minidump written to %s\n",

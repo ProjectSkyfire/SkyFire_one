@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -154,22 +155,22 @@ struct instance_blackrock_depths : public ScriptedInstance
             TombBossGUIDs[i] = 0;
     }
 
-    void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void OnCreatureCreate(Creature* creature, bool /*add*/)
     {
-        switch(pCreature->GetEntry())
+        switch (creature->GetEntry())
         {
-        case NPC_EMPEROR: EmperorGUID = pCreature->GetGUID(); break;
-        case NPC_PHALANX: PhalanxGUID = pCreature->GetGUID(); break;
-        case NPC_DOOMREL: TombBossGUIDs[0] = pCreature->GetGUID(); break;
-        case NPC_DOPEREL: TombBossGUIDs[1] = pCreature->GetGUID(); break;
-        case NPC_HATEREL: TombBossGUIDs[2] = pCreature->GetGUID(); break;
-        case NPC_VILEREL: TombBossGUIDs[3] = pCreature->GetGUID(); break;
-        case NPC_SEETHREL: TombBossGUIDs[4] = pCreature->GetGUID(); break;
-        case NPC_GLOOMREL: TombBossGUIDs[5] = pCreature->GetGUID(); break;
-        case NPC_ANGERREL: TombBossGUIDs[6] = pCreature->GetGUID(); break;
+        case NPC_EMPEROR: EmperorGUID = creature->GetGUID(); break;
+        case NPC_PHALANX: PhalanxGUID = creature->GetGUID(); break;
+        case NPC_DOOMREL: TombBossGUIDs[0] = creature->GetGUID(); break;
+        case NPC_DOPEREL: TombBossGUIDs[1] = creature->GetGUID(); break;
+        case NPC_HATEREL: TombBossGUIDs[2] = creature->GetGUID(); break;
+        case NPC_VILEREL: TombBossGUIDs[3] = creature->GetGUID(); break;
+        case NPC_SEETHREL: TombBossGUIDs[4] = creature->GetGUID(); break;
+        case NPC_GLOOMREL: TombBossGUIDs[5] = creature->GetGUID(); break;
+        case NPC_ANGERREL: TombBossGUIDs[6] = creature->GetGUID(); break;
         case NPC_MAGMUS:
-            MagmusGUID = pCreature->GetGUID();
-            if (!pCreature->isAlive())
+            MagmusGUID = creature->GetGUID();
+            if (!creature->isAlive())
                 HandleGameObject(GetData64(DATA_THRONE_DOOR), true); // if Magmus is dead open door to last boss
             break;
         }
@@ -177,7 +178,7 @@ struct instance_blackrock_depths : public ScriptedInstance
 
     void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
     {
-        switch(pGo->GetEntry())
+        switch (pGo->GetEntry())
         {
         case GO_ARENA1: GoArena1GUID = pGo->GetGUID(); break;
         case GO_ARENA2: GoArena2GUID = pGo->GetGUID(); break;
@@ -210,9 +211,9 @@ struct instance_blackrock_depths : public ScriptedInstance
 
     void SetData64(uint32 type, uint64 data)
     {
-        debug_log("OSCR: Instance Blackrock Depths: SetData64 update (Type: %u Data %u)", type, data);
+        sLog->outDebug("TSCR: Instance Blackrock Depths: SetData64 update (Type: %u Data %u)", type, data);
 
-        switch(type)
+        switch (type)
         {
         case DATA_EVENSTARTER:
             TombEventStarterGUID = data;
@@ -226,9 +227,9 @@ struct instance_blackrock_depths : public ScriptedInstance
 
     void SetData(uint32 type, uint32 data)
     {
-        debug_log("OSCR: Instance Blackrock Depths: SetData update (Type: %u Data %u)", type, data);
+        sLog->outDebug("TSCR: Instance Blackrock Depths: SetData update (Type: %u Data %u)", type, data);
 
-        switch(type)
+        switch (type)
         {
         case TYPE_RING_OF_LAW:
             m_auiEncounter[0] = data;
@@ -273,7 +274,7 @@ struct instance_blackrock_depths : public ScriptedInstance
 
     uint32 GetData(uint32 type)
     {
-        switch(type)
+        switch (type)
         {
         case TYPE_RING_OF_LAW:
             return m_auiEncounter[0];
@@ -298,7 +299,7 @@ struct instance_blackrock_depths : public ScriptedInstance
 
     uint64 GetData64(uint32 data)
     {
-        switch(data)
+        switch (data)
         {
         case DATA_EMPEROR:
             return EmperorGUID;
@@ -380,8 +381,8 @@ struct instance_blackrock_depths : public ScriptedInstance
 
     void TombOfSevenReset()
     {
-        HandleGameObject(GoTombExitGUID,false);//event reseted, close exit door
-        HandleGameObject(GoTombEnterGUID,true);//event reseted, open entrance door
+        HandleGameObject(GoTombExitGUID, false);//event reseted, close exit door
+        HandleGameObject(GoTombEnterGUID, true);//event reseted, open entrance door
         for (uint8 i = 0; i < 7; ++i)
         {
             if (Creature* boss = instance->GetCreature(TombBossGUIDs[i]))
@@ -408,16 +409,16 @@ struct instance_blackrock_depths : public ScriptedInstance
 
     void TombOfSevenStart()
     {
-        HandleGameObject(GoTombExitGUID,false);//event started, close exit door
-        HandleGameObject(GoTombEnterGUID,false);//event started, close entrance door
+        HandleGameObject(GoTombExitGUID, false);//event started, close exit door
+        HandleGameObject(GoTombEnterGUID, false);//event started, close entrance door
         SetData(TYPE_TOMB_OF_SEVEN, IN_PROGRESS);
     }
 
     void TombOfSevenEnd()
     {
-        DoRespawnGameObject(GoChestGUID,DAY);
-        HandleGameObject(GoTombExitGUID,true);//event done, open exit door
-        HandleGameObject(GoTombEnterGUID,true);//event done, open entrance door
+        DoRespawnGameObject(GoChestGUID, DAY);
+        HandleGameObject(GoTombExitGUID, true);//event done, open exit door
+        HandleGameObject(GoTombEnterGUID, true);//event done, open entrance door
         TombEventStarterGUID = 0;
         SetData(TYPE_TOMB_OF_SEVEN, DONE);
     }

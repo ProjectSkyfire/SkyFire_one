@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -78,7 +79,7 @@ struct boss_high_inquisitor_fairbanksAI : public ScriptedAI
         //Fear_Timer
         if (Fear_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                 DoCast(pTarget, SPELL_FEAR);
 
             Fear_Timer = 40000;
@@ -87,7 +88,7 @@ struct boss_high_inquisitor_fairbanksAI : public ScriptedAI
         //Sleep_Timer
         if (Sleep_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
                 DoCast(pTarget, SPELL_SLEEP);
 
             Sleep_Timer = 30000;
@@ -103,7 +104,7 @@ struct boss_high_inquisitor_fairbanksAI : public ScriptedAI
         //Dispel_Timer
         if (Dispel_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 DoCast(pTarget, SPELL_DISPELMAGIC);
 
             DispelMagic_Timer = 30000;
@@ -120,9 +121,9 @@ struct boss_high_inquisitor_fairbanksAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_high_inquisitor_fairbanks(Creature* pCreature)
+CreatureAI* GetAI_boss_high_inquisitor_fairbanks(Creature* creature)
 {
-    return new boss_high_inquisitor_fairbanksAI (pCreature);
+    return new boss_high_inquisitor_fairbanksAI (creature);
 }
 
 void AddSC_boss_high_inquisitor_fairbanks()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -18,7 +19,6 @@
  */
 
 #include "SocialMgr.h"
-#include "Policies/SingletonImp.h"
 #include "Database/DatabaseEnv.h"
 #include "Opcodes.h"
 #include "WorldPacket.h"
@@ -27,8 +27,6 @@
 #include "ObjectMgr.h"
 #include "World.h"
 #include "Util.h"
-
-INSTANTIATE_SINGLETON_1(SocialMgr);
 
 PlayerSocial::PlayerSocial()
 {
@@ -113,16 +111,16 @@ void PlayerSocial::SetFriendNote(uint32 friend_guid, std::string note)
     if (itr == m_playerSocialMap.end())                      // not exist
         return;
 
-    utf8truncate(note,48);                                  // DB and client size limitation
+    utf8truncate(note, 48);                                  // DB and client size limitation
 
-    CharacterDatabase.escape_string(note);
+    CharacterDatabase.EscapeString(note);
     CharacterDatabase.PExecute("UPDATE character_social SET note = '%s' WHERE guid = '%u' AND friend = '%u'", note.c_str(), GetPlayerGUID(), friend_guid);
     m_playerSocialMap[friend_guid].Note = note;
 }
 
 void PlayerSocial::SendSocialList()
 {
-    Player *plr = objmgr.GetPlayer(GetPlayerGUID());
+    Player *plr = sObjectMgr->GetPlayer(GetPlayerGUID());
     if (!plr)
         return;
 
@@ -134,7 +132,7 @@ void PlayerSocial::SendSocialList()
 
     for (PlayerSocialMap::iterator itr = m_playerSocialMap.begin(); itr != m_playerSocialMap.end(); ++itr)
     {
-        sSocialMgr.GetFriendInfo(plr, itr->first, itr->second);
+        sSocialMgr->GetFriendInfo(plr, itr->first, itr->second);
 
         data << uint64(itr->first);                         // player guid
         data << uint32(itr->second.Flags);                  // player flag (0x1-friend?, 0x2-ignored?, 0x4-muted?)
@@ -152,7 +150,7 @@ void PlayerSocial::SendSocialList()
     }
 
     plr->GetSession()->SendPacket(&data);
-    sLog.outDebug("WORLD: Sent SMSG_CONTACT_LIST");
+    sLog->outDebug("WORLD: Sent SMSG_CONTACT_LIST");
 }
 
 bool PlayerSocial::HasFriend(uint32 friend_guid)
@@ -179,7 +177,7 @@ SocialMgr::~SocialMgr()
 {
 }
 
-void SocialMgr::GetFriendInfo(Player *player, uint32 friendGUID, FriendInfo &friendInfo)
+void SocialMgr::GetFriendInfo(Player* player, uint32 friendGUID, FriendInfo &friendInfo)
 {
     if (!player)
         return;
@@ -195,8 +193,8 @@ void SocialMgr::GetFriendInfo(Player *player, uint32 friendGUID, FriendInfo &fri
 
     uint32 team = player->GetTeam();
     uint32 security = player->GetSession()->GetSecurity();
-    bool allowTwoSideWhoList = sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
-    bool gmInWhoList = sWorld.getConfig(CONFIG_GM_IN_WHO_LIST) || security > SEC_PLAYER;
+    bool allowTwoSideWhoList = sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
+    bool gmInWhoList = sWorld->getConfig(CONFIG_GM_IN_WHO_LIST) || security > SEC_PLAYER;
 
     PlayerSocialMap::iterator itr = player->GetSocial()->m_playerSocialMap.find(friendGUID);
     if (itr != player->GetSocial()->m_playerSocialMap.end())
@@ -227,14 +225,14 @@ void SocialMgr::MakeFriendStatusPacket(FriendsResult result, uint32 guid, WorldP
     *data << uint64(guid);
 }
 
-void SocialMgr::SendFriendStatus(Player *player, FriendsResult result, uint32 friend_guid, bool broadcast)
+void SocialMgr::SendFriendStatus(Player* player, FriendsResult result, uint32 friend_guid, bool broadcast)
 {
     FriendInfo fi;
 
     WorldPacket data;
     MakeFriendStatusPacket(result, friend_guid, &data);
     GetFriendInfo(player, friend_guid, fi);
-    switch(result)
+    switch (result)
     {
         case FRIEND_ADDED_OFFLINE:
         case FRIEND_ADDED_ONLINE:
@@ -242,7 +240,7 @@ void SocialMgr::SendFriendStatus(Player *player, FriendsResult result, uint32 fr
             break;
     }
 
-    switch(result)
+    switch (result)
     {
         case FRIEND_ADDED_ONLINE:
         case FRIEND_ONLINE:
@@ -259,7 +257,7 @@ void SocialMgr::SendFriendStatus(Player *player, FriendsResult result, uint32 fr
         player->GetSession()->SendPacket(&data);
 }
 
-void SocialMgr::BroadcastToFriendListers(Player *player, WorldPacket *packet)
+void SocialMgr::BroadcastToFriendListers(Player* player, WorldPacket *packet)
 {
     if (!player)
         return;
@@ -267,8 +265,8 @@ void SocialMgr::BroadcastToFriendListers(Player *player, WorldPacket *packet)
     uint32 team     = player->GetTeam();
     uint32 security = player->GetSession()->GetSecurity();
     uint32 guid     = player->GetGUIDLow();
-    bool gmInWhoList = sWorld.getConfig(CONFIG_GM_IN_WHO_LIST);
-    bool allowTwoSideWhoList = sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
+    bool gmInWhoList = sWorld->getConfig(CONFIG_GM_IN_WHO_LIST);
+    bool allowTwoSideWhoList = sWorld->getConfig(CONFIG_ALLOW_TWO_SIDE_WHO_LIST);
 
     for (SocialMap::iterator itr = m_socialMap.begin(); itr != m_socialMap.end(); ++itr)
     {

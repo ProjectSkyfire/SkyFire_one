@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -145,7 +146,7 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%3)
+        switch (rand()%3)
         {
             case 0: DoScriptText(SAY_AGGRO_1, me); break;
             case 1: DoScriptText(SAY_AGGRO_2, me); break;
@@ -162,16 +163,16 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
     {
         if (summoned->GetEntry() == ENTRY_BEACON)
         {
-            summoned->CastSpell(summoned,SPELL_ETHEREAL_BEACON_VISUAL,false);
+            summoned->CastSpell(summoned, SPELL_ETHEREAL_BEACON_VISUAL, false);
 
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 summoned->AI()->AttackStart(pTarget);
         }
     }
 
     void KilledUnit(Unit* victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY_1, me); break;
             case 1: DoScriptText(SAY_SLAY_2, me); break;
@@ -193,7 +194,7 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 me->InterruptNonMeleeSpells(true);
 
-            DoCast(me,SPELL_FROSTNOVA);
+            DoCast(me, SPELL_FROSTNOVA);
             FrostNova_Timer  = 17500 + rand()%7500;
             CanBlink = true;
         } else FrostNova_Timer -= diff;
@@ -217,7 +218,7 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
                 if (me->IsNonMeleeSpellCasted(false))
                     me->InterruptNonMeleeSpells(true);
 
-                DoCast(me,SPELL_BLINK);
+                DoCast(me, SPELL_BLINK);
                 Blink_Timer = 1000 + rand()%1500;
                 CanBlink = false;
             } else Blink_Timer -= diff;
@@ -228,10 +229,10 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 me->InterruptNonMeleeSpells(true);
 
-            if (!urand(0,3))
+            if (!urand(0, 3))
                 DoScriptText(SAY_SUMMON, me);
 
-            DoCast(me,SPELL_ETHEREAL_BEACON);
+            DoCast(me, SPELL_ETHEREAL_BEACON);
 
             Beacon_Timer = 10000;
         } else Beacon_Timer -= diff;
@@ -240,9 +241,9 @@ struct boss_nexusprince_shaffarAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_nexusprince_shaffar(Creature* pCreature)
+CreatureAI* GetAI_boss_nexusprince_shaffar(Creature* creature)
 {
-    return new boss_nexusprince_shaffarAI (pCreature);
+    return new boss_nexusprince_shaffarAI (creature);
 }
 
 #define SPELL_ARCANE_BOLT               15254
@@ -323,7 +324,7 @@ struct mob_ethereal_beaconAI : public ScriptedAI
             if (me->IsNonMeleeSpellCasted(false))
                 me->InterruptNonMeleeSpells(true);
 
-            me->CastSpell(me,SPELL_ETHEREAL_APPRENTICE,true);
+            me->CastSpell(me, SPELL_ETHEREAL_APPRENTICE, true);
             if (me->isPet())
                 ((Pet*)me)->SetDuration(0);
             KillSelf();
@@ -332,9 +333,9 @@ struct mob_ethereal_beaconAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_ethereal_beacon(Creature* pCreature)
+CreatureAI* GetAI_mob_ethereal_beacon(Creature* creature)
 {
-    return new mob_ethereal_beaconAI (pCreature);
+    return new mob_ethereal_beaconAI (creature);
 }
 
 #define SPELL_ETHEREAL_APPRENTICE_FIREBOLT          32369
@@ -376,9 +377,9 @@ struct mob_ethereal_apprenticeAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_ethereal_apprentice(Creature* pCreature)
+CreatureAI* GetAI_mob_ethereal_apprentice(Creature* creature)
 {
-    return new mob_ethereal_apprenticeAI (pCreature);
+    return new mob_ethereal_apprenticeAI (creature);
 }
 
 void AddSC_boss_nexusprince_shaffar()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -67,7 +68,7 @@ struct boss_epoch_hunterAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_AGGRO1, me); break;
             case 1: DoScriptText(SAY_AGGRO2, me); break;
@@ -76,7 +77,7 @@ struct boss_epoch_hunterAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -105,7 +106,7 @@ struct boss_epoch_hunterAI : public ScriptedAI
 
             DoCast(me->getVictim(),SPELL_SAND_BREATH);
 
-            switch(rand()%2)
+            switch (rand()%2)
             {
                 case 0: DoScriptText(SAY_BREATH1, me); break;
                 case 1: DoScriptText(SAY_BREATH2, me); break;
@@ -122,14 +123,14 @@ struct boss_epoch_hunterAI : public ScriptedAI
 
         if (WingBuffet_Timer <= diff)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
-                DoCast(pTarget,SPELL_WING_BUFFET);
+            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                DoCast(pTarget, SPELL_WING_BUFFET);
             WingBuffet_Timer = 25000+rand()%10000;
         } else WingBuffet_Timer -= diff;
 
         if (Mda_Timer <= diff)
         {
-            DoCast(me,SPELL_MAGIC_DISRUPTION_AURA);
+            DoCast(me, SPELL_MAGIC_DISRUPTION_AURA);
             Mda_Timer = 15000;
         } else Mda_Timer -= diff;
 
@@ -137,9 +138,9 @@ struct boss_epoch_hunterAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_epoch_hunter(Creature* pCreature)
+CreatureAI* GetAI_boss_epoch_hunter(Creature* creature)
 {
-    return new boss_epoch_hunterAI (pCreature);
+    return new boss_epoch_hunterAI (creature);
 }
 
 void AddSC_boss_epoch_hunter()

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -36,7 +37,7 @@ enum eFollowState
 class FollowerAI : public ScriptedAI
 {
     public:
-        explicit FollowerAI(Creature* pCreature);
+        explicit FollowerAI(Creature* creature);
         ~FollowerAI() {}
 
         //virtual void WaypointReached(uint32 uiPointId) = 0;
@@ -56,7 +57,7 @@ class FollowerAI : public ScriptedAI
         void UpdateAI(const uint32);                        //the "internal" update, calls UpdateFollowerAI()
         virtual void UpdateFollowerAI(const uint32);        //used when it's needed to add code in update (abilities, scripted events, etc)
 
-        void StartFollow(Player* pPlayer, uint32 uiFactionForFollower = 0, const Quest* pQuest = NULL);
+        void StartFollow(Player* player, uint32 uiFactionForFollower = 0, const Quest* pQuest = NULL);
 
         void SetFollowPaused(bool bPaused);                 //if special event require follow mode to hold/resume during the follow
         void SetFollowComplete(bool bWithEndEvent = false);

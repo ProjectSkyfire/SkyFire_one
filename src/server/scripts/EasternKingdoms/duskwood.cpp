@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -53,23 +54,23 @@ enum
 # at_twilight_grove
 ######*/
 
-bool AreaTrigger_at_twilight_grove(Player* pPlayer, const AreaTriggerEntry * /*at*/)
+bool AreaTrigger_at_twilight_grove(Player* player, const AreaTriggerEntry * /*at*/)
 {
-    if (pPlayer->HasQuestForItem(21149))
+    if (player->HasQuestForItem(21149))
     {
-        if (Creature* pCorrupter = pPlayer->FindNearestCreature(NPC_TWILINGHT_CORRUPTER, 10.0f))
+        if (Creature* pCorrupter = player->FindNearestCreature(NPC_TWILINGHT_CORRUPTER, 10.0f))
         {
-            DoScriptText(CORRUPTER_YELL_COME, pCorrupter, pPlayer);
+            DoScriptText(CORRUPTER_YELL_COME, pCorrupter, player);
             return false;
         }
 
-        if (Creature* pCorrupter = pPlayer->SummonCreature(NPC_TWILINGHT_CORRUPTER, -10636.9, -389.254, 102.626, 0,TEMPSUMMON_TIMED_DESPAWN, CORRUPTER_DESPAWN_TIMER))
+        if (Creature* pCorrupter = player->SummonCreature(NPC_TWILINGHT_CORRUPTER, -10636.9, -389.254, 102.626, 0, TEMPSUMMON_TIMED_DESPAWN, CORRUPTER_DESPAWN_TIMER))
         {
             pCorrupter->SetVisibility(VISIBILITY_OFF);
-            DoScriptText(CORRUPTER_YELL_COME, pCorrupter, pPlayer);
+            DoScriptText(CORRUPTER_YELL_COME, pCorrupter, player);
         }
 
-        if (Creature* TCorrupter = pPlayer->SummonCreature(NPC_TWILINGHT_CORRUPTER,-10328.16,-489.57,49.95,0,TEMPSUMMON_MANUAL_DESPAWN,60000))
+        if (Creature* TCorrupter = player->SummonCreature(NPC_TWILINGHT_CORRUPTER,-10328.16,-489.57, 49.95, 0, TEMPSUMMON_MANUAL_DESPAWN, 60000))
         {
             TCorrupter->setFaction(14);
             TCorrupter->SetMaxHealth(832750);
@@ -134,9 +135,9 @@ struct boss_twilight_corrupterAI : public ScriptedAI
     };
 };
 
-CreatureAI* GetAI_boss_twilight_corrupter(Creature* pCreature)
+CreatureAI* GetAI_boss_twilight_corrupter(Creature* creature)
 {
-    return new boss_twilight_corrupterAI (pCreature);
+    return new boss_twilight_corrupterAI (creature);
 }
 
 void AddSC_duskwood()

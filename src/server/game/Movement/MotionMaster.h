@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGON_MOTIONMASTER_H
-#define OREGON_MOTIONMASTER_H
+#ifndef TRINITY_MOTIONMASTER_H
+#define TRINITY_MOTIONMASTER_H
 
 #include "Common.h"
 #include <vector>
@@ -151,12 +152,12 @@ class MotionMaster //: private std::stack<MovementGenerator *>
         void MoveFleeing(Unit* enemy, uint32 time = 0);
         void MovePoint(uint32 id, const Position &pos)
             { MovePoint(id, pos.m_positionX, pos.m_positionY, pos.m_positionZ); }
-        void MovePoint(uint32 id, float x,float y,float z);
+        void MovePoint(uint32 id, float x, float y, float z);
         void MoveCharge(float x, float y, float z, float speed = SPEED_CHARGE, uint32 id = EVENT_CHARGE);
         void MoveFall(float z, uint32 id = 0);
         void MoveJumpTo(float angle, float speedXY, float speedZ);
         void MoveJump(float x, float y, float z, float speedXY, float speedZ);
-        void MoveSeekAssistance(float x,float y,float z);
+        void MoveSeekAssistance(float x, float y, float z);
         void MoveSeekAssistanceDistract(uint32 timer);
         void MoveTaxiFlight(uint32 path, uint32 pathnode);
         void MoveDistract(uint32 time);

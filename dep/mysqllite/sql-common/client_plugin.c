@@ -199,7 +199,7 @@ static void load_env_plugins(MYSQL *mysql)
   char *plugs, *free_env, *s= getenv("LIBMYSQL_PLUGINS");
 
   /* no plugins to load */
-  if(!s)
+  if (!s)
     return;
 
   free_env= plugs= my_strdup(s, MYF(MY_WME));
@@ -360,7 +360,7 @@ mysql_load_plugin_v(MYSQL *mysql, const char *name, int type,
 
     DBUG_PRINT ("info", ("failed to dlopen"));
 #ifdef _WIN32
-    if(FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
+    if (FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,
                   0, GetLastError(), 0, win_errormsg, 2048, NULL))
       errmsg= win_errormsg;
     else

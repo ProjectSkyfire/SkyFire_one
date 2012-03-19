@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -71,7 +72,7 @@ struct boss_chrono_lord_dejaAI : public ScriptedAI
         //Despawn Time Keeper
         if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
         {
-            if (me->IsWithinDistInMap(who,20.0f))
+            if (me->IsWithinDistInMap(who, 20.0f))
             {
                 DoScriptText(SAY_BANISH, me);
                 me->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -83,7 +84,7 @@ struct boss_chrono_lord_dejaAI : public ScriptedAI
 
     void KilledUnit(Unit *victim)
     {
-        switch(rand()%2)
+        switch (rand()%2)
         {
             case 0: DoScriptText(SAY_SLAY1, me); break;
             case 1: DoScriptText(SAY_SLAY2, me); break;
@@ -95,7 +96,7 @@ struct boss_chrono_lord_dejaAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
 
         if (pInstance)
-            pInstance->SetData(TYPE_RIFT,SPECIAL);
+            pInstance->SetData(TYPE_RIFT, SPECIAL);
     }
 
     void UpdateAI(const uint32 diff)
@@ -123,9 +124,9 @@ struct boss_chrono_lord_dejaAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_chrono_lord_deja(Creature* pCreature)
+CreatureAI* GetAI_boss_chrono_lord_deja(Creature* creature)
 {
-    return new boss_chrono_lord_dejaAI (pCreature);
+    return new boss_chrono_lord_dejaAI (creature);
 }
 
 void AddSC_boss_chrono_lord_deja()

@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -96,10 +97,10 @@ struct mobs_nether_drakeAI : public ScriptedAI
         {
             uint32 cEntry = 0;
 
-            switch(me->GetEntry())
+            switch (me->GetEntry())
             {
                 case ENTRY_WHELP:
-                    switch(rand()%4)
+                    switch (rand()%4)
                     {
                         case 0: cEntry = ENTRY_PROTO; break;
                         case 1: cEntry = ENTRY_ADOLE; break;
@@ -108,7 +109,7 @@ struct mobs_nether_drakeAI : public ScriptedAI
                     }
                     break;
                 case ENTRY_PROTO:
-                    switch(rand()%3)
+                    switch (rand()%3)
                     {
                         case 0: cEntry = ENTRY_ADOLE; break;
                         case 1: cEntry = ENTRY_MATUR; break;
@@ -116,7 +117,7 @@ struct mobs_nether_drakeAI : public ScriptedAI
                     }
                     break;
                 case ENTRY_ADOLE:
-                    switch(rand()%3)
+                    switch (rand()%3)
                     {
                         case 0: cEntry = ENTRY_PROTO; break;
                         case 1: cEntry = ENTRY_MATUR; break;
@@ -124,7 +125,7 @@ struct mobs_nether_drakeAI : public ScriptedAI
                     }
                     break;
                 case ENTRY_MATUR:
-                    switch(rand()%3)
+                    switch (rand()%3)
                     {
                         case 0: cEntry = ENTRY_PROTO; break;
                         case 1: cEntry = ENTRY_ADOLE; break;
@@ -136,7 +137,7 @@ struct mobs_nether_drakeAI : public ScriptedAI
                     {
                         DoScriptText(SAY_NIHIL_INTERRUPT, me);
                         IsNihil = false;
-                        switch(rand()%3)
+                        switch (rand()%3)
                         {
                             case 0: cEntry = ENTRY_PROTO; break;
                             case 1: cEntry = ENTRY_ADOLE; break;
@@ -170,7 +171,7 @@ struct mobs_nether_drakeAI : public ScriptedAI
             {
                 if (NihilSpeech_Timer <= diff)
                 {
-                    switch(NihilSpeech_Phase)
+                    switch (NihilSpeech_Phase)
                     {
                         case 1:
                             DoScriptText(SAY_NIHIL_1, me);
@@ -216,7 +217,7 @@ struct mobs_nether_drakeAI : public ScriptedAI
         {
             Unit *pTarget = me->getVictim();
             if (pTarget && pTarget->getPowerType() == POWER_MANA)
-                DoCast(pTarget,SPELL_MANA_BURN);
+                DoCast(pTarget, SPELL_MANA_BURN);
             ManaBurn_Timer = 8000+rand()%8000;
         } else ManaBurn_Timer -= diff;
 
@@ -229,9 +230,9 @@ struct mobs_nether_drakeAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_mobs_nether_drake(Creature* pCreature)
+CreatureAI* GetAI_mobs_nether_drake(Creature* creature)
 {
-    return new mobs_nether_drakeAI (pCreature);
+    return new mobs_nether_drakeAI (creature);
 }
 
 /*######
@@ -256,7 +257,7 @@ struct npc_daranelleAI : public ScriptedAI
     {
         if (who->GetTypeId() == TYPEID_PLAYER)
         {
-            if (who->HasAura(36904,0))
+            if (who->HasAura(36904, 0))
             {
                 DoScriptText(SAY_DARANELLE, me, who);
                 //TODO: Move the below to updateAI and run if this statement == true
@@ -269,9 +270,9 @@ struct npc_daranelleAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_daranelle(Creature* pCreature)
+CreatureAI* GetAI_npc_daranelle(Creature* creature)
 {
-    return new npc_daranelleAI (pCreature);
+    return new npc_daranelleAI (creature);
 }
 
 /*######
@@ -280,21 +281,21 @@ CreatureAI* GetAI_npc_daranelle(Creature* pCreature)
 
 #define GOSSIP_HON "Overseer, I am here to negotiate on behalf of the Cenarion Expedition."
 
-bool GossipHello_npc_overseer_nuaar(Player *player, Creature* pCreature)
+bool GossipHello_npc_overseer_nuaar(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(10682) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(10532, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(10532, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_overseer_nuaar(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_overseer_nuaar(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     if (action == GOSSIP_ACTION_INFO_DEF+1)
     {
-        player->SEND_GOSSIP_MENU(10533, pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(10533, creature->GetGUID());
         player->AreaExploredOrEventHappens(10682);
     }
     return true;
@@ -307,27 +308,27 @@ bool GossipSelect_npc_overseer_nuaar(Player *player, Creature* pCreature, uint32
 #define GOSSIP_HSTE "Yes... yes, it's me."
 #define GOSSIP_SSTE "Yes elder. Tell me more of the book."
 
-bool GossipHello_npc_saikkal_the_elder(Player *player, Creature* pCreature)
+bool GossipHello_npc_saikkal_the_elder(Player* player, Creature* creature)
 {
     if (player->GetQuestStatus(10980) == QUEST_STATUS_INCOMPLETE)
         player->ADD_GOSSIP_ITEM(0, GOSSIP_HSTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    player->SEND_GOSSIP_MENU(10794, pCreature->GetGUID());
+    player->SEND_GOSSIP_MENU(10794, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_saikkal_the_elder(Player *player, Creature* pCreature, uint32 sender, uint32 action)
+bool GossipSelect_npc_saikkal_the_elder(Player* player, Creature* creature, uint32 sender, uint32 action)
 {
     switch (action)
     {
         case GOSSIP_ACTION_INFO_DEF+1:
             player->ADD_GOSSIP_ITEM(0, GOSSIP_SSTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(10795, pCreature->GetGUID());
+            player->SEND_GOSSIP_MENU(10795, creature->GetGUID());
             break;
         case GOSSIP_ACTION_INFO_DEF+2:
-            player->TalkedToCreature(pCreature->GetEntry(), pCreature->GetGUID());
-            player->SEND_GOSSIP_MENU(10796, pCreature->GetGUID());
+            player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
+            player->SEND_GOSSIP_MENU(10796, creature->GetGUID());
             break;
     }
     return true;
@@ -365,9 +366,9 @@ struct npc_bloodmaul_brutebaneAI : public ScriptedAI
     void UpdateAI(const uint32 /*uiDiff*/) {}
 };
 
-CreatureAI* GetAI_npc_bloodmaul_brutebane(Creature* pCreature)
+CreatureAI* GetAI_npc_bloodmaul_brutebane(Creature* creature)
 {
-    return new npc_bloodmaul_brutebaneAI (pCreature);
+    return new npc_bloodmaul_brutebaneAI (creature);
 }
 
 /*######
@@ -396,7 +397,7 @@ struct npc_ogre_bruteAI : public ScriptedAI
 
     void MovementInform(uint32 /*uiMotionType*/, uint32 uiPointId)
     {
-        if (Player* pPlayer = Unit::GetPlayer(*me, PlayerGUID))
+        if (Player* player = Unit::GetPlayer(*me, PlayerGUID))
         {
             if (uiPointId == 1)
             {
@@ -406,7 +407,7 @@ struct npc_ogre_bruteAI : public ScriptedAI
                 me->SetReactState(REACT_AGGRESSIVE);
                 me->GetMotionMaster()->MoveTargetedHome();
                 if (Creature* pCredit = me->FindNearestCreature(NPC_QUEST_CREDIT, 50, true))
-                    pPlayer->KilledMonsterCredit(NPC_QUEST_CREDIT, pCredit->GetGUID());
+                    player->KilledMonsterCredit(NPC_QUEST_CREDIT, pCredit->GetGUID());
             }
         }
     }
@@ -419,9 +420,9 @@ struct npc_ogre_bruteAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_npc_ogre_brute(Creature* pCreature)
+CreatureAI* GetAI_npc_ogre_brute(Creature* creature)
 {
-    return new npc_ogre_bruteAI(pCreature);
+    return new npc_ogre_bruteAI(creature);
 }
 
 /*#########
@@ -432,7 +433,7 @@ CreatureAI* GetAI_npc_ogre_brute(Creature* pCreature)
 #define Q_THE_THUNDERSPIKE 10526
 #define GOR_GRIMGUT_ENTRY  21319
 
-bool GOUse_go_thunderspike(Player *player, GameObject* _GO)
+bool GOUse_go_thunderspike(Player* player, GameObject* _GO)
 {
     if (player->GetQuestStatus(Q_THE_THUNDERSPIKE) == QUEST_STATUS_INCOMPLETE)
     {

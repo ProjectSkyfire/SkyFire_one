@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -47,7 +48,7 @@ void DynamicObject::AddToWorld()
     // Register the dynamicObject for guid lookup
     if (!IsInWorld())
     {
-        ObjectAccessor::Instance().AddObject(this);
+        sObjectAccessor->AddObject(this);
         WorldObject::AddToWorld();
     }
 }
@@ -66,11 +67,11 @@ void DynamicObject::RemoveFromWorld()
             }
             else
             {
-                sLog.outCrash("DynamicObject::RemoveFromWorld cannot find viewpoint owner");
+                sLog->outCrash("DynamicObject::RemoveFromWorld cannot find viewpoint owner");
             }
         }
         WorldObject::RemoveFromWorld();
-        ObjectAccessor::Instance().RemoveObject(this);
+        sObjectAccessor->RemoveObject(this);
     }
 }
 
@@ -80,7 +81,7 @@ bool DynamicObject::Create(uint32 guidlow, Unit *caster, uint32 spellId, uint32 
     Relocate(pos);
     if (!IsPositionValid())
     {
-        sLog.outError("DynamicObject (spell %u eff %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)",spellId,effIndex,GetPositionX(),GetPositionY());
+        sLog->outError("DynamicObject (spell %u eff %u) not created. Suggested coordinates isn't valid (X: %f Y: %f)", spellId, effIndex, GetPositionX(), GetPositionY());
         return false;
     }
 
@@ -143,7 +144,7 @@ void DynamicObject::Update(uint32 p_time)
     {
         if (m_updateTimer < p_time)
         {
-            Oregon::DynamicObjectUpdater notifier(*this,caster);
+            Trinity::DynamicObjectUpdater notifier(*this, caster);
             VisitNearbyObject(GetRadius(), notifier);
             m_updateTimer = 500; // is this official-like?
         }else m_updateTimer -= p_time;

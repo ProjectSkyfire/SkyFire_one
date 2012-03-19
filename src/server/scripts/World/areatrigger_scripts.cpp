@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -41,9 +42,9 @@ enum eCoilfangGOs
     GO_COILFANG_WATERFALL   = 184212
 };
 
-bool AreaTrigger_at_coilfang_waterfall(Player *pPlayer, const AreaTriggerEntry * /*pAt*/)
+bool AreaTrigger_at_coilfang_waterfall(Player* player, const AreaTriggerEntry * /*pAt*/)
 {
-    if (GameObject* pGo = GetClosestGameObjectWithEntry(pPlayer, GO_COILFANG_WATERFALL, 35.0f))
+    if (GameObject* pGo = GetClosestGameObjectWithEntry(player, GO_COILFANG_WATERFALL, 35.0f))
         if (pGo->getLootState() == GO_READY)
             pGo->UseDoorOrButton();
 
@@ -63,19 +64,19 @@ enum eLegionTeleporter
     QUEST_GAINING_ACCESS_H  = 10604
 };
 
-bool AreaTrigger_at_legion_teleporter(Player *pPlayer, const AreaTriggerEntry * /*pAt*/)
+bool AreaTrigger_at_legion_teleporter(Player* player, const AreaTriggerEntry * /*pAt*/)
 {
-    if (pPlayer->isAlive() && !pPlayer->isInCombat())
+    if (player->isAlive() && !player->isInCombat())
     {
-        if (pPlayer->GetTeam() == ALLIANCE && pPlayer->GetQuestRewardStatus(QUEST_GAINING_ACCESS_A))
+        if (player->GetTeam() == ALLIANCE && player->GetQuestRewardStatus(QUEST_GAINING_ACCESS_A))
         {
-            pPlayer->CastSpell(pPlayer, SPELL_TELE_A_TO, false);
+            player->CastSpell(player, SPELL_TELE_A_TO, false);
             return true;
         }
 
-        if (pPlayer->GetTeam() == HORDE && pPlayer->GetQuestRewardStatus(QUEST_GAINING_ACCESS_H))
+        if (player->GetTeam() == HORDE && player->GetQuestRewardStatus(QUEST_GAINING_ACCESS_H))
         {
-            pPlayer->CastSpell(pPlayer, SPELL_TELE_H_TO, false);
+            player->CastSpell(player, SPELL_TELE_H_TO, false);
             return true;
         }
 
@@ -90,10 +91,10 @@ enum eRavenholdt
     NPC_RAVENHOLDT          = 13936
 };
 
-bool AreaTrigger_at_ravenholdt(Player* pPlayer, const AreaTriggerEntry* /*pAt*/)
+bool AreaTrigger_at_ravenholdt(Player* player, const AreaTriggerEntry* /*pAt*/)
 {
-    if (pPlayer->GetQuestStatus(QUEST_MANOR_RAVENHOLDT) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->KilledMonsterCredit(NPC_RAVENHOLDT, 0);
+    if (player->GetQuestStatus(QUEST_MANOR_RAVENHOLDT) == QUEST_STATUS_INCOMPLETE)
+        player->KilledMonsterCredit(NPC_RAVENHOLDT, 0);
 
     return false;
 }

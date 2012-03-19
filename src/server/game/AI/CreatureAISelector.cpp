@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -20,29 +21,25 @@
 #include "Creature.h"
 #include "CreatureAISelector.h"
 #include "PassiveAI.h"
-#include "Policies/SingletonImp.h"
 #include "MovementGenerator.h"
 #include "Pet.h"
 #include "TemporarySummon.h"
 #include "CreatureAIFactory.h"
 #include "ScriptMgr.h"
 
-INSTANTIATE_SINGLETON_1(CreatureAIRegistry);
-INSTANTIATE_SINGLETON_1(MovementGeneratorRegistry);
-
 namespace FactorySelector
 {
-    CreatureAI* selectAI(Creature *creature)
+    CreatureAI* selectAI(Creature* creature)
     {
         const CreatureAICreator *ai_factory = NULL;
-        CreatureAIRegistry &ai_registry(CreatureAIRepository::Instance());
+        CreatureAIRegistry& ai_registry(*CreatureAIRepository::instance());
 
         if (creature->isPet())
             ai_factory = ai_registry.GetRegistryItem("PetAI");
 
         //scriptname in db
         if (!ai_factory)
-            if (CreatureAI* scriptedAI = sScriptMgr.GetAI(creature))
+            if (CreatureAI* scriptedAI = sScriptMgr->GetAI(creature))
                 return scriptedAI;
 
         // AIname in db
@@ -97,14 +94,14 @@ namespace FactorySelector
         // select NullCreatureAI if not another cases
         ainame = (ai_factory == NULL) ? "NullCreatureAI" : ai_factory->key();
 
-        DEBUG_LOG("Creature %u used AI is %s.", creature->GetGUIDLow(), ainame.c_str());
+        sLog->outDebug("Creature %u used AI is %s.", creature->GetGUIDLow(), ainame.c_str());
         return (ai_factory == NULL ? new NullCreatureAI(creature) : ai_factory->Create(creature));
     }
 
-    MovementGenerator* selectMovementGenerator(Creature *creature)
+    MovementGenerator* selectMovementGenerator(Creature* creature)
     {
-        MovementGeneratorRegistry &mv_registry(MovementGeneratorRepository::Instance());
-        ASSERT(creature->GetCreatureInfo() != NULL);
+        MovementGeneratorRegistry& mv_registry(*MovementGeneratorRepository::instance());
+        ASSERT(creature->GetCreatureTemplate() != NULL);
         const MovementGeneratorCreator *mv_factory = mv_registry.GetRegistryItem(creature->GetDefaultMovementType());
 
         /* if (mv_factory == NULL)

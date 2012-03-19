@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -97,7 +98,7 @@ struct boss_lady_blaumeuxAI : public ScriptedAI
         {
             if (ShieldWall1)
             {
-                DoCast(me,SPELL_SHIELDWALL);
+                DoCast(me, SPELL_SHIELDWALL);
                 ShieldWall1 = false;
             }
        }
@@ -105,7 +106,7 @@ struct boss_lady_blaumeuxAI : public ScriptedAI
        {
            if (ShieldWall2)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall2 = false;
            }
        }
@@ -121,9 +122,9 @@ struct boss_lady_blaumeuxAI : public ScriptedAI
    }
 };
 
-CreatureAI* GetAI_boss_lady_blaumeux(Creature* pCreature)
+CreatureAI* GetAI_boss_lady_blaumeux(Creature* creature)
 {
-   return new boss_lady_blaumeuxAI (pCreature);
+   return new boss_lady_blaumeuxAI (creature);
 }
 
 //baron rivendare
@@ -154,7 +155,7 @@ struct boss_rivendare_naxxAI : public ScriptedAI
 
    void EnterCombat(Unit *who)
    {
-       switch(rand()%3)
+       switch (rand()%3)
        {
            case 0: DoScriptText(SAY_RIVE_AGGRO1, me); break;
            case 1: DoScriptText(SAY_RIVE_AGGRO2, me); break;
@@ -164,7 +165,7 @@ struct boss_rivendare_naxxAI : public ScriptedAI
 
    void KilledUnit(Unit* Victim)
    {
-       switch(rand()%2)
+       switch (rand()%2)
        {
            case 0: DoScriptText(SAY_RIVE_SLAY1, me); break;
            case 1: DoScriptText(SAY_RIVE_SLAY2, me); break;
@@ -185,9 +186,9 @@ struct boss_rivendare_naxxAI : public ScriptedAI
    }
 };
 
-CreatureAI* GetAI_boss_rivendare_naxx(Creature* pCreature)
+CreatureAI* GetAI_boss_rivendare_naxx(Creature* creature)
 {
-   return new boss_rivendare_naxxAI (pCreature);
+   return new boss_rivendare_naxxAI (creature);
 }
 
 //thane korthazz
@@ -253,7 +254,7 @@ struct boss_thane_korthazzAI : public ScriptedAI
        {
            if (ShieldWall1)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall1 = false;
            }
        }
@@ -261,7 +262,7 @@ struct boss_thane_korthazzAI : public ScriptedAI
        {
            if (ShieldWall2)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
               ShieldWall2 = false;
            }
        }
@@ -277,9 +278,9 @@ struct boss_thane_korthazzAI : public ScriptedAI
    }
 };
 
-CreatureAI* GetAI_boss_thane_korthazz(Creature* pCreature)
+CreatureAI* GetAI_boss_thane_korthazz(Creature* creature)
 {
-   return new boss_thane_korthazzAI (pCreature);
+   return new boss_thane_korthazzAI (creature);
 }
 
 //sir zeliek
@@ -349,7 +350,7 @@ struct boss_sir_zeliekAI : public ScriptedAI
        {
            if (ShieldWall1)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall1 = false;
            }
      }
@@ -357,7 +358,7 @@ struct boss_sir_zeliekAI : public ScriptedAI
        {
            if (ShieldWall2)
            {
-               DoCast(me,SPELL_SHIELDWALL);
+               DoCast(me, SPELL_SHIELDWALL);
                ShieldWall2 = false;
            }
        }
@@ -373,9 +374,9 @@ struct boss_sir_zeliekAI : public ScriptedAI
    }
 };
 
-CreatureAI* GetAI_boss_sir_zeliek(Creature* pCreature)
+CreatureAI* GetAI_boss_sir_zeliek(Creature* creature)
 {
-   return new boss_sir_zeliekAI (pCreature);
+   return new boss_sir_zeliekAI (creature);
 }
 
 void AddSC_boss_four_horsemen()

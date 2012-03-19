@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -36,7 +37,7 @@ class ByteBufferException
 
         void PrintPosError() const
         {
-            sLog.outError("ERROR: Attempted to %s in ByteBuffer (pos: " SIZEFMTD " size: "SIZEFMTD") value with size: " SIZEFMTD,
+            sLog->outError("ERROR: Attempted to %s in ByteBuffer (pos: " SIZEFMTD " size: "SIZEFMTD") value with size: " SIZEFMTD,
                 (add ? "put" : "get"), pos, size, esize);
         }
     private:
@@ -78,10 +79,10 @@ class ByteBuffer
             _rpos = _wpos = 0;
         }
 
-        template <typename T> void put(size_t pos,T value)
+        template <typename T> void put(size_t pos, T value)
         {
             EndianConvert(value);
-            put(pos,(uint8 *)&value,sizeof(value));
+            put(pos,(uint8 *)&value, sizeof(value));
         }
 
         ByteBuffer &operator<<(uint8 value)
@@ -402,33 +403,33 @@ class ByteBuffer
 
         void print_storage() const
         {
-            if (!sLog.IsOutDebug())                          // optimize disabled debug output
+            if (!sLog->IsOutDebug())                          // optimize disabled debug output
                 return;
 
-            sLog.outDebug("STORAGE_SIZE: %lu", (unsigned long)size() );
+            sLog->outDebug("STORAGE_SIZE: %lu", (unsigned long)size() );
             for (uint32 i = 0; i < size(); ++i)
-                sLog.outDebugInLine("%u - ", read<uint8>(i) );
-            sLog.outDebug(" ");
+                sLog->outDebugInLine("%u - ", read<uint8>(i) );
+            sLog->outDebug(" ");
         }
 
         void textlike() const
         {
-            if (!sLog.IsOutDebug())                          // optimize disabled debug output
+            if (!sLog->IsOutDebug())                          // optimize disabled debug output
                 return;
 
-            sLog.outDebug("STORAGE_SIZE: %lu", (unsigned long)size() );
+            sLog->outDebug("STORAGE_SIZE: %lu", (unsigned long)size() );
             for (uint32 i = 0; i < size(); ++i)
-                sLog.outDebugInLine("%c", read<uint8>(i) );
-            sLog.outDebug(" ");
+                sLog->outDebugInLine("%c", read<uint8>(i) );
+            sLog->outDebug(" ");
         }
 
         void hexlike() const
         {
-            if (!sLog.IsOutDebug())                          // optimize disabled debug output
+            if (!sLog->IsOutDebug())                          // optimize disabled debug output
                 return;
 
             uint32 j = 1, k = 1;
-            sLog.outDebug("STORAGE_SIZE: %lu", (unsigned long)size() );
+            sLog->outDebug("STORAGE_SIZE: %lu", (unsigned long)size() );
 
             for (uint32 i = 0; i < size(); ++i)
             {
@@ -436,11 +437,11 @@ class ByteBuffer
                 {
                     if (read<uint8>(i) < 0x10)
                     {
-                        sLog.outDebugInLine("| 0%X ", read<uint8>(i) );
+                        sLog->outDebugInLine("| 0%X ", read<uint8>(i) );
                     }
                     else
                     {
-                        sLog.outDebugInLine("| %X ", read<uint8>(i) );
+                        sLog->outDebugInLine("| %X ", read<uint8>(i) );
                     }
                     ++j;
                 }
@@ -448,15 +449,15 @@ class ByteBuffer
                 {
                     if (read<uint8>(i) < 0x10)
                     {
-                        sLog.outDebugInLine("\n");
+                        sLog->outDebugInLine("\n");
 
-                        sLog.outDebugInLine("0%X ", read<uint8>(i) );
+                        sLog->outDebugInLine("0%X ", read<uint8>(i) );
                     }
                     else
                     {
-                        sLog.outDebugInLine("\n");
+                        sLog->outDebugInLine("\n");
 
-                        sLog.outDebugInLine("%X ", read<uint8>(i) );
+                        sLog->outDebugInLine("%X ", read<uint8>(i) );
                     }
 
                     ++k;
@@ -466,15 +467,15 @@ class ByteBuffer
                 {
                     if (read<uint8>(i) < 0x10)
                     {
-                        sLog.outDebugInLine("0%X ", read<uint8>(i) );
+                        sLog->outDebugInLine("0%X ", read<uint8>(i) );
                     }
                     else
                     {
-                        sLog.outDebugInLine("%X ", read<uint8>(i) );
+                        sLog->outDebugInLine("%X ", read<uint8>(i) );
                     }
                 }
             }
-            sLog.outDebugInLine("\n");
+            sLog->outDebugInLine("\n");
         }
     private:
         // limited for internal use because can "append" any unexpected type (like pointer and etc) with hard detection problem

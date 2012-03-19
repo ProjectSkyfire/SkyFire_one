@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -27,7 +28,7 @@ typedef short int16;
 typedef unsigned int uint32;
 typedef int int32; */
 
-#pragma pack(push,1)
+#pragma pack(push, 1)
 
 struct ModelHeader
 {
@@ -107,7 +108,7 @@ struct ModelVertex {
     uint8 bones[4];
     Vec3D normal;
     Vec2D texcoords;
-    int unk1, unk2; // always 0,0 so this is probably unused
+    int unk1, unk2; // always 0, 0 so this is probably unused
 };
 
 struct ModelView {

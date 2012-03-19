@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -82,9 +83,9 @@ struct npc_lady_sylvanas_windrunnerAI : public ScriptedAI
     {
         if (summoned->GetEntry() == ENTRY_HIGHBORNE_BUNNY)
         {
-            if (Unit *pTarget = Unit::GetUnit(*summoned,targetGUID))
+            if (Unit *pTarget = Unit::GetUnit(*summoned, targetGUID))
             {
-                pTarget->SendMonsterMove(pTarget->GetPositionX(), pTarget->GetPositionY(), me->GetPositionZ()+15.0f,0);
+                pTarget->SendMonsterMove(pTarget->GetPositionX(), pTarget->GetPositionY(), me->GetPositionZ()+15.0f, 0);
                 pTarget->GetMap()->CreatureRelocation(me, pTarget->GetPositionX(), pTarget->GetPositionY(), me->GetPositionZ()+15.0f, 0.0f);
                 summoned->CastSpell(pTarget, SPELL_RIBBON_OF_SOULS, false);
             }
@@ -118,21 +119,21 @@ struct npc_lady_sylvanas_windrunnerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-CreatureAI* GetAI_npc_lady_sylvanas_windrunner(Creature* pCreature)
+CreatureAI* GetAI_npc_lady_sylvanas_windrunner(Creature* creature)
 {
-    return new npc_lady_sylvanas_windrunnerAI (pCreature);
+    return new npc_lady_sylvanas_windrunnerAI (creature);
 }
 
-bool ChooseReward_npc_lady_sylvanas_windrunner(Player* /*pPlayer*/, Creature* pCreature, const Quest *_Quest, uint32 /*slot*/)
+bool ChooseReward_npc_lady_sylvanas_windrunner(Player* /*player*/, Creature* creature, const Quest *_Quest, uint32 /*slot*/)
 {
     if (_Quest->GetQuestId() == 9180)
     {
-        CAST_AI(npc_lady_sylvanas_windrunnerAI, pCreature->AI())->LamentEvent = true;
-        CAST_AI(npc_lady_sylvanas_windrunnerAI, pCreature->AI())->DoPlaySoundToSet(pCreature,SOUND_CREDIT);
-        pCreature->CastSpell(pCreature,SPELL_SYLVANAS_CAST,false);
+        CAST_AI(npc_lady_sylvanas_windrunnerAI, creature->AI())->LamentEvent = true;
+        CAST_AI(npc_lady_sylvanas_windrunnerAI, creature->AI())->DoPlaySoundToSet(creature, SOUND_CREDIT);
+        creature->CastSpell(creature, SPELL_SYLVANAS_CAST, false);
 
         for (uint8 i = 0; i < 4; ++i)
-            pCreature->SummonCreature(ENTRY_HIGHBORNE_LAMENTER, HighborneLoc[i][0], HighborneLoc[i][1], HIGHBORNE_LOC_Y, HighborneLoc[i][2], TEMPSUMMON_TIMED_DESPAWN, 160000);
+            creature->SummonCreature(ENTRY_HIGHBORNE_LAMENTER, HighborneLoc[i][0], HighborneLoc[i][1], HIGHBORNE_LOC_Y, HighborneLoc[i][2], TEMPSUMMON_TIMED_DESPAWN, 160000);
     }
 
     return true;
@@ -168,8 +169,8 @@ struct npc_highborne_lamenterAI : public ScriptedAI
             if (EventMove_Timer <= diff)
             {
                 me->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
-                me->SendMonsterMoveWithSpeed(me->GetPositionX(),me->GetPositionY(),HIGHBORNE_LOC_Y_NEW,5000);
-                me->GetMap()->CreatureRelocation(me,me->GetPositionX(),me->GetPositionY(),HIGHBORNE_LOC_Y_NEW,me->GetOrientation());
+                me->SendMonsterMoveWithSpeed(me->GetPositionX(),me->GetPositionY(),HIGHBORNE_LOC_Y_NEW, 5000);
+                me->GetMap()->CreatureRelocation(me, me->GetPositionX(),me->GetPositionY(),HIGHBORNE_LOC_Y_NEW, me->GetOrientation());
                 EventMove = false;
             } else EventMove_Timer -= diff;
         }
@@ -183,9 +184,9 @@ struct npc_highborne_lamenterAI : public ScriptedAI
         }
     }
 };
-CreatureAI* GetAI_npc_highborne_lamenter(Creature* pCreature)
+CreatureAI* GetAI_npc_highborne_lamenter(Creature* creature)
 {
-    return new npc_highborne_lamenterAI (pCreature);
+    return new npc_highborne_lamenterAI (creature);
 }
 
 /*######
@@ -198,35 +199,35 @@ CreatureAI* GetAI_npc_highborne_lamenter(Creature* pCreature)
 #define GOSSIP_HPF2 "Kel'Thuzad"
 #define GOSSIP_HPF3 "Ner'zhul"
 
-bool GossipHello_npc_parqual_fintallas(Player* pPlayer, Creature* pCreature)
+bool GossipHello_npc_parqual_fintallas(Player* player, Creature* creature)
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+    if (creature->isQuestGiver())
+        player->PrepareQuestMenu(creature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(6628) == QUEST_STATUS_INCOMPLETE && !pPlayer->HasAura(SPELL_MARK_OF_SHAME, 0))
+    if (player->GetQuestStatus(6628) == QUEST_STATUS_INCOMPLETE && !player->HasAura(SPELL_MARK_OF_SHAME, 0))
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        pPlayer->SEND_GOSSIP_MENU(5822, pCreature->GetGUID());
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HPF3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        player->SEND_GOSSIP_MENU(5822, creature->GetGUID());
     }
     else
-        pPlayer->SEND_GOSSIP_MENU(5821, pCreature->GetGUID());
+        player->SEND_GOSSIP_MENU(5821, creature->GetGUID());
 
     return true;
 }
 
-bool GossipSelect_npc_parqual_fintallas(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+bool GossipSelect_npc_parqual_fintallas(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
 {
     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->CastSpell(pPlayer,SPELL_MARK_OF_SHAME,false);
+        player->CLOSE_GOSSIP_MENU();
+        creature->CastSpell(player, SPELL_MARK_OF_SHAME, false);
     }
     if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pPlayer->AreaExploredOrEventHappens(6628);
+        player->CLOSE_GOSSIP_MENU();
+        player->AreaExploredOrEventHappens(6628);
     }
     return true;
 }

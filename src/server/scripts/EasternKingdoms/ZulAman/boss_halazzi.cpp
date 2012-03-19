@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -154,7 +155,7 @@ struct boss_halazziAI : public ScriptedAI
 
     void EnterPhase(PhaseHalazzi NextPhase)
     {
-        switch(NextPhase)
+        switch (NextPhase)
         {
         case PHASE_LYNX:
         case PHASE_ENRAGE:
@@ -180,7 +181,7 @@ struct boss_halazziAI : public ScriptedAI
             break;
         case PHASE_HUMAN:
             //DoCast(me, SPELL_SUMMON_LYNX, true);
-            DoSpawnCreature(MOB_SPIRIT_LYNX, 5,5,0,0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+            DoSpawnCreature(MOB_SPIRIT_LYNX, 5, 5, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
             me->SetMaxHealth(400000);
             me->SetHealth(400000);
             ShockTimer = 10000;
@@ -222,7 +223,7 @@ struct boss_halazziAI : public ScriptedAI
         {
             if (SaberlashTimer <= diff)
             {
-                switch(rand()%2)
+                switch (rand()%2)
                 {
                     case 0:
                         me->MonsterYell(YELL_SABER_ONE, LANG_UNIVERSAL, NULL);
@@ -243,7 +244,7 @@ struct boss_halazziAI : public ScriptedAI
             if (FrenzyTimer <= diff)
             {
                 DoCast(me, SPELL_FRENZY);
-                FrenzyTimer = urand(10000,15000);
+                FrenzyTimer = urand(10000, 15000);
             } else FrenzyTimer -= diff;
 
             if (Phase == PHASE_LYNX)
@@ -265,7 +266,7 @@ struct boss_halazziAI : public ScriptedAI
 
             if (ShockTimer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
                     if (pTarget->IsNonMeleeSpellCasted(false))
                         DoCast(pTarget, SPELL_EARTHSHOCK);
@@ -316,7 +317,7 @@ struct boss_halazziAI : public ScriptedAI
 
     void KilledUnit(Unit* /*victim*/)
     {
-        switch (urand(0,1))
+        switch (urand(0, 1))
         {
             case 0:
                 me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
@@ -351,7 +352,7 @@ struct boss_spiritlynxAI : public ScriptedAI
 
     void Reset()
     {
-        FrenzyTimer = urand(30000,50000);  //frenzy every 30-50 seconds
+        FrenzyTimer = urand(30000, 50000);  //frenzy every 30-50 seconds
         shredder_timer = 4000;
     }
 
@@ -377,7 +378,7 @@ struct boss_spiritlynxAI : public ScriptedAI
         if (FrenzyTimer <= diff)
         {
             DoCast(me, SPELL_LYNX_FRENZY);
-            FrenzyTimer = urand(30000,50000);  //frenzy every 30-50 seconds
+            FrenzyTimer = urand(30000, 50000);  //frenzy every 30-50 seconds
         } else FrenzyTimer -= diff;
 
         if (shredder_timer <= diff)
@@ -390,14 +391,14 @@ struct boss_spiritlynxAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_boss_halazziAI(Creature* pCreature)
+CreatureAI* GetAI_boss_halazziAI(Creature* creature)
 {
-    return new boss_halazziAI (pCreature);
+    return new boss_halazziAI (creature);
 }
 
-CreatureAI* GetAI_boss_spiritlynxAI(Creature* pCreature)
+CreatureAI* GetAI_boss_spiritlynxAI(Creature* creature)
 {
-    return new boss_spiritlynxAI (pCreature);
+    return new boss_spiritlynxAI (creature);
 }
 
 void AddSC_boss_halazzi()

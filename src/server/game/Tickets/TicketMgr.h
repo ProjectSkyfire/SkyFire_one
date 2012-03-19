@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
@@ -20,10 +20,11 @@
 #ifndef _TICKETMGR_H
 #define _TICKETMGR_H
 
-#include "Policies/Singleton.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Util.h"
 #include "Config.h"
+
+#include <ace/Singleton.h>
 #include <map>
 
 enum GMTicketOpenedByGMStatus
@@ -89,5 +90,5 @@ class TicketMgr
 };
 
 #endif
-#define ticketmgr Oregon::Singleton<TicketMgr>::Instance()
+#define sTicketMgr ACE_Singleton<TicketMgr, ACE_Thread_Mutex>::instance()
 

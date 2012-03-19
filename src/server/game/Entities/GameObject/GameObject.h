@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OREGONCORE_GAMEOBJECT_H
-#define OREGONCORE_GAMEOBJECT_H
+#ifndef TRINITY_GAMEOBJECT_H
+#define TRINITY_GAMEOBJECT_H
 
 #include "Common.h"
 #include "SharedDefines.h"
@@ -26,11 +27,11 @@
 #include "LootMgr.h"
 #include "Database/DatabaseEnv.h"
 
-// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push,N), also any gcc version not support it at some platform
+// GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack(1)
 #else
-#pragma pack(push,1)
+#pragma pack(push, 1)
 #endif
 
 // from `gameobject_template`
@@ -367,7 +368,7 @@ struct GameObjectInfo
 
     uint32 GetCharges() const                               // despawn at uses amount
     {
-        switch(type)
+        switch (type)
         {
             //case GAMEOBJECT_TYPE_TRAP:        return trap.charges;
             case GAMEOBJECT_TYPE_GUARDPOST:   return guardpost.charges;
@@ -378,7 +379,7 @@ struct GameObjectInfo
 
     uint32 GetGossipMenuId() const
     {
-        switch(type)
+        switch (type)
         {
             case GAMEOBJECT_TYPE_QUESTGIVER:    return questgiver.gossipID;
             case GAMEOBJECT_TYPE_GOOBER:        return goober.gossipID;
@@ -471,14 +472,14 @@ class GameObject : public WorldObject, public GridObject<GameObject>
 
         void UpdateRotationFields(float rotation2 = 0.0f, float rotation3 = 0.0f);
 
-        void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text,language,TargetGuid); }
-        void Yell(const char* text, uint32 language, uint64 TargetGuid) { MonsterYell(text,language,TargetGuid); }
-        void TextEmote(const char* text, uint64 TargetGuid) { MonsterTextEmote(text,TargetGuid); }
-        void Whisper(const char* text,uint64 receiver) { MonsterWhisper(text,receiver); }
-        void Say(int32 textId, uint32 language, uint64 TargetGuid) { MonsterSay(textId,language,TargetGuid); }
-        void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId,language,TargetGuid); }
-        void TextEmote(int32 textId, uint64 TargetGuid) { MonsterTextEmote(textId,TargetGuid); }
-        void Whisper(int32 textId, uint64 receiver) { MonsterWhisper(textId,receiver); }
+        void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text, language, TargetGuid); }
+        void Yell(const char* text, uint32 language, uint64 TargetGuid) { MonsterYell(text, language, TargetGuid); }
+        void TextEmote(const char* text, uint64 TargetGuid) { MonsterTextEmote(text, TargetGuid); }
+        void Whisper(const char* text, uint64 receiver) { MonsterWhisper(text, receiver); }
+        void Say(int32 textId, uint32 language, uint64 TargetGuid) { MonsterSay(textId, language, TargetGuid); }
+        void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId, language, TargetGuid); }
+        void TextEmote(int32 textId, uint64 TargetGuid) { MonsterTextEmote(textId, TargetGuid); }
+        void Whisper(int32 textId, uint64 receiver) { MonsterWhisper(textId, receiver); }
 
         // overwrite WorldObject function for proper name localization
         const char* GetNameForLocaleIdx(int32 locale_idx) const;
@@ -512,7 +513,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetLootId() const { return GetLootId(GetGOInfo()); }
         uint32 GetLockId() const
         {
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_DOOR:       return GetGOInfo()->door.lockId;
                 case GAMEOBJECT_TYPE_BUTTON:     return GetGOInfo()->button.lockId;
@@ -531,7 +532,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
 
         bool GetDespawnPossibility() const                      // despawn at targeting of cast?
         {
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_DOOR:       return GetGOInfo()->door.noDamageImmune;
                 case GAMEOBJECT_TYPE_BUTTON:     return GetGOInfo()->button.noDamageImmune;
@@ -614,7 +615,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
 
         uint32 GetLinkedGameObjectEntry() const
         {
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_CHEST:       return GetGOInfo()->chest.linkedTrapId;
                 case GAMEOBJECT_TYPE_SPELL_FOCUS: return GetGOInfo()->spellFocus.linkedTrapId;
@@ -626,7 +627,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetAutoCloseTime() const
         {
             uint32 autoCloseTime = 0;
-            switch(GetGoType())
+            switch (GetGoType())
             {
                 case GAMEOBJECT_TYPE_DOOR:          autoCloseTime = GetGOInfo()->door.autoCloseTime; break;
                 case GAMEOBJECT_TYPE_BUTTON:        autoCloseTime = GetGOInfo()->button.autoCloseTime; break;

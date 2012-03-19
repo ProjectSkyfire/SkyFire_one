@@ -1,4 +1,5 @@
  /*
+  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
   * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
   * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
   * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
@@ -89,7 +90,7 @@ EndScriptData */
 
 struct Position2d
 {
-    float x,y;
+    float x, y;
 };
 
 static Position2d Coords[]=
@@ -216,7 +217,7 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
 
         if (Timer <= diff)
         {
-            switch(Counter)
+            switch (Counter)
             {
             case 0:
                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY2H);  // I R ANNNGRRRY!
@@ -275,7 +276,7 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
                     DoScriptText(DESI_SAY_AFTER, Essence);
                 }
                 Essence->ForcedDespawn();
-                me->SetUInt32Value(UNIT_NPC_EMOTESTATE,0);
+                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
                 EssenceGUID = 0;
                 SoulCount = 0;
                 SoulDeathCount = 0;
@@ -335,7 +336,7 @@ struct boss_essence_of_sufferingAI : public ScriptedAI
         {
             damage = 0;
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            me->Yell(SUFF_SAY_RECAP,LANG_UNIVERSAL,0);
+            me->Yell(SUFF_SAY_RECAP, LANG_UNIVERSAL, 0);
             DoScriptText(SUFF_SAY_RECAP, me);
         }
     }
@@ -351,7 +352,7 @@ struct boss_essence_of_sufferingAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(SUFF_SAY_SLAY1,SUFF_SAY_SLAY2,SUFF_SAY_SLAY3), me);
+        DoScriptText(RAND(SUFF_SAY_SLAY1, SUFF_SAY_SLAY2, SUFF_SAY_SLAY3), me);
     }
 
     void CastFixate()
@@ -369,13 +370,13 @@ struct boss_essence_of_sufferingAI : public ScriptedAI
         }
         if (targets.empty())
             return; // No targets added for some reason. No point continuing.
-        targets.sort(Oregon::ObjectDistanceOrderPred(me)); // Sort players by distance.
+        targets.sort(Trinity::ObjectDistanceOrderPred(me)); // Sort players by distance.
         targets.resize(1); // Only need closest target.
         Unit *pTarget = targets.front(); // Get the first target.
         if (pTarget)
             pTarget->CastSpell(me, SPELL_FIXATE_TAUNT, true);
         DoResetThreat();
-        me->AddThreat(pTarget,1000000);
+        me->AddThreat(pTarget, 1000000);
     }
 
     void UpdateAI(const uint32 diff)
@@ -468,7 +469,7 @@ struct boss_essence_of_desireAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(DESI_SAY_SLAY1,DESI_SAY_SLAY2,DESI_SAY_SLAY3), me);
+        DoScriptText(RAND(DESI_SAY_SLAY1, DESI_SAY_SLAY2, DESI_SAY_SLAY3), me);
     }
 
     void UpdateAI(const uint32 diff)
@@ -535,7 +536,7 @@ struct boss_essence_of_angerAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        DoScriptText(RAND(ANGER_SAY_FREED,ANGER_SAY_FREED2), me);
+        DoScriptText(RAND(ANGER_SAY_FREED, ANGER_SAY_FREED2), me);
 
         DoZoneInCombat();
         DoCast(me, AURA_OF_ANGER, true);
@@ -548,7 +549,7 @@ struct boss_essence_of_angerAI : public ScriptedAI
 
     void KilledUnit(Unit * /*victim*/)
     {
-        DoScriptText(RAND(ANGER_SAY_SLAY1,ANGER_SAY_SLAY2), me);
+        DoScriptText(RAND(ANGER_SAY_SLAY1, ANGER_SAY_SLAY2), me);
     }
 
     void UpdateAI(const uint32 diff)
@@ -604,29 +605,29 @@ void npc_enslaved_soulAI::JustDied(Unit * /*killer*/)
     DoCast(me, SPELL_SOUL_RELEASE, true);
 }
 
-CreatureAI* GetAI_boss_reliquary_of_souls(Creature* pCreature)
+CreatureAI* GetAI_boss_reliquary_of_souls(Creature* creature)
 {
-    return new boss_reliquary_of_soulsAI (pCreature);
+    return new boss_reliquary_of_soulsAI (creature);
 }
 
-CreatureAI* GetAI_boss_essence_of_suffering(Creature* pCreature)
+CreatureAI* GetAI_boss_essence_of_suffering(Creature* creature)
 {
-    return new boss_essence_of_sufferingAI (pCreature);
+    return new boss_essence_of_sufferingAI (creature);
 }
 
-CreatureAI* GetAI_boss_essence_of_desire(Creature* pCreature)
+CreatureAI* GetAI_boss_essence_of_desire(Creature* creature)
 {
-    return new boss_essence_of_desireAI (pCreature);
+    return new boss_essence_of_desireAI (creature);
 }
 
-CreatureAI* GetAI_boss_essence_of_anger(Creature* pCreature)
+CreatureAI* GetAI_boss_essence_of_anger(Creature* creature)
 {
-    return new boss_essence_of_angerAI (pCreature);
+    return new boss_essence_of_angerAI (creature);
 }
 
-CreatureAI* GetAI_npc_enslaved_soul(Creature* pCreature)
+CreatureAI* GetAI_npc_enslaved_soul(Creature* creature)
 {
-    return new npc_enslaved_soulAI (pCreature);
+    return new npc_enslaved_soulAI (creature);
 }
 
 void AddSC_boss_reliquary_of_souls()

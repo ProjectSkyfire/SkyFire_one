@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -17,7 +18,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ProgressBar.h"
 #include "Log.h"
 #include "DBCFileLoader.h"
 
@@ -64,7 +64,7 @@ template<class V>
 void SQLStorageLoaderBase<T>::storeValue(V value, SQLStorage &store, char *p, int x, uint32 &offset)
 {
     T * subclass = (static_cast<T*>(this));
-    switch(store.dst_format[x])
+    switch (store.dst_format[x])
     {
         case FT_LOGIC:
             subclass->convert(x, value, *((bool*)(&p[offset])) );
@@ -93,7 +93,7 @@ template<class T>
 void SQLStorageLoaderBase<T>::storeValue(char * value, SQLStorage &store, char *p, int x, uint32 &offset)
 {
     T * subclass = (static_cast<T*>(this));
-    switch(store.dst_format[x])
+    switch (store.dst_format[x])
     {
         case FT_LOGIC:
             subclass->convert_from_str(x, value, *((bool*)(&p[offset])) );
@@ -126,7 +126,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     QueryResult_AutoPtr result  = WorldDatabase.PQuery("SELECT MAX(%s) FROM %s", store.entry_field, store.table);
     if (!result)
     {
-        sLog.outError("Error loading %s table (not exist?)\n", store.table);
+        sLog->outError("Error loading %s table (not exist?)\n", store.table);
         exit(1);                                            // Stop server at loading non exited table or not accessable table
     }
 
@@ -145,7 +145,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
 
     if (!result)
     {
-        sLog.outError("%s table is empty!\n", store.table);
+        sLog->outError("%s table is empty!\n", store.table);
         store.RecordCount = 0;
         return;
     }
@@ -156,7 +156,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     if (store.iNumFields != result->GetFieldCount())
     {
         store.RecordCount = 0;
-        sLog.outError("Error in %s table, probably sql file format was updated (there should be %d fields in sql).\n", store.table, store.iNumFields);
+        sLog->outError("Error in %s table, probably sql file format was updated (there should be %d fields in sql).\n", store.table, store.iNumFields);
         exit(1);                                            // Stop server at loading broken or non-compatible table.
     }
 
@@ -174,21 +174,21 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     recordsize=(store.iNumFields-sc-bo-bb)*4+sc*sizeof(char*)+bo*sizeof(bool)+bb*sizeof(char);
 
     char** newIndex=new char*[maxi];
-    memset(newIndex,0,maxi*sizeof(char*));
+    memset(newIndex, 0, maxi*sizeof(char*));
 
     char * _data= new char[store.RecordCount *recordsize];
     uint32 count=0;
-    barGoLink bar( store.RecordCount );
+
     do
     {
         fields = result->Fetch();
-        bar.step();
+
         char *p=(char*)&_data[recordsize*count];
         newIndex[fields[0].GetUInt32()]=p;
 
         offset=0;
         for (uint32 x = 0; x < store.iNumFields; x++)
-            switch(store.src_format[x])
+            switch (store.src_format[x])
             {
                 case FT_LOGIC:
                     storeValue((bool)(fields[x].GetUInt32() > 0), store, p, x, offset); break;

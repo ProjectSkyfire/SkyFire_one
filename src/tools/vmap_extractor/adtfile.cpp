@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
@@ -38,7 +39,7 @@ char * GetPlainName(char * FileName)
 
 void fixnamen(char *name, size_t len)
 {
-    for (size_t i=0; i<len-3; i++)
+    for (size_t i = 0; i < len-3; i++)
     {
         if (i>0 && name[i]>='A' && name[i]<='Z' && isalpha(name[i-1]))
         {
@@ -49,13 +50,13 @@ void fixnamen(char *name, size_t len)
         }
     }
     //extension in lowercase
-    for (size_t i=len-3; i<len; i++)
+    for (size_t i=len-3; i < len; i++)
         name[i] |= 0x20;
 }
 
 void fixname2(char *name, size_t len)
 {
-    for (size_t i=0; i<len-3; i++)
+    for (size_t i = 0; i < len-3; i++)
     {
         if (name[i] == ' ')
         name[i] = '_';
@@ -79,7 +80,7 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
 
     Adtfilename.erase(Adtfilename.find(".adt"),4);
     string TempMapNumber;
-    TempMapNumber = Adtfilename.substr(Adtfilename.length()-6,6);
+    TempMapNumber = Adtfilename.substr(Adtfilename.length()-6, 6);
     xMap = TempMapNumber.substr(TempMapNumber.find("_")+1,(TempMapNumber.find_last_of("_")-1) - (TempMapNumber.find("_")));
     yMap = TempMapNumber.substr(TempMapNumber.find_last_of("_")+1,(TempMapNumber.length()) - (TempMapNumber.find_last_of("_")));
     Adtfilename.erase((Adtfilename.length()-xMap.length()-yMap.length()-2), (xMap.length()+yMap.length()+2));
@@ -101,7 +102,7 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
     while (!ADT.isEof())
     {
         char fourcc[5];
-        ADT.read(&fourcc,4);
+        ADT.read(&fourcc, 4);
         ADT.read(&size, 4);
         flipcc(fourcc);
         fourcc[4] = 0;
@@ -125,15 +126,15 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
                 ModelInstansName = new string[size];
                 while (p<buf+size)
                 {
-                    fixnamen(p,strlen(p));
+                    fixnamen(p, strlen(p));
                     string path(p);
                     char* s=GetPlainName(p);
-                    fixname2(s,strlen(s));
+                    fixname2(s, strlen(s));
                     p=p+strlen(p)+1;
                     ModelInstansName[t++] = s;
 
                     // replace .mdx -> .m2
-                    path.erase(path.length()-2,2);
+                    path.erase(path.length()-2, 2);
                     path.append("2");
 
                     char szLocalFile[1024];
@@ -164,8 +165,8 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
                 {
                     string path(p);
                     char* s=GetPlainName(p);
-                    fixnamen(s,strlen(s));
-                    fixname2(s,strlen(s));
+                    fixnamen(s, strlen(s));
+                    fixname2(s, strlen(s));
                     p=p+strlen(p)+1;
                     WmoInstansName[q++] = s;
                 }
@@ -177,11 +178,11 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
             if (size)
             {
                 nMDX = (int)size / 36;
-                for (int i=0; i<nMDX; ++i)
+                for (int i = 0; i < nMDX; ++i)
                 {
                     uint32 id;
                     ADT.read(&id, 4);
-                    ModelInstance inst(ADT,ModelInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
+                    ModelInstance inst(ADT, ModelInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
                 }
                 delete[] ModelInstansName;
             }
@@ -191,11 +192,11 @@ bool ADTFile::init(uint32 map_num, uint32 tileX, uint32 tileY)
             if (size)
             {
                 nWMO = (int)size / 64;
-                for (int i=0; i<nWMO; ++i)
+                for (int i = 0; i < nWMO; ++i)
                 {
                     uint32 id;
                     ADT.read(&id, 4);
-                    WMOInstance inst(ADT,WmoInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
+                    WMOInstance inst(ADT, WmoInstansName[id].c_str(), map_num, tileX, tileY, dirfile);
                 }
                 delete[] WmoInstansName;
             }
