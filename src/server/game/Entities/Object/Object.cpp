@@ -577,26 +577,26 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask 
                 {
                     const CreatureTemplate* cinfo = ToCreature()->GetCreatureTemplate();
                     if (cinfo->flags_extra & CREATURE_FLAG_EXTRA_TRIGGER)
+                    {
+                        if (target->isGameMaster())
                         {
-                            if (target->isGameMaster())
-                            {
-                                if (cinfo->Modelid1)
-                                    *data << cinfo->Modelid1;//Modelid1 is a visible model for gms
-                                else
-                                    *data << 17519; // world invisible trigger's model
-                            }
+                            if (cinfo->Modelid1)
+                                *data << cinfo->Modelid1; // Modelid1 is a visible model for gm's
                             else
-                            {
-                                if (cinfo->Modelid2)
-                                    *data << cinfo->Modelid2;//Modelid2 is an invisible model for players
-                                else
-                                    *data << 11686; // world invisible trigger's model
-                            }
+                                *data << 17519; // world invisible trigger's model
                         }
                         else
-                            *data << m_uint32Values[ index ];
+                        {
+                            if (cinfo->Modelid2)
+                                *data << cinfo->Modelid2; // Modelid2 is an invisible model for players
+                            else
+                                *data << 11686; // world invisible trigger's model
+                        }
+                    }
+                    else
+                        *data << m_uint32Values[ index ];
                 }
-                // hide lootable animation for unallowed players
+                // hide lootable animation for players not allowed
                 else if (index == UNIT_DYNAMIC_FLAGS && GetTypeId() == TYPEID_UNIT)
                 {
                     if (!target->isAllowedToLoot(ToCreature()))
