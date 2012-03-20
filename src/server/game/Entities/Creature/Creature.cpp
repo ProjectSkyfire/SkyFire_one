@@ -932,6 +932,9 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask)
     CreatureData& data = sObjectMgr->NewOrExistCreatureData(m_DBTableGuid);
 
     uint32 displayId = GetNativeDisplayId();
+    uint32 npcflag = GetUInt32Value(UNIT_NPC_FLAGS);
+    uint32 unit_flags = GetUInt32Value(UNIT_FIELD_FLAGS);
+    uint32 dynamicflags = GetUInt32Value(UNIT_DYNAMIC_FLAGS);
 
     // check if it's a custom model and if not, use 0 for displayId
     CreatureTemplate const* cinfo = GetCreatureTemplate();
@@ -941,14 +944,14 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask)
             displayId == cinfo->Modelid3 || displayId == cinfo->Modelid4)
             displayId = 0;
 
-        //if (npcflag == cinfo->npcflag)
-            //npcflag = 0;
+        if (npcflag == cinfo->npcflag)
+            npcflag = 0;
 
-        //if (unit_flags == cinfo->unit_flags)
-            //unit_flags = 0;
+        if (unit_flags == cinfo->unit_flags)
+            unit_flags = 0;
 
-        //if (dynamicflags == cinfo->dynamicflags)
-            //dynamicflags = 0;
+        if (dynamicflags == cinfo->dynamicflags)
+            dynamicflags = 0;
     }
 
     // data->guid = guid don't must be update at save
@@ -971,6 +974,9 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask)
     data.movementType = !m_respawnradius && GetDefaultMovementType() == RANDOM_MOTION_TYPE
         ? IDLE_MOTION_TYPE : GetDefaultMovementType();
     data.spawnMask = spawnMask;
+    data.npcflag = npcflag;
+    data.unit_flags = unit_flags;
+    data.dynamicflags = dynamicflags;
 
     // updated in DB
     WorldDatabase.BeginTransaction();
