@@ -238,7 +238,7 @@ void WorldSession::HandleTaxiNextDestinationOpcode(WorldPacket& recv_data)
 
         sLog->outDebug("WORLD: Taxi has to go from %u to %u", sourcenode, destinationnode);
 
-        uint16 MountId = sObjectMgr->GetTaxiMount(sourcenode, GetPlayer()->GetTeam());
+        uint16 MountId = sObjectMgr->GetTaxiMountDisplayId(sourcenode, GetPlayer()->GetTeam());
 
         uint32 path, cost;
         sObjectMgr->GetTaxiPath(sourcenode, destinationnode, path, cost);

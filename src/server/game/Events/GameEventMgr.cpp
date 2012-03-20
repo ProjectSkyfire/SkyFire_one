@@ -1196,7 +1196,7 @@ void GameEventMgr::ChangeEquipOrModel(int16 event_id, bool activate)
             CreatureData const* data = sObjectMgr->GetCreatureData(itr->first);
             if (data && activate)
             {
-                CreatureTemplate const *cinfo = sObjectMgr->GetCreatureTemplate(data->id);
+                CreatureTemplate const* cinfo = sObjectMgr->GetCreatureTemplate(data->id);
                 uint32 display_id = sObjectMgr->ChooseDisplayId(0, cinfo, data);
                 CreatureModelInfo const *minfo = sObjectMgr->GetCreatureModelRandomGender(display_id);
                 if (minfo)

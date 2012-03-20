@@ -142,10 +142,10 @@ struct CreatureTemplate
     uint32  Entry;
     uint32  HeroicEntry;
     uint32  KillCredit[MAX_KILL_CREDIT];
-    uint32  Modelid_A1;
-    uint32  Modelid_A2;
-    uint32  Modelid_H1;
-    uint32  Modelid_H2;
+    uint32  Modelid1;
+    uint32  Modelid2;
+    uint32  Modelid3;
+    uint32  Modelid4;
     char*   Name;
     char*   SubName;
     char*   IconName;
@@ -519,7 +519,7 @@ class Creature : public Unit, public GridObject<Creature>
 
         TrainerSpellData const* GetTrainerSpells() const;
 
-        CreatureTemplate const *GetCreatureTemplate() const { return m_creatureInfo; }
+        CreatureTemplate const* GetCreatureTemplate() const { return m_creatureInfo; }
         CreatureData const *GetCreatureData() const { return m_creatureData; }
         CreatureDataAddon const* GetCreatureAddon() const;
 

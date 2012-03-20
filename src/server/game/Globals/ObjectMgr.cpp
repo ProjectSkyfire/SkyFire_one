@@ -577,27 +577,75 @@ void ObjectMgr::LoadCreatureTemplates()
         if (!factionTemplate)
             sLog->outErrorDb("Creature (Entry: %u) has invalid faction_H template (%u)", cInfo->Entry, cInfo->faction_H);
 
-        // check model ids, supplying and sending non-existent ids to the client might crash them
-        if (cInfo->Modelid_A1 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_A1))
+        // used later for scale
+        CreatureDisplayInfoEntry const* displayScaleEntry = NULL;
+
+        if (cInfo->Modelid1)
         {
-            sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_A1 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_A1);
-            const_cast<CreatureTemplate*>(cInfo)->Modelid_A1 = 0;
+            CreatureDisplayInfoEntry const* displayEntry = sCreatureDisplayInfoStore.LookupEntry(cInfo->Modelid1);
+            if (!displayEntry)
+            {
+                sLog->outErrorDb("Creature (Entry: %u) lists non-existing Modelid1 id (%u), this can crash the client.", cInfo->Entry, cInfo->Modelid1);
+                const_cast<CreatureTemplate*>(cInfo)->Modelid1 = 0;
+            }
+            else if (!displayScaleEntry)
+                displayScaleEntry = displayEntry;
+
+            CreatureModelInfo const* modelInfo = GetCreatureModelInfo(cInfo->Modelid1);
+            if (!modelInfo)
+                sLog->outErrorDb("No model data exist for `Modelid1` = %u listed by creature (Entry: %u).", cInfo->Modelid1, cInfo->Entry);
         }
-        if (cInfo->Modelid_A2 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_A2))
+
+        if (cInfo->Modelid2)
         {
-            sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_A2 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_A2);
-            const_cast<CreatureTemplate*>(cInfo)->Modelid_A2 = 0;
+            CreatureDisplayInfoEntry const* displayEntry = sCreatureDisplayInfoStore.LookupEntry(cInfo->Modelid2);
+            if (!displayEntry)
+            {
+                sLog->outErrorDb("Creature (Entry: %u) lists non-existing Modelid2 id (%u), this can crash the client.", cInfo->Entry, cInfo->Modelid2);
+                const_cast<CreatureTemplate*>(cInfo)->Modelid2 = 0;
+            }
+            else if (!displayScaleEntry)
+                displayScaleEntry = displayEntry;
+
+            CreatureModelInfo const* modelInfo = GetCreatureModelInfo(cInfo->Modelid2);
+            if (!modelInfo)
+                sLog->outErrorDb("No model data exist for `Modelid2` = %u listed by creature (Entry: %u).", cInfo->Modelid2, cInfo->Entry);
         }
-        if (cInfo->Modelid_H1 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_H1))
+
+        if (cInfo->Modelid3)
         {
-            sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_H1 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_H1);
-            const_cast<CreatureTemplate*>(cInfo)->Modelid_H1 = 0;
+            CreatureDisplayInfoEntry const* displayEntry = sCreatureDisplayInfoStore.LookupEntry(cInfo->Modelid3);
+            if (!displayEntry)
+            {
+                sLog->outErrorDb("Creature (Entry: %u) lists non-existing Modelid3 id (%u), this can crash the client.", cInfo->Entry, cInfo->Modelid3);
+                const_cast<CreatureTemplate*>(cInfo)->Modelid3 = 0;
+            }
+            else if (!displayScaleEntry)
+                displayScaleEntry = displayEntry;
+
+            CreatureModelInfo const* modelInfo = GetCreatureModelInfo(cInfo->Modelid3);
+            if (!modelInfo)
+                sLog->outErrorDb("No model data exist for `Modelid3` = %u listed by creature (Entry: %u).", cInfo->Modelid3, cInfo->Entry);
         }
-        if (cInfo->Modelid_H2 && !sCreatureModelStorage.LookupEntry<CreatureModelInfo>(cInfo->Modelid_H2))
+
+        if (cInfo->Modelid4)
         {
-            sLog->outErrorDb("Creature (Entry: %u) has invalid Modelid_H2 (%u), setting it to 0", cInfo->Entry, cInfo->Modelid_H2);
-            const_cast<CreatureTemplate*>(cInfo)->Modelid_H2 = 0;
+            CreatureDisplayInfoEntry const* displayEntry = sCreatureDisplayInfoStore.LookupEntry(cInfo->Modelid4);
+            if (!displayEntry)
+            {
+                sLog->outErrorDb("Creature (Entry: %u) lists non-existing Modelid4 id (%u), this can crash the client.", cInfo->Entry, cInfo->Modelid4);
+                const_cast<CreatureTemplate*>(cInfo)->Modelid4 = 0;
+            }
+            else if (!displayScaleEntry)
+                displayScaleEntry = displayEntry;
+
+            CreatureModelInfo const* modelInfo = GetCreatureModelInfo(cInfo->Modelid4);
+            if (!modelInfo)
+                sLog->outErrorDb("No model data exist for `Modelid4` = %u listed by creature (Entry: %u).", cInfo->Modelid4, cInfo->Entry);
         }
+
+        if (!displayScaleEntry)
+            sLog->outErrorDb("Creature (Entry: %u) does not have any existing display id in Modelid1/Modelid2/Modelid3/Modelid4.", cInfo->Entry);
 
         for (int k = 0; k < MAX_KILL_CREDIT; ++k)
         {
@@ -654,12 +702,13 @@ void ObjectMgr::LoadCreatureTemplates()
             }
         }
 
-        // if not set custom creature scale then load scale from CreatureDisplayInfo.dbc
+        /// if not set custom creature scale then load scale from CreatureDisplayInfo.dbc
         if (cInfo->scale <= 0.0f)
         {
-            uint32 modelid = cInfo->GetFirstValidModelId();
-            CreatureDisplayInfoEntry const* ScaleEntry = sCreatureDisplayInfoStore.LookupEntry(modelid);
-            const_cast<CreatureTemplate*>(cInfo)->scale = ScaleEntry ? ScaleEntry->scale : 1.0f;
+            if (displayScaleEntry)
+                const_cast<CreatureTemplate*>(cInfo)->scale = displayScaleEntry->scale;
+            else
+                const_cast<CreatureTemplate*>(cInfo)->scale = 1.0f;
         }
     }
 }
@@ -1141,7 +1190,7 @@ uint32 ObjectMgr::AddGOData(uint32 entry, uint32 artKit, uint32 mapId, float x, 
 
 uint32 ObjectMgr::AddCreData(uint32 entry, uint32 /*team*/, uint32 mapId, float x, float y, float z, float o, uint32 spawntimedelay)
 {
-    CreatureTemplate const *cInfo = GetCreatureTemplate(entry);
+    CreatureTemplate const* cInfo = GetCreatureTemplate(entry);
     if (!cInfo)
         return 0;
 
@@ -4570,21 +4619,25 @@ void ObjectMgr::GetTaxiPath(uint32 source, uint32 destination, uint32 &path, uin
     path = dest_i->second.ID;
 }
 
-uint16 ObjectMgr::GetTaxiMount(uint32 id, uint32 team)
+uint32 ObjectMgr::GetTaxiMountDisplayId(uint32 id, uint32 team, bool allowed_alt_team /* = false */)
 {
-    uint16 mount_entry = 0;
-    uint16 mount_id = 0;
+    uint32 mount_entry = 0;
+    uint32 mount_id = 0;
 
+    // select mount creature id
     TaxiNodesEntry const* node = sTaxiNodesStore.LookupEntry(id);
     if (node)
     {
-        if (team == ALLIANCE) mount_entry = node->alliance_mount_type;
-        else mount_entry = node->horde_mount_type;
+        if (team == ALLIANCE)
+            mount_entry = node->MountCreatureID[1];
+        else
+            mount_entry = node->MountCreatureID[0];
 
-        CreatureTemplate const *cinfo = GetCreatureTemplate(mount_entry);
-        if (cinfo)
+        CreatureTemplate const *mount_info = GetCreatureTemplate(mount_entry);
+        if (mount_info)
         {
-            if (! (mount_id = cinfo->GetRandomValidModelId()))
+            mount_id = mount_info->GetRandomValidModelId();
+            if (!mount_id)
             {
                 sLog->outErrorDb("No displayid found for the taxi mount with the entry %u! Can't load it!", mount_entry);
                 return false;
@@ -4592,16 +4645,9 @@ uint16 ObjectMgr::GetTaxiMount(uint32 id, uint32 team)
         }
     }
 
-    CreatureModelInfo const *minfo = GetCreatureModelInfo(mount_id);
-    if (!minfo)
-    {
-        sLog->outErrorDb("Taxi mount (Entry: %u) for taxi node (Id: %u) for team %u has model %u not found in table creature_model_info, can't load. ",
-            mount_entry, id, team, mount_id);
-
-        return false;
-    }
-    if (minfo->modelid_other_gender != 0)
-        mount_id = urand(0, 1) ? mount_id : minfo->modelid_other_gender;
+    CreatureModelInfo const *minfo = sObjectMgr->GetCreatureModelRandomGender(mount_id);
+    if (minfo)
+        mount_id = minfo->modelid;
 
     return mount_id;
 }
@@ -5596,7 +5642,7 @@ std::string ObjectMgr::GeneratePetName(uint32 entry)
 
     if (list0.empty() || list1.empty())
     {
-        CreatureTemplate const *cinfo = GetCreatureTemplate(entry);
+        CreatureTemplate const* cinfo = GetCreatureTemplate(entry);
         char* petname = GetPetName(cinfo->family, sWorld->GetDefaultDbcLocale());
         if (!petname)
             petname = cinfo->Name;
@@ -7367,7 +7413,7 @@ GameObjectInfo const *GetGameObjectInfo(uint32 id)
     return sObjectMgr->GetGameObjectInfo(id);
 }
 
-CreatureTemplate const *GetCreatureTemplate(uint32 id)
+CreatureTemplate const* GetCreatureTemplate(uint32 id)
 {
     return sObjectMgr->GetCreatureTemplate(id);
 }

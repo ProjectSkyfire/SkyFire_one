@@ -837,8 +837,7 @@ struct TaxiNodesEntry
     float     z;                                            // 4
     //char*     name[16];                                   // 5-21
                                                             // 22 string flags, unused
-    uint32    horde_mount_type;                             // 23
-    uint32    alliance_mount_type;                          // 24
+    uint32    MountCreatureID[2];                           // 23-24    m_MountCreatureID[2]
 };
 
 struct TaxiPathEntry

@@ -3846,7 +3846,7 @@ bool ChatHandler::HandleNpcInfoCommand(const char* /*args*/)
     PSendSysMessage(LANG_NPCINFO_DUNGEON_ID, target->GetInstanceId());
     PSendSysMessage(LANG_NPCINFO_POSITION, float(target->GetPositionX()), float(target->GetPositionY()), float(target->GetPositionZ()));
     if (const CreatureData* const linked = target->GetLinkedRespawnCreatureData())
-        if (CreatureTemplate const *master = GetCreatureTemplate(linked->id))
+        if (CreatureTemplate const* master = GetCreatureTemplate(linked->id))
             PSendSysMessage(LANG_NPCINFO_LINKGUID, sObjectMgr->GetLinkedRespawnGuid(target->GetDBTableGUIDLow()), linked->id, master->Name);
 
     if ((npcflags & UNIT_NPC_FLAG_VENDOR))

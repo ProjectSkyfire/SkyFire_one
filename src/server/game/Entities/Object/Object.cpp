@@ -333,7 +333,7 @@ void Object::_BuildMovementUpdate(ByteBuffer * data, uint8 updateFlags) const
             if (GetTypeId() == TYPEID_PLAYER)
                 *data << (float)ToPlayer()->m_movementInfo.s_pitch;
             else
-                *data << float(0);                          // is't part of movement packet, we must store and send it...
+                *data << float(0);                          // it's part of movement packet, we must store and send it...
         }
 
         if (GetTypeId() == TYPEID_PLAYER)
@@ -577,24 +577,24 @@ void Object::_BuildValuesUpdate(uint8 updatetype, ByteBuffer * data, UpdateMask 
                 {
                     const CreatureTemplate* cinfo = ToCreature()->GetCreatureTemplate();
                     if (cinfo->flags_extra & CREATURE_FLAG_EXTRA_TRIGGER)
-                    {
-                        if (target->isGameMaster())
                         {
-                            if (cinfo->Modelid_A2)
-                                *data << cinfo->Modelid_A1;
+                            if (target->isGameMaster())
+                            {
+                                if (cinfo->Modelid1)
+                                    *data << cinfo->Modelid1;//Modelid1 is a visible model for gms
+                                else
+                                    *data << 17519; // world invisible trigger's model
+                            }
                             else
-                                *data << 17519; // world invisible trigger's model
+                            {
+                                if (cinfo->Modelid2)
+                                    *data << cinfo->Modelid2;//Modelid2 is an invisible model for players
+                                else
+                                    *data << 11686; // world invisible trigger's model
+                            }
                         }
                         else
-                        {
-                            if (cinfo->Modelid_A2)
-                                *data << cinfo->Modelid_A2;
-                            else
-                                *data << 11686; // world invisible trigger's model
-                        }
-                    }
-                    else
-                        *data << m_uint32Values[ index ];
+                            *data << m_uint32Values[ index ];
                 }
                 // hide lootable animation for unallowed players
                 else if (index == UNIT_DYNAMIC_FLAGS && GetTypeId() == TYPEID_UNIT)

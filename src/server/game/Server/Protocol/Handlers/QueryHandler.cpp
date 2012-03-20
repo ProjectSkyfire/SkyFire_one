@@ -146,7 +146,7 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    CreatureTemplate const *ci = sObjectMgr->GetCreatureTemplate(entry);
+    CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(entry);
     if (ci)
     {
         std::string Name, SubName;
@@ -179,10 +179,10 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket & recv_data)
         data << uint32(ci->rank);                           // Creature Rank (elite, boss, etc)
         data << uint32(0);                                  // unknown        wdbFeild11
         data << uint32(ci->PetSpellDataId);                 // Id from CreatureSpellData.dbc    wdbField12
-        data << (uint32)ci->Modelid_A1;                     // Modelid_A1
-        data << (uint32)ci->Modelid_A2;                     // Modelid_A2
-        data << (uint32)ci->Modelid_H1;                     // Modelid_H1
-        data << (uint32)ci->Modelid_H2;                     // Modelid_H2
+        data << (uint32)ci->Modelid1;                       // Modelid1
+        data << (uint32)ci->Modelid2;                       // Modelid2
+        data << (uint32)ci->Modelid3;                       // Modelid3
+        data << (uint32)ci->Modelid4;                       // Modelid4
         data << (float)1.0f;                                // unk
         data << (float)1.0f;                                // unk
         data << uint8(ci->RacialLeader);

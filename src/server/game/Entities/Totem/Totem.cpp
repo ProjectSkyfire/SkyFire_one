@@ -57,23 +57,23 @@ void Totem::InitStats(uint32 duration)
 {
     Minion::InitStats(duration);
 
-    CreatureTemplate const *cinfo = GetCreatureTemplate();
+    CreatureTemplate const* cinfo = GetCreatureTemplate();
     if (m_owner->GetTypeId() == TYPEID_PLAYER && cinfo)
     {
         uint32 modelid = 0;
         if (m_owner->ToPlayer()->GetTeam() == HORDE)
         {
-            if (cinfo->Modelid_H1)
-                modelid = cinfo->Modelid_H1;
-            else if (cinfo->Modelid_H2)
-                modelid = cinfo->Modelid_H2;
+            if (cinfo->Modelid3)
+                modelid = cinfo->Modelid3;
+            else if (cinfo->Modelid4)
+                modelid = cinfo->Modelid4;
         }
         else
         {
-            if (cinfo->Modelid_A1)
-                modelid = cinfo->Modelid_A1;
-            else if (cinfo->Modelid_A2)
-                modelid = cinfo->Modelid_A2;
+            if (cinfo->Modelid1)
+                modelid = cinfo->Modelid1;
+            else if (cinfo->Modelid2)
+                modelid = cinfo->Modelid2;
         }
         if (modelid)
             SetDisplayId(modelid);

@@ -17448,7 +17448,7 @@ void Player::CharmSpellInitialize()
     uint8 addlist = 0;
     if (charm->GetTypeId() != TYPEID_PLAYER)
     {
-        //CreatureTemplate const *cinfo = charm->ToCreature()->GetCreatureTemplate();
+        //CreatureTemplate const* cinfo = charm->ToCreature()->GetCreatureTemplate();
         //if (cinfo && cinfo->type == CREATURE_TYPE_DEMON && getClass() == CLASS_WARLOCK)
         {
             for (uint32 i = 0; i < MAX_SPELL_CHARM; ++i)
@@ -17861,7 +17861,7 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
     }
 
     if (!mount_id)                                           // if not provide then attempt use default.
-        mount_id = sObjectMgr->GetTaxiMount(sourcenode, GetTeam());
+        mount_id = sObjectMgr->GetTaxiMountDisplayId(sourcenode, GetTeam());
 
     if (mount_id == 0 || sourcepath == 0)
     {
@@ -17919,7 +17919,7 @@ void Player::ContinueTaxiFlight()
 
     sLog->outDebug("WORLD: Restart character %u taxi flight", GetGUIDLow());
 
-    uint32 mountDisplayId = sObjectMgr->GetTaxiMount(sourceNode, GetTeam());
+    uint32 mountDisplayId = sObjectMgr->GetTaxiMountDisplayId(sourceNode, GetTeam());
     uint32 path = m_taxi.GetCurrentTaxiPath();
 
     // search appropriate start path node

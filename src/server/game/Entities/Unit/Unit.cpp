@@ -11975,7 +11975,7 @@ void Unit::SetCharmedBy(Unit* charmer, CharmType type)
             case CHARM_TYPE_CHARM:
                 if (GetTypeId() == TYPEID_UNIT && charmer->getClass() == CLASS_WARLOCK)
                 {
-                    CreatureTemplate const *cinfo = ToCreature()->GetCreatureTemplate();
+                    CreatureTemplate const* cinfo = ToCreature()->GetCreatureTemplate();
                     if (cinfo && cinfo->type == CREATURE_TYPE_DEMON)
                     {
                         //to prevent client crash
@@ -12060,7 +12060,7 @@ void Unit::RemoveCharmedBy(Unit *charmer)
             case CHARM_TYPE_CHARM:
                 if (GetTypeId() == TYPEID_UNIT && charmer->getClass() == CLASS_WARLOCK)
                 {
-                    CreatureTemplate const *cinfo = ToCreature()->GetCreatureTemplate();
+                    CreatureTemplate const* cinfo = ToCreature()->GetCreatureTemplate();
                     if (cinfo && cinfo->type == CREATURE_TYPE_DEMON)
                     {
                         CreatureDataAddon const *cainfo = ToCreature()->GetCreatureAddon();
@@ -12094,7 +12094,7 @@ void Unit::RestoreFaction()
         ToPlayer()->setFactionForRace(getRace());
     else
     {
-        CreatureTemplate const *cinfo = ToCreature()->GetCreatureTemplate();
+        CreatureTemplate const* cinfo = ToCreature()->GetCreatureTemplate();
 
         if (ToCreature()->isPet())
         {

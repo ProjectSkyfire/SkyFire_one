@@ -583,7 +583,7 @@ class ObjectMgr
         ArenaTeamMap::iterator GetArenaTeamMapBegin() { return mArenaTeamMap.begin(); }
         ArenaTeamMap::iterator GetArenaTeamMapEnd()   { return mArenaTeamMap.end(); }
 
-        static CreatureTemplate const *GetCreatureTemplate(uint32 id);
+        static CreatureTemplate const* GetCreatureTemplate(uint32 id);
         CreatureModelInfo const *GetCreatureModelInfo(uint32 modelid);
         CreatureModelInfo const* GetCreatureModelRandomGender(uint32 display_id);
         uint32 ChooseDisplayId(uint32 team, const CreatureTemplate *cinfo, const CreatureData *data = NULL);
@@ -632,7 +632,7 @@ class ObjectMgr
 
         uint32 GetNearestTaxiNode(float x, float y, float z, uint32 mapid);
         void GetTaxiPath(uint32 source, uint32 destination, uint32 &path, uint32 &cost);
-        uint16 GetTaxiMount(uint32 id, uint32 team);
+        uint32 GetTaxiMountDisplayId(uint32 id, uint32 team, bool allowed_alt_team = false);
         void GetTaxiPathNodes(uint32 path, Path &pathnodes, std::vector<uint32>& mapIds);
         void GetTransportPathNodes(uint32 path, TransportPath &pathnodes);
 
@@ -1161,7 +1161,7 @@ uint32 GetAreaTriggerScriptId(uint32 trigger_id);
 uint32 GetScriptId(const char *name);
 ObjectMgr::ScriptNameMap& GetScriptNames();
 GameObjectInfo const *GetGameObjectInfo(uint32 id);
-CreatureTemplate const *GetCreatureTemplate(uint32 id);
+CreatureTemplate const* GetCreatureTemplate(uint32 id);
 CreatureTemplate const* GetCreatureTemplateStore(uint32 entry);
 Quest const* GetQuestTemplateStore(uint32 entry);
 

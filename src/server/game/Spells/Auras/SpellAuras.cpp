@@ -19,7 +19,7 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
@@ -371,12 +371,12 @@ m_periodicTimer(0), m_amplitude(0), m_PeriodicEventId(0), m_AuraDRGroup(DIMINISH
             ItemRandomSuffixEntry const *item_rand_suffix = sItemRandomSuffixStore.LookupEntry(abs(castItem->GetItemRandomPropertyId()));
             if (item_rand_suffix)
             {
-                for (int k=0; k<3; k++)
+                for (int k = 0; k < 3; k++)
                 {
                     SpellItemEnchantmentEntry const *pEnchant = sSpellItemEnchantmentStore.LookupEntry(item_rand_suffix->enchant_id[k]);
                     if (pEnchant)
                     {
-                        for (int t=0; t<3; t++)
+                        for (int t = 0; t < 3; t++)
                             if (pEnchant->spellid[t] == m_spellProto->Id)
                         {
                             damage = uint32((item_rand_suffix->prefix[k]*castItem->GetItemSuffixFactor()) / 10000);
@@ -2882,7 +2882,7 @@ void Aura::HandleAuraTransform(bool apply, bool Real)
         }
         else
         {
-            CreatureTemplate const * ci = sObjectMgr->GetCreatureTemplate(m_modifier.m_miscvalue);
+            CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(m_modifier.m_miscvalue);
             if (!ci)
             {
                                                             //pig pink ^_^
@@ -5352,7 +5352,7 @@ void Aura::HandleAuraEmpathy(bool apply, bool Real)
     if (m_target->GetTypeId() != TYPEID_UNIT)
         return;
 
-    CreatureTemplate const * ci = sObjectMgr->GetCreatureTemplate(m_target->GetEntry());
+    CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(m_target->GetEntry());
     if (ci && ci->type == CREATURE_TYPE_BEAST)
         m_target->ApplyModUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_SPECIALINFO, apply);
 }

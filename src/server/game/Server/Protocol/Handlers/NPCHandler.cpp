@@ -128,7 +128,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
     if (!unit->isCanTrainingOf(_player, true))
         return;
 
-    CreatureTemplate const *ci = unit->GetCreatureTemplate();
+    CreatureTemplate const* ci = unit->GetCreatureTemplate();
 
     if (!ci)
     {

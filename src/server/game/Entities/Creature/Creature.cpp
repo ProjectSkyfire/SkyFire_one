@@ -100,20 +100,20 @@ uint32 CreatureTemplate::GetRandomValidModelId() const
     uint32 c = 0;
     uint32 modelIDs[4];
 
-    if (Modelid_A1) modelIDs[c++] = Modelid_A1;
-    if (Modelid_A2) modelIDs[c++] = Modelid_A2;
-    if (Modelid_H1) modelIDs[c++] = Modelid_H1;
-    if (Modelid_H2) modelIDs[c++] = Modelid_H2;
+    if (Modelid1) modelIDs[c++] = Modelid1;
+    if (Modelid2) modelIDs[c++] = Modelid2;
+    if (Modelid3) modelIDs[c++] = Modelid3;
+    if (Modelid4) modelIDs[c++] = Modelid4;
 
     return ((c>0) ? modelIDs[urand(0, c-1)] : 0);
 }
 
 uint32 CreatureTemplate::GetFirstValidModelId() const
 {
-    if (Modelid_A1) return Modelid_A1;
-    if (Modelid_A2) return Modelid_A2;
-    if (Modelid_H1) return Modelid_H1;
-    if (Modelid_H2) return Modelid_H2;
+    if(Modelid1) return Modelid1;
+    if(Modelid2) return Modelid2;
+    if(Modelid3) return Modelid3;
+    if(Modelid4) return Modelid4;
     return 0;
 }
 
@@ -254,7 +254,7 @@ void Creature::RemoveCorpse(bool setSpawnTime)
  */
 bool Creature::InitEntry(uint32 Entry, uint32 team, const CreatureData *data)
 {
-    CreatureTemplate const *normalInfo = sObjectMgr->GetCreatureTemplate(Entry);
+    CreatureTemplate const* normalInfo = sObjectMgr->GetCreatureTemplate(Entry);
     if (!normalInfo)
     {
         sLog->outErrorDb("Creature::UpdateEntry creature entry %u does not exist.", Entry);
@@ -263,7 +263,7 @@ bool Creature::InitEntry(uint32 Entry, uint32 team, const CreatureData *data)
 
     // get heroic mode entry
     uint32 actualEntry = Entry;
-    CreatureTemplate const *cinfo = normalInfo;
+    CreatureTemplate const* cinfo = normalInfo;
     if (normalInfo->HeroicEntry)
     {
         //we already have valid Map pointer for current creature!
@@ -936,11 +936,21 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask)
     uint32 displayId = GetNativeDisplayId();
 
     // check if it's a custom model and if not, use 0 for displayId
-    CreatureTemplate const *cinfo = GetCreatureTemplate();
+    CreatureTemplate const* cinfo = GetCreatureTemplate();
     if (cinfo)
     {
-        if (displayId == cinfo->Modelid_A1 || displayId == cinfo->Modelid_A2 ||
-            displayId == cinfo->Modelid_H1 || displayId == cinfo->Modelid_H2) displayId = 0;
+        if (displayId == cinfo->Modelid1 || displayId == cinfo->Modelid2 ||
+            displayId == cinfo->Modelid3 || displayId == cinfo->Modelid4)
+            displayId = 0;
+
+        //if (npcflag == cinfo->npcflag)
+            //npcflag = 0;
+
+        //if (unit_flags == cinfo->unit_flags)
+            //unit_flags = 0;
+
+        //if (dynamicflags == cinfo->dynamicflags)
+            //dynamicflags = 0;
     }
 
     // data->guid = guid don't must be update at save
@@ -1114,7 +1124,7 @@ bool Creature::CreateFromProto(uint32 guidlow, uint32 Entry, uint32 team, const 
             return false;
     }
 
-    CreatureTemplate const *cinfo = sObjectMgr->GetCreatureTemplate(Entry);
+    CreatureTemplate const* cinfo = sObjectMgr->GetCreatureTemplate(Entry);
     if (!cinfo)
     {
         sLog->outErrorDb("Creature entry %u does not exist.", Entry);
@@ -1401,7 +1411,7 @@ void Creature::setDeathState(DeathState s)
         SetLootRecipient(NULL);
         ResetPlayerDamageReq();
         Unit::setDeathState(ALIVE);
-        CreatureTemplate const *cinfo = GetCreatureTemplate();
+        CreatureTemplate const* cinfo = GetCreatureTemplate();
         RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SKINNABLE);
         AddUnitMovementFlag(MOVEFLAG_WALK_MODE);
         if (GetCreatureTemplate()->InhabitType & INHABIT_AIR)
@@ -1464,7 +1474,7 @@ void Creature::Respawn(bool force)
         if (m_originalEntry != GetEntry())
             UpdateEntry(m_originalEntry);
 
-        CreatureTemplate const *cinfo = GetCreatureTemplate();
+        CreatureTemplate const* cinfo = GetCreatureTemplate();
         SelectLevel(cinfo);
 
         if (m_isDeadByDefault)
@@ -2057,7 +2067,7 @@ void Creature::AllLootRemovedFromCorpse()
             return;
 
         float decayRate;
-        CreatureTemplate const *cinfo = GetCreatureTemplate();
+        CreatureTemplate const* cinfo = GetCreatureTemplate();
 
         // corpse was not skinnable -> apply corpse looted timer
         if (!cinfo || !cinfo->SkinLootId)

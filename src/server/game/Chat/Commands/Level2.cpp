@@ -1514,7 +1514,7 @@ bool ChatHandler::HandleNpcFactionIdCommand(const char* args)
     // faction is set in creature_template - not inside creature
 
     // update in memory
-    if (CreatureTemplate const *cinfo = creature->GetCreatureTemplate())
+    if (CreatureTemplate const* cinfo = creature->GetCreatureTemplate())
     {
         const_cast<CreatureTemplate*>(cinfo)->faction_A = factionId;
         const_cast<CreatureTemplate*>(cinfo)->faction_H = factionId;

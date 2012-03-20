@@ -195,7 +195,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
     SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, owner->getFaction());
     SetUInt32Value(UNIT_CREATED_BY_SPELL, summon_spell_id);
 
-    CreatureTemplate const *cinfo = GetCreatureTemplate();
+    CreatureTemplate const* cinfo = GetCreatureTemplate();
     if (cinfo->type == CREATURE_TYPE_CRITTER)
     {
         map->Add(ToCreature());
@@ -892,7 +892,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
         return false;
     }
 
-    CreatureTemplate const *cinfo = GetCreatureTemplate();
+    CreatureTemplate const* cinfo = GetCreatureTemplate();
     if (!cinfo)
     {
         sLog->outError("CreateBaseAtCreature() failed, creatureInfo is missing!");
@@ -932,7 +932,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
 
 bool Guardian::InitStatsForLevel(uint32 petlevel)
 {
-    CreatureTemplate const *cinfo = GetCreatureTemplate();
+    CreatureTemplate const* cinfo = GetCreatureTemplate();
     ASSERT(cinfo);
 
     SetLevel(petlevel);
@@ -1726,7 +1726,7 @@ bool Pet::Create(uint32 guidlow, Map *map, uint32 Entry, uint32 pet_number)
 
 void Pet::InitPetAuras(const uint32 Entry)
 {
-    CreatureTemplate const *cInfo = sObjectMgr->GetCreatureTemplate(Entry);
+    CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(Entry);
     if (!cInfo)
         return;
 
