@@ -15416,7 +15416,17 @@ void Player::_LoadInventory(QueryResult_AutoPtr result, uint32 timediff)
                 // the item is in a bag, find the bag
                 std::map<uint64, Bag*>::iterator itr = bagMap.find(bag_guid);
                 if (itr != bagMap.end())
-                    itr->second->StoreItem(slot, item, true);
+                {
+                    ItemPosCountVec dest;
+                    uint8 result = CanStoreItem(itr->second->GetSlot(), slot, dest, item);
+                    if (result == EQUIP_ERR_OK)
+                        itr->second->StoreItem(slot, item, true);
+                    else
+                    {
+                        sLog->outError("Player::_LoadInventory: Player %s has item (GUID: %u Entry: %u) can't be loaded to inventory (Bag GUID: %u Slot: %u) by reason %u.", GetName(),item_guid, item_id, bag_guid, slot, result);
+                        success = false;
+                    }
+                }
                 else
                     success = false;
             }
