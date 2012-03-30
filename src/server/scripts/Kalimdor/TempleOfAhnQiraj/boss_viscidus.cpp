@@ -209,9 +209,6 @@ struct boss_viscidusAI : public ScriptedAI
 
     void DoSummonGlobs()
     {
-        //if((me->GetHealth()*100) / me->GetMaxHealth() >= 5)
-        //    me->CastSpell(
-
         uint32 hpborder = 5;
         for (int i = 0; i < 20; i++)
         {
@@ -219,8 +216,8 @@ struct boss_viscidusAI : public ScriptedAI
             {
                 me->CastSpell(me, Spell_Summon_glob[i], true);
                 hpborder += 5;
-            } else
-                break;
+            }
+            break;
         }
     }
 
