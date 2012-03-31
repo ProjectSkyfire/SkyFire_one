@@ -899,6 +899,8 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_DEATH_BONES_WORLD]              = ConfigMgr::GetBoolDefault("Death.Bones.World", true);
     m_configs[CONFIG_DEATH_BONES_BG_OR_ARENA]        = ConfigMgr::GetBoolDefault("Death.Bones.BattlegroundOrArena", true);
 
+    m_configs[CONFIG_DIE_COMMAND_MODE] = ConfigMgr::GetBoolDefault("Die.Command.Mode", true);
+
     m_configs[CONFIG_THREAT_RADIUS] = ConfigMgr::GetIntDefault("ThreatRadius", 60);
 
     // always use declined names in the russian client
