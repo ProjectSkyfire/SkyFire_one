@@ -44,6 +44,7 @@ file(GLOB_RECURSE sources_Skills Skills/*.cpp Skills/*.h)
 file(GLOB_RECURSE sources_Spells Spells/*.cpp Spells/*.h)
 file(GLOB_RECURSE sources_Tools Tools/*.cpp Tools/*.h)
 file(GLOB_RECURSE sources_Tickets Tickets/*.cpp Tickets/*.h)
+file(GLOB_RECURSE sources_Warden Warden/*.cpp Warden/*.h)
 file(GLOB_RECURSE sources_Weather Weather/*.cpp Weather/*.h)
 file(GLOB_RECURSE sources_World World/*.cpp World/*.h)
 
@@ -80,6 +81,7 @@ source_group(Skills FILES ${sources_Skills})
 source_group(Spells FILES ${sources_Spells})
 source_group(Tools FILES ${sources_Tools})
 source_group(Tickets FILES ${sources_Tickets})
+source_group(Warden FILES ${sources_Warden})
 source_group(Weather FILES ${sources_Weather})
 source_group(World FILES ${sources_World})
 
@@ -124,6 +126,7 @@ set(game_STAT_SRCS
   ${sources_Spells}
   ${sources_Tools}
   ${sources_Tickets}
+  ${sources_Warden}  
   ${sources_Weather}
   ${sources_World}
 )
@@ -205,6 +208,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Spells/Auras
   ${CMAKE_CURRENT_SOURCE_DIR}/Tools
   ${CMAKE_CURRENT_SOURCE_DIR}/Tickets
+  ${CMAKE_CURRENT_SOURCE_DIR}/Warden  
   ${CMAKE_CURRENT_SOURCE_DIR}/Weather
   ${CMAKE_CURRENT_SOURCE_DIR}/World
   ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders

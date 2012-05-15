@@ -58,6 +58,7 @@
 #include "Transport.h"
 #include "CreatureEventAIMgr.h"
 #include "ScriptMgr.h"
+#include "WardenDataStorage.h"
 
 volatile bool World::m_stopEvent = false;
 uint8 World::m_ExitCode = SHUTDOWN_EXIT_CODE;
@@ -1089,6 +1090,13 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_CHATLOG_PUBLIC] = ConfigMgr::GetBoolDefault("ChatLogs.Public", false);
     m_configs[CONFIG_CHATLOG_ADDON] = ConfigMgr::GetBoolDefault("ChatLogs.Addon", false);
     m_configs[CONFIG_CHATLOG_BGROUND] = ConfigMgr::GetBoolDefault("ChatLogs.BattleGround", false);
+
+    // warden
+    m_configs[CONFIG_WARDEN_ENABLED] = ConfigMgr::GetBoolDefault("Warden.Enabled", false);
+    m_configs[CONFIG_WARDEN_KICK] = ConfigMgr::GetBoolDefault("Warden.Kick", false);
+    m_configs[CONFIG_WARDEN_NUM_CHECKS] = ConfigMgr::GetIntDefault("Warden.NumChecks", 3);
+    m_configs[CONFIG_WARDEN_CLIENT_CHECK_HOLDOFF] = ConfigMgr::GetIntDefault("Warden.ClientCheckHoldOff", 30);
+    m_configs[CONFIG_WARDEN_CLIENT_RESPONSE_DELAY] = ConfigMgr::GetIntDefault("Warden.ClientResponseDelay", 15);
 }
 
 // Initialize the World
@@ -1473,6 +1481,10 @@ void World::SetInitialWorldSettings()
     sLog->outString("Starting Game Event system...");
     uint32 nextGameEvent = sGameEventMgr->Initialize();
     m_timers[WUPDATE_EVENTS].SetInterval(nextGameEvent);    //depend on next event
+
+    // Load Warden Data
+    sLog->outString("Loading Warden Data..." );
+    WardenDataStorage.Init();
 
     // Initialize Battlegrounds
     sLog->outString("Starting BattleGround System");

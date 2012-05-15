@@ -113,7 +113,7 @@ class Log
         void outCharDump( const char * str, uint32 account_id, uint32 guid, const char * name );
         void outSQLDev( const char * str, ... )                 ATTR_PRINTF(2, 3);
         void outSQLDriver( const char* str, ... )               ATTR_PRINTF(2, 3);
-
+        void outWarden( const char * str, ... )                 ATTR_PRINTF(2, 3);
         static void outTimestamp(FILE* file);
         static std::string GetTimestampStr();
 
@@ -145,7 +145,8 @@ class Log
         FILE* arenaLogFile;
         FILE* sqlLogFile;
         FILE* sqlDevLogFile;
-
+        FILE* wardenLogFile;
+        
         // cache values for after initialization use (like gm log per account case)
         std::string m_logsDir;
         std::string m_logsTimestamp;

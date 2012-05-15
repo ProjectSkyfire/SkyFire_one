@@ -340,6 +340,13 @@ bool AuthSocket::_HandleLogonChallenge()
     _login = (const char*)ch->I;
     _build = ch->build;
     _expversion = (AuthHelper::IsPostWotLKAcceptedClientBuild(_build) ? POST_WOTLK_EXP_FLAG : NO_VALID_EXP_FLAG) | (AuthHelper::IsPostBCAcceptedClientBuild(_build) ? POST_BC_EXP_FLAG : NO_VALID_EXP_FLAG) | (AuthHelper::IsPreBCAcceptedClientBuild(_build) ? PRE_BC_EXP_FLAG : NO_VALID_EXP_FLAG);
+    _os = (const char*)ch->os;
+
+    if(_os.size() > 4)
+        return false;
+
+    // Restore string order as its byte order is reversed
+    std::reverse(_os.begin(), _os.end());
 
     pkt << (uint8)AUTH_LOGON_CHALLENGE;
     pkt << (uint8)0x00;
@@ -596,8 +603,8 @@ bool AuthSocket::_HandleLogonProof()
         // No SQL injection (escaped user name) and IP address as received by socket
         const char *K_hex = K.AsHexStr();
 
-        LoginDatabase.PExecute("UPDATE account SET sessionkey = '%s', last_ip = '%s', last_login = NOW(), locale = '%u', failed_logins = 0 WHERE username = '%s'", K_hex, socket().getRemoteAddress().c_str(), GetLocaleByName(_localizationName), _login.c_str());
-
+        LoginDatabase.PExecute("UPDATE account SET sessionkey = '%s', last_ip = '%s', last_login = NOW(), locale = '%u', os = '%s', failed_logins = 0 WHERE username = '%s'", K_hex, socket().getRemoteAddress().c_str(), GetLocaleByName(_localizationName),
+        _os.c_str(), _login.c_str());
         OPENSSL_free((void*)K_hex);
 
         // Finish SRP6 and send the final result to the client
@@ -724,6 +731,13 @@ bool AuthSocket::_HandleReconnectChallenge()
     // Reinitialize build, expansion and the account securitylevel
     _build = ch->build;
     _expversion = (AuthHelper::IsPostBCAcceptedClientBuild(_build) ? POST_BC_EXP_FLAG : NO_VALID_EXP_FLAG) | (AuthHelper::IsPreBCAcceptedClientBuild(_build) ? PRE_BC_EXP_FLAG : NO_VALID_EXP_FLAG);
+    _os = (const char*)ch->os;
+
+    if (_os.size() > 4)
+        return false;
+
+    // Restore string order as its byte order is reversed
+    std::reverse(_os.begin(), _os.end());
 
     Field* fields = result->Fetch();
     uint8 secLevel = fields[2].GetUInt8();

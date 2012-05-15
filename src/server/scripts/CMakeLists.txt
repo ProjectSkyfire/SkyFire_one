@@ -130,11 +130,13 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Spells/Auras
   ${CMAKE_SOURCE_DIR}/src/server/game/Tickets
   ${CMAKE_SOURCE_DIR}/src/server/game/Tools
+  ${CMAKE_SOURCE_DIR}/src/server/game/Warden   
   ${CMAKE_SOURCE_DIR}/src/server/game/Weather
   ${CMAKE_SOURCE_DIR}/src/server/game/World  
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
+  ${OPENSSL_INCLUDE_DIR} 
 )
 
 add_library(scripts STATIC ${scripts_STAT_SRCS})

@@ -18,34 +18,31 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _AUTH_HMAC_H
-#define _AUTH_HMAC_H
+#ifndef _WARDEN_MAC_H
+#define _WARDEN_MAC_H
 
-#include "Common.h"
-#include <openssl/hmac.h>
-#include <openssl/sha.h>
+#include "ARC4.h"
+#include "BigNumber.h"
+#include "ByteBuffer.h"
 
-class BigNumber;
+#include <map>
 
-#define SEED_KEY_SIZE 16
+class WorldSession;
+class WardenBase;
 
-class HmacHash
+class WardenMac : WardenBase
 {
     public:
-        HmacHash();
-        ~HmacHash();
-        HmacHash(uint32 len, uint8 *seed);        
-        void UpdateBigNumber(BigNumber *bn);
-        void UpdateData(const uint8 *data, int length);
-        void UpdateData(const std::string &str);       
-        void Initialize();
-        void Finalize();
-        uint8 *GetDigest() { return m_digest; };
-        int GetLength() { return SHA_DIGEST_LENGTH; };
-    private:
-        HMAC_CTX m_ctx;
-        uint8 m_key[SEED_KEY_SIZE];
-        uint8 m_digest[SHA_DIGEST_LENGTH];
-};
-#endif
+        WardenMac();
+        ~WardenMac();
 
+        void Init(WorldSession *pClient, BigNumber *K);
+        ClientWardenModule *GetModuleForClient(WorldSession *session);
+        void InitializeModule();
+        void RequestHash();
+        void HandleHashResult(ByteBuffer &buff);
+        void RequestData();
+        void HandleData(ByteBuffer &buff);
+};
+
+#endif

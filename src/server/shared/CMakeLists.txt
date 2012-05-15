@@ -11,7 +11,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-if ( USE_COREPCH )
+if (USE_COREPCH)
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -31,7 +31,7 @@ file(GLOB sources_localdir *.cpp *.h)
 # Build shared sourcelist
 #
 
-if ( USE_COREPCH AND MSVC )
+if (USE_COREPCH AND MSVC)
   set(shared_STAT_SRCS
     PrecompiledHeaders/SharedPCH.cpp
     PrecompiledHeaders/SharedPCH.h
@@ -64,7 +64,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Addons    
   ${CMAKE_SOURCE_DIR}/src/server/game/Server 
   ${CMAKE_SOURCE_DIR}/src/server/game/Server/Protocol 
-  ${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous   
+  ${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous
+  ${CMAKE_SOURCE_DIR}/src/server/game/Warden  
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Configuration
   ${CMAKE_CURRENT_SOURCE_DIR}/Cryptography
@@ -89,7 +90,7 @@ target_link_libraries(shared
 )
 
 # Generate precompiled header
-if ( USE_COREPCH )
+if (USE_COREPCH)
   if (CMAKE_COMPILER_IS_GNUCXX)
     add_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH.h)
   elseif(MSVC)
