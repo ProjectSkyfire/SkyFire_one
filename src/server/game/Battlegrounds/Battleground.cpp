@@ -135,6 +135,7 @@ BattleGround::BattleGround()
     m_IsArena           = false;
     m_Winner            = 2;
     m_StartTime         = 0;
+    m_ValidStartPositionTimer = 0;
     m_Events            = 0;
     m_IsRated           = false;
     m_BuffChange        = false;
@@ -166,6 +167,8 @@ BattleGround::BattleGround()
 
     m_ArenaTeamIds[BG_TEAM_ALLIANCE]   = 0;
     m_ArenaTeamIds[BG_TEAM_HORDE]      = 0;
+
+    m_StartMaxDist = 0.0f;
 
     m_ArenaTeamRatingChanges[BG_TEAM_ALLIANCE]   = 0;
     m_ArenaTeamRatingChanges[BG_TEAM_HORDE]      = 0;
@@ -235,6 +238,7 @@ void BattleGround::Update(time_t diff)
         return;
 
     m_StartTime += diff;
+    m_ValidStartPositionTimer += diff;
 
     // WorldPacket data;
 
@@ -408,19 +412,19 @@ void BattleGround::Update(time_t diff)
             //first start warning - 2 or 1 minute
             SendMessageToAll(m_StartMessageIds[BG_STARTING_EVENT_FIRST], CHAT_MSG_BG_SYSTEM_NEUTRAL);
         }
-        // After 1 minute or 30 seconds, warning is signalled
+        // After 1 minute or 30 seconds, warning is signaled
         else if (GetStartDelayTime() <= m_StartDelayTimes[BG_STARTING_EVENT_SECOND] && !(m_Events & BG_STARTING_EVENT_2))
         {
             m_Events |= BG_STARTING_EVENT_2;
             SendMessageToAll(m_StartMessageIds[BG_STARTING_EVENT_SECOND], CHAT_MSG_BG_SYSTEM_NEUTRAL);
         }
-        // After 30 or 15 seconds, warning is signalled
+        // After 30 or 15 seconds, warning is signaled
         else if (GetStartDelayTime() <= m_StartDelayTimes[BG_STARTING_EVENT_THIRD] && !(m_Events & BG_STARTING_EVENT_3))
         {
             m_Events |= BG_STARTING_EVENT_3;
             SendMessageToAll(m_StartMessageIds[BG_STARTING_EVENT_THIRD], CHAT_MSG_BG_SYSTEM_NEUTRAL);
         }
-        // delay expired (after 2 or 1 minute)
+        // Delay expired (after 2 or 1 minute)
         else if (GetStartDelayTime() <= 0 && !(m_Events & BG_STARTING_EVENT_4))
         {
             m_Events |= BG_STARTING_EVENT_4;
@@ -450,6 +454,33 @@ void BattleGround::Update(time_t diff)
 
                 //Announce BG starting
                 Announce();
+            }
+        }
+
+        // Find if the player left our start zone; if so, teleport it back
+        if (m_ValidStartPositionTimer > 1000)
+        {
+            m_ValidStartPositionTimer = 0;
+            float maxDist = GetStartMaxDist();
+            if (maxDist > 0.0f)
+            {
+                for (std::map<uint64, BattleGroundPlayer>::iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
+                {
+                    if (Player* plr = sObjectMgr->GetPlayer(itr->first))
+                    {
+                        float x, y, z, o;
+                        uint32 team = plr->GetBGTeam();
+                        GetTeamStartLoc(team, x, y, z, o);
+
+                        float dist = plr->GetDistance(x, y, z);
+
+                        if (dist >= maxDist)
+                        {
+                            sLog->outError("BATTLEGROUND: Sending %s back to start location (possible exploit)", plr->GetName());
+                            plr->TeleportTo(GetMapId(), x, y, z, o);
+                        }
+                    }
+                }
             }
         }
     }

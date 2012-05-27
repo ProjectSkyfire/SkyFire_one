@@ -405,7 +405,10 @@ class BattleGround
             O = m_TeamStartLocO[idx];
         }
 
-        /* Packet Transfer */
+        void SetStartMaxDist(float startMaxDist) { m_StartMaxDist = startMaxDist; }
+        float GetStartMaxDist() const { return m_StartMaxDist; }
+
+        // Packet Transfer
         // method that should fill worldpacket with actual world states (not yet implemented for all battlegrounds!)
         virtual void FillInitialWorldStates(WorldPacket& /*data*/) {}
         void SendPacketToTeam(uint32 TeamID, WorldPacket *packet, Player *sender = NULL, bool self = true);
@@ -554,6 +557,7 @@ class BattleGround
         uint32 m_Status;
         uint32 m_StartTime;
         uint32 m_EndTime;
+        uint32 m_ValidStartPositionTimer;
         uint32 m_LastResurrectTime;
         uint32 m_Queue_type;
         uint8  m_ArenaType;                                 // 2=2v2, 3=3v3, 5=5v5
@@ -606,6 +610,7 @@ class BattleGround
         float m_TeamStartLocY[BG_TEAMS_COUNT];
         float m_TeamStartLocZ[BG_TEAMS_COUNT];
         float m_TeamStartLocO[BG_TEAMS_COUNT];
+        float m_StartMaxDist;
 };
 #endif
 
