@@ -47,87 +47,87 @@ struct WMOAreaTableTripple
 
 typedef std::map<WMOAreaTableTripple, WMOAreaTableEntry const *> WMOAreaInfoByTripple;
 
-DBCStorage <AreaTableEntry> sAreaStore(AreaTableEntryfmt);
-static AreaFlagByAreaID sAreaFlagByAreaID;
-static AreaFlagByMapID sAreaFlagByMapID;                    // for instances without generated *.map files
+DBCStorage <AreaTableEntry>                     sAreaStore(AreaTableEntryfmt);
+static AreaFlagByAreaID                         sAreaFlagByAreaID;
+static AreaFlagByMapID                          sAreaFlagByMapID;  // for instances without generated *.map files
 
-static WMOAreaInfoByTripple sWMOAreaInfoByTripple;
+static WMOAreaInfoByTripple                     sWMOAreaInfoByTripple;
 
-DBCStorage <AreaTriggerEntry> sAreaTriggerStore(AreaTriggerEntryfmt);
-DBCStorage <AuctionHouseEntry> sAuctionHouseStore(AuctionHouseEntryfmt);
-DBCStorage <BankBagSlotPricesEntry> sBankBagSlotPricesStore(BankBagSlotPricesEntryfmt);
-DBCStorage <BattlemasterListEntry> sBattlemasterListStore(BattlemasterListEntryfmt);
-DBCStorage <CharStartOutfitEntry> sCharStartOutfitStore(CharStartOutfitEntryfmt);
-DBCStorage <CharTitlesEntry> sCharTitlesStore(CharTitlesEntryfmt);
-DBCStorage <ChatChannelsEntry> sChatChannelsStore(ChatChannelsEntryfmt);
-DBCStorage <ChrClassesEntry> sChrClassesStore(ChrClassesEntryfmt);
-DBCStorage <ChrRacesEntry> sChrRacesStore(ChrRacesEntryfmt);
-DBCStorage <CinematicSequencesEntry> sCinematicSequencesStore(CinematicSequencesEntryfmt);
-DBCStorage <CreatureDisplayInfoEntry> sCreatureDisplayInfoStore(CreatureDisplayInfofmt);
-DBCStorage <CreatureFamilyEntry> sCreatureFamilyStore(CreatureFamilyfmt);
-DBCStorage <CreatureSpellDataEntry> sCreatureSpellDataStore(CreatureSpellDatafmt);
+DBCStorage <AreaTriggerEntry>                   sAreaTriggerStore(AreaTriggerEntryfmt);
+DBCStorage <AuctionHouseEntry>                  sAuctionHouseStore(AuctionHouseEntryfmt);
+DBCStorage <BankBagSlotPricesEntry>             sBankBagSlotPricesStore(BankBagSlotPricesEntryfmt);
+DBCStorage <BattlemasterListEntry>              sBattlemasterListStore(BattlemasterListEntryfmt);
+DBCStorage <CharStartOutfitEntry>               sCharStartOutfitStore(CharStartOutfitEntryfmt);
+DBCStorage <CharTitlesEntry>                    sCharTitlesStore(CharTitlesEntryfmt);
+DBCStorage <ChatChannelsEntry>                  sChatChannelsStore(ChatChannelsEntryfmt);
+DBCStorage <ChrClassesEntry>                    sChrClassesStore(ChrClassesEntryfmt);
+DBCStorage <ChrRacesEntry>                      sChrRacesStore(ChrRacesEntryfmt);
+DBCStorage <CinematicSequencesEntry>            sCinematicSequencesStore(CinematicSequencesEntryfmt);
+DBCStorage <CreatureDisplayInfoEntry>           sCreatureDisplayInfoStore(CreatureDisplayInfofmt);
+DBCStorage <CreatureFamilyEntry>                sCreatureFamilyStore(CreatureFamilyfmt);
+DBCStorage <CreatureSpellDataEntry>             sCreatureSpellDataStore(CreatureSpellDatafmt);
 
-DBCStorage <DurabilityQualityEntry> sDurabilityQualityStore(DurabilityQualityfmt);
-DBCStorage <DurabilityCostsEntry> sDurabilityCostsStore(DurabilityCostsfmt);
+DBCStorage <DurabilityQualityEntry>             sDurabilityQualityStore(DurabilityQualityfmt);
+DBCStorage <DurabilityCostsEntry>               sDurabilityCostsStore(DurabilityCostsfmt);
 
-DBCStorage <EmotesEntry> sEmotesStore(EmotesEntryfmt);
-DBCStorage <EmotesTextEntry> sEmotesTextStore(EmotesTextEntryfmt);
+DBCStorage <EmotesEntry>                        sEmotesStore(EmotesEntryfmt);
+DBCStorage <EmotesTextEntry>                    sEmotesTextStore(EmotesTextEntryfmt);
 
 typedef std::map<uint32, SimpleFactionsList> FactionTeamMap;
-static FactionTeamMap sFactionTeamMap;
-DBCStorage <FactionEntry> sFactionStore(FactionEntryfmt);
-DBCStorage <FactionTemplateEntry> sFactionTemplateStore(FactionTemplateEntryfmt);
+static FactionTeamMap  sFactionTeamMap;
+DBCStorage <FactionEntry>                       sFactionStore(FactionEntryfmt);
+DBCStorage <FactionTemplateEntry>               sFactionTemplateStore(FactionTemplateEntryfmt);
 
-DBCStorage <GemPropertiesEntry> sGemPropertiesStore(GemPropertiesEntryfmt);
+DBCStorage <GemPropertiesEntry>                 sGemPropertiesStore(GemPropertiesEntryfmt);
 
-DBCStorage <GtCombatRatingsEntry>         sGtCombatRatingsStore(GtCombatRatingsfmt);
-DBCStorage <GtChanceToMeleeCritBaseEntry> sGtChanceToMeleeCritBaseStore(GtChanceToMeleeCritBasefmt);
-DBCStorage <GtChanceToMeleeCritEntry>     sGtChanceToMeleeCritStore(GtChanceToMeleeCritfmt);
-DBCStorage <GtChanceToSpellCritBaseEntry> sGtChanceToSpellCritBaseStore(GtChanceToSpellCritBasefmt);
-DBCStorage <GtChanceToSpellCritEntry>     sGtChanceToSpellCritStore(GtChanceToSpellCritfmt);
-DBCStorage <GtOCTRegenHPEntry>            sGtOCTRegenHPStore(GtOCTRegenHPfmt);
-//DBCStorage <GtOCTRegenMPEntry>            sGtOCTRegenMPStore(GtOCTRegenMPfmt);  -- not used currently
-DBCStorage <GtRegenHPPerSptEntry>         sGtRegenHPPerSptStore(GtRegenHPPerSptfmt);
-DBCStorage <GtRegenMPPerSptEntry>         sGtRegenMPPerSptStore(GtRegenMPPerSptfmt);
-DBCStorage <ItemEntry>                    sItemStore(Itemfmt);
-//DBCStorage <ItemCondExtCostsEntry> sItemCondExtCostsStore(ItemCondExtCostsEntryfmt);
-//DBCStorage <ItemDisplayInfoEntry> sItemDisplayInfoStore(ItemDisplayTemplateEntryfmt); -- not used currently
-DBCStorage <ItemExtendedCostEntry> sItemExtendedCostStore(ItemExtendedCostEntryfmt);
-DBCStorage <ItemRandomPropertiesEntry> sItemRandomPropertiesStore(ItemRandomPropertiesfmt);
-DBCStorage <ItemRandomSuffixEntry> sItemRandomSuffixStore(ItemRandomSuffixfmt);
-DBCStorage <ItemSetEntry> sItemSetStore(ItemSetEntryfmt);
+DBCStorage <GtCombatRatingsEntry>               sGtCombatRatingsStore(GtCombatRatingsfmt);
+DBCStorage <GtChanceToMeleeCritBaseEntry>       sGtChanceToMeleeCritBaseStore(GtChanceToMeleeCritBasefmt);
+DBCStorage <GtChanceToMeleeCritEntry>           sGtChanceToMeleeCritStore(GtChanceToMeleeCritfmt);
+DBCStorage <GtChanceToSpellCritBaseEntry>       sGtChanceToSpellCritBaseStore(GtChanceToSpellCritBasefmt);
+DBCStorage <GtChanceToSpellCritEntry>           sGtChanceToSpellCritStore(GtChanceToSpellCritfmt);
+DBCStorage <GtOCTRegenHPEntry>                  sGtOCTRegenHPStore(GtOCTRegenHPfmt);
+//DBCStorage <GtOCTRegenMPEntry>                  sGtOCTRegenMPStore(GtOCTRegenMPfmt);  -- not used currently
+DBCStorage <GtRegenHPPerSptEntry>               sGtRegenHPPerSptStore(GtRegenHPPerSptfmt);
+DBCStorage <GtRegenMPPerSptEntry>               sGtRegenMPPerSptStore(GtRegenMPPerSptfmt);
+DBCStorage <ItemEntry>                          sItemStore(Itemfmt);
+//DBCStorage <ItemCondExtCostsEntry>              sItemCondExtCostsStore(ItemCondExtCostsEntryfmt);
+//DBCStorage <ItemDisplayInfoEntry>               sItemDisplayInfoStore(ItemDisplayTemplateEntryfmt); -- not used currently
+DBCStorage <ItemExtendedCostEntry>              sItemExtendedCostStore(ItemExtendedCostEntryfmt);
+DBCStorage <ItemRandomPropertiesEntry>          sItemRandomPropertiesStore(ItemRandomPropertiesfmt);
+DBCStorage <ItemRandomSuffixEntry>              sItemRandomSuffixStore(ItemRandomSuffixfmt);
+DBCStorage <ItemSetEntry>                       sItemSetStore(ItemSetEntryfmt);
 
-DBCStorage <LockEntry> sLockStore(LockEntryfmt);
+DBCStorage <LockEntry>                          sLockStore(LockEntryfmt);
 
-DBCStorage <MailTemplateEntry> sMailTemplateStore(MailTemplateEntryfmt);
-DBCStorage <MapEntry> sMapStore(MapEntryfmt);
+DBCStorage <MailTemplateEntry>                  sMailTemplateStore(MailTemplateEntryfmt);
+DBCStorage <MapEntry>                           sMapStore(MapEntryfmt);
 
-DBCStorage <QuestSortEntry> sQuestSortStore(QuestSortEntryfmt);
+DBCStorage <QuestSortEntry>                     sQuestSortStore(QuestSortEntryfmt);
 
-DBCStorage <RandomPropertiesPointsEntry> sRandomPropertiesPointsStore(RandomPropertiesPointsfmt);
+DBCStorage <RandomPropertiesPointsEntry>        sRandomPropertiesPointsStore(RandomPropertiesPointsfmt);
 
-DBCStorage <SkillLineEntry> sSkillLineStore(SkillLinefmt);
-DBCStorage <SkillLineAbilityEntry> sSkillLineAbilityStore(SkillLineAbilityfmt);
+DBCStorage <SkillLineEntry>                     sSkillLineStore(SkillLinefmt);
+DBCStorage <SkillLineAbilityEntry>              sSkillLineAbilityStore(SkillLineAbilityfmt);
 
-DBCStorage <SoundEntriesEntry> sSoundEntriesStore(SoundEntriesfmt);
+DBCStorage <SoundEntriesEntry>                  sSoundEntriesStore(SoundEntriesfmt);
 
-DBCStorage <SpellItemEnchantmentEntry> sSpellItemEnchantmentStore(SpellItemEnchantmentfmt);
+DBCStorage <SpellItemEnchantmentEntry>          sSpellItemEnchantmentStore(SpellItemEnchantmentfmt);
 DBCStorage <SpellItemEnchantmentConditionEntry> sSpellItemEnchantmentConditionStore(SpellItemEnchantmentConditionfmt);
-DBCStorage <SpellEntry> sSpellStore(SpellEntryfmt);
+DBCStorage <SpellEntry>                         sSpellStore(SpellEntryfmt);
 SpellCategoryStore sSpellCategoryStore;
 PetFamilySpellsStore sPetFamilySpellsStore;
 
-DBCStorage <SpellCastTimesEntry> sSpellCastTimesStore(SpellCastTimefmt);
-DBCStorage <SpellDurationEntry> sSpellDurationStore(SpellDurationfmt);
-DBCStorage <SpellFocusObjectEntry> sSpellFocusObjectStore(SpellFocusObjectfmt);
-DBCStorage <SpellRadiusEntry> sSpellRadiusStore(SpellRadiusfmt);
-DBCStorage <SpellRangeEntry> sSpellRangeStore(SpellRangefmt);
-DBCStorage <SpellShapeshiftEntry> sSpellShapeshiftStore(SpellShapeshiftfmt);
-DBCStorage <StableSlotPricesEntry> sStableSlotPricesStore(StableSlotPricesfmt);
-DBCStorage <SummonPropertiesEntry> sSummonPropertiesStore(SummonPropertiesfmt);
-DBCStorage <TalentEntry> sTalentStore(TalentEntryfmt);
+DBCStorage <SpellCastTimesEntry>                sSpellCastTimesStore(SpellCastTimefmt);
+DBCStorage <SpellDurationEntry>                 sSpellDurationStore(SpellDurationfmt);
+DBCStorage <SpellFocusObjectEntry>              sSpellFocusObjectStore(SpellFocusObjectfmt);
+DBCStorage <SpellRadiusEntry>                   sSpellRadiusStore(SpellRadiusfmt);
+DBCStorage <SpellRangeEntry>                    sSpellRangeStore(SpellRangefmt);
+DBCStorage <SpellShapeshiftEntry>               sSpellShapeshiftStore(SpellShapeshiftfmt);
+DBCStorage <StableSlotPricesEntry>              sStableSlotPricesStore(StableSlotPricesfmt);
+DBCStorage <SummonPropertiesEntry>              sSummonPropertiesStore(SummonPropertiesfmt);
+DBCStorage <TalentEntry>                        sTalentStore(TalentEntryfmt);
 TalentSpellPosMap sTalentSpellPosMap;
-DBCStorage <TalentTabEntry> sTalentTabStore(TalentTabEntryfmt);
+DBCStorage <TalentTabEntry>                     sTalentTabStore(TalentTabEntryfmt);
 
 // store absolute bit position for first rank for talent inspect
 typedef std::map<uint32, uint32> TalentInspectMap;
@@ -135,21 +135,21 @@ static TalentInspectMap sTalentPosInInspect;
 static TalentInspectMap sTalentTabSizeInInspect;
 static uint32 sTalentTabPages[12/*MAX_CLASSES*/][3];
 
-DBCStorage <TaxiNodesEntry> sTaxiNodesStore(TaxiNodesEntryfmt);
+DBCStorage <TaxiNodesEntry>                     sTaxiNodesStore(TaxiNodesEntryfmt);
 TaxiMask sTaxiNodesMask;
 
 // DBC used only for initialization sTaxiPathSetBySource at startup.
 TaxiPathSetBySource sTaxiPathSetBySource;
-DBCStorage <TaxiPathEntry> sTaxiPathStore(TaxiPathEntryfmt);
+DBCStorage <TaxiPathEntry>                      sTaxiPathStore(TaxiPathEntryfmt);
 
 // DBC used only for initialization sTaxiPathSetBySource at startup.
 TaxiPathNodesByPath sTaxiPathNodesByPath;
 
-static DBCStorage <TaxiPathNodeEntry> sTaxiPathNodeStore(TaxiPathNodeEntryfmt);
-DBCStorage <TotemCategoryEntry> sTotemCategoryStore(TotemCategoryEntryfmt);
-DBCStorage <WMOAreaTableEntry> sWMOAreaTableStore(WMOAreaTableEntryfmt);
-DBCStorage <WorldMapAreaEntry> sWorldMapAreaStore(WorldMapAreaEntryfmt);
-DBCStorage <WorldSafeLocsEntry> sWorldSafeLocsStore(WorldSafeLocsEntryfmt);
+static DBCStorage <TaxiPathNodeEntry>           sTaxiPathNodeStore(TaxiPathNodeEntryfmt);
+DBCStorage <TotemCategoryEntry>                 sTotemCategoryStore(TotemCategoryEntryfmt);
+DBCStorage <WMOAreaTableEntry>                  sWMOAreaTableStore(WMOAreaTableEntryfmt);
+DBCStorage <WorldMapAreaEntry>                  sWorldMapAreaStore(WorldMapAreaEntryfmt);
+DBCStorage <WorldSafeLocsEntry>                 sWorldSafeLocsStore(WorldSafeLocsEntryfmt);
 
 typedef std::list<std::string> StoreProblemList;
 
@@ -500,7 +500,7 @@ void LoadDBCStores(const std::string& dataPath)
     // check at up-to-date DBC files (2425 is last item extended cost added in 2.4.3)
     // check at up-to-date DBC files (71 is last char title added in 2.4.3)
     // check at up-to-date DBC files (1768 is last area added in 2.4.3)
-    if ( !sSpellStore.LookupEntry(53085)            ||
+    if ( !sSpellStore.LookupEntry(53085)           ||
         !sSkillLineAbilityStore.LookupEntry(17514) ||
         !sMapStore.LookupEntry(598)                ||
         !sGemPropertiesStore.LookupEntry(1127)     ||
