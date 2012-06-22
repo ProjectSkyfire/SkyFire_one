@@ -357,7 +357,7 @@ struct instance_black_temple : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_black_temple(Map* pMap)
+InstanceScript* GetInstanceData_instance_black_temple(Map* pMap)
 {
     return new instance_black_temple(pMap);
 }

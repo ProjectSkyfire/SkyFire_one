@@ -434,7 +434,7 @@ bool ScriptMgr::EffectDummyCreature(Unit *caster, uint32 spellId, uint32 effInde
     return tmpscript->pEffectDummyCreature(caster, spellId, effIndex, crTarget);
 }
 
-InstanceData* ScriptMgr::CreateInstanceData(Map *map)
+InstanceScript* ScriptMgr::CreateInstanceData(Map *map)
 {
     if (!map->IsDungeon()) return NULL;
 

@@ -31,7 +31,7 @@
 class Player;
 class Creature;
 class CreatureAI;
-class InstanceData;
+class InstanceScript;
 class Quest;
 class Item;
 class GameObject;
@@ -83,7 +83,7 @@ struct Script
     bool (*pEffectDummyCreature )(Unit*, uint32, uint32, Creature*);
 
     CreatureAI* (*GetAI)(Creature*);
-    InstanceData* (*GetInstanceData)(Map*);
+    InstanceScript* (*GetInstanceData)(Map*);
 
     void RegisterSelf();
 };
@@ -128,7 +128,7 @@ public: /* Initialization */
         CreatureAI* GetAI(Creature* creature);
         bool ItemUse(Player* player, Item* pItem, SpellCastTargets const& targets);
         bool EffectDummyCreature(Unit *caster, uint32 spellId, uint32 effIndex, Creature *crTarget);
-        InstanceData* CreateInstanceData(Map *map);
+        InstanceScript* CreateInstanceData(Map *map);
 };
 
 //Generic scripting text function

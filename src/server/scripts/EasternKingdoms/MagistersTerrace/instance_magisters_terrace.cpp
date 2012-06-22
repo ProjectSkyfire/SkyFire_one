@@ -192,7 +192,7 @@ struct instance_magisters_terrace : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_magisters_terrace(Map* pMap)
+InstanceScript* GetInstanceData_instance_magisters_terrace(Map* pMap)
 {
     return new instance_magisters_terrace(pMap);
 }

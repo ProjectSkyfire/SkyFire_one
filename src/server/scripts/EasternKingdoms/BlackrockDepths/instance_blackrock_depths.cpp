@@ -449,7 +449,7 @@ struct instance_blackrock_depths : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_blackrock_depths(Map* pMap)
+InstanceScript* GetInstanceData_instance_blackrock_depths(Map* pMap)
 {
     return new instance_blackrock_depths(pMap);
 }

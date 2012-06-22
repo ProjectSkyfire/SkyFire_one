@@ -367,7 +367,7 @@ struct instance_dark_portal : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_dark_portal(Map* map)
+InstanceScript* GetInstanceData_instance_dark_portal(Map* map)
 {
     return new instance_dark_portal(map);
 }

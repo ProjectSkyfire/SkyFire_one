@@ -264,7 +264,7 @@ struct instance_shadowfang_keep : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_shadowfang_keep(Map* pMap)
+InstanceScript* GetInstanceData_instance_shadowfang_keep(Map* pMap)
 {
     return new instance_shadowfang_keep(pMap);
 }

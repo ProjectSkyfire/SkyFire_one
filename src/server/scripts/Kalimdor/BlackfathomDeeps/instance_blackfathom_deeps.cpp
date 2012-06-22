@@ -248,7 +248,7 @@ struct instance_blackfathom_deeps : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_blackfathom_deeps(Map* pMap)
+InstanceScript* GetInstanceData_instance_blackfathom_deeps(Map* pMap)
 {
     return new instance_blackfathom_deeps(pMap);
 }

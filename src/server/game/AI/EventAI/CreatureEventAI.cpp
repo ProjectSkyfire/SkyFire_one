@@ -29,7 +29,7 @@
 #include "GameEventMgr.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 #include "SpellMgr.h"
 #include "CreatureAIImpl.h"
 
@@ -719,7 +719,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
             break;
         case ACTION_T_SET_INST_DATA:
         {
-            InstanceData* pInst = (InstanceData*)me->GetInstanceData();
+            InstanceScript* pInst = (InstanceScript*)me->GetInstanceData();
             if (!pInst)
             {
                 sLog->outErrorDb("CreatureEventAI: Event %d attempt to set instance data without instance script. Creature %d", EventId, me->GetEntry());
@@ -738,7 +738,7 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                 return;
             }
 
-            InstanceData* pInst = (InstanceData*)me->GetInstanceData();
+            InstanceScript* pInst = (InstanceScript*)me->GetInstanceData();
             if (!pInst)
             {
                 sLog->outErrorDb("CreatureEventAI: Event %d attempt to set instance data64 without instance script. Creature %d", EventId, me->GetEntry());

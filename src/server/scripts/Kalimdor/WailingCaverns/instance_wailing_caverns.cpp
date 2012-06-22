@@ -130,7 +130,7 @@ struct instance_wailing_caverns : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_wailing_caverns(Map* pMap)
+InstanceScript* GetInstanceData_instance_wailing_caverns(Map* pMap)
 {
     return new instance_wailing_caverns(pMap);
 }

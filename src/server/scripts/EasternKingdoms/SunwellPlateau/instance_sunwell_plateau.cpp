@@ -296,7 +296,7 @@ struct instance_sunwell_plateau : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_sunwell_plateau(Map* pMap)
+InstanceScript* GetInstanceData_instance_sunwell_plateau(Map* pMap)
 {
     return new instance_sunwell_plateau(pMap);
 }

@@ -245,7 +245,7 @@ struct instance_steam_vault : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_steam_vault(Map* map)
+InstanceScript* GetInstanceData_instance_steam_vault(Map* map)
 {
     return new instance_steam_vault(map);
 }

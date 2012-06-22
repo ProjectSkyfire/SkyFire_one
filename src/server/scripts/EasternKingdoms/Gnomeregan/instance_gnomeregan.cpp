@@ -127,7 +127,7 @@ struct instance_gnomeregan : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_gnomeregan(Map* pMap)
+InstanceScript* GetInstanceData_instance_gnomeregan(Map* pMap)
 {
     return new instance_gnomeregan(pMap);
 }

@@ -192,7 +192,7 @@ struct instance_sunken_temple : public ScriptedInstance
      }
 };
 
-InstanceData* GetInstanceData_instance_sunken_temple(Map* pMap)
+InstanceScript* GetInstanceData_instance_sunken_temple(Map* pMap)
 {
     return new instance_sunken_temple(pMap);
 }

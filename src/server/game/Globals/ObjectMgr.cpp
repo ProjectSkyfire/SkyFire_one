@@ -45,7 +45,7 @@
 #include "Util.h"
 #include "WaypointManager.h"
 #include "GossipDef.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 
 ScriptMapMap sQuestEndScripts;
 ScriptMapMap sQuestStartScripts;

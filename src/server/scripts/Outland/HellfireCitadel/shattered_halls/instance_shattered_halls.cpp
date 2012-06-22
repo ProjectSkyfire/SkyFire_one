@@ -375,7 +375,7 @@ struct instance_shattered_halls : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_shattered_halls(Map* map)
+InstanceScript* GetInstanceData_instance_shattered_halls(Map* map)
 {
     return new instance_shattered_halls(map);
 }

@@ -243,7 +243,7 @@ struct instance_magtheridons_lair : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_magtheridons_lair(Map* map)
+InstanceScript* GetInstanceData_instance_magtheridons_lair(Map* map)
 {
     return new instance_magtheridons_lair(map);
 }

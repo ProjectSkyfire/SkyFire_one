@@ -347,7 +347,7 @@ struct instance_zulaman : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_zulaman(Map* pMap)
+InstanceScript* GetInstanceData_instance_zulaman(Map* pMap)
 {
     return new instance_zulaman(pMap);
 }

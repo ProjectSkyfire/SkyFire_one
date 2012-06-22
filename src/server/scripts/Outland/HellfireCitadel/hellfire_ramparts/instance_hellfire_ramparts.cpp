@@ -151,7 +151,7 @@ struct instance_ramparts : public ScriptedInstance
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 };
-InstanceData* GetInstanceData_instance_ramparts(Map* pMap)
+InstanceScript* GetInstanceData_instance_ramparts(Map* pMap)
 {
     return new instance_ramparts(pMap);
 }

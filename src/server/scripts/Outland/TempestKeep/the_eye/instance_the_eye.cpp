@@ -179,7 +179,7 @@ struct instance_the_eye : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_the_eye(Map* map)
+InstanceScript* GetInstanceData_instance_the_eye(Map* map)
 {
     return new instance_the_eye(map);
 }

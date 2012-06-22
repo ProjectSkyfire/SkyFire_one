@@ -18,14 +18,14 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "InstanceData.h"
+#include "InstanceScript.h"
 #include "Database/DatabaseEnv.h"
 #include "Map.h"
 #include "GameObject.h"
 #include "Creature.h"
 #include "CreatureAI.h"
 
-void InstanceData::SaveToDB()
+void InstanceScript::SaveToDB()
 {
     std::string data = GetSaveData();
     if (data.empty())
@@ -34,17 +34,17 @@ void InstanceData::SaveToDB()
     CharacterDatabase.PExecute("UPDATE instance SET data = '%s' WHERE id = '%d'", data.c_str(), instance->GetInstanceId());
 }
 
-void InstanceData::HandleGameObject(uint64 GUID, bool open, GameObject *go)
+void InstanceScript::HandleGameObject(uint64 GUID, bool open, GameObject *go)
 {
     if (!go)
         go = instance->GetGameObject(GUID);
     if (go)
         go->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
     else
-        sLog->outDebug("TSCR: InstanceData: HandleGameObject failed");
+        sLog->outDebug("TSCR: InstanceScript: HandleGameObject failed");
 }
 
-bool InstanceData::IsEncounterInProgress() const
+bool InstanceScript::IsEncounterInProgress() const
 {
     for (std::vector<BossInfo>::const_iterator itr = bosses.begin(); itr != bosses.end(); ++itr)
         if (itr->state == IN_PROGRESS)
@@ -53,7 +53,7 @@ bool InstanceData::IsEncounterInProgress() const
     return false;
 }
 
-void InstanceData::LoadMinionData(const MinionData *data)
+void InstanceScript::LoadMinionData(const MinionData *data)
 {
     while (data->entry)
     {
@@ -62,10 +62,10 @@ void InstanceData::LoadMinionData(const MinionData *data)
 
         ++data;
     }
-    sLog->outDebug("InstanceData::LoadMinionData: %u minions loaded.", doors.size());
+    sLog->outDebug("InstanceScript::LoadMinionData: %u minions loaded.", doors.size());
 }
 
-void InstanceData::LoadDoorData(const DoorData *data)
+void InstanceScript::LoadDoorData(const DoorData *data)
 {
     while (data->entry)
     {
@@ -74,10 +74,10 @@ void InstanceData::LoadDoorData(const DoorData *data)
 
         ++data;
     }
-    sLog->outDebug("InstanceData::LoadDoorData: %u doors loaded.", doors.size());
+    sLog->outDebug("InstanceScript::LoadDoorData: %u doors loaded.", doors.size());
 }
 
-void InstanceData::UpdateMinionState(Creature *minion, EncounterState state)
+void InstanceScript::UpdateMinionState(Creature *minion, EncounterState state)
 {
     switch (state)
     {
@@ -96,7 +96,7 @@ void InstanceData::UpdateMinionState(Creature *minion, EncounterState state)
     }
 }
 
-void InstanceData::UpdateDoorState(GameObject *door)
+void InstanceScript::UpdateDoorState(GameObject *door)
 {
     DoorInfoMap::iterator lower = doors.lower_bound(door->GetEntry());
     DoorInfoMap::iterator upper = doors.upper_bound(door->GetEntry());
@@ -127,7 +127,7 @@ void InstanceData::UpdateDoorState(GameObject *door)
     door->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
 }
 
-void InstanceData::AddDoor(GameObject *door, bool add)
+void InstanceScript::AddDoor(GameObject *door, bool add)
 {
     DoorInfoMap::iterator lower = doors.lower_bound(door->GetEntry());
     DoorInfoMap::iterator upper = doors.upper_bound(door->GetEntry());
@@ -146,7 +146,7 @@ void InstanceData::AddDoor(GameObject *door, bool add)
         UpdateDoorState(door);
 }
 
-void InstanceData::AddMinion(Creature *minion, bool add)
+void InstanceScript::AddMinion(Creature *minion, bool add)
 {
     MinionInfoMap::iterator itr = minions.find(minion->GetEntry());
     if (itr == minions.end())
@@ -158,7 +158,7 @@ void InstanceData::AddMinion(Creature *minion, bool add)
         itr->second.bossInfo->minion.erase(minion);
 }
 
-bool InstanceData::SetBossState(uint32 id, EncounterState state)
+bool InstanceScript::SetBossState(uint32 id, EncounterState state)
 {
     if (id < bosses.size())
     {
@@ -189,7 +189,7 @@ bool InstanceData::SetBossState(uint32 id, EncounterState state)
     return false;
 }
 
-std::string InstanceData::LoadBossState(const char * data)
+std::string InstanceScript::LoadBossState(const char * data)
 {
     if (!data)
         return NULL;
@@ -205,7 +205,7 @@ std::string InstanceData::LoadBossState(const char * data)
     return loadStream.str();
 }
 
-std::string InstanceData::GetBossSaveData()
+std::string InstanceScript::GetBossSaveData()
 {
     std::ostringstream saveStream;
     for (std::vector<BossInfo>::iterator i = bosses.begin(); i != bosses.end(); ++i)
@@ -213,7 +213,7 @@ std::string InstanceData::GetBossSaveData()
     return saveStream.str();
 }
 
-void InstanceData::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bool bUseAlternativeState)
+void InstanceScript::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bool bUseAlternativeState)
 {
     if (!uiGuid)
         return;
@@ -234,7 +234,7 @@ void InstanceData::DoUseDoorOrButton(uint64 uiGuid, uint32 uiWithRestoreTime, bo
     }
 }
 
-void InstanceData::DoRespawnGameObject(uint64 uiGuid, uint32 uiTimeToDespawn)
+void InstanceScript::DoRespawnGameObject(uint64 uiGuid, uint32 uiTimeToDespawn)
 {
     if (GameObject* pGo = instance->GetGameObject(uiGuid))
     {

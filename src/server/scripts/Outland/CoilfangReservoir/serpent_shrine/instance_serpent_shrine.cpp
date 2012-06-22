@@ -372,7 +372,7 @@ struct instance_serpentshrine_cavern : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_serpentshrine_cavern(Map* pMap)
+InstanceScript* GetInstanceData_instance_serpentshrine_cavern(Map* pMap)
 {
     return new instance_serpentshrine_cavern(pMap);
 }

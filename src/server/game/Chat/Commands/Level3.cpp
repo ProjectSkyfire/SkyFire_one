@@ -51,7 +51,7 @@
 #include "ItemEnchantmentMgr.h"
 #include "BattlegroundMgr.h"
 #include "InstanceSaveMgr.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 #include "CreatureEventAIMgr.h"
 
 //reload commands

@@ -446,7 +446,7 @@ struct instance_stratholme : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_stratholme(Map* pMap)
+InstanceScript* GetInstanceData_instance_stratholme(Map* pMap)
 {
     return new instance_stratholme(pMap);
 }

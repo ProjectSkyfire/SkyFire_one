@@ -24,7 +24,7 @@
 #include "Creature.h"
 #include "CreatureAI.h"
 #include "CreatureAIImpl.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 
 #define SCRIPT_CAST_TYPE dynamic_cast
 
@@ -204,7 +204,7 @@ struct BossAI : public ScriptedAI
     const uint32 bossId;
     EventMap events;
     SummonList summons;
-    InstanceData * const instance;
+    InstanceScript * const instance;
 
     void JustSummoned(Creature *summon);
     void SummonedCreatureDespawn(Creature *summon);

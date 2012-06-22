@@ -87,12 +87,12 @@ struct MinionInfo
 typedef std::multimap<uint32 /*entry*/, DoorInfo> DoorInfoMap;
 typedef std::map<uint32 /*entry*/, MinionInfo> MinionInfoMap;
 
-class InstanceData : public ZoneScript
+class InstanceScript : public ZoneScript
 {
     public:
 
-        explicit InstanceData(Map *map) : instance(map) {}
-        virtual ~InstanceData() {}
+        explicit InstanceScript(Map *map) : instance(map) {}
+        virtual ~InstanceScript() {}
 
         Map *instance;
 

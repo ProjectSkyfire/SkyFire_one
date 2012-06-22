@@ -250,7 +250,7 @@ struct instance_deadmines : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_deadmines(Map* pMap)
+InstanceScript* GetInstanceData_instance_deadmines(Map* pMap)
 {
     return new instance_deadmines(pMap);
 }

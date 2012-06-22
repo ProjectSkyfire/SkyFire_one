@@ -450,7 +450,7 @@ struct instance_uldaman : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_uldaman(Map* pMap)
+InstanceScript* GetInstanceData_instance_uldaman(Map* pMap)
 {
     return new instance_uldaman(pMap);
 }

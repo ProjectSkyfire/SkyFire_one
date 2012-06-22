@@ -45,7 +45,7 @@ struct instance_zulfarrak : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_zulfarrak(Map* pMap)
+InstanceScript* GetInstanceData_instance_zulfarrak(Map* pMap)
 {
     return new instance_zulfarrak(pMap);
 }

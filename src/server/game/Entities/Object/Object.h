@@ -123,7 +123,7 @@ class WorldSession;
 class Creature;
 class Player;
 class UpdateMask;
-class InstanceData;
+class InstanceScript;
 class GameObject;
 class TempSummon;
 class CreatureAI;
@@ -611,7 +611,7 @@ class WorldObject : public Object, public WorldLocation
         uint32 GetZoneId() const;
         uint32 GetAreaId() const;
 
-        InstanceData* GetInstanceData();
+        InstanceScript* GetInstanceData();
 
         const char* GetName() const { return m_name.c_str(); }
         void SetName(const std::string& newname) { m_name=newname; }

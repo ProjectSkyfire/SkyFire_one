@@ -38,7 +38,7 @@
 
 class Unit;
 class WorldPacket;
-class InstanceData;
+class InstanceScript;
 class Group;
 class InstanceSave;
 class Object;
@@ -573,7 +573,7 @@ class InstanceMap : public Map
         void CreateInstanceData(bool load);
         bool Reset(uint8 method);
         uint32 GetScriptId() { return i_script_id; }
-        InstanceData* GetInstanceData() { return i_data; }
+        InstanceScript* GetInstanceData() { return i_data; }
         void PermBindAllPlayers(Player* player);
         time_t GetResetTime();
         void UnloadAll();
@@ -585,7 +585,7 @@ class InstanceMap : public Map
     private:
         bool m_resetAfterUnload;
         bool m_unloadWhenEmpty;
-        InstanceData* i_data;
+        InstanceScript* i_data;
         uint32 i_script_id;
 };
 

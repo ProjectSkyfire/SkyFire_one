@@ -154,7 +154,7 @@ struct instance_temple_of_ahnqiraj : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_temple_of_ahnqiraj(Map* map)
+InstanceScript* GetInstanceData_instance_temple_of_ahnqiraj(Map* map)
 {
     return new instance_temple_of_ahnqiraj(map);
 }

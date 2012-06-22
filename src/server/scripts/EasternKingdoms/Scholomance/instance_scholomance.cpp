@@ -134,7 +134,7 @@ struct instance_scholomance : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_scholomance(Map* pMap)
+InstanceScript* GetInstanceData_instance_scholomance(Map* pMap)
 {
     return new instance_scholomance(pMap);
 }

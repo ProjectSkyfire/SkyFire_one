@@ -232,7 +232,7 @@ struct instance_old_hillsbrad : public ScriptedInstance
         return 0;
     }
 };
-InstanceData* GetInstanceData_instance_old_hillsbrad(Map* map)
+InstanceScript* GetInstanceData_instance_old_hillsbrad(Map* map)
 {
     return new instance_old_hillsbrad(map);
 }

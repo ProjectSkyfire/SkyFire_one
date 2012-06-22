@@ -27,7 +27,7 @@
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "Transport.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 #include "ObjectAccessor.h"
 #include "MapManager.h"
 #include "ObjectMgr.h"

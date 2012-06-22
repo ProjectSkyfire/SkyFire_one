@@ -39,7 +39,7 @@
 #include "Formulas.h"
 #include "SpellAuras.h"
 #include "WaypointMovementGenerator.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 #include "Battleground.h"
 #include "Util.h"
 #include "GridNotifiers.h"

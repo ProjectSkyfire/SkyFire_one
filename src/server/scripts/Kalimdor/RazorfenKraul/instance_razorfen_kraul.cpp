@@ -92,7 +92,7 @@ struct instance_razorfen_kraul : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_razorfen_kraul(Map* pMap)
+InstanceScript* GetInstanceData_instance_razorfen_kraul(Map* pMap)
 {
     return new instance_razorfen_kraul(pMap);
 }

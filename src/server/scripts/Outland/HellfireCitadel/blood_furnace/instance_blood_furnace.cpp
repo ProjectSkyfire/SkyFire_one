@@ -439,7 +439,7 @@ struct instance_blood_furnace : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_blood_furnace(Map* map)
+InstanceScript* GetInstanceData_instance_blood_furnace(Map* map)
 {
     return new instance_blood_furnace(map);
 }

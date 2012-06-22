@@ -190,7 +190,7 @@ struct instance_sethekk_halls : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_sethekk_halls(Map* map)
+InstanceScript* GetInstanceData_instance_sethekk_halls(Map* map)
 {
     return new instance_sethekk_halls(map);
 }

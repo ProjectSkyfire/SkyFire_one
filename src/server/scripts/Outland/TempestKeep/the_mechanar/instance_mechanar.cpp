@@ -79,7 +79,7 @@ struct instance_mechanar : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_mechanar(Map* map)
+InstanceScript* GetInstanceData_instance_mechanar(Map* map)
 {
     return new instance_mechanar(map);
 }

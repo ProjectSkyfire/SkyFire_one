@@ -145,7 +145,7 @@ struct instance_scarlet_monastery : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_scarlet_monastery(Map* pMap)
+InstanceScript* GetInstanceData_instance_scarlet_monastery(Map* pMap)
 {
     return new instance_scarlet_monastery(pMap);
 }

@@ -153,7 +153,7 @@ struct instance_zulgurub : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_zulgurub(Map* pMap)
+InstanceScript* GetInstanceData_instance_zulgurub(Map* pMap)
 {
     return new instance_zulgurub(pMap);
 }

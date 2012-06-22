@@ -189,7 +189,7 @@ struct instance_gruuls_lair : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_gruuls_lair(Map* map)
+InstanceScript* GetInstanceData_instance_gruuls_lair(Map* map)
 {
     return new instance_gruuls_lair(map);
 }

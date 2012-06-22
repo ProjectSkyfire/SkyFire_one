@@ -231,7 +231,7 @@ struct instance_shadow_labyrinth : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_shadow_labyrinth(Map* map)
+InstanceScript* GetInstanceData_instance_shadow_labyrinth(Map* map)
 {
     return new instance_shadow_labyrinth(map);
 }

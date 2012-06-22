@@ -35,7 +35,7 @@
 #include "BattlegroundMgr.h"
 #include <fstream>
 #include "ObjectMgr.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 
 bool ChatHandler::HandleDebugInArcCommand(const char* /*args*/)
 {
@@ -655,7 +655,7 @@ bool ChatHandler::HandleSetInstanceDataCommand(const char *args)
     if (!args || !m_session->GetPlayer())
         return false;
 
-    InstanceData *pInstance = m_session->GetPlayer()->GetInstanceData();
+    InstanceScript *pInstance = m_session->GetPlayer()->GetInstanceData();
     if (!pInstance)
     {
         PSendSysMessage("You are not in scripted instance.");
@@ -682,7 +682,7 @@ bool ChatHandler::HandleGetInstanceDataCommand(const char *args)
     if (!args || !m_session->GetPlayer())
         return false;
 
-    InstanceData *pInstance = m_session->GetPlayer()->GetInstanceData();
+    InstanceScript *pInstance = m_session->GetPlayer()->GetInstanceData();
     if (!pInstance)
     {
         PSendSysMessage("You are not in scripted instance.");

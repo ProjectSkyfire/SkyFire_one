@@ -226,7 +226,7 @@ struct instance_arcatraz : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_arcatraz(Map* map)
+InstanceScript* GetInstanceData_instance_arcatraz(Map* map)
 {
     return new instance_arcatraz(map);
 }

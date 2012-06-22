@@ -304,7 +304,7 @@ struct instance_mount_hyjal : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_mount_hyjal(Map* pMap)
+InstanceScript* GetInstanceData_instance_mount_hyjal(Map* pMap)
 {
     return new instance_mount_hyjal(pMap);
 }

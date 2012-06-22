@@ -249,7 +249,7 @@ struct instance_molten_core : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstance_instance_molten_core(Map* pMap)
+InstanceScript* GetInstance_instance_molten_core(Map* pMap)
 {
     return new instance_molten_core (pMap);
 }

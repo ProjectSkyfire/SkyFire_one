@@ -333,7 +333,7 @@ struct instance_karazhan : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_karazhan(Map* pMap)
+InstanceScript* GetInstanceData_instance_karazhan(Map* pMap)
 {
     return new instance_karazhan(pMap);
 }

@@ -200,7 +200,7 @@ struct instance_razorfen_downs : public ScriptedInstance
     }
 };
 
-InstanceData* GetInstanceData_instance_razorfen_downs(Map* pMap)
+InstanceScript* GetInstanceData_instance_razorfen_downs(Map* pMap)
 {
     return new instance_razorfen_downs(pMap);
 }
