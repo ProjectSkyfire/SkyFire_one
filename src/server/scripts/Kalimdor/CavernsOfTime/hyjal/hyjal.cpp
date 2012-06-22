@@ -75,8 +75,8 @@ bool GossipHello_npc_jaina_proudmoore(Player* player, Creature* creature)
     if (ai->EventBegun)
         return false;
 
-    uint32 RageEncounter = ai->GetInstanceData(DATA_RAGEWINTERCHILLEVENT);
-    uint32 AnetheronEncounter = ai->GetInstanceData(DATA_ANETHERONEVENT);
+    uint32 RageEncounter = ai->GetInstanceScript(DATA_RAGEWINTERCHILLEVENT);
+    uint32 AnetheronEncounter = ai->GetInstanceScript(DATA_ANETHERONEVENT);
     if (RageEncounter == NOT_STARTED)
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEGIN_ALLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     else if (RageEncounter == DONE && AnetheronEncounter == NOT_STARTED)
@@ -139,12 +139,12 @@ bool GossipHello_npc_thrall(Player* player, Creature* creature)
     if (ai->EventBegun)
         return false;
 
-    uint32 AnetheronEvent = ai->GetInstanceData(DATA_ANETHERONEVENT);
+    uint32 AnetheronEvent = ai->GetInstanceScript(DATA_ANETHERONEVENT);
     // Only let them start the Horde phases if Anetheron is dead.
-    if (AnetheronEvent == DONE && ai->GetInstanceData(DATA_ALLIANCE_RETREAT))
+    if (AnetheronEvent == DONE && ai->GetInstanceScript(DATA_ALLIANCE_RETREAT))
     {
-        uint32 KazrogalEvent = ai->GetInstanceData(DATA_KAZROGALEVENT);
-        uint32 AzgalorEvent  = ai->GetInstanceData(DATA_AZGALOREVENT);
+        uint32 KazrogalEvent = ai->GetInstanceScript(DATA_KAZROGALEVENT);
+        uint32 AzgalorEvent  = ai->GetInstanceScript(DATA_AZGALOREVENT);
         if (KazrogalEvent == NOT_STARTED)
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEGIN_HORDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         else if (KazrogalEvent == DONE && AzgalorEvent != DONE && AzgalorEvent != IN_PROGRESS)
@@ -196,7 +196,7 @@ CreatureAI* GetAI_npc_tyrande_whisperwind(Creature* creature)
 bool GossipHello_npc_tyrande_whisperwind(Player* player, Creature* creature)
 {
     hyjalAI* ai = CAST_AI(hyjalAI, creature->AI());
-    uint32 AzgalorEvent = ai->GetInstanceData(DATA_AZGALOREVENT);
+    uint32 AzgalorEvent = ai->GetInstanceScript(DATA_AZGALOREVENT);
 
     // Only let them get item if Azgalor is dead.
     if (AzgalorEvent == DONE && !player->HasItemCount(ITEM_TEAR_OF_GODDESS, 1))

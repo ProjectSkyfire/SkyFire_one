@@ -353,10 +353,10 @@ struct boss_headless_horsemanAI : public ScriptedAI
             speed->EffectApplyAuraName[1] = SPELL_AURA_MOD_CONFUSE;
         }
 */
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 headGUID;
     uint64 PlayerGUID;
@@ -405,8 +405,8 @@ struct boss_headless_horsemanAI : public ScriptedAI
             headGUID = 0;
         }
 
-        //if (pInstance)
-        //    pInstance->SetData(DATA_HORSEMAN_EVENT, NOT_STARTED);
+        //if (instance)
+        //    instance->SetData(DATA_HORSEMAN_EVENT, NOT_STARTED);
     }
 
     void FlyMode()
@@ -442,8 +442,8 @@ struct boss_headless_horsemanAI : public ScriptedAI
                 break;
             }
             case 6:
-                if (pInstance)
-                    pInstance->SetData(GAMEOBJECT_PUMPKIN_SHRINE, 0);   //hide gameobject
+                if (instance)
+                    instance->SetData(GAMEOBJECT_PUMPKIN_SHRINE, 0);   //hide gameobject
                 break;
             case 19:
                 me->RemoveUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);
@@ -465,8 +465,8 @@ struct boss_headless_horsemanAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HORSEMAN_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_HORSEMAN_EVENT, IN_PROGRESS);
         DoZoneInCombat();
     }
     void AttackStart(Unit* who) {ScriptedAI::AttackStart(who);}
@@ -534,8 +534,8 @@ struct boss_headless_horsemanAI : public ScriptedAI
             flame->CastSpell(flame, SPELL_BODY_FLAME, false);
         if (Creature *wisp = DoSpawnCreature(WISP_INVIS, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 60000))
             CAST_AI(mob_wisp_invisAI, wisp->AI())->SetType(4);
-        if (pInstance)
-            pInstance->SetData(DATA_HORSEMAN_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_HORSEMAN_EVENT, DONE);
     }
 
     void SpellHit(Unit *caster, const SpellEntry* spell)
@@ -820,12 +820,12 @@ struct mob_pulsing_pumpkinAI : public ScriptedAI
 
 bool GOHello_go_loosely_turned_soil(Player* player, GameObject* soil)
 {
-    ScriptedInstance* pInstance = player->GetInstanceData();
-    if (pInstance)
+    ScriptedInstance* instance = player->GetInstanceScript();
+    if (instance)
     {
-        if (pInstance->GetData(DATA_HORSEMAN_EVENT) != NOT_STARTED)
+        if (instance->GetData(DATA_HORSEMAN_EVENT) != NOT_STARTED)
             return true;
-        pInstance->SetData(DATA_HORSEMAN_EVENT, IN_PROGRESS);
+        instance->SetData(DATA_HORSEMAN_EVENT, IN_PROGRESS);
     }
 /*  if (soil->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER && plr->getLevel() > 64)
     {

@@ -53,7 +53,7 @@ struct Script
         pQuestSelect(NULL), pQuestComplete(NULL), pNPCDialogStatus(NULL), pGODialogStatus(NULL),
         pChooseReward(NULL), pItemHello(NULL), pGOHello(NULL), pAreaTrigger(NULL), pItemQuestAccept(NULL),
         pGOQuestAccept(NULL), pGOChooseReward(NULL), pItemUse(NULL), pEffectDummyCreature(NULL),
-        GetAI(NULL), GetInstanceData(NULL)
+        GetAI(NULL), GetInstanceScript(NULL)
     {}
 
     std::string Name;
@@ -83,7 +83,7 @@ struct Script
     bool (*pEffectDummyCreature )(Unit*, uint32, uint32, Creature*);
 
     CreatureAI* (*GetAI)(Creature*);
-    InstanceScript* (*GetInstanceData)(Map*);
+    InstanceScript* (*GetInstanceScript)(Map*);
 
     void RegisterSelf();
 };

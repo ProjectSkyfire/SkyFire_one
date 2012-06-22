@@ -64,12 +64,12 @@ struct boss_nightbaneAI : public ScriptedAI
 {
     boss_nightbaneAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         Intro = true;
         isReseted = false;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Phase;
 
@@ -99,14 +99,14 @@ struct boss_nightbaneAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (instance)
         {
             bool isCorrectSpawned = true;
 
-            if (pInstance->GetData(TYPE_NIGHTBANE) != DONE)
+            if (instance->GetData(TYPE_NIGHTBANE) != DONE)
             {
                 uint64 NightbaneGUID = 0;
-                NightbaneGUID = pInstance->GetData64(DATA_NIGHTBANE);
+                NightbaneGUID = instance->GetData64(DATA_NIGHTBANE);
 
                 if (NightbaneGUID)
                     if (Creature* Nightbane = Creature::GetCreature((*me),NightbaneGUID))
@@ -124,14 +124,14 @@ struct boss_nightbaneAI : public ScriptedAI
             }
             else
             {
-                pInstance->SetData64(DATA_NIGHTBANE, me->GetGUID());
+                instance->SetData64(DATA_NIGHTBANE, me->GetGUID());
             }
 
             if (!Intro)
             {
                 (*me).GetMotionMaster()->Clear(false);
                 isReseted = true;
-                pInstance->SetData(TYPE_NIGHTBANE, NOT_STARTED);
+                instance->SetData(TYPE_NIGHTBANE, NOT_STARTED);
                 me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 me->RemoveCorpse();
                 return;
@@ -168,17 +168,17 @@ struct boss_nightbaneAI : public ScriptedAI
 
     void HandleTerraceDoors(bool open)
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_MASTERS_TERRACE_DOOR_1), open);
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_MASTERS_TERRACE_DOOR_2), open);
+            instance->HandleGameObject(instance->GetData64(DATA_MASTERS_TERRACE_DOOR_1), open);
+            instance->HandleGameObject(instance->GetData64(DATA_MASTERS_TERRACE_DOOR_2), open);
         }
     }
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_NIGHTBANE, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_NIGHTBANE, IN_PROGRESS);
 
         HandleTerraceDoors(false);
         me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
@@ -196,8 +196,8 @@ struct boss_nightbaneAI : public ScriptedAI
     void JustDied(Unit* /*killer*/)
     {
         if (!isReseted)
-            if (pInstance)
-                pInstance->SetData(TYPE_NIGHTBANE, DONE);
+            if (instance)
+                instance->SetData(TYPE_NIGHTBANE, DONE);
 
         HandleTerraceDoors(true);
     }

@@ -57,11 +57,11 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
 {
     boss_warchief_kargath_bladefistAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     std::vector<uint64> adds;
@@ -97,21 +97,21 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
         Assassins_Timer = 5000;
         resetcheck_timer = 5000;
 
-        if (pInstance)
-            pInstance->SetData(DATA_KARGATH, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_KARGATH, NOT_STARTED);
     }
 
     void EnterCombat(Unit * /*who*/)
     {
         DoScriptText(RAND(SAY_AGGRO1, SAY_AGGRO2, SAY_AGGRO3), me);
 
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(DATA_KARGATH, IN_PROGRESS);
+            instance->SetData(DATA_KARGATH, IN_PROGRESS);
 
-            if (pInstance->GetData64(DATA_WARBRINGER))
+            if (instance->GetData64(DATA_WARBRINGER))
             {
-                Creature *pWar = Unit::GetCreature(*me, pInstance->GetData64(DATA_WARBRINGER));
+                Creature *pWar = Unit::GetCreature(*me, instance->GetData64(DATA_WARBRINGER));
                 if (pWar && pWar->isAlive())
                     pWar->AI()->AttackStart(me->getVictim());
             }
@@ -147,8 +147,8 @@ struct boss_warchief_kargath_bladefistAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
         removeAdds();
 
-        if (pInstance)
-            pInstance->SetData(DATA_KARGATH, DONE);
+        if (instance)
+            instance->SetData(DATA_KARGATH, DONE);
     }
 
     void MovementInform(uint32 type, uint32 id)

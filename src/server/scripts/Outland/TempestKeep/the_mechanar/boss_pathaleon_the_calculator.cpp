@@ -182,7 +182,7 @@ struct mob_nether_wraithAI : public ScriptedAI
 {
     mob_nether_wraithAI(Creature *c) : ScriptedAI(c) {}
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 ArcaneMissiles_Timer;
     uint32 Detonation_Timer;

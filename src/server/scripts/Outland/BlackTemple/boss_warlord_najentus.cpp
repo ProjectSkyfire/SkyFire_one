@@ -59,10 +59,10 @@ struct boss_najentusAI : public ScriptedAI
 {
     boss_najentusAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 NeedleSpineTimer;
     uint32 EnrageTimer;
@@ -82,8 +82,8 @@ struct boss_najentusAI : public ScriptedAI
 
         SpineTargetGUID = 0;
 
-        if (pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, NOT_STARTED);
 
         DeleteSpine();
     }
@@ -95,8 +95,8 @@ struct boss_najentusAI : public ScriptedAI
 
     void JustDied(Unit * /*victim*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, DONE);
 
         DoScriptText(SAY_DEATH, me);
         DeleteSpine();
@@ -132,8 +132,8 @@ struct boss_najentusAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_HIGHWARLORDNAJENTUSEVENT, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, me);
         DoZoneInCombat();
@@ -243,8 +243,8 @@ struct boss_najentusAI : public ScriptedAI
 
 bool GOHello_go_najentus_spine(Player* player, GameObject* pGo)
 {
-    if (ScriptedInstance* pInstance = pGo->GetInstanceData())
-        if (Creature* Najentus = Unit::GetCreature(*pGo, pInstance->GetData64(DATA_HIGHWARLORDNAJENTUS)))
+    if (ScriptedInstance* instance = pGo->GetInstanceScript())
+        if (Creature* Najentus = Unit::GetCreature(*pGo, instance->GetData64(DATA_HIGHWARLORDNAJENTUS)))
             if (CAST_AI(boss_najentusAI, Najentus->AI())->RemoveImpalingSpine())
             {
                 player->CastSpell(player, SPELL_CREATE_NAJENTUS_SPINE, true);

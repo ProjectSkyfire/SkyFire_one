@@ -53,7 +53,7 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
 {
     boss_rage_winterchillAI(Creature *c) : hyjal_trashAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         pGo = false;
         pos = 0;
     }
@@ -73,14 +73,14 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
         NovaTimer = 15000;
         IceboltTimer = 10000;
 
-        if (pInstance && IsEvent)
-            pInstance->SetData(DATA_RAGEWINTERCHILLEVENT, NOT_STARTED);
+        if (instance && IsEvent)
+            instance->SetData(DATA_RAGEWINTERCHILLEVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance && IsEvent)
-            pInstance->SetData(DATA_RAGEWINTERCHILLEVENT, IN_PROGRESS);
+        if (instance && IsEvent)
+            instance->SetData(DATA_RAGEWINTERCHILLEVENT, IN_PROGRESS);
         DoPlaySoundToSet(me, SOUND_ONAGGRO);
         me->MonsterYell(SAY_ONAGGRO, LANG_UNIVERSAL, 0);
     }
@@ -103,9 +103,9 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
     void WaypointReached(uint32 i)
     {
         pos = i;
-        if (i == 7 && pInstance)
+        if (i == 7 && instance)
         {
-            Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_JAINAPROUDMOORE));
+            Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_JAINAPROUDMOORE));
             if (pTarget && pTarget->isAlive())
                 me->AddThreat(pTarget, 0.0f);
         }
@@ -114,8 +114,8 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
     void JustDied(Unit *victim)
     {
         hyjal_trashAI::JustDied(victim);
-        if (pInstance && IsEvent)
-            pInstance->SetData(DATA_RAGEWINTERCHILLEVENT, DONE);
+        if (instance && IsEvent)
+            instance->SetData(DATA_RAGEWINTERCHILLEVENT, DONE);
         DoPlaySoundToSet(me, SOUND_ONDEATH);
         me->MonsterYell(SAY_ONDEATH, LANG_UNIVERSAL, NULL);
     }
@@ -129,7 +129,7 @@ struct boss_rage_winterchillAI : public hyjal_trashAI
             if (!pGo)
             {
                 pGo = true;
-                if (pInstance)
+                if (instance)
                 {
                     AddWaypoint(0, 4896.08f,    -1576.35f,    1333.65f);
                     AddWaypoint(1, 4898.68f,    -1615.02f,    1329.48f);

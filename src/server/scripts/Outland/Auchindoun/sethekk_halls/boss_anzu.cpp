@@ -46,13 +46,13 @@ struct boss_anzuAI : public ScriptedAI
 {
     boss_anzuAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
         DoScriptText(SAY_INTRO1, me);
         DoScriptText(SAY_INTRO2, me);
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     bool HeroicMode;
 
@@ -71,8 +71,8 @@ struct boss_anzuAI : public ScriptedAI
         if (GameObject* pClaw = me->FindNearestGameObject(GO_CLAW , 20))
             pClaw->RemoveFromWorld();
 
-        if (pInstance)
-            pInstance->SetData(DATA_ANZUEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_ANZUEVENT, NOT_STARTED);
 
         Cyclone_Timer = 10000;
         Rip_Timer = 8000;
@@ -86,14 +86,14 @@ struct boss_anzuAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ANZUEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_ANZUEVENT, IN_PROGRESS);
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ANZUEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_ANZUEVENT, DONE);
     }
 
     void JustSummoned(Creature *summoned)

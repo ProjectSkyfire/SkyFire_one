@@ -83,8 +83,8 @@ struct boss_magmusAI : public ScriptedAI
     // When he die open door to last chamber
     void JustDied(Unit *who)
     {
-        if (ScriptedInstance* pInstance = who->GetInstanceData())
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_THRONE_DOOR), true);
+        if (ScriptedInstance* instance = who->GetInstanceScript())
+            instance->HandleGameObject(instance->GetData64(DATA_THRONE_DOOR), true);
     }
 };
 CreatureAI* GetAI_boss_magmus(Creature* creature)

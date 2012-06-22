@@ -314,7 +314,7 @@ void AddSC_instance_mount_hyjal()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_hyjal";
-    newscript->GetInstanceData = &GetInstanceData_instance_mount_hyjal;
+    newscript->GetInstanceScript = &GetInstanceData_instance_mount_hyjal;
     newscript->RegisterSelf();
 }
 

@@ -51,13 +51,13 @@ EndScriptData */
 
 bool GOHello_go_bridge_console(Player* /*player*/, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = pGo->GetInstanceData();
+    ScriptedInstance* instance = pGo->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return false;
 
-    if (pInstance)
-        pInstance->SetData(DATA_CONTROL_CONSOLE, DONE);
+    if (instance)
+        instance->SetData(DATA_CONTROL_CONSOLE, DONE);
 
     return true;
 }
@@ -383,7 +383,7 @@ void AddSC_instance_serpentshrine_cavern()
 
     newscript = new Script;
     newscript->Name = "instance_serpent_shrine";
-    newscript->GetInstanceData = &GetInstanceData_instance_serpentshrine_cavern;
+    newscript->GetInstanceScript = &GetInstanceData_instance_serpentshrine_cavern;
     newscript->RegisterSelf();
 
     newscript = new Script;

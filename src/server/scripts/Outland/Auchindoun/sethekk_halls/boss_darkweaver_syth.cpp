@@ -60,11 +60,11 @@ struct boss_darkweaver_sythAI : public ScriptedAI
 {
     boss_darkweaver_sythAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 flameshock_timer;
     uint32 arcaneshock_timer;
@@ -89,8 +89,8 @@ struct boss_darkweaver_sythAI : public ScriptedAI
         summon50 = false;
         summon10 = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_SYTHEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_SYTHEVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
@@ -102,16 +102,16 @@ struct boss_darkweaver_sythAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, me); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_SYTHEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_SYTHEVENT, IN_PROGRESS);
     }
 
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_SYTHEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_SYTHEVENT, DONE);
     }
 
     void KilledUnit(Unit* victim)

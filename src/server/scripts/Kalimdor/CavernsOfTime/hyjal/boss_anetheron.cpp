@@ -59,7 +59,7 @@ struct boss_anetheronAI : public hyjal_trashAI
 {
     boss_anetheronAI(Creature *c) : hyjal_trashAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         pGo = false;
         pos = 0;
         SpellEntry *TempSpell = GET_SPELL(SPELL_SLEEP);
@@ -85,14 +85,14 @@ struct boss_anetheronAI : public hyjal_trashAI
         AuraTimer = 5000;
         InfernoTimer = 45000;
 
-        if (pInstance && IsEvent)
-            pInstance->SetData(DATA_ANETHERONEVENT, NOT_STARTED);
+        if (instance && IsEvent)
+            instance->SetData(DATA_ANETHERONEVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance && IsEvent)
-            pInstance->SetData(DATA_ANETHERONEVENT, IN_PROGRESS);
+        if (instance && IsEvent)
+            instance->SetData(DATA_ANETHERONEVENT, IN_PROGRESS);
         DoPlaySoundToSet(me, SOUND_ONAGGRO);
         me->MonsterYell(SAY_ONAGGRO, LANG_UNIVERSAL, 0);
     }
@@ -119,9 +119,9 @@ struct boss_anetheronAI : public hyjal_trashAI
     void WaypointReached(uint32 i)
     {
         pos = i;
-        if (i == 7 && pInstance)
+        if (i == 7 && instance)
         {
-            Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_JAINAPROUDMOORE));
+            Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_JAINAPROUDMOORE));
             if (pTarget && pTarget->isAlive())
                 me->AddThreat(pTarget, 0.0f);
         }
@@ -130,8 +130,8 @@ struct boss_anetheronAI : public hyjal_trashAI
     void JustDied(Unit *victim)
     {
         hyjal_trashAI::JustDied(victim);
-        if (pInstance && IsEvent)
-            pInstance->SetData(DATA_ANETHERONEVENT, DONE);
+        if (instance && IsEvent)
+            instance->SetData(DATA_ANETHERONEVENT, DONE);
         DoPlaySoundToSet(me, SOUND_ONDEATH);
         me->MonsterYell(SAY_ONDEATH, LANG_UNIVERSAL, 0);
     }
@@ -145,7 +145,7 @@ struct boss_anetheronAI : public hyjal_trashAI
             if (!pGo)
             {
                 pGo = true;
-                if (pInstance)
+                if (instance)
                 {
                     AddWaypoint(0, 4896.08f,    -1576.35f,    1333.65f);
                     AddWaypoint(1, 4898.68f,    -1615.02f,    1329.48f);
@@ -242,15 +242,15 @@ struct mob_towering_infernalAI : public ScriptedAI
 {
     mob_towering_infernalAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
-        if (pInstance)
-            AnetheronGUID = pInstance->GetData64(DATA_ANETHERON);
+        instance = c->GetInstanceScript();
+        if (instance)
+            AnetheronGUID = instance->GetData64(DATA_ANETHERON);
     }
 
     uint32 ImmolationTimer;
     uint32 CheckTimer;
     uint64 AnetheronGUID;
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     void Reset()
     {

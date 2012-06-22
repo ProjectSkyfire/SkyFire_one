@@ -247,7 +247,7 @@ void AddSC_instance_sethekk_halls()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_sethekk_halls";
-    newscript->GetInstanceData = &GetInstanceData_instance_sethekk_halls;
+    newscript->GetInstanceScript = &GetInstanceData_instance_sethekk_halls;
     newscript->RegisterSelf();
 
     newscript = new Script;

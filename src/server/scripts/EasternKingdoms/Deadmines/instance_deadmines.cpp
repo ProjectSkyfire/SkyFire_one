@@ -260,6 +260,6 @@ void AddSC_instance_deadmines()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_deadmines";
-    newscript->GetInstanceData = &GetInstanceData_instance_deadmines;
+    newscript->GetInstanceScript = &GetInstanceData_instance_deadmines;
     newscript->RegisterSelf();
 }

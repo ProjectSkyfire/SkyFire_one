@@ -50,11 +50,11 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
 {
     boss_ambassador_hellmawAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint32 EventCheck_Timer;
@@ -73,15 +73,15 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
         Intro = false;
         IsBanished = false;
 
-        if (pInstance)
+        if (instance)
         {
-            if (pInstance->GetData(TYPE_HELLMAW) == NOT_STARTED)
+            if (instance->GetData(TYPE_HELLMAW) == NOT_STARTED)
             {
                 DoCast(me, SPELL_BANISH);
                 IsBanished = true;
             }
-            else pInstance->SetData(TYPE_HELLMAW, FAIL);
-            if (pInstance->GetData(TYPE_OVERSEER) == DONE)
+            else instance->SetData(TYPE_HELLMAW, FAIL);
+            if (instance->GetData(TYPE_OVERSEER) == DONE)
             {
                 if (me->HasAura(SPELL_BANISH, 0))
                     me->RemoveAurasDueToSpell(SPELL_BANISH);
@@ -114,8 +114,8 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
         IsBanished = false;
         Intro = true;
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_HELLMAW, IN_PROGRESS);
     }
 
     void EnterCombat(Unit *who)
@@ -141,8 +141,8 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HELLMAW, DONE);
+        if (instance)
+            instance->SetData(TYPE_HELLMAW, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -151,9 +151,9 @@ struct boss_ambassador_hellmawAI : public ScriptedAI
         {
             if (EventCheck_Timer <= diff)
             {
-                if (pInstance)
+                if (instance)
                 {
-                    if (pInstance->GetData(TYPE_OVERSEER) == DONE)
+                    if (instance->GetData(TYPE_OVERSEER) == DONE)
                         DoIntro();
                 }
                 EventCheck_Timer = 5000;

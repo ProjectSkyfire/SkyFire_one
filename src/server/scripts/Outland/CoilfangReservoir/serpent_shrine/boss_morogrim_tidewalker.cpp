@@ -104,10 +104,10 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
 {
     boss_morogrim_tidewalkerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     Map::PlayerList const *PlayerList;
 
@@ -136,16 +136,16 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
         Earthquake = false;
         Phase2 = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, NOT_STARTED);
     }
 
     void StartEvent()
     {
         DoScriptText(SAY_AGGRO, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit * /*victim*/)
@@ -162,8 +162,8 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_MOROGRIMTIDEWALKEREVENT, DONE);
     }
 
     void EnterCombat(Unit * /*who*/)

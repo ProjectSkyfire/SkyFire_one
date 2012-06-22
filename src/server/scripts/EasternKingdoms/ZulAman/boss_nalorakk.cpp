@@ -98,7 +98,7 @@ struct boss_nalorakkAI : public ScriptedAI
     {
         MoveEvent = true;
         MovePhase = 0;
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
 
         // hack mangle as it affects Nalorakk instead of victim
         SpellEntry *TempSpell1 = GET_SPELL(42389);
@@ -109,7 +109,7 @@ struct boss_nalorakkAI : public ScriptedAI
         }
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 BrutalSwipe_Timer;
     uint32 Mangle_Timer;
@@ -143,8 +143,8 @@ struct boss_nalorakkAI : public ScriptedAI
             (*me).GetMotionMaster()->MovePoint(0, NalorakkWay[7][0],NalorakkWay[7][1],NalorakkWay[7][2]);
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_NALORAKKEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_NALORAKKEVENT, NOT_STARTED);
 
         Surge_Timer = 15000 + rand()%5000;
         BrutalSwipe_Timer = 7000 + rand()%5000;
@@ -268,8 +268,8 @@ struct boss_nalorakkAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_NALORAKKEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_NALORAKKEVENT, IN_PROGRESS);
 
         me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_YELL_AGGRO);
@@ -278,8 +278,8 @@ struct boss_nalorakkAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_NALORAKKEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_NALORAKKEVENT, DONE);
 
         me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_YELL_DEATH);

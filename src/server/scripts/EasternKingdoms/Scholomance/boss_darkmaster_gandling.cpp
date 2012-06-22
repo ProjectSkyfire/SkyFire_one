@@ -56,10 +56,10 @@ struct boss_darkmaster_gandlingAI : public ScriptedAI
 {
     boss_darkmaster_gandlingAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = me->GetInstanceData();
+        instance = me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 ArcaneMissiles_Timer;
     uint32 ShadowShield_Timer;
@@ -80,8 +80,8 @@ struct boss_darkmaster_gandlingAI : public ScriptedAI
 
     void JustDied(Unit * /*killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_GANDLING, DONE);
+        if (instance)
+            instance->SetData(TYPE_GANDLING, DONE);
     }
 
     void UpdateAI(const uint32 diff)

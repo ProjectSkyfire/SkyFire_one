@@ -110,7 +110,7 @@ struct boss_felmystAI : public ScriptedAI
 {
     boss_felmystAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
 
         // wait for core patch be accepted
         /*SpellEntry *TempSpell = GET_SPELL(SPELL_ENCAPSULATE_EFFECT);
@@ -124,7 +124,7 @@ struct boss_felmystAI : public ScriptedAI
             TempSpell->Attributes |= SPELL_ATTR_PASSIVE;*/
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     PhaseFelmyst phase;
     EventMap events;
 
@@ -148,8 +148,8 @@ struct boss_felmystAI : public ScriptedAI
         DespawnSummons(MOB_VAPOR_TRAIL);
         me->setActive(false);
 
-        if (pInstance)
-            pInstance->SetData(DATA_FELMYST_EVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_FELMYST_EVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit * /*who*/)
@@ -162,8 +162,8 @@ struct boss_felmystAI : public ScriptedAI
         DoCast(me, AURA_NOXIOUS_FUMES, true);
         EnterPhase(PHASE_GROUND);
 
-        if (pInstance)
-            pInstance->SetData(DATA_FELMYST_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_FELMYST_EVENT, IN_PROGRESS);
     }
 
     void AttackStart(Unit *who)
@@ -192,8 +192,8 @@ struct boss_felmystAI : public ScriptedAI
     {
         DoScriptText(YELL_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_FELMYST_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_FELMYST_EVENT, DONE);
     }
 
     void SpellHit(Unit *caster, const SpellEntry *spell)
@@ -286,7 +286,7 @@ struct boss_felmystAI : public ScriptedAI
         {
             Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 150, true);
             if (!pTarget)
-                pTarget = Unit::GetUnit(*me, pInstance ? pInstance->GetData64(DATA_PLAYER_GUID) : 0);
+                pTarget = Unit::GetUnit(*me, instance ? instance->GetData64(DATA_PLAYER_GUID) : 0);
 
             if (!pTarget)
             {
@@ -313,7 +313,7 @@ struct boss_felmystAI : public ScriptedAI
 
             Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 150, true);
             if (!pTarget)
-                pTarget = Unit::GetUnit(*me, pInstance ? pInstance->GetData64(DATA_PLAYER_GUID) : 0);
+                pTarget = Unit::GetUnit(*me, instance ? instance->GetData64(DATA_PLAYER_GUID) : 0);
 
             if (!pTarget)
             {
@@ -343,7 +343,7 @@ struct boss_felmystAI : public ScriptedAI
         {
             Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 150, true);
             if (!pTarget)
-                pTarget = Unit::GetUnit(*me, pInstance ? pInstance->GetData64(DATA_PLAYER_GUID) : 0);
+                pTarget = Unit::GetUnit(*me, instance ? instance->GetData64(DATA_PLAYER_GUID) : 0);
 
             if (!pTarget)
             {

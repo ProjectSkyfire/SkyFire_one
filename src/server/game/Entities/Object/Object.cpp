@@ -1175,10 +1175,10 @@ uint32 WorldObject::GetAreaId() const
     return GetBaseMap()->GetAreaId(m_positionX, m_positionY, m_positionZ);
 }
 
-InstanceScript* WorldObject::GetInstanceData()
+InstanceScript* WorldObject::GetInstanceScript()
 {
     Map *map = GetMap();
-    return map->IsDungeon() ? ((InstanceMap*)map)->GetInstanceData() : NULL;
+    return map->IsDungeon() ? ((InstanceMap*)map)->GetInstanceScript() : NULL;
 }
 
 float WorldObject::GetDistanceZ(const WorldObject* obj) const
@@ -1752,7 +1752,7 @@ void WorldObject::SetZoneScript()
     if (Map *map = FindMap())
     {
         if (map->IsDungeon())
-            m_zoneScript = (ZoneScript*)((InstanceMap*)map)->GetInstanceData();
+            m_zoneScript = (ZoneScript*)((InstanceMap*)map)->GetInstanceScript();
         else if (!map->IsBattleGroundOrArena())
             m_zoneScript = sOutdoorPvPMgr->GetZoneScript(GetZoneId());
     }

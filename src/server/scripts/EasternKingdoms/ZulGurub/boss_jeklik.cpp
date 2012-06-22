@@ -54,10 +54,10 @@ struct boss_jeklikAI : public ScriptedAI
 {
     boss_jeklikAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 Charge_Timer;
     uint32 SonicBurst_Timer;
@@ -96,8 +96,8 @@ struct boss_jeklikAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_JEKLIK, DONE);
+        if (instance)
+            instance->SetData(TYPE_JEKLIK, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -240,10 +240,10 @@ struct mob_batriderAI : public ScriptedAI
 {
     mob_batriderAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 Bomb_Timer;
     uint32 Despawn_Timer;
@@ -278,9 +278,9 @@ struct mob_batriderAI : public ScriptedAI
         // Despawn_Timer
         if (Despawn_Timer <= diff)
         {
-            if (pInstance)
+            if (instance)
             {
-                if (pInstance->GetData(TYPE_JEKLIK) == DONE)
+                if (instance->GetData(TYPE_JEKLIK) == DONE)
                 {
                     me->setDeathState(JUST_DIED);
                     me->RemoveCorpse();

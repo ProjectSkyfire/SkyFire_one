@@ -46,11 +46,11 @@ struct boss_aeonusAI : public ScriptedAI
 {
     boss_aeonusAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     bool HeroicMode;
 
     uint32 SandBreath_Timer;
@@ -88,10 +88,10 @@ struct boss_aeonusAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-         if (pInstance)
+         if (instance)
          {
-             pInstance->SetData(TYPE_RIFT, DONE);
-             pInstance->SetData(TYPE_MEDIVH, DONE);//FIXME: later should be removed
+             instance->SetData(TYPE_RIFT, DONE);
+             instance->SetData(TYPE_MEDIVH, DONE);//FIXME: later should be removed
          }
     }
 

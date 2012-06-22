@@ -132,11 +132,11 @@ struct boss_warbringer_omroggAI : public ScriptedAI
 {
     boss_warbringer_omroggAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint64 LeftHead;
@@ -176,8 +176,8 @@ struct boss_warbringer_omroggAI : public ScriptedAI
         ThunderClap_Timer = 15000;
         ResetThreat_Timer = 30000;
 
-        if (pInstance)
-            pInstance->SetData(TYPE_WARBRINGER, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_WARBRINGER, NOT_STARTED);
     }
 
     void DoYellForThreat()
@@ -216,8 +216,8 @@ struct boss_warbringer_omroggAI : public ScriptedAI
             AggroYell = true;
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_WARBRINGER, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_WARBRINGER, IN_PROGRESS);
     }
 
     void JustSummoned(Creature *summoned)
@@ -277,8 +277,8 @@ struct boss_warbringer_omroggAI : public ScriptedAI
             ((mob_omrogg_headsAI*)CAST_CRE(Right)->AI())->DoDeathYell();
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_WARBRINGER, DONE);
+        if (instance)
+            instance->SetData(TYPE_WARBRINGER, DONE);
     }
 
     void UpdateAI(const uint32 diff)

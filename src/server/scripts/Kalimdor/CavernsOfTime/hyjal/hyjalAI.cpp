@@ -314,7 +314,7 @@ float HordeFirePos[65][8]=//spawn points for the fire visuals (GO) in the horde 
 
 hyjalAI::hyjalAI(Creature *c) : npc_escortAI(c), Summons(me)
 {
-    pInstance = c->GetInstanceData();
+    instance = c->GetInstanceScript();
     VeinsSpawned[0] = false;
     VeinsSpawned[1] = false;
     for (uint8 i = 0; i < 14; ++i)
@@ -394,15 +394,15 @@ void hyjalAI::Reset()
     memset(Spell, 0, sizeof(Spell));
 
     //Reset Instance Data for trash count
-    if (pInstance)
+    if (instance)
     {
-        if ((!pInstance->GetData(DATA_ALLIANCE_RETREAT) && me->GetEntry() == JAINA) || (pInstance->GetData(DATA_ALLIANCE_RETREAT) && me->GetEntry() == THRALL))
+        if ((!instance->GetData(DATA_ALLIANCE_RETREAT) && me->GetEntry() == JAINA) || (instance->GetData(DATA_ALLIANCE_RETREAT) && me->GetEntry() == THRALL))
         {
             //Reset World States
             UpdateWorldState(WORLD_STATE_WAVES, 0);
             UpdateWorldState(WORLD_STATE_ENEMY, 0);
             UpdateWorldState(WORLD_STATE_ENEMYCOUNT, 0);
-            pInstance->SetData(DATA_RESET_TRASH_COUNT, 0);
+            instance->SetData(DATA_RESET_TRASH_COUNT, 0);
         }
     } else sLog->outError(ERROR_INST_DATA);
 
@@ -512,9 +512,9 @@ void hyjalAI::SummonCreature(uint32 entry, float Base[4][3])
                 CAST_AI(hyjal_trashAI, creature->AI())->IsEvent = true;
                 break;
         }
-        if (pInstance)
+        if (instance)
         {
-            if (pInstance->GetData(DATA_RAIDDAMAGE) < MINRAIDDAMAGE)
+            if (instance->GetData(DATA_RAIDDAMAGE) < MINRAIDDAMAGE)
                 creature->SetDisableReputationGain(true);//no repu for solo farming
         }
         // Check if creature is a boss.
@@ -533,14 +533,14 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
     if (rand()%4 == 0)
         Talk(RALLY);
 
-    if (!pInstance)
+    if (!instance)
     {
         sLog->outError(ERROR_INST_DATA);
         return;
     }
     InfernalCount = 0;//reset infernal count every new wave
 
-    EnemyCount = pInstance->GetData(DATA_TRASH);
+    EnemyCount = instance->GetData(DATA_TRASH);
     for (uint8 i = 0; i < 18; ++i)
     {
         if (wave[Count].Mob[i])
@@ -555,7 +555,7 @@ void hyjalAI::SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3])
         UpdateWorldState(WORLD_STATE_WAVES, stateValue);    // Set world state to our current wave number
         UpdateWorldState(WORLD_STATE_ENEMY, 1);             // Enable world state
 
-        pInstance->SetData(DATA_TRASH, EnemyCount);         // Send data for instance script to update count
+        instance->SetData(DATA_TRASH, EnemyCount);         // Send data for instance script to update count
 
         if (!Debug)
             NextWaveTimer = wave[Count].WaveTimer;
@@ -598,10 +598,10 @@ void hyjalAI::StartEvent(Player* player)
     DeSpawnVeins();
 }
 
-uint32 hyjalAI::GetInstanceData(uint32 Event)
+uint32 hyjalAI::GetInstanceScript(uint32 Event)
 {
-    if (pInstance)
-        return pInstance->GetData(Event);
+    if (instance)
+        return instance->GetData(Event);
     else sLog->outError(ERROR_INST_DATA);
 
     return 0;
@@ -664,11 +664,11 @@ void hyjalAI::UpdateWorldState(uint32 id, uint32 state)
 
 void hyjalAI::Retreat()
 {
-    if (pInstance)
+    if (instance)
     {
         if (Faction == 0)
         {
-            pInstance->SetData(DATA_ALLIANCE_RETREAT, 1);
+            instance->SetData(DATA_ALLIANCE_RETREAT, 1);
             AddWaypoint(0, JainaWPs[0][0],JainaWPs[0][1],JainaWPs[0][2]);
             AddWaypoint(1, JainaWPs[1][0],JainaWPs[1][1],JainaWPs[1][2]);
             Start(false, false, false);
@@ -676,7 +676,7 @@ void hyjalAI::Retreat()
         }
         if (Faction == 1)
         {
-            pInstance->SetData(DATA_HORDE_RETREAT, 1);
+            instance->SetData(DATA_HORDE_RETREAT, 1);
             Creature* JainaDummy = me->SummonCreature(JAINA, JainaDummySpawn[0][0],JainaDummySpawn[0][1],JainaDummySpawn[0][2],JainaDummySpawn[0][3],TEMPSUMMON_TIMED_DESPAWN, 60000);
             if (JainaDummy)
             {
@@ -722,11 +722,11 @@ void hyjalAI::SpawnVeins()
 
 void hyjalAI::DeSpawnVeins()
 {
-    if (!pInstance)
+    if (!instance)
         return;
     if (Faction == 1)
     {
-        Creature* pUnit=Unit::GetCreature((*me),pInstance->GetData64(DATA_JAINAPROUDMOORE));
+        Creature* pUnit=Unit::GetCreature((*me),instance->GetData64(DATA_JAINAPROUDMOORE));
         if (!pUnit)return;
         hyjalAI* ai = CAST_AI(hyjalAI, pUnit->AI());
         if (!ai)return;
@@ -737,7 +737,7 @@ void hyjalAI::DeSpawnVeins()
         }
     } else if (Faction)
     {
-        Creature* pUnit=Unit::GetCreature((*me),pInstance->GetData64(DATA_THRALL));
+        Creature* pUnit=Unit::GetCreature((*me),instance->GetData64(DATA_THRALL));
         if (!pUnit)return;
         hyjalAI* ai = CAST_AI(hyjalAI, pUnit->AI());
         if (!ai)return;
@@ -766,7 +766,7 @@ void hyjalAI::UpdateAI(const uint32 diff)
         switch (me->GetEntry())
         {
             case JAINA:
-                if (pInstance && pInstance->GetData(DATA_ALLIANCE_RETREAT))
+                if (instance && instance->GetData(DATA_ALLIANCE_RETREAT))
                 {
                     me->SetVisibility(VISIBILITY_OFF);
                     HideNearPos(me->GetPositionX(), me->GetPositionY());
@@ -777,7 +777,7 @@ void hyjalAI::UpdateAI(const uint32 diff)
                 else me->SetVisibility(VISIBILITY_ON);
                 break;
             case THRALL: //thrall
-                if (pInstance && pInstance->GetData(DATA_HORDE_RETREAT))
+                if (instance && instance->GetData(DATA_HORDE_RETREAT))
                 {
                     me->SetVisibility(VISIBILITY_OFF);
                     HideNearPos(me->GetPositionX(), me->GetPositionY());
@@ -840,9 +840,9 @@ void hyjalAI::UpdateAI(const uint32 diff)
 
     if (Summon)
     {
-        if (pInstance && EnemyCount)
+        if (instance && EnemyCount)
         {
-            EnemyCount = pInstance->GetData(DATA_TRASH);
+            EnemyCount = instance->GetData(DATA_TRASH);
             if (!EnemyCount)
                 NextWaveTimer = 5000;
         }
@@ -928,17 +928,17 @@ void hyjalAI::JustDied(Unit* /*killer*/)
     RespawnTimer = 120000;
     Talk(DEATH);
     Summons.DespawnAll();//despawn all wave's summons
-    if (pInstance)
+    if (instance)
     {//reset encounter if boss is despawned (ex: thrall is killed, boss despawns, event stucks at inprogress)
-        if (pInstance->GetData(DATA_RAGEWINTERCHILLEVENT) == IN_PROGRESS)
-            pInstance->SetData(DATA_RAGEWINTERCHILLEVENT, NOT_STARTED);
-        if (pInstance->GetData(DATA_ANETHERONEVENT) == IN_PROGRESS)
-            pInstance->SetData(DATA_ANETHERONEVENT, NOT_STARTED);
-        if (pInstance->GetData(DATA_KAZROGALEVENT) == IN_PROGRESS)
-            pInstance->SetData(DATA_KAZROGALEVENT, NOT_STARTED);
-        if (pInstance->GetData(DATA_AZGALOREVENT) == IN_PROGRESS)
-            pInstance->SetData(DATA_AZGALOREVENT, NOT_STARTED);
-        pInstance->SetData(DATA_RESET_RAIDDAMAGE, NULL);//reset damage on die
+        if (instance->GetData(DATA_RAGEWINTERCHILLEVENT) == IN_PROGRESS)
+            instance->SetData(DATA_RAGEWINTERCHILLEVENT, NOT_STARTED);
+        if (instance->GetData(DATA_ANETHERONEVENT) == IN_PROGRESS)
+            instance->SetData(DATA_ANETHERONEVENT, NOT_STARTED);
+        if (instance->GetData(DATA_KAZROGALEVENT) == IN_PROGRESS)
+            instance->SetData(DATA_KAZROGALEVENT, NOT_STARTED);
+        if (instance->GetData(DATA_AZGALOREVENT) == IN_PROGRESS)
+            instance->SetData(DATA_AZGALOREVENT, NOT_STARTED);
+        instance->SetData(DATA_RESET_RAIDDAMAGE, NULL);//reset damage on die
     }
 }
 void hyjalAI::HideNearPos(float x, float y)

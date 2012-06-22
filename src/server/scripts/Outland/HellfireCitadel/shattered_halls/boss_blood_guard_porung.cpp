@@ -38,11 +38,11 @@ struct boss_blood_guard_porungAI : public ScriptedAI
 {
     boss_blood_guard_porungAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool Heroic;
 
     uint32 Cleave_Timer;
@@ -51,20 +51,20 @@ struct boss_blood_guard_porungAI : public ScriptedAI
     {
         Cleave_Timer = 15000;
 
-        if (pInstance)
-            pInstance->SetData(DATA_PORUNG, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_PORUNG, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_PORUNG, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_PORUNG, IN_PROGRESS);
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_PORUNG, DONE);
+        if (instance)
+            instance->SetData(DATA_PORUNG, DONE);
     }
 
     void UpdateAI(const uint32 diff)

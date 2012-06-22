@@ -41,12 +41,12 @@ EndContentData */
 
 bool GOHello_go_gauntlet_gate(Player* player, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = pGo->GetInstanceData();
+    ScriptedInstance* instance = pGo->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return false;
 
-    if (pInstance->GetData(TYPE_BARON_RUN) != NOT_STARTED)
+    if (instance->GetData(TYPE_BARON_RUN) != NOT_STARTED)
         return false;
 
     if (Group *pGroup = player->GetGroup())
@@ -67,7 +67,7 @@ bool GOHello_go_gauntlet_gate(Player* player, GameObject* pGo)
                 player->GetMap() == pGo->GetMap())
                 player->CastSpell(player, SPELL_BARON_ULTIMATUM, true);
 
-    pInstance->SetData(TYPE_BARON_RUN, IN_PROGRESS);
+    instance->SetData(TYPE_BARON_RUN, IN_PROGRESS);
     return false;
 }
 

@@ -39,34 +39,34 @@ struct boss_kelrisAI : public ScriptedAI
 {
     boss_kelrisAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 uiMindBlastTimer;
     uint32 uiSleepTimer;
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     void Reset()
     {
         uiMindBlastTimer = urand(2000, 5000);
         uiSleepTimer = urand(9000, 12000);
-        if (pInstance)
-            pInstance->SetData(TYPE_KELRIS, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_KELRIS, NOT_STARTED);
     }
 
     void EnterCombat(Unit* /*who*/)
     {
         DoScriptText(SAY_AGGRO, me);
-        if (pInstance)
-            pInstance->SetData(TYPE_KELRIS, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_KELRIS, IN_PROGRESS);
     }
 
     void JustDied(Unit* /*killer*/)
     {
         DoScriptText(SAY_DEATH, me);
-        if (pInstance)
-            pInstance->SetData(TYPE_KELRIS, DONE);
+        if (instance)
+            instance->SetData(TYPE_KELRIS, DONE);
     }
 
     void UpdateAI(const uint32 diff)

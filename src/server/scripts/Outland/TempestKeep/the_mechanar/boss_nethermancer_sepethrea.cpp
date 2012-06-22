@@ -49,11 +49,11 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
 {
     boss_nethermancer_sepethreaAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     bool HeroicMode;
 
@@ -71,14 +71,14 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
         knockback_Timer = 22000 + rand()%6000;
         solarburn_Timer = 30000;
 
-        if (pInstance)
-            pInstance->SetData(DATA_NETHERMANCER_EVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_NETHERMANCER_EVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_NETHERMANCER_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_NETHERMANCER_EVENT, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, me);
         DoCast(who, HeroicMode ? H_SPELL_SUMMON_RAGIN_FLAMES : SPELL_SUMMON_RAGIN_FLAMES);
@@ -98,8 +98,8 @@ struct boss_nethermancer_sepethreaAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_NETHERMANCER_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_NETHERMANCER_EVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -170,10 +170,10 @@ struct mob_ragin_flamesAI : public ScriptedAI
 {
     mob_ragin_flamesAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();        HeroicMode = me->GetMap()->IsHeroic();
+        instance = c->GetInstanceScript();        HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     bool HeroicMode;
 
@@ -203,9 +203,9 @@ struct mob_ragin_flamesAI : public ScriptedAI
          //Check_Timer
         if (Check_Timer <= diff)
         {
-            if (pInstance)
+            if (instance)
             {
-                if (pInstance->GetData(DATA_NETHERMANCER_EVENT) != IN_PROGRESS)
+                if (instance->GetData(DATA_NETHERMANCER_EVENT) != IN_PROGRESS)
                 {
                     //remove
                     me->setDeathState(JUST_DIED);

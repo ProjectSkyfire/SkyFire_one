@@ -150,14 +150,14 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
     boss_leotheras_the_blindAI(Creature *c) : ScriptedAI(c)
     {
         c->GetPosition(x, y, z);
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         Demon = 0;
 
         for (uint8 i = 0; i < 3; ++i)//clear guids
             SpellBinderGUID[i] = 0;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 Whirlwind_Timer;
     uint32 ChaosBlast_Timer;
@@ -202,8 +202,8 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
         me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
         me->CastSpell(me, SPELL_DUAL_WIELD, true);
         me->SetCorpseDelay(1000*60*60);
-        if (pInstance)
-            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_LEOTHERASTHEBLINDEVENT, NOT_STARTED);
     }
 
     void CheckChannelers(/*bool DoEvade = true*/)
@@ -249,8 +249,8 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
     void StartEvent()
     {
         DoScriptText(SAY_AGGRO, me);
-        if (pInstance)
-            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_LEOTHERASTHEBLINDEVENT, IN_PROGRESS);
     }
 
     void CheckBanish()
@@ -278,10 +278,10 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
             // and reseting equipment
             me->LoadEquipment(me->GetEquipmentId());
 
-            if (pInstance && pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
+            if (instance && instance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
             {
                 Unit *victim = NULL;
-                victim = Unit::GetUnit(*me, pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER));
+                victim = Unit::GetUnit(*me, instance->GetData64(DATA_LEOTHERAS_EVENT_STARTER));
                 if (victim)
                     me->getThreatManager().addThreat(victim, 1);
                 StartEvent();
@@ -378,8 +378,8 @@ struct boss_leotheras_the_blindAI : public ScriptedAI
             if (Creature* pDemon = Unit::GetCreature(*me, Demon))
                 pDemon->ForcedDespawn();
         }
-        if (pInstance)
-            pInstance->SetData(DATA_LEOTHERASTHEBLINDEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_LEOTHERASTHEBLINDEVENT, DONE);
     }
 
     void EnterCombat(Unit * /*who*/)
@@ -643,12 +643,12 @@ struct mob_greyheart_spellbinderAI : public ScriptedAI
 {
     mob_greyheart_spellbinderAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         leotherasGUID = 0;
         AddedBanish = false;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 leotherasGUID;
 
@@ -662,9 +662,9 @@ struct mob_greyheart_spellbinderAI : public ScriptedAI
         Mindblast_Timer  = 3000 + rand()%5000;
         Earthshock_Timer = 5000 + rand()%5000;
 
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData64(DATA_LEOTHERAS_EVENT_STARTER, 0);
+            instance->SetData64(DATA_LEOTHERAS_EVENT_STARTER, 0);
             Creature *leotheras = Unit::GetCreature(*me, leotherasGUID);
             if (leotheras && leotheras->isAlive())
                 CAST_AI(boss_leotheras_the_blindAI, leotheras->AI())->CheckChannelers(/*false*/);
@@ -674,8 +674,8 @@ struct mob_greyheart_spellbinderAI : public ScriptedAI
     void EnterCombat(Unit *who)
     {
         me->InterruptNonMeleeSpells(false);
-        if (pInstance)
-            pInstance->SetData64(DATA_LEOTHERAS_EVENT_STARTER, who->GetGUID());
+        if (instance)
+            instance->SetData64(DATA_LEOTHERAS_EVENT_STARTER, who->GetGUID());
     }
 
     void JustRespawned()
@@ -699,15 +699,15 @@ struct mob_greyheart_spellbinderAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance)
+        if (instance)
         {
             if (!leotherasGUID)
-                leotherasGUID = pInstance->GetData64(DATA_LEOTHERAS);
+                leotherasGUID = instance->GetData64(DATA_LEOTHERAS);
 
-            if (!me->isInCombat() && pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
+            if (!me->isInCombat() && instance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
             {
                 Unit *victim = NULL;
-                victim = Unit::GetUnit(*me, pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER));
+                victim = Unit::GetUnit(*me, instance->GetData64(DATA_LEOTHERAS_EVENT_STARTER));
                 if (victim)
                     AttackStart(victim);
             }
@@ -719,7 +719,7 @@ struct mob_greyheart_spellbinderAI : public ScriptedAI
             return;
         }
 
-        if (pInstance && !pInstance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
+        if (instance && !instance->GetData64(DATA_LEOTHERAS_EVENT_STARTER))
         {
             EnterEvadeMode();
             return;

@@ -109,7 +109,7 @@ struct boss_kalecgosAI : public ScriptedAI
 {
     boss_kalecgosAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         SathGUID = 0;
         bJustReset = false;
         me->setActive(true);
@@ -118,7 +118,7 @@ struct boss_kalecgosAI : public ScriptedAI
             TempSpell->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ENEMY;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 ArcaneBuffetTimer;
     uint32 FrostBreathTimer;
@@ -139,10 +139,10 @@ struct boss_kalecgosAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (instance)
         {
-            SathGUID = pInstance->GetData64(DATA_SATHROVARR);
-            pInstance->SetData(DATA_KALECGOS_EVENT, NOT_STARTED);
+            SathGUID = instance->GetData64(DATA_SATHROVARR);
+            instance->SetData(DATA_KALECGOS_EVENT, NOT_STARTED);
         }
 
         if (Creature *Sath = Unit::GetCreature(*me, SathGUID))
@@ -344,8 +344,8 @@ struct boss_kalecgosAI : public ScriptedAI
         DoScriptText(SAY_EVIL_AGGRO, me);
         DoZoneInCombat();
 
-        if (pInstance)
-            pInstance->SetData(DATA_KALECGOS_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_KALECGOS_EVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit * /*victim*/)
@@ -428,12 +428,12 @@ struct boss_sathrovarrAI : public ScriptedAI
 {
     boss_sathrovarrAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         KalecGUID = 0;
         KalecgosGUID = 0;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 CorruptionStrikeTimer;
     uint32 AgonyCurseTimer;
@@ -451,10 +451,10 @@ struct boss_sathrovarrAI : public ScriptedAI
     {
         me->SetHealth(me->GetMaxHealth());//dunno why it does not resets health at evade..
         me->setActive(true);
-        if (pInstance)
+        if (instance)
         {
-            KalecgosGUID = pInstance->GetData64(DATA_KALECGOS_DRAGON);
-            pInstance->SetData(DATA_KALECGOS_EVENT, NOT_STARTED);
+            KalecgosGUID = instance->GetData64(DATA_KALECGOS_DRAGON);
+            instance->SetData(DATA_KALECGOS_EVENT, NOT_STARTED);
         }
         if (KalecGUID)
         {
@@ -520,8 +520,8 @@ struct boss_sathrovarrAI : public ScriptedAI
             CAST_AI(boss_kalecgosAI, Kalecgos->AI())->isFriendly = true;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_KALECGOS_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_KALECGOS_EVENT, DONE);
     }
 
     void TeleportAllPlayersBack()
@@ -651,7 +651,7 @@ struct boss_sathrovarrAI : public ScriptedAI
 
 struct boss_kalecAI : public ScriptedAI
 {
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 RevitalizeTimer;
     uint32 HeroicStrikeTimer;
@@ -664,13 +664,13 @@ struct boss_kalecAI : public ScriptedAI
 
     boss_kalecAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     void Reset()
     {
-        if (pInstance)
-            SathGUID = pInstance->GetData64(DATA_SATHROVARR);
+        if (instance)
+            SathGUID = instance->GetData64(DATA_SATHROVARR);
 
         RevitalizeTimer = 5000;
         HeroicStrikeTimer = 3000;

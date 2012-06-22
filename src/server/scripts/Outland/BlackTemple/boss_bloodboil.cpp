@@ -73,10 +73,10 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
 {
     boss_gurtogg_bloodboilAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 TargetGUID;
 
@@ -102,8 +102,8 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_GURTOGGBLOODBOILEVENT, NOT_STARTED);
 
         TargetGUID = 0;
 
@@ -136,8 +136,8 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
     {
         DoZoneInCombat();
         DoScriptText(SAY_AGGRO, me);
-        if (pInstance)
-            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_GURTOGGBLOODBOILEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit * /*victim*/)
@@ -147,8 +147,8 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
 
     void JustDied(Unit * /*victim*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_GURTOGGBLOODBOILEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_GURTOGGBLOODBOILEVENT, DONE);
 
         DoScriptText(SAY_DEATH, me);
     }

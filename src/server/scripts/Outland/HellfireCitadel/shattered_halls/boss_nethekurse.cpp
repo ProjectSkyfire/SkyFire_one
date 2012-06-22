@@ -83,11 +83,11 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
 {
     boss_grand_warlock_nethekurseAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     bool IntroOnce;
@@ -130,8 +130,8 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
         for (std::list<Creature*>::iterator itr = orcs.begin(); itr != orcs.end(); itr++)
             OrcGUID.push_back((*itr)->GetGUID());
 
-        if (pInstance)
-            pInstance->SetData(TYPE_NETHEKURSE, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_NETHEKURSE, NOT_STARTED);
     }
 
     void DoYellForPeonEnterCombat()
@@ -211,8 +211,8 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
                 IntroOnce = true;
                 IsIntroEvent = true;
 
-                if (pInstance)
-                    pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
+                if (instance)
+                    instance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
             }
 
             if (!me->canFly() && me->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
@@ -267,9 +267,9 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
         if (!me->isAlive())
             return;
 
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(TYPE_NETHEKURSE, FAIL);
+            instance->SetData(TYPE_NETHEKURSE, FAIL);
             float fRespX, fRespY, fRespZ;
             me->GetRespawnCoord(fRespX, fRespY, fRespZ);
             me->GetMotionMaster()->MovePoint(0, fRespX, fRespY, fRespZ);
@@ -294,10 +294,10 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
     {
         DoScriptText(SAY_DIE, me);
 
-        if (!pInstance)
+        if (!instance)
             return;
 
-        pInstance->SetData(TYPE_NETHEKURSE, DONE);
+        instance->SetData(TYPE_NETHEKURSE, DONE);
     }
 
     void MovementInform(uint32 uiMotionType, uint32 uiPointId)
@@ -316,10 +316,10 @@ struct boss_grand_warlock_nethekurseAI : public ScriptedAI
     {
         if (IsIntroEvent)
         {
-            if (!pInstance)
+            if (!instance)
                 return;
 
-            if (pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
+            if (instance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
             {
                 if (IntroEvent_Timer <= diff)
                 {
@@ -376,10 +376,10 @@ struct mob_fel_orc_convertAI : public ScriptedAI
 {
     mob_fel_orc_convertAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     uint32 Hemorrhage_Timer;
 
     void Reset()
@@ -395,28 +395,28 @@ struct mob_fel_orc_convertAI : public ScriptedAI
 
     void EnterCombat(Unit* who)
     {
-        if (pInstance)
+        if (instance)
         {
-            if (pInstance->GetData64(DATA_NETHEKURSE))
+            if (instance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = Unit::GetCreature(*me, pInstance->GetData64(DATA_NETHEKURSE));
+                Creature *pKurse = Unit::GetCreature(*me, instance->GetData64(DATA_NETHEKURSE));
                 if (pKurse)
                     ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonEnterCombat();
             }
 
-            if (pInstance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
+            if (instance->GetData(TYPE_NETHEKURSE) == IN_PROGRESS)
                 return;
-            else pInstance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
+            else instance->SetData(TYPE_NETHEKURSE, IN_PROGRESS);
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
+        if (instance)
         {
-            if (pInstance->GetData64(DATA_NETHEKURSE))
+            if (instance->GetData64(DATA_NETHEKURSE))
             {
-                Creature *pKurse = Unit::GetCreature(*me, pInstance->GetData64(DATA_NETHEKURSE));
+                Creature *pKurse = Unit::GetCreature(*me, instance->GetData64(DATA_NETHEKURSE));
                 if (pKurse)
                     ((boss_grand_warlock_nethekurseAI*)pKurse->AI())->DoYellForPeonDeath();
             }

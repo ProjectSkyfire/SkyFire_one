@@ -59,7 +59,7 @@ struct boss_scarlet_commander_mograineAI : public ScriptedAI
 {
     boss_scarlet_commander_mograineAI(Creature* creature) : ScriptedAI(creature)
     {
-        m_pInstance = creature->GetInstanceData();
+        m_pInstance = creature->GetInstanceScript();
     }
 
     ScriptedInstance* m_pInstance;
@@ -212,7 +212,7 @@ struct boss_high_inquisitor_whitemaneAI : public ScriptedAI
 {
     boss_high_inquisitor_whitemaneAI(Creature* creature) : ScriptedAI(creature)
     {
-        m_pInstance = creature->GetInstanceData();
+        m_pInstance = creature->GetInstanceScript();
     }
 
     ScriptedInstance* m_pInstance;

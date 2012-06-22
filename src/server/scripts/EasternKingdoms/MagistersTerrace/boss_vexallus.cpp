@@ -65,11 +65,11 @@ struct boss_vexallusAI : public ScriptedAI
 {
     boss_vexallusAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         Heroic = c->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 ChainLightningTimer;
     uint32 ArcaneShockTimer;
@@ -86,8 +86,8 @@ struct boss_vexallusAI : public ScriptedAI
         IntervalHealthAmount = 1;
         Enraged = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit * /*victim*/)
@@ -97,16 +97,16 @@ struct boss_vexallusAI : public ScriptedAI
 
     void JustDied(Unit * /*victim*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_VEXALLUS_EVENT, DONE);
     }
 
     void EnterCombat(Unit * /*who*/)
     {
         DoScriptText(SAY_AGGRO, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
     }
 
     void JustSummoned(Creature *summoned)

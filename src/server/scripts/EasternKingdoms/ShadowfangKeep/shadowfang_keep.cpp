@@ -59,11 +59,11 @@ struct npc_shadowfang_prisonerAI : public npc_escortAI
 {
     npc_shadowfang_prisonerAI(Creature *c) : npc_escortAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         uiNpcEntry = c->GetEntry();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     uint32 uiNpcEntry;
 
     void WaypointReached(uint32 uiPoint)
@@ -92,8 +92,8 @@ struct npc_shadowfang_prisonerAI : public npc_escortAI
                 else
                     DoScriptText(SAY_POST1_DOOR_AD, me);
 
-                if (pInstance)
-                    pInstance->SetData(TYPE_FREE_NPC, DONE);
+                if (instance)
+                    instance->SetData(TYPE_FREE_NPC, DONE);
                 break;
             case 13:
                 if (uiNpcEntry != NPC_ASH)
@@ -113,9 +113,9 @@ CreatureAI* GetAI_npc_shadowfang_prisoner(Creature* creature)
 
 bool GossipHello_npc_shadowfang_prisoner(Player* player, Creature* creature)
 {
-    ScriptedInstance* pInstance = creature->GetInstanceData();
+    ScriptedInstance* instance = creature->GetInstanceScript();
 
-    if (pInstance && pInstance->GetData(TYPE_FREE_NPC) != DONE && pInstance->GetData(TYPE_RETHILGORE) == DONE)
+    if (instance && instance->GetData(TYPE_FREE_NPC) != DONE && instance->GetData(TYPE_RETHILGORE) == DONE)
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DOOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
@@ -139,10 +139,10 @@ struct npc_arugal_voidwalkerAI : public ScriptedAI
 {
     npc_arugal_voidwalkerAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = creature->GetInstanceData();
+        instance = creature->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 uiDarkOffering;
 
@@ -173,8 +173,8 @@ struct npc_arugal_voidwalkerAI : public ScriptedAI
 
     void JustDied(Unit* /*pKiller*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_FENRUS, pInstance->GetData(TYPE_FENRUS) + 1);
+        if (instance)
+            instance->SetData(TYPE_FENRUS, instance->GetData(TYPE_FENRUS) + 1);
     }
 };
 

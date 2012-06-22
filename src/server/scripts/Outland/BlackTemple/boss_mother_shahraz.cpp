@@ -82,10 +82,10 @@ struct boss_shahrazAI : public ScriptedAI
 {
     boss_shahrazAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 TargetGUID[3];
     uint32 BeamTimer;
@@ -102,8 +102,8 @@ struct boss_shahrazAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MOTHERSHAHRAZEVENT, NOT_STARTED);
 
         for (uint8 i = 0; i < 3; ++i)
             TargetGUID[i] = 0;
@@ -123,8 +123,8 @@ struct boss_shahrazAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_MOTHERSHAHRAZEVENT, IN_PROGRESS);
 
         DoZoneInCombat();
         DoScriptText(SAY_AGGRO, me);
@@ -139,8 +139,8 @@ struct boss_shahrazAI : public ScriptedAI
 
     void JustDied(Unit * /*victim*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_MOTHERSHAHRAZEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_MOTHERSHAHRAZEVENT, DONE);
 
         DoScriptText(SAY_DEATH, me);
     }

@@ -81,10 +81,10 @@ struct mob_ancient_wispAI : public ScriptedAI
 {
     mob_ancient_wispAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     uint64 ArchimondeGUID;
     uint32 CheckTimer;
 
@@ -104,8 +104,8 @@ struct mob_ancient_wispAI : public ScriptedAI
     {
         if (!ArchimondeGUID)
         {
-            if (pInstance)
-                ArchimondeGUID = pInstance->GetData64(DATA_ARCHIMONDE);
+            if (instance)
+                ArchimondeGUID = instance->GetData64(DATA_ARCHIMONDE);
         }
 
         if (CheckTimer <= diff)
@@ -318,10 +318,10 @@ struct boss_archimondeAI : public hyjal_trashAI
 {
     boss_archimondeAI(Creature *c) : hyjal_trashAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 DrainNordrassilTimer;
     uint32 FearTimer;
@@ -344,8 +344,8 @@ struct boss_archimondeAI : public hyjal_trashAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_ARCHIMONDEEVENT, NOT_STARTED);
 
         damageTaken = 0;
         DrainNordrassilTimer = 0;
@@ -374,8 +374,8 @@ struct boss_archimondeAI : public hyjal_trashAI
         DoScriptText(SAY_AGGRO, me);
         DoZoneInCombat();
 
-        if (pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_ARCHIMONDEEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit * victim)
@@ -416,8 +416,8 @@ struct boss_archimondeAI : public hyjal_trashAI
         hyjal_trashAI::JustDied(victim);
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_ARCHIMONDEEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_ARCHIMONDEEVENT, DONE);
     }
 
     bool CanUseFingerOfDeath()
@@ -520,15 +520,15 @@ struct boss_archimondeAI : public hyjal_trashAI
     {
         if (!me->isInCombat())
         {
-            if (pInstance)
+            if (instance)
             {
                 // Do not let the raid skip straight to Archimonde. Visible and hostile ONLY if Azagalor is finished.
-                if ((pInstance->GetData(DATA_AZGALOREVENT) < DONE) && ((me->GetVisibility() != VISIBILITY_OFF) || (me->getFaction() != 35)))
+                if ((instance->GetData(DATA_AZGALOREVENT) < DONE) && ((me->GetVisibility() != VISIBILITY_OFF) || (me->getFaction() != 35)))
                 {
                     me->SetVisibility(VISIBILITY_OFF);
                     me->setFaction(35);
                 }
-                else if ((pInstance->GetData(DATA_AZGALOREVENT) >= DONE) && ((me->GetVisibility() != VISIBILITY_ON) || (me->getFaction() == 35)))
+                else if ((instance->GetData(DATA_AZGALOREVENT) >= DONE) && ((me->GetVisibility() != VISIBILITY_ON) || (me->getFaction() == 35)))
                 {
                     me->setFaction(1720);
                     me->SetVisibility(VISIBILITY_ON);

@@ -179,11 +179,11 @@ static PlayerAbilityStruct PlayerAbility[][3] =
 
 struct boss_hexlord_addAI : public ScriptedAI
 {
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     boss_hexlord_addAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     void Reset() {}
@@ -192,7 +192,7 @@ struct boss_hexlord_addAI : public ScriptedAI
 
     void UpdateAI(const uint32 /*diff*/)
     {
-        if (pInstance && pInstance->GetData(DATA_HEXLORDEVENT) != IN_PROGRESS)
+        if (instance && instance->GetData(DATA_HEXLORDEVENT) != IN_PROGRESS)
         {
             EnterEvadeMode();
             return;
@@ -206,13 +206,13 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 {
     boss_hex_lord_malacrassAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         SelectAddEntry();
         for (uint8 i = 0; i < 4; ++i)
             AddGUID[i] = 0;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 AddGUID[4];
     uint32 AddEntry[4];
@@ -230,8 +230,8 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HEXLORDEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_HEXLORDEVENT, NOT_STARTED);
 
         SpiritBolts_Timer = 20000;
         DrainPower_Timer = 60000;
@@ -249,8 +249,8 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
     void EnterCombat(Unit* /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HEXLORDEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_HEXLORDEVENT, IN_PROGRESS);
 
         DoZoneInCombat();
         me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
@@ -286,8 +286,8 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 
     void JustDied(Unit* /*victim*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HEXLORDEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_HEXLORDEVENT, DONE);
 
         me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_YELL_DEATH);

@@ -48,11 +48,11 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
 {
     boss_gatewatcher_iron_handAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     bool HeroicMode;
 
@@ -87,7 +87,7 @@ struct boss_gatewatcher_iron_handAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH_1, me);
 
-        if (!pInstance)
+        if (!instance)
             return;
 
         //TODO: Add door check/open code

@@ -211,6 +211,6 @@ void AddSC_instance_razorfen_downs()
 
     newscript = new Script;
     newscript->Name = "instance_razorfen_downs";
-    newscript->GetInstanceData = &GetInstanceData_instance_razorfen_downs;
+    newscript->GetInstanceScript = &GetInstanceData_instance_razorfen_downs;
     newscript->RegisterSelf();
 }

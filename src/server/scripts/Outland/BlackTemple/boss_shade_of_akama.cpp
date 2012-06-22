@@ -174,14 +174,14 @@ struct boss_shade_of_akamaAI : public ScriptedAI
 {
     boss_shade_of_akamaAI(Creature* c) : ScriptedAI(c), summons(me)
     {
-        pInstance = c->GetInstanceData();
-        AkamaGUID = pInstance ? pInstance->GetData64(DATA_AKAMA_SHADE) : 0;
+        instance = c->GetInstanceScript();
+        AkamaGUID = instance ? instance->GetData64(DATA_AKAMA_SHADE) : 0;
         me->setActive(true);//if view distance is too low
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     std::list<uint64> Channelers;
     std::list<uint64> Sorcerers;
@@ -241,8 +241,8 @@ struct boss_shade_of_akamaAI : public ScriptedAI
         //me->GetMotionMaster()->MoveIdle();
         me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
 
-        if (pInstance && me->isAlive())
-            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, NOT_STARTED);
+        if (instance && me->isAlive())
+            instance->SetData(DATA_SHADEOFAKAMAEVENT, NOT_STARTED);
 
         reseting = false;
 
@@ -528,8 +528,8 @@ struct npc_akamaAI : public ScriptedAI
     {
         ShadeHasDied = false;
         StartCombat = false;
-        pInstance = c->GetInstanceData();
-        ShadeGUID = pInstance ? pInstance->GetData64(DATA_SHADEOFAKAMA) : NOT_STARTED;
+        instance = c->GetInstanceScript();
+        ShadeGUID = instance ? instance->GetData64(DATA_SHADEOFAKAMA) : NOT_STARTED;
         me->setActive(true);
         EventBegun = false;
         CastSoulRetrieveTimer = 0;
@@ -542,7 +542,7 @@ struct npc_akamaAI : public ScriptedAI
         HasYelledOnce = false;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 ShadeGUID;
 
@@ -595,17 +595,17 @@ struct npc_akamaAI : public ScriptedAI
 
     void BeginEvent(Player* pl)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
-        ShadeGUID = pInstance->GetData64(DATA_SHADEOFAKAMA);
+        ShadeGUID = instance->GetData64(DATA_SHADEOFAKAMA);
         if (!ShadeGUID)
             return;
 
         Creature* Shade = (Unit::GetCreature((*me), ShadeGUID));
         if (Shade)
         {
-            pInstance->SetData(DATA_SHADEOFAKAMAEVENT, IN_PROGRESS);
+            instance->SetData(DATA_SHADEOFAKAMAEVENT, IN_PROGRESS);
             // Prevent players from trying to restart event
             me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
             CAST_AI(boss_shade_of_akamaAI, Shade->AI())->SetAkamaGUID(me->GetGUID());
@@ -695,8 +695,8 @@ struct npc_akamaAI : public ScriptedAI
 
         if (ShadeHasDied && (WayPointId == 1))
         {
-            if (pInstance)
-                pInstance->SetData(DATA_SHADEOFAKAMAEVENT, DONE);
+            if (instance)
+                instance->SetData(DATA_SHADEOFAKAMAEVENT, DONE);
             me->GetMotionMaster()->MovePoint(WayPointId, AkamaWP[1].x, AkamaWP[1].y, AkamaWP[1].z);
             ++WayPointId;
         }
@@ -862,9 +862,9 @@ bool GossipSelect_npc_akama(Player* player, Creature* creature, uint32 /*uiSende
 
 bool GossipHello_npc_akama(Player* player, Creature* creature)
 {
-    ScriptedInstance* pInstance = (creature->GetInstanceData());
+    ScriptedInstance* instance = (creature->GetInstanceScript());
 
-    if (pInstance && pInstance->GetData(DATA_SHADEOFAKAMAEVENT) == NOT_STARTED)
+    if (instance && instance->GetData(DATA_SHADEOFAKAMAEVENT) == NOT_STARTED)
     {
         player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }

@@ -108,10 +108,10 @@ struct boss_entropiusAI : public ScriptedAI
 {
     boss_entropiusAI(Creature *c) : ScriptedAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     SummonList Summons;
 
     uint32 BlackHoleSummonTimer;
@@ -123,8 +123,8 @@ struct boss_entropiusAI : public ScriptedAI
 
         Summons.DespawnAll();
 
-        if (pInstance)
-            pInstance->SetData(DATA_MURU_EVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MURU_EVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit * /*who*/)
@@ -132,8 +132,8 @@ struct boss_entropiusAI : public ScriptedAI
         DoCastAOE(SPELL_NEGATIVE_ENERGY_E, true);
         DoCast(me, SPELL_ENTROPIUS_SPAWN, false);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MURU_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_MURU_EVENT, IN_PROGRESS);
     }
 
     void JustSummoned(Creature* summoned)
@@ -158,8 +158,8 @@ struct boss_entropiusAI : public ScriptedAI
     {
         Summons.DespawnAll();
 
-        if (pInstance)
-            pInstance->SetData(DATA_MURU_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_MURU_EVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -201,10 +201,10 @@ struct boss_muruAI : public Scripted_NoMovementAI
 {
     boss_muruAI(Creature *c) : Scripted_NoMovementAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     SummonList Summons;
 
     uint8 Phase;
@@ -228,16 +228,16 @@ struct boss_muruAI : public Scripted_NoMovementAI
 
         Summons.DespawnAll();
 
-        if (pInstance)
-            pInstance->SetData(DATA_MURU_EVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MURU_EVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit * /*who*/)
     {
         DoCastAOE(SPELL_NEGATIVE_ENERGY, false);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MURU_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_MURU_EVENT, IN_PROGRESS);
     }
 
     void DamageTaken(Unit * /*done_by*/, uint32 &damage)
@@ -278,9 +278,9 @@ struct boss_muruAI : public Scripted_NoMovementAI
         {
             if (Timer[TIMER_PHASE] <= diff)
             {
-                if (!pInstance)
+                if (!instance)
                     return;
-                switch (pInstance->GetData(DATA_MURU_EVENT))
+                switch (instance->GetData(DATA_MURU_EVENT))
                 {
                     case NOT_STARTED:
                         Reset();
@@ -358,10 +358,10 @@ struct npc_muru_portalAI : public Scripted_NoMovementAI
 {
     npc_muru_portalAI(Creature *c) : Scripted_NoMovementAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     SummonList Summons;
 
@@ -384,8 +384,8 @@ struct npc_muru_portalAI : public Scripted_NoMovementAI
 
     void JustSummoned(Creature* summoned)
     {
-        if (pInstance)
-            if (Player* Target = Unit::GetPlayer(*me, pInstance->GetData64(DATA_PLAYER_GUID)))
+        if (instance)
+            if (Player* Target = Unit::GetPlayer(*me, instance->GetData64(DATA_PLAYER_GUID)))
                 summoned->AI()->AttackStart(Target);
 
         Summons.Summon(summoned);
@@ -413,7 +413,7 @@ struct npc_muru_portalAI : public Scripted_NoMovementAI
     {
         if (!SummonSentinel)
         {
-            if (InAction && pInstance && pInstance->GetData(DATA_MURU_EVENT) == NOT_STARTED)
+            if (InAction && instance && instance->GetData(DATA_MURU_EVENT) == NOT_STARTED)
                 Reset();
             return;
         }
@@ -539,10 +539,10 @@ struct npc_blackholeAI : public ScriptedAI
 {
     npc_blackholeAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 DespawnTimer;
     uint32 SpellTimer;
@@ -563,7 +563,7 @@ struct npc_blackholeAI : public ScriptedAI
     {
         if (SpellTimer <= diff)
         {
-            Unit* Victim = Unit::GetUnit(*me, pInstance ? pInstance->GetData64(DATA_PLAYER_GUID) : 0);
+            Unit* Victim = Unit::GetUnit(*me, instance ? instance->GetData64(DATA_PLAYER_GUID) : 0);
             switch (NeedForAHack)
             {
                 case 0:

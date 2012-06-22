@@ -459,6 +459,6 @@ InstanceScript* GetInstanceData_instance_blackrock_depths(Map* pMap)
        Script *newscript;
        newscript = new Script;
        newscript->Name = "instance_blackrock_depths";
-       newscript->GetInstanceData = &GetInstanceData_instance_blackrock_depths;
+       newscript->GetInstanceScript = &GetInstanceData_instance_blackrock_depths;
        newscript->RegisterSelf();
    }

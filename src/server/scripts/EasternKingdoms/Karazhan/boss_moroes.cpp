@@ -70,10 +70,10 @@ struct boss_moroesAI : public ScriptedAI
         {
             AddId[i] = 0;
         }
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 AddGUID[4];
 
@@ -103,14 +103,14 @@ struct boss_moroesAI : public ScriptedAI
             SpawnAdds();
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_MOROES, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_MOROES, NOT_STARTED);
     }
 
     void StartEvent()
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_MOROES, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_MOROES, IN_PROGRESS);
 
         DoZoneInCombat();
     }
@@ -133,8 +133,8 @@ struct boss_moroesAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_MOROES, DONE);
+        if (instance)
+            instance->SetData(TYPE_MOROES, DONE);
 
         DeSpawnAdds();
 
@@ -242,7 +242,7 @@ struct boss_moroesAI : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        if (pInstance && !pInstance->GetData(TYPE_MOROES))
+        if (instance && !instance->GetData(TYPE_MOROES))
         {
             EnterEvadeMode();
             return;
@@ -319,7 +319,7 @@ struct boss_moroesAI : public ScriptedAI
 
 struct boss_moroes_guestAI : public ScriptedAI
 {
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 GuestGUID[4];
 
@@ -328,21 +328,21 @@ struct boss_moroes_guestAI : public ScriptedAI
         for (uint8 i = 0; i < 4; ++i)
             GuestGUID[i] = 0;
 
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_MOROES, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_MOROES, NOT_STARTED);
     }
 
     void AcquireGUID()
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
-        uint64 MoroesGUID = pInstance->GetData64(DATA_MOROES);
+        uint64 MoroesGUID = instance->GetData64(DATA_MOROES);
         Creature* Moroes = (Unit::GetCreature((*me), MoroesGUID));
         if (Moroes)
         {
@@ -370,7 +370,7 @@ struct boss_moroes_guestAI : public ScriptedAI
 
     void UpdateAI(const uint32 /*diff*/)
     {
-        if (pInstance && !pInstance->GetData(TYPE_MOROES))
+        if (instance && !instance->GetData(TYPE_MOROES))
             EnterEvadeMode();
 
         DoMeleeAttackIfReady();

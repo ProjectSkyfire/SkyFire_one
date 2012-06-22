@@ -139,13 +139,13 @@ struct boss_lady_vashjAI : public ScriptedAI
 {
     boss_lady_vashjAI (Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         Intro = false;
         JustCreated = true;
         c->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); //set it only once on Creature create (no need do intro if wiped)
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 ShieldGeneratorChannel[4];
 
@@ -201,8 +201,8 @@ struct boss_lady_vashjAI : public ScriptedAI
                 remo->setDeathState(JUST_DIED);
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_LADYVASHJEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_LADYVASHJEVENT, NOT_STARTED);
         ShieldGeneratorChannel[0] = 0;
         ShieldGeneratorChannel[1] = 0;
         ShieldGeneratorChannel[2] = 0;
@@ -232,8 +232,8 @@ struct boss_lady_vashjAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_LADYVASHJEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_LADYVASHJEVENT, DONE);
     }
 
     void StartEvent()
@@ -248,13 +248,13 @@ struct boss_lady_vashjAI : public ScriptedAI
 
         Phase = 1;
 
-        if (pInstance)
-            pInstance->SetData(DATA_LADYVASHJEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_LADYVASHJEVENT, IN_PROGRESS);
     }
 
     void EnterCombat(Unit * who)
     {
-        if (pInstance)
+        if (instance)
         {
             //remove old tainted cores to prevent cheating in phase 2
             Map* pMap = me->GetMap();
@@ -559,7 +559,7 @@ struct boss_lady_vashjAI : public ScriptedAI
             if (Check_Timer <= diff)
             {
                 //Start Phase 3
-                if (pInstance && pInstance->GetData(DATA_CANSTARTPHASE3))
+                if (instance && instance->GetData(DATA_CANSTARTPHASE3))
                 {
                     //set life 50%
                     me->SetHealth(me->GetMaxHealth()/2);
@@ -590,10 +590,10 @@ struct mob_enchanted_elementalAI : public ScriptedAI
 {
     mob_enchanted_elementalAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     uint32 move;
     uint32 phase;
     float x, y, z;
@@ -627,8 +627,8 @@ struct mob_enchanted_elementalAI : public ScriptedAI
                 }
             }
         }
-        if (pInstance)
-            VashjGUID = pInstance->GetData64(DATA_LADYVASHJ);
+        if (instance)
+            VashjGUID = instance->GetData64(DATA_LADYVASHJ);
     }
 
     void EnterCombat(Unit * /*who*/) {}
@@ -637,7 +637,7 @@ struct mob_enchanted_elementalAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         if (!VashjGUID)
@@ -696,10 +696,10 @@ struct mob_tainted_elementalAI : public ScriptedAI
 {
     mob_tainted_elementalAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 PoisonBolt_Timer;
     uint32 Despawn_Timer;
@@ -712,10 +712,10 @@ struct mob_tainted_elementalAI : public ScriptedAI
 
     void JustDied(Unit * /*killer*/)
     {
-        if (pInstance)
+        if (instance)
         {
             Creature *Vashj = NULL;
-            Vashj = (Unit::GetCreature((*me), pInstance->GetData64(DATA_LADYVASHJ)));
+            Vashj = (Unit::GetCreature((*me), instance->GetData64(DATA_LADYVASHJ)));
 
             if (Vashj)
                 CAST_AI(boss_lady_vashjAI, Vashj->AI())->EventTaintedElementalDeath();
@@ -759,11 +759,11 @@ struct mob_toxic_sporebatAI : public ScriptedAI
 {
     mob_toxic_sporebatAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         EnterEvadeMode();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 movement_timer;
     uint32 ToxicSpore_Timer;
@@ -828,11 +828,11 @@ struct mob_toxic_sporebatAI : public ScriptedAI
         //Check_Timer
         if (Check_Timer <= diff)
         {
-            if (pInstance)
+            if (instance)
             {
                 //check if vashj is death
                 Unit *Vashj = NULL;
-                Vashj = Unit::GetUnit((*me), pInstance->GetData64(DATA_LADYVASHJ));
+                Vashj = Unit::GetUnit((*me), instance->GetData64(DATA_LADYVASHJ));
                 if (!Vashj || (Vashj && !Vashj->isAlive()) || (Vashj && CAST_AI(boss_lady_vashjAI, CAST_CRE(Vashj)->AI())->Phase != 3))
                 {
                     //remove
@@ -913,10 +913,10 @@ struct mob_shield_generator_channelAI : public ScriptedAI
 {
     mob_shield_generator_channelAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     uint32 Check_Timer;
     bool Casted;
     void Reset()
@@ -934,13 +934,13 @@ struct mob_shield_generator_channelAI : public ScriptedAI
 
     void UpdateAI (const uint32 diff)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         if (Check_Timer <= diff)
         {
             Unit *Vashj = NULL;
-            Vashj = Unit::GetUnit((*me), pInstance->GetData64(DATA_LADYVASHJ));
+            Vashj = Unit::GetUnit((*me), instance->GetData64(DATA_LADYVASHJ));
 
             if (Vashj && Vashj->isAlive())
             {
@@ -958,16 +958,16 @@ struct mob_shield_generator_channelAI : public ScriptedAI
 
 bool ItemUse_item_tainted_core(Player* player, Item* /*_Item*/, SpellCastTargets const& targets)
 {
-    ScriptedInstance *pInstance = player->GetInstanceData();
+    ScriptedInstance *instance = player->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
     {
         player->GetSession()->SendNotification(TEXT_NOT_INITIALIZED);
         return true;
     }
 
     Creature *Vashj = NULL;
-    Vashj = (Unit::GetCreature((*player), pInstance->GetData64(DATA_LADYVASHJ)));
+    Vashj = (Unit::GetCreature((*player), instance->GetData64(DATA_LADYVASHJ)));
     if (Vashj && CAST_AI(boss_lady_vashjAI, Vashj->AI())->Phase == 2)
     {
         if (targets.getGOTarget() && targets.getGOTarget()->GetTypeId() == TYPEID_GAMEOBJECT)
@@ -996,7 +996,7 @@ bool ItemUse_item_tainted_core(Player* player, Item* /*_Item*/, SpellCastTargets
                     return true;
             }
 
-            if (pInstance->GetData(identifier))
+            if (instance->GetData(identifier))
             {
                 player->GetSession()->SendNotification(TEXT_ALREADY_DEACTIVATED);
                 return true;
@@ -1011,7 +1011,7 @@ bool ItemUse_item_tainted_core(Player* player, Item* /*_Item*/, SpellCastTargets
                 Channel->setDeathState(JUST_DIED);
             }
 
-            pInstance->SetData(identifier, 1);
+            instance->SetData(identifier, 1);
 
             //remove this item
             player->DestroyItemCount(31088, 1, true);

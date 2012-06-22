@@ -42,16 +42,16 @@ EndScriptData */
 
 bool GOHello_go_main_chambers_access_panel(Player* player, GameObject* _GO)
 {
-    ScriptedInstance* pInstance = _GO->GetInstanceData();
+    ScriptedInstance* instance = _GO->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return false;
 
-    if (_GO->GetEntry() == ACCESS_PANEL_HYDRO && (pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE || pInstance->GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL))
-        pInstance->SetData(TYPE_HYDROMANCER_THESPIA, SPECIAL);
+    if (_GO->GetEntry() == ACCESS_PANEL_HYDRO && (instance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE || instance->GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL))
+        instance->SetData(TYPE_HYDROMANCER_THESPIA, SPECIAL);
 
-    if (_GO->GetEntry() == ACCESS_PANEL_MEK && (pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE || pInstance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL))
-        pInstance->SetData(TYPE_MEKGINEER_STEAMRIGGER, SPECIAL);
+    if (_GO->GetEntry() == ACCESS_PANEL_MEK && (instance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE || instance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL))
+        instance->SetData(TYPE_MEKGINEER_STEAMRIGGER, SPECIAL);
 
     return true;
 }
@@ -261,7 +261,7 @@ void AddSC_instance_steam_vault()
 
     newscript = new Script;
     newscript->Name = "instance_steam_vault";
-    newscript->GetInstanceData = &GetInstanceData_instance_steam_vault;
+    newscript->GetInstanceScript = &GetInstanceData_instance_steam_vault;
     newscript->RegisterSelf();
 }
 

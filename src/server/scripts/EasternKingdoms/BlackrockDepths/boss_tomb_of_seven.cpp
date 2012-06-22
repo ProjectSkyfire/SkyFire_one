@@ -79,10 +79,10 @@ bool GossipSelect_boss_gloomrel(Player* player, Creature* creature, uint32 /*uiS
             break;
         case GOSSIP_ACTION_INFO_DEF+22:
             player->CLOSE_GOSSIP_MENU();
-            if (ScriptedInstance* pInstance = creature->GetInstanceData())
+            if (ScriptedInstance* instance = creature->GetInstanceScript())
             {
                 //are 5 minutes expected? go template may have data to despawn when used at quest
-                pInstance->DoRespawnGameObject(pInstance->GetData64(DATA_GO_CHALICE),MINUTE*5);
+                instance->DoRespawnGameObject(instance->GetData64(DATA_GO_CHALICE),MINUTE*5);
             }
             break;
     }
@@ -102,10 +102,10 @@ struct boss_doomrelAI : public ScriptedAI
 {
     boss_doomrelAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     uint32 ShadowVolley_Timer;
     uint32 Immolate_Timer;
     uint32 CurseOfWeakness_Timer;
@@ -125,8 +125,8 @@ struct boss_doomrelAI : public ScriptedAI
         // was set before event start, so set again
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
-        if (pInstance)
-            if (pInstance->GetData(DATA_GHOSTKILL) >= 7)
+        if (instance)
+            if (instance->GetData(DATA_GHOSTKILL) >= 7)
                 me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
             else
                 me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -145,14 +145,14 @@ struct boss_doomrelAI : public ScriptedAI
         if (me->isAlive())
             me->GetMotionMaster()->MoveTargetedHome();
         me->SetLootRecipient(NULL);
-        if (pInstance)
-            pInstance->SetData64(DATA_EVENSTARTER, 0);
+        if (instance)
+            instance->SetData64(DATA_EVENSTARTER, 0);
     }
 
     void JustDied(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_GHOSTKILL, 1);
+        if (instance)
+            instance->SetData(DATA_GHOSTKILL, 1);
     }
 
     void UpdateAI(const uint32 diff)
@@ -231,9 +231,9 @@ bool GossipSelect_boss_doomrel(Player* player, Creature* creature, uint32 /*uiSe
             creature->setFaction(FACTION_HOSTILE);
             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             creature->AI()->AttackStart(player);
-            ScriptedInstance* pInstance = creature->GetInstanceData();
-            if (pInstance)
-                pInstance->SetData64(DATA_EVENSTARTER, player->GetGUID());
+            ScriptedInstance* instance = creature->GetInstanceScript();
+            if (instance)
+                instance->SetData64(DATA_EVENSTARTER, player->GetGUID());
             break;
     }
     return true;

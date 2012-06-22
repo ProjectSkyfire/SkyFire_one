@@ -61,12 +61,12 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
 {
     boss_harbinger_skyrissAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
         Intro = false;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     bool HeroicMode;
 
     bool Intro;
@@ -110,8 +110,8 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, me);
-        if (pInstance)
-            pInstance->SetData(TYPE_HARBINGERSKYRISS, DONE);
+        if (instance)
+            instance->SetData(TYPE_HARBINGERSKYRISS, DONE);
     }
 
     void JustSummoned(Creature *summon)
@@ -157,7 +157,7 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
     {
         if (!Intro)
         {
-            if (!pInstance)
+            if (!instance)
                 return;
 
             if (Intro_Timer <= diff)
@@ -166,19 +166,19 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
                 {
                     case 1:
                          DoScriptText(SAY_INTRO, me);
-                        if (GameObject* Sphere = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_SPHERE_SHIELD)))
+                        if (GameObject* Sphere = GameObject::GetGameObject(*me, instance->GetData64(DATA_SPHERE_SHIELD)))
                             Sphere->SetGoState(GO_STATE_ACTIVE);
                         ++Intro_Phase;
                         Intro_Timer = 25000;
                         break;
                     case 2:
                         DoScriptText(SAY_AGGRO, me);
-                        if (Unit *mellic = Unit::GetUnit(*me, pInstance->GetData64(DATA_MELLICHAR)))
+                        if (Unit *mellic = Unit::GetUnit(*me, instance->GetData64(DATA_MELLICHAR)))
                         {
                             //should have a better way to do this. possibly spell exist.
                             mellic->setDeathState(JUST_DIED);
                             mellic->SetHealth(0);
-                            pInstance->SetData(TYPE_SHIELD_OPEN, IN_PROGRESS);
+                            instance->SetData(TYPE_SHIELD_OPEN, IN_PROGRESS);
                         }
                         ++Intro_Phase;
                         Intro_Timer = 3000;
@@ -283,11 +283,11 @@ struct boss_harbinger_skyriss_illusionAI : public ScriptedAI
 {
     boss_harbinger_skyriss_illusionAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     bool HeroicMode;
 
     void Reset() { }

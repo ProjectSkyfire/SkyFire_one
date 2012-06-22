@@ -207,13 +207,13 @@ struct hyjalAI : public npc_escortAI
 
     void StartEvent(Player* player);                        // Begins the event by gossip click
 
-    uint32 GetInstanceData(uint32 Event);                   // Gets instance data for this instance, used to check if raid has gotten past a certain point and can access the next phase
+    uint32 GetInstanceScript(uint32 Event);                   // Gets instance data for this instance, used to check if raid has gotten past a certain point and can access the next phase
 
     void Talk(uint32 id);                                   // Searches for the appropriate yell and sound and uses it to inform the raid of various things
 
     void UpdateWorldState(uint32 field, uint32 value);      // NYI: Requires core support. Updates the world state counter at the top of the UI.
     public:
-        ScriptedInstance* pInstance;
+        ScriptedInstance* instance;
 
         uint64 PlayerGUID;
         uint64 BossGUID[2];

@@ -58,10 +58,10 @@ struct boss_supremusAI : public ScriptedAI
 {
     boss_supremusAI(Creature *c) : ScriptedAI(c), summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 SummonFlameTimer;
     uint32 SwitchTargetTimer;
@@ -76,11 +76,11 @@ struct boss_supremusAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (instance)
         {
             if (me->isAlive())
             {
-                pInstance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
+                instance->SetData(DATA_SUPREMUSEVENT, NOT_STARTED);
             }
         }
 
@@ -102,13 +102,13 @@ struct boss_supremusAI : public ScriptedAI
     {
         DoZoneInCombat();
 
-        if (pInstance)
-            pInstance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_SUPREMUSEVENT, IN_PROGRESS);
     }
 
     void ToggleDoors(bool close)
     {
-        if (GameObject* Doors = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
+        if (GameObject* Doors = GameObject::GetGameObject(*me, instance->GetData64(DATA_GAMEOBJECT_SUPREMUS_DOORS)))
         {
             if (close) Doors->SetGoState(GO_STATE_READY);                 // Closed
             else Doors->SetGoState(GO_STATE_ACTIVE);                      // Open
@@ -117,9 +117,9 @@ struct boss_supremusAI : public ScriptedAI
 
     void JustDied(Unit *killer)
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(DATA_SUPREMUSEVENT, DONE);
+            instance->SetData(DATA_SUPREMUSEVENT, DONE);
             ToggleDoors(false);
         }
         summons.DespawnAll();
@@ -242,10 +242,10 @@ struct npc_volcanoAI : public ScriptedAI
 {
     npc_volcanoAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 CheckTimer;
     bool Eruption;
@@ -270,7 +270,7 @@ struct npc_volcanoAI : public ScriptedAI
     {
         if (CheckTimer <= diff)
         {
-            uint64 SupremusGUID = pInstance->GetData64(DATA_SUPREMUS);
+            uint64 SupremusGUID = instance->GetData64(DATA_SUPREMUS);
             Creature* Supremus = (Unit::GetCreature((*me), SupremusGUID));
             if (!Eruption && Supremus && !((boss_supremusAI*)Supremus->AI())->Phase1)
             {

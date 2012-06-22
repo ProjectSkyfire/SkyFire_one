@@ -45,10 +45,10 @@ struct boss_golemaggAI : public ScriptedAI
 {
     boss_golemaggAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = creature->GetInstanceData();
+        instance = creature->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 uiPyroblastTimer;
     uint32 uiEarthquakeTimer;
@@ -67,8 +67,8 @@ struct boss_golemaggAI : public ScriptedAI
 
     void JustDied(Unit* /*pKiller*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_GOLEMAGG_DEATH, 0);
+        if (instance)
+            instance->SetData(DATA_GOLEMAGG_DEATH, 0);
     }
 
     void UpdateAI(const uint32 uiDiff)
@@ -125,10 +125,10 @@ struct mob_core_ragerAI : public ScriptedAI
 {
     mob_core_ragerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 uiMangleTimer;
 
@@ -141,9 +141,9 @@ struct mob_core_ragerAI : public ScriptedAI
     {
         if (me->GetHealth()*100 / me->GetMaxHealth() < 50)
         {
-            if (pInstance)
+            if (instance)
             {
-                if (Unit *pGolemagg = Unit::GetUnit(*me, pInstance->GetData64(DATA_GOLEMAGG)))
+                if (Unit *pGolemagg = Unit::GetUnit(*me, instance->GetData64(DATA_GOLEMAGG)))
                 {
                     if (pGolemagg->isAlive())
                     {

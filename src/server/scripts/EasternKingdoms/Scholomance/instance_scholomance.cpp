@@ -144,7 +144,7 @@ void AddSC_instance_scholomance()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_scholomance";
-    newscript->GetInstanceData = &GetInstanceData_instance_scholomance;
+    newscript->GetInstanceScript = &GetInstanceData_instance_scholomance;
     newscript->RegisterSelf();
 }
 

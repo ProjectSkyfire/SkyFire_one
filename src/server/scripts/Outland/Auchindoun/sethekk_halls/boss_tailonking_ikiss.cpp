@@ -58,11 +58,11 @@ struct boss_talon_king_ikissAI : public ScriptedAI
 {
     boss_talon_king_ikissAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     bool HeroicMode;
 
@@ -85,8 +85,8 @@ struct boss_talon_king_ikissAI : public ScriptedAI
         Intro = false;
         ManaShield = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_IKISSEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_IKISSEVENT, NOT_STARTED);
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -120,16 +120,16 @@ struct boss_talon_king_ikissAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, me); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_IKISSEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_IKISSEVENT, IN_PROGRESS);
     }
 
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_IKISSEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_IKISSEVENT, DONE);
     }
 
     void KilledUnit(Unit* victim)

@@ -45,11 +45,11 @@ struct boss_temporusAI : public ScriptedAI
 {
     boss_temporusAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     bool HeroicMode;
 
     uint32 Haste_Timer;
@@ -79,8 +79,8 @@ struct boss_temporusAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_RIFT, SPECIAL);
+        if (instance)
+            instance->SetData(TYPE_RIFT, SPECIAL);
     }
 
     void MoveInLineOfSight(Unit *who)

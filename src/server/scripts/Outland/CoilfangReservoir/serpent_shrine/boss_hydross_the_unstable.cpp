@@ -82,10 +82,10 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
 {
     boss_hydross_the_unstableAI(Creature *c) : ScriptedAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 beams[2];
     uint32 PosCheck_Timer;
@@ -121,8 +121,8 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
 
         me->SetDisplayId(MODEL_CLEAN);
 
-        if (pInstance)
-            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, NOT_STARTED);
         beam = false;
         Summons.DespawnAll();
     }
@@ -162,8 +162,8 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit * /*victim*/)
@@ -214,8 +214,8 @@ struct boss_hydross_the_unstableAI : public ScriptedAI
         else
             DoScriptText(SAY_CLEAN_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, DONE);
         Summons.DespawnAll();
     }
 

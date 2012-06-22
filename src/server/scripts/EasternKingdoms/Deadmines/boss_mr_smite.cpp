@@ -49,10 +49,10 @@ struct boss_mr_smiteAI : public ScriptedAI
 {
     boss_mr_smiteAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = creature->GetInstanceData();
+        instance = creature->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 uiTrashTimer;
     uint32 uiSlamTimer;

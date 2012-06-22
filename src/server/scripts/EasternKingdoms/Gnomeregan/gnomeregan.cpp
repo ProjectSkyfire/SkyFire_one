@@ -91,12 +91,12 @@ struct npc_blastmaster_emi_shortfuseAI : public npc_escortAI
 {
     npc_blastmaster_emi_shortfuseAI(Creature* creature) : npc_escortAI(creature)
     {
-        pInstance = creature->GetInstanceData();
+        instance = creature->GetInstanceScript();
         creature->RestoreFaction();
         Reset();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint8 uiPhase;
     uint32 uiTimer;
@@ -152,39 +152,39 @@ struct npc_blastmaster_emi_shortfuseAI : public npc_escortAI
 
        if (bBool)
        {
-            if (pInstance)
-                if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
-                    pInstance->HandleGameObject(NULL, false, pGo);
+            if (instance)
+                if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
+                    instance->HandleGameObject(NULL, false, pGo);
        }else
-            if (pInstance)
-                if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_LEFT)))
-                    pInstance->HandleGameObject(NULL, false, pGo);
+            if (instance)
+                if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_LEFT)))
+                    instance->HandleGameObject(NULL, false, pGo);
     }
 
     void SetInFace(bool bBool)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         if (bBool)
         {
-            if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
+            if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
                 me->SetFacingToObject(pGo);
         }else
-            if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_LEFT)))
+            if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_LEFT)))
                 me->SetFacingToObject(pGo);
     }
 
     void RestoreAll()
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
-        if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
-            pInstance->HandleGameObject(NULL, false, pGo);
+        if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
+            instance->HandleGameObject(NULL, false, pGo);
 
-        if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_LEFT)))
-            pInstance->HandleGameObject(NULL, false, pGo);
+        if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_LEFT)))
+            instance->HandleGameObject(NULL, false, pGo);
 
         if (!GoSummonList.empty())
             for (std::list<uint64>::const_iterator itr = GoSummonList.begin(); itr != GoSummonList.end(); ++itr)
@@ -284,16 +284,16 @@ struct npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                 NextStep(1500, true);
                 break;
             case 2:
-                if (!pInstance)
+                if (!instance)
                     return;
 
                 switch (uiValue)
                 {
                     case 1:
-                        pInstance->SetData(TYPE_EVENT, IN_PROGRESS);
+                        instance->SetData(TYPE_EVENT, IN_PROGRESS);
                         break;
                     case 2:
-                        pInstance->SetData(TYPE_EVENT, DONE);
+                        instance->SetData(TYPE_EVENT, DONE);
                         NextStep(5000, false, 22);
                         break;
                 }
@@ -408,9 +408,9 @@ struct npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                         SetInFace(true);
                         DoScriptText(SAY_BLASTMASTER_5, me);
                         Summon(1);
-                        if (pInstance)
-                            if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
-                                pInstance->HandleGameObject(NULL, true, pGo);
+                        if (instance)
+                            if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_RIGHT)))
+                                instance->HandleGameObject(NULL, true, pGo);
                         NextStep(3000, true);
                         break;
                     case 7:
@@ -454,9 +454,9 @@ struct npc_blastmaster_emi_shortfuseAI : public npc_escortAI
                     case 16:
                         DoScriptText(SAY_BLASTMASTER_23, me);
                         SetInFace(false);
-                        if (pInstance)
-                            if (GameObject* pGo = GameObject::GetGameObject((*me),pInstance->GetData64(DATA_GO_CAVE_IN_LEFT)))
-                                pInstance->HandleGameObject(NULL, true, pGo);
+                        if (instance)
+                            if (GameObject* pGo = GameObject::GetGameObject((*me),instance->GetData64(DATA_GO_CAVE_IN_LEFT)))
+                                instance->HandleGameObject(NULL, true, pGo);
                         NextStep(2000, true);
                         break;
                     case 17:
@@ -512,9 +512,9 @@ CreatureAI* GetAI_npc_blastmaster_emi_shortfuse(Creature* creature)
 
 bool GossipHello_npc_blastmaster_emi_shortfuse(Player* player, Creature* creature)
 {
-    ScriptedInstance* pInstance = creature->GetInstanceData();
+    ScriptedInstance* instance = creature->GetInstanceScript();
 
-    if (pInstance && pInstance->GetData(TYPE_EVENT) == NOT_STARTED)
+    if (instance && instance->GetData(TYPE_EVENT) == NOT_STARTED)
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
     player->SEND_GOSSIP_MENU(GOSSIP_TEXT_EMI, creature->GetGUID());

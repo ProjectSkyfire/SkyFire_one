@@ -201,13 +201,13 @@ bool GossipSelect_npc_lore_keeper_of_norgannon(Player* player, Creature* creatur
 
 bool GOHello_go_keystone_chamber(Player* player, GameObject* go)
 {
-    ScriptedInstance* pInstance = go->GetInstanceData();
+    ScriptedInstance* instance = go->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return false;
 
-    if (pInstance)
-        pInstance->SetData(DATA_IRONAYA_SEAL, IN_PROGRESS); //door animation and save state.
+    if (instance)
+        instance->SetData(DATA_IRONAYA_SEAL, IN_PROGRESS); //door animation and save state.
 
     return false;
 }

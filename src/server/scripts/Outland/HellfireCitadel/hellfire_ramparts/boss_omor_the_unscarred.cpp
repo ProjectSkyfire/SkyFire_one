@@ -50,11 +50,11 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
 {
     boss_omor_the_unscarredAI(Creature *c) : Scripted_NoMovementAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint32 OrbitalStrike_Timer;
@@ -79,8 +79,8 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
         playerGUID = 0;
         CanPullBack = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_OMOR, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_OMOR, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
@@ -92,8 +92,8 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
             case 2: DoScriptText(SAY_AGGRO_3, me); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_OMOR, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_OMOR, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* victim)
@@ -116,8 +116,8 @@ struct boss_omor_the_unscarredAI : public Scripted_NoMovementAI
     {
         DoScriptText(SAY_DIE, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_OMOR, DONE);
+        if (instance)
+            instance->SetData(DATA_OMOR, DONE);
     }
 
     void UpdateAI(const uint32 diff)

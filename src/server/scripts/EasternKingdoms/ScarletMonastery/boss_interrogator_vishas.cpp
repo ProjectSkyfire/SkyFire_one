@@ -43,10 +43,10 @@ struct boss_interrogator_vishasAI : public ScriptedAI
 {
     boss_interrogator_vishasAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = me->GetInstanceData();
+        instance = me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     bool Yell30;
     bool Yell60;
@@ -69,11 +69,11 @@ struct boss_interrogator_vishasAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         //Any other actions to do with vorrel? setStandState?
-        if (Unit *vorrel = Unit::GetUnit(*me, pInstance->GetData64(DATA_VORREL)))
+        if (Unit *vorrel = Unit::GetUnit(*me, instance->GetData64(DATA_VORREL)))
             DoScriptText(SAY_TRIGGER_VORREL, vorrel);
     }
 

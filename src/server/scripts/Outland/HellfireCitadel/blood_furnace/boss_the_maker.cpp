@@ -43,11 +43,11 @@ struct boss_the_makerAI : public ScriptedAI
 {
     boss_the_makerAI(Creature *c) : ScriptedAI(c)
 	{
-            pInstance = c->GetInstanceData();
+            instance = c->GetInstanceScript();
             HeroicMode = me->GetMap()->IsHeroic();
 	}
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint32 ExplodingBreaker_Timer;
@@ -57,8 +57,8 @@ struct boss_the_makerAI : public ScriptedAI
     {
         ExplodingBreaker_Timer = 9000;
         Domination_Timer = 60000;
-        if (pInstance)
-            pInstance->SetData(DATA_MAKEREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MAKEREVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
@@ -70,8 +70,8 @@ struct boss_the_makerAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, me); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_MAKEREVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_MAKEREVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* victim)
@@ -87,8 +87,8 @@ struct boss_the_makerAI : public ScriptedAI
     {
         DoScriptText(SAY_DIE, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_MAKEREVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_MAKEREVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)

@@ -719,14 +719,14 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
             break;
         case ACTION_T_SET_INST_DATA:
         {
-            InstanceScript* pInst = (InstanceScript*)me->GetInstanceData();
-            if (!pInst)
+            InstanceScript* instance = (InstanceScript*)me->GetInstanceScript();
+            if (!instance)
             {
                 sLog->outErrorDb("CreatureEventAI: Event %d attempt to set instance data without instance script. Creature %d", EventId, me->GetEntry());
                 return;
             }
 
-            pInst->SetData(action.set_inst_data.field, action.set_inst_data.value);
+            instance->SetData(action.set_inst_data.field, action.set_inst_data.value);
             break;
         }
         case ACTION_T_SET_INST_DATA64:
@@ -738,14 +738,14 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
                 return;
             }
 
-            InstanceScript* pInst = (InstanceScript*)me->GetInstanceData();
-            if (!pInst)
+            InstanceScript* instance = (InstanceScript*)me->GetInstanceScript();
+            if (!instance)
             {
                 sLog->outErrorDb("CreatureEventAI: Event %d attempt to set instance data64 without instance script. Creature %d", EventId, me->GetEntry());
                 return;
             }
 
-            pInst->SetData(action.set_inst_data64.field, target->GetGUID());
+            instance->SetData(action.set_inst_data64.field, target->GetGUID());
             break;
         }
         case ACTION_T_UPDATE_TEMPLATE:

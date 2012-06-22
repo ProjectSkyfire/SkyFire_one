@@ -73,11 +73,11 @@ struct boss_alarAI : public ScriptedAI
 {
     boss_alarAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance =c->GetInstanceData();
+        instance =c->GetInstanceScript();
         DefaultMoveSpeedRate = me->GetSpeedRate(MOVE_RUN);
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     WaitEventType WaitEvent;
     uint32 WaitTimer;
@@ -101,8 +101,8 @@ struct boss_alarAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ALAREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_ALAREVENT, NOT_STARTED);
 
         Berserk_Timer = 1200000;
         Platforms_Move_Timer = 0;
@@ -128,8 +128,8 @@ struct boss_alarAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ALAREVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_ALAREVENT, IN_PROGRESS);
 
         me->SetUnitMovementFlags(MOVEFLAG_LEVITATING); // after enterevademode will be set walk movement
         DoZoneInCombat();
@@ -138,8 +138,8 @@ struct boss_alarAI : public ScriptedAI
 
     void JustDied(Unit *victim)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ALAREVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_ALAREVENT, DONE);
     }
 
     void JustSummoned(Creature *summon)
@@ -248,7 +248,7 @@ struct boss_alarAI : public ScriptedAI
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         DoZoneInCombat();
                         me->CastSpell(me, SPELL_REBIRTH, true);
-                        pInstance->SetData(DATA_ALAREVENT, SPECIAL); // proszeq
+                        instance->SetData(DATA_ALAREVENT, SPECIAL); // proszeq
                         MeltArmor_Timer = 60000;
                         Charge_Timer = 7000;
                         DiveBomb_Timer = 40000+rand()%5000;
@@ -432,12 +432,12 @@ struct mob_ember_of_alarAI : public ScriptedAI
 {
     mob_ember_of_alarAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         me->SetUnitMovementFlags(MOVEFLAG_LEVITATING);
         me->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     bool toDie;
 
     void Reset() {toDie = false;}
@@ -452,10 +452,10 @@ struct mob_ember_of_alarAI : public ScriptedAI
             me->CastSpell(me, SPELL_EMBER_BLAST, true);
             me->SetDisplayId(11686);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            //if (pInstance && pInstance->GetData(DATA_ALAREVENT) == 2)
-            if (pInstance && (pInstance->GetData(DATA_ALAREVENT) == 4 || pInstance->GetData(DATA_ALAREVENT) == 2))
+            //if (instance && instance->GetData(DATA_ALAREVENT) == 2)
+            if (instance && (instance->GetData(DATA_ALAREVENT) == 4 || instance->GetData(DATA_ALAREVENT) == 2))
             {
-                if (Unit* Alar = Unit::GetUnit((*me), pInstance->GetData64(DATA_ALAR)))
+                if (Unit* Alar = Unit::GetUnit((*me), instance->GetData64(DATA_ALAR)))
                 {
                     int AlarHealth = Alar->GetHealth() - Alar->GetMaxHealth()*0.03f;
                     if (AlarHealth > 0)

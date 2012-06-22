@@ -37,10 +37,10 @@ struct boss_ramstein_the_gorgerAI : public ScriptedAI
 {
     boss_ramstein_the_gorgerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = me->GetInstanceData();
+        instance = me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Trample_Timer;
     uint32 Knockout_Timer;
@@ -63,8 +63,8 @@ struct boss_ramstein_the_gorgerAI : public ScriptedAI
                 mob->AI()->AttackStart(me->SelectNearestTarget(500));
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_RAMSTEIN, DONE);
+        if (instance)
+            instance->SetData(TYPE_RAMSTEIN, DONE);
     }
 
     void UpdateAI(const uint32 diff)

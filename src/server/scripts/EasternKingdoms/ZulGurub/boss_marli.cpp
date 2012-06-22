@@ -54,10 +54,10 @@ struct boss_marliAI : public ScriptedAI
 {
     boss_marliAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 SpawnStartSpiders_Timer;
     uint32 PoisonVolley_Timer;
@@ -96,8 +96,8 @@ struct boss_marliAI : public ScriptedAI
     void JustDied(Unit* /*Killer*/)
     {
         DoScriptText(SAY_DEATH, me);
-        if (pInstance)
-            pInstance->SetData(TYPE_MARLI, DONE);
+        if (instance)
+            instance->SetData(TYPE_MARLI, DONE);
     }
 
     void UpdateAI(const uint32 diff)

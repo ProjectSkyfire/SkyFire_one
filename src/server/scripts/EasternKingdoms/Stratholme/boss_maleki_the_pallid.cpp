@@ -37,10 +37,10 @@ struct boss_maleki_the_pallidAI : public ScriptedAI
 {
     boss_maleki_the_pallidAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = me->GetInstanceData();
+        instance = me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Frostbolt_Timer;
     uint32 IceTomb_Timer;
@@ -59,8 +59,8 @@ struct boss_maleki_the_pallidAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_PALLID, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_PALLID, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)

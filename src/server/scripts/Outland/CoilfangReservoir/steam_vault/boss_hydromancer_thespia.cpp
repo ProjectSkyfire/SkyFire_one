@@ -49,11 +49,11 @@ struct boss_thespiaAI : public ScriptedAI
 {
     boss_thespiaAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     bool HeroicMode;
 
     uint32 LightningCloud_Timer;
@@ -66,16 +66,16 @@ struct boss_thespiaAI : public ScriptedAI
         LungBurst_Timer = 7000;
         EnvelopingWinds_Timer = 9000;
 
-        if (pInstance && me->isAlive())
-            pInstance->SetData(TYPE_HYDROMANCER_THESPIA, NOT_STARTED);
+        if (instance && me->isAlive())
+            instance->SetData(TYPE_HYDROMANCER_THESPIA, NOT_STARTED);
     }
 
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEAD, me);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HYDROMANCER_THESPIA, DONE);
+        if (instance)
+            instance->SetData(TYPE_HYDROMANCER_THESPIA, DONE);
     }
 
     void KilledUnit(Unit* victim)
@@ -96,8 +96,8 @@ struct boss_thespiaAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, me); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(TYPE_HYDROMANCER_THESPIA, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_HYDROMANCER_THESPIA, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)

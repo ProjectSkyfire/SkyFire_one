@@ -49,17 +49,17 @@ EndContentData */
 
 bool GOHello_go_shadowforge_brazier(Player* /*player*/, GameObject* pGo)
 {
-    if (ScriptedInstance* pInstance = pGo->GetInstanceData())
+    if (ScriptedInstance* instance = pGo->GetInstanceScript())
     {
-        if (pInstance->GetData(TYPE_LYCEUM) == IN_PROGRESS)
-            pInstance->SetData(TYPE_LYCEUM, DONE);
+        if (instance->GetData(TYPE_LYCEUM) == IN_PROGRESS)
+            instance->SetData(TYPE_LYCEUM, DONE);
         else
-            pInstance->SetData(TYPE_LYCEUM, IN_PROGRESS);
+            instance->SetData(TYPE_LYCEUM, IN_PROGRESS);
         // If used brazier open linked doors (North or South)
-        if (pGo->GetGUID() == pInstance->GetData64(DATA_SF_BRAZIER_N))
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_GOLEM_DOOR_N), true);
-        else if (pGo->GetGUID() == pInstance->GetData64(DATA_SF_BRAZIER_S))
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_GOLEM_DOOR_S), true);
+        if (pGo->GetGUID() == instance->GetData64(DATA_SF_BRAZIER_N))
+            instance->HandleGameObject(instance->GetData64(DATA_GOLEM_DOOR_N), true);
+        else if (pGo->GetGUID() == instance->GetData64(DATA_SF_BRAZIER_S))
+            instance->HandleGameObject(instance->GetData64(DATA_GOLEM_DOOR_S), true);
     }
     return false;
 }
@@ -99,12 +99,12 @@ uint32 RingBoss[]=
 
 bool AreaTrigger_at_ring_of_law(Player* player, const AreaTriggerEntry * /*at*/)
 {
-    if (ScriptedInstance* pInstance = player->GetInstanceData())
+    if (ScriptedInstance* instance = player->GetInstanceScript())
     {
-        if (pInstance->GetData(TYPE_RING_OF_LAW) == IN_PROGRESS || pInstance->GetData(TYPE_RING_OF_LAW) == DONE)
+        if (instance->GetData(TYPE_RING_OF_LAW) == IN_PROGRESS || instance->GetData(TYPE_RING_OF_LAW) == DONE)
             return false;
 
-        pInstance->SetData(TYPE_RING_OF_LAW, IN_PROGRESS);
+        instance->SetData(TYPE_RING_OF_LAW, IN_PROGRESS);
         player->SummonCreature(NPC_GRIMSTONE, 625.559,-205.618,-52.735, 2.609, TEMPSUMMON_DEAD_DESPAWN, 0);
 
         return false;
@@ -131,11 +131,11 @@ struct npc_grimstoneAI : public npc_escortAI
 {
     npc_grimstoneAI(Creature *c) : npc_escortAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         MobSpawnId = rand()%6;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint8 EventPhase;
     uint32 Event_Timer;
@@ -214,9 +214,9 @@ struct npc_grimstoneAI : public npc_escortAI
             Event_Timer = 5000;
             break;
         case 5:
-            if (pInstance)
+            if (instance)
             {
-                pInstance->SetData(TYPE_RING_OF_LAW, DONE);
+                instance->SetData(TYPE_RING_OF_LAW, DONE);
                 sLog->outDebug("TSCR: npc_grimstone: event reached end and set complete.");
             }
             break;
@@ -225,12 +225,12 @@ struct npc_grimstoneAI : public npc_escortAI
 
     void HandleGameObject(uint32 id, bool open)
     {
-        pInstance->HandleGameObject(pInstance->GetData64(id), open);
+        instance->HandleGameObject(instance->GetData64(id), open);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         if (MobDeath_Timer)
@@ -583,12 +583,12 @@ struct npc_dughal_stormwingAI : public npc_escortAI
     switch (i)
         {
         case 0:me->Say(SAY_DUGHAL_FREE, LANG_UNIVERSAL, PlayerGUID); break;
-        case 1:pInstance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_OBJECTIVE_COMPLETED);break;
+        case 1:instance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_OBJECTIVE_COMPLETED);break;
         case 2:
             me->SetVisibility(VISIBILITY_OFF);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pInstance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_ENDED);
+            instance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_ENDED);
             break;
         }
     }
@@ -603,14 +603,14 @@ struct npc_dughal_stormwingAI : public npc_escortAI
             me->SetVisibility(VISIBILITY_OFF);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pInstance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_ENDED);
+            instance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_ENDED);
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
-        if ((pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS || pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_FAILED || pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_ENDED)&& pInstance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_ENDED)
+        if (instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
+        if ((instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS || instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_FAILED || instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_ENDED)&& instance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_ENDED)
         {
             me->SetVisibility(VISIBILITY_OFF);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -637,7 +637,7 @@ CreatureAI* GetAI_npc_dughal_stormwing(Creature* creature)
 }
 bool GossipHello_npc_dughal_stormwing(Player* player, Creature* creature)
 {
-    if (player->GetQuestStatus(QUEST_JAIL_BREAK) == QUEST_STATUS_INCOMPLETE && pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS)
+    if (player->GetQuestStatus(QUEST_JAIL_BREAK) == QUEST_STATUS_INCOMPLETE && instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS)
     {
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DUGHAL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         player->SEND_GOSSIP_MENU(2846, creature->GetGUID());
@@ -652,7 +652,7 @@ bool GossipSelect_npc_dughal_stormwing(Player* player, Creature* creature, uint3
         player->CLOSE_GOSSIP_MENU();
         CAST_AI(npc_escortAI, (creature->AI()))->Start(false, true, player->GetGUID());
         creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-        pInstance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_IN_PROGRESS);
+        instance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_IN_PROGRESS);
     }
     return true;
 }
@@ -678,7 +678,7 @@ struct npc_marshal_windsorAI : public npc_escortAI
 {
     npc_marshal_windsorAI(Creature *c) : npc_escortAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     void WaypointReached(uint32 i)
@@ -698,13 +698,13 @@ struct npc_marshal_windsorAI : public npc_escortAI
             break;
         case 12:
             me->Say(SAY_WINDSOR_6, LANG_UNIVERSAL, PlayerGUID);
-            pInstance->SetData(DATA_SUPPLY_ROOM, ENCOUNTER_STATE_IN_PROGRESS);
+            instance->SetData(DATA_SUPPLY_ROOM, ENCOUNTER_STATE_IN_PROGRESS);
             break;
         case 13:
             me->HandleEmoteCommand(EMOTE_STATE_USESTANDING);//EMOTE_STATE_WORK
             break;
         case 14:
-            pInstance->SetData(DATA_GATE_SR, 0);
+            instance->SetData(DATA_GATE_SR, 0);
             me->setFaction(11);
             break;
         case 16:
@@ -714,14 +714,14 @@ struct npc_marshal_windsorAI : public npc_escortAI
             me->HandleEmoteCommand(EMOTE_STATE_USESTANDING);//EMOTE_STATE_WORK
             break;
         case 18:
-            pInstance->SetData(DATA_GATE_SC, 0);
+            instance->SetData(DATA_GATE_SC, 0);
             break;
         case 19:
             me->SetVisibility(VISIBILITY_OFF);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             me->SummonCreature(MOB_ENTRY_REGINALD_WINDSOR, 403.61,-51.71,-63.92, 3.600434, TEMPSUMMON_DEAD_DESPAWN , 0);
-            pInstance->SetData(DATA_SUPPLY_ROOM, ENCOUNTER_STATE_ENDED);
+            instance->SetData(DATA_SUPPLY_ROOM, ENCOUNTER_STATE_ENDED);
             break;
         }
     }
@@ -740,25 +740,25 @@ struct npc_marshal_windsorAI : public npc_escortAI
 
     void JustDied(Unit *slayer)
     {
-        pInstance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_FAILED);
+        instance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_FAILED);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
-        if (pInstance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_OBJECTIVE_COMPLETED)
+        if (instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
+        if (instance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_OBJECTIVE_COMPLETED)
             SetEscortPaused(false);
-        if (!pInstance->GetData(DATA_GATE_D) && pInstance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_NOT_STARTED)
+        if (!instance->GetData(DATA_GATE_D) && instance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_NOT_STARTED)
             {
             me->Say(SAY_WINDSOR_4_2, LANG_UNIVERSAL, PlayerGUID);
-            pInstance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_BEFORE_START);
+            instance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_BEFORE_START);
             }
-        if (pInstance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_OBJECTIVE_COMPLETED)
+        if (instance->GetData(DATA_DUGHAL) == ENCOUNTER_STATE_OBJECTIVE_COMPLETED)
             {
             me->Say(SAY_WINDSOR_4_3, LANG_UNIVERSAL, PlayerGUID);
-            pInstance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_ENDED);
+            instance->SetData(DATA_DUGHAL, ENCOUNTER_STATE_ENDED);
             }
-        if ((pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS || pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_FAILED || pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_ENDED)&& pInstance->GetData(DATA_SUPPLY_ROOM) == ENCOUNTER_STATE_ENDED)
+        if ((instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS || instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_FAILED || instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_ENDED)&& instance->GetData(DATA_SUPPLY_ROOM) == ENCOUNTER_STATE_ENDED)
         {
             me->SetVisibility(VISIBILITY_OFF);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -805,10 +805,10 @@ bool QuestAccept_npc_marshal_windsor(Player* player, Creature* creature, Quest c
 {
     if (quest->GetQuestId() == 4322)
         {PlayerStart = player;
-        if (pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED)
+        if (instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED)
         {
                 CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, player->GetGUID());
-                pInstance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_IN_PROGRESS);
+                instance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_IN_PROGRESS);
                 creature->setFaction(11);
         }
         }
@@ -897,7 +897,7 @@ struct npc_marshal_reginald_windsorAI : public npc_escortAI
         case 32:
             me->Say(SAY_REGINALD_WINDSOR_20_2, LANG_UNIVERSAL, PlayerGUID);
             PlayerStart->GroupEventHappens(QUEST_JAIL_BREAK, me);
-            pInstance->SetData(DATA_SHILL, ENCOUNTER_STATE_ENDED);
+            instance->SetData(DATA_SHILL, ENCOUNTER_STATE_ENDED);
             break;
         }
     }
@@ -934,53 +934,53 @@ struct npc_marshal_reginald_windsorAI : public npc_escortAI
 
     void JustDied(Unit *slayer)
     {
-        pInstance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_FAILED);
+        instance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_FAILED);
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
+        if (instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
         if (wp == 7)
             {
-            if (!pInstance->GetData(DATA_GATE_J) && pInstance->GetData(DATA_JAZ) == ENCOUNTER_STATE_NOT_STARTED)
+            if (!instance->GetData(DATA_GATE_J) && instance->GetData(DATA_JAZ) == ENCOUNTER_STATE_NOT_STARTED)
                 {
-                    pInstance->SetData(DATA_CREATURE_JAZ, 1);
-                    pInstance->SetData(DATA_JAZ, ENCOUNTER_STATE_IN_PROGRESS);
+                    instance->SetData(DATA_CREATURE_JAZ, 1);
+                    instance->SetData(DATA_JAZ, ENCOUNTER_STATE_IN_PROGRESS);
                 }
-            if (pInstance->GetData(DATA_CREATURE_JAZ) && pInstance->GetData(DATA_CREATURE_OGRABISI) && pInstance->GetData(DATA_JAZ) == ENCOUNTER_STATE_IN_PROGRESS)
+            if (instance->GetData(DATA_CREATURE_JAZ) && instance->GetData(DATA_CREATURE_OGRABISI) && instance->GetData(DATA_JAZ) == ENCOUNTER_STATE_IN_PROGRESS)
                 {
                     SetEscortPaused(false);
-                    pInstance->SetData(DATA_JAZ, ENCOUNTER_STATE_ENDED);
+                    instance->SetData(DATA_JAZ, ENCOUNTER_STATE_ENDED);
                 }
             }
         else if (wp == 11)
             {
-            if (!pInstance->GetData(DATA_GATE_S) && pInstance->GetData(DATA_SHILL) == ENCOUNTER_STATE_NOT_STARTED)
+            if (!instance->GetData(DATA_GATE_S) && instance->GetData(DATA_SHILL) == ENCOUNTER_STATE_NOT_STARTED)
                 {
-                    pInstance->SetData(DATA_CREATURE_SHILL, 1);
-                    pInstance->SetData(DATA_SHILL, ENCOUNTER_STATE_IN_PROGRESS);
+                    instance->SetData(DATA_CREATURE_SHILL, 1);
+                    instance->SetData(DATA_SHILL, ENCOUNTER_STATE_IN_PROGRESS);
                 }
-            if (pInstance->GetData(DATA_CREATURE_SHILL) && pInstance->GetData(DATA_SHILL) == ENCOUNTER_STATE_IN_PROGRESS)
+            if (instance->GetData(DATA_CREATURE_SHILL) && instance->GetData(DATA_SHILL) == ENCOUNTER_STATE_IN_PROGRESS)
                 {
-                    pInstance->SetData(DATA_SHILL, ENCOUNTER_STATE_ENDED);
+                    instance->SetData(DATA_SHILL, ENCOUNTER_STATE_ENDED);
                     SetEscortPaused(false);
                 }
             }
         else if (wp == 20)
             {
-            if (!pInstance->GetData(DATA_GATE_C) && pInstance->GetData(DATA_CREST) == ENCOUNTER_STATE_NOT_STARTED)
+            if (!instance->GetData(DATA_GATE_C) && instance->GetData(DATA_CREST) == ENCOUNTER_STATE_NOT_STARTED)
                 {
-                    pInstance->SetData(DATA_CREATURE_CREST, 1);
+                    instance->SetData(DATA_CREATURE_CREST, 1);
                     me->Say(SAY_REGINALD_WINDSOR_13_2, LANG_UNIVERSAL, PlayerGUID);
-                    pInstance->SetData(DATA_CREST, ENCOUNTER_STATE_IN_PROGRESS);
+                    instance->SetData(DATA_CREST, ENCOUNTER_STATE_IN_PROGRESS);
                 }
-            if (pInstance->GetData(DATA_CREATURE_CREST) && pInstance->GetData(DATA_CREST) == ENCOUNTER_STATE_IN_PROGRESS)
+            if (instance->GetData(DATA_CREATURE_CREST) && instance->GetData(DATA_CREST) == ENCOUNTER_STATE_IN_PROGRESS)
                 {
                     SetEscortPaused(false);
-                    pInstance->SetData(DATA_CREST, ENCOUNTER_STATE_ENDED);
+                    instance->SetData(DATA_CREST, ENCOUNTER_STATE_ENDED);
                 }
             }
-        if (pInstance->GetData(DATA_TOBIAS) == ENCOUNTER_STATE_OBJECTIVE_COMPLETED) SetEscortPaused(false);
+        if (instance->GetData(DATA_TOBIAS) == ENCOUNTER_STATE_OBJECTIVE_COMPLETED) SetEscortPaused(false);
         npc_escortAI::UpdateAI(diff);
     }
 };
@@ -1047,7 +1047,7 @@ struct npc_tobias_seecherAI : public npc_escortAI
             me->SetVisibility(VISIBILITY_OFF);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pInstance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_ENDED);
+            instance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_ENDED);
         }
     }
 
@@ -1057,20 +1057,20 @@ struct npc_tobias_seecherAI : public npc_escortAI
         {
         case 0:me->Say(SAY_TOBIAS_FREE, LANG_UNIVERSAL, PlayerGUID); break;
         case 2:
-            pInstance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_OBJECTIVE_COMPLETED);break;
+            instance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_OBJECTIVE_COMPLETED);break;
         case 4:
             me->SetVisibility(VISIBILITY_OFF);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            pInstance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_ENDED);
+            instance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_ENDED);
             break;
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
-        if ((pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS || pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_FAILED || pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_ENDED)&& pInstance->GetData(DATA_TOBIAS) == ENCOUNTER_STATE_ENDED)
+        if (instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_NOT_STARTED) return;
+        if ((instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS || instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_FAILED || instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_ENDED)&& instance->GetData(DATA_TOBIAS) == ENCOUNTER_STATE_ENDED)
         {
             me->SetVisibility(VISIBILITY_OFF);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -1101,7 +1101,7 @@ CreatureAI* GetAI_npc_tobias_seecher(Creature* creature)
 
 bool GossipHello_npc_tobias_seecher(Player* player, Creature* creature)
 {
-    if (player->GetQuestStatus(QUEST_JAIL_BREAK) == QUEST_STATUS_INCOMPLETE && pInstance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS)
+    if (player->GetQuestStatus(QUEST_JAIL_BREAK) == QUEST_STATUS_INCOMPLETE && instance->GetData(DATA_QUEST_JAIL_BREAK) == ENCOUNTER_STATE_IN_PROGRESS)
     {
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Get out of here, Tobias, you're free!", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         player->SEND_GOSSIP_MENU(2847, creature->GetGUID());
@@ -1116,7 +1116,7 @@ bool GossipSelect_npc_tobias_seecher(Player* player, Creature* creature, uint32 
         player->CLOSE_GOSSIP_MENU();
         CAST_AI(npc_escortAI, (creature->AI()))->Start(false, true, player->GetGUID());
         creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-        pInstance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_IN_PROGRESS);
+        instance->SetData(DATA_TOBIAS, ENCOUNTER_STATE_IN_PROGRESS);
     }
     return true;
 }
@@ -1145,10 +1145,10 @@ struct npc_rocknotAI : public npc_escortAI
 {
     npc_rocknotAI(Creature *c) : npc_escortAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 BreakKeg_Timer;
     uint32 BreakDoor_Timer;
@@ -1164,13 +1164,13 @@ struct npc_rocknotAI : public npc_escortAI
 
     void DoGo(uint32 id, uint32 state)
     {
-        if (GameObject* pGo = pInstance->instance->GetGameObject(pInstance->GetData64(id)))
+        if (GameObject* pGo = instance->instance->GetGameObject(instance->GetData64(id)))
             pGo->SetGoState((GOState)state);
     }
 
     void WaypointReached(uint32 i)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         switch (i)
@@ -1196,7 +1196,7 @@ struct npc_rocknotAI : public npc_escortAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         if (BreakKeg_Timer)
@@ -1217,12 +1217,12 @@ struct npc_rocknotAI : public npc_escortAI
                 DoGo(DATA_GO_BAR_KEG_TRAP, 0);               //doesn't work very well, leaving code here for future
                 //spell by trap has effect61, this indicate the bar go hostile
 
-                if (Unit *tmp = Unit::GetUnit(*me, pInstance->GetData64(DATA_PHALANX)))
+                if (Unit *tmp = Unit::GetUnit(*me, instance->GetData64(DATA_PHALANX)))
                     tmp->setFaction(14);
 
                 //for later, this event(s) has alot more to it.
                 //optionally, DONE can trigger bar to go hostile.
-                pInstance->SetData(TYPE_BAR, DONE);
+                instance->SetData(TYPE_BAR, DONE);
 
                 BreakDoor_Timer = 0;
             } else BreakDoor_Timer -= diff;
@@ -1239,23 +1239,23 @@ CreatureAI* GetAI_npc_rocknot(Creature* creature)
 
 bool ChooseReward_npc_rocknot(Player* /*player*/, Creature* creature, const Quest *_Quest, uint32 /*item*/)
 {
-    ScriptedInstance* pInstance = creature->GetInstanceData();
+    ScriptedInstance* instance = creature->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return true;
 
-    if (pInstance->GetData(TYPE_BAR) == DONE || pInstance->GetData(TYPE_BAR) == SPECIAL)
+    if (instance->GetData(TYPE_BAR) == DONE || instance->GetData(TYPE_BAR) == SPECIAL)
         return true;
 
     if (_Quest->GetQuestId() == QUEST_ALE)
     {
-        if (pInstance->GetData(TYPE_BAR) != IN_PROGRESS)
-            pInstance->SetData(TYPE_BAR, IN_PROGRESS);
+        if (instance->GetData(TYPE_BAR) != IN_PROGRESS)
+            instance->SetData(TYPE_BAR, IN_PROGRESS);
 
-        pInstance->SetData(TYPE_BAR, SPECIAL);
+        instance->SetData(TYPE_BAR, SPECIAL);
 
         //keep track of amount in instance script, returns SPECIAL if amount ok and event in progress
-        if (pInstance->GetData(TYPE_BAR) == SPECIAL)
+        if (instance->GetData(TYPE_BAR) == SPECIAL)
         {
             DoScriptText(SAY_GOT_BEER, creature);
             creature->CastSpell(creature, SPELL_DRUNKEN_RAGE, false);

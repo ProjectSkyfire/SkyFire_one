@@ -446,14 +446,14 @@ InstanceScript* GetInstanceData_instance_blood_furnace(Map* map)
 
 bool GOHello_go_prison_cell_lever(Player* player, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = (ScriptedInstance*)pGo->GetInstanceData();
+    ScriptedInstance* instance = (ScriptedInstance*)pGo->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return false;
 
-    if (pInstance->GetData(DATA_BROGGOKEVENT) != DONE && pInstance->GetData(DATA_BROGGOKEVENT) != IN_PROGRESS)
+    if (instance->GetData(DATA_BROGGOKEVENT) != DONE && instance->GetData(DATA_BROGGOKEVENT) != IN_PROGRESS)
     {
-        pInstance->SetData(DATA_BROGGOKEVENT, IN_PROGRESS);
+        instance->SetData(DATA_BROGGOKEVENT, IN_PROGRESS);
     }
 
     return false;
@@ -464,7 +464,7 @@ void AddSC_instance_blood_furnace()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_blood_furnace";
-    newscript->GetInstanceData = &GetInstanceData_instance_blood_furnace;
+    newscript->GetInstanceScript = &GetInstanceData_instance_blood_furnace;
     newscript->RegisterSelf();
 
     newscript = new Script;

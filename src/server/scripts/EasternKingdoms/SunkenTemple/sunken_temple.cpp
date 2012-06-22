@@ -37,7 +37,7 @@ EndContentData */
 
 bool AreaTrigger_at_malfurion_stormrage(Player* player, const AreaTriggerEntry * /*at*/)
 {
-    if (ScriptedInstance* pInstance = player->GetInstanceData())
+    if (ScriptedInstance* instance = player->GetInstanceScript())
     {
         if (!player->FindNearestCreature(15362, 15))
             player->SummonCreature(15362, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), -1.52, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
@@ -51,10 +51,10 @@ return false;
 
 bool GOHello_go_atalai_statue(Player* player, GameObject* pGo)
 {
-    ScriptedInstance* pInstance = player->GetInstanceData();
-    if (!pInstance)
+    ScriptedInstance* instance = player->GetInstanceScript();
+    if (!instance)
         return false;
-    pInstance->SetData(EVENT_STATE, pGo->GetEntry());
+    instance->SetData(EVENT_STATE, pGo->GetEntry());
     return false;
 }
 

@@ -368,7 +368,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
 {
     boss_illidan_stormrageAI(Creature* c) : ScriptedAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         DoCast(me, SPELL_DUAL_WIELD, true);
 
         SpellEntry *TempSpell = GET_SPELL(SPELL_SHADOWFIEND_PASSIVE);
@@ -376,7 +376,7 @@ struct boss_illidan_stormrageAI : public ScriptedAI
             TempSpell->EffectApplyAuraName[0] = 4; // proc debuff, and summon infinite fiends
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     PhaseIllidan Phase;
     EventIllidan Event;
@@ -454,13 +454,13 @@ struct boss_illidan_stormrageAI : public ScriptedAI
     {
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-        if (!pInstance)
+        if (!instance)
             return;
 
-        pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, DONE); // Completed
+        instance->SetData(DATA_ILLIDANSTORMRAGEEVENT, DONE); // Completed
 
         for (uint8 i = DATA_GAMEOBJECT_ILLIDAN_DOOR_R; i < DATA_GAMEOBJECT_ILLIDAN_DOOR_L + 1; ++i)
-            pInstance->HandleGameObject(pInstance->GetData64(i), true);
+            instance->HandleGameObject(instance->GetData64(i), true);
     }
 
     void KilledUnit(Unit * victim)
@@ -973,11 +973,11 @@ struct npc_akama_illidanAI : public ScriptedAI
 {
     npc_akama_illidanAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         JustCreated = true;
     }
     bool JustCreated;
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     PhaseAkama Phase;
     bool Event;
@@ -997,27 +997,27 @@ struct npc_akama_illidanAI : public ScriptedAI
     void Reset()
     {
         WalkCount = 0;
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
+            instance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
 
-            IllidanGUID = pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
-            GateGUID = pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE);
-            DoorGUID[0] = pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_DOOR_R);
-            DoorGUID[1] = pInstance->GetData64(DATA_GAMEOBJECT_ILLIDAN_DOOR_L);
+            IllidanGUID = instance->GetData64(DATA_ILLIDANSTORMRAGE);
+            GateGUID = instance->GetData64(DATA_GAMEOBJECT_ILLIDAN_GATE);
+            DoorGUID[0] = instance->GetData64(DATA_GAMEOBJECT_ILLIDAN_DOOR_R);
+            DoorGUID[1] = instance->GetData64(DATA_GAMEOBJECT_ILLIDAN_DOOR_L);
 
             if (JustCreated)//close all doors at create
             {
-                pInstance->HandleGameObject(GateGUID, false);
+                instance->HandleGameObject(GateGUID, false);
 
                 for (uint8 i = 0; i < 2; ++i)
-                    pInstance->HandleGameObject(DoorGUID[i], false);
+                    instance->HandleGameObject(DoorGUID[i], false);
             } else
             {//open all doors, raid wiped
-                pInstance->HandleGameObject(GateGUID, true);
+                instance->HandleGameObject(GateGUID, true);
                 WalkCount = 1;//skip first wp
                 for (uint8 i = 0; i < 2; ++i)
-                    pInstance->HandleGameObject(DoorGUID[i], true);
+                    instance->HandleGameObject(DoorGUID[i], true);
             }
         }
         else
@@ -1088,13 +1088,13 @@ struct npc_akama_illidanAI : public ScriptedAI
 
     void BeginTalk()
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
-        pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, IN_PROGRESS);
+        instance->SetData(DATA_ILLIDANSTORMRAGEEVENT, IN_PROGRESS);
 
         for (uint8 i = 0; i < 2; ++i)
-            pInstance->HandleGameObject(DoorGUID[i], false);
+            instance->HandleGameObject(DoorGUID[i], false);
         if (GETCRE(Illidan, IllidanGUID))
         {
             Illidan->RemoveAurasDueToSpell(SPELL_KNEEL);
@@ -1144,7 +1144,7 @@ struct npc_akama_illidanAI : public ScriptedAI
 
     void EnterPhase(PhaseAkama NextPhase)
     {
-        if (!pInstance)
+        if (!instance)
             return;
         switch (NextPhase)
         {
@@ -1264,8 +1264,8 @@ struct npc_akama_illidanAI : public ScriptedAI
             me->InterruptNonMeleeSpells(true);
             Spirit[0]->InterruptNonMeleeSpells(true);
             Spirit[1]->InterruptNonMeleeSpells(true);
-            if (pInstance)
-                pInstance->HandleGameObject(GateGUID, true);
+            if (instance)
+                instance->HandleGameObject(GateGUID, true);
             Timer = 2000;
             break;
         case 4:
@@ -1295,8 +1295,8 @@ struct npc_akama_illidanAI : public ScriptedAI
         {
         case 6:
             for (uint8 i = 0; i < 2; ++i)
-                if (pInstance)
-                    pInstance->HandleGameObject(DoorGUID[i], true);
+                if (instance)
+                    instance->HandleGameObject(DoorGUID[i], true);
             break;
         case 8:
             if (Phase == PHASE_WALK)
@@ -1323,7 +1323,7 @@ struct npc_akama_illidanAI : public ScriptedAI
         {
             if (Check_Timer <= diff)
             {
-                if (pInstance && pInstance->GetData(DATA_ILLIDARICOUNCILEVENT) == DONE)
+                if (instance && instance->GetData(DATA_ILLIDARICOUNCILEVENT) == DONE)
                     me->SetVisibility(VISIBILITY_ON);
 
                 Check_Timer = 5000;
@@ -1747,17 +1747,17 @@ struct mob_parasitic_shadowfiendAI : public ScriptedAI
 {
     mob_parasitic_shadowfiendAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     uint64 IllidanGUID;
     uint32 CheckTimer;
 
     void Reset()
     {
-        if (pInstance)
-            IllidanGUID = pInstance->GetData64(DATA_ILLIDANSTORMRAGE);
+        if (instance)
+            IllidanGUID = instance->GetData64(DATA_ILLIDANSTORMRAGE);
         else
             IllidanGUID = 0;
 
@@ -1823,8 +1823,8 @@ struct blade_of_azzinothAI : public NullCreatureAI
 
 void boss_illidan_stormrageAI::Reset()
 {
-    if (pInstance)
-        pInstance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
+    if (instance)
+        instance->SetData(DATA_ILLIDANSTORMRAGEEVENT, NOT_STARTED);
 
     if (AkamaGUID)
     {

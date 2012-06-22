@@ -57,10 +57,10 @@ struct boss_gruulAI : public ScriptedAI
 {
     boss_gruulAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 Growth_Timer;
     uint32 CaveIn_Timer;
@@ -80,16 +80,16 @@ struct boss_gruulAI : public ScriptedAI
         HurtfulStrike_Timer= 8000;
         Reverberation_Timer= 60000+45000;
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRUULEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_GRUULEVENT, NOT_STARTED);
     }
 
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRUULEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_GRUULEVENT, DONE);
     }
 
     void EnterCombat(Unit *who)
@@ -97,8 +97,8 @@ struct boss_gruulAI : public ScriptedAI
         DoScriptText(SAY_AGGRO, me);
         DoZoneInCombat();
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRUULEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_GRUULEVENT, IN_PROGRESS);
     }
 
     void KilledUnit()

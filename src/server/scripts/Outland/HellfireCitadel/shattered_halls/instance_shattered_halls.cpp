@@ -385,19 +385,19 @@ bool AreaTrigger_at_shattered_halls(Player* player, AreaTriggerEntry const* pAt)
     if (player->isGameMaster() || player->isDead())
         return false;
 
-    instance_shattered_halls* pInstance = (instance_shattered_halls*)player->GetInstanceData();
+    instance_shattered_halls* instance = (instance_shattered_halls*)player->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return false;
 
-    if (!pInstance->instance->IsHeroic())
+    if (!instance->instance->IsHeroic())
         return false;
 
-    if (pInstance->GetData(DATA_KARGATH) == DONE || pInstance->GetData(TYPE_WARBRINGER) == DONE)
+    if (instance->GetData(DATA_KARGATH) == DONE || instance->GetData(TYPE_WARBRINGER) == DONE)
         return false;
 
-    if (pInstance->GetData(TYPE_EXECUTION) == NOT_STARTED)
-        pInstance->SetData(TYPE_EXECUTION, IN_PROGRESS);
+    if (instance->GetData(TYPE_EXECUTION) == NOT_STARTED)
+        instance->SetData(TYPE_EXECUTION, IN_PROGRESS);
 
     return true;
 }
@@ -407,7 +407,7 @@ void AddSC_instance_shattered_halls()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_shattered_halls";
-    newscript->GetInstanceData = &GetInstanceData_instance_shattered_halls;
+    newscript->GetInstanceScript = &GetInstanceData_instance_shattered_halls;
     newscript->RegisterSelf();
 
     newscript = new Script;

@@ -439,8 +439,8 @@ InstanceScript* ScriptMgr::CreateInstanceData(Map *map)
     if (!map->IsDungeon()) return NULL;
 
     Script *tmpscript = m_scripts[((InstanceMap*)map)->GetScriptId()];
-    if (!tmpscript || !tmpscript->GetInstanceData) return NULL;
+    if (!tmpscript || !tmpscript->GetInstanceScript) return NULL;
 
-    return tmpscript->GetInstanceData(map);
+    return tmpscript->GetInstanceScript(map);
 }
 

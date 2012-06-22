@@ -573,7 +573,7 @@ class InstanceMap : public Map
         void CreateInstanceData(bool load);
         bool Reset(uint8 method);
         uint32 GetScriptId() { return i_script_id; }
-        InstanceScript* GetInstanceData() { return i_data; }
+        InstanceScript* GetInstanceScript() { return i_data; }
         void PermBindAllPlayers(Player* player);
         time_t GetResetTime();
         void UnloadAll();

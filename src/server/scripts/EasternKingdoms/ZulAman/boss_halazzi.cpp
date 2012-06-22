@@ -81,14 +81,14 @@ struct boss_halazziAI : public ScriptedAI
 {
     boss_halazziAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         // need to find out what controls totem's spell cooldown
         SpellEntry *TempSpell = GET_SPELL(SPELL_LIGHTNING);
         if (TempSpell && TempSpell->CastingTimeIndex != 5)
             TempSpell->CastingTimeIndex = 5; // 2000 ms casting time
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 FrenzyTimer;
     uint32 SaberlashTimer;
@@ -105,8 +105,8 @@ struct boss_halazziAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HALAZZIEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_HALAZZIEVENT, NOT_STARTED);
 
         TransformCount = 0;
         BerserkTimer = 600000;
@@ -120,8 +120,8 @@ struct boss_halazziAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HALAZZIEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_HALAZZIEVENT, IN_PROGRESS);
 
         me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_AGGRO);
@@ -333,8 +333,8 @@ struct boss_halazziAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_HALAZZIEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_HALAZZIEVENT, DONE);
 
         me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_DEATH);

@@ -133,7 +133,7 @@ struct npc_barnesAI : public npc_escortAI
     {
         RaidWiped = false;
         m_uiEventId = 0;
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         SpellEntry *TempSpell = GET_SPELL(29683);
         TempSpell->Effect[2] = 27;
         TempSpell->EffectBaseDice[2] = 1;
@@ -146,7 +146,7 @@ struct npc_barnesAI : public npc_escortAI
         TempSpell->EffectMiscValue[2] = 127;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 m_uiSpotlightGUID;
 
@@ -168,20 +168,20 @@ struct npc_barnesAI : public npc_escortAI
 
         PerformanceReady = false;
 
-        if (pInstance)
-            m_uiEventId = pInstance->GetData(DATA_OPERA_PERFORMANCE);
+        if (instance)
+            m_uiEventId = instance->GetData(DATA_OPERA_PERFORMANCE);
     }
 
     void StartEvent()
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
-        pInstance->SetData(TYPE_OPERA, IN_PROGRESS);
+        instance->SetData(TYPE_OPERA, IN_PROGRESS);
 
         //resets count for this event, in case earlier failed
         if (m_uiEventId == EVENT_OZ)
-            pInstance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
+            instance->SetData(DATA_OPERA_OZ_DEATHCOUNT, IN_PROGRESS);
 
         Start(false, false);
     }
@@ -190,14 +190,14 @@ struct npc_barnesAI : public npc_escortAI
 
     void WaypointReached(uint32 i)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         switch (i)
         {
             case 0:
                 DoCast(me, SPELL_TUXEDO, false);
-                pInstance->DoUseDoorOrButton(pInstance->GetData64(DATA_GO_STAGEDOORLEFT));
+                instance->DoUseDoorOrButton(instance->GetData64(DATA_GO_STAGEDOORLEFT));
                 break;
             case 2:
                 TalkCount = 0;
@@ -228,10 +228,10 @@ struct npc_barnesAI : public npc_escortAI
                 }
                 break;
             case 5:
-                pInstance->DoUseDoorOrButton(pInstance->GetData64(DATA_GO_STAGEDOORLEFT));
+                instance->DoUseDoorOrButton(instance->GetData64(DATA_GO_STAGEDOORLEFT));
                 PerformanceReady = true;
                 PrepareEncounter();
-                pInstance->DoUseDoorOrButton(pInstance->GetData64(DATA_GO_CURTAINS));
+                instance->DoUseDoorOrButton(instance->GetData64(DATA_GO_CURTAINS));
                 break;
         }
     }
@@ -373,10 +373,10 @@ CreatureAI* GetAI_npc_barnesAI(Creature* creature)
 
 bool GossipHello_npc_barnes(Player* player, Creature* creature)
 {
-    if (ScriptedInstance* pInstance = creature->GetInstanceData())
+    if (ScriptedInstance* instance = creature->GetInstanceScript())
     {
         // Check for death of Moroes and if opera event is not done already
-        if (pInstance->GetData(TYPE_MOROES) == DONE && pInstance->GetData(TYPE_OPERA) != DONE)
+        if (instance->GetData(TYPE_MOROES) == DONE && instance->GetData(TYPE_OPERA) != DONE)
         {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, OZ_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
@@ -450,10 +450,10 @@ enum eBerthold
 
 bool GossipHello_npc_berthold(Player* player, Creature* creature)
 {
-    if (ScriptedInstance* pInstance = creature->GetInstanceData())
+    if (ScriptedInstance* instance = creature->GetInstanceScript())
     {
         // Check if Shade of Aran event is done
-        if (pInstance->GetData(TYPE_ARAN) == DONE)
+        if (instance->GetData(TYPE_ARAN) == DONE)
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     }
 
@@ -497,10 +497,10 @@ struct npc_image_of_medivhAI : public ScriptedAI
 {
     npc_image_of_medivhAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 ArcanagosGUID;
 
@@ -515,9 +515,9 @@ struct npc_image_of_medivhAI : public ScriptedAI
     {
         ArcanagosGUID = 0;
 
-        if (pInstance && pInstance->GetData64(DATA_IMAGE_OF_MEDIVH) == 0)
+        if (instance && instance->GetData64(DATA_IMAGE_OF_MEDIVH) == 0)
         {
-            pInstance->SetData64(DATA_IMAGE_OF_MEDIVH, me->GetGUID());
+            instance->SetData64(DATA_IMAGE_OF_MEDIVH, me->GetGUID());
             (*me).GetMotionMaster()->MovePoint(1, MedivPos[0],MedivPos[1],MedivPos[2]);
             Step = 0;
         } else

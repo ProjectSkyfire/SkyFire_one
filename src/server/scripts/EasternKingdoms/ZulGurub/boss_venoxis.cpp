@@ -51,10 +51,10 @@ struct boss_venoxisAI : public ScriptedAI
 {
     boss_venoxisAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 HolyFire_Timer;
     uint32 HolyWrath_Timer;
@@ -90,8 +90,8 @@ struct boss_venoxisAI : public ScriptedAI
     void JustDied(Unit* /*Killer*/)
     {
         DoScriptText(SAY_DEATH, me);
-        if (pInstance)
-            pInstance->SetData(TYPE_VENOXIS, DONE);
+        if (instance)
+            instance->SetData(TYPE_VENOXIS, DONE);
     }
 
     void UpdateAI(const uint32 diff)

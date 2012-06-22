@@ -57,16 +57,16 @@ struct boss_selin_fireheartAI : public ScriptedAI
 {
     boss_selin_fireheartAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
 
         Crystals.clear();
         // GUIDs per instance is static, so we only need to load them once.
-        if (pInstance)
+        if (instance)
         {
-            uint32 size = pInstance->GetData(DATA_FEL_CRYSTAL_SIZE);
+            uint32 size = instance->GetData(DATA_FEL_CRYSTAL_SIZE);
             for (uint8 i = 0; i < size; ++i)
             {
-                uint64 guid = pInstance->GetData64(DATA_FEL_CRYSTAL);
+                uint64 guid = instance->GetData64(DATA_FEL_CRYSTAL);
                 sLog->outDebug("TSCR: Selin: Adding Fel Crystal %u to list", guid);
                 Crystals.push_back(guid);
             }
@@ -74,7 +74,7 @@ struct boss_selin_fireheartAI : public ScriptedAI
         Heroic = c->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     std::list<uint64> Crystals;
 
@@ -91,7 +91,7 @@ struct boss_selin_fireheartAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (instance)
         {
             //for (uint8 i = 0; i < CRYSTALS_NUMBER; ++i)
             for (std::list<uint64>::const_iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
@@ -108,11 +108,11 @@ struct boss_selin_fireheartAI : public ScriptedAI
                 }
             }
 
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);
+            instance->HandleGameObject(instance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);
             // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
                                                             // Small door opened after event are expected to be closed by default
             // Set Inst data for encounter
-            pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
+            instance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
         } else sLog->outError(ERROR_INST_DATA);
 
         DrainLifeTimer = 3000 + rand()%4000;
@@ -187,8 +187,8 @@ struct boss_selin_fireheartAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, me);
 
-        if (pInstance)
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), false);
+        if (instance)
+            instance->HandleGameObject(instance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), false);
             //Close the encounter door, open it in JustDied/Reset
      }
 
@@ -223,12 +223,12 @@ struct boss_selin_fireheartAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (!pInstance)
+        if (!instance)
             return;
 
-        pInstance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
-        pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);                  // Open the encounter door
-        pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_DOOR), true);                 // Open the door leading further in
+        instance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
+        instance->HandleGameObject(instance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);                  // Open the encounter door
+        instance->HandleGameObject(instance->GetData64(DATA_SELIN_DOOR), true);                 // Open the door leading further in
         ShatterRemainingCrystals();
     }
 
@@ -326,9 +326,9 @@ struct mob_fel_crystalAI : public ScriptedAI
 
     void JustDied(Unit* /*killer*/)
     {
-        if (ScriptedInstance* pInstance = me->GetInstanceData())
+        if (ScriptedInstance* instance = me->GetInstanceScript())
         {
-            Creature* Selin = (Unit::GetCreature(*me, pInstance->GetData64(DATA_SELIN)));
+            Creature* Selin = (Unit::GetCreature(*me, instance->GetData64(DATA_SELIN)));
             if (Selin && Selin->isAlive())
             {
                 if (CAST_AI(boss_selin_fireheartAI, Selin->AI())->CrystalGUID == me->GetGUID())

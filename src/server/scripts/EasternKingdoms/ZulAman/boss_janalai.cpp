@@ -108,7 +108,7 @@ struct boss_janalaiAI : public ScriptedAI
 {
     boss_janalaiAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance =c->GetInstanceData();
+        instance =c->GetInstanceScript();
 
         SpellEntry *TempSpell = GET_SPELL(SPELL_HATCH_EGG);
         if (TempSpell && TempSpell->EffectImplicitTargetA[0] != 1)
@@ -118,7 +118,7 @@ struct boss_janalaiAI : public ScriptedAI
         }
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 FireBreathTimer;
     uint32 BombTimer;
@@ -138,8 +138,8 @@ struct boss_janalaiAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_JANALAIEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_JANALAIEVENT, NOT_STARTED);
 
         FireBreathTimer = 8000;
         BombTimer = 30000;
@@ -165,8 +165,8 @@ struct boss_janalaiAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_JANALAIEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_JANALAIEVENT, DONE);
     }
 
     void KilledUnit(Unit* /*victim*/)
@@ -176,8 +176,8 @@ struct boss_janalaiAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_JANALAIEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_JANALAIEVENT, IN_PROGRESS);
 
         DoScriptText(SAY_AGGRO, me);
         DoZoneInCombat();
@@ -477,10 +477,10 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
 {
     mob_amanishi_hatcherAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance =c->GetInstanceData();
+        instance =c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 waypoint;
     uint32 HatchNum;
@@ -547,7 +547,7 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance || !(pInstance->GetData(DATA_JANALAIEVENT) == IN_PROGRESS))
+        if (!instance || !(instance->GetData(DATA_JANALAIEVENT) == IN_PROGRESS))
         {
             me->DisappearAndDie();
             return;
@@ -596,10 +596,10 @@ struct mob_hatchlingAI : public ScriptedAI
 {
     mob_hatchlingAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance =c->GetInstanceData();
+        instance =c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     uint32 BuffetTimer;
 
     void Reset()
@@ -617,7 +617,7 @@ struct mob_hatchlingAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (!pInstance || !(pInstance->GetData(DATA_JANALAIEVENT) == IN_PROGRESS))
+        if (!instance || !(instance->GetData(DATA_JANALAIEVENT) == IN_PROGRESS))
         {
             me->DisappearAndDie();
             return;

@@ -63,7 +63,7 @@ EndScriptData */
 
 struct boss_twinemperorsAI : public ScriptedAI
 {
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     uint32 Heal_Timer;
     uint32 Teleport_Timer;
     bool AfterTeleport;
@@ -79,7 +79,7 @@ struct boss_twinemperorsAI : public ScriptedAI
 
     boss_twinemperorsAI(Creature *c): ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     void TwinReset()
@@ -98,9 +98,9 @@ struct boss_twinemperorsAI : public ScriptedAI
 
     Creature *GetOtherBoss()
     {
-        if (pInstance)
+        if (instance)
         {
-            return (Creature *)Unit::GetUnit((*me), pInstance->GetData64(IAmVeklor() ? DATA_VEKNILASH : DATA_VEKLOR));
+            return (Creature *)Unit::GetUnit((*me), instance->GetData64(IAmVeklor() ? DATA_VEKNILASH : DATA_VEKLOR));
         }
         else
         {
@@ -211,7 +211,7 @@ struct boss_twinemperorsAI : public ScriptedAI
 
     void TeleportToMyBrother()
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         Teleport_Timer = TELEPORTTIME;

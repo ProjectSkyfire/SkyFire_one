@@ -37,10 +37,10 @@ struct boss_baroness_anastariAI : public ScriptedAI
 {
     boss_baroness_anastariAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = me->GetInstanceData();
+        instance = me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 BansheeWail_Timer;
     uint32 BansheeCurse_Timer;
@@ -61,8 +61,8 @@ struct boss_baroness_anastariAI : public ScriptedAI
 
      void JustDied(Unit* /*Killer*/)
      {
-         if (pInstance)
-             pInstance->SetData(TYPE_BARONESS, IN_PROGRESS);
+         if (instance)
+             instance->SetData(TYPE_BARONESS, IN_PROGRESS);
      }
 
     void UpdateAI(const uint32 diff)

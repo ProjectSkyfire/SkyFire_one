@@ -69,9 +69,9 @@ EndScriptData */
 #define SPELL_SPELLSHIELD       33054
 #define SPELL_BLAST_WAVE        33061
 
-bool CheckAllBossDied(ScriptedInstance* pInstance, Creature* me)
+bool CheckAllBossDied(ScriptedInstance* instance, Creature* me)
 {
-    if (!pInstance || !me)
+    if (!instance || !me)
         return false;
 
     uint64 MaulgarGUID = 0;
@@ -86,11 +86,11 @@ bool CheckAllBossDied(ScriptedInstance* pInstance, Creature* me)
     Creature* Olm = NULL;
     Creature* Krosh = NULL;
 
-    MaulgarGUID = pInstance->GetData64(DATA_MAULGAR);
-    KigglerGUID = pInstance->GetData64(DATA_KIGGLERTHECRAZED);
-    BlindeyeGUID = pInstance->GetData64(DATA_BLINDEYETHESEER);
-    OlmGUID = pInstance->GetData64(DATA_OLMTHESUMMONER);
-    KroshGUID = pInstance->GetData64(DATA_KROSHFIREHAND);
+    MaulgarGUID = instance->GetData64(DATA_MAULGAR);
+    KigglerGUID = instance->GetData64(DATA_KIGGLERTHECRAZED);
+    BlindeyeGUID = instance->GetData64(DATA_BLINDEYETHESEER);
+    OlmGUID = instance->GetData64(DATA_OLMTHESUMMONER);
+    KroshGUID = instance->GetData64(DATA_KROSHFIREHAND);
 
     Maulgar = (Unit::GetCreature((*me), MaulgarGUID));
     Kiggler = (Unit::GetCreature((*me), KigglerGUID));
@@ -112,12 +112,12 @@ struct boss_high_king_maulgarAI : public ScriptedAI
 {
     boss_high_king_maulgarAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         for (uint8 i = 0; i < 4; ++i)
             Council[i] = 0;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 ArcingSmash_Timer;
     uint32 MightyBlow_Timer;
@@ -156,8 +156,8 @@ struct boss_high_king_maulgarAI : public ScriptedAI
         }
 
         //reset encounter
-        if (pInstance)
-            pInstance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
     }
 
     void KilledUnit()
@@ -174,8 +174,8 @@ struct boss_high_king_maulgarAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (CheckAllBossDied(pInstance, me))
-            pInstance->SetData(DATA_MAULGAREVENT, DONE);
+        if (CheckAllBossDied(instance, me))
+            instance->SetData(DATA_MAULGAREVENT, DONE);
     }
 
        void AddDeath()
@@ -197,23 +197,23 @@ struct boss_high_king_maulgarAI : public ScriptedAI
     void GetCouncil()
     {
         //get council member's guid to respawn them if needed
-        Council[0] = pInstance->GetData64(DATA_KIGGLERTHECRAZED);
-        Council[1] = pInstance->GetData64(DATA_BLINDEYETHESEER);
-        Council[2] = pInstance->GetData64(DATA_OLMTHESUMMONER);
-        Council[3] = pInstance->GetData64(DATA_KROSHFIREHAND);
+        Council[0] = instance->GetData64(DATA_KIGGLERTHECRAZED);
+        Council[1] = instance->GetData64(DATA_BLINDEYETHESEER);
+        Council[2] = instance->GetData64(DATA_OLMTHESUMMONER);
+        Council[3] = instance->GetData64(DATA_KROSHFIREHAND);
     }
 
     void StartEvent(Unit *who)
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
         GetCouncil();
 
         DoScriptText(SAY_AGGRO, me);
 
-        pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-        pInstance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
+        instance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+        instance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
 
         DoZoneInCombat();
     }
@@ -221,9 +221,9 @@ struct boss_high_king_maulgarAI : public ScriptedAI
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!me->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!me->isInCombat() && instance && instance->GetData(DATA_MAULGAREVENT))
         {
-            Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
+            Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if (pTarget)
             {
@@ -237,7 +237,7 @@ struct boss_high_king_maulgarAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
+        if (instance && !instance->GetData(DATA_MAULGAREVENT))
         {
             EnterEvadeMode();
             return;
@@ -307,14 +307,14 @@ struct boss_olm_the_summonerAI : public ScriptedAI
 {
     boss_olm_the_summonerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 DarkDecay_Timer;
     uint32 Summon_Timer;
        uint32 DeathCoil_Timer;
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     void Reset()
     {
@@ -323,40 +323,40 @@ struct boss_olm_the_summonerAI : public ScriptedAI
         DeathCoil_Timer = 20000;
 
         //reset encounter
-        if (pInstance)
-            pInstance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-            pInstance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
+            instance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            instance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
+        if (instance)
         {
             Creature *Maulgar = NULL;
-            Maulgar = (Creature*)(Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAR)));
+            Maulgar = (Creature*)(Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAR)));
 
             if (Maulgar)
                 ((boss_high_king_maulgarAI*)Maulgar->AI())->AddDeath();
 
-            if (CheckAllBossDied(pInstance, me))
-                pInstance->SetData(DATA_MAULGAREVENT, DONE);
+            if (CheckAllBossDied(instance, me))
+                instance->SetData(DATA_MAULGAREVENT, DONE);
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!me->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!me->isInCombat() && instance && instance->GetData(DATA_MAULGAREVENT))
         {
-            Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
+            Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if (pTarget)
             {
@@ -369,7 +369,7 @@ struct boss_olm_the_summonerAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
+        if (instance && !instance->GetData(DATA_MAULGAREVENT))
         {
             EnterEvadeMode();
             return;
@@ -408,7 +408,7 @@ struct boss_kiggler_the_crazedAI : public ScriptedAI
 {
     boss_kiggler_the_crazedAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 GreaterPolymorph_Timer;
@@ -416,7 +416,7 @@ struct boss_kiggler_the_crazedAI : public ScriptedAI
     uint32 ArcaneShock_Timer;
     uint32 ArcaneExplosion_Timer;
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     void Reset()
     {
@@ -426,40 +426,40 @@ struct boss_kiggler_the_crazedAI : public ScriptedAI
         ArcaneExplosion_Timer = 30000;
 
         //reset encounter
-        if (pInstance)
-            pInstance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-            pInstance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
+            instance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            instance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
+        if (instance)
         {
             Creature *Maulgar = NULL;
-            Maulgar = (Creature*)(Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAR)));
+            Maulgar = (Creature*)(Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAR)));
 
             if (Maulgar)
                 ((boss_high_king_maulgarAI*)Maulgar->AI())->AddDeath();
 
-            if (CheckAllBossDied(pInstance, me))
-                pInstance->SetData(DATA_MAULGAREVENT, DONE);
+            if (CheckAllBossDied(instance, me))
+                instance->SetData(DATA_MAULGAREVENT, DONE);
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!me->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!me->isInCombat() && instance && instance->GetData(DATA_MAULGAREVENT))
         {
-            Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
+            Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if (pTarget)
             {
@@ -472,7 +472,7 @@ struct boss_kiggler_the_crazedAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
+        if (instance && !instance->GetData(DATA_MAULGAREVENT))
         {
             EnterEvadeMode();
             return;
@@ -518,13 +518,13 @@ struct boss_blindeye_the_seerAI : public ScriptedAI
 {
     boss_blindeye_the_seerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 GreaterPowerWordShield_Timer;
     uint32 Heal_Timer;
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     void Reset()
     {
@@ -532,40 +532,40 @@ struct boss_blindeye_the_seerAI : public ScriptedAI
         Heal_Timer = 30000;
 
         //reset encounter
-        if (pInstance)
-            pInstance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-            pInstance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
+            instance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            instance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
+        if (instance)
         {
             Creature *Maulgar = NULL;
-            Maulgar = (Creature*)(Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAR)));
+            Maulgar = (Creature*)(Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAR)));
 
             if (Maulgar)
                 ((boss_high_king_maulgarAI*)Maulgar->AI())->AddDeath();
 
-            if (CheckAllBossDied(pInstance, me))
-                pInstance->SetData(DATA_MAULGAREVENT, DONE);
+            if (CheckAllBossDied(instance, me))
+                instance->SetData(DATA_MAULGAREVENT, DONE);
         }
     }
 
      void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!me->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!me->isInCombat() && instance && instance->GetData(DATA_MAULGAREVENT))
         {
-            Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
+            Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if (pTarget)
             {
@@ -578,7 +578,7 @@ struct boss_blindeye_the_seerAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
+        if (instance && !instance->GetData(DATA_MAULGAREVENT))
         {
             EnterEvadeMode();
             return;
@@ -607,14 +607,14 @@ struct boss_krosh_firehandAI : public ScriptedAI
 {
     boss_krosh_firehandAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 GreaterFireball_Timer;
     uint32 SpellShield_Timer;
     uint32 BlastWave_Timer;
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     void Reset()
     {
@@ -623,40 +623,40 @@ struct boss_krosh_firehandAI : public ScriptedAI
         BlastWave_Timer = 20000;
 
         //reset encounter
-        if (pInstance)
-            pInstance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_MAULGAREVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
-            pInstance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
+            instance->SetData64(DATA_MAULGAREVENT_TANK, who->GetGUID());
+            instance->SetData(DATA_MAULGAREVENT, IN_PROGRESS);
         }
     }
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
+        if (instance)
         {
             Creature *Maulgar = NULL;
-            Maulgar = (Creature*)(Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAR)));
+            Maulgar = (Creature*)(Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAR)));
 
             if (Maulgar)
                 ((boss_high_king_maulgarAI*)Maulgar->AI())->AddDeath();
 
-            if (CheckAllBossDied(pInstance, me))
-                pInstance->SetData(DATA_MAULGAREVENT, DONE);
+            if (CheckAllBossDied(instance, me))
+                instance->SetData(DATA_MAULGAREVENT, DONE);
         }
     }
 
     void UpdateAI(const uint32 diff)
     {
         //Only if not incombat check if the event is started
-        if (!me->isInCombat() && pInstance && pInstance->GetData(DATA_MAULGAREVENT))
+        if (!me->isInCombat() && instance && instance->GetData(DATA_MAULGAREVENT))
         {
-            Unit *pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_MAULGAREVENT_TANK));
+            Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_MAULGAREVENT_TANK));
 
             if (pTarget)
             {
@@ -669,7 +669,7 @@ struct boss_krosh_firehandAI : public ScriptedAI
             return;
 
         //someone evaded!
-        if (pInstance && !pInstance->GetData(DATA_MAULGAREVENT))
+        if (instance && !instance->GetData(DATA_MAULGAREVENT))
         {
             EnterEvadeMode();
             return;

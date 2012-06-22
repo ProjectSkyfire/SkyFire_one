@@ -66,13 +66,13 @@ struct boss_nazanAI : public ScriptedAI
 {
     boss_nazanAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
         VazrudenGUID = 0;
         flight = true;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Fireball_Timer;
     uint32 ConeOfFire_Timer;
@@ -183,11 +183,11 @@ struct boss_vazrudenAI : public ScriptedAI
 {
     boss_vazrudenAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Revenge_Timer;
     bool HeroicMode;
@@ -265,11 +265,11 @@ struct boss_vazruden_the_heraldAI : public ScriptedAI
         sentryDown = false;
         NazanGUID = 0;
         VazrudenGUID = 0;
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     std::vector<uint64> OrcGUID;
     std::list<Creature*> orcs;
@@ -296,8 +296,8 @@ struct boss_vazruden_the_heraldAI : public ScriptedAI
         UnsummonAdds();
         me->GetMotionMaster()->MovePath(PATH_ENTRY, true);
 
-        if (pInstance)
-            pInstance->SetData(DATA_VAZRUDEN, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_VAZRUDEN, NOT_STARTED);
     }
 
     void UnsummonAdds()
@@ -363,8 +363,8 @@ struct boss_vazruden_the_heraldAI : public ScriptedAI
             check = 0;
             DoScriptText(SAY_INTRO, me);
 
-            if (pInstance)
-                pInstance->SetData(DATA_VAZRUDEN, IN_PROGRESS);
+            if (instance)
+                instance->SetData(DATA_VAZRUDEN, IN_PROGRESS);
         }
     }
 
@@ -439,8 +439,8 @@ struct boss_vazruden_the_heraldAI : public ScriptedAI
                     me->SummonGameObject(ENTRY_REINFORCED_FEL_IRON_CHEST, VazrudenMiddle[0],VazrudenMiddle[1],VazrudenMiddle[2],0, 0, 0, 0, 0, 0);
                     me->SetLootRecipient(NULL);
                     me->DealDamage(me, me->GetMaxHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    if (pInstance)
-                        pInstance->SetData(DATA_VAZRUDEN, DONE);
+                    if (instance)
+                        instance->SetData(DATA_VAZRUDEN, DONE);
                 }
                 check = 2000;
             } else check -= diff;

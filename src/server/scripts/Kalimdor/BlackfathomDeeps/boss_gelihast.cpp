@@ -30,30 +30,30 @@ struct boss_gelihastAI : public ScriptedAI
 {
     boss_gelihastAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 uiNetTimer;
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     void Reset()
     {
         uiNetTimer = urand(2000, 4000);
-        if (pInstance)
-            pInstance->SetData(TYPE_GELIHAST, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_GELIHAST, NOT_STARTED);
     }
 
     void EnterCombat(Unit* /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_GELIHAST, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_GELIHAST, IN_PROGRESS);
     }
 
     void JustDied(Unit* /*killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_GELIHAST, DONE);
+        if (instance)
+            instance->SetData(TYPE_GELIHAST, DONE);
     }
 
     void UpdateAI(const uint32 diff)

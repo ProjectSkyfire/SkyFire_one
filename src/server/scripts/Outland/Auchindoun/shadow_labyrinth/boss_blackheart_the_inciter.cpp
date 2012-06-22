@@ -59,10 +59,10 @@ struct boss_blackheart_the_inciterAI : public ScriptedAI
 {
     boss_blackheart_the_inciterAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     bool InciteChaos;
     uint32 InciteChaos_Timer;
@@ -78,8 +78,8 @@ struct boss_blackheart_the_inciterAI : public ScriptedAI
         Charge_Timer = 5000;
         Knockback_Timer = 15000;
 
-        if (pInstance)
-            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -95,8 +95,8 @@ struct boss_blackheart_the_inciterAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, DONE);
     }
 
     void EnterCombat(Unit *who)
@@ -108,8 +108,8 @@ struct boss_blackheart_the_inciterAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO3, me); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)

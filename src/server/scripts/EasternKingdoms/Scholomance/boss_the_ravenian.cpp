@@ -54,12 +54,12 @@ struct boss_theravenianAI : public ScriptedAI
 
     void JustDied(Unit * /*killer*/)
     {
-        ScriptedInstance *pInstance = me->GetInstanceData();
-        if (pInstance)
+        ScriptedInstance *instance = me->GetInstanceScript();
+        if (instance)
         {
-            pInstance->SetData(DATA_THERAVENIAN_DEATH, 0);
+            instance->SetData(DATA_THERAVENIAN_DEATH, 0);
 
-            if (pInstance->GetData(TYPE_GANDLING) == IN_PROGRESS)
+            if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
                 me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
         }
     }

@@ -241,14 +241,14 @@ struct mob_fel_overseerAI : public ScriptedAI
 {
     mob_fel_overseerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     void JustDied(Unit* killer)
     {
-        pInstance->SetData(TYPE_OVERSEER, DONE);
+        instance->SetData(TYPE_OVERSEER, DONE);
     }
 };
 
@@ -262,7 +262,7 @@ void AddSC_instance_shadow_labyrinth()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_shadow_labyrinth";
-    newscript->GetInstanceData = &GetInstanceData_instance_shadow_labyrinth;
+    newscript->GetInstanceScript = &GetInstanceData_instance_shadow_labyrinth;
     newscript->RegisterSelf();
 
     newscript = new Script;

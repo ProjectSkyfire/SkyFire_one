@@ -72,7 +72,7 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
 {
     boss_the_lurker_belowAI(Creature *c) : Scripted_NoMovementAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         SpellEntry *TempSpell = GET_SPELL(SPELL_SPOUT_ANIM);
         if (TempSpell)
         {
@@ -82,7 +82,7 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
         }
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     SummonList Summons;
 
     bool Spawned;
@@ -102,7 +102,7 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
 
     bool CheckCanStart()//check if players fished
     {
-        if (pInstance && pInstance->GetData(DATA_STRANGE_POOL) == NOT_STARTED)
+        if (instance && instance->GetData(DATA_STRANGE_POOL) == NOT_STARTED)
             return false;
         return true;
     }
@@ -127,10 +127,10 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
 
         Summons.DespawnAll();
 
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(DATA_THELURKERBELOWEVENT, NOT_STARTED);
-            pInstance->SetData(DATA_STRANGE_POOL, NOT_STARTED);
+            instance->SetData(DATA_THELURKERBELOWEVENT, NOT_STARTED);
+            instance->SetData(DATA_STRANGE_POOL, NOT_STARTED);
         }
         DoCast(me, SPELL_SUBMERGE);//submerge anim
         me->SetVisibility(VISIBILITY_OFF);//we start invis under water, submerged
@@ -140,16 +140,16 @@ struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_THELURKERBELOWEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_THELURKERBELOWEVENT, DONE);
 
         Summons.DespawnAll();
     }
 
     void EnterCombat(Unit * who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_THELURKERBELOWEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_THELURKERBELOWEVENT, IN_PROGRESS);
         Scripted_NoMovementAI::EnterCombat(who);
     }
 

@@ -136,12 +136,12 @@ struct boss_grandmaster_vorpilAI : public ScriptedAI
 {
     boss_grandmaster_vorpilAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
         Intro = false;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     bool Intro, HelpYell;
     bool sumportals;
     bool HeroicMode;
@@ -161,8 +161,8 @@ struct boss_grandmaster_vorpilAI : public ScriptedAI
         HelpYell = false;
         destroyPortals();
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_GRANDMASTERVORPILEVENT, NOT_STARTED);
     }
 
     void summonPortals()
@@ -230,8 +230,8 @@ struct boss_grandmaster_vorpilAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
         destroyPortals();
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_GRANDMASTERVORPILEVENT, DONE);
     }
 
     void EnterCombat(Unit *who)
@@ -244,8 +244,8 @@ struct boss_grandmaster_vorpilAI : public ScriptedAI
         }
         summonPortals();
 
-        if (pInstance)
-            pInstance->SetData(DATA_GRANDMASTERVORPILEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_GRANDMASTERVORPILEVENT, IN_PROGRESS);
     }
 
     void MoveInLineOfSight(Unit *who)

@@ -47,11 +47,11 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
 {
     boss_watchkeeper_gargolmarAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint32 Surge_Timer;
@@ -70,8 +70,8 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
         HasTaunted = false;
         YelledForHeal = false;
 
-        if (pInstance)
-            pInstance->SetData(DATA_GARGOLMAR, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_GARGOLMAR, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
@@ -83,8 +83,8 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
             case 2: DoScriptText(SAY_AGGRO_3, me); break;
         }
 
-        if (pInstance)
-            pInstance->SetData(DATA_GARGOLMAR, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_GARGOLMAR, IN_PROGRESS);
     }
 
     void MoveInLineOfSight(Unit* who)
@@ -121,8 +121,8 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
     {
         DoScriptText(SAY_DIE, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_GARGOLMAR, DONE);
+        if (instance)
+            instance->SetData(DATA_GARGOLMAR, DONE);
     }
 
     void UpdateAI(const uint32 diff)

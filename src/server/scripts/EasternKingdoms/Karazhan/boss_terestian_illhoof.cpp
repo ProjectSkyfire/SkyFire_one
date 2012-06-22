@@ -62,10 +62,10 @@ struct mob_kilrekAI : public ScriptedAI
 {
     mob_kilrekAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 TerestianGUID;
 
@@ -79,7 +79,7 @@ struct mob_kilrekAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (!pInstance)
+        if (!instance)
         {
             ERROR_INST_DATA(me);
             return;
@@ -88,9 +88,9 @@ struct mob_kilrekAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
+        if (instance)
         {
-            uint64 TerestianGUID = pInstance->GetData64(DATA_TERESTIAN);
+            uint64 TerestianGUID = instance->GetData64(DATA_TERESTIAN);
             if (TerestianGUID)
             {
                 Unit* Terestian = Unit::GetUnit((*me), TerestianGUID);
@@ -173,10 +173,10 @@ struct boss_terestianAI : public ScriptedAI
     {
         for (uint8 i = 0; i < 2; ++i)
             PortalGUID[i] = 0;
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 PortalGUID[2];
     uint8 PortalsCount;
@@ -214,8 +214,8 @@ struct boss_terestianAI : public ScriptedAI
         SummonedPortals     = false;
         Berserk             = false;
 
-        if (pInstance)
-            pInstance->SetData(TYPE_TERESTIAN, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_TERESTIAN, NOT_STARTED);
 
         me->RemoveAurasDueToSpell(SPELL_BROKEN_PACT);
 
@@ -270,8 +270,8 @@ struct boss_terestianAI : public ScriptedAI
 
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_TERESTIAN, DONE);
+        if (instance)
+            instance->SetData(TYPE_TERESTIAN, DONE);
     }
 
     void UpdateAI(const uint32 diff)

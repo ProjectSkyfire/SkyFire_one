@@ -35,15 +35,15 @@ EndScriptData */
 
 bool GOHello_go_barrel_old_hillsbrad(Player* player, GameObject* _GO)
 {
-    ScriptedInstance* pInstance = _GO->GetInstanceData();
+    ScriptedInstance* instance = _GO->GetInstanceScript();
 
-    if (!pInstance)
+    if (!instance)
         return false;
 
-    if (pInstance->GetData(TYPE_BARREL_DIVERSION) == DONE)
+    if (instance->GetData(TYPE_BARREL_DIVERSION) == DONE)
         return false;
 
-    pInstance->SetData(TYPE_BARREL_DIVERSION, IN_PROGRESS);
+    instance->SetData(TYPE_BARREL_DIVERSION, IN_PROGRESS);
 
     return false;
 }

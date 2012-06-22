@@ -161,6 +161,6 @@ void AddSC_instance_ramparts()
     Script* pNewScript;
     pNewScript = new Script;
     pNewScript->Name = "instance_ramparts";
-    pNewScript->GetInstanceData = &GetInstanceData_instance_ramparts;
+    pNewScript->GetInstanceScript = &GetInstanceData_instance_ramparts;
     pNewScript->RegisterSelf();
 }

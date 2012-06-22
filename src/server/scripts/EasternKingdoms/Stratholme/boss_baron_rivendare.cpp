@@ -83,10 +83,10 @@ struct boss_baron_rivendareAI : public ScriptedAI
 {
     boss_baron_rivendareAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = me->GetInstanceData();
+        instance = me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 ShadowBolt_Timer;
     uint32 Cleave_Timer;
@@ -101,14 +101,14 @@ struct boss_baron_rivendareAI : public ScriptedAI
         MortalStrike_Timer = 12000;
         //        RaiseDead_Timer = 30000;
         SummonSkeletons_Timer = 34000;
-        if (pInstance && pInstance->GetData(TYPE_RAMSTEIN) == DONE)
-            pInstance->SetData(TYPE_BARON, NOT_STARTED);
+        if (instance && instance->GetData(TYPE_RAMSTEIN) == DONE)
+            instance->SetData(TYPE_BARON, NOT_STARTED);
     }
 
     void AttackStart(Unit* who)
     {
-        if (pInstance)//can't use entercombat(), boss' dmg aura sets near players in combat, before entering the room's door
-            pInstance->SetData(TYPE_BARON, IN_PROGRESS);
+        if (instance)//can't use entercombat(), boss' dmg aura sets near players in combat, before entering the room's door
+            instance->SetData(TYPE_BARON, IN_PROGRESS);
         ScriptedAI::AttackStart(who);
     }
 
@@ -120,8 +120,8 @@ struct boss_baron_rivendareAI : public ScriptedAI
 
      void JustDied(Unit* /*Killer*/)
      {
-         if (pInstance)
-             pInstance->SetData(TYPE_BARON, DONE);
+         if (instance)
+             instance->SetData(TYPE_BARON, DONE);
      }
 
     void UpdateAI(const uint32 diff)

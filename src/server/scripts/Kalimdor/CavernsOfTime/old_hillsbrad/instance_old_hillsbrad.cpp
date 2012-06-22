@@ -242,7 +242,7 @@ void AddSC_instance_old_hillsbrad()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_old_hillsbrad";
-    newscript->GetInstanceData = &GetInstanceData_instance_old_hillsbrad;
+    newscript->GetInstanceScript = &GetInstanceData_instance_old_hillsbrad;
     newscript->RegisterSelf();
 }
 

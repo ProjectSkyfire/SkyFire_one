@@ -68,9 +68,9 @@ struct boss_akilzonAI : public ScriptedAI
         SpellEntry *TempSpell = GET_SPELL(SPELL_ELECTRICAL_DAMAGE);
         if (TempSpell)
             TempSpell->EffectBasePoints[1] = 49;//disable bugged lightning until fixed in core
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 BirdGUIDs[8];
     uint64 TargetGUID;
@@ -91,8 +91,8 @@ struct boss_akilzonAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_AKILZONEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_AKILZONEVENT, NOT_STARTED);
 
         StaticDisruption_Timer = urand(10000, 20000); //10 to 20 seconds (bosskillers)
         GustOfWind_Timer = urand(20000, 30000); //20 to 30 seconds(bosskillers)
@@ -121,16 +121,16 @@ struct boss_akilzonAI : public ScriptedAI
         me->MonsterYell(SAY_ONAGGRO, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_ONAGGRO);
         DoZoneInCombat();
-        if (pInstance)
-            pInstance->SetData(DATA_AKILZONEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_AKILZONEVENT, IN_PROGRESS);
     }
 
     void JustDied(Unit* /*Killer*/)
     {
         me->MonsterYell(SAY_ONDEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_ONDEATH);
-        if (pInstance)
-            pInstance->SetData(DATA_AKILZONEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_AKILZONEVENT, DONE);
         DespawnSummons();
     }
 

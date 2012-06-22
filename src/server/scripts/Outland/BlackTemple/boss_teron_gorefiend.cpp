@@ -189,10 +189,10 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 {
     boss_teron_gorefiendAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 IncinerateTimer;
     uint32 SummonDoomBlossomTimer;
@@ -210,8 +210,8 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_TERONGOREFIENDEVENT, NOT_STARTED);
 
         IncinerateTimer = 20000 + rand()%11000;
         SummonDoomBlossomTimer = 12000;
@@ -249,8 +249,8 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
             if (!me->isInCombat() && !Intro && me->IsWithinDistInMap(who, 60.0f) && (who->GetTypeId() == TYPEID_PLAYER))
             {
-                if (pInstance)
-                    pInstance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
+                if (instance)
+                    instance->SetData(DATA_TERONGOREFIENDEVENT, IN_PROGRESS);
 
                 me->GetMotionMaster()->Clear(false);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -269,8 +269,8 @@ struct boss_teron_gorefiendAI : public ScriptedAI
 
     void JustDied(Unit * /*victim*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_TERONGOREFIENDEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_TERONGOREFIENDEVENT, DONE);
 
         DoScriptText(SAY_DEATH, me);
     }

@@ -48,10 +48,10 @@ struct npc_sergeant_blyAI : public ScriptedAI
 {
     npc_sergeant_blyAI(Creature *c) : ScriptedAI(c)
     {
-        //pInstance = c->GetInstanceData();
+        //instance = c->GetInstanceScript();
     }
 
-    //ScriptedInstance* pInstance;
+    //ScriptedInstance* instance;
 
     uint32 ShieldBash_Timer;
     uint32 Revenge_Timer;                                   //this is wrong, spell should never be used unless me->getVictim() dodge, parry or block attack. Trinity support required.
@@ -63,20 +63,20 @@ struct npc_sergeant_blyAI : public ScriptedAI
 
         me->setFaction(FACTION_FRIENDLY);
 
-        /*if (pInstance)
-            pInstance->SetData(0, NOT_STARTED);*/
+        /*if (instance)
+            instance->SetData(0, NOT_STARTED);*/
     }
 
     void EnterCombat(Unit * /*who*/)
     {
-        /*if (pInstance)
-            pInstance->SetData(0, IN_PROGRESS);*/
+        /*if (instance)
+            instance->SetData(0, IN_PROGRESS);*/
     }
 
     void JustDied(Unit * /*victim*/)
     {
-        /*if (pInstance)
-            pInstance->SetData(0, DONE);*/
+        /*if (instance)
+            instance->SetData(0, DONE);*/
     }
 
     void UpdateAI(const uint32 diff)
@@ -106,12 +106,12 @@ CreatureAI* GetAI_npc_sergeant_bly(Creature* creature)
 
 bool GossipHello_npc_sergeant_bly(Player* player, Creature* creature)
 {
-    /*if (pInstance->GetData(0) == DONE)
+    /*if (instance->GetData(0) == DONE)
     {*/
     player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
     player->SEND_GOSSIP_MENU(1517, creature->GetGUID());
     /*}
-    else if (pInstance->GetData(0) == IN_PROGRESS)
+    else if (instance->GetData(0) == IN_PROGRESS)
         player->SEND_GOSSIP_MENU(1516, creature->GetGUID());
     else
         player->SEND_GOSSIP_MENU(1515, creature->GetGUID());*/
@@ -145,27 +145,27 @@ struct npc_weegli_blastfuseAI : public ScriptedAI
 {
     npc_weegli_blastfuseAI(Creature *c) : ScriptedAI(c)
     {
-        //pInstance = c->GetInstanceData();
+        //instance = c->GetInstanceScript();
     }
 
-    //ScriptedInstance* pInstance;
+    //ScriptedInstance* instance;
 
     void Reset()
     {
-        /*if (pInstance)
-            pInstance->SetData(0, NOT_STARTED);*/
+        /*if (instance)
+            instance->SetData(0, NOT_STARTED);*/
     }
 
     void EnterCombat(Unit * /*who*/)
     {
-        /*if (pInstance)
-            pInstance->SetData(0, IN_PROGRESS);*/
+        /*if (instance)
+            instance->SetData(0, IN_PROGRESS);*/
     }
 
     void JustDied(Unit * /*victim*/)
     {
-        /*if (pInstance)
-            pInstance->SetData(0, DONE);*/
+        /*if (instance)
+            instance->SetData(0, DONE);*/
     }
 
     void UpdateAI(const uint32 /*diff*/)
@@ -184,12 +184,12 @@ CreatureAI* GetAI_npc_weegli_blastfuse(Creature* creature)
 bool GossipHello_npc_weegli_blastfuse(Player* player, Creature* creature)
 {
     //event not implemented yet, this is only placeholder for future developement
-    /*if (pInstance->GetData(0) == DONE)
+    /*if (instance->GetData(0) == DONE)
     {
         player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
         player->SEND_GOSSIP_MENU(1514, creature->GetGUID());//if event can proceed to end
     }
-    else if (pInstance->GetData(0) == IN_PROGRESS)
+    else if (instance->GetData(0) == IN_PROGRESS)
         player->SEND_GOSSIP_MENU(1513, creature->GetGUID());//if event are in progress
     else*/
     player->SEND_GOSSIP_MENU(1511, creature->GetGUID());   //if event not started

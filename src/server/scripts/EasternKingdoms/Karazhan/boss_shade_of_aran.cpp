@@ -87,10 +87,10 @@ struct boss_aranAI : public ScriptedAI
 {
     boss_aranAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 SecondarySpellTimer;
     uint32 NormalCastTimer;
@@ -141,11 +141,11 @@ struct boss_aranAI : public ScriptedAI
         Drinking = false;
         DrinkInturrupted = false;
 
-        if (pInstance)
+        if (instance)
         {
             // Not in progress
-            pInstance->SetData(TYPE_ARAN, NOT_STARTED);
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), true);
+            instance->SetData(TYPE_ARAN, NOT_STARTED);
+            instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), true);
         }
     }
 
@@ -158,10 +158,10 @@ struct boss_aranAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(TYPE_ARAN, DONE);
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), true);
+            instance->SetData(TYPE_ARAN, DONE);
+            instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), true);
         }
     }
 
@@ -169,10 +169,10 @@ struct boss_aranAI : public ScriptedAI
     {
         DoScriptText(RAND(SAY_AGGRO1, SAY_AGGRO2, SAY_AGGRO3), me);
 
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(TYPE_ARAN, IN_PROGRESS);
-            pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), false);
+            instance->SetData(TYPE_ARAN, IN_PROGRESS);
+            instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), false);
         }
     }
 
@@ -220,9 +220,9 @@ struct boss_aranAI : public ScriptedAI
         {
             if (CloseDoorTimer <= diff)
             {
-                if (pInstance)
+                if (instance)
                 {
-                    pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), false);
+                    instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), false);
                     CloseDoorTimer = 0;
                 }
             } else CloseDoorTimer -= diff;

@@ -57,10 +57,10 @@ struct boss_arlokkAI : public ScriptedAI
 {
     boss_arlokkAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = creature->GetInstanceData();
+        instance = creature->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 m_uiShadowWordPain_Timer;
     uint32 m_uiGouge_Timer;
@@ -107,8 +107,8 @@ struct boss_arlokkAI : public ScriptedAI
 
     void JustReachedHome()
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_ARLOKK, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_ARLOKK, NOT_STARTED);
 
         // boss is summoned, so despawn
         me->ForcedDespawn();
@@ -122,8 +122,8 @@ struct boss_arlokkAI : public ScriptedAI
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.0f);
 
-        if (pInstance)
-            pInstance->SetData(TYPE_ARLOKK, DONE);
+        if (instance)
+            instance->SetData(TYPE_ARLOKK, DONE);
     }
 
     void DoSummonPhanters()
@@ -289,10 +289,10 @@ struct mob_prowlerAI : public ScriptedAI
 
     mob_prowlerAI(Creature* creature) : ScriptedAI(creature)
     {
-        pInstance = creature->GetInstanceData();
+        instance = creature->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     void Reset()
     {

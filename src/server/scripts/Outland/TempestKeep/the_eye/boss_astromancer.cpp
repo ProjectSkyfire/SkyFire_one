@@ -76,13 +76,13 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
 {
     boss_high_astromancer_solarianAI(Creature *c) : ScriptedAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
 
         defaultarmor = me->GetArmor();
         defaultsize = me->GetFloatValue(OBJECT_FIELD_SCALE_X);
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     SummonList Summons;
 
     uint8 Phase;
@@ -125,8 +125,8 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
         Wrath_Timer = 20000+rand()%5000;//twice in phase one
         Phase = 1;
 
-        if (pInstance)
-            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, NOT_STARTED);
 
         me->SetArmor(defaultarmor);
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -141,8 +141,8 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
     {
         DoScriptText(SAY_AGGRO, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit *victim)
@@ -161,8 +161,8 @@ struct boss_high_astromancer_solarianAI : public ScriptedAI
         me->SetDisplayId(MODEL_HUMAN);
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_HIGHASTROMANCERSOLARIANEVENT, DONE);
     }
 
     void EnterCombat(Unit *who)
@@ -396,10 +396,10 @@ struct mob_solarium_priestAI : public ScriptedAI
 {
     mob_solarium_priestAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 healTimer;
     uint32 holysmiteTimer;
@@ -428,8 +428,8 @@ struct mob_solarium_priestAI : public ScriptedAI
             switch (rand()%2)
             {
                 case 0:
-                    if (pInstance)
-                        pTarget = Unit::GetUnit((*me), pInstance->GetData64(DATA_ASTROMANCER));
+                    if (instance)
+                        pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_ASTROMANCER));
                     break;
                 case 1:
                     pTarget = me;

@@ -37,10 +37,10 @@ struct boss_nerubenkanAI : public ScriptedAI
 {
     boss_nerubenkanAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = me->GetInstanceData();
+        instance = me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 EncasingWebs_Timer;
     uint32 PierceArmor_Timer;
@@ -61,8 +61,8 @@ struct boss_nerubenkanAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_NERUB, IN_PROGRESS);
+        if (instance)
+            instance->SetData(TYPE_NERUB, IN_PROGRESS);
     }
 
     void RaiseUndeadScarab(Unit* pVictim)

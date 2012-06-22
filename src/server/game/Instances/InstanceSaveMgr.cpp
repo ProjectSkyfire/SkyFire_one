@@ -163,7 +163,7 @@ void InstanceSave::SaveToDB()
     if (map)
     {
         ASSERT(map->IsDungeon());
-        if (InstanceScript *iData = ((InstanceMap*)map)->GetInstanceData())
+        if (InstanceScript *iData = ((InstanceMap*)map)->GetInstanceScript())
         {
             data = iData->GetSaveData();
             if (!data.empty())

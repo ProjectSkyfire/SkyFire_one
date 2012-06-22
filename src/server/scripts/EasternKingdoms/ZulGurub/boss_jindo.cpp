@@ -167,12 +167,12 @@ struct mob_healing_wardAI : public ScriptedAI
 {
     mob_healing_wardAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 Heal_Timer;
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     void Reset()
     {
@@ -188,9 +188,9 @@ struct mob_healing_wardAI : public ScriptedAI
         //Heal_Timer
         if (Heal_Timer <= diff)
         {
-            if (pInstance)
+            if (instance)
             {
-                Unit *pJindo = Unit::GetUnit((*me), pInstance->GetData64(DATA_JINDO));
+                Unit *pJindo = Unit::GetUnit((*me), instance->GetData64(DATA_JINDO));
                 if (pJindo)
                     DoCast(pJindo, SPELL_HEAL);
             }

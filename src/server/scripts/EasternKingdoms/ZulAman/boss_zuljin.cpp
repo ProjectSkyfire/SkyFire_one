@@ -146,9 +146,9 @@ struct boss_zuljinAI : public ScriptedAI
 {
     boss_zuljinAI(Creature *c) : ScriptedAI(c), Summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint64 SpiritGUID[4];
     uint64 ClawTargetGUID;
@@ -179,8 +179,8 @@ struct boss_zuljinAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ZULJINEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_ZULJINEVENT, NOT_STARTED);
 
         Phase = 0;
 
@@ -216,8 +216,8 @@ struct boss_zuljinAI : public ScriptedAI
 
     void EnterCombat(Unit * /*who*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ZULJINEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_ZULJINEVENT, IN_PROGRESS);
 
         DoZoneInCombat();
 
@@ -247,8 +247,8 @@ struct boss_zuljinAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_ZULJINEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_ZULJINEVENT, DONE);
 
         me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
         DoPlaySoundToSet(me, SOUND_DEATH);

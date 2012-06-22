@@ -139,10 +139,10 @@ struct npc_deaths_head_ward_keeperAI : public ScriptedAI
 {
     npc_deaths_head_ward_keeperAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
     uint32 QuillboarChanneling_Timer;
 
     void Reset()
@@ -155,8 +155,8 @@ struct npc_deaths_head_ward_keeperAI : public ScriptedAI
         if (!me->isAlive())
             return;
 
-        if (pInstance)
-            pInstance->SetData(TYPE_WARD_KEEPERS, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_WARD_KEEPERS, NOT_STARTED);
 
         if (QuillboarChanneling_Timer <= diff)
         {

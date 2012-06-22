@@ -84,10 +84,10 @@ struct boss_viscidusAI : public ScriptedAI
 {
     boss_viscidusAI(Creature *creature) : ScriptedAI(creature)
     {
-        pInstance = ((ScriptedInstance*)creature->GetInstanceData());
+        instance = ((ScriptedInstance*)creature->GetInstanceScript());
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     ViscidusState state;
     uint32 HitCounter;
 

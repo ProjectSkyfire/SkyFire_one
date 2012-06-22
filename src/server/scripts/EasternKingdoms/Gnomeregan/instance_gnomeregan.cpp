@@ -138,6 +138,6 @@ void AddSC_instance_gnomeregan()
 
     newscript = new Script;
     newscript->Name = "instance_gnomeregan";
-    newscript->GetInstanceData = &GetInstanceData_instance_gnomeregan;
+    newscript->GetInstanceScript = &GetInstanceData_instance_gnomeregan;
     newscript->RegisterSelf();
 }

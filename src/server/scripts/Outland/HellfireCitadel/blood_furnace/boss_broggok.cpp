@@ -40,11 +40,11 @@ struct boss_broggokAI : public ScriptedAI
 {
     boss_broggokAI(Creature *c) : ScriptedAI(c)
 	{
-            pInstance = c->GetInstanceData();
+            instance = c->GetInstanceScript();
             HeroicMode = me->GetMap()->IsHeroic();
 	}
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint32 AcidSpray_Timer;
@@ -57,22 +57,22 @@ struct boss_broggokAI : public ScriptedAI
         AcidSpray_Timer = 10000;
         PoisonSpawn_Timer = 5000;
         PoisonBolt_Timer = 7000;
-        if (pInstance)
-            pInstance->SetData(DATA_BROGGOKEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_BROGGOKEVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
     {
         DoScriptText(SAY_AGGRO, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_BROGGOKEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_BROGGOKEVENT, IN_PROGRESS);
     }
 
     void JustDied(Unit* Killer)
     {
-       if (pInstance)
-           pInstance->SetData(DATA_BROGGOKEVENT, DONE);
+       if (instance)
+           instance->SetData(DATA_BROGGOKEVENT, DONE);
     }
 
     void EnterEvadeMode()
@@ -86,9 +86,9 @@ struct boss_broggokAI : public ScriptedAI
         if (!me->isAlive())
             return;
 
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(DATA_BROGGOKEVENT, FAIL);
+            instance->SetData(DATA_BROGGOKEVENT, FAIL);
             float fRespX, fRespY, fRespZ;
             me->GetRespawnCoord(fRespX, fRespY, fRespZ);
             me->GetMotionMaster()->MovePoint(0, fRespX, fRespY, fRespZ);
@@ -149,11 +149,11 @@ struct mob_nascent_orcAI : public ScriptedAI
 {
     mob_nascent_orcAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Blow_Timer;
     uint32 Stomp_Timer;
@@ -179,8 +179,8 @@ struct mob_nascent_orcAI : public ScriptedAI
 
     void EnterEvadeMode()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_BROGGOKEVENT, FAIL);
+        if (instance)
+            instance->SetData(DATA_BROGGOKEVENT, FAIL);
 
         me->DeleteThreatList();
         me->CombatStop(true);
@@ -225,11 +225,11 @@ struct mob_broggok_poisoncloudAI : public ScriptedAI
 {
     mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     void Reset()
     {

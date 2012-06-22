@@ -113,7 +113,7 @@ struct boss_thekalAI : public ScriptedAI
 {
     boss_thekalAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     // Humanoid Timer
@@ -127,7 +127,7 @@ struct boss_thekalAI : public ScriptedAI
     uint32 Enrage_Timer;
     uint32 Frenzy_Timer;
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     bool Enraged;
 
@@ -155,17 +155,17 @@ struct boss_thekalAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(TYPE_THEKAL, DONE);
+            instance->SetData(TYPE_THEKAL, DONE);
             DoScriptText(SAY_DEATH, me);
         }
     }
 
     void JustReachedHome()
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_THEKAL, NOT_STARTED);
+        if (instance)
+            instance->SetData(TYPE_THEKAL, NOT_STARTED);
     }
 
     void SpellHit(Unit* /*pWho*/, const SpellEntry* pSpell)
@@ -183,7 +183,7 @@ struct boss_thekalAI : public ScriptedAI
         if (uiDamage < me->GetHealth() || ThekalDead)
             return;
 
-        if (!pInstance)
+        if (!instance)
             return;
 
         ThekalDead = true;
@@ -315,7 +315,7 @@ struct mob_zealot_lorkhanAI : public ScriptedAI
 {
     mob_zealot_lorkhanAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 Shield_Timer;
@@ -323,7 +323,7 @@ struct mob_zealot_lorkhanAI : public ScriptedAI
     uint32 GreaterHeal_Timer;
     uint32 Disarm_Timer;
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     void Reset()
     {
@@ -354,7 +354,7 @@ struct mob_zealot_lorkhanAI : public ScriptedAI
         if (uiDamage < me->GetHealth() || LorkhanDead)
             return;
 
-        if (!pInstance)
+        if (!instance)
             return;
 
         LorkhanDead = true;
@@ -423,7 +423,7 @@ struct mob_zealot_lorkhanAI : public ScriptedAI
         // Cast Greater heal on Thekal or Zath if they are in melee range.
         if (GreaterHeal_Timer <= diff)
         {
-            if (pInstance)
+            if (instance)
             {
                 Unit *pThekal = Unit::GetUnit((*me), ThekalGUID);
                 Unit *pZath = Unit::GetUnit((*me), ZathGUID);
@@ -482,7 +482,7 @@ struct mob_zealot_zathAI : public ScriptedAI
 {
     mob_zealot_zathAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 SweepingStrikes_Timer;
@@ -491,7 +491,7 @@ struct mob_zealot_zathAI : public ScriptedAI
     uint32 Kick_Timer;
     uint32 Blind_Timer;
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     void Reset()
     {
@@ -523,7 +523,7 @@ struct mob_zealot_zathAI : public ScriptedAI
         if (uiDamage < me->GetHealth() || ZathDead)
             return;
 
-        if (!pInstance)
+        if (!instance)
             return;
 
         ZathDead = true;

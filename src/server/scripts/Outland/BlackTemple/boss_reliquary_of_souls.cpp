@@ -124,11 +124,11 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
 {
     boss_reliquary_of_soulsAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         EssenceGUID = 0;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint64 EssenceGUID;
 
@@ -141,8 +141,8 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
-            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_RELIQUARYOFSOULSEVENT, NOT_STARTED);
 
         if (EssenceGUID)
         {
@@ -164,8 +164,8 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
     {
         me->AddThreat(who, 10000.0f);
         DoZoneInCombat();
-        if (pInstance)
-            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_RELIQUARYOFSOULSEVENT, IN_PROGRESS);
 
         Phase = 1;
         Counter = 0;
@@ -189,8 +189,8 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
 
     void JustDied(Unit* /*killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_RELIQUARYOFSOULSEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_RELIQUARYOFSOULSEVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)

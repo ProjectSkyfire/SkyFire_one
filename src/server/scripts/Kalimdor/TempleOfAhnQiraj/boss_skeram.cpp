@@ -61,11 +61,11 @@ struct boss_skeramAI : public ScriptedAI
 {
     boss_skeramAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         IsImage = false;
     }
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     uint32 ArcaneExplosion_Timer;
     uint32 EarthShock_Timer;

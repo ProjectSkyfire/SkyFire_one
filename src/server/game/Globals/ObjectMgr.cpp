@@ -6537,8 +6537,8 @@ bool PlayerCondition::Meets(Player const * player) const
         case CONDITION_INSTANCE_DATA:
         {
             Map *map = player->GetMap();
-            if (map && map->IsDungeon() && ((InstanceMap*)map)->GetInstanceData())
-                return ((InstanceMap*)map)->GetInstanceData()->GetData(value1) == value2;
+            if (map && map->IsDungeon() && ((InstanceMap*)map)->GetInstanceScript())
+                return ((InstanceMap*)map)->GetInstanceScript()->GetData(value1) == value2;
         }
         default:
             return false;

@@ -76,12 +76,12 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
 {
     boss_kelidan_the_breakerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
         for (int i = 0; i < 5; ++i) Channelers[i] = 0;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint32 ShadowVolley_Timer;
@@ -103,8 +103,8 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         addYell = false;
         SummonChannelers();
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        if (pInstance)
-            pInstance->SetData(DATA_KELIDANEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_KELIDANEVENT, NOT_STARTED);
     }
 
     void EnterCombat(Unit *who)
@@ -113,8 +113,8 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
         if (me->IsNonMeleeSpellCasted(false))
             me->InterruptNonMeleeSpells(true);
         DoStartMovement(who);
-        if (pInstance)
-            pInstance->SetData(DATA_KELIDANEVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_KELIDANEVENT, IN_PROGRESS);
     }
 
     void KilledUnit(Unit* victim)
@@ -196,8 +196,8 @@ struct boss_kelidan_the_breakerAI : public ScriptedAI
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DIE, me);
-       if (pInstance)
-           pInstance->SetData(DATA_KELIDANEVENT, DONE);
+       if (instance)
+           instance->SetData(DATA_KELIDANEVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -285,11 +285,11 @@ struct mob_shadowmoon_channelerAI : public ScriptedAI
 {
     mob_shadowmoon_channelerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         HeroicMode = me->GetMap()->IsHeroic();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool HeroicMode;
 
     uint32 ShadowBolt_Timer;

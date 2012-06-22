@@ -140,12 +140,12 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
 {
     eye_of_cthunAI(Creature *c) : Scripted_NoMovementAI(c)
     {
-        pInst = c->GetInstanceData();
-        if (!pInst)
+        instance = c->GetInstanceScript();
+        if (!instance)
             sLog->outError("TSCR: No Instance eye_of_cthunAI");
     }
 
-    ScriptedInstance* pInst;
+    ScriptedInstance* instance;
 
     //Global variables
     uint32 PhaseTimer;
@@ -182,8 +182,8 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
         //Reset Phase
-        if (pInst)
-            pInst->SetData(DATA_CTHUN_PHASE, 0);
+        if (instance)
+            instance->SetData(DATA_CTHUN_PHASE, 0);
     }
 
     void EnterCombat(Unit *who)
@@ -212,10 +212,10 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
             return;
 
         //No instance
-        if (!pInst)
+        if (!instance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (instance->GetData(DATA_CTHUN_PHASE))
         {
             case 0:
             {
@@ -281,7 +281,7 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer <= diff)
                 {
                     //Switch to Dark Beam
-                    pInst->SetData(DATA_CTHUN_PHASE, 1);
+                    instance->SetData(DATA_CTHUN_PHASE, 1);
 
                     me->InterruptNonMeleeSpells(false);
 
@@ -342,7 +342,7 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer <= diff)
                 {
                     //Switch to Eye Beam
-                    pInst->SetData(DATA_CTHUN_PHASE, 0);
+                    instance->SetData(DATA_CTHUN_PHASE, 0);
 
                     BeamTimer = 3000;
                     EyeTentacleTimer = 45000;               //Always spawns 5 seconds before Dark Beam
@@ -381,10 +381,10 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         //No instance
-        if (!pInst)
+        if (!instance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (instance->GetData(DATA_CTHUN_PHASE))
         {
             case 0:
             case 1:
@@ -407,7 +407,7 @@ struct eye_of_cthunAI : public Scripted_NoMovementAI
                 me->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
                 //Death animation/respawning;
-                pInst->SetData(DATA_CTHUN_PHASE, 2);
+                instance->SetData(DATA_CTHUN_PHASE, 2);
 
                 me->SetHealth(0);
                 damage = 0;
@@ -438,12 +438,12 @@ struct cthunAI : public Scripted_NoMovementAI
 {
     cthunAI(Creature *c) : Scripted_NoMovementAI(c)
     {
-        pInst = c->GetInstanceData();
-        if (!pInst)
+        instance = c->GetInstanceScript();
+        if (!instance)
             sLog->outError("TSCR: No Instance eye_of_cthunAI");
     }
 
-    ScriptedInstance* pInst;
+    ScriptedInstance* instance;
 
     //Out of combat whisper timer
     uint32 WisperTimer;
@@ -497,8 +497,8 @@ struct cthunAI : public Scripted_NoMovementAI
         me->RemoveAurasDueToSpell(SPELL_TRANSFORM);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
 
-        if (pInst)
-            pInst->SetData(DATA_CTHUN_PHASE, 0);
+        if (instance)
+            instance->SetData(DATA_CTHUN_PHASE, 0);
     }
 
     void EnterCombat(Unit *who)
@@ -589,10 +589,10 @@ struct cthunAI : public Scripted_NoMovementAI
         me->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
         //No instance
-        if (!pInst)
+        if (!instance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (instance->GetData(DATA_CTHUN_PHASE))
         {
             //Transition phase
             case 2:
@@ -601,7 +601,7 @@ struct cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer <= diff)
                 {
                     //Switch
-                    pInst->SetData(DATA_CTHUN_PHASE, 3);
+                    instance->SetData(DATA_CTHUN_PHASE, 3);
 
                     //Switch to c'thun model
                     me->InterruptNonMeleeSpells(false);
@@ -658,7 +658,7 @@ struct cthunAI : public Scripted_NoMovementAI
                 //Weaken
                 if (FleshTentaclesKilled > 1)
                 {
-                    pInst->SetData(DATA_CTHUN_PHASE, 4);
+                    instance->SetData(DATA_CTHUN_PHASE, 4);
 
                     DoScriptText(EMOTE_WEAKENED, me);
                     PhaseTimer = 45000;
@@ -831,7 +831,7 @@ struct cthunAI : public Scripted_NoMovementAI
                 if (PhaseTimer <= diff)
                 {
                     //Switch
-                    pInst->SetData(DATA_CTHUN_PHASE, 3);
+                    instance->SetData(DATA_CTHUN_PHASE, 3);
 
                     //Remove red coloration
                     me->RemoveAurasDueToSpell(SPELL_RED_COLORATION);
@@ -866,17 +866,17 @@ struct cthunAI : public Scripted_NoMovementAI
     void JustDied(Unit* pKiller)
     {
         //Switch
-        if (pInst)
-            pInst->SetData(DATA_CTHUN_PHASE, 5);
+        if (instance)
+            instance->SetData(DATA_CTHUN_PHASE, 5);
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         //No instance
-        if (!pInst)
+        if (!instance)
             return;
 
-        switch (pInst->GetData(DATA_CTHUN_PHASE))
+        switch (instance->GetData(DATA_CTHUN_PHASE))
         {
             case 3:
             {

@@ -655,8 +655,8 @@ bool ChatHandler::HandleSetInstanceDataCommand(const char *args)
     if (!args || !m_session->GetPlayer())
         return false;
 
-    InstanceScript *pInstance = m_session->GetPlayer()->GetInstanceData();
-    if (!pInstance)
+    InstanceScript* instance = m_session->GetPlayer()->GetInstanceScript();
+    if (!instance)
     {
         PSendSysMessage("You are not in scripted instance.");
         SetSentErrorMessage(true);
@@ -673,7 +673,7 @@ bool ChatHandler::HandleSetInstanceDataCommand(const char *args)
     uint32 _id = uint32(atoi(id));
     uint32 _data = uint32(atoi(data));
 
-    pInstance->SetData(_id, _data);
+    instance->SetData(_id, _data);
     return true;
 }
 
@@ -682,8 +682,8 @@ bool ChatHandler::HandleGetInstanceDataCommand(const char *args)
     if (!args || !m_session->GetPlayer())
         return false;
 
-    InstanceScript *pInstance = m_session->GetPlayer()->GetInstanceData();
-    if (!pInstance)
+    InstanceScript* instance = m_session->GetPlayer()->GetInstanceScript();
+    if (!instance)
     {
         PSendSysMessage("You are not in scripted instance.");
         SetSentErrorMessage(true);
@@ -698,7 +698,7 @@ bool ChatHandler::HandleGetInstanceDataCommand(const char *args)
 
     uint32 _id = uint32(atoi(id));
 
-    PSendSysMessage("Result: %u", pInstance->GetData(_id));
+    PSendSysMessage("Result: %u", instance->GetData(_id));
     return true;
 }
 

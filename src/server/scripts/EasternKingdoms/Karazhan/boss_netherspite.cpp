@@ -64,7 +64,7 @@ struct boss_netherspiteAI : public ScriptedAI
 {
     boss_netherspiteAI(Creature* c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
 
         for (int i = 0; i < 3; ++i)
         {
@@ -80,7 +80,7 @@ struct boss_netherspiteAI : public ScriptedAI
         }
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     bool PortalPhase;
     bool Berserk;
@@ -245,7 +245,7 @@ struct boss_netherspiteAI : public ScriptedAI
 
     void HandleDoors(bool open) // Massive Door switcher
     {
-        if (GameObject *Door = GameObject::GetGameObject(*me, pInstance ? pInstance->GetData64(DATA_GO_MASSIVE_DOOR) : 0))
+        if (GameObject *Door = GameObject::GetGameObject(*me, instance ? instance->GetData64(DATA_GO_MASSIVE_DOOR) : 0))
             Door->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
     }
 

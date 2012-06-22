@@ -45,10 +45,10 @@ struct boss_void_reaverAI : public ScriptedAI
 {
     boss_void_reaverAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Pounding_Timer;
     uint32 ArcaneOrb_Timer;
@@ -66,8 +66,8 @@ struct boss_void_reaverAI : public ScriptedAI
 
         Enraged = false;
 
-        if (pInstance && me->isAlive())
-            pInstance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
+        if (instance && me->isAlive())
+            instance->SetData(DATA_VOIDREAVEREVENT, NOT_STARTED);
     }
 
     void KilledUnit(Unit *victim)
@@ -84,16 +84,16 @@ struct boss_void_reaverAI : public ScriptedAI
     {
         DoScriptText(SAY_DEATH, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_VOIDREAVEREVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_VOIDREAVEREVENT, DONE);
     }
 
     void EnterCombat(Unit *who)
     {
         DoScriptText(SAY_AGGRO, me);
 
-        if (pInstance)
-            pInstance->SetData(DATA_VOIDREAVEREVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_VOIDREAVEREVENT, IN_PROGRESS);
     }
 
     void UpdateAI(const uint32 diff)

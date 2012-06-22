@@ -44,13 +44,13 @@ bool GoHello_blackfathom_altar(Player* player, GameObject* /*pGo*/)
 
 bool GoHello_blackfathom_fire(Player * /*player*/, GameObject* pGo)
 {
-    ScriptedInstance *pInstance = pGo->GetInstanceData();
+    ScriptedInstance *instance = pGo->GetInstanceScript();
 
-    if (pInstance)
+    if (instance)
     {
         pGo->SetGoState(GO_STATE_ACTIVE);
         pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
-        pInstance->SetData(DATA_FIRE, pInstance->GetData(DATA_FIRE) + 1);
+        instance->SetData(DATA_FIRE, instance->GetData(DATA_FIRE) + 1);
         return true;
     }
     return false;
@@ -67,10 +67,10 @@ struct npc_blackfathom_deeps_eventAI : public ScriptedAI
             AttackPlayer();
         }
 
-        pInstance = creature->GetInstanceData();
+        instance = creature->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 uiRavageTimer;
     uint32 uiFrostNovaTimer;
@@ -164,8 +164,8 @@ struct npc_blackfathom_deeps_eventAI : public ScriptedAI
     {
         //if (me->isSummon()) //we are not a normal spawn.
         if (me->isPet()) //TODO: Use line above
-            if (pInstance)
-                pInstance->SetData(DATA_EVENT, pInstance->GetData(DATA_EVENT) + 1);
+            if (instance)
+                instance->SetData(DATA_EVENT, instance->GetData(DATA_EVENT) + 1);
     }
 };
 

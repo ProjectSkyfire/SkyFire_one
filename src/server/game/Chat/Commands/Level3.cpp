@@ -6309,14 +6309,14 @@ bool ChatHandler::HandleInstanceSaveDataCommand(const char * /*args*/)
         return false;
     }
 
-    if (!((InstanceMap*)map)->GetInstanceData())
+    if (!((InstanceMap*)map)->GetInstanceScript())
     {
         PSendSysMessage("Map has no instance data.");
         SetSentErrorMessage(true);
         return false;
     }
 
-    ((InstanceMap*)map)->GetInstanceData()->SaveToDB();
+    ((InstanceMap*)map)->GetInstanceScript()->SaveToDB();
     return true;
 }
 

@@ -174,7 +174,7 @@ struct boss_magtheridonAI : public ScriptedAI
 {
     boss_magtheridonAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance =me->GetInstanceData();
+        instance =me->GetInstanceScript();
         me->SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, 10);
         me->SetFloatValue(UNIT_FIELD_COMBATREACH, 10);
 
@@ -195,7 +195,7 @@ struct boss_magtheridonAI : public ScriptedAI
 
     CubeMap Cube;
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 Berserk_Timer;
     uint32 Quake_Timer;
@@ -210,10 +210,10 @@ struct boss_magtheridonAI : public ScriptedAI
 
     void Reset()
     {
-        if (pInstance)
+        if (instance)
         {
-            pInstance->SetData(DATA_MAGTHERIDON_EVENT, NOT_STARTED);
-            pInstance->SetData(DATA_COLLAPSE, false);
+            instance->SetData(DATA_MAGTHERIDON_EVENT, NOT_STARTED);
+            instance->SetData(DATA_COLLAPSE, false);
         }
 
         Berserk_Timer = 1320000;
@@ -287,8 +287,8 @@ struct boss_magtheridonAI : public ScriptedAI
 
     void JustDied(Unit* Killer)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_MAGTHERIDON_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_MAGTHERIDON_EVENT, DONE);
 
         DoScriptText(SAY_DEATH, me);
     }
@@ -303,8 +303,8 @@ struct boss_magtheridonAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_MAGTHERIDON_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_MAGTHERIDON_EVENT, IN_PROGRESS);
         DoZoneInCombat();
 
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -389,8 +389,8 @@ struct boss_magtheridonAI : public ScriptedAI
             me->CastSpell(me, SPELL_CAMERA_SHAKE, true);
             me->CastSpell(me, SPELL_DEBRIS_KNOCKDOWN, true);
 
-            if (pInstance)
-                pInstance->SetData(DATA_COLLAPSE, true);
+            if (instance)
+                instance->SetData(DATA_COLLAPSE, true);
         }
 
         if (Phase3)
@@ -416,10 +416,10 @@ struct mob_hellfire_channelerAI : public ScriptedAI
 {
     mob_hellfire_channelerAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance =me->GetInstanceData();
+        instance =me->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     uint32 ShadowBoltVolley_Timer;
     uint32 DarkMending_Timer;
@@ -437,16 +437,16 @@ struct mob_hellfire_channelerAI : public ScriptedAI
 
         Check_Timer = 5000;
 
-        if (pInstance)
-            pInstance->SetData(DATA_CHANNELER_EVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_CHANNELER_EVENT, NOT_STARTED);
 
         me->CastSpell(me, SPELL_SHADOW_GRASP_C, false);
     }
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_CHANNELER_EVENT, IN_PROGRESS);
+        if (instance)
+            instance->SetData(DATA_CHANNELER_EVENT, IN_PROGRESS);
 
         me->InterruptNonMeleeSpells(false);
         DoZoneInCombat();
@@ -464,8 +464,8 @@ struct mob_hellfire_channelerAI : public ScriptedAI
 
     void JustDied(Unit*)
     {
-        if (pInstance)
-            pInstance->SetData(DATA_CHANNELER_EVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_CHANNELER_EVENT, DONE);
     }
 
     void UpdateAI(const uint32 diff)
@@ -507,10 +507,10 @@ struct mob_hellfire_channelerAI : public ScriptedAI
 //Manticron Cube
 bool GOHello_go_Manticron_Cube(Player* player, GameObject* _GO)
 {
-    ScriptedInstance* pInstance =_GO->GetInstanceData();
-    if (!pInstance) return true;
-    if (pInstance->GetData(DATA_MAGTHERIDON_EVENT) != IN_PROGRESS) return true;
-    Creature *Magtheridon =Unit::GetCreature(*_GO, pInstance->GetData64(DATA_MAGTHERIDON));
+    ScriptedInstance* instance =_GO->GetInstanceScript();
+    if (!instance) return true;
+    if (instance->GetData(DATA_MAGTHERIDON_EVENT) != IN_PROGRESS) return true;
+    Creature *Magtheridon =Unit::GetCreature(*_GO, instance->GetData64(DATA_MAGTHERIDON));
     if (!Magtheridon || !Magtheridon->isAlive()) return true;
 
     // if exhausted or already channeling return

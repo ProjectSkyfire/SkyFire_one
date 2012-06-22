@@ -62,7 +62,7 @@ struct boss_mandokirAI : public ScriptedAI
 {
     boss_mandokirAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 KillCount;
@@ -77,7 +77,7 @@ struct boss_mandokirAI : public ScriptedAI
     float targetY;
     float targetZ;
 
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     bool endGaze;
     bool someGazed;
@@ -121,9 +121,9 @@ struct boss_mandokirAI : public ScriptedAI
             {
                 DoScriptText(SAY_DING_KILL, me);
 
-                if (pInstance)
+                if (instance)
                 {
-                    if (uint64 JindoGUID = pInstance->GetData64(DATA_JINDO))
+                    if (uint64 JindoGUID = instance->GetData64(DATA_JINDO))
                     {
                         if (Unit* jTemp = Unit::GetUnit(*me, JindoGUID))
                         {
@@ -272,9 +272,9 @@ struct boss_mandokirAI : public ScriptedAI
             // Checking if Ohgan is dead. If yes Mandokir will enrage.
             if (Check_Timer <= diff)
             {
-                if (pInstance)
+                if (instance)
                 {
-                    if (pInstance->GetData(TYPE_OHGAN) == DONE)
+                    if (instance->GetData(TYPE_OHGAN) == DONE)
                     {
                         if (!RaptorDead)
                         {
@@ -299,11 +299,11 @@ struct mob_ohganAI : public ScriptedAI
 {
     mob_ohganAI(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     uint32 SunderArmor_Timer;
-    ScriptedInstance *pInstance;
+    ScriptedInstance *instance;
 
     void Reset()
     {
@@ -314,8 +314,8 @@ struct mob_ohganAI : public ScriptedAI
 
     void JustDied(Unit* /*Killer*/)
     {
-        if (pInstance)
-            pInstance->SetData(TYPE_OHGAN, DONE);
+        if (instance)
+            instance->SetData(TYPE_OHGAN, DONE);
     }
 
     void UpdateAI (const uint32 diff)

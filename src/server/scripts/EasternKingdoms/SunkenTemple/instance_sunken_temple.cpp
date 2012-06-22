@@ -202,6 +202,6 @@ void AddSC_instance_sunken_temple()
     Script *newscript;
     newscript = new Script;
     newscript->Name = "instance_sunken_temple";
-    newscript->GetInstanceData = &GetInstanceData_instance_sunken_temple;
+    newscript->GetInstanceScript = &GetInstanceData_instance_sunken_temple;
     newscript->RegisterSelf();
 }

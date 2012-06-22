@@ -156,14 +156,14 @@ float KaelthasWeapons[7][5] =
 //Base AI for Advisors
 struct advisorbase_ai : public ScriptedAI
 {
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     bool FakeDeath;
     uint32 DelayRes_Timer;
     uint64 DelayRes_Target;
 
     advisorbase_ai(Creature *c) : ScriptedAI(c)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
     }
 
     void MoveInLineOfSight(Unit *who)
@@ -194,10 +194,10 @@ struct advisorbase_ai : public ScriptedAI
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
         //reset encounter
-        if (pInstance && (pInstance->GetData(DATA_KAELTHASEVENT) == 1 || pInstance->GetData(DATA_KAELTHASEVENT) == 3))
+        if (instance && (instance->GetData(DATA_KAELTHASEVENT) == 1 || instance->GetData(DATA_KAELTHASEVENT) == 3))
         {
             Creature *Kaelthas = NULL;
-            Kaelthas = (Creature*)(Unit::GetUnit((*me), pInstance->GetData64(DATA_KAELTHAS)));
+            Kaelthas = (Creature*)(Unit::GetUnit((*me), instance->GetData64(DATA_KAELTHAS)));
 
             if (Kaelthas)
                 Kaelthas->AI()->EnterEvadeMode();
@@ -225,7 +225,7 @@ struct advisorbase_ai : public ScriptedAI
             return;
         }
         //Don't really die in phase 1 & 3, only die after that
-        if (pInstance && pInstance->GetData(DATA_KAELTHASEVENT) != 0)
+        if (instance && instance->GetData(DATA_KAELTHASEVENT) != 0)
         {
             //prevent death
             damage = 0;
@@ -244,7 +244,7 @@ struct advisorbase_ai : public ScriptedAI
             me->GetMotionMaster()->MoveIdle();
             me->SetStandState(UNIT_STAND_STATE_DEAD);
 
-            if (pInstance->GetData(DATA_KAELTHASEVENT) == 3)
+            if (instance->GetData(DATA_KAELTHASEVENT) == 3)
                 JustDied(pKiller);
         }
     }
@@ -278,14 +278,14 @@ struct boss_kaelthasAI : public ScriptedAI
 {
     boss_kaelthasAI(Creature *c) : ScriptedAI(c), summons(me)
     {
-        pInstance = c->GetInstanceData();
+        instance = c->GetInstanceScript();
         AdvisorGuid[0] = 0;
         AdvisorGuid[1] = 0;
         AdvisorGuid[2] = 0;
         AdvisorGuid[3] = 0;
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
 
     std::list<uint64> Phoenix;
 
@@ -363,8 +363,8 @@ struct boss_kaelthasAI : public ScriptedAI
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-        if (pInstance)
-            pInstance->SetData(DATA_KAELTHASEVENT, NOT_STARTED);
+        if (instance)
+            instance->SetData(DATA_KAELTHASEVENT, NOT_STARTED);
     }
 
     void PrepareAdvisors()
@@ -385,13 +385,13 @@ struct boss_kaelthasAI : public ScriptedAI
 
     void StartEvent()
     {
-        if (!pInstance)
+        if (!instance)
             return;
 
-        AdvisorGuid[0] = pInstance->GetData64(DATA_THALADREDTHEDARKENER);
-        AdvisorGuid[1] = pInstance->GetData64(DATA_LORDSANGUINAR);
-        AdvisorGuid[2] = pInstance->GetData64(DATA_GRANDASTROMANCERCAPERNIAN);
-        AdvisorGuid[3] = pInstance->GetData64(DATA_MASTERENGINEERTELONICUS);
+        AdvisorGuid[0] = instance->GetData64(DATA_THALADREDTHEDARKENER);
+        AdvisorGuid[1] = instance->GetData64(DATA_LORDSANGUINAR);
+        AdvisorGuid[2] = instance->GetData64(DATA_GRANDASTROMANCERCAPERNIAN);
+        AdvisorGuid[3] = instance->GetData64(DATA_MASTERENGINEERTELONICUS);
 
         if (!AdvisorGuid[0] || !AdvisorGuid[1] || !AdvisorGuid[2] || !AdvisorGuid[3])
         {
@@ -400,7 +400,7 @@ struct boss_kaelthasAI : public ScriptedAI
             DoScriptText(SAY_PHASE4_INTRO2, me);
             Phase = 4;
 
-            pInstance->SetData(DATA_KAELTHASEVENT, 4);
+            instance->SetData(DATA_KAELTHASEVENT, 4);
 
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -414,7 +414,7 @@ struct boss_kaelthasAI : public ScriptedAI
 
             DoScriptText(SAY_INTRO, me);
 
-            pInstance->SetData(DATA_KAELTHASEVENT, IN_PROGRESS);
+            instance->SetData(DATA_KAELTHASEVENT, IN_PROGRESS);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
             PhaseSubphase = 0;
@@ -457,8 +457,8 @@ struct boss_kaelthasAI : public ScriptedAI
         DeleteLegs();
         summons.DespawnAll();
 
-        if (pInstance)
-            pInstance->SetData(DATA_KAELTHASEVENT, DONE);
+        if (instance)
+            instance->SetData(DATA_KAELTHASEVENT, DONE);
 
         Creature* creature;
         for (uint8 i = 0; i < 4; ++i)
@@ -473,7 +473,7 @@ struct boss_kaelthasAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     {
-        if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase)
+        if (instance && !instance->GetData(DATA_KAELTHASEVENT) && !Phase)
             StartEvent();
     }
 
@@ -491,7 +491,7 @@ struct boss_kaelthasAI : public ScriptedAI
             }
             else if (who->isAlive())
             {
-                if (pInstance && !pInstance->GetData(DATA_KAELTHASEVENT) && !Phase && me->IsWithinDistInMap(who, 60.0f))
+                if (instance && !instance->GetData(DATA_KAELTHASEVENT) && !Phase && me->IsWithinDistInMap(who, 60.0f))
                     StartEvent();
 
                 //add to the threat list, so we can use SelectTarget
@@ -502,9 +502,9 @@ struct boss_kaelthasAI : public ScriptedAI
 
     void UpdateAI(const uint32 diff)
     {
-        if (pInstance && Phase)
+        if (instance && Phase)
         {
-            if (pInstance->GetData(DATA_KAELTHASEVENT) == IN_PROGRESS && me->getThreatManager().getThreatList().empty())
+            if (instance->GetData(DATA_KAELTHASEVENT) == IN_PROGRESS && me->getThreatManager().getThreatList().empty())
             {
                 EnterEvadeMode();
                 return;
@@ -664,7 +664,7 @@ struct boss_kaelthasAI : public ScriptedAI
                         if (Advisor && (Advisor->GetUInt32Value(UNIT_FIELD_BYTES_1) == UNIT_STAND_STATE_DEAD))
                         {
                             Phase = 2;
-                            pInstance->SetData(DATA_KAELTHASEVENT, 2);
+                            instance->SetData(DATA_KAELTHASEVENT, 2);
 
                             DoScriptText(SAY_PHASE2_WEAPON, me);
                             PhaseSubphase = 0;
@@ -713,7 +713,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     if (Phase_Timer <= diff)
                 {
                     DoScriptText(SAY_PHASE3_ADVANCE, me);
-                    pInstance->SetData(DATA_KAELTHASEVENT, 3);
+                    instance->SetData(DATA_KAELTHASEVENT, 3);
                     Phase = 3;
                     PhaseSubphase = 0;
                 } else Phase_Timer -= diff;
@@ -746,7 +746,7 @@ struct boss_kaelthasAI : public ScriptedAI
                     DoScriptText(SAY_PHASE4_INTRO2, me);
                     Phase = 4;
 
-                    pInstance->SetData(DATA_KAELTHASEVENT, 4);
+                    instance->SetData(DATA_KAELTHASEVENT, 4);
 
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -844,7 +844,7 @@ struct boss_kaelthasAI : public ScriptedAI
                 {
                     if (me->GetHealth()*100 / me->GetMaxHealth() < 50)
                     {
-                        pInstance->SetData(DATA_KAELTHASEVENT, 4);
+                        instance->SetData(DATA_KAELTHASEVENT, 4);
                         Phase = 5;
                         Phase_Timer = 10000;
 
@@ -1402,10 +1402,10 @@ struct mob_phoenix_tkAI : public ScriptedAI
 {
     mob_phoenix_tkAI(Creature *c) : ScriptedAI(c)
     {
-       pInstance = c->GetInstanceData();
+       instance = c->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    ScriptedInstance* instance;
     uint32 Cycle_Timer;
     bool egg;
 
@@ -1441,9 +1441,9 @@ struct mob_phoenix_tkAI : public ScriptedAI
     {
         if (Cycle_Timer <= diff)
         {
-            if (pInstance)//check for boss reset
+            if (instance)//check for boss reset
             {
-                Creature* Kael = Unit::GetCreature((*me), pInstance->GetData64(DATA_KAELTHAS));
+                Creature* Kael = Unit::GetCreature((*me), instance->GetData64(DATA_KAELTHAS));
                 if (Kael && Kael->getThreatManager().getThreatList().empty())
                 {
                     egg = false;
