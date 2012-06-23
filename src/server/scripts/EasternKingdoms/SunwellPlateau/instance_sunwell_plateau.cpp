@@ -42,6 +42,7 @@ EndScriptData */
 struct instance_sunwell_plateau : public ScriptedInstance
 {
     instance_sunwell_plateau(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     /** Creatures **/

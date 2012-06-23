@@ -42,6 +42,7 @@ EndScriptData */
 struct boss_sarturaAI : public ScriptedAI
 {
     boss_sarturaAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 WhirlWind_Timer;
     uint32 WhirlWindRandom_Timer;
     uint32 WhirlWindEnd_Timer;
@@ -165,6 +166,7 @@ struct boss_sarturaAI : public ScriptedAI
 struct mob_sartura_royal_guardAI : public ScriptedAI
 {
     mob_sartura_royal_guardAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 WhirlWind_Timer;
     uint32 WhirlWindRandom_Timer;
     uint32 WhirlWindEnd_Timer;

@@ -46,11 +46,13 @@ class TargetedMovementGenerator
         TargetedMovementGenerator(Unit &target, float offset, float angle)
             : TargetedMovementGeneratorBase(target), i_offset(offset), i_angle(angle), i_recalculateTravel(false) {}
         ~TargetedMovementGenerator() {}
+
         void Initialize(T &);
         void Finalize(T &);
         void Reset(T &);
         bool Update(T &, const uint32 &);
         MovementGeneratorType GetMovementGeneratorType() { return TARGETED_MOTION_TYPE; }
+
         void MovementInform(T &);
 
         Unit* GetTarget() const;

@@ -210,6 +210,7 @@ struct boss_dorotheeAI : public ScriptedAI
 struct mob_titoAI : public ScriptedAI
 {
     mob_titoAI(Creature* c) : ScriptedAI(c) {}
+
     uint64 DorotheeGUID;
     uint32 YipTimer;
 
@@ -220,6 +221,7 @@ struct mob_titoAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void JustDied(Unit* /*killer*/)
     {
         if (DorotheeGUID)
@@ -624,6 +626,7 @@ struct boss_croneAI : public ScriptedAI
 struct mob_cycloneAI : public ScriptedAI
 {
     mob_cycloneAI(Creature* c) : ScriptedAI(c) {}
+
     uint32 MoveTimer;
 
     void Reset()
@@ -632,6 +635,7 @@ struct mob_cycloneAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void MoveInLineOfSight(Unit* /*who*/)
     {
     }
@@ -974,6 +978,7 @@ struct boss_julianneAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void AttackStart(Unit* who)
     {
         if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))

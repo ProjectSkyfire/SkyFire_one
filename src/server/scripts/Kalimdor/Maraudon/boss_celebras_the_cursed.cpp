@@ -34,6 +34,7 @@ EndScriptData */
 struct celebras_the_cursedAI : public ScriptedAI
 {
     celebras_the_cursedAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Wrath_Timer;
     uint32 EntanglingRoots_Timer;
     uint32 CorruptForces_Timer;
@@ -46,6 +47,7 @@ struct celebras_the_cursedAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) { }
+
     void JustDied(Unit* /*Killer*/)
     {
         me->SummonCreature(13716, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 600000);

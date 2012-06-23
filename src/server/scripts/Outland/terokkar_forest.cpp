@@ -57,6 +57,7 @@ enum eUnkor
 struct mob_unkor_the_ruthlessAI : public ScriptedAI
 {
     mob_unkor_the_ruthlessAI(Creature* c) : ScriptedAI(c) {}
+
     bool CanDoQuest;
     uint32 UnkorUnfriendly_Timer;
     uint32 Pulverize_Timer;
@@ -71,6 +72,7 @@ struct mob_unkor_the_ruthlessAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void DoNice()
     {
         DoScriptText(SAY_SUBMIT, me);
@@ -155,8 +157,10 @@ CreatureAI* GetAI_mob_unkor_the_ruthless(Creature* creature)
 struct mob_infested_root_walkerAI : public ScriptedAI
 {
     mob_infested_root_walkerAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset() { }
     void EnterCombat(Unit *who) { }
+
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (done_by && done_by->GetTypeId() == TYPEID_PLAYER)
@@ -178,8 +182,10 @@ CreatureAI* GetAI_mob_infested_root_walker(Creature* creature)
 struct mob_rotting_forest_ragerAI : public ScriptedAI
 {
     mob_rotting_forest_ragerAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset() { }
     void EnterCombat(Unit *who) { }
+
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
@@ -208,9 +214,11 @@ const uint32 netherwebVictims[6] =
 struct mob_netherweb_victimAI : public ScriptedAI
 {
     mob_netherweb_victimAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset() { }
     void EnterCombat(Unit *who) { }
     void MoveInLineOfSight(Unit *who) { }
+
     void JustDied(Unit* Killer)
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
@@ -258,6 +266,7 @@ enum eFloon
 struct npc_floonAI : public ScriptedAI
 {
     npc_floonAI(Creature* c) : ScriptedAI(c) {}
+
     uint32 Silence_Timer;
     uint32 Frostbolt_Timer;
     uint32 FrostNova_Timer;
@@ -271,6 +280,7 @@ struct npc_floonAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
@@ -348,6 +358,7 @@ enum eIsla
 struct npc_isla_starmaneAI : public npc_escortAI
 {
     npc_isla_starmaneAI(Creature* c) : npc_escortAI(c) {}
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -478,6 +489,7 @@ enum
 struct npc_skywingAI : public npc_escortAI
 {
     npc_skywingAI(Creature *c) : npc_escortAI(c) {}
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -496,7 +508,9 @@ struct npc_skywingAI : public npc_escortAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void Reset() {}
+
     void JustSummoned(Creature* pSummoned)
     {
         pSummoned->AI()->AttackStart(me);
@@ -574,9 +588,11 @@ enum
 
 static float m_afAmbushB1[]= {-2895.525879f, 5336.431641f, -11.800f};
 static float m_afAmbushB2[]= {-2890.604980f, 5331.938965f, -11.282f};
+
 struct npc_akunoAI : public npc_escortAI
 {
     npc_akunoAI(Creature* creature) : npc_escortAI(creature) { Reset(); }
+
     uint32 m_uiChainLightningTimer;
 
     void Reset()
@@ -737,6 +753,7 @@ struct npc_letollAI : public npc_escortAI
     uint32 m_uiEventCount;
 
     void Reset() {}
+
     //will make them follow, but will only work until they enter combat with any unit
     void SetFormation()
     {
@@ -965,6 +982,7 @@ enum
 struct npc_mana_bomb_exp_triggerAI : public ScriptedAI
 {
     npc_mana_bomb_exp_triggerAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
+
     GameObject* pManaBomb;
 
     bool m_bIsActivated;
@@ -1101,7 +1119,9 @@ bool GOHello_veil_skith_cage(Player* player, GameObject* pGo)
 struct npc_captive_child : public ScriptedAI
 {
     npc_captive_child(Creature* creature) : ScriptedAI(creature) { Reset(); }
+
     void Reset() {}
+
     void WaypointReached(uint32 uiPointId)
     {
         // we only have one waypoint
@@ -1132,7 +1152,9 @@ enum SPrisoner
 struct npc_skyguard_prisonerAI : public npc_escortAI
 {
     npc_skyguard_prisonerAI(Creature* creature) : npc_escortAI(creature) {}
+
     void Reset() {}
+
     uint32 CalculateWaypointID()
     {
         //TODO: we have 2 ways to calculate wich waypoint we need to use

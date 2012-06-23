@@ -202,6 +202,7 @@ struct CreatureMover
 {
     CreatureMover() : x(0), y(0), z(0), ang(0) {}
     CreatureMover(float _x, float _y, float _z, float _ang) : x(_x), y(_y), z(_z), ang(_ang) {}
+
     float x, y, z, ang;
 };
 
@@ -312,6 +313,7 @@ class Map : public GridRefManager<NGridType>
 
         time_t GetGridExpiry(void) const { return i_gridExpiry; }
         uint32 GetId(void) const { return i_mapEntry->MapID; }
+
         static bool ExistMap(uint32 mapid, int gx, int gy);
         static bool ExistVMap(uint32 mapid, int gx, int gy);
 
@@ -319,6 +321,7 @@ class Map : public GridRefManager<NGridType>
         static void DeleteStateMachine();
 
         Map const * GetParent() const { return m_parentMap; }
+
         // some calls like isInWater should not use vmaps due to processor power
         // can return INVALID_HEIGHT if under z+2 z coord not found height
         float GetHeight(float x, float y, float z, bool pCheckVMap=true, float maxSearchDist=DEFAULT_HEIGHT_SEARCH) const;
@@ -370,6 +373,7 @@ class Map : public GridRefManager<NGridType>
         bool IsBattleGround() const { return i_mapEntry && i_mapEntry->IsBattleGround(); }
         bool IsBattleArena() const { return i_mapEntry && i_mapEntry->IsBattleArena(); }
         bool IsBattleGroundOrArena() const { return i_mapEntry && i_mapEntry->IsBattleGroundOrArena(); }
+
         void AddObjectToRemoveList(WorldObject *obj);
         void AddObjectToSwitchList(WorldObject *obj, bool on);
         virtual void DelayedUpdate(const uint32 diff);
@@ -380,16 +384,19 @@ class Map : public GridRefManager<NGridType>
         void resetMarkedCells() { marked_cells.reset(); }
         bool isCellMarked(uint32 pCellId) { return marked_cells.test(pCellId); }
         void markCell(uint32 pCellId) { marked_cells.set(pCellId); }
+
         bool HavePlayers() const { return !m_mapRefManager.isEmpty(); }
         uint32 GetPlayersCountExceptGMs() const;
         bool ActiveObjectsNearGrid(uint32 x, uint32 y) const;
 
         void AddWorldObject(WorldObject *obj) { i_worldObjects.insert(obj); }
         void RemoveWorldObject(WorldObject *obj) { i_worldObjects.erase(obj); }
+
         void SendToPlayers(WorldPacket const* data) const;
 
         typedef MapRefManager PlayerList;
         PlayerList const& GetPlayers() const { return m_mapRefManager; }
+
         //per-map script storage
         void ScriptsStart(std::map<uint32, std::multimap<uint32, ScriptInfo> > const& scripts, uint32 id, Object* source, Object* target);
         void ScriptCommandStart(ScriptInfo const& script, uint32 delay, Object* source, Object* target);
@@ -397,11 +404,13 @@ class Map : public GridRefManager<NGridType>
         // must called with AddToWorld
         template<class T>
         void AddToActive(T* obj) { AddToActiveHelper(obj); }
+
         void AddToActive(Creature* obj);
 
         // must called with RemoveFromWorld
         template<class T>
         void RemoveFromActive(T* obj) { RemoveFromActiveHelper(obj); }
+
         void RemoveFromActive(Creature* obj);
 
         template<class T> void SwitchGridContainers(T* obj, bool active);
@@ -424,6 +433,7 @@ class Map : public GridRefManager<NGridType>
         GridMap *GetGrid(float x, float y);
 
         void SetTimer(uint32 t) { i_gridExpiry = t < MIN_GRID_DELAY ? MIN_GRID_DELAY : t; }
+
         void SendInitSelf(Player * player);
 
         void SendInitTransports(Player * player);
@@ -440,6 +450,7 @@ class Map : public GridRefManager<NGridType>
         void EnsureGridLoadedAtEnter(Cell const&, Player* player = NULL);
 
         void buildNGridLinkage(NGridType* pNGridType) { pNGridType->link(this); }
+
         template<class T> void AddType(T *obj);
         template<class T> void RemoveType(T *obj, bool);
 
@@ -452,12 +463,14 @@ class Map : public GridRefManager<NGridType>
 
         bool isGridObjectDataLoaded(uint32 x, uint32 y) const { return getNGrid(x, y)->isGridObjectDataLoaded(); }
         void setGridObjectDataLoaded(bool pLoaded, uint32 x, uint32 y) { getNGrid(x, y)->setGridObjectDataLoaded(pLoaded); }
+
         void setNGrid(NGridType* grid, uint32 x, uint32 y);
         void ScriptsProcess();
 
         void UpdateActiveCells(const float &x, const float &y, const uint32 &t_diff);
     protected:
         void SetUnloadReferenceLock(const GridPair &p, bool on) { getNGrid(p.x_coord, p.y_coord)->setUnloadReferenceLock(on); }
+
         ACE_Thread_Mutex Lock;
 
         MapEntry const* i_mapEntry;

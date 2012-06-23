@@ -27,6 +27,7 @@ void Triangle::init(const Vector3& v0, const Vector3& v1, const Vector3& v2) {
     _vertex[2] = v2;
 
     static int next[] = {1,2,0};
+
     for (int i = 0; i < 3; ++i) {
         const Vector3& e  = _vertex[next[i]] - _vertex[i];
         edgeMagnitude[i]  = e.magnitude();

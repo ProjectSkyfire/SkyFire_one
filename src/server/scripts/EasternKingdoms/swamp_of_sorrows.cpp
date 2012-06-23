@@ -53,6 +53,7 @@ enum eGalen
 struct npc_galen_goodwardAI : public npc_escortAI
 {
     npc_galen_goodwardAI(Creature* creature) : npc_escortAI(creature) { }
+
     uint32 m_uiPostEventTimer;
 
     void Reset()

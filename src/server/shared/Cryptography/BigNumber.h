@@ -82,6 +82,7 @@ class BigNumber
         int GetNumBytes(void);
 
         struct bignum_st *BN() { return _bn; }
+
         uint32 AsDword();
         uint8* AsByteArray(int minSize = 0, bool reverse = true);
         ByteBuffer AsByteBuffer();

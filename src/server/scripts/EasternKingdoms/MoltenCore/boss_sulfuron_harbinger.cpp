@@ -42,6 +42,7 @@ EndScriptData */
 struct boss_sulfuronAI : public ScriptedAI
 {
     boss_sulfuronAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Darkstrike_Timer;
     uint32 DemoralizingShout_Timer;
     uint32 Inspire_Timer;
@@ -124,6 +125,7 @@ struct boss_sulfuronAI : public ScriptedAI
 struct mob_flamewaker_priestAI : public ScriptedAI
 {
     mob_flamewaker_priestAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Heal_Timer;
     uint32 ShadowWordPain_Timer;
     uint32 Immolate_Timer;

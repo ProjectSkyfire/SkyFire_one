@@ -45,6 +45,7 @@ EndScriptData */
 struct boss_herodAI : public ScriptedAI
 {
     boss_herodAI(Creature *c) : ScriptedAI(c) {}
+
     bool Enrage;
 
     uint32 Cleave_Timer;
@@ -124,6 +125,7 @@ struct mob_scarlet_traineeAI : public npc_escortAI
     void Reset() {}
     void WaypointReached(uint32 /*uiPoint*/) {}
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (Start_Timer)

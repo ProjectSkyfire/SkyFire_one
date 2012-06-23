@@ -84,6 +84,7 @@ bool GOHello_go_gauntlet_gate(Player* player, GameObject* pGo)
 struct mob_freed_soulAI : public ScriptedAI
 {
     mob_freed_soulAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset()
     {
         DoScriptText(RAND(SAY_ZAPPED0, SAY_ZAPPED1, SAY_ZAPPED2, SAY_ZAPPED3), me);
@@ -110,6 +111,7 @@ CreatureAI* GetAI_mob_freed_soul(Creature* creature)
 struct mob_restless_soulAI : public ScriptedAI
 {
     mob_restless_soulAI(Creature *c) : ScriptedAI(c) {}
+
     uint64 Tagger;
     uint32 Die_Timer;
     bool Tagged;
@@ -122,6 +124,7 @@ struct mob_restless_soulAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (caster->GetTypeId() == TYPEID_PLAYER)
@@ -179,6 +182,7 @@ enum eGhostlyCitizenSpells
 struct mobs_spectral_ghostly_citizenAI : public ScriptedAI
 {
     mobs_spectral_ghostly_citizenAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Die_Timer;
     bool Tagged;
 
@@ -189,6 +193,7 @@ struct mobs_spectral_ghostly_citizenAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void SpellHit(Unit * /*caster*/, const SpellEntry *spell)
     {
         if (!Tagged && spell->Id == SPELL_EGAN_BLASTER)

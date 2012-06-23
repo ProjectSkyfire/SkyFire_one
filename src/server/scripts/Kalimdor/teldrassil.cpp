@@ -48,9 +48,11 @@ enum eMist
 };
 
 const float m_afToForestLoc[] = {10648.7f, 1790.63f, 1324.08f};
+
 struct npc_mistAI : public FollowerAI
 {
     npc_mistAI(Creature* creature) : FollowerAI(creature) { }
+
     uint32 m_uiPostEventTimer;
     uint32 m_uiPhasePostEvent;
 

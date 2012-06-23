@@ -150,6 +150,7 @@ struct boss_alarAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit *who) {}
+
     void DamageTaken(Unit* pKiller, uint32 &damage)
     {
         if (damage >= me->GetHealth() && Phase1)
@@ -442,6 +443,7 @@ struct mob_ember_of_alarAI : public ScriptedAI
     void Reset() {toDie = false;}
     void Aggro(Unit *who) {DoZoneInCombat();}
     void EnterEvadeMode() {me->setDeathState(JUST_DIED);}
+
     void DamageTaken(Unit* pKiller, uint32 &damage)
     {
         if (damage >= me->GetHealth() && pKiller != me && !toDie)

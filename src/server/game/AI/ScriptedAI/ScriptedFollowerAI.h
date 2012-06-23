@@ -39,6 +39,7 @@ class FollowerAI : public ScriptedAI
     public:
         explicit FollowerAI(Creature* creature);
         ~FollowerAI() {}
+
         //virtual void WaypointReached(uint32 uiPointId) = 0;
 
         void MovementInform(uint32 uiMotionType, uint32 uiPointId);
@@ -62,12 +63,14 @@ class FollowerAI : public ScriptedAI
         void SetFollowComplete(bool bWithEndEvent = false);
 
         bool HasFollowState(uint32 uiFollowState) { return (m_uiFollowState & uiFollowState); }
+
     protected:
         Player* GetLeaderForFollower();
 
     private:
         void AddFollowState(uint32 uiFollowState) { m_uiFollowState |= uiFollowState; }
         void RemoveFollowState(uint32 uiFollowState) { m_uiFollowState &= ~uiFollowState; }
+
         bool AssistPlayerInCombat(Unit* pWho);
 
         uint64 m_uiLeaderGUID;

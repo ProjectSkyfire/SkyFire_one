@@ -56,6 +56,7 @@ struct ScriptedAI : public CreatureAI
 {
     explicit ScriptedAI(Creature* creature);
     virtual ~ScriptedAI() {}
+
     //*************
     //CreatureAI Functions
     //*************
@@ -64,25 +65,34 @@ struct ScriptedAI : public CreatureAI
 
     // Called at any Damage from any attacker (before damage apply)
     void DamageTaken(Unit* /*pDone_by*/, uint32& /*uiDamage*/) {}
+
     //Called at World update tick
     void UpdateAI(const uint32);
 
     //Called at creature death
     void JustDied(Unit* /*who*/){}
+
     //Called at creature killing another unit
     void KilledUnit(Unit* /*who*/){}
+
     // Called when the creature summon successfully other creature
     void JustSummoned(Creature*) {}
+
     // Called when a summoned creature is despawned
     void SummonedCreatureDespawn(Creature*) {}
+
     // Called when hit by a spell
     void SpellHit(Unit* /*caster*/, const SpellEntry * /*spell*/) {}
+
     // Called when spell hits a target
     void SpellHitTarget(Unit * /*pTarget*/, const SpellEntry * /*spell*/) {}
+
     //Called at waypoint reached or PointMovement end
     void MovementInform(uint32 /*type*/, uint32 /*id*/){}
+
     // Called when AI is temporarily replaced or put back when possess is applied or removed
     void OnPossess(bool /*apply*/) {}
+
     //*************
     // Variables
     //*************
@@ -101,8 +111,10 @@ struct ScriptedAI : public CreatureAI
 
     //Called at creature reset either by death or evade
     void Reset() {}
+
     //Called at creature aggro either by MoveInLOS or Attack Start
     void EnterCombat(Unit* /*who*/) {}
+
     //*************
     //AI Helper Functions
     //*************
@@ -132,6 +144,7 @@ struct ScriptedAI : public CreatureAI
     void DoTeleportTo(const float pos[4]);
 
     void DoAction(const int32 /*param*/) {}
+
     //Teleports a player without dropping threat (only teleports to same map)
     void DoTeleportPlayer(Unit* pUnit, float fX, float fY, float fZ, float fO);
     void DoTeleportAll(float fX, float fY, float fZ, float fO);
@@ -155,6 +168,7 @@ struct ScriptedAI : public CreatureAI
     Unit* SelectUnit(SelectAggroTarget pTarget, uint32 uiPosition);
 
     bool HealthBelowPct(uint32 pct) const { return me->GetHealth() * 100 < me->GetMaxHealth() * pct; }
+
     //Returns spells that meet the specified criteria from the creatures spell list
     SpellEntry const* SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTargetType Targets,  uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effect);
 
@@ -166,6 +180,7 @@ struct ScriptedAI : public CreatureAI
     //Generally used to control if MoveChase() is to be used or not in AttackStart(). Some creatures does not chase victims
     void SetCombatMovement(bool CombatMove);
     bool IsCombatMovement() { return m_bCombatMovement; }
+
     bool EnterEvadeIfOutOfCombatArea(const uint32 uiDiff);
 
     private:
@@ -176,6 +191,7 @@ struct ScriptedAI : public CreatureAI
 struct Scripted_NoMovementAI : public ScriptedAI
 {
     Scripted_NoMovementAI(Creature* creature) : ScriptedAI(creature) {}
+
     //Called at each attack of me by any victim
     void AttackStart(Unit* who);
 };
@@ -184,6 +200,7 @@ struct BossAI : public ScriptedAI
 {
     BossAI(Creature *c, uint32 id);
     virtual ~BossAI() {}
+
     const uint32 bossId;
     EventMap events;
     SummonList summons;
@@ -198,6 +215,7 @@ struct BossAI : public ScriptedAI
     void EnterCombat(Unit * /*who*/) { _EnterCombat(); }
     void JustDied(Unit * /*killer*/) { _JustDied(); }
     void JustReachedHome() { me->setActive(false); }
+
     protected:
         void _Reset();
         void _EnterCombat();

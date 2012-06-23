@@ -76,6 +76,7 @@ enum eManaforge
 struct npc_manaforge_control_consoleAI : public ScriptedAI
 {
     npc_manaforge_control_consoleAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Event_Timer;
     uint32 Wave_Timer;
     uint32 Phase;
@@ -96,6 +97,7 @@ struct npc_manaforge_control_consoleAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { return; }
+
     /*void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         //we have no way of telling the creature was hit by spell -> got aura applied after 10-12 seconds
@@ -378,6 +380,7 @@ int CreatureEntry[3][1] =
 struct npc_commander_dawnforgeAI : public ScriptedAI
 {
     npc_commander_dawnforgeAI(Creature *c) : ScriptedAI(c) { Reset (); }
+
     uint64 playerGUID;
     uint64 ardonisGUID;
     uint64 pathaleonGUID;
@@ -403,6 +406,7 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
+
     //Select any creature in a grid
     Creature* SelectCreatureInGrid(uint32 entry, float range)
     {
@@ -731,6 +735,7 @@ bool QuestAccept_npc_professor_dabiri(Player* player, Creature* creature, Quest 
 struct mob_phase_hunterAI : public ScriptedAI
 {
     mob_phase_hunterAI(Creature *c) : ScriptedAI(c) {}
+
     bool Weak;
     bool Materialize;
     bool Drained;
@@ -846,6 +851,7 @@ CreatureAI* GetAI_mob_phase_hunter(Creature* creature)
 struct npc_bessyAI : public npc_escortAI
 {
     npc_bessyAI(Creature *c) : npc_escortAI(c) {}
+
     void JustDied(Unit* killer)
     {
         if (Player* player = GetPlayerForEscort())
@@ -889,6 +895,7 @@ struct npc_bessyAI : public npc_escortAI
     }
 
     void EnterCombat(Unit* who){}
+
     void Reset()
     {
         me->RestoreFaction();
@@ -924,6 +931,7 @@ enum
 struct npc_maxx_a_million_escortAI : public npc_escortAI
 {
     npc_maxx_a_million_escortAI(Creature* creature) : npc_escortAI(creature) {}
+
     bool bTake;
     uint32 uiTakeTimer;
 
@@ -1019,6 +1027,7 @@ enum
 struct npc_zeppitAI : public ScriptedAI
 {
     npc_zeppitAI(Creature* creature) : ScriptedAI(creature) {}
+
     uint32 uiCheckTimer;
     uint64 uiWarpGUID;
 
@@ -1066,6 +1075,7 @@ enum
 struct npc_dr_boomAI : public ScriptedAI
 {
     npc_dr_boomAI(Creature *pCeature) : ScriptedAI(pCeature) {}
+
     std::vector<uint64> targetGUID;
 
     uint32 SummonTimer;
@@ -1131,6 +1141,7 @@ CreatureAI* GetAI_npc_dr_boom(Creature* creature)
 struct npc_boom_botAI : public ScriptedAI
 {
     npc_boom_botAI(Creature* creature) : ScriptedAI(creature) {}
+
     bool Boom;
 
     uint32 BoomTimer;
@@ -1144,6 +1155,7 @@ struct npc_boom_botAI : public ScriptedAI
 
     void AttackedBy(Unit* pWho) {}
     void AttackStart(Unit* pWho) {}
+
     void MovementInform(uint32 type, uint32 id)
     {
         if (type != POINT_MOTION_TYPE)
@@ -1217,6 +1229,7 @@ enum
 struct npc_drijyaAI : public npc_escortAI
 {
     npc_drijyaAI(Creature* creature) : npc_escortAI(creature) {}
+
     bool Destroy;
     bool SummonImp;
     bool SummonTrooper;
@@ -1241,6 +1254,7 @@ struct npc_drijyaAI : public npc_escortAI
 
     void AttackedBy(Unit* pWho) {}
     void AttackStart(Unit* pWho) {}
+
     void SpawnImp()
     {
         ++Count;

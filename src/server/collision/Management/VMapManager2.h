@@ -89,6 +89,7 @@ namespace VMAP
             float getHeight(unsigned int pMapId, float x, float y, float z, float maxSearchDist);
 
             bool processCommand(char * /*pCommand*/) { return false; }      // for debug and extensions
+
             bool getAreaInfo(unsigned int pMapId, float x, float y, float &z, uint32 &flags, int32 &adtId, int32 &rootId, int32 &groupId) const;
             bool GetLiquidLevel(uint32 pMapId, float x, float y, float z, uint8 ReqLiquidType, float &level, float &floor, uint32 &type) const;
 

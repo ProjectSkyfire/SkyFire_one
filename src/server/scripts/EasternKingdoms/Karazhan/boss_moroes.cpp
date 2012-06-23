@@ -386,6 +386,7 @@ struct boss_baroness_dorothea_millstipeAI : public boss_moroes_guestAI
 {
     //Shadow Priest
     boss_baroness_dorothea_millstipeAI(Creature *c) : boss_moroes_guestAI(c) {}
+
     uint32 ManaBurn_Timer;
     uint32 MindFlay_Timer;
     uint32 ShadowWordPain_Timer;
@@ -441,6 +442,7 @@ struct boss_baron_rafe_dreugerAI : public boss_moroes_guestAI
 {
     //Retr Pally
     boss_baron_rafe_dreugerAI(Creature *c) : boss_moroes_guestAI(c){}
+
     uint32 HammerOfJustice_Timer;
     uint32 SealOfCommand_Timer;
     uint32 JudgementOfCommand_Timer;
@@ -491,6 +493,7 @@ struct boss_lady_catriona_von_indiAI : public boss_moroes_guestAI
 {
     //Holy Priest
     boss_lady_catriona_von_indiAI(Creature *c) : boss_moroes_guestAI(c) {}
+
     uint32 DispelMagic_Timer;
     uint32 GreaterHeal_Timer;
     uint32 HolyFire_Timer;
@@ -554,6 +557,7 @@ struct boss_lady_keira_berrybuckAI : public boss_moroes_guestAI
 {
     //Holy Pally
     boss_lady_keira_berrybuckAI(Creature *c) : boss_moroes_guestAI(c)  {}
+
     uint32 Cleanse_Timer;
     uint32 GreaterBless_Timer;
     uint32 HolyLight_Timer;
@@ -620,6 +624,7 @@ struct boss_lord_robin_darisAI : public boss_moroes_guestAI
 {
     //Arms Warr
     boss_lord_robin_darisAI(Creature *c) : boss_moroes_guestAI(c) {}
+
     uint32 Hamstring_Timer;
     uint32 MortalStrike_Timer;
     uint32 WhirlWind_Timer;
@@ -669,6 +674,7 @@ struct boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
 {
     //Arms Warr
     boss_lord_crispin_ferenceAI(Creature *c) : boss_moroes_guestAI(c) {}
+
     uint32 Disarm_Timer;
     uint32 HeroicStrike_Timer;
     uint32 ShieldBash_Timer;

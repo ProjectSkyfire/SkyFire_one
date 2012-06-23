@@ -34,6 +34,7 @@ EndScriptData */
 struct boss_renatakiAI : public ScriptedAI
 {
     boss_renatakiAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Invisible_Timer;
     uint32 Ambush_Timer;
     uint32 Visible_Timer;

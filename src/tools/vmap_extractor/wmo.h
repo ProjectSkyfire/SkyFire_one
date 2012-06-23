@@ -43,6 +43,7 @@ class MPQFile;
 
 /* for whatever reason a certain company just can't stick to one coordinate system... */
 static inline Vec3D fixCoords(const Vec3D &v){ return Vec3D(v.z, v.x, v.y); }
+
 class WMORoot
 {
 public:

@@ -54,6 +54,7 @@ EndScriptData */
 #define SPELL_VOID_PORTAL_VISUAL    33569
 
 float VorpilPosition[3] = {-252.8820f,-264.3030f, 17.1f};
+
 float VoidPortalCoords[5][3] =
 {
     {-283.5894f, -239.5718f, 12.7f},
@@ -89,6 +90,7 @@ struct mob_voidtravelerAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who){}
+
     void UpdateAI(const uint32 diff)
     {
         if (!Vorpil)

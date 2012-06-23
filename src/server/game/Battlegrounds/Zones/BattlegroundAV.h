@@ -440,6 +440,7 @@ const float BG_AV_ObjectPos[AV_OPLACE_MAX][4] = {
     {-1295.55f, -263.865f, 105.033f, 0.925024f},
     {-1294.71f, -281.466f, 107.664f, -1.50098f},
     {-1289.69f, -259.521f, 107.612f, -2.19912f},
+
     //the two buildings of the captains
     //alliance
     {-64.4987f, -289.33f, 33.4616f, -2.82743f},
@@ -463,6 +464,7 @@ const float BG_AV_ObjectPos[AV_OPLACE_MAX][4] = {
     {-568.04f, -188.707f, 81.55f, 0},
     {-501.775f, -151.581f, 81.2027f, 0},
     {-509.975f, -191.652f, 83.2978f, 0},
+
 //snowfall eyecandy
     {-191.153f, -129.868f, 78.5595f, -1.25664f },
     {-201.282f, -134.319f, 78.6753f, -0.942478f },
@@ -656,6 +658,7 @@ const float BG_AV_CreaturePos[AV_CPLACE_MAX][4] = {
     {-1302.41f, -259.256f, 114.065f, 1.67602f},
     {-1287.97f, -262.087f, 114.165f, 6.18264f},
     {-1291.59f, -271.166f, 114.151f, 5.28257f},
+
     //alliance marshall
     {721.104f, -7.64155f, 50.7046f, 3.45575f}, // south
     {723.058f, -14.1548f, 50.7046f, 3.40339f}, // north
@@ -666,6 +669,7 @@ const float BG_AV_CreaturePos[AV_CPLACE_MAX][4] = {
     {-1370.96f, -223.532f, 98.4266f, 4.93012f},
     {-1378.37f, -228.614f, 99.3546f, 5.38565f},
     {-1358.02f, -228.998f, 98.868f, 3.87768f},
+
  //irondeep mine
  //Irondeep Trogg
     {971.671f, -442.657f, 57.6951f, 3.1765f},
@@ -979,31 +983,38 @@ const uint32 BG_AV_CreatureInfo[AV_NPC_INFO_MAX][4] = {
     { 14762, 1534, 60, 60 }, //Dun Baldar North Marshal
     { 14764, 1534, 60, 60 }, //Icewing Marshal
     { 14765, 1534, 60, 60 }, //Stonehearth Marshal
+
     { 14773, 1214, 60, 60 }, //Iceblood Warmaster
     { 14776, 1214, 60, 60 }, //Tower Point Warmaster
     { 14772, 1214, 60, 60 }, //East Frostwolf Warmaster
     { 14777, 1214, 60, 60 }, //West Frostwolf Warmaster
+
     { 10987, 59, 52, 53 }, //Irondeep Trogg
     { 11600, 59, 53, 54 }, //Irondeep Shaman
     { 11602, 59, 54, 55 }, //Irondeep Skullthumper
     { 11657, 59, 58, 58 }, //Morloch
+
     {13396, 469, 52, 53}, //irondeep alliance TODO: get the right ids
     {13080, 469, 53, 54},
     {13098, 469, 54, 55},
     {13078, 469, 58, 58},
+
     {13397, 67, 52, 53}, //irondeep horde
     {13099, 67, 53, 54},
     {13081, 67, 54, 55},
     {13079, 67, 58, 58},
+
     { 11603, 59, 52, 53 }, //south mine neutral
     { 11604, 59, 53, 54 },
     { 11605, 59, 54, 55 },
     { 11677, 59, 58, 58 },
     { 10982, 59, 52, 53 }, //vermin
+
     {13317, 469, 52, 53}, //alliance
     {13096, 469, 54, 55}, //explorer
     {13087, 469, 54, 55}, //invader
     {13086, 469, 58, 58},
+
     {13316, 67, 52, 53}, //horde
     {13097, 67, 54, 55}, //surveypr
     {13089, 67, 54, 55}, //guard
@@ -1422,6 +1433,7 @@ struct BG_AV_NodeInfo
 };
 
 inline BG_AV_Nodes &operator++(BG_AV_Nodes &i){ return i = BG_AV_Nodes(i + 1); }
+
 class BattleGroundAVScore : public BattleGroundScore
 {
     public:
@@ -1488,6 +1500,7 @@ class BattleGroundAV : public BattleGround
         const uint32 GetObjectThroughNode(BG_AV_Nodes node);
         const char* GetNodeName(BG_AV_Nodes node);
         const bool IsTower(BG_AV_Nodes node) {   return m_Nodes[node].Tower; }
+
         /*mine*/
         void ChangeMineOwner(uint8 mine, uint32 team, bool initial=false);
 

@@ -69,6 +69,7 @@ static float SpawnLocations[4][3]=
 struct boss_onyxiaAI : public ScriptedAI
 {
     boss_onyxiaAI(Creature* c) : ScriptedAI(c) {}
+
     uint32 Phase;
 
     uint32 FlameBreathTimer;

@@ -34,6 +34,7 @@ void CreatureAI::OnCharmed(bool /*apply*/)
 
 AISpellInfoType * UnitAI::AISpellInfo;
 AISpellInfoType * GetAISpellInfo(uint32 i) { return &CreatureAI::AISpellInfo[i]; }
+
 void CreatureAI::DoZoneInCombat(Creature* creature)
 {
     if (!creature)

@@ -85,6 +85,7 @@ enum eOOX
 struct npc_oox22feAI : public npc_escortAI
 {
     npc_oox22feAI(Creature* creature) : npc_escortAI(creature) { }
+
     void WaypointReached(uint32 i)
     {
         switch (i)

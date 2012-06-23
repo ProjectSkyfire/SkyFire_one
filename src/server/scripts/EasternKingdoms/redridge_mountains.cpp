@@ -44,6 +44,7 @@ enum eCorporalKeeshan
 struct npc_corporal_keeshanAI : public npc_escortAI
 {
     npc_corporal_keeshanAI(Creature* creature) : npc_escortAI(creature) {}
+
     uint32 uiPhase;
     uint32 uiTimer;
     uint32 uiMockingBlowTimer;

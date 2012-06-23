@@ -71,6 +71,7 @@ struct mob_yennikuAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (bReset)

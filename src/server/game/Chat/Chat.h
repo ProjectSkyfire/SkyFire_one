@@ -47,6 +47,7 @@ class ChatHandler
         explicit ChatHandler(WorldSession* session) : m_session(session) {}
         explicit ChatHandler(Player* player) : m_session(player->GetSession()) {}
          ~ChatHandler() {}
+
         static void FillMessageData(WorldPacket *data, WorldSession* session, uint8 type, uint32 language, const char *channelName, uint64 target_guid, const char *message, Unit *speaker);
 
         void FillMessageData(WorldPacket *data, uint8 type, uint32 language, uint64 target_guid, const char* message)
@@ -60,6 +61,7 @@ class ChatHandler
         }
 
         static char* LineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = NULL; return start; }
+
         // function with different implementation for chat/console
         virtual const char *GetSkyFireString(int32 entry) const;
         virtual void SendSysMessage(const char *str);
@@ -80,6 +82,7 @@ class ChatHandler
         virtual char const* GetName() const;
     protected:
         explicit ChatHandler() : m_session(NULL) {}      // for CLI subclass
+
         bool hasStringAbbr(const char* name, const char* part);
 
         // function with different implementation for chat/console
@@ -572,6 +575,7 @@ class CliHandler : public ChatHandler
     public:
         typedef void Print(void*, char const*);
         explicit CliHandler(void* callbackArg, Print* zprint) : m_callbackArg(callbackArg), m_print(zprint) {}
+
         // overwrite functions
         const char *GetSkyFireString(int32 entry) const;
         bool isAvailable(ChatCommand const& cmd) const;

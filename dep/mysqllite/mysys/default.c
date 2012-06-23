@@ -692,6 +692,7 @@ static char *get_argument(const char *keyword, size_t kwlen,
        my_isspace(&my_charset_latin1, ptr[0]);
        ptr++)
   {}
+
   /*
     Trim trailing whitespace from directory name
     The -1 below is for the newline added by fgets()
@@ -797,6 +798,7 @@ static int search_default_file_with_ext(Process_option_func opt_handler,
     /* Ignore comment and empty lines */
     for (ptr= buff; my_isspace(&my_charset_latin1, *ptr); ptr++)
     {}
+
     if (*ptr == '#' || *ptr == ';' || !*ptr)
       continue;
 
@@ -820,6 +822,7 @@ static int search_default_file_with_ext(Process_option_func opt_handler,
       /* skip over `!' and following whitespace */
       for (++ptr; my_isspace(&my_charset_latin1, ptr[0]); ptr++)
       {}
+
       if ((!strncmp(ptr, includedir_keyword,
                     sizeof(includedir_keyword) - 1)) &&
           my_isspace(&my_charset_latin1, ptr[sizeof(includedir_keyword) - 1]))

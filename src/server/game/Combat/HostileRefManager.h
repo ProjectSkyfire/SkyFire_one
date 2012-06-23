@@ -40,6 +40,7 @@ class HostileRefManager : public RefManager<Unit, ThreatManager>
         ~HostileRefManager();
 
         Unit* getOwner() { return iOwner; }
+
         // send threat to all my hateres for the pVictim
         // The pVictim is hated than by them as well
         // use for buffs and healing threat functionality
@@ -52,6 +53,7 @@ class HostileRefManager : public RefManager<Unit, ThreatManager>
         void deleteReferences();
 
         HostileReference* getFirst() { return ((HostileReference*) RefManager<Unit, ThreatManager>::getFirst()); }
+
         void updateThreatTables();
 
         void setOnlineOfflineState(bool pIsOnline);

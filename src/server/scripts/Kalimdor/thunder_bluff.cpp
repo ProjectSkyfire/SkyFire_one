@@ -42,6 +42,7 @@ EndScriptData */
 struct npc_cairne_bloodhoofAI : public ScriptedAI
 {
     npc_cairne_bloodhoofAI(Creature* c) : ScriptedAI(c) {}
+
     uint32 BerserkerCharge_Timer;
     uint32 Cleave_Timer;
     uint32 MortalStrike_Timer;
@@ -58,6 +59,7 @@ struct npc_cairne_bloodhoofAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

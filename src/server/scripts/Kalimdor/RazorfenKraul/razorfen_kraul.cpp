@@ -52,6 +52,7 @@ EndContentData */
 struct npc_willixAI : public npc_escortAI
 {
     npc_willixAI(Creature *c) : npc_escortAI(c) {}
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -104,6 +105,7 @@ struct npc_willixAI : public npc_escortAI
     }
 
     void Reset() {}
+
     void EnterCombat(Unit* /*who*/)
     {
         DoScriptText(SAY_AGGRO1, me, NULL);

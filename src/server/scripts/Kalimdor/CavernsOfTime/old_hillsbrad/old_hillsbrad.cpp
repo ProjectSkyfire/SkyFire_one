@@ -585,6 +585,7 @@ struct npc_tarethaAI : public npc_escortAI
     }
     void Reset() {}
     void EnterCombat(Unit* who) {}
+
     void UpdateAI(const uint32 diff)
     {
         npc_escortAI::UpdateAI(diff);

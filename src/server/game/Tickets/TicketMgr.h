@@ -60,6 +60,7 @@ class TicketMgr
     public:
         TicketMgr(){ InitTicketID();}    //constructor
         ~TicketMgr(){}  //destructor
+
         // Object Holder
         GmTicketList         GM_TicketList;
 

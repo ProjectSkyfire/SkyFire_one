@@ -34,6 +34,7 @@ EndScriptData */
 struct boss_gythAI : public ScriptedAI
 {
     boss_gythAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Aggro_Timer;
     uint32 Dragons_Timer;
     uint32 Orc_Timer;

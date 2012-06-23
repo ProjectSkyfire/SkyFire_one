@@ -54,6 +54,7 @@ EndScriptData */
 struct instance_stratholme : public ScriptedInstance
 {
     instance_stratholme(Map* pMap) : ScriptedInstance(pMap) {}
+
     uint32 Encounter[MAX_ENCOUNTER];
 
     bool IsSilverHandDead[5];

@@ -47,6 +47,7 @@ enum eConv
 struct npc_converted_sentryAI : public ScriptedAI
 {
     npc_converted_sentryAI(Creature *c) : ScriptedAI(c) {}
+
     bool Credit;
     uint32 Timer;
 
@@ -58,6 +59,7 @@ struct npc_converted_sentryAI : public ScriptedAI
 
     void MoveInLineOfSight(Unit * /*who*/) {}
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (!Credit)
@@ -95,9 +97,11 @@ CreatureAI* GetAI_npc_converted_sentry(Creature* creature)
 struct npc_greengill_slaveAI : public ScriptedAI
 {
     npc_greengill_slaveAI(Creature* c) : ScriptedAI(c) {}
+
     uint64 PlayerGUID;
 
     void EnterCombat(Unit* /*who*/){}
+
     void Reset()
     {
     PlayerGUID = 0;

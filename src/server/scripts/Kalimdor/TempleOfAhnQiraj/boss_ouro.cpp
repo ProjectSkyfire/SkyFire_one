@@ -38,6 +38,7 @@ EndScriptData */
 struct boss_ouroAI : public ScriptedAI
 {
     boss_ouroAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Sweep_Timer;
     uint32 SandBlast_Timer;
     uint32 Submerge_Timer;

@@ -192,6 +192,7 @@ static int recursive_iterate(LF_DYNARRAY *array, void *ptr, int level,
     each. _lf_dynarray_iterate() calls user-supplied function on every array
     from the set. It is the fastest way to scan the array, faster than
       for (i=0; i < N; i++) { func(_lf_dynarray_value(dynarray, i)); }
+
   NOTE
     if func() returns non-zero, the scan is aborted
 */

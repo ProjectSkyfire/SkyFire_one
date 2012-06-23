@@ -60,6 +60,7 @@ SummonDef m_aSummonPoint[]=
     {3449.123, -3087.009, 135.002, 2.240},                 //G1 front, right
     {3446.246, -3093.466, 135.002, 2.240},                 //G1 back left
     {3451.160, -3089.904, 135.002, 2.240},                 //G1 back, right
+
     {3457.995, -3080.916, 135.002, 3.784},                 //G2 front, left
     {3454.302, -3076.330, 135.002, 3.784},                 //G2 front, right
     {3460.975, -3078.901, 135.002, 3.784},                 //G2 back left
@@ -69,6 +70,7 @@ SummonDef m_aSummonPoint[]=
 struct boss_dathrohan_balnazzarAI : public ScriptedAI
 {
     boss_dathrohan_balnazzarAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 m_uiCrusadersHammer_Timer;
     uint32 m_uiCrusaderStrike_Timer;
     uint32 m_uiMindBlast_Timer;

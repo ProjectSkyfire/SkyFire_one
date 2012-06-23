@@ -147,6 +147,7 @@ struct boss_thespiaAI : public ScriptedAI
 struct mob_coilfang_waterelementalAI : public ScriptedAI
 {
     mob_coilfang_waterelementalAI(Creature *c) : ScriptedAI(c) {}
+
     bool HeroicMode;
     uint32 WaterBoltVolley_Timer;
 
@@ -157,6 +158,7 @@ struct mob_coilfang_waterelementalAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

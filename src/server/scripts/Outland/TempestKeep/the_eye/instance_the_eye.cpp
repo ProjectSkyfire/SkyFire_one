@@ -40,6 +40,7 @@ EndScriptData */
 struct instance_the_eye : public ScriptedInstance
 {
     instance_the_eye(Map *map) : ScriptedInstance(map) {Initialize();};
+
     uint64 ThaladredTheDarkener;
     uint64 LordSanguinar;
     uint64 GrandAstromancerCapernian;

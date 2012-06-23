@@ -48,6 +48,7 @@ enum LazyPeon
 struct npc_lazy_peonAI : public ScriptedAI
 {
     npc_lazy_peonAI(Creature *c) : ScriptedAI(c) {}
+
     uint64 uiPlayerGUID;
 
     uint32 m_uiRebuffTimer;

@@ -588,12 +588,15 @@ CreatureAI* GetAI_boss_zuljin(Creature* creature)
 struct feather_vortexAI : public ScriptedAI
 {
     feather_vortexAI(Creature *c) : ScriptedAI(c) {}
+
     std::list<Player*> PlayerList;
     uint32 ResetTimer;
     uint32 ChangeTargetTimer;
 
     void Reset() {}
+
     void EnterCombat(Unit *pTarget) {}
+
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (caster->GetTypeId() == TYPEID_PLAYER && !PlayerIsInList(CAST_PLR(caster)))

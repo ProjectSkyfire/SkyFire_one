@@ -113,6 +113,7 @@ struct ACE_Stack_Trace_stackstate
   ACE_Stack_Trace_stackstate (char* b, size_t& bl, size_t nf, size_t sf)
     : buf(b), buflen(bl), num_frames(nf), starting_frame(sf)
   { }
+
   char* buf;
   size_t& buflen;
   size_t num_frames;
@@ -577,6 +578,7 @@ add_frame_to_buf (struct frame_state const *fs, void *usrarg)
 }
 
 static void emptyStack () { }
+
 #if defined (_MSC_VER)
 #  pragma warning(push)
 // Suppress warning 4748 "/GS can not protect parameters and local

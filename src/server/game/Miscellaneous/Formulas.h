@@ -35,6 +35,7 @@ namespace Trinity
     namespace XP
     {
         typedef enum XPColorChar { RED, ORANGE, YELLOW, GREEN, GRAY };
+
         inline uint32 GetGrayLevel(uint32 pl_level)
         {
             if (pl_level <= 5)

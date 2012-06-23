@@ -35,6 +35,7 @@ class PetAI : public CreatureAI
 
         void EnterEvadeMode();
         void JustDied(Unit *who) { _stopAttack(); }
+
         void UpdateAI(const uint32);
         static int Permissible(const Creature *);
 

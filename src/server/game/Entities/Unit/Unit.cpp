@@ -10245,6 +10245,7 @@ struct ProcTriggeredData
         triggeredByAura_SpellPair(Unit::spellEffectPair(triggeredByAura->GetId(), triggeredByAura->GetEffIndex())),
         cooldown(_cooldown)
     {}
+
     Aura* triggeredByAura;                                  // triggred aura, can be invalidate at triggered aura proccessing
     Unit::spellEffectPair triggeredByAura_SpellPair;        // spell pair, used for re-find aura (by pointer comparison in range)
     uint32 cooldown;                                        // possible hidden cooldown

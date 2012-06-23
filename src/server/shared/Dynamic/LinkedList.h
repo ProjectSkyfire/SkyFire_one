@@ -35,17 +35,21 @@ class LinkedListElement
     public:
         LinkedListElement() { iNext = NULL; iPrev = NULL; }
         ~LinkedListElement() { delink(); }
+
         bool hasNext() const { return(iNext && iNext->iNext != NULL); }
         bool hasPrev() const { return(iPrev && iPrev->iPrev != NULL); }
         bool isInList() const { return(iNext != NULL && iPrev != NULL); }
+
         LinkedListElement      * next()       { return hasNext() ? iNext : NULL; }
         LinkedListElement const* next() const { return hasNext() ? iNext : NULL; }
         LinkedListElement      * prev()       { return hasPrev() ? iPrev : NULL; }
         LinkedListElement const* prev() const { return hasPrev() ? iPrev : NULL; }
+
         LinkedListElement      * nocheck_next()       { return iNext; }
         LinkedListElement const* nocheck_next() const { return iNext; }
         LinkedListElement      * nocheck_prev()       { return iPrev; }
         LinkedListElement const* nocheck_prev() const { return iPrev; }
+
         void delink()
         {
             if (isInList())
@@ -88,10 +92,13 @@ class LinkedListHead
         }
 
         bool isEmpty() const { return(!iFirst.iNext->isInList()); }
+
         LinkedListElement      * getFirst()       { return(isEmpty() ? NULL : iFirst.iNext); }
         LinkedListElement const* getFirst() const { return(isEmpty() ? NULL : iFirst.iNext); }
+
         LinkedListElement      * getLast() { return(isEmpty() ? NULL : iLast.iPrev); }
         LinkedListElement const* getLast() const  { return(isEmpty() ? NULL : iLast.iPrev); }
+
         void insertFirst(LinkedListElement* pElem)
         {
             iFirst.insertAfter(pElem);
@@ -121,6 +128,7 @@ class LinkedListHead
 
         void incSize() { ++iSize; }
         void decSize() { --iSize; }
+
         template<class _Ty>
             class Iterator
         {

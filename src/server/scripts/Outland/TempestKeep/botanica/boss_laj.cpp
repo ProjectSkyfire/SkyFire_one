@@ -50,6 +50,7 @@ EndScriptData */
 struct boss_lajAI : public ScriptedAI
 {
     boss_lajAI(Creature *c) : ScriptedAI(c) {}
+
     bool CanSummon;
     uint32 Teleport_Timer;
     uint32 Summon_Timer;

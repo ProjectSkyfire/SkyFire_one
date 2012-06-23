@@ -56,6 +56,7 @@ EndScriptData */
 struct mob_doom_blossomAI : public ScriptedAI
 {
     mob_doom_blossomAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 CheckTeronTimer;
     uint32 ShadowBoltTimer;
     uint64 TeronGUID;
@@ -70,6 +71,7 @@ struct mob_doom_blossomAI : public ScriptedAI
     void EnterCombat(Unit * /*who*/) { }
     void AttackStart(Unit* /*who*/) {}
     void MoveInLineOfSight(Unit* /*who*/) {}
+
     void Despawn()
     {
         me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
@@ -108,6 +110,7 @@ struct mob_doom_blossomAI : public ScriptedAI
 struct mob_shadowy_constructAI : public ScriptedAI
 {
     mob_shadowy_constructAI(Creature* c) : ScriptedAI(c) {}
+
     uint64 GhostGUID;
     uint64 TeronGUID;
 
@@ -124,6 +127,7 @@ struct mob_shadowy_constructAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || (!who->isAlive()) || (who->GetGUID() == GhostGUID))
@@ -226,6 +230,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || (!who->isAlive())) return;

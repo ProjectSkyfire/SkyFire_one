@@ -222,6 +222,7 @@ struct GuildBankTab
 struct GuildItemPosCount
 {
     GuildItemPosCount(uint8 _slot, uint8 _count) : Slot(_slot), Count(_count) {}
+
     bool isContainedIn(std::vector<GuildItemPosCount> const& vec) const;
 
     uint8 Slot;
@@ -282,19 +283,23 @@ class Guild
         std::string const& GetName() const { return m_Name; }
         std::string const& GetMOTD() const { return MOTD; }
         std::string const& GetGINFO() const { return GINFO; }
+
         uint32 GetCreatedYear() const { return m_CreatedYear; }
         uint32 GetCreatedMonth() const { return m_CreatedMonth; }
         uint32 GetCreatedDay() const { return m_CreatedDay; }
+
         uint32 GetEmblemStyle() const { return m_EmblemStyle; }
         uint32 GetEmblemColor() const { return m_EmblemColor; }
         uint32 GetBorderStyle() const { return m_BorderStyle; }
         uint32 GetBorderColor() const { return m_BorderColor; }
         uint32 GetBackgroundColor() const { return m_BackgroundColor; }
+
         void SetLeader(uint64 guid);
         bool AddMember(uint64 plGuid, uint32 plRank);
         void ChangeRank(uint64 guid, uint32 newRank);
         void DelMember(uint64 guid, bool isDisbanding=false);
         uint32 GetLowestRank() const { return GetNrRanks()-1; }
+
         void SetMOTD(std::string motd);
         void SetGINFO(std::string ginfo);
         void SetPNOTE(uint64 guid, std::string pnote);
@@ -303,6 +308,7 @@ class Guild
 
         uint32 GetMemberSize() const { return members.size(); }
         uint32 GetAccountsNumber() const { return m_accountsNumber; }
+
         bool LoadGuildFromDB(QueryResult_AutoPtr guildDataResult);
         bool CheckGuildStructure();
         bool LoadRanksFromDB(QueryResult_AutoPtr guildRanksResult);
@@ -327,6 +333,7 @@ class Guild
         std::string GetRankName(uint32 rankId);
         uint32 GetRankRights(uint32 rankId);
         uint32 GetNrRanks() const { return m_Ranks.size(); }
+
         void SetRankName(uint32 rankId, std::string name);
         void SetRankRights(uint32 rankId, uint32 rights);
         bool HasRankRight(uint32 rankId, uint32 right)

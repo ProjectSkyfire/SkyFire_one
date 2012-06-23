@@ -38,6 +38,7 @@ void ReferenceCountedObject::ReferenceCountedObject_zeroWeakPointers() {
 }
 
 ReferenceCountedObject::~ReferenceCountedObject() {}
+
 ReferenceCountedObject::ReferenceCountedObject(const ReferenceCountedObject& notUsed) :
     ReferenceCountedObject_refCount(0),
     ReferenceCountedObject_weakPointer(0) {

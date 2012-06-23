@@ -725,6 +725,7 @@ static const uint32 rcon[]=
 #define RJ_SWAP(x) (_lrotl(x, 8) & 0x00ff00ff | _lrotr(x, 8) & 0xff00ff00)
 #define GETuint32(p) RJ_SWAP(*((uint32 *)(p)))
 #define PUTuint32(ct, st) { *((uint32 *)(ct)) = RJ_SWAP((st)); }
+
 #else
 
 #define GETuint32(pt) (((uint32)(pt)[0] << 24) ^ ((uint32)(pt)[1] << 16)\

@@ -36,6 +36,7 @@ struct SkillDiscoveryEntry
 
     SkillDiscoveryEntry()
         : spellId(0), chance(0) {}
+
     SkillDiscoveryEntry(uint16 _spellId, float _chance)
         : spellId(_spellId), chance(_chance) {}
 };

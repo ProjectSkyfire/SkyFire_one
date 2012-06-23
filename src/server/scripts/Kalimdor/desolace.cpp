@@ -58,6 +58,7 @@ enum eDyingKodo
 struct npc_aged_dying_ancient_kodoAI : public ScriptedAI
 {
     npc_aged_dying_ancient_kodoAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
+
     uint32 m_uiDespawnTimer;
 
     void Reset()
@@ -163,6 +164,7 @@ CreatureAI* GetAI_npc_aged_dying_ancient_kodo(Creature* creature)
 struct npc_dalindaAI : public npc_escortAI
 {
     npc_dalindaAI(Creature* creature) : npc_escortAI(creature) { }
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -179,7 +181,9 @@ struct npc_dalindaAI : public npc_escortAI
     }
 
     void EnterCombat(Unit* /*pWho*/) { }
+
     void Reset() {}
+
     void JustDied(Unit* /*pKiller*/)
     {
         Player* player = GetPlayerForEscort();
@@ -245,6 +249,7 @@ static float m_afAmbushSpawn[4][3]=
 struct npc_melizza_brimbuzzleAI : public npc_escortAI
 {
     npc_melizza_brimbuzzleAI(Creature* creature) : npc_escortAI(creature) { }
+
     uint32 m_uiPostEventCount;
     uint64 m_uiPostEventTimer;
 

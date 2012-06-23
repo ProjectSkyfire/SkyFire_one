@@ -37,11 +37,14 @@ class ObjectGridLoader
         ObjectGridLoader(NGridType &grid, Map* map, const Cell &cell)
             : i_cell(cell), i_grid(grid), i_map(map), i_gameObjects(0), i_creatures(0), i_corpses (0)
             {}
+
         void Load(GridType &grid);
         void Visit(GameObjectMapType &m);
         void Visit(CreatureMapType &m);
         void Visit(CorpseMapType &) {}
+
         void Visit(DynamicObjectMapType&) { }
+
         void LoadN(void);
 
     private:
@@ -57,6 +60,7 @@ class ObjectGridUnloader
 {
     public:
         ObjectGridUnloader(NGridType &grid) : i_grid(grid) {}
+
         void MoveToRespawnN();
         void UnloadN()
         {
@@ -80,6 +84,7 @@ class ObjectGridStoper
 {
     public:
         ObjectGridStoper(NGridType &grid) : i_grid(grid) {}
+
         void StopN()
         {
             for (unsigned int x=0; x < MAX_NUMBER_OF_CELLS; ++x)
@@ -104,6 +109,7 @@ class ObjectGridCleaner
 {
     public:
         ObjectGridCleaner(NGridType &grid) : i_grid(grid) {}
+
         void CleanN()
         {
             for (unsigned int x=0; x < MAX_NUMBER_OF_CELLS; ++x)

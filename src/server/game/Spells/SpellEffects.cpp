@@ -1278,6 +1278,7 @@ void Spell::EffectDummy(uint32 i)
 
                     uint32 health = tempSummon->GetHealth();
                     const uint32 entry_list[6] = {21821, 21820, 21817};
+
                     float x = tempSummon->GetPositionX();
                     float y = tempSummon->GetPositionY();
                     float z = tempSummon->GetPositionZ();
@@ -4605,6 +4606,7 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                 case 26275:
                 {
                     uint32 spells[4] = { 26272, 26157, 26273, 26274 };
+
                     // check presence
                     for (uint8 j = 0; j < 4; ++j)
                         if (unitTarget->HasAura(spells[j], 0))

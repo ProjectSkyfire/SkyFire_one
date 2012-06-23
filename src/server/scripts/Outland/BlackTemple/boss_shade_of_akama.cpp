@@ -108,9 +108,11 @@ static Location BrokenWP[]=
 #define CREATURE_BROKEN             23319
 
 const uint32 spawnEntries[4]= { 23523, 23318, 23524 };
+
 struct mob_ashtongue_channelerAI : public ScriptedAI
 {
     mob_ashtongue_channelerAI(Creature* c) : ScriptedAI(c) {ShadeGUID = 0;}
+
     uint64 ShadeGUID;
 
     void Reset()
@@ -127,6 +129,7 @@ struct mob_ashtongue_channelerAI : public ScriptedAI
 struct mob_ashtongue_sorcererAI : public ScriptedAI
 {
     mob_ashtongue_sorcererAI(Creature* c) : ScriptedAI(c) {ShadeGUID = 0;}
+
     uint64 ShadeGUID;
     uint32 CheckTimer;
     bool StartBanishing;
@@ -295,6 +298,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) { }
+
     void AttackStart(Unit* who)
     {
         if (!who || IsBanished) return;
@@ -393,6 +397,7 @@ struct boss_shade_of_akamaAI : public ScriptedAI
     }
 
     void SetAkamaGUID(uint64 guid) { AkamaGUID = guid; }
+
     void UpdateAI(const uint32 diff)
     {
         if (!StartCombat)
@@ -587,6 +592,7 @@ struct npc_akamaAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void BeginEvent(Player* pl)
     {
         if (!instance)

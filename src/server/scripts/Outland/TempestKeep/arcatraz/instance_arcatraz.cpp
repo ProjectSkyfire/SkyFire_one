@@ -52,6 +52,7 @@ EndScriptData */
 struct instance_arcatraz : public ScriptedInstance
 {
     instance_arcatraz(Map *map) : ScriptedInstance(map) {Initialize();};
+
     uint32 Encounter[ENCOUNTERS];
 
     GameObject *Containment_Core_Security_Field_Alpha;

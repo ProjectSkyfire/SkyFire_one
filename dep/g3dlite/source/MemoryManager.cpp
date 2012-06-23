@@ -14,6 +14,7 @@
 
 namespace G3D {
 MemoryManager::MemoryManager() {}
+
 void* MemoryManager::alloc(size_t s) {
     return System::malloc(s);
 }
@@ -34,6 +35,7 @@ MemoryManager::Ref MemoryManager::create() {
 ///////////////////////////////////////////////////
 
 AlignedMemoryManager::AlignedMemoryManager() {}
+
 void* AlignedMemoryManager::alloc(size_t s) {
     return System::alignedMalloc(s, 16);
 }
@@ -54,6 +56,7 @@ AlignedMemoryManager::Ref AlignedMemoryManager::create() {
 ///////////////////////////////////////////////////
 
 CRTMemoryManager::CRTMemoryManager() {}
+
 void* CRTMemoryManager::alloc(size_t s) {
     return ::malloc(s);
 }

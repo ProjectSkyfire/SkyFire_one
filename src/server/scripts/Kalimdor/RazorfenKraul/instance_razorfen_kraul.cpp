@@ -33,6 +33,7 @@ EndScriptData */
 struct instance_razorfen_kraul : public ScriptedInstance
 {
     instance_razorfen_kraul(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+
     uint64 DoorWardGUID;
     uint32 WardCheck_Timer;
     int WardKeeperAlive;

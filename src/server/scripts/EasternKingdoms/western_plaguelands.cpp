@@ -146,8 +146,11 @@ bool GossipSelect_npc_myranda_the_hag(Player* player, Creature* /*creature*/, ui
 struct npc_the_scourge_cauldronAI : public ScriptedAI
 {
     npc_the_scourge_cauldronAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset() {}
+
     void EnterCombat(Unit* /*who*/) {}
+
     void DoDie()
     {
         //summoner dies here
@@ -220,6 +223,7 @@ enum eAndorhalTower
 struct npc_andorhal_towerAI : public Scripted_NoMovementAI
 {
     npc_andorhal_towerAI(Creature *c) : Scripted_NoMovementAI(c) {}
+
     void MoveInLineOfSight(Unit* pWho)
     {
         if (!pWho || pWho->GetTypeId() != TYPEID_PLAYER)
@@ -259,6 +263,7 @@ enum eTruuen
 struct npc_anchorite_truuenAI : public npc_escortAI
 {
     npc_anchorite_truuenAI(Creature* creature) : npc_escortAI(creature) { }
+
     uint32 EventTimer;
     uint64 UterGUID;
     uint32 uiPhase;

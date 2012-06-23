@@ -35,6 +35,7 @@ EndScriptData */
 struct boss_quatermasterzigrisAI : public ScriptedAI
 {
     boss_quatermasterzigrisAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Shoot_Timer;
     uint32 StunBomb_Timer;
     //uint32 HelingPotion_Timer;

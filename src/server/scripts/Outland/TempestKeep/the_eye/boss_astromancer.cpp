@@ -71,6 +71,7 @@ EndScriptData */
 
                              // x,          y,      z,         o
 static float SolarianPos[4] = {432.909f, -373.424f, 17.9608f, 1.06421f};
+
 struct boss_high_astromancer_solarianAI : public ScriptedAI
 {
     boss_high_astromancer_solarianAI(Creature *c) : ScriptedAI(c), Summons(me)

@@ -42,6 +42,7 @@ EndScriptData */
 struct boss_fankrissAI : public ScriptedAI
 {
     boss_fankrissAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 MortalWound_Timer;
     uint32 SpawnHatchlings_Timer;
     uint32 SpawnSpawns_Timer;

@@ -42,8 +42,11 @@ EndContentData */
 struct mobs_mana_tappedAI : public ScriptedAI
 {
     mobs_mana_tappedAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset() { }
+
     void EnterCombat(Unit *who) { }
+
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (caster->GetTypeId() == TYPEID_PLAYER)
@@ -75,6 +78,7 @@ struct npc_prospector_anvilwardAI : public npc_escortAI
 {
     // CreatureAI functions
     npc_prospector_anvilwardAI(Creature *c) : npc_escortAI(c) {}
+
     // Pure Virtual Functions
     void WaypointReached(uint32 i)
     {
@@ -187,6 +191,7 @@ static Locations SpawnPosition[]=
 };
 
 static uint32 PaladinEntry[] = {CHAMPION_BLOODWRATH, CHAMPION_LIGHTREND, CHAMPION_SWIFTBLADE, CHAMPION_SUNSTRIKER};
+
 /*######
 ## npc_second_trial_paladin
 ######*/
@@ -194,6 +199,7 @@ static uint32 PaladinEntry[] = {CHAMPION_BLOODWRATH, CHAMPION_LIGHTREND, CHAMPIO
 struct npc_secondTrialAI : public ScriptedAI
 {
     npc_secondTrialAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 timer;
     uint8  questPhase;
     uint64 summonerGuid;
@@ -248,6 +254,7 @@ struct npc_secondTrialAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (questPhase == 1)
@@ -322,6 +329,7 @@ struct npc_secondTrialAI : public ScriptedAI
 struct master_kelerun_bloodmournAI : public ScriptedAI
 {
     master_kelerun_bloodmournAI(Creature *c) : ScriptedAI(c) {}
+
     uint8  questPhase;
     uint8  paladinPhase;
     uint32 timer;
@@ -338,6 +346,7 @@ struct master_kelerun_bloodmournAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         // Quest accepted but object not activated, object despawned (if in sync 1 minute!)
@@ -522,6 +531,7 @@ enum eMirveda
 struct npc_apprentice_mirvedaAI : public ScriptedAI
 {
     npc_apprentice_mirvedaAI(Creature* c) : ScriptedAI(c), Summons(me) {}
+
     uint32 KillCount;
     uint64 PlayerGUID;
     bool Summon;
@@ -536,6 +546,7 @@ struct npc_apprentice_mirvedaAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/){}
+
     void JustSummoned(Creature *summoned)
     {
         summoned->AI()->AttackStart(me);
@@ -617,6 +628,7 @@ static Location SpawnLocations[] =
 struct npc_infused_crystalAI : public Scripted_NoMovementAI
 {
     npc_infused_crystalAI(Creature* c) : Scripted_NoMovementAI(c) {}
+
     uint32 EndTimer;
     uint32 WaveTimer;
     bool Completed;

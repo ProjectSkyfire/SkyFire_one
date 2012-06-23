@@ -281,6 +281,7 @@ struct npc_clintar_spiritAI : public npc_escortAI
 {
 public:
     npc_clintar_spiritAI(Creature *c) : npc_escortAI(c) {}
+
     uint32 Step;
     uint32 CurrWP;
     uint32 Event_Timer;
@@ -660,6 +661,7 @@ Location PristessHomePoint[] =
 struct npc_remulosAI : public npc_escortAI
 {
     npc_remulosAI(Creature *c) : npc_escortAI(c) {}
+
     uint64 EranikusGUID;
     uint32 uiPhase;
     uint32 EventTimer;
@@ -1097,6 +1099,7 @@ struct npc_eranikusAI : public ScriptedAI
 {
 public:
     npc_eranikusAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 ShadowBoltTimer;
     uint32 AcidBreathTimer;
     uint32 NoxiusBreathTimer;

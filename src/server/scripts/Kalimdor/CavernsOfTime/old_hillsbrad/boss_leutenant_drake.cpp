@@ -99,6 +99,7 @@ static Location DrakeWP[]=
 struct boss_lieutenant_drakeAI : public ScriptedAI
 {
     boss_lieutenant_drakeAI(Creature *c) : ScriptedAI(c) {}
+
     bool CanPatrol;
     uint32 wpId;
 

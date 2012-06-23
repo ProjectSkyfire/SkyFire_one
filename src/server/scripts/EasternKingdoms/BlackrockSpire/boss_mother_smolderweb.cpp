@@ -34,6 +34,7 @@ EndScriptData */
 struct boss_mothersmolderwebAI : public ScriptedAI
 {
     boss_mothersmolderwebAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Crystalize_Timer;
     uint32 MothersMilk_Timer;
 
@@ -44,6 +45,7 @@ struct boss_mothersmolderwebAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void DamageTaken(Unit * /*done_by*/, uint32 &damage)
     {
         if (me->GetHealth() <= damage)

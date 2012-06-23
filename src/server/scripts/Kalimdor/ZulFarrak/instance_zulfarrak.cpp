@@ -25,6 +25,7 @@
 struct instance_zulfarrak : public ScriptedInstance
 {
     instance_zulfarrak(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
+
     uint32 GahzRillaEncounter;
 
     void Initialize()

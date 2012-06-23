@@ -43,6 +43,7 @@ class Totem : public Minion
         uint32 GetSpell() const { return m_spells[0]; }
         uint32 GetTotemDuration() const { return m_duration; }
         TotemType GetTotemType() const { return m_type; }
+
         bool UpdateStats(Stats /*stat*/) { return true; }
         bool UpdateAllStats() { return true; }
         void UpdateResistances(uint32 /*school*/) {}
@@ -51,6 +52,7 @@ class Totem : public Minion
         void UpdateMaxPower(Powers /*power*/) {}
         void UpdateAttackPowerAndDamage(bool /*ranged*/) {}
         void UpdateDamagePhysical(WeaponAttackType /*attType*/) {}
+
         bool IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const;
 
     protected:

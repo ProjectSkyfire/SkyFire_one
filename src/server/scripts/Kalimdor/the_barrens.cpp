@@ -93,7 +93,9 @@ enum eGilthares
 struct npc_giltharesAI : public npc_escortAI
 {
     npc_giltharesAI(Creature* creature) : npc_escortAI(creature) { }
+
     void Reset() { }
+
     void WaypointReached(uint32 uiPointId)
     {
         Player* player = GetPlayerForEscort();
@@ -202,6 +204,7 @@ bool GossipSelect_npc_sputtervalve(Player* player, Creature* creature, uint32 /*
 struct npc_taskmaster_fizzuleAI : public ScriptedAI
 {
     npc_taskmaster_fizzuleAI(Creature* c) : ScriptedAI(c) {}
+
     bool IsFriend;
     uint32 Reset_Timer;
     uint32 FlareCount;
@@ -239,6 +242,7 @@ struct npc_taskmaster_fizzuleAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (IsFriend)
@@ -303,6 +307,7 @@ float AffrayChallengerLoc[6][4]=
 struct npc_twiggy_flatheadAI : public ScriptedAI
 {
     npc_twiggy_flatheadAI(Creature *c) : ScriptedAI(c) {}
+
     bool EventInProgress;
     bool EventGrate;
     bool EventBigWill;
@@ -333,6 +338,7 @@ struct npc_twiggy_flatheadAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) { }
+
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || (!who->isAlive())) return;
@@ -345,6 +351,7 @@ struct npc_twiggy_flatheadAI : public ScriptedAI
     }
 
     void KilledUnit(Unit * /*victim*/) { }
+
     void UpdateAI(const uint32 diff)
     {
         if (EventInProgress) {

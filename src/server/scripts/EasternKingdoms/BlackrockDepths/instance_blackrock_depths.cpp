@@ -80,6 +80,7 @@ enum eEnums
 struct instance_blackrock_depths : public ScriptedInstance
 {
     instance_blackrock_depths(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+
     uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string str_data;
 

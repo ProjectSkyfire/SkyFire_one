@@ -25,11 +25,13 @@ namespace ACE
       , sum_of_squares_ (0.0)
       , last_ (0.0)
     {}
+
     //=============================================================
 
     Monitor_Control_Types::Constraint::Constraint (void)
       : control_action (0)
     {}
+
     Monitor_Control_Types::Constraint::Constraint (const Constraint& rhs)
       : expr (rhs.expr),
         control_action (rhs.control_action)

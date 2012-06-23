@@ -721,6 +721,7 @@ ACE_Get_Opt::ACE_Get_Opt_Long_Option::ACE_Get_Opt_Long_Option (
      has_arg_ (has_arg),
      val_ (val)
 {}
+
 ACE_Get_Opt::ACE_Get_Opt_Long_Option::~ACE_Get_Opt_Long_Option (void)
 {
   delete [] this->name_;

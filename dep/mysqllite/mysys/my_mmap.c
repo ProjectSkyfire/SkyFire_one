@@ -31,6 +31,7 @@ int my_msync(int fd, void *addr, size_t len, int flags)
 
 static SECURITY_ATTRIBUTES mmap_security_attributes=
   {sizeof(SECURITY_ATTRIBUTES), 0, TRUE};
+
 void *my_mmap(void *addr, size_t len, int prot,
                int flags, File fd, my_off_t offset)
 {

@@ -903,6 +903,7 @@ public:
         cache sizes on many machines.
       */
     enum {tinyBufferSize = 128, smallBufferSize = 1024, medBufferSize = 4096};
+
     /**
        Most buffers we're allowed to store.
        250000 * 128  = 32 MB (preallocated)
@@ -910,6 +911,7 @@ public:
          1024 * 4096 =  4 MB (allocated on demand)
      */
     enum {maxTinyBuffers = 250000, maxSmallBuffers = 10000, maxMedBuffers = 1024};
+
 private:
 
     class MemBlock {

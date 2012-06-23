@@ -54,6 +54,7 @@ enum eAME
 struct npc_ameAI : public npc_escortAI
 {
     npc_ameAI(Creature *c) : npc_escortAI(c) {}
+
     uint32 DEMORALIZINGSHOUT_Timer;
 
     void WaypointReached(uint32 i)
@@ -173,6 +174,7 @@ enum eRingo
 struct npc_ringoAI : public FollowerAI
 {
     npc_ringoAI(Creature* creature) : FollowerAI(creature) { }
+
     uint32 m_uiFaintTimer;
     uint32 m_uiEndEventProgress;
     uint32 m_uiEndEventTimer;

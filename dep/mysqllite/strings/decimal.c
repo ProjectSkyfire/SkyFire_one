@@ -29,6 +29,7 @@
   particular radix R, where R is either 2 or 10. S is a non-negative
   integer. Every value of an exact numeric type of scale S is of the
   form n*10^{-S}, where n is an integer such that ­-R^P <= n <= R^P.
+
   [...]
 
   If an assignment of some number would result in a loss of its most
@@ -2687,6 +2688,7 @@ void test_md(const char *s1, const char *s2, const char *orig, int ex)
 
 const char *round_mode[]=
 {"TRUNCATE", "HALF_EVEN", "HALF_UP", "CEILING", "FLOOR"};
+
 void test_ro(const char *s1, int n, decimal_round_mode mode, const char *orig,
              int ex)
 {

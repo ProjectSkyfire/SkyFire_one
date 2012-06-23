@@ -38,6 +38,7 @@ EndScriptData */
 struct boss_broodlordAI : public ScriptedAI
 {
     boss_broodlordAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Cleave_Timer;
     uint32 BlastWave_Timer;
     uint32 MortalStrike_Timer;

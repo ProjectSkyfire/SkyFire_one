@@ -65,6 +65,7 @@ namespace Trinity
     struct PlayerRelocationNotifier : public VisibleNotifier
     {
         PlayerRelocationNotifier(Player &pl) : VisibleNotifier(pl) {}
+
         template<class T> void Visit(GridRefManager<T> &m) { VisibleNotifier::Visit(m); }
         void Visit(CreatureMapType &);
         void Visit(PlayerMapType &);
@@ -106,6 +107,7 @@ namespace Trinity
         GridType &i_grid;
         uint32 i_timeDiff;
         GridUpdater(GridType &grid, uint32 diff) : i_grid(grid), i_timeDiff(diff) {}
+
         template<class T> void updateObjects(GridRefManager<T> &m)
         {
             for (typename GridRefManager<T>::iterator iter = m.begin(); iter != m.end(); ++iter)
@@ -134,6 +136,7 @@ namespace Trinity
         void Visit(CreatureMapType &m);
         void Visit(DynamicObjectMapType &m);
         template<class SKIP> void Visit(GridRefManager<SKIP> &) {}
+
         void SendPacket(Player* plr)
         {
             // never send packet to self
@@ -185,6 +188,7 @@ namespace Trinity
         Check &i_check;
 
         WorldObjectSearcher(WorldObject* & result, Check& check) : i_object(result), i_check(check) {}
+
         void Visit(GameObjectMapType &m);
         void Visit(PlayerMapType &m);
         void Visit(CreatureMapType &m);
@@ -201,6 +205,7 @@ namespace Trinity
         Check& i_check;
 
         WorldObjectListSearcher(std::list<WorldObject*> &objects, Check & check) : i_objects(objects), i_check(check) {}
+
         void Visit(PlayerMapType &m);
         void Visit(CreatureMapType &m);
         void Visit(CorpseMapType &m);
@@ -216,6 +221,7 @@ namespace Trinity
         Do const& i_do;
 
         explicit WorldObjectWorker(Do const& _do) : i_do(_do) {}
+
         void Visit(GameObjectMapType &m)
         {
             for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
@@ -257,6 +263,7 @@ namespace Trinity
         Check &i_check;
 
         GameObjectSearcher(GameObject* & result, Check& check) : i_object(result), i_check(check) {}
+
         void Visit(GameObjectMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -270,6 +277,7 @@ namespace Trinity
         Check& i_check;
 
         GameObjectLastSearcher(GameObject* & result, Check& check) : i_object(result), i_check(check) {}
+
         void Visit(GameObjectMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -282,6 +290,7 @@ namespace Trinity
         Check& i_check;
 
         GameObjectListSearcher(std::list<GameObject*> &objects, Check & check) : i_objects(objects), i_check(check) {}
+
         void Visit(GameObjectMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -297,6 +306,7 @@ namespace Trinity
         Check & i_check;
 
         UnitSearcher(Unit* & result, Check & check) : i_object(result), i_check(check) {}
+
         void Visit(CreatureMapType &m);
         void Visit(PlayerMapType &m);
 
@@ -311,6 +321,7 @@ namespace Trinity
         Check & i_check;
 
         UnitLastSearcher(Unit* & result, Check & check) : i_object(result), i_check(check) {}
+
         void Visit(CreatureMapType &m);
         void Visit(PlayerMapType &m);
 
@@ -325,6 +336,7 @@ namespace Trinity
         Check& i_check;
 
         UnitListSearcher(std::list<Unit*> &objects, Check & check) : i_objects(objects), i_check(check) {}
+
         void Visit(PlayerMapType &m);
         void Visit(CreatureMapType &m);
 
@@ -340,6 +352,7 @@ namespace Trinity
         Check & i_check;
 
         CreatureSearcher(Creature* & result, Check & check) : i_object(result), i_check(check) {}
+
         void Visit(CreatureMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -353,6 +366,7 @@ namespace Trinity
         Check & i_check;
 
         CreatureLastSearcher(Creature* & result, Check & check) : i_object(result), i_check(check) {}
+
         void Visit(CreatureMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -365,6 +379,7 @@ namespace Trinity
         Check& i_check;
 
         CreatureListSearcher(std::list<Creature*> &objects, Check & check) : i_objects(objects), i_check(check) {}
+
         void Visit(CreatureMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -377,6 +392,7 @@ namespace Trinity
 
         CreatureWorker(Do& _do)
             : i_do(_do) {}
+
         void Visit(CreatureMapType &m)
         {
             for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
@@ -395,6 +411,7 @@ namespace Trinity
         Check & i_check;
 
         PlayerSearcher(Player* & result, Check & check) : i_object(result), i_check(check) {}
+
         void Visit(PlayerMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -409,6 +426,7 @@ namespace Trinity
 
         PlayerListSearcher(std::list<Player*> &objects, Check & check)
             : i_objects(objects), i_check(check) {}
+
         void Visit(PlayerMapType &m);
 
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
@@ -420,6 +438,7 @@ namespace Trinity
         Do& i_do;
 
         explicit PlayerWorker(Do& _do) : i_do(_do) {}
+
         void Visit(PlayerMapType &m)
         {
             for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
@@ -437,6 +456,7 @@ namespace Trinity
 
         PlayerDistWorker(float _dist, Do& _do)
             : i_dist(_dist), i_do(_do) {}
+
         void Visit(PlayerMapType &m)
         {
             for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
@@ -884,6 +904,7 @@ namespace Trinity
         public:
             NearestAssistCreatureInCreatureRangeCheck(Creature* obj, Unit* enemy, float range)
                 : i_obj(obj), i_enemy(enemy), i_range(range) {}
+
             bool operator()(Creature* u)
             {
                 if (u->getFaction() == i_obj->getFaction() && !u->isInCombat() && !u->GetCharmerOrOwnerGUID() && u->IsHostileTo(i_enemy) && u->isAlive()&& i_obj->IsWithinDistInMap(u, i_range) && i_obj->IsWithinLOSInMap(u))
@@ -909,6 +930,7 @@ namespace Trinity
         public:
             NearestCreatureEntryWithLiveStateInObjectRangeCheck(WorldObject const& obj, uint32 entry, bool alive, float range)
                 : i_obj(obj), i_entry(entry), i_alive(alive), i_range(range) {}
+
             bool operator()(Creature* u)
             {
                 if (u->GetEntry() == i_entry && u->isAlive() == i_alive && i_obj.IsWithinDistInMap(u, i_range))
@@ -1021,6 +1043,7 @@ namespace Trinity
     {
         public:
             explicit LocalizedPacketDo(Builder& builder) : i_builder(builder) {}
+
             ~LocalizedPacketDo()
             {
                 for (int i = 0; i < i_data_cache.size(); ++i)
@@ -1040,6 +1063,7 @@ namespace Trinity
         public:
             typedef std::vector<WorldPacket*> WorldPacketList;
             explicit LocalizedPacketListDo(Builder& builder) : i_builder(builder) {}
+
             ~LocalizedPacketListDo()
             {
                 for (size_t i = 0; i < i_data_cache.size(); ++i)

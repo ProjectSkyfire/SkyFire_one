@@ -70,6 +70,7 @@ enum eKerlonian
 struct npc_kerlonianAI : public FollowerAI
 {
     npc_kerlonianAI(Creature* creature) : FollowerAI(creature) { }
+
     uint32 m_uiFallAsleepTimer;
 
     void Reset()
@@ -201,6 +202,7 @@ enum eRemtravel
 struct npc_prospector_remtravelAI : public npc_escortAI
 {
     npc_prospector_remtravelAI(Creature* creature) : npc_escortAI(creature) {}
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -265,6 +267,7 @@ struct npc_prospector_remtravelAI : public npc_escortAI
     }
 
     void Reset() {}
+
     void EnterCombat(Unit* who)
     {
         if (rand()%2)
@@ -308,7 +311,9 @@ enum eThreshwackonator
 struct npc_threshwackonatorAI : public FollowerAI
 {
     npc_threshwackonatorAI(Creature* creature) : FollowerAI(creature) { }
+
     void Reset() { }
+
     void MoveInLineOfSight(Unit* pWho)
     {
         FollowerAI::MoveInLineOfSight(pWho);

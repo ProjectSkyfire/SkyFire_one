@@ -69,6 +69,7 @@ struct LootStoreItem
         : itemid(_itemid), chance(fabs(_chanceOrQuestChance)), mincountOrRef(_mincountOrRef),
         group(_group), maxcount(_maxcount), conditionId(_conditionId),
         needs_quest(_chanceOrQuestChance < 0) {}
+
     bool Roll() const;                                      // Checks if the entry takes it's chance (at loot generation)
     bool IsValid(LootStore const& store, uint32 entry) const;
                                                             // Checks correctness of values
@@ -103,6 +104,7 @@ struct QuestItem
 
     QuestItem()
         : index(0), is_looted(false) {}
+
     QuestItem(uint8 _index, bool _islooted = false)
         : index(_index), is_looted(_islooted) {}
 };
@@ -122,6 +124,7 @@ class LootStore
     public:
         explicit LootStore(char const* name, char const* entryName) : m_name(name), m_entryName(entryName) {}
         virtual ~LootStore() { Clear(); }
+
         void Verify() const;
 
         void LoadAndCollectLootIds(LootIdSet& ids_set);
@@ -189,6 +192,7 @@ class LootValidatorRefManager : public RefManager<Loot, LootValidatorRef>
 
         LootValidatorRef* getFirst() { return (LootValidatorRef*)RefManager<Loot, LootValidatorRef>::getFirst(); }
         LootValidatorRef* getLast() { return (LootValidatorRef*)RefManager<Loot, LootValidatorRef>::getLast(); }
+
         iterator begin() { return iterator(getFirst()); }
         iterator end() { return iterator(NULL); }
         iterator rbegin() { return iterator(getLast()); }
@@ -202,6 +206,7 @@ struct Loot
     QuestItemMap const& GetPlayerQuestItems() const { return PlayerQuestItems; }
     QuestItemMap const& GetPlayerFFAItems() const { return PlayerFFAItems; }
     QuestItemMap const& GetPlayerNonQuestNonFFAConditionalItems() const { return PlayerNonQuestNonFFAConditionalItems; }
+
     QuestItemList* FillFFALoot(Player* player);
     QuestItemList* FillQuestLoot(Player* player);
     QuestItemList* FillNonQuestNonFFAConditionalLoot(Player* player);
@@ -213,6 +218,7 @@ struct Loot
 
     Loot(uint32 _gold = 0) : gold(_gold), unlootedCount(0) {}
     ~Loot() { clear(); }
+
     // if loot becomes invalid this reference is used to inform the listener
     void addLootValidatorRef(LootValidatorRef* pLootValidatorRef)
     {
@@ -243,11 +249,13 @@ struct Loot
 
     bool empty() const { return items.empty() && gold == 0; }
     bool isLooted() const { return gold == 0 && unlootedCount == 0; }
+
     void NotifyItemRemoved(uint8 lootIndex);
     void NotifyQuestItemRemoved(uint8 questIndex);
     void NotifyMoneyRemoved();
     void AddLooter(uint64 GUID) { PlayersLooting.insert(GUID); }
     void RemoveLooter(uint64 GUID) { PlayersLooting.erase(GUID); }
+
     void generateMoneyLoot(uint32 minAmount, uint32 maxAmount);
     void FillLoot(uint32 loot_id, LootStore const& store, Player* loot_owner);
 

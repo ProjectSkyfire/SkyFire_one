@@ -30,12 +30,16 @@
 
 template<class T>
 void WaypointMovementGenerator<T>::Initialize(T & /*u*/){}
+
 template<>
 void WaypointMovementGenerator<Creature>::Finalize(Creature & /*u*/){}
+
 template<>
 void WaypointMovementGenerator<Player>::Finalize(Player & /*u*/){}
+
 template<class T>
 void WaypointMovementGenerator<T>::MovementInform(T & /*unit*/){}
+
 template<>
 void WaypointMovementGenerator<Creature>::MovementInform(Creature &unit)
 {
@@ -67,6 +71,7 @@ void WaypointMovementGenerator<Creature>::Reset(Creature & /*unit*/)
 
 template<>
 void WaypointMovementGenerator<Player>::Reset(Player & /*unit*/){}
+
 template<>
 void WaypointMovementGenerator<Creature>::InitTraveller(Creature &unit, const WaypointData &node)
 {
@@ -108,6 +113,7 @@ void WaypointMovementGenerator<Creature>::Initialize(Creature &u)
 
 template<>
 void WaypointMovementGenerator<Player>::InitTraveller(Player & /*unit*/, const WaypointData & /*node*/){}
+
 template<class T>
 bool
 WaypointMovementGenerator<T>::Update(T & /*unit*/, const uint32 & /*diff*/)

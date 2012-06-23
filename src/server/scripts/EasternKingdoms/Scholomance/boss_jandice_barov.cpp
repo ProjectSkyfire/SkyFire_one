@@ -36,6 +36,7 @@ EndScriptData */
 struct boss_jandicebarovAI : public ScriptedAI
 {
     boss_jandicebarovAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 CurseOfBlood_Timer;
     uint32 Illusion_Timer;
     //uint32 Illusioncounter;
@@ -144,6 +145,7 @@ struct boss_jandicebarovAI : public ScriptedAI
 struct mob_illusionofjandicebarovAI : public ScriptedAI
 {
     mob_illusionofjandicebarovAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Cleave_Timer;
 
     void Reset()

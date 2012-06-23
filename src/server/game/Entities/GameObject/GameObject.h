@@ -465,9 +465,11 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         static GameObject* GetGameObject(WorldObject& object, uint64 guid);
         GameObjectInfo const* GetGOInfo() const { return m_goInfo; }
         GameObjectData const* GetGOData() const { return m_goData; }
+
         bool IsTransport() const;
 
         uint32 GetDBTableGUIDLow() const { return m_DBTableGuid; }
+
         void UpdateRotationFields(float rotation2 = 0.0f, float rotation3 = 0.0f);
 
         void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text, language, TargetGuid); }
@@ -478,6 +480,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId, language, TargetGuid); }
         void TextEmote(int32 textId, uint64 TargetGuid) { MonsterTextEmote(textId, TargetGuid); }
         void Whisper(int32 textId, uint64 receiver) { MonsterWhisper(textId, receiver); }
+
         // overwrite WorldObject function for proper name localization
         const char* GetNameForLocaleIdx(int32 locale_idx) const;
 
@@ -505,6 +508,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
             m_spellId = id;
         }
         uint32 GetSpellId() const { return m_spellId;}
+
         static uint32 GetLootId(GameObjectInfo const* info);
         uint32 GetLootId() const { return GetLootId(GetGOInfo()); }
         uint32 GetLockId() const
@@ -576,10 +580,12 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         void SetGoArtKit(uint32 artkit);
         uint32 GetGoAnimProgress() const { return GetUInt32Value(GAMEOBJECT_ANIMPROGRESS); }
         void SetGoAnimProgress(uint32 animprogress) { SetUInt32Value(GAMEOBJECT_ANIMPROGRESS, animprogress); }
+
         void Use(Unit* user);
 
         LootState getLootState() const { return m_lootState; }
         void SetLootState(LootState s) { m_lootState = s; }
+
         void AddToSkillupList(uint32 PlayerGuidLow) { m_SkillupList.push_back(PlayerGuidLow); }
         bool IsInSkillupList(uint32 PlayerGuidLow) const
         {
@@ -588,10 +594,13 @@ class GameObject : public WorldObject, public GridObject<GameObject>
             return false;
         }
         void ClearSkillupList() { m_SkillupList.clear(); }
+
         void AddUniqueUse(Player* player);
         void AddUse() { ++m_usetimes; }
+
         uint32 GetUseCount() const { return m_usetimes; }
         uint32 GetUniqueUseCount() const { return m_unique_users.size(); }
+
         void SaveRespawnTime();
 
         Loot        loot;

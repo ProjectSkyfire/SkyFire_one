@@ -61,6 +61,7 @@ EndContentData */
 struct boss_nexusprince_shaffarAI : public ScriptedAI
 {
     boss_nexusprince_shaffarAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Blink_Timer;
     uint32 Beacon_Timer;
     uint32 FireBall_Timer;
@@ -343,6 +344,7 @@ CreatureAI* GetAI_mob_ethereal_beacon(Creature* creature)
 struct mob_ethereal_apprenticeAI : public ScriptedAI
 {
     mob_ethereal_apprenticeAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Cast_Timer;
 
     bool isFireboltTurn;
@@ -354,6 +356,7 @@ struct mob_ethereal_apprenticeAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

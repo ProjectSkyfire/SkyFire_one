@@ -22,6 +22,7 @@
 #include "Database/DatabaseEnv.h"
 
 RealmList::RealmList() : m_UpdateInterval(0), m_NextUpdateTime(time(NULL)){}
+
 // Load the realm list from the database
 void RealmList::Initialize(uint32 updateInterval)
 {

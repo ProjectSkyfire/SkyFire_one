@@ -36,6 +36,7 @@ using namespace std;
 
 class MPQArchive
 {
+
 public:
     mpq_archive_s *mpq_a;
 
@@ -82,6 +83,7 @@ class MPQFile
     // disable copying
     MPQFile(const MPQFile &f) {}
     void operator=(const MPQFile &f) {}
+
 public:
     MPQFile(const char* filename);    // filenames are not case sensitive
     ~MPQFile() { close(); }

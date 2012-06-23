@@ -36,6 +36,7 @@ struct EnchStoreItem
 
     EnchStoreItem()
         : ench(0), chance(0) {}
+
     EnchStoreItem(uint32 _ench, float _chance)
         : ench(_ench), chance(_chance) {}
 };

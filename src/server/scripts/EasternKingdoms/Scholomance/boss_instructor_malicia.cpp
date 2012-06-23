@@ -37,6 +37,7 @@ EndScriptData */
 struct boss_instructormaliciaAI : public ScriptedAI
 {
     boss_instructormaliciaAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 CallOfGraves_Timer;
     uint32 Corruption_Timer;
     uint32 FlashHeal_Timer;

@@ -33,6 +33,7 @@ EndScriptData */
 struct boss_noxxionAI : public ScriptedAI
 {
     boss_noxxionAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 ToxicVolley_Timer;
     uint32 Uppercut_Timer;
     uint32 Adds_Timer;

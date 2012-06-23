@@ -94,6 +94,7 @@ struct boss_nazanAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) {}
+
     void JustSummoned(Creature *summoned)
     {
         if (summoned && summoned->GetEntry() == ENTRY_LIQUID_FIRE)
@@ -451,6 +452,7 @@ struct boss_vazruden_the_heraldAI : public ScriptedAI
 struct mob_hellfire_sentryAI : public ScriptedAI
 {
     mob_hellfire_sentryAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 KidneyShot_Timer;
 
     void Reset()
@@ -459,6 +461,7 @@ struct mob_hellfire_sentryAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) {}
+
     void JustDied(Unit* who)
     {
         if (Creature *herald = me->FindNearestCreature(ENTRY_VAZRUDEN_HERALD, 150))

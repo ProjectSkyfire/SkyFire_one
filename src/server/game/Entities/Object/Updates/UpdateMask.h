@@ -29,6 +29,7 @@ class UpdateMask
     public:
         UpdateMask() : mCount(0), mBlocks(0), mUpdateMask(0) { }
         UpdateMask(const UpdateMask& mask) : mUpdateMask(0) { *this = mask; }
+
         ~UpdateMask()
         {
             if (mUpdateMask)
@@ -54,6 +55,7 @@ class UpdateMask
         uint32 GetLength() { return mBlocks << 2; }
         uint32 GetCount() { return mCount; }
         uint8* GetMask() { return (uint8*)mUpdateMask; }
+
         void SetCount (uint32 valuesCount)
         {
             if (mUpdateMask)

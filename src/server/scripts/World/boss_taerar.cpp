@@ -57,6 +57,7 @@ uint32 m_auiSpellSummonShade[]=
 struct boss_taerarAI : public ScriptedAI
 {
     boss_taerarAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 m_uiSleep_Timer;
     uint32 m_uiNoxiousBreath_Timer;
     uint32 m_uiTailSweep_Timer;
@@ -202,6 +203,7 @@ struct boss_taerarAI : public ScriptedAI
 struct boss_shadeoftaerarAI : public ScriptedAI
 {
     boss_shadeoftaerarAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 m_uiPoisonCloud_Timer;
     uint32 m_uiPosionBreath_Timer;
 

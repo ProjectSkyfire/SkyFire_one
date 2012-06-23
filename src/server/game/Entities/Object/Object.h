@@ -168,8 +168,10 @@ class Object
         PackedGuid const& GetPackGUID() const { return m_PackGUID; }
         uint32 GetEntry() const { return GetUInt32Value(OBJECT_FIELD_ENTRY); }
         void SetEntry(uint32 entry) { SetUInt32Value(OBJECT_FIELD_ENTRY, entry); }
+
         uint8 GetTypeId() const { return m_objectTypeId; }
         bool isType(uint16 mask) const { return (mask & m_objectType); }
+
         virtual void BuildCreateUpdateBlockForPlayer(UpdateData *data, Player *target) const;
         void SendUpdateToPlayer(Player* player);
 
@@ -320,6 +322,7 @@ class Object
         bool LoadValues(const char* data);
 
         uint16 GetValuesCount() const { return m_valuesCount; }
+
         virtual bool hasQuest(uint32 /* quest_id */) const { return false; }
         virtual bool hasInvolvedQuest(uint32 /* quest_id */) const { return false; }
         virtual void BuildUpdate(UpdateDataMapType&) {}
@@ -332,6 +335,7 @@ class Object
         const Player* ToPlayer() const { if (GetTypeId() == TYPEID_PLAYER)  return (const Player*)((Player*)this); else return NULL;  }
         Creature* ToCreature(){ if (GetTypeId() == TYPEID_UNIT) return reinterpret_cast<Creature*>(this); else return NULL; }
         const Creature* ToCreature() const {if (GetTypeId() == TYPEID_UNIT) return (const Creature*)((Creature*)this); else return NULL; }
+
     protected:
 
         Object ();
@@ -394,10 +398,12 @@ struct Position
         { m_positionX = pos->m_positionX; m_positionY = pos->m_positionY; m_positionZ = pos->m_positionZ; m_orientation = pos->m_orientation; }
     void SetOrientation(float orientation)
         { m_orientation = orientation; }
+
     float GetPositionX() const { return m_positionX; }
     float GetPositionY() const { return m_positionY; }
     float GetPositionZ() const { return m_positionZ; }
     float GetOrientation() const { return m_orientation; }
+
     void GetPosition(float &x, float &y) const
         { x = m_positionX; y = m_positionY; }
     void GetPosition(float &x, float &y, float &z) const
@@ -428,9 +434,11 @@ struct Position
         { float dx = m_positionX - pos->m_positionX; float dy = m_positionY - pos->m_positionY; float dz = m_positionZ - pos->m_positionZ; return dx*dx + dy*dy + dz*dz; }
     float GetExactDist(const Position *pos) const
         { return sqrt(GetExactDistSq(pos)); }
+
     float GetAngle(const Position *pos) const;
     float GetAngle(float x, float y) const;
     float GetRelativeAngle(const Position *pos) const { return GetAngle(pos) - m_orientation; }
+
     bool IsInDist2d(float x, float y, float dist) const
         { return GetExactDist2dSq(x, y) < dist * dist; }
     bool IsInDist2d(const Position *pos, float dist) const
@@ -464,6 +472,7 @@ struct MovementInfo
     MovementInfo() : moveFlags(MOVEFLAG_NONE), moveFlags2(0), time(0), t_guid(0),
         t_time(0), s_pitch(0.0f), fallTime(0), j_velocity(0.0f), j_sinAngle(0.0f),
         j_cosAngle(0.0f), j_xyspeed(0.0f), u_unk1(0.0f) {}
+
     // Read/Write methods
     void Read(ByteBuffer &data);
     void Write(ByteBuffer &data) const;
@@ -474,6 +483,7 @@ struct MovementInfo
     bool HasMovementFlag(MovementFlags f) const { return moveFlags & f; }
     MovementFlags GetMovementFlags() const { return MovementFlags(moveFlags); }
     void SetMovementFlags(MovementFlags f) { moveFlags = f; }
+
     // Position manipulations
     Position const *GetPos() const { return &pos; }
     void SetTransportData(uint64 guid, float x, float y, float z, float o, uint32 time)
@@ -500,6 +510,7 @@ struct MovementInfo
     uint32 GetFallTime() const { return fallTime; }
     void ChangePosition(float x, float y, float z, float o) { pos.m_positionX = x; pos.m_positionY = y; pos.m_positionZ = z; pos.m_orientation = o; }
     void UpdateTime(uint32 _time) { time = _time; }
+
     //private:
     // common
 };
@@ -524,9 +535,11 @@ class WorldLocation : public Position
         explicit WorldLocation(uint32 _mapid = MAPID_INVALID, float _x = 0, float _y = 0, float _z = 0, float _o = 0)
             : m_mapId(_mapid) { Relocate(_x, _y, _z, _o); }
         WorldLocation(const WorldLocation &loc) { WorldRelocate(loc); }
+
         void WorldRelocate(const WorldLocation &loc)
             { m_mapId = loc.GetMapId(); Relocate(loc); }
         uint32 GetMapId() const { return m_mapId; }
+
         uint32 m_mapId;
 };
 
@@ -545,6 +558,7 @@ class WorldObject : public Object, public WorldLocation
         virtual ~WorldObject();
 
         virtual void Update (uint32 /*time_diff*/) { }
+
         void _Create(uint32 guidlow, HighGuid guidhigh);
 
         void GetNearPoint2D(float &x, float &y, float distance, float absAngle) const;
@@ -593,6 +607,7 @@ class WorldObject : public Object, public WorldLocation
         }
 
         uint32 GetInstanceId() const { return m_InstanceId; }
+
         uint32 GetZoneId() const;
         uint32 GetAreaId() const;
 
@@ -600,7 +615,9 @@ class WorldObject : public Object, public WorldLocation
 
         const char* GetName() const { return m_name.c_str(); }
         void SetName(const std::string& newname) { m_name=newname; }
+
         virtual const char* GetNameForLocaleIdx(int32 /*locale_idx*/) const { return GetName(); }
+
         float GetDistance(const WorldObject *obj) const
         {
             float d = GetExactDist(obj) - GetObjectSize() - obj->GetObjectSize();
@@ -687,6 +704,7 @@ class WorldObject : public Object, public WorldLocation
 
         // main visibility check function in normal case (ignore grey zone distance check)
         bool isVisibleFor(Player const* u) const { return isVisibleForInState(u, false); }
+
         // low level function for visibility change code, must be define in all main world object subclasses
         virtual bool isVisibleForInState(Player const* u, bool inVisibleList) const = 0;
 
@@ -735,12 +753,14 @@ class WorldObject : public Object, public WorldLocation
         bool NotifyExecuted(uint16 f) const { return m_executed_notifies & f;}
         void SetNotified(uint16 f) { m_executed_notifies |= f;}
         void ResetAllNotifies() { m_notifyflags = 0; m_executed_notifies = 0; }
+
         bool isActiveObject() const { return m_isActive; }
         void setActive(bool isActiveObject);
         void SetWorldObject(bool apply);
         template<class NOTIFIER> void VisitNearbyObject(const float &radius, NOTIFIER &notifier) const { GetMap()->VisitAll(GetPositionX(), GetPositionY(), radius, notifier); }
         template<class NOTIFIER> void VisitNearbyGridObject(const float &radius, NOTIFIER &notifier) const { GetMap()->VisitGrid(GetPositionX(), GetPositionY(), radius, notifier); }
         template<class NOTIFIER> void VisitNearbyWorldObject(const float &radius, NOTIFIER &notifier) const { GetMap()->VisitWorld(GetPositionX(), GetPositionY(), radius, notifier); }
+
         uint32 m_groupLootTimer;                            // (msecs)timer used for group loot
         uint64 lootingGroupLeaderGUID;                      // used to find group which is looting corpse
 
@@ -759,6 +779,7 @@ class WorldObject : public Object, public WorldLocation
         //mapId/instanceId should be set in SetMap() function!
         void SetLocationMapId(uint32 _mapId) { m_mapId = _mapId; }
         void SetLocationInstanceId(uint32 _instanceId) { m_InstanceId = _instanceId; }
+
     private:
         Map * m_currMap;                                    //current object's Map location
 

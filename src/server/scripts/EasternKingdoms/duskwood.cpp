@@ -86,6 +86,7 @@ bool AreaTrigger_at_twilight_grove(Player* player, const AreaTriggerEntry * /*at
 struct boss_twilight_corrupterAI : public ScriptedAI
 {
     boss_twilight_corrupterAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 SoulCorruption_Timer;
     uint32 CreatureOfNightmare_Timer;
     uint8 KillCount;

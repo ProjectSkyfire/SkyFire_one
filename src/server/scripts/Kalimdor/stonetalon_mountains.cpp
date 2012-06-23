@@ -101,6 +101,7 @@ enum eKaya
 struct npc_kaya_flathoofAI : public npc_escortAI
 {
     npc_kaya_flathoofAI(Creature* c) : npc_escortAI(c) {}
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();

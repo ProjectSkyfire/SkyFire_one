@@ -53,6 +53,7 @@ static struct my_err_head
   int                   meh_first;       /* error number matching array slot 0 */
   int                   meh_last;          /* error number matching last slot */
 } my_errmsgs_globerrs = {NULL, get_global_errmsgs, EE_ERROR_FIRST, EE_ERROR_LAST};
+
 static struct my_err_head *my_errmsgs_list= &my_errmsgs_globerrs;
 
 /*

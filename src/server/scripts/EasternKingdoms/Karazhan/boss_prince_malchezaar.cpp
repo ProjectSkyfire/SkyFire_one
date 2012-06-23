@@ -104,6 +104,7 @@ struct netherspite_infernalAI : public ScriptedAI
 {
     netherspite_infernalAI(Creature *c) : ScriptedAI(c) ,
         malchezaar(0), HellfireTimer(0), CleanupTimer(0), point(NULL) {}
+
     uint32 HellfireTimer;
     uint32 CleanupTimer;
     uint32 malchezaar;
@@ -112,6 +113,7 @@ struct netherspite_infernalAI : public ScriptedAI
     void Reset() {}
     void EnterCombat(Unit * /*who*/) {}
     void MoveInLineOfSight(Unit * /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (HellfireTimer)

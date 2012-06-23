@@ -434,6 +434,7 @@ CreatureAI* GetAI_npc_muru_portal(Creature* creature)
 struct npc_dark_fiendAI : public ScriptedAI
 {
     npc_dark_fiendAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 WaitTimer;
     bool InAction;
 
@@ -488,6 +489,7 @@ CreatureAI* GetAI_npc_dark_fiend(Creature* creature)
 struct npc_void_sentinelAI : public ScriptedAI
 {
     npc_void_sentinelAI(Creature *c) : ScriptedAI(c){}
+
     uint32 PulseTimer;
     uint32 VoidBlastTimer;
 

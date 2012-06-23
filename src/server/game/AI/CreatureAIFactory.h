@@ -34,6 +34,7 @@ template<class REAL_AI>
 struct CreatureAIFactory : public SelectableAI
 {
     CreatureAIFactory(const char *name) : SelectableAI(name) {}
+
     CreatureAI* Create(void *) const;
 
     int Permit(const Creature *c) const { return REAL_AI::Permissible(c); }

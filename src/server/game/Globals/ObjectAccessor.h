@@ -71,11 +71,13 @@ class HashMapHolder
         }
 
         static MapType& GetContainer() { return m_objectMap; }
+
         static LockType* GetLock() { return &i_lock; }
     private:
 
         //Non instanceable only static
         HashMapHolder() {}
+
         static LockType i_lock;
         static MapType  m_objectMap;
 };

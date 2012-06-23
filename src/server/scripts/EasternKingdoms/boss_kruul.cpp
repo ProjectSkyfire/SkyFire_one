@@ -38,6 +38,7 @@ EndScriptData */
 struct boss_kruulAI : public ScriptedAI
 {
     boss_kruulAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 ShadowVolley_Timer;
     uint32 Cleave_Timer;
     uint32 ThunderClap_Timer;

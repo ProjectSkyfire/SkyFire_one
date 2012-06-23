@@ -45,6 +45,7 @@ EndScriptData */
 struct instance_molten_core : public ScriptedInstance
 {
     instance_molten_core(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+
     uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros, FlamewakerPriest;
     uint64 RuneKoro, RuneZeth, RuneMazj, RuneTheri, RuneBlaz, RuneKress, RuneMohn;
 

@@ -38,6 +38,7 @@ EndScriptData */
 struct boss_kurinnaxxAI : public ScriptedAI
 {
     boss_kurinnaxxAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 MORTALWOUND_Timer;
     uint32 SANDTRAP_Timer;
     uint32 THRASH_Timer;

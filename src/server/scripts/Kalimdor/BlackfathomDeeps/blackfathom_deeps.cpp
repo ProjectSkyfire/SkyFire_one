@@ -34,6 +34,7 @@ enum eSpells
 #define GOSSIP_ITEM_MORRIDUNE "Please port me to Darnassus"
 
 const Position HomePosition = {-815.817,-145.299,-25.870, 0};
+
 bool GoHello_blackfathom_altar(Player* player, GameObject* /*pGo*/)
 {
     if (!player->HasAura(SPELL_BLESSING_OF_BLACKFATHOM, 0))

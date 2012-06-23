@@ -36,6 +36,7 @@ EndScriptData */
 struct boss_ironayaAI : public ScriptedAI
 {
     boss_ironayaAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Arcing_Timer;
     bool hasCastedWstomp;
     bool hasCastedKnockaway;

@@ -53,6 +53,7 @@ static Location SpawnLocation[]=
 struct instance_sethekk_halls : public ScriptedInstance
 {
     instance_sethekk_halls(Map *map) : ScriptedInstance(map) {Initialize();};
+
     uint64 IkissDoorGUID;
     uint32 Encounter[ENCOUNTERS];
     std::string str_data;
@@ -202,7 +203,9 @@ InstanceScript* GetInstanceData_instance_sethekk_halls(Map* map)
 struct npc_lakkaAI : public npc_escortAI
 {
     npc_lakkaAI(Creature* creature) : npc_escortAI(creature) {}
+
     void Reset() { }
+
     void WaypointReached(uint32 uiPointId)
     {
         switch (uiPointId)

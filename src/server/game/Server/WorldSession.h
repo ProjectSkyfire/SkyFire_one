@@ -75,6 +75,7 @@ class WorldSession
         bool PlayerLoading() const { return m_playerLoading; }
         bool PlayerLogout() const { return m_playerLogout; }
         bool PlayerLogoutWithSave() const { return m_playerLogout && m_playerSave; }
+
         void SizeError(WorldPacket const& packet, uint32 size) const;
 
         void SendPacket(WorldPacket const* packet);
@@ -94,12 +95,15 @@ class WorldSession
         std::string const& GetRemoteAddress() { return m_Address; }
         void SetPlayer(Player *plr) { _player = plr; }
         uint8 Expansion() const { return m_expansion; }
+
         void InitWarden(BigNumber *K, std::string os);
 
         // Session in auth.queue currently
         void SetInQueue(bool state) { m_inQueue = state; }
+
         // Is the user engaged in a log out process?
         bool isLogingOut() const { return _logoutTime || m_playerLogout; }
+
         // Engage the logout process for the user
         void LogoutRequest(time_t requestTime)
         {

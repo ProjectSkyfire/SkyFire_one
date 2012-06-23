@@ -40,6 +40,7 @@ enum eEnums
 struct boss_vectusAI : public ScriptedAI
 {
     boss_vectusAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 m_uiFireShield_Timer;
     uint32 m_uiBlastWave_Timer;
     uint32 m_uiFrenzy_Timer;

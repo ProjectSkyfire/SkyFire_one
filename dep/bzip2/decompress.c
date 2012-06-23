@@ -35,6 +35,7 @@ void makeMaps_d ( DState* s )
 /*---------------------------------------------------*/
 #define RETURN(rrr)                               \
    { retVal = rrr; goto save_state_and_return; };
+
 #define GET_BITS(lll,vvv,nnn)                     \
    case lll: s->state = lll;                      \
    while (True) {                                 \

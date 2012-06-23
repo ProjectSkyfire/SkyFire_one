@@ -17,6 +17,7 @@ static void addAndCarry(const uint64& _a, const uint64& _b, uint64& carry, uint6
     // This eliminates the need to and with 0xFFFFFFFF.
     uint32 a [2] = {_a & 0xFFFFFFFF, _a >> 32};
     uint32 b [2] = {_b & 0xFFFFFFFF, _b >> 32};
+
     uint64 tmp = uint64(a[0]) + b[0];
 
     result = tmp & 0xFFFFFFFF;
@@ -33,6 +34,7 @@ void multiplyAndCarry(const uint64& _a, const uint64& _b, uint64& carry, uint64&
     // This eliminates the need to and with 0xFFFFFFFF.
     uint32 a [2] = {_a & 0xFFFFFFFF, _a >> 32};
     uint32 b [2] = {_b & 0xFFFFFFFF, _b >> 32};
+
     uint64 prod [2][2];
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 2; ++j) {

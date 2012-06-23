@@ -97,6 +97,7 @@ struct boss_viscidusAI : public ScriptedAI
     }
 
     void Aggro(Unit *who){}
+
     void DamageTaken(Unit* Done_by, uint32 &Damage)
     {
         if (Damage > 0) Damage = Damage/2;
@@ -221,6 +222,7 @@ struct boss_viscidusAI : public ScriptedAI
     }
 
     void JustDied(Unit* Killer){}
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

@@ -145,6 +145,7 @@ enum __QuestFlags
 struct QuestLocale
 {
     QuestLocale() { ObjectiveText.resize(QUEST_OBJECTIVES_COUNT); }
+
     std::vector<std::string> Title;
     std::vector<std::string> Details;
     std::vector<std::string> Objectives;
@@ -166,6 +167,7 @@ class Quest
 
         bool HasFlag(uint32 flag) const { return (QuestFlags & flag) != 0; }
         void SetFlag(uint32 flag) { QuestFlags |= flag; }
+
         // table data accessors:
         uint32 GetQuestId() const { return QuestId; }
         uint32 GetQuestMethod() const { return QuestMethod; }
@@ -218,6 +220,7 @@ class Quest
         bool   IsAutoComplete() const { return QuestMethod ? false : true; }
         uint32 GetFlags() const { return QuestFlags; }
         bool   IsDaily() const { return QuestFlags & QUEST_FLAGS_DAILY; }
+
         // multiple values
         std::string ObjectiveText[QUEST_OBJECTIVES_COUNT];
         uint32 ReqItemId[QUEST_OBJECTIVES_COUNT];
@@ -241,6 +244,7 @@ class Quest
         uint32 GetReqCreatureOrGOcount() const { return m_reqCreatureOrGOcount; }
         uint32 GetRewChoiceItemsCount() const { return m_rewchoiceitemscount; }
         uint32 GetRewItemsCount() const { return m_rewitemscount; }
+
         typedef std::vector<int32> PrevQuests;
         PrevQuests prevQuests;
         typedef std::vector<uint32> PrevChainQuests;

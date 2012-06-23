@@ -42,6 +42,7 @@ EndScriptData */
 struct instance_old_hillsbrad : public ScriptedInstance
 {
     instance_old_hillsbrad(Map *map) : ScriptedInstance(map) {Initialize();};
+
     uint32 Encounter[ENCOUNTERS];
     uint32 mBarrelCount;
     uint32 mThrallEventCount;

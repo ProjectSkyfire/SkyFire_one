@@ -34,6 +34,7 @@ EndScriptData */
 struct boss_timmy_the_cruelAI : public ScriptedAI
 {
     boss_timmy_the_cruelAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 RavenousClaw_Timer;
     bool HasYelled;
 

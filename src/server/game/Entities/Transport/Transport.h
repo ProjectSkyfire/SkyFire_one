@@ -48,8 +48,10 @@ class TransportPath
         void Resize(unsigned int sz) { i_nodes.resize(sz); }
         void Clear(void) { i_nodes.clear(); }
         PathNode* GetNodes(void) { return static_cast<PathNode *>(&i_nodes[0]); }
+
         PathNode& operator[](const unsigned int idx) { return i_nodes[idx]; }
         const PathNode& operator()(const unsigned int idx) const { return i_nodes[idx]; }
+
     protected:
         std::vector<PathNode> i_nodes;
 };
@@ -68,6 +70,7 @@ class Transport : public GameObject
 
         typedef std::set<Player*> PlayerSet;
         PlayerSet const& GetPassengers() const { return m_passengers; }
+
     private:
         struct WayPoint
         {

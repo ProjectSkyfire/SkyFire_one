@@ -50,6 +50,7 @@ enum eTapokeSlim
 struct npc_tapoke_slim_jahnAI : public npc_escortAI
 {
     npc_tapoke_slim_jahnAI(Creature* creature) : npc_escortAI(creature) { }
+
     bool m_bFriendSummoned;
 
     void Reset()

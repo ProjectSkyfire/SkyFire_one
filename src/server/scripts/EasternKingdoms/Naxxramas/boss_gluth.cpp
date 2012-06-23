@@ -72,6 +72,7 @@ EndScriptData */
 struct boss_gluthAI : public ScriptedAI
 {
     boss_gluthAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 MortalWound_Timer;
     uint32 Decimate_Timer;
     uint32 TerrifyingRoar_Timer;

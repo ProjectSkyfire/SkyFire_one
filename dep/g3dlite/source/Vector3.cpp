@@ -54,8 +54,11 @@ Vector3::operator Any() const {
 }
 
 Vector3::Vector3(const class Color3& v) : x(v.r), y(v.g), z(v.b) {}
+
 Vector3::Vector3(const class Vector3int32& v) : x((float)v.x), y((float)v.y), z((float)v.z) {}
+
 Vector3::Vector3(const Vector4int8& v) : x(v.x / 127.0f), y(v.y / 127.0f), z(v.z / 127.0f) {}
+
 Vector3::Vector3(const class Vector2& v, float _z) : x(v.x), y(v.y), z(_z) {
 }
 
@@ -73,6 +76,7 @@ const Vector3& Vector3::inf()      { static const Vector3 v((float)G3D::finf(), 
 const Vector3& Vector3::nan()      { static const Vector3 v((float)G3D::fnan(), (float)G3D::fnan(), (float)G3D::fnan()); return v; }
 const Vector3& Vector3::minFinite(){ static const Vector3 v(-FLT_MAX, -FLT_MAX, -FLT_MAX); return v; }
 const Vector3& Vector3::maxFinite(){ static const Vector3 v(FLT_MAX, FLT_MAX, FLT_MAX); return v; }
+
 Vector3::Axis Vector3::primaryAxis() const {
     Axis a = X_AXIS;
 
@@ -359,6 +363,7 @@ Vector2 Vector3::zy() const  { return Vector2       (z, y); }
 Vector2 Vector3::xz() const  { return Vector2       (x, z); }
 Vector2 Vector3::yz() const  { return Vector2       (y, z); }
 Vector2 Vector3::zz() const  { return Vector2       (z, z); }
+
 // 3-char swizzles
 
 Vector3 Vector3::xxx() const  { return Vector3       (x, x, x); }
@@ -388,6 +393,7 @@ Vector3 Vector3::zyz() const  { return Vector3       (z, y, z); }
 Vector3 Vector3::xzz() const  { return Vector3       (x, z, z); }
 Vector3 Vector3::yzz() const  { return Vector3       (y, z, z); }
 Vector3 Vector3::zzz() const  { return Vector3       (z, z, z); }
+
 // 4-char swizzles
 
 Vector4 Vector3::xxxx() const  { return Vector4       (x, x, x, x); }

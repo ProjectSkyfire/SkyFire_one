@@ -53,6 +53,7 @@ EndContentData */
 struct mobs_risen_husk_spiritAI : public ScriptedAI
 {
     mobs_risen_husk_spiritAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 ConsumeFlesh_Timer;
     uint32 IntangiblePresence_Timer;
 
@@ -63,6 +64,7 @@ struct mobs_risen_husk_spiritAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) { }
+
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
@@ -122,11 +124,13 @@ enum eDeserter
 };
 
 const Position DeserterDisappearPos = {-3609.03f, -4332.91f, 9.39354f, 3.73862f};
+
 #define GOSSIP_ITEM_DESERTER "Your propaganda wont`t work on me. Spout your treasonous filth elsewhere traitor!"
 
 struct npc_deserter_agitatorAI : public ScriptedAI
 {
     npc_deserter_agitatorAI(Creature* creature) : ScriptedAI(creature) { }
+
     void Reset()
     {
         me->RestoreFaction();
@@ -218,6 +222,7 @@ enum eTheramoreGuard
 struct npc_theramore_guardAI : public ScriptedAI
 {
     npc_theramore_guardAI(Creature* creature) : ScriptedAI(creature) { }
+
     uint32 uiYellTimer;
     uint32 uiStep;
     bool bYellTimer;
@@ -370,6 +375,7 @@ struct npc_morokkAI : public npc_escortAI
     bool m_bIsSuccess;
 
     void Reset() {}
+
     void WaypointReached(uint32 uiPointId)
     {
         switch (uiPointId)
@@ -509,6 +515,7 @@ enum
 
 static float m_afSpawn[] = {-3383.501953f, -3203.383301f, 36.149f};
 static float m_afMoveTo[] = {-3371.414795f, -3212.179932f, 34.210f};
+
 struct npc_ogronAI : public npc_escortAI
 {
     npc_ogronAI(Creature* creature) : npc_escortAI(creature)
@@ -791,6 +798,7 @@ EventLocation m_afEventMoveTo[] =
 struct npc_private_hendelAI : public ScriptedAI
 {
     npc_private_hendelAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
+
     std::list<Creature*> lCreatureList;
 
     uint32 m_uiPhaseCounter;
@@ -1129,6 +1137,7 @@ enum eStinky
 struct npc_stinkyAI : public npc_escortAI
 {
     npc_stinkyAI(Creature* creature) : npc_escortAI(creature) { }
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -1179,6 +1188,7 @@ struct npc_stinkyAI : public npc_escortAI
     }
 
     void Reset() {}
+
     void JustDied(Unit* /*pKiller*/)
     {
         Player* player = GetPlayerForEscort();

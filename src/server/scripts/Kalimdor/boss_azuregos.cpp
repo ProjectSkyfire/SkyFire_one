@@ -40,6 +40,7 @@ EndScriptData */
 struct boss_azuregosAI : public ScriptedAI
 {
     boss_azuregosAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 MarkOfFrost_Timer;
     uint32 ManaStorm_Timer;
     uint32 Chill_Timer;
@@ -64,6 +65,7 @@ struct boss_azuregosAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
+
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

@@ -54,7 +54,9 @@ enum eOOX
 struct npc_00x09hlAI : public npc_escortAI
 {
     npc_00x09hlAI(Creature* creature) : npc_escortAI(creature) { }
+
     void Reset() { }
+
     void WaypointReached(uint32 uiPointId)
     {
         Player* player = GetPlayerForEscort();

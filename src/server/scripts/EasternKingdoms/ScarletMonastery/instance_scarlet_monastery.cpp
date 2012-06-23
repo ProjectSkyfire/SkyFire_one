@@ -38,6 +38,7 @@ EndScriptData */
 struct instance_scarlet_monastery : public ScriptedInstance
 {
     instance_scarlet_monastery(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+
     uint64 PumpkinShrineGUID;
     uint64 HorsemanGUID;
     uint64 HeadGUID;

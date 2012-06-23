@@ -187,6 +187,7 @@ struct npc_barnesAI : public npc_escortAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void WaypointReached(uint32 i)
     {
         if (!instance)
@@ -491,6 +492,7 @@ bool GossipSelect_npc_berthold(Player* player, Creature* /*creature*/, uint32 /*
 
 static float MedivPos[4] = {-11161.49f,-1902.24f, 91.48f, 1.94f};
 static float ArcanagosPos[4] = {-11169.75f,-1881.48f, 95.39f, 4.83f};
+
 struct npc_image_of_medivhAI : public ScriptedAI
 {
     npc_image_of_medivhAI(Creature* c) : ScriptedAI(c)
@@ -525,6 +527,7 @@ struct npc_image_of_medivhAI : public ScriptedAI
         }
     }
     void EnterCombat(Unit* /*who*/) {}
+
     void MovementInform(uint32 type, uint32 id)
     {
         if (type != POINT_MOTION_TYPE)

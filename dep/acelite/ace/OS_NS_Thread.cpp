@@ -92,6 +92,7 @@ ACE_TSS_Keys* ACE_TSS_Emulation::tss_keys_used_ = 0;
 ACE_TSS_Emulation::ACE_TSS_DESTRUCTOR
 ACE_TSS_Emulation::tss_destructor_[ACE_TSS_Emulation::ACE_TSS_THREAD_KEYS_MAX]
  = { 0 };
+
 #  if defined (ACE_HAS_THREAD_SPECIFIC_STORAGE)
 
 bool ACE_TSS_Emulation::key_created_ = false;

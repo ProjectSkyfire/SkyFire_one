@@ -50,7 +50,9 @@ class UnitAI
         virtual void UpdateAI(const uint32 diff) = 0;
 
         virtual void InitializeAI() { if (!me->isDead()) Reset(); }
+
         virtual void Reset() {};
+
         // Called when unit is charmed
         virtual void OnCharmed(bool apply) = 0;
 
@@ -60,6 +62,7 @@ class UnitAI
         virtual void SetData(uint32 id, uint32 value) {}
         virtual void SetGUID(const uint64 &guid, int32 id = 0) {}
         virtual uint64 GetGUID(int32 id = 0) { return 0; }
+
         Unit* SelectTarget(SelectAggroTarget target, uint32 position = 0, float dist = 0, bool playerOnly = false, int32 aura = 0);
         void SelectTargetList(std::list<Unit*> &targetList, uint32 num, SelectAggroTarget target, float dist = 0, bool playerOnly = false, int32 aura = 0);
 
@@ -85,6 +88,7 @@ class PlayerAI : public UnitAI
         Player* const me;
     public:
         explicit PlayerAI(Player *p) : UnitAI((Unit*)p), me(p) {}
+
         void OnCharmed(bool apply);
 };
 

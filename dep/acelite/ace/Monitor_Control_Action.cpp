@@ -15,8 +15,10 @@ namespace ACE
     Control_Action::Control_Action (void)
       : ACE_Refcountable_T<ACE_SYNCH_MUTEX> (1)
     {}
+
     Control_Action::~Control_Action (void)
     {}
+
     void
     Control_Action::add_ref (void)
     {

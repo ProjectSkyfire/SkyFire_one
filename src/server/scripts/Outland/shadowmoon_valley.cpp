@@ -87,6 +87,7 @@ struct mob_mature_netherwing_drakeAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) { }
+
     void MoveInLineOfSight(Unit* who)
     {
         if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() == POINT_MOTION_TYPE)
@@ -209,6 +210,7 @@ struct mob_enslaved_netherwing_drakeAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) { }
+
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {
         if (!caster)
@@ -313,6 +315,7 @@ CreatureAI* GetAI_mob_enslaved_netherwing_drake(Creature* creature)
 struct mob_dragonmaw_peonAI : public ScriptedAI
 {
     mob_dragonmaw_peonAI(Creature* c) : ScriptedAI(c) {}
+
     uint64 PlayerGUID;
     bool Tapped;
     uint32 PoisonTimer;
@@ -325,6 +328,7 @@ struct mob_dragonmaw_peonAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) { }
+
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {
         if (!caster)
@@ -675,6 +679,7 @@ bool QuestAccept_npc_karynaku(Player* player, Creature* creature, Quest const* q
 struct npc_overlord_morghorAI : public ScriptedAI
 {
     npc_overlord_morghorAI(Creature *c) : ScriptedAI(c) {}
+
     uint64 PlayerGUID;
     uint64 IllidanGUID;
 
@@ -695,6 +700,7 @@ struct npc_overlord_morghorAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who){}
+
     void StartEvent()
     {
         me->SetUInt32Value(UNIT_NPC_FLAGS, 0);
@@ -879,6 +885,7 @@ enum eWilda
 struct npc_earthmender_wildaAI : public npc_escortAI
 {
     npc_earthmender_wildaAI(Creature *c) : npc_escortAI(c) {}
+
     bool Completed;
 
     void EnterCombat(Unit *who)
@@ -1134,6 +1141,7 @@ enum
 struct mob_torlothAI : public ScriptedAI
 {
     mob_torlothAI(Creature* creature) : ScriptedAI(creature) {Reset();}
+
     uint64 m_uiLordIllidanGUID;
     uint64 m_uiPlayerGUID;
 
@@ -1288,6 +1296,7 @@ CreatureAI* GetAI_mob_torloth(Creature* creature)
 struct npc_lord_illidan_stormrageAI : public Scripted_NoMovementAI
 {
     npc_lord_illidan_stormrageAI(Creature* creature) : Scripted_NoMovementAI(creature) {Reset();}
+
     uint64 m_uiPlayerGUID;
     uint32 m_uiWaveTimer;
     uint32 m_uiAnnounceTimer;
@@ -1562,8 +1571,11 @@ bool GOQuestAccept_GO_crystal_prison(Player* player, GameObject* pGo, Quest cons
 struct npc_enraged_spiritAI : public ScriptedAI
 {
     npc_enraged_spiritAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset()   { }
+
     void EnterCombat(Unit *who){}
+
     void JustDied(Unit* killer)
     {
         // always spawn spirit on death
@@ -1654,6 +1666,7 @@ enum
 struct npc_jovaanAI : public ScriptedAI
 {
     npc_jovaanAI(Creature* creature) : ScriptedAI(creature) {}
+
     bool Image;
 
     uint64 uiPlayerGUID;

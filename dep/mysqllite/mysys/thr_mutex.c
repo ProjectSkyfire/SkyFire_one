@@ -445,6 +445,7 @@ int my_pthread_fastmutex_init(my_pthread_fastmutex_t *mp,
   generator that operates in multiplicative group of integers modulo n.
 
   x_{k+1} = (x_k g) mod n
+
   Popular pair of parameters: n = 2^32 − 5 = 4294967291 and g = 279470273.
   The period of the generator is about 2^31.
   Largest value that can be returned: 2147483646 (RAND_MAX)

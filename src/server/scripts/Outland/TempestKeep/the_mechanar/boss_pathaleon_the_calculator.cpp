@@ -106,6 +106,7 @@ struct boss_pathaleon_the_calculatorAI : public ScriptedAI
 
     void JustSummoned(Creature *summon) { summons.Summon(summon); }
     void SummonedCreatureDespawn(Creature *summon) { summons.Despawn(summon); }
+
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target
@@ -180,6 +181,7 @@ CreatureAI* GetAI_boss_pathaleon_the_calculator(Creature* creature)
 struct mob_nether_wraithAI : public ScriptedAI
 {
     mob_nether_wraithAI(Creature *c) : ScriptedAI(c) {}
+
     ScriptedInstance *instance;
 
     uint32 ArcaneMissiles_Timer;

@@ -69,6 +69,7 @@ public:
 private:
     RealmSocket& socket_;
     RealmSocket& socket(void) { return socket_; }
+
     BigNumber N, s, g, v;
     BigNumber b, B;
     BigNumber K;

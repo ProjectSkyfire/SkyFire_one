@@ -49,6 +49,7 @@ static const uint special_opt_prefix_lengths[]=
 { 4,      7,         6,        7,         5,      0};
 enum enum_special_opt
 { OPT_SKIP, OPT_DISABLE, OPT_ENABLE, OPT_MAXIMUM, OPT_LOOSE};
+
 char *disabled_my_option= (char*) "0";
 char *enabled_my_option= (char*) "1";
 

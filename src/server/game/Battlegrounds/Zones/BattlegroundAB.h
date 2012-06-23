@@ -62,7 +62,9 @@ enum BG_AB_WorldStates
 };
 
 const uint32 BG_AB_OP_NODESTATES[5] =    {1767, 1782, 1772, 1792, 1787};
+
 const uint32 BG_AB_OP_NODEICONS[5]  =    {1842, 1846, 1845, 1844, 1843};
+
 /* Note: code uses that these IDs follow each other */
 enum BG_AB_NodeObjectId
 {
@@ -189,8 +191,10 @@ const float BG_AB_DoorPositions[2][8] = {
 // Tick intervals and given points: case 0, 1, 2, 3, 4, 5 captured nodes
 const uint32 BG_AB_TickIntervals[6] = {0, 12000, 9000, 6000, 3000, 1000};
 const uint32 BG_AB_TickPoints[6] = {0, 10, 10, 10, 10, 30};
+
 // WorldSafeLocs ids for 5 nodes, and for ally, and horde starting location
 const uint32 BG_AB_GraveyardIds[BG_AB_ALL_NODES_COUNT] = {895, 894, 893, 897, 896, 898, 899};
+
 // x, y, z, o
 const float BG_AB_BuffPositions[BG_AB_NODES_MAX][4] = {
     {1185.71f, 1185.24f, -56.36f, 2.56f},                  // stables

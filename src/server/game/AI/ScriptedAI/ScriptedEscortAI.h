@@ -56,6 +56,7 @@ struct npc_escortAI : public ScriptedAI
     public:
         explicit npc_escortAI(Creature* creature);
         ~npc_escortAI() {}
+
         // CreatureAI functions
         void AttackStart(Unit* who);
 
@@ -79,6 +80,7 @@ struct npc_escortAI : public ScriptedAI
 
         virtual void WaypointReached(uint32 uiPointId) = 0;
         virtual void WaypointStart(uint32 /*uiPointId*/) {}
+
         void Start(bool bIsActiveAttacker = true, bool bRun = false, uint64 uiPlayerGUID = 0, const Quest* pQuest = NULL, bool bInstantRespawn = false, bool bCanLoopPath = false);
 
         void SetRun(bool bRun = true);
@@ -86,15 +88,19 @@ struct npc_escortAI : public ScriptedAI
 
         bool HasEscortState(uint32 uiEscortState) { return (m_uiEscortState & uiEscortState); }
         virtual bool IsEscorted() { return (m_uiEscortState & STATE_ESCORT_ESCORTING); }
+
         void SetMaxPlayerDistance(float newMax) { MaxPlayerDistance = newMax; }
         float GetMaxPlayerDistance() { return MaxPlayerDistance; }
+
         void SetDespawnAtEnd(bool despawn) { DespawnAtEnd = despawn; }
         void SetDespawnAtFar(bool despawn) { DespawnAtFar = despawn; }
         bool GetAttack() { return m_bIsActiveAttacker; }//used in EnterEvadeMode override
         void SetCanAttack(bool attack) { m_bIsActiveAttacker = attack; }
         uint64 GetEventStarterGUID() { return m_uiPlayerGUID; }
+
     protected:
         Player* GetPlayerForEscort() { return (Player*)Unit::GetUnit(*me, m_uiPlayerGUID); }
+
     private:
         bool AssistPlayerInCombat(Unit* pWho);
         bool IsPlayerOrGroupInRange();
@@ -102,6 +108,7 @@ struct npc_escortAI : public ScriptedAI
 
         void AddEscortState(uint32 uiEscortState) { m_uiEscortState |= uiEscortState; }
         void RemoveEscortState(uint32 uiEscortState) { m_uiEscortState &= ~uiEscortState; }
+
         uint64 m_uiPlayerGUID;
         uint32 m_uiWPWaitTimer;
         uint32 m_uiPlayerCheckTimer;

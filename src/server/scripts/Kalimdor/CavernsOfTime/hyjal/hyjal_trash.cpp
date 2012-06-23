@@ -423,6 +423,7 @@ struct mob_giant_infernalAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void WaypointReached(uint32 i)
     {
         pos = i;
@@ -567,6 +568,7 @@ struct mob_abominationAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         hyjal_trashAI::UpdateAI(diff);
@@ -665,6 +667,7 @@ struct mob_ghoulAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         hyjal_trashAI::UpdateAI(diff);
@@ -779,6 +782,7 @@ struct mob_necromancerAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         hyjal_trashAI::UpdateAI(diff);
@@ -869,6 +873,7 @@ struct mob_bansheeAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         hyjal_trashAI::UpdateAI(diff);
@@ -962,6 +967,7 @@ struct mob_crypt_fiendAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         hyjal_trashAI::UpdateAI(diff);
@@ -1045,6 +1051,7 @@ struct mob_fel_stalkerAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         hyjal_trashAI::UpdateAI(diff);
@@ -1140,6 +1147,7 @@ struct mob_frost_wyrmAI : public hyjal_trashAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         hyjal_trashAI::UpdateAI(diff);

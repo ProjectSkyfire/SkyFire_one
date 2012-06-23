@@ -113,6 +113,7 @@ EndScriptData */
 struct flesh_tentacleAI : public Scripted_NoMovementAI
 {
     flesh_tentacleAI(Creature *c) : Scripted_NoMovementAI(c), Parent(0) {}
+
     uint64 Parent;
     uint32 CheckTimer;
 

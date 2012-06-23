@@ -55,6 +55,7 @@ enum eAqua
 struct mob_aquementasAI : public ScriptedAI
 {
     mob_aquementasAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 SendItem_Timer;
     uint32 SwitchFaction_Timer;
     bool isFriendly;
@@ -161,6 +162,7 @@ enum eCustodian
 struct npc_custodian_of_timeAI : public npc_escortAI
 {
     npc_custodian_of_timeAI(Creature *c) : npc_escortAI(c) {}
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -215,6 +217,7 @@ struct npc_custodian_of_timeAI : public npc_escortAI
 
     void EnterCombat(Unit* /*who*/) {}
     void Reset() { }
+
     void UpdateAI(const uint32 diff)
     {
         npc_escortAI::UpdateAI(diff);
@@ -367,6 +370,7 @@ enum e00X17
 struct npc_OOX17AI : public npc_escortAI
 {
     npc_OOX17AI(Creature *c) : npc_escortAI(c) {}
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -402,6 +406,7 @@ struct npc_OOX17AI : public npc_escortAI
     }
 
     void Reset(){}
+
     void EnterCombat(Unit* /*who*/)
     {
         DoScriptText(RAND(SAY_OOX_AGGRO1, SAY_OOX_AGGRO2), me);
@@ -505,9 +510,11 @@ enum eTooga
 };
 
 const float m_afToWaterLoc[] = {-7032.664551f, -4906.199219f, -1.606446f};
+
 struct npc_toogaAI : public FollowerAI
 {
     npc_toogaAI(Creature* creature) : FollowerAI(creature) { }
+
     uint32 m_uiCheckSpeechTimer;
     uint32 m_uiPostEventTimer;
     uint32 m_uiPhasePostEvent;

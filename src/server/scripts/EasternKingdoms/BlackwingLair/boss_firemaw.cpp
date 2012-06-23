@@ -34,6 +34,7 @@ EndScriptData */
 struct boss_firemawAI : public ScriptedAI
 {
     boss_firemawAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 ShadowFlame_Timer;
     uint32 WingBuffet_Timer;
     uint32 FlameBuffet_Timer;

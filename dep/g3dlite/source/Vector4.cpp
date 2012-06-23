@@ -172,6 +172,7 @@ Vector2 Vector4::xw() const  { return Vector2       (x, w); }
 Vector2 Vector4::yw() const  { return Vector2       (y, w); }
 Vector2 Vector4::zw() const  { return Vector2       (z, w); }
 Vector2 Vector4::ww() const  { return Vector2       (w, w); }
+
 // 3-char swizzles
 
 Vector3 Vector4::xxx() const  { return Vector3       (x, x, x); }
@@ -238,6 +239,7 @@ Vector3 Vector4::xww() const  { return Vector3       (x, w, w); }
 Vector3 Vector4::yww() const  { return Vector3       (y, w, w); }
 Vector3 Vector4::zww() const  { return Vector3       (z, w, w); }
 Vector3 Vector4::www() const  { return Vector3       (w, w, w); }
+
 // 4-char swizzles
 
 Vector4 Vector4::xxxx() const  { return Vector4       (x, x, x, x); }

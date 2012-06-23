@@ -77,6 +77,7 @@ class UnitBaseEvent
         UnitBaseEvent(uint32 pType) { iType = pType; }
         uint32 getType() const { return iType; }
         bool matchesTypeMask(uint32 pMask) const { return iType & pMask; }
+
         void setType(uint32 pType) { iType = pType; }
 };
 
@@ -95,15 +96,25 @@ class ThreatRefStatusChangeEvent : public UnitBaseEvent
         ThreatManager* iThreatManager;
     public:
         ThreatRefStatusChangeEvent(uint32 pType) : UnitBaseEvent(pType) { iHostileReference = NULL; }
+
         ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; }
+
         ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, float pValue) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; iFValue = pValue; }
+
         ThreatRefStatusChangeEvent(uint32 pType, HostileReference* pHostileReference, bool pValue) : UnitBaseEvent(pType) { iHostileReference = pHostileReference; iBValue = pValue; }
+
         int32 getIValue() const { return iIValue; }
+
         float getFValue() const { return iFValue; }
+
         bool getBValue() const { return iBValue; }
+
         void setBValue(bool pValue) { iBValue = pValue; }
+
         HostileReference* getReference() const { return iHostileReference; }
+
         void setThreatManager(ThreatManager* pThreatManager) { iThreatManager = pThreatManager; }
+
         ThreatManager* getThreatManager() const { return iThreatManager; }
 };
 
@@ -116,7 +127,9 @@ class ThreatManagerEvent : public ThreatRefStatusChangeEvent
     public:
         ThreatManagerEvent(uint32 pType) : ThreatRefStatusChangeEvent(pType) {}
         ThreatManagerEvent(uint32 pType, HostileReference* pHostileReference) : ThreatRefStatusChangeEvent(pType, pHostileReference) {}
+
         void setThreatContainer(ThreatContainer* pThreatContainer) { iThreatContainer = pThreatContainer; }
+
         ThreatContainer* getThreatContainer() const { return iThreatContainer; }
 };
 

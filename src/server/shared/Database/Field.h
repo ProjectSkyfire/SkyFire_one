@@ -40,6 +40,7 @@ class Field
         ~Field();
 
         enum DataTypes GetType() const { return mType; }
+
         const char* GetString() const { return mValue; }
         std::string GetCppString() const
         {
@@ -76,6 +77,7 @@ class Field
         }
 
         void SetType(enum DataTypes type) { mType = type; }
+
         void SetValue(const char* value);
 
     private:

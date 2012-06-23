@@ -45,6 +45,7 @@ Cell *cell;
 mcell *mcells;
 int holetab_h[4] = {0x1111, 0x2222, 0x4444, 0x8888};
 int holetab_v[4] = {0x000F, 0x00F0, 0x0F00, 0xF000};
+
 bool LoadADT(char* filename)
 {
     size_t size;

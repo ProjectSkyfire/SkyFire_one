@@ -67,6 +67,7 @@ struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     { }
+
     void JustSummoned(Creature *summoned)
     {
         if (summoned && summoned->GetEntry() == ENTRY_FOCUS_FIRE)
@@ -173,6 +174,7 @@ struct mob_focus_fireAI : public ScriptedAI
 
     void EnterCombat(Unit *who)
     { }
+
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

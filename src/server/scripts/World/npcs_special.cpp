@@ -95,6 +95,7 @@ enum eChicken
 struct npc_chicken_cluckAI : public ScriptedAI
 {
     npc_chicken_cluckAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 ResetFlagTimer;
 
     void Reset()
@@ -105,6 +106,7 @@ struct npc_chicken_cluckAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         // Reset flags after a certain time has passed so that the next player has to start the 'event' again
@@ -182,6 +184,7 @@ bool QuestComplete_npc_chicken_cluck(Player* /*player*/, Creature* creature, con
 struct npc_dancing_flamesAI : public ScriptedAI
 {
     npc_dancing_flamesAI(Creature *c) : ScriptedAI(c) {}
+
     bool active;
     uint32 can_iteract;
 
@@ -214,6 +217,7 @@ struct npc_dancing_flamesAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/){}
+
     void ReceiveEmote(Player* player, uint32 emote)
     {
         if (me->IsWithinLOS(player->GetPositionX(),player->GetPositionY(),player->GetPositionZ()) && me->IsWithinDistInMap(player, 30.0f))
@@ -319,6 +323,7 @@ const uint32 HordeSoldierId[3] =
 struct npc_doctorAI : public ScriptedAI
 {
     npc_doctorAI(Creature *c) : ScriptedAI(c) {}
+
     uint64 PlayerGUID;
 
     uint32 SummonPatient_Timer;
@@ -363,6 +368,7 @@ struct npc_doctorAI : public ScriptedAI
 struct npc_injured_patientAI : public ScriptedAI
 {
     npc_injured_patientAI(Creature *c) : ScriptedAI(c) {}
+
     uint64 Doctorguid;
     Location* Coord;
 
@@ -400,6 +406,7 @@ struct npc_injured_patientAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/){}
+
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (caster->GetTypeId() == TYPEID_PLAYER && me->isAlive() && spell->Id == 20804)
@@ -658,6 +665,7 @@ enum eGarments
 struct npc_garments_of_questsAI : public npc_escortAI
 {
     npc_garments_of_questsAI(Creature *c) : npc_escortAI(c) {Reset();}
+
     uint64 caster;
 
     bool bIsHealed;
@@ -680,6 +688,7 @@ struct npc_garments_of_questsAI : public npc_escortAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void SpellHit(Unit* pCaster, const SpellEntry *Spell)
     {
         if (Spell->Id == SPELL_LESSER_HEAL_R2 || Spell->Id == SPELL_FORTITUDE_R1)
@@ -839,6 +848,7 @@ CreatureAI* GetAI_npc_garments_of_quests(Creature* creature)
 struct npc_guardianAI : public ScriptedAI
 {
     npc_guardianAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset()
     {
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -1159,8 +1169,10 @@ bool GossipSelect_npc_sayge(Player* player, Creature* creature, uint32 uiSender,
 struct npc_steam_tonkAI : public ScriptedAI
 {
     npc_steam_tonkAI(Creature *c) : ScriptedAI(c) {}
+
     void Reset() {}
     void EnterCombat(Unit * /*who*/) {}
+
     void OnPossess(bool apply)
     {
         if (apply)
@@ -1200,6 +1212,7 @@ struct npc_tonk_mineAI : public ScriptedAI
     void EnterCombat(Unit * /*who*/) {}
     void AttackStart(Unit * /*who*/) {}
     void MoveInLineOfSight(Unit * /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (ExplosionTimer <= diff)
@@ -1283,11 +1296,13 @@ CreatureAI* GetAI_npc_winter_reveler(Creature* creature)
 struct npc_snake_trap_serpentsAI : public ScriptedAI
 {
     npc_snake_trap_serpentsAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 SpellTimer;
     Unit *Owner;
     bool IsViper;
 
     void EnterCombat(Unit * /*who*/) {}
+
     void Reset()
     {
         Owner = me->GetOwner();

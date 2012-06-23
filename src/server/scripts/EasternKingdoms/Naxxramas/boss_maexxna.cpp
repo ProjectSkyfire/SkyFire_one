@@ -54,6 +54,7 @@ EndScriptData */
 struct mob_webwrapAI : public ScriptedAI
 {
     mob_webwrapAI(Creature *c) : ScriptedAI(c) {}
+
     uint64 victimGUID;
 
     void Reset()
@@ -100,6 +101,7 @@ struct mob_webwrapAI : public ScriptedAI
 struct boss_maexxnaAI : public ScriptedAI
 {
     boss_maexxnaAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 WebTrap_Timer;
     uint32 WebSpray_Timer;
     uint32 PoisonShock_Timer;

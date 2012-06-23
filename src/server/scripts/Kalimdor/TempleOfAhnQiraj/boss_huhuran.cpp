@@ -40,6 +40,7 @@ EndScriptData */
 struct boss_huhuranAI : public ScriptedAI
 {
     boss_huhuranAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 Frenzy_Timer;
     uint32 Wyvern_Timer;
     uint32 Spit_Timer;

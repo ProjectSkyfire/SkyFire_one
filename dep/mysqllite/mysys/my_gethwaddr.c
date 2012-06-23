@@ -37,6 +37,7 @@ my_bool my_gethwaddr(uchar *to)
   struct sockaddr_dl *sdl;
   int res=1, mib[6]={CTL_NET, AF_ROUTE, 0, AF_LINK, NET_RT_IFLIST, 0};
   char zero_array[ETHER_ADDR_LEN] = {0};
+
   if (sysctl(mib, 6, NULL, &len, NULL, 0) == -1)
     goto err;
   if (!(buf = alloca(len)))
@@ -72,6 +73,7 @@ my_bool my_gethwaddr(uchar *to)
   int fd, res= 1;
   struct ifreq ifr;
   char zero_array[ETHER_ADDR_LEN] = {0};
+
   fd = socket(AF_INET, SOCK_DGRAM, 0);
   if (fd < 0)
     goto err;

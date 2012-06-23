@@ -142,6 +142,7 @@ public:
     // Trivial
     size_t getRecordCount() const { return recordCount;}
     size_t getFieldCount() const { return fieldCount; }
+
 private:
     std::string filename;
     size_t recordSize;

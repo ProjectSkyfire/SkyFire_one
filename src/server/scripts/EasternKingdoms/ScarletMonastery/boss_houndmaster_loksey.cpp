@@ -37,6 +37,7 @@ enum eEnums
 struct boss_houndmaster_lokseyAI : public ScriptedAI
 {
     boss_houndmaster_lokseyAI(Creature *c) : ScriptedAI(c) {}
+
     uint32 BloodLust_Timer;
 
     void Reset()

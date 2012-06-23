@@ -54,9 +54,11 @@ EndScriptData */
 struct instance_blood_furnace : public ScriptedInstance
 {
     instance_blood_furnace(Map *map) : ScriptedInstance(map){Initialize();}
+
     struct BroggokEventInfo
     {
         BroggokEventInfo() : IsCellOpened(false), KilledOrcCount(0) {}
+
         uint64 CellGuid;
         bool IsCellOpened;
         uint8 KilledOrcCount;

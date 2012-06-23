@@ -47,6 +47,7 @@ ACE_OS::opendir_emulation (const ACE_TCHAR *filename)
 
   ACE_DIR *dir = 0;
   ACE_TCHAR extra[3] = {0,0,0};
+
    // Check if filename is a directory.
    DWORD fileAttribute = ACE_TEXT_GetFileAttributes (filename);
    if (fileAttribute == INVALID_FILE_ATTRIBUTES

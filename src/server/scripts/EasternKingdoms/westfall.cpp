@@ -54,6 +54,7 @@ enum eEnums
 struct npc_daphne_stilwellAI : public npc_escortAI
 {
     npc_daphne_stilwellAI(Creature* creature) : npc_escortAI(creature) {}
+
     uint32 uiWPHolder;
     uint32 uiShootTimer;
 
@@ -197,6 +198,7 @@ CreatureAI* GetAI_npc_daphne_stilwell(Creature* creature)
 struct npc_defias_traitorAI : public npc_escortAI
 {
     npc_defias_traitorAI(Creature *c) : npc_escortAI(c) { Reset(); }
+
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();

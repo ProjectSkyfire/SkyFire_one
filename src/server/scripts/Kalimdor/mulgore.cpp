@@ -75,6 +75,7 @@ enum eKyle
 struct npc_kyle_the_frenziedAI : public ScriptedAI
 {
     npc_kyle_the_frenziedAI(Creature* creature) : ScriptedAI(creature) {Reset();}
+
     bool m_bEvent;
     bool m_bIsMovingToLunch;
     uint64 m_uiPlayerGUID;
@@ -240,6 +241,7 @@ float wp_plain_vision[50][3] =
 struct npc_plains_visionAI  : public ScriptedAI
 {
     npc_plains_visionAI(Creature *c) : ScriptedAI(c) {}
+
     bool newWaypoint;
     uint8 WayPointId;
     uint8 amountWP;
@@ -252,6 +254,7 @@ struct npc_plains_visionAI  : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/){}
+
     void MovementInform(uint32 type, uint32 id)
     {
         if (type != POINT_MOTION_TYPE)

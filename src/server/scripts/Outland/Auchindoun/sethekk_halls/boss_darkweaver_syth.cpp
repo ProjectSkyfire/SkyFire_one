@@ -239,6 +239,7 @@ struct mob_syth_fireAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
@@ -289,6 +290,7 @@ struct mob_syth_arcaneAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
@@ -339,6 +341,7 @@ struct mob_syth_frostAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
@@ -389,6 +392,7 @@ struct mob_syth_shadowAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
+
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

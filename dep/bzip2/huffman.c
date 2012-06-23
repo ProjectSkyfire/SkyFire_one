@@ -175,6 +175,7 @@ void BZ2_hbCreateDecodeTables ( Int32 *limit,
    for (i = minLen; i <= maxLen; i++)
       for (j = 0; j < alphaSize; j++)
          if (length[j] == i) { perm[pp] = j; pp++; };
+
    for (i = 0; i < BZ_MAX_CODE_LEN; i++) base[i] = 0;
    for (i = 0; i < alphaSize; i++) base[length[i]+1]++;
 

@@ -311,6 +311,7 @@ struct mob_ohganAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
+
     void JustDied(Unit* /*Killer*/)
     {
         if (instance)

@@ -59,6 +59,7 @@ const Position SpawnLocation[] =
 struct instance_shadowfang_keep : public ScriptedInstance
 {
     instance_shadowfang_keep(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+
     uint32 m_auiEncounter[MAX_ENCOUNTER];
     std::string str_data;
 

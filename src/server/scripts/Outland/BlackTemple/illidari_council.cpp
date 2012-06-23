@@ -155,8 +155,10 @@ struct mob_blood_elf_council_voice_triggerAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
+
     void AttackStart(Unit* /*who*/) {}
     void MoveInLineOfSight(Unit* /*who*/) {}
+
     void UpdateAI(const uint32 diff)
     {
         if (!EventStarted)
@@ -254,6 +256,7 @@ struct mob_illidari_councilAI : public ScriptedAI
     void EnterCombat(Unit * /*who*/) {}
     void AttackStart(Unit* /*who*/) {}
     void MoveInLineOfSight(Unit* /*who*/) {}
+
     void StartEvent(Unit *pTarget)
     {
         if (!instance)
@@ -457,6 +460,7 @@ struct boss_illidari_councilAI : public ScriptedAI
 struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
 {
     boss_gathios_the_shattererAI(Creature *c) : boss_illidari_councilAI(c) {}
+
     uint32 ConsecrationTimer;
     uint32 HammerOfJusticeTimer;
     uint32 SealTimer;
@@ -606,6 +610,7 @@ struct boss_gathios_the_shattererAI : public boss_illidari_councilAI
 struct boss_high_nethermancer_zerevorAI : public boss_illidari_councilAI
 {
     boss_high_nethermancer_zerevorAI(Creature *c) : boss_illidari_councilAI(c) {}
+
     uint32 BlizzardTimer;
     uint32 FlamestrikeTimer;
     uint32 ArcaneBoltTimer;
@@ -698,6 +703,7 @@ struct boss_high_nethermancer_zerevorAI : public boss_illidari_councilAI
 struct boss_lady_malandeAI : public boss_illidari_councilAI
 {
     boss_lady_malandeAI(Creature *c) : boss_illidari_councilAI(c) {}
+
     uint32 EmpoweredSmiteTimer;
     uint32 CircleOfHealingTimer;
     uint32 DivineWrathTimer;
@@ -763,6 +769,7 @@ struct boss_lady_malandeAI : public boss_illidari_councilAI
 struct boss_veras_darkshadowAI : public boss_illidari_councilAI
 {
     boss_veras_darkshadowAI(Creature *c) : boss_illidari_councilAI(c) {}
+
     uint64 EnvenomTargetGUID;
 
     uint32 DeadlyPoisonTimer;

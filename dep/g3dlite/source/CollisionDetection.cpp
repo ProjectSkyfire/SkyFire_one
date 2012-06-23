@@ -1635,6 +1635,7 @@ float CollisionDetection::collisionTimeForMovingSphereFixedTriangle(
 
         // Index of the next vertex
         static const int next[] = {1, 2, 0};
+
         // Project along the edge in question.
         // Avoid sqrt by taking advantage of the existing edgeDirection unit vector.
         b[next[edgeIndex]] = (outLocation - triangle._vertex[edgeIndex]).dot
@@ -1881,6 +1882,7 @@ Vector3 CollisionDetection::closestPointOnTrianglePerimeter(
 
     // Index of the next point
     static const int next[] = {1, 2, 0};
+
     for (int i = 0; i < 3; ++i) {
         r[i] = closestPointOnLineSegment(v[i], v[next[i]], edgeDirection[i], edgeLength[i], point);
         d[i] = (r[i] - point).squaredMagnitude();
