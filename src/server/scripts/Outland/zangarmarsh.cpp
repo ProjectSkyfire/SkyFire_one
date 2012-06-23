@@ -132,7 +132,6 @@ bool GossipSelect_npcs_ashyen_and_keleth(Player* player, Creature* creature, uin
 struct npc_cooshcooshAI : public ScriptedAI
 {
     npc_cooshcooshAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 LightningBolt_Timer;
 
     void Reset()
@@ -142,7 +141,6 @@ struct npc_cooshcooshAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
@@ -274,9 +272,7 @@ enum eKayra
 struct npc_kayra_longmaneAI : public npc_escortAI
 {
     npc_kayra_longmaneAI(Creature* c) : npc_escortAI(c) {}
-
     void Reset() { }
-
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();

@@ -72,7 +72,6 @@ class SystemMgr
     public:
         SystemMgr();
         ~SystemMgr() {}
-
         static SystemMgr& Instance();
 
         //Maps and lists

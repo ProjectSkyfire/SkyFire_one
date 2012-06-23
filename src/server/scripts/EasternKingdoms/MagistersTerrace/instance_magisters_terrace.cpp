@@ -40,7 +40,6 @@ EndScriptData */
 struct instance_magisters_terrace : public ScriptedInstance
 {
     instance_magisters_terrace(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
-
     uint32 m_auiEncounter[MAX_ENCOUNTER];
     uint32 DelrissaDeathCount;
 

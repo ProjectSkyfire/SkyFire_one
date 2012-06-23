@@ -27,7 +27,6 @@ DBCFile::DBCFile(const std::string &filename):
     filename(filename),
     data(0)
 {
-
 }
 
 bool DBCFile::open()

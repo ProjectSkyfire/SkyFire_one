@@ -47,7 +47,6 @@ enum
 struct npc_blood_knight_stillbladeAI : public ScriptedAI
 {
     npc_blood_knight_stillbladeAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 lifeTimer;
     bool spellHit;
 

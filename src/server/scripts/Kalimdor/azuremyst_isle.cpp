@@ -60,7 +60,6 @@ enum eSurv
 struct npc_draenei_survivorAI : public ScriptedAI
 {
     npc_draenei_survivorAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 UnSpawnTimer;
     uint32 ResetlifeTimer;
     uint32 SayingTimer;
@@ -91,7 +90,6 @@ struct npc_draenei_survivorAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void MoveInLineOfSight(Unit *who)                       //MoveInLineOfSight is called if creature could see you, updated all 100 ms
     {
         if (!who)
@@ -221,7 +219,6 @@ enum eSpark
 struct npc_engineer_spark_overgrindAI : public ScriptedAI
 {
     npc_engineer_spark_overgrindAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Dynamite_Timer;
     uint32 Emote_Timer;
 
@@ -233,7 +230,6 @@ struct npc_engineer_spark_overgrindAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (!me->isInCombat())
@@ -292,7 +288,6 @@ bool GossipSelect_npc_engineer_spark_overgrind(Player* player, Creature* creatur
 struct npc_injured_draeneiAI : public ScriptedAI
 {
     npc_injured_draeneiAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IN_COMBAT);
@@ -305,7 +300,6 @@ struct npc_injured_draeneiAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void MoveInLineOfSight(Unit * /*who*/)
     {
     }
@@ -338,7 +332,6 @@ enum eMagwin
 struct npc_magwinAI : public npc_escortAI
 {
     npc_magwinAI(Creature *c) : npc_escortAI(c) {}
-
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -407,11 +400,9 @@ CreatureAI* GetAI_npc_magwinAI(Creature* creature)
 #define GO_NAGA_FLAG    181694
 
 static float SparkPos[3] = {-5030.95f, -11291.99f, 7.97f};
-
 struct npc_geezleAI : public ScriptedAI
 {
     npc_geezleAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 SparkGUID;
 
     uint32 Step;
@@ -427,7 +418,6 @@ struct npc_geezleAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/){}
-
     void StartEvent()
     {
         Step = 1;
@@ -528,7 +518,6 @@ CreatureAI* GetAI_npc_geezleAI(Creature* creature)
 struct mob_nestlewood_owlkinAI : public ScriptedAI
 {
     mob_nestlewood_owlkinAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ChannelTimer;
     bool Channeled;
     bool Hitted;
@@ -541,7 +530,6 @@ struct mob_nestlewood_owlkinAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who){}
-
     void SpellHit(Unit* caster, const SpellEntry* spell)
     {
         if (!caster)
@@ -600,7 +588,6 @@ bool go_ravager_cage(Player* player, GameObject* pGo)
 struct npc_death_ravagerAI : public ScriptedAI
 {
     npc_death_ravagerAI(Creature *c) : ScriptedAI(c){}
-
     uint32 RendTimer;
     uint32 EnragingBiteTimer;
 
@@ -659,7 +646,6 @@ enum BristlelimbCage
 struct npc_stillpine_capitiveAI : public ScriptedAI
 {
     npc_stillpine_capitiveAI(Creature *c) : ScriptedAI(c){}
-
     uint32 FleeTimer;
 
     void Reset()

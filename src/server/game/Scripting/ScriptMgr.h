@@ -55,7 +55,6 @@ struct Script
         pGOQuestAccept(NULL), pGOChooseReward(NULL), pItemUse(NULL), pEffectDummyCreature(NULL),
         GetAI(NULL), GetInstanceScript(NULL)
     {}
-
     std::string Name;
 
     //Methods to be scripted

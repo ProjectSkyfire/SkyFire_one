@@ -53,7 +53,6 @@ class Grid
         // destructor to clean up its resources. This includes unloading the
         // grid if it has not been unload.
         ~Grid() {}
-
         // an object of interested enters the grid
         template<class SPECIFIC_OBJECT> void AddWorldObject(SPECIFIC_OBJECT *obj)
         {
@@ -70,13 +69,10 @@ class Grid
 
         // Refreshes/update the grid. This required for remote grids.
         void RefreshGrid(void) { /* TBI */}
-
         // Locks a grid.  Any object enters must wait until the grid is unlock.
         void LockGrid(void) { /* TBI */ }
-
         // Unlocks the grid.
         void UnlockGrid(void) { /* TBI */ }
-
         // Grid visitor for grid objects
         template<class T> void Visit(TypeContainerVisitor<T, TypeMapContainer<GRID_OBJECT_TYPES> > &visitor)
         {
@@ -91,7 +87,6 @@ class Grid
 
         // Returns the number of object within the grid.
         unsigned int ActiveObjectsInGrid(void) const { return /*m_activeGridObjects.size()+*/i_objects.template Count<ACTIVE_OBJECT>(); }
-
         // Inserts a container type object into the grid.
         template<class SPECIFIC_OBJECT> void AddGridObject(SPECIFIC_OBJECT *obj)
         {

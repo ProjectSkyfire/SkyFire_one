@@ -100,7 +100,6 @@ class SpellCastTargets;
 struct SpellCastTargetsReader
 {
     explicit SpellCastTargetsReader(SpellCastTargets& _targets, Unit* _caster) : targets(_targets), caster(_caster) {}
-
     SpellCastTargets& targets;
     Unit* caster;
 };
@@ -115,7 +114,6 @@ class SpellCastTargets
         void write(ByteBuffer& data) const;
 
         SpellCastTargetsReader ReadForCaster(Unit* caster) { return SpellCastTargetsReader(*this, caster); }
-
         SpellCastTargets& operator=(const SpellCastTargets &target)
         {
             m_unitTarget = target.m_unitTarget;
@@ -169,7 +167,6 @@ class SpellCastTargets
         bool IsEmpty() const { return m_GOTargetGUID.IsEmpty() && m_unitTargetGUID.IsEmpty() && m_itemTarget==NULL && m_CorpseTargetGUID.IsEmpty(); }
         bool HasSrc() const { return m_targetMask & TARGET_FLAG_SOURCE_LOCATION; }
         bool HasDst() const { return m_targetMask & TARGET_FLAG_DEST_LOCATION; }
-
         void Update(Unit* caster);
 
         Position m_srcPos;
@@ -374,13 +371,11 @@ class Spell
         uint8 CheckCasterAuras() const;
 
         int32 CalculateDamage(uint8 i, Unit* target) { return m_caster->CalculateSpellDamage(m_spellInfo, i, m_currentBasePoints[i], target); }
-
         bool HaveTargetsForEffect(uint8 effect) const;
         void Delayed();
         void DelayedChannel();
         uint32 getState() const { return m_spellState; }
         void setState(uint32 state) { m_spellState = state; }
-
         void DoCreateItem(uint32 i, uint32 itemtype);
 
         void WriteSpellGoTargets(WorldPacket * data);
@@ -395,7 +390,6 @@ class Spell
 
         void CheckSrc() { if (!m_targets.HasSrc()) m_targets.setSrc(m_caster); }
         void CheckDst() { if (!m_targets.HasDst()) m_targets.setDst(m_caster); }
-
         void SendCastResult(uint8 result);
         void SendSpellStart();
         void SendSpellGo();
@@ -433,7 +427,6 @@ class Spell
         bool IsChannelActive() const { return m_caster->GetUInt32Value(UNIT_CHANNEL_SPELL) != 0; }
         bool IsMeleeAttackResetSpell() const { return !m_IsTriggeredSpell && (m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_AUTOATTACK);  }
         bool IsRangedAttackResetSpell() const { return !m_IsTriggeredSpell && /*IsRangedSpell() &&*/ !(m_spellInfo->AttributesEx2 & SPELL_ATTR_EX2_NOT_RESET_AUTOSHOT); }
-
         bool IsDeletable() const { return !m_referencedFromCurrentSpell && !m_executedCurrently; }
         void SetReferencedFromCurrent(bool yes) { m_referencedFromCurrentSpell = yes; }
         bool IsInterruptable() const { return !m_executedCurrently; }
@@ -441,7 +434,6 @@ class Spell
         uint64 GetDelayStart() const { return m_delayStart; }
         void SetDelayStart(uint64 m_time) { m_delayStart = m_time; }
         uint64 GetDelayMoment() const { return m_delayMoment; }
-
         bool IsNeedSendToClient() const;
 
         CurrentSpellTypes GetCurrentContainer();
@@ -449,7 +441,6 @@ class Spell
         Unit* GetCaster() const { return m_caster; }
         Unit* GetOriginalCaster() const { return m_originalCaster; }
         int32 GetPowerCost() const { return m_powerCost; }
-
         void UpdatePointers();                              // must be used at call Spell code after time delay (non triggered spell cast/update spell call/etc)
 
         bool IsAffectedBy(SpellEntry const *spellInfo, uint32 effectId);
@@ -457,7 +448,6 @@ class Spell
         bool CheckTargetCreatureType(Unit* target) const;
 
         void AddTriggeredSpell(SpellEntry const* spell) { m_TriggerSpells.push_back(spell); }
-
         void CleanupTargetList();
 
         void SetSpellValue(SpellValueMod mod, int32 value);
@@ -486,7 +476,6 @@ class Spell
 
         uint8 m_delayAtDamageCount;
         int32 GetNextDelayAtDamageMsTime() { return m_delayAtDamageCount < 5 ? IN_MILLISECONDS - (m_delayAtDamageCount++)* 200 : 200; }
-
         // Delayed spells system
         uint64 m_delayStart;                                // time of spell delay start, filled by event handler, zero = just started
         uint64 m_delayMoment;                               // moment of next delay call, used internally

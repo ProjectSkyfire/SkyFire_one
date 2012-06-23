@@ -122,11 +122,9 @@ class Log
         void SetDBLogLevel(char * Level);
         void SetSQLDriverQueryLogging(bool newStatus) { m_sqlDriverQueryLogging = newStatus; }
         void SetRealmID(uint32 id) { realm = id; }
-
         uint32 getLogFilter() const { return m_logFilter; }
         bool IsOutDebug() const { return m_logLevel > 2 || (m_logFileLevel > 2 && logfile); }
         bool IsOutCharDump() const { return m_charLog_Dump; }
-
         bool GetLogDB() { return m_enableLogDB; }
         bool GetLogDBLater() { return m_enableLogDBLater; }
         void SetLogDB(bool enable) { m_enableLogDB = enable; }

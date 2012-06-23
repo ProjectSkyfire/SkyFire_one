@@ -45,7 +45,6 @@ EndScriptData */
 struct instance_black_temple : public ScriptedInstance
 {
     instance_black_temple(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     uint64 Najentus;
     uint64 Akama;                                           // This is the Akama that starts the Illidan encounter.
     uint64 Akama_Shade;                                     // This is the Akama that starts the Shade of Akama encounter.

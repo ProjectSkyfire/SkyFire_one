@@ -49,7 +49,6 @@ npc_escortAI::npc_escortAI(Creature* creature) : ScriptedAI(creature),
     m_bCanReturnToStart(false),
     ScriptWP(false)
 {}
-
 void npc_escortAI::AttackStart(Unit* pWho)
 {
     if (!pWho)

@@ -55,7 +55,6 @@ static SHostageInfo HostageInfo[] =
 struct instance_zulaman : public ScriptedInstance
 {
     instance_zulaman(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     uint64 HarkorsSatchelGUID;
     uint64 TanzarsTrunkGUID;
     uint64 AshlisBagGUID;

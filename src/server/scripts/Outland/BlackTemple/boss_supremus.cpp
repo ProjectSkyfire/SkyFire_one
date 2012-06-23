@@ -127,7 +127,6 @@ struct boss_supremusAI : public ScriptedAI
 
     void JustSummoned(Creature *summon) {summons.Summon(summon);}
     void SummonedCreatureDespawn(Creature *summon) {summons.Despawn(summon);}
-
     Unit* CalculateHatefulStrikeTarget()
     {
         uint32 health = 0;
@@ -260,7 +259,6 @@ struct npc_volcanoAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void MoveInLineOfSight(Unit *who)
     {
         return; // paralyze the npc

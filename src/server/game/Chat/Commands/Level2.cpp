@@ -967,7 +967,6 @@ bool ChatHandler::HandleNpcAddCommand(const char* args)
     int32 teamval = 0;
     if (team) { teamval = atoi(team); }
     if (teamval < 0) { teamval = 0; }
-
     uint32 id  = atoi(charID);
 
     Player *chr = m_session->GetPlayer();

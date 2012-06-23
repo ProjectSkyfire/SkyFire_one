@@ -38,7 +38,6 @@ enum Spells
 struct boss_high_interrogator_gerstahnAI : public ScriptedAI
 {
     boss_high_interrogator_gerstahnAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ShadowWordPain_Timer;
     uint32 ManaBurn_Timer;
     uint32 PsychicScream_Timer;

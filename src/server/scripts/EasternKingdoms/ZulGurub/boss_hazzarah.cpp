@@ -34,7 +34,6 @@ EndScriptData */
 struct boss_hazzarahAI : public ScriptedAI
 {
     boss_hazzarahAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ManaBurn_Timer;
     uint32 Sleep_Timer;
     uint32 Illusions_Timer;

@@ -1457,7 +1457,6 @@ struct st_test test_12[] = {{0,TL_WRITE_CONCURRENT_INSERT},{1,TL_WRITE_CONCURREN
 struct st_test test_13[] = {{0,TL_WRITE_CONCURRENT_INSERT},{1,TL_READ}};
 struct st_test test_14[] = {{0,TL_WRITE_ALLOW_WRITE},{1,TL_READ}};
 struct st_test test_15[] = {{0,TL_WRITE_ALLOW_WRITE},{1,TL_WRITE_ALLOW_WRITE}};
-
 struct st_test *tests[] = {test_0,test_1,test_2,test_3,test_4,test_5,test_6,
                test_7,test_8,test_9,test_10,test_11,test_12,
                test_13,test_14,test_15};

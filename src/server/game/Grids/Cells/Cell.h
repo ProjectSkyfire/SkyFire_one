@@ -49,7 +49,6 @@ struct CellArea
     CellArea() : right_offset(0), left_offset(0), upper_offset(0), lower_offset(0) {}
     CellArea(int right, int left, int upper, int lower) : right_offset(right), left_offset(left), upper_offset(upper), lower_offset(lower) {}
     bool operator!() const { return !right_offset && !left_offset && !upper_offset && !lower_offset; }
-
     void ResizeBorders(CellPair& begin_cell, CellPair& end_cell) const
     {
         begin_cell << left_offset;
@@ -131,7 +130,6 @@ struct Cell
     uint32 GridY() const { return data.Part.grid_y; }
     bool NoCreate() const { return data.Part.nocreate; }
     void SetNoCreate() { data.Part.nocreate = 1; }
-
     CellPair cellPair() const
     {
         return CellPair(

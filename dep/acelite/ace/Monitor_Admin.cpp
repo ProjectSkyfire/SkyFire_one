@@ -31,7 +31,6 @@ namespace ACE
       : reactor_ (ACE_Reactor::instance ()),
         default_reactor_ (true)
     {}
-
     Monitor_Admin::~Monitor_Admin (void)
     {
       if (this->default_reactor_)

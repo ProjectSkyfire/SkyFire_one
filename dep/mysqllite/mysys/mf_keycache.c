@@ -198,7 +198,6 @@ struct st_hash_link
 
 /* block temperature determines in which (sub-)chain the block currently is */
 enum BLOCK_TEMPERATURE { BLOCK_COLD /*free*/ , BLOCK_WARM , BLOCK_HOT };
-
 /* key cache block */
 struct st_block_link
 {
@@ -1583,7 +1582,6 @@ restart:
       init_hits_left      how initialize the block counter for the page
       wrmode              <-> get for writing
       page_st        out  {PAGE_READ,PAGE_TO_BE_READ,PAGE_WAIT_TO_BE_READ}
-
   RETURN VALUE
     Pointer to the found block if successful, 0 - otherwise
 

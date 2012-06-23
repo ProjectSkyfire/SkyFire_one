@@ -40,7 +40,6 @@ EndScriptData */
 struct boss_sapphironAI : public ScriptedAI
 {
     boss_sapphironAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 Icebolt_Count;
     uint32 Icebolt_Timer;
     uint32 FrostBreath_Timer;

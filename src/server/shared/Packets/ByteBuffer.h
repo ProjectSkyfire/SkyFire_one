@@ -72,7 +72,6 @@ class ByteBuffer
 
         // copy constructor
         ByteBuffer(const ByteBuffer &buf): _rpos(buf._rpos), _wpos(buf._wpos), _storage(buf._storage) { }
-
         void clear()
         {
             _storage.clear();
@@ -254,7 +253,6 @@ class ByteBuffer
         }
 
         size_t rpos() const { return _rpos; }
-
         size_t rpos(size_t rpos_)
         {
             _rpos = rpos_;
@@ -262,7 +260,6 @@ class ByteBuffer
         }
 
         size_t wpos() const { return _wpos; }
-
         size_t wpos(size_t wpos_)
         {
             _wpos = wpos_;
@@ -271,7 +268,6 @@ class ByteBuffer
 
         template<typename T>
         void read_skip() { read_skip(sizeof(T)); }
-
         void read_skip(size_t skip)
         {
             if (_rpos + skip > size())
@@ -323,10 +319,8 @@ class ByteBuffer
         }
 
         const uint8 *contents() const { return &_storage[0]; }
-
         size_t size() const { return _storage.size(); }
         bool empty() const { return _storage.empty(); }
-
         void resize(size_t newsize)
         {
             _storage.resize(newsize);

@@ -64,7 +64,6 @@ enum eDrake
 struct mobs_nether_drakeAI : public ScriptedAI
 {
     mobs_nether_drakeAI(Creature *c) : ScriptedAI(c) {}
-
     bool IsNihil;
     uint32 NihilSpeech_Timer;
     uint32 NihilSpeech_Phase;
@@ -90,7 +89,6 @@ struct mobs_nether_drakeAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) { }
-
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (spell->Id == SPELL_T_PHASE_MODULATOR && caster->GetTypeId() == TYPEID_PLAYER)
@@ -244,7 +242,6 @@ CreatureAI* GetAI_mobs_nether_drake(Creature* creature)
 struct npc_daranelleAI : public ScriptedAI
 {
     npc_daranelleAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
     }
@@ -378,7 +375,6 @@ CreatureAI* GetAI_npc_bloodmaul_brutebane(Creature* creature)
 struct npc_ogre_bruteAI : public ScriptedAI
 {
     npc_ogre_bruteAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 PlayerGUID;
 
     void Reset()

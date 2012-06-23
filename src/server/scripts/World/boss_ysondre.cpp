@@ -47,7 +47,6 @@ enum eEnums
 struct boss_ysondreAI : public ScriptedAI
 {
     boss_ysondreAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 m_uiSleep_Timer;
     uint32 m_uiNoxiousBreath_Timer;
     uint32 m_uiTailSweep_Timer;
@@ -152,7 +151,6 @@ struct boss_ysondreAI : public ScriptedAI
 struct mob_dementeddruidsAI : public ScriptedAI
 {
     mob_dementeddruidsAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 m_uiMoonFire_Timer;
 
     void Reset()

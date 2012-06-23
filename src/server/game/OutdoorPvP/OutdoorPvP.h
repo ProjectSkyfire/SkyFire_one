@@ -91,7 +91,6 @@ public:
     OPvPCapturePoint(OutdoorPvP * pvp);
 
     virtual void FillInitialWorldStates(WorldPacket & /*data*/) {}
-
     // send world state update to all players present
     void SendUpdateWorldState(uint32 field, uint32 value);
     // send kill notify to players in the controlling faction
@@ -190,10 +189,8 @@ public:
 
     // setup stuff
     virtual bool SetupOutdoorPvP() {return true;}
-
     void OnGameObjectCreate(GameObject *go, bool add);
     void OnCreatureCreate(Creature *, bool /*add*/) {}
-
     // send world state update to all players present
     void SendUpdateWorldState(uint32 field, uint32 value);
 
@@ -203,15 +200,12 @@ public:
     // handle npc/player kill
     virtual void HandleKill(Player * killer, Unit * killed);
     virtual void HandleKillImpl(Player * /*killer*/, Unit * /*killed*/) {}
-
     // checks if player is in range of a capture credit marker
     bool IsInsideObjective(Player * plr) const;
 
     // awards rewards for player kill
     virtual void AwardKillBonus(Player * /*plr*/) {}
-
     uint32 GetTypeId() {return m_TypeId;}
-
     virtual bool HandleDropFlag(Player * plr, uint32 spellId);
 
     virtual bool HandleGossipOption(Player *plr, uint64 guid, uint32 gossipid);
@@ -228,7 +222,6 @@ protected:
 
     // world state stuff
     virtual void SendRemoveWorldStates(Player * /*plr*/) {}
-
     virtual void HandlePlayerEnterZone(Player * plr, uint32 zone);
     virtual void HandlePlayerLeaveZone(Player * plr, uint32 zone);
 

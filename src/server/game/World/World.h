@@ -457,11 +457,9 @@ class World
         // Get the active session server limit (or security level limitations)
         AccountTypes GetPlayerSecurityLimit() const { return m_allowedSecurityLevel < 0 ? SEC_PLAYER : m_allowedSecurityLevel; }
         void SetPlayerSecurityLimit(AccountTypes sec) { m_allowedSecurityLevel = (sec < SEC_PLAYER ? SEC_PLAYER : sec); }
-
         // Active session server limit
         void SetPlayerAmountLimit(uint32 limit) { m_playerLimit = limit; }
         uint32 GetPlayerAmountLimit() const { return m_playerLimit; }
-
         //player Queue
         typedef std::list<WorldSession*> Queue;
         void AddQueuedPlayer(WorldSession*);
@@ -469,28 +467,22 @@ class World
         int32 GetQueuePos(WorldSession*);
         bool HasRecentlyDisconnected(WorldSession*);
         uint32 GetQueueSize() const { return m_QueuedPlayer.size(); }
-
         // todo Actions on m_allowMovement still to be implemented
         // Is movement allowed?
         bool getAllowMovement() const { return m_allowMovement; }
         // Allow/Disallow object movements
         void SetAllowMovement(bool allow) { m_allowMovement = allow; }
-
         // Set a new Message of the Day
         void SetMotd(std::string motd) { m_motd = motd; }
         // Get the current Message of the Day
         const char* GetMotd() const { return m_motd.c_str(); }
-
         // Set the string for new characters (first login)
         void SetNewCharString(std::string str) { m_newCharString = str; }
         // Get the string for new characters (first login)
         const std::string& GetNewCharString() const { return m_newCharString; }
-
         uint32 GetDefaultDbcLocale() const { return m_defaultDbcLocale; }
-
         // Get the path where data (dbc, maps) are stored on disk
         std::string GetDataPath() const { return m_dataPath; }
-
         // When server started?
         time_t const& GetStartTime() const { return m_startTime; }
         // What time is it?
@@ -500,7 +492,6 @@ class World
         // Update time
         uint32 GetUpdateTime() const { return m_updateTime; }
         void SetRecordDiffInterval(int32 t) { if (t >= 0) m_configs[CONFIG_INTERVAL_LOG_UPDATE] = (uint32)t; }
-
         // Get the maximum skill level a player can reach
         uint16 GetConfigMaxSkillValue() const
         {
@@ -528,7 +519,6 @@ class World
         static uint8 GetExitCode() { return m_ExitCode; }
         static void StopNow(uint8 exitcode) { m_stopEvent = true; m_ExitCode = exitcode; }
         static bool IsStopped() { return m_stopEvent; }
-
         void Update(time_t diff);
 
         void UpdateSessions(time_t diff);
@@ -536,7 +526,6 @@ class World
         void setRate(Rates rate, float value) { rate_values[rate]=value; }
         // Get a server rate (see #Rates)
         float getRate(Rates rate) const { return rate_values[rate]; }
-
         // Set a server configuration element (see #WorldConfigs)
         void setConfig(uint32 index, uint32 value)
         {
@@ -556,7 +545,6 @@ class World
         // Are we on a "Player versus Player" server?
         bool IsPvPRealm() { return (getConfig(CONFIG_GAME_TYPE) == REALM_TYPE_PVP || getConfig(CONFIG_GAME_TYPE) == REALM_TYPE_RPPVP || getConfig(CONFIG_GAME_TYPE) == REALM_TYPE_FFA_PVP); }
         bool IsFFAPvPRealm() { return getConfig(CONFIG_GAME_TYPE) == REALM_TYPE_FFA_PVP; }
-
         bool KickPlayer(const std::string& playerName);
         void KickAll();
         void KickAllLess(AccountTypes sec);
@@ -567,26 +555,20 @@ class World
         uint32 DecreaseScheduledScriptCount() { return (uint32)--m_scheduledScripts; }
         uint32 DecreaseScheduledScriptCount(size_t count) { return (uint32)(m_scheduledScripts -= count); }
         bool IsScriptScheduled() const { return m_scheduledScripts > 0; }
-
         bool IsAllowedMap(uint32 mapid) { return m_forbiddenMapIds.count(mapid) == 0 ;}
-
         // for max speed access
         static float GetMaxVisibleDistanceOnContinents()    { return m_MaxVisibleDistanceOnContinents; }
         static float GetMaxVisibleDistanceInInstances()     { return m_MaxVisibleDistanceInInstances;  }
         static float GetMaxVisibleDistanceInBGArenas()      { return m_MaxVisibleDistanceInBGArenas;   }
         static float GetMaxVisibleDistanceForObject()       { return m_MaxVisibleDistanceForObject;    }
-
         static float GetMaxVisibleDistanceInFlight()        { return m_MaxVisibleDistanceInFlight;     }
         static float GetVisibleUnitGreyDistance()           { return m_VisibleUnitGreyDistance;        }
         static float GetVisibleObjectGreyDistance()         { return m_VisibleObjectGreyDistance;      }
-
         static int32 GetVisibilityNotifyPeriodOnContinents(){ return m_visibility_notify_periodOnContinents; }
         static int32 GetVisibilityNotifyPeriodInInstances() { return m_visibility_notify_periodInInstances;  }
         static int32 GetVisibilityNotifyPeriodInBGArenas()  { return m_visibility_notify_periodInBGArenas;   }
-
         void ProcessCliCommands();
         void QueueCliCommand(CliCommandHolder* commandHolder) { cliCmdQueue.add(commandHolder); }
-
         void UpdateResultQueue();
         void InitResultQueue();
 
@@ -597,15 +579,12 @@ class World
         void UpdateAllowedSecurity();
 
         LocaleConstant GetAvailableDbcLocale(LocaleConstant locale) const { if (m_availableDbcLocaleMask & (1 << locale)) return locale; else return m_defaultDbcLocale; }
-
         //used World DB version
         void LoadDBVersion();
         char const* GetDBVersion() { return m_DBVersion.c_str(); }
-
         //used Script version
         void SetScriptsVersion(char const* version) { m_ScriptsVersion = version ? version : "unknown scripting library"; }
         char const* GetScriptsVersion() { return m_ScriptsVersion.c_str(); }
-
         void RecordTimeDiff(const char * text, ...);
         void LoadAutobroadcasts();
     protected:

@@ -346,7 +346,6 @@ struct boss_halazziAI : public ScriptedAI
 struct boss_spiritlynxAI : public ScriptedAI
 {
     boss_spiritlynxAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 FrenzyTimer;
     uint32 shredder_timer;
 
@@ -369,7 +368,6 @@ struct boss_spiritlynxAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {/*DoZoneInCombat();*/}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

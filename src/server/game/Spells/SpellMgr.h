@@ -831,7 +831,6 @@ class SpellMgr
         }
 
         SpellElixirMap const& GetSpellElixirMap() const { return mSpellElixirs; }
-
         uint32 GetSpellElixirMask(uint32 spellid) const
         {
             SpellElixirMap::const_iterator itr = mSpellElixirs.find(spellid);
@@ -918,7 +917,6 @@ class SpellMgr
         }
 
         SpellsRequiringSpellMap const& GetSpellsRequiringSpell() const { return mSpellsReqSpell; }
-
         // Note: not use rank for compare to spell ranks: spell chains isn't linear order
         // Use IsHighRankOfSpell instead
         uint8 GetSpellRank(uint32 spell_id) const

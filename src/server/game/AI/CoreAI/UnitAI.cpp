@@ -240,7 +240,6 @@ void UnitAI::DoCast(uint32 spellId)
 }
 
 #define UPDATE_TARGET(a) {if (AIInfo->target<a) AIInfo->target=a;}
-
 void UnitAI::FillAISpellInfo()
 {
     AISpellInfo = new AISpellInfoType[GetSpellStore()->GetNumRows()];
@@ -296,7 +295,6 @@ void UnitAI::FillAISpellInfo()
 
 //Enable PlayerAI when charmed
 void PlayerAI::OnCharmed(bool apply) { me->IsAIEnabled = apply; }
-
 void SimpleCharmedAI::UpdateAI(const uint32 /*diff*/)
 {
     Creature *charmer = me->GetCharmer()->ToCreature();

@@ -29,10 +29,8 @@ extern DatabaseType LoginDatabase;
 
 AccountMgr::AccountMgr()
 {}
-
 AccountMgr::~AccountMgr()
 {}
-
 AccountOpResult AccountMgr::CreateAccount(std::string username, std::string password)
 {
     if (utf8length(username) > MAX_ACCOUNT_STR)

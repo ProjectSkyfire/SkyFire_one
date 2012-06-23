@@ -46,9 +46,7 @@ namespace VMAP
 
         public:
             IVMapManager() : iEnableLineOfSightCalc(true), iEnableHeightCalc(true) {}
-
             virtual ~IVMapManager(void) {}
-
             virtual VMAPLoadResult loadMap(const char* pBasePath, unsigned int pMapId, int x, int y) = 0;
 
             virtual bool existsMap(const char* pBasePath, unsigned int pMapId, int x, int y) = 0;
@@ -78,11 +76,9 @@ namespace VMAP
             It is enabled by default. If it is enabled in mid game the maps have to loaded manualy
             */
             void setEnableHeightCalc(bool pVal) { iEnableHeightCalc = pVal; }
-
             bool isLineOfSightCalcEnabled() const { return(iEnableLineOfSightCalc); }
             bool isHeightCalcEnabled() const { return(iEnableHeightCalc); }
             bool isMapLoadingEnabled() const { return(iEnableLineOfSightCalc || iEnableHeightCalc  ); }
-
             virtual std::string getDirFileName(unsigned int pMapId, int x, int y) const =0;
             /*
             Query world model area info.

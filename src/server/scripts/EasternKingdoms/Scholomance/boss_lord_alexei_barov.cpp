@@ -34,7 +34,6 @@ EndScriptData */
 struct boss_lordalexeibarovAI : public ScriptedAI
 {
     boss_lordalexeibarovAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Immolate_Timer;
     uint32 VeilofShadow_Timer;
 

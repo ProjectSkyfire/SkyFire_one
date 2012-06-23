@@ -379,7 +379,6 @@ struct boss_akilzonAI : public ScriptedAI
 struct mob_soaring_eagleAI : public ScriptedAI
 {
     mob_soaring_eagleAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 EagleSwoop_Timer;
     bool arrived;
     uint32 TargetGUID;
@@ -393,9 +392,7 @@ struct mob_soaring_eagleAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {DoZoneInCombat();}
-
     void MoveInLineOfSight(Unit* /*who*/) {}
-
     void MovementInform(uint32, uint32)
     {
         arrived = true;

@@ -53,7 +53,6 @@ EndContentData */
 struct npc_raliq_the_drunkAI : public ScriptedAI
 {
     npc_raliq_the_drunkAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 Uppercut_Timer;
 
     void Reset()
@@ -63,7 +62,6 @@ struct npc_raliq_the_drunkAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
@@ -117,7 +115,6 @@ bool GossipSelect_npc_raliq_the_drunk(Player* player, Creature* creature, uint32
 struct npc_salsalabimAI : public ScriptedAI
 {
     npc_salsalabimAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 MagneticPull_Timer;
 
     void Reset()
@@ -127,7 +124,6 @@ struct npc_salsalabimAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void DamageTaken(Unit *done_by, uint32 &damage)
     {
         if (done_by->GetTypeId() == TYPEID_PLAYER)
@@ -298,7 +294,6 @@ enum eServant
 struct npc_khadgars_servantAI : public npc_escortAI
 {
     npc_khadgars_servantAI(Creature* creature) : npc_escortAI(creature) {}
-
     uint32 m_uiPointId;
     uint32 m_uiTalkTimer;
     uint32 m_uiTalkCount;
@@ -563,7 +558,6 @@ enum eLarry
 struct npc_dirty_larryAI : public ScriptedAI
 {
     npc_dirty_larryAI(Creature* c) : ScriptedAI(c) {}
-
     bool Event;
     bool Attack;
     bool Done;
@@ -626,7 +620,6 @@ struct npc_dirty_larryAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who){}
-
     void UpdateAI(const uint32 diff)
     {
         if (SayTimer <= diff)

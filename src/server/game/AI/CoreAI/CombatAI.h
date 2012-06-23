@@ -30,7 +30,6 @@ class AggressorAI : public CreatureAI
 {
     public:
         explicit AggressorAI(Creature *c) : CreatureAI(c) {}
-
         void UpdateAI(const uint32);
         static int Permissible(const Creature *);
 };
@@ -41,7 +40,6 @@ class CombatAI : public CreatureAI
 {
     public:
         explicit CombatAI(Creature *c) : CreatureAI(c) {}
-
         void InitializeAI();
         void Reset();
         void EnterCombat(Unit* who);

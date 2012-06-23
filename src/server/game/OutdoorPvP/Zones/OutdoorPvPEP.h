@@ -27,10 +27,8 @@
 #define OutdoorPvPEPTeamsBuffNum 4
                                                          //  Eastern Plaguelands, Stratholme and Scholomance
 const uint32 OutdoorPvPEPBuffZones[OutdoorPvPEPBuffZonesNum] = {139, 2017, 2057};
-
 const int EP_AllianceBuffs[OutdoorPvPEPTeamsBuffNum] = {11413, 11414, 11415, 1386};
 const int EP_HordeBuffs[OutdoorPvPEPTeamsBuffNum] = {30880, 30683, 30682, 29520};
-
 const uint32 EP_GraveYardZone = 139;
 const uint32 EP_GraveYardId = 927;
 
@@ -44,15 +42,12 @@ enum OutdoorPvPEPTowerType
 };
 
 const uint32 EP_CREDITMARKER[EP_TOWER_NUM] = {17689, 17690, 17696, 17698};
-
 const uint32 EP_MAP_N[EP_TOWER_NUM] = {2355, 2361, 2352, 2353};
 const uint32 EP_MAP_A[EP_TOWER_NUM] = {2378, 2354, 2372, 2370};
 const uint32 EP_MAP_H[EP_TOWER_NUM] = {2379, 2356, 2373, 2371};
 const uint32 EP_MAP_N_A[EP_TOWER_NUM] = {2374, 2359, 2362, 2366};
 const uint32 EP_MAP_N_H[EP_TOWER_NUM] = {2375, 2360, 2363, 2353}; // plaguewood tower has incorrect display value (2353 as well as logical 2367 is wrong)
-
 const uint32 EP_TAXI_NODE[EP_TOWER_NUM] = {84, 85, 86, 87};
-
 enum OutdoorPvPEPWorldStates
 {
     EP_UI_TOWER_SLIDER_DISPLAY = 2426,
@@ -101,7 +96,6 @@ const go_type EPTowerFlags[EP_TOWER_NUM*2] =
 
 const uint32 EPTowerPlayerEnterEvents[EP_TOWER_NUM] = {10705, 10691, 10699, 10701};
 const uint32 EPTowerPlayerLeaveEvents[EP_TOWER_NUM] = {10704, 10692, 10698, 10700};
-
 const uint8 EP_NUM_CREATURES = 6;
 const uint8 EP_EWT_NUM_CREATURES = 5;
 
@@ -130,7 +124,6 @@ const uint32 EP_PWT_FlightMasterAura = 36725;
 
 const go_type EP_NPT_LordaeronShrine = {181682, 0, 3167.72, -4355.91, 138.785, 1.69297, 0, 0, 0.748956, 0.66262};
 const go_type EP_NPT_LordaeronShrineAura = {180100, 0, 3167.72, -4355.91, 138.785, 1.69297, 0, 0, 0.748956, 0.66262};
-
 class OPvPCapturePointEP : public OPvPCapturePoint
 {
     public:

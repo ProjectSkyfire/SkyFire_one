@@ -103,7 +103,6 @@ EndScriptData */
 #define POS_Z                   33.8883f
 
 static float Pos_X[4] = {112.8827f, 107.8827f, 122.8827f, 127.8827f};
-
 static uint32 AddEntryList[8]=
 {
     24240, //Alyson Antille
@@ -187,9 +186,7 @@ struct boss_hexlord_addAI : public ScriptedAI
     }
 
     void Reset() {}
-
     void EnterCombat(Unit* /*who*/) {DoZoneInCombat();}
-
     void UpdateAI(const uint32 /*diff*/)
     {
         if (instance && instance->GetData(DATA_HEXLORDEVENT) != IN_PROGRESS)
@@ -476,7 +473,6 @@ struct boss_hex_lord_malacrassAI : public ScriptedAI
 struct boss_thurgAI : public boss_hexlord_addAI
 {
     boss_thurgAI(Creature *c) : boss_hexlord_addAI(c) {}
-
     uint32 bloodlust_timer;
     uint32 cleave_timer;
 
@@ -521,7 +517,6 @@ struct boss_alyson_antilleAI : public boss_hexlord_addAI
 {
     //Holy Priest
     boss_alyson_antilleAI(Creature *c) : boss_hexlord_addAI(c) {}
-
     uint32 flashheal_timer;
     uint32 dispelmagic_timer;
 
@@ -604,7 +599,6 @@ struct boss_alyson_antilleAI : public boss_hexlord_addAI
 struct boss_gazakrothAI : public boss_hexlord_addAI
 {
     boss_gazakrothAI(Creature *c) : boss_hexlord_addAI(c)  {}
-
     uint32 firebolt_timer;
 
     void Reset()
@@ -649,7 +643,6 @@ struct boss_gazakrothAI : public boss_hexlord_addAI
 struct boss_lord_raadanAI : public boss_hexlord_addAI
 {
     boss_lord_raadanAI(Creature *c) : boss_hexlord_addAI(c)  {}
-
     uint32 flamebreath_timer;
     uint32 thunderclap_timer;
 
@@ -686,7 +679,6 @@ struct boss_lord_raadanAI : public boss_hexlord_addAI
 struct boss_darkheartAI : public boss_hexlord_addAI
 {
     boss_darkheartAI(Creature *c) : boss_hexlord_addAI(c)  {}
-
     uint32 psychicwail_timer;
 
     void Reset()
@@ -714,7 +706,6 @@ struct boss_darkheartAI : public boss_hexlord_addAI
 struct boss_slitherAI : public boss_hexlord_addAI
 {
     boss_slitherAI(Creature *c) : boss_hexlord_addAI(c) {}
-
     uint32 venomspit_timer;
 
     void Reset()
@@ -760,7 +751,6 @@ struct boss_slitherAI : public boss_hexlord_addAI
 struct boss_fenstalkerAI : public boss_hexlord_addAI
 {
     boss_fenstalkerAI(Creature *c) : boss_hexlord_addAI(c) {}
-
     uint32 volatileinf_timer;
 
     void Reset()
@@ -791,7 +781,6 @@ struct boss_fenstalkerAI : public boss_hexlord_addAI
 struct boss_koraggAI : public boss_hexlord_addAI
 {
     boss_koraggAI(Creature *c) : boss_hexlord_addAI(c) {}
-
     uint32 coldstare_timer;
     uint32 mightyblow_timer;
 

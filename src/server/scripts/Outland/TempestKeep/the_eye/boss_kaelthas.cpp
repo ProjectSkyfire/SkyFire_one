@@ -446,7 +446,6 @@ struct boss_kaelthasAI : public ScriptedAI
     }
 
     void SummonedCreatureDespawn(Creature *summon) {summons.Despawn(summon);}
-
     void JustDied(Unit* Killer)
     {
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -1032,7 +1031,6 @@ struct boss_kaelthasAI : public ScriptedAI
 struct boss_thaladred_the_darkenerAI : public advisorbase_ai
 {
     boss_thaladred_the_darkenerAI(Creature *c) : advisorbase_ai(c) {}
-
     uint32 Gaze_Timer;
     uint32 Silence_Timer;
     uint32 PsychicBlow_Timer;
@@ -1112,7 +1110,6 @@ struct boss_thaladred_the_darkenerAI : public advisorbase_ai
 struct boss_lord_sanguinarAI : public advisorbase_ai
 {
     boss_lord_sanguinarAI(Creature *c) : advisorbase_ai(c){}
-
     uint32 Fear_Timer;
 
     void Reset()
@@ -1164,7 +1161,6 @@ struct boss_lord_sanguinarAI : public advisorbase_ai
 struct boss_grand_astromancer_capernianAI : public advisorbase_ai
 {
     boss_grand_astromancer_capernianAI(Creature *c) : advisorbase_ai(c){}
-
     uint32 Fireball_Timer;
     uint32 Conflagration_Timer;
     uint32 ArcaneExplosion_Timer;
@@ -1287,7 +1283,6 @@ struct boss_grand_astromancer_capernianAI : public advisorbase_ai
 struct boss_master_engineer_telonicusAI : public advisorbase_ai
 {
     boss_master_engineer_telonicusAI(Creature *c) : advisorbase_ai(c){}
-
     uint32 Bomb_Timer;
     uint32 RemoteToy_Timer;
 
@@ -1351,7 +1346,6 @@ struct boss_master_engineer_telonicusAI : public advisorbase_ai
 struct mob_kael_flamestrikeAI : public ScriptedAI
 {
     mob_kael_flamestrikeAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Timer;
     bool Casting;
     bool KillSelf;
@@ -1432,7 +1426,6 @@ struct mob_phoenix_tkAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
-
     void DamageTaken(Unit* pKiller, uint32 &damage)
     {
     }
@@ -1471,7 +1464,6 @@ struct mob_phoenix_tkAI : public ScriptedAI
 struct mob_phoenix_egg_tkAI : public ScriptedAI
 {
     mob_phoenix_egg_tkAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Rebirth_Timer;
     bool summoned;
 
@@ -1482,7 +1474,6 @@ struct mob_phoenix_egg_tkAI : public ScriptedAI
 
     //ignore any
     void MoveInLineOfSight(Unit* who) { return; }
-
     void AttackStart(Unit* who)
     {
         if (me->Attack(who, false))
@@ -1495,7 +1486,6 @@ struct mob_phoenix_egg_tkAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
-
     void JustSummoned(Creature* summoned)
     {
         summoned->AddThreat(me->getVictim(), 0.0f);

@@ -140,7 +140,6 @@ local const config configuration_table[10] = {
 /* 1 */ {4,    4,  8,    4, deflate_fast}, /* max speed, no lazy matches */
 /* 2 */ {4,    5, 16,    8, deflate_fast},
 /* 3 */ {4,    6, 32,   32, deflate_fast},
-
 /* 4 */ {4,    4, 16,   16, deflate_slow},  /* lazy matches */
 /* 5 */ {8,   16, 32,   32, deflate_slow},
 /* 6 */ {8,   16, 128, 128, deflate_slow},
@@ -1106,7 +1105,6 @@ local uInt longest_match(s, cur_match)
                  *(ushf*)(scan+=2) == *(ushf*)(match+=2) &&
                  scan < strend);
         /* The funny "do {}" generates better code on most compilers */
-
         /* Here, scan <= window+strstart+257 */
         Assert(scan <= s->window+(unsigned)(s->window_size-1), "wild scan");
         if (*scan == *match) scan++;

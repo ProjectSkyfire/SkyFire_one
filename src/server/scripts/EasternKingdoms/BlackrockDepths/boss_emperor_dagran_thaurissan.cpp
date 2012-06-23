@@ -42,7 +42,6 @@ enum Spells
 struct boss_draganthaurissanAI : public ScriptedAI
 {
     boss_draganthaurissanAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 HandOfThaurissan_Timer;
     uint32 AvatarOfFlame_Timer;
     //uint32 Counter;

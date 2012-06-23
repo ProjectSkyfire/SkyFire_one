@@ -482,7 +482,6 @@ struct boss_kagani_nightstrikeAI : public boss_priestess_lackey_commonAI
 {
     //Rogue
     boss_kagani_nightstrikeAI(Creature *c) : boss_priestess_lackey_commonAI(c) {}
-
     uint32 Gouge_Timer;
     uint32 Kick_Timer;
     uint32 Vanish_Timer;
@@ -580,7 +579,6 @@ struct boss_ellris_duskhallowAI : public boss_priestess_lackey_commonAI
 {
     //Warlock
     boss_ellris_duskhallowAI(Creature *c) : boss_priestess_lackey_commonAI(c) {}
-
     uint32 Immolate_Timer;
     uint32 Shadow_Bolt_Timer;
     uint32 Seed_of_Corruption_Timer;
@@ -665,7 +663,6 @@ struct boss_eramas_brightblazeAI : public boss_priestess_lackey_commonAI
 {
     //Monk
     boss_eramas_brightblazeAI(Creature *c) : boss_priestess_lackey_commonAI(c) {}
-
     uint32 Knockdown_Timer;
     uint32 Snap_Kick_Timer;
 
@@ -720,7 +717,6 @@ struct boss_yazzaiAI : public boss_priestess_lackey_commonAI
 {
     //Mage
     boss_yazzaiAI(Creature *c) : boss_priestess_lackey_commonAI(c) {}
-
     bool HasIceBlocked;
 
     uint32 Polymorph_Timer;
@@ -844,7 +840,6 @@ struct boss_warlord_salarisAI : public boss_priestess_lackey_commonAI
 {
     //Warrior
     boss_warlord_salarisAI(Creature *c) : boss_priestess_lackey_commonAI(c) {}
-
     uint32 Intercept_Stun_Timer;
     uint32 Disarm_Timer;
     uint32 Piercing_Howl_Timer;
@@ -958,7 +953,6 @@ struct boss_garaxxasAI : public boss_priestess_lackey_commonAI
 {
     //Hunter
     boss_garaxxasAI(Creature *c) : boss_priestess_lackey_commonAI(c) { m_uiPetGUID = 0; }
-
     uint64 m_uiPetGUID;
 
     uint32 Aimed_Shot_Timer;
@@ -1071,7 +1065,6 @@ struct boss_apokoAI : public boss_priestess_lackey_commonAI
 {
     //Shaman
     boss_apokoAI(Creature *c) : boss_priestess_lackey_commonAI(c) {}
-
     uint32 Totem_Timer;
     uint8  Totem_Amount;
     uint32 War_Stomp_Timer;
@@ -1163,7 +1156,6 @@ struct boss_zelfanAI : public boss_priestess_lackey_commonAI
 {
     //Engineer
     boss_zelfanAI(Creature *c) : boss_priestess_lackey_commonAI(c) {}
-
     uint32 Goblin_Dragon_Gun_Timer;
     uint32 Rocket_Launch_Timer;
     uint32 Recombobulate_Timer;

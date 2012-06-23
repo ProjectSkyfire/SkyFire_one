@@ -207,7 +207,6 @@ class Channel
 
         bool IsOn(uint64 who) const { return players.find(who) != players.end(); }
         bool IsBanned(uint64 guid) const { return banned.find(guid) != banned.end(); }
-
         bool _UpdateStringInDB(const std::string& colName, const std::string& colValue) const;
         bool _UpdateIntInDB(const std::string& colName, int colValue) const;
         void _UpdateBanListInDB() const;
@@ -261,7 +260,6 @@ class Channel
         uint32 GetNumPlayers() const { return players.size(); }
         uint8 GetFlags() const { return m_flags; }
         bool HasFlag(uint8 flag) { return m_flags & flag; }
-
         void Join(uint64 p, const char *pass);
         void Leave(uint64 p, bool send = true);
         void KickOrBan(uint64 good, const char *badname, bool ban);

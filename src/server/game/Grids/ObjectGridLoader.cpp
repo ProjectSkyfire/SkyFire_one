@@ -33,7 +33,6 @@ class ObjectGridRespawnMover
 {
     public:
         ObjectGridRespawnMover() {}
-
         void Move(GridType &grid);
 
         template<class T> void Visit(GridRefManager<T> &) {}
@@ -82,11 +81,9 @@ class ObjectWorldLoader
         explicit ObjectWorldLoader(ObjectGridLoader& gloader)
             : i_cell(gloader.i_cell), i_grid(gloader.i_grid), i_map(gloader.i_map), i_corpses (0)
             {}
-
         void Visit(CorpseMapType &m);
 
         template<class T> void Visit(GridRefManager<T>&) { }
-
     private:
         Cell i_cell;
         NGridType &i_grid;

@@ -1999,7 +1999,6 @@ const MY_CSET_OS_NAME charsets[]=
   {"cp54936",        "gb18030",  my_cs_exact},
 #endif
   {"cp65001",        "utf8",     my_cs_exact},
-
 #else /* not Windows */
 
   {"646",            "latin1",   my_cs_approx}, /* Default on Solaris */
@@ -2026,17 +2025,14 @@ const MY_CSET_OS_NAME charsets[]=
   {"georgianps",     "geostd8",  my_cs_exact},
   {"georgian-ps",    "geostd8",  my_cs_exact},
   {"IBM-1252",       "cp1252",   my_cs_exact},
-
   {"iso88591",       "latin1",   my_cs_approx},
   {"ISO_8859-1",     "latin1",   my_cs_approx},
   {"ISO8859-1",      "latin1",   my_cs_approx},
   {"ISO-8859-1",     "latin1",   my_cs_approx},
-
   {"iso885913",      "latin7",   my_cs_exact},
   {"ISO_8859-13",    "latin7",   my_cs_exact},
   {"ISO8859-13",     "latin7",   my_cs_exact},
   {"ISO-8859-13",    "latin7",   my_cs_exact},
-
 #ifdef UNCOMMENT_THIS_WHEN_WL_4579_IS_DONE
   {"iso885915",      "latin9",   my_cs_exact},
   {"ISO_8859-15",    "latin9",   my_cs_exact},
@@ -2048,40 +2044,30 @@ const MY_CSET_OS_NAME charsets[]=
   {"ISO_8859-2",     "latin2",   my_cs_exact},
   {"ISO8859-2",      "latin2",   my_cs_exact},
   {"ISO-8859-2",     "latin2",   my_cs_exact},
-
   {"iso88597",       "greek",    my_cs_exact},
   {"ISO_8859-7",     "greek",    my_cs_exact},
   {"ISO8859-7",      "greek",    my_cs_exact},
   {"ISO-8859-7",     "greek",    my_cs_exact},
-
   {"iso88598",       "hebrew",   my_cs_exact},
   {"ISO_8859-8",     "hebrew",   my_cs_exact},
   {"ISO8859-8",      "hebrew",   my_cs_exact},
   {"ISO-8859-8",     "hebrew",   my_cs_exact},
-
   {"iso88599",       "latin5",   my_cs_exact},
   {"ISO_8859-9",     "latin5",   my_cs_exact},
   {"ISO8859-9",      "latin5",   my_cs_exact},
   {"ISO-8859-9",     "latin5",   my_cs_exact},
-
   {"koi8r",          "koi8r",    my_cs_exact},
   {"KOI8-R",         "koi8r",    my_cs_exact},
   {"koi8u",          "koi8u",    my_cs_exact},
   {"KOI8-U",         "koi8u",    my_cs_exact},
-
   {"roman8",         "hp8",      my_cs_exact}, /* Default on HP UX */
-
   {"Shift_JIS",      "sjis",     my_cs_exact},
   {"SJIS",           "sjis",     my_cs_exact},
   {"shiftjisx0213",  "sjis",     my_cs_exact},
-
   {"tis620",         "tis620",   my_cs_exact},
   {"tis-620",        "tis620",   my_cs_exact},
-
   {"ujis",           "ujis",     my_cs_exact},
-
   {"US-ASCII",       "latin1",   my_cs_approx},
-
   {"utf8",           "utf8",     my_cs_exact},
   {"utf-8",          "utf8",     my_cs_exact},
 #endif

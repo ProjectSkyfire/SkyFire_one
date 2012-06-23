@@ -39,7 +39,6 @@ EndScriptData */
 #define SAY_DEATH                   -1189007
 
 uint32 RandomLaugh[] = {11965, 11975, 11976};
-
     // Entryes
 #define HH_MOUNTED                  23682
 #define HH_UNHORSED                 23800
@@ -208,7 +207,6 @@ struct mob_wisp_invisAI : public ScriptedAI
 struct mob_headAI : public ScriptedAI
 {
     mob_headAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 bodyGUID;
 
     uint32 Phase;
@@ -751,7 +749,6 @@ void mob_headAI::Disappear()
 struct mob_pulsing_pumpkinAI : public ScriptedAI
 {
     mob_pulsing_pumpkinAI(Creature *c) : ScriptedAI(c) {}
-
     bool sprouted;
     uint64 debuffGUID;
 
@@ -776,7 +773,6 @@ struct mob_pulsing_pumpkinAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/){}
-
     void SpellHit(Unit * /*caster*/, const SpellEntry *spell)
     {
         if (spell->Id == SPELL_SPROUTING)
@@ -800,7 +796,6 @@ struct mob_pulsing_pumpkinAI : public ScriptedAI
     }
 
     void JustDied(Unit * /*killer*/) { if (!sprouted) Despawn(); }
-
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || !who->isTargetableForAttack() || !me->IsHostileTo(who) || me->getVictim())

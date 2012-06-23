@@ -51,7 +51,6 @@ enum Spells
 struct boss_vanndarAI : public ScriptedAI
 {
     boss_vanndarAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 uiAvatarTimer;
     uint32 uiThunderclapTimer;
     uint32 uiStormboltTimer;

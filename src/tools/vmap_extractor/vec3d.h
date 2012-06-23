@@ -30,9 +30,7 @@ public:
     float x, y, z;
 
     Vec3D(float x0 = 0.0f, float y0 = 0.0f, float z0 = 0.0f) : x(x0), y(y0), z(z0) {}
-
     Vec3D(const Vec3D& v) : x(v.x), y(v.y), z(v.z) {}
-
     Vec3D& operator= (const Vec3D &v) {
         x = v.x;
         y = v.y;
@@ -139,16 +137,13 @@ public:
     }
 };
 
-
 class Vec2D
 {
 public:
     float x, y;
 
     Vec2D(float x0 = 0.0f, float y0 = 0.0f) : x(x0), y(y0) {}
-
     Vec2D(const Vec2D& v) : x(v.x), y(v.y) {}
-
     Vec2D& operator= (const Vec2D &v) {
         x = v.x;
         y = v.y;

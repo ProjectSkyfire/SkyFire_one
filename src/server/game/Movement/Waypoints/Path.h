@@ -80,7 +80,6 @@ class Path
 
         PathNode& operator[](const unsigned int idx) { return i_nodes[idx]; }
         const PathNode& operator()(const unsigned int idx) const { return i_nodes[idx]; }
-
     protected:
         std::vector<PathNode> i_nodes;
 };

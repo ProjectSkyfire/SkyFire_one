@@ -51,7 +51,6 @@ struct npc_testAI : public npc_escortAI
 
         // CreatureAI functions
         npc_testAI(Creature *c) : npc_escortAI(c) {}
-
         uint32 DeathCoilTimer;
         uint32 ChatTimer;
 

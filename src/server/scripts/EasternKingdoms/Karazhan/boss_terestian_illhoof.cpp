@@ -121,7 +121,6 @@ struct mob_kilrekAI : public ScriptedAI
 struct mob_demon_chainAI : public ScriptedAI
 {
     mob_demon_chainAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 SacrificeGUID;
 
     void Reset()
@@ -132,7 +131,6 @@ struct mob_demon_chainAI : public ScriptedAI
     void EnterCombat(Unit* /*who*/) {}
     void AttackStart(Unit* /*who*/) {}
     void MoveInLineOfSight(Unit* /*who*/) {}
-
     void JustDied(Unit * /*killer*/)
     {
         if (SacrificeGUID)
@@ -147,7 +145,6 @@ struct mob_demon_chainAI : public ScriptedAI
 struct mob_fiendish_portalAI : public PassiveAI
 {
     mob_fiendish_portalAI(Creature *c) : PassiveAI(c),summons(me){}
-
     SummonList summons;
 
     void Reset()
@@ -337,7 +334,6 @@ struct boss_terestianAI : public ScriptedAI
 struct mob_fiendish_impAI : public ScriptedAI
 {
     mob_fiendish_impAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 FireboltTimer;
 
     void Reset()
@@ -348,7 +344,6 @@ struct mob_fiendish_impAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

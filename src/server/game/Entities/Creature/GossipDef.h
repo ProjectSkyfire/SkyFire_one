@@ -161,7 +161,6 @@ class GossipMenu
 
         void SetMenuId(uint32 menu_id) { m_gMenuId = menu_id; }
         uint32 GetMenuId() { return m_gMenuId; }
-
         void AddGossipMenuItemData(uint32 action_menu, uint32 action_poi, uint32 action_script);
 
         unsigned int MenuItemCount() const
@@ -240,9 +239,7 @@ class PlayerMenu
 
         GossipMenu& GetGossipMenu() { return mGossipMenu; }
         QuestMenu& GetQuestMenu() { return mQuestMenu; }
-
         bool Empty() const { return mGossipMenu.Empty() && mQuestMenu.Empty(); }
-
         void ClearMenus();
         uint32 GossipOptionSender(unsigned int Selection);
         uint32 GossipOptionAction(unsigned int Selection);

@@ -285,7 +285,6 @@ struct npc_warden_mellicharAI : public ScriptedAI
     }
 
     void AttackStart(Unit* who) { }
-
     void MoveInLineOfSight(Unit *who)
     {
         if (IsRunning)
@@ -488,7 +487,6 @@ CreatureAI* GetAI_npc_warden_mellichar(Creature* creature)
 struct mob_zerekethvoidzoneAI : public ScriptedAI
 {
     mob_zerekethvoidzoneAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         me->SetUInt32Value(UNIT_NPC_FLAGS, 0);

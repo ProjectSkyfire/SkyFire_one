@@ -37,7 +37,6 @@ EndScriptData */
 struct boss_warmastervooneAI : public ScriptedAI
 {
     boss_warmastervooneAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Snapkick_Timer;
     uint32 Cleave_Timer;
     uint32 Uppercut_Timer;

@@ -42,7 +42,6 @@ enum eEnums
 struct boss_arcanist_doanAI : public ScriptedAI
 {
     boss_arcanist_doanAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Polymorph_Timer;
     uint32 AoESilence_Timer;
     uint32 ArcaneExplosion_Timer;

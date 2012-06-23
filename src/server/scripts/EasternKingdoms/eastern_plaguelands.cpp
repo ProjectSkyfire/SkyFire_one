@@ -41,11 +41,8 @@ EndContentData */
 struct mobs_ghoul_flayerAI : public ScriptedAI
 {
     mobs_ghoul_flayerAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset() {}
-
     void EnterCombat(Unit* /*who*/) {}
-
     void JustDied(Unit* Killer)
     {
         if (Killer->GetTypeId() == TYPEID_PLAYER)
@@ -90,7 +87,6 @@ bool GossipSelect_npc_augustus_the_touched(Player* player, Creature* creature, u
 struct npc_darrowshire_spiritAI : public ScriptedAI
 {
     npc_darrowshire_spiritAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         DoCast(me, SPELL_SPIRIT_SPAWNIN);

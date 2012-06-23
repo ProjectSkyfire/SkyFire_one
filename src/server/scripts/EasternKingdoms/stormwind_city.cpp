@@ -78,7 +78,6 @@ bool GossipSelect_npc_archmage_malin(Player* player, Creature* creature, uint32 
 struct npc_bartlebyAI : public ScriptedAI
 {
     npc_bartlebyAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 PlayerGUID;
 
     void Reset()
@@ -135,7 +134,6 @@ CreatureAI* GetAI_npc_bartleby(Creature* creature)
 struct npc_dashel_stonefistAI : public ScriptedAI
 {
     npc_dashel_stonefistAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         me->setFaction(11);
@@ -181,7 +179,6 @@ CreatureAI* GetAI_npc_dashel_stonefist(Creature* creature)
 struct npc_general_marcus_jonathanAI : public ScriptedAI
 {
     npc_general_marcus_jonathanAI(Creature *c) : ScriptedAI(c) {}
-
     void ReceiveEmote(Player* player, uint32 emote)
     {
         if (player->GetTeam() == ALLIANCE)
@@ -311,7 +308,6 @@ Point P2[] =
 struct npc_stormwind_royal_guardAI : public ScriptedAI
 {
     npc_stormwind_royal_guardAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 uiSpybotTimer;
     uint32 uiSpybotPhase;
     uint8 PointID;
@@ -624,7 +620,6 @@ CreatureAI* GetAI_npc_marzon_silent_blade(Creature* creature)
 struct npc_tyrion_spybotAI : public npc_escortAI
 {
     npc_tyrion_spybotAI(Creature* creature) : npc_escortAI(creature) {}
-
     uint32 uiTimer;
     uint32 uiPhase;
 

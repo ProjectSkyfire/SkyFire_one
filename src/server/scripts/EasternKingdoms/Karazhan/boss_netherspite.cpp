@@ -59,7 +59,6 @@ const uint32 PortalBeam[3] = {30465, 30464, 30463};
 const uint32 PlayerBuff[3] = {30421, 30422, 30423};
 const uint32 NetherBuff[3] = {30466, 30467, 30468};
 const uint32 PlayerDebuff[3] = {38637, 38638, 38639};
-
 struct boss_netherspiteAI : public ScriptedAI
 {
     boss_netherspiteAI(Creature* c) : ScriptedAI(c)

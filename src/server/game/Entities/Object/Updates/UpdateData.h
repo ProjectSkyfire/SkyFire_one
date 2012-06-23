@@ -59,7 +59,6 @@ class UpdateData
         void Clear();
 
         std::set<uint64> const& GetOutOfRangeGUIDs() const { return m_outOfRangeGUIDs; }
-
     protected:
         uint32 m_blockCount;
         std::set<uint64> m_outOfRangeGUIDs;

@@ -41,7 +41,6 @@ FollowerAI::FollowerAI(Creature* creature) : ScriptedAI(creature),
     m_uiFollowState(STATE_FOLLOW_NONE),
     m_pQuestForFollow(NULL)
 {}
-
 void FollowerAI::AttackStart(Unit* pWho)
 {
     if (!pWho)

@@ -45,7 +45,6 @@ class PossessedAI : public CreatureAI
         void AttackStart(Unit *target);
         void UpdateAI(const uint32);
         void EnterEvadeMode() {}
-
         void JustDied(Unit*);
         void KilledUnit(Unit* victim);
 
@@ -62,7 +61,6 @@ class NullCreatureAI : public CreatureAI
         void UpdateAI(const uint32) {}
         void EnterEvadeMode() {}
         void OnCharmed(bool apply) {}
-
         static int Permissible(const Creature *) { return PERMIT_BASE_IDLE;  }
 };
 
@@ -70,7 +68,6 @@ class CritterAI : public PassiveAI
 {
     public:
         explicit CritterAI(Creature *c) : PassiveAI(c) {}
-
         void DamageTaken(Unit *done_by, uint32 & /*damage*/);
         void EnterEvadeMode();
 };

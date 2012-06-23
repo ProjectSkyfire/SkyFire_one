@@ -244,7 +244,6 @@ struct BattleGroundEYLoosingPointStruct
         DespawnObjectTypeAlliance(_DespawnObjectTypeAlliance), MessageIdAlliance(_MessageIdAlliance),
         DespawnObjectTypeHorde(_DespawnObjectTypeHorde), MessageIdHorde(_MessageIdHorde)
     {}
-
     uint32 SpawnNeutralObjectType;
     uint32 DespawnObjectTypeAlliance;
     uint32 MessageIdAlliance;
@@ -260,7 +259,6 @@ struct BattleGroundEYCapturingPointStruct
         SpawnObjectTypeHorde(_SpawnObjectTypeHorde), MessageIdHorde(_MessageIdHorde),
         GraveYardId(_GraveYardId)
     {}
-
     uint32 DespawnNeutralObjectType;
     uint32 SpawnObjectTypeAlliance;
     uint32 MessageIdAlliance;
@@ -271,7 +269,6 @@ struct BattleGroundEYCapturingPointStruct
 
 const uint8  BG_EY_TickPoints[EY_POINTS_MAX] = {1, 2, 5, 10};
 const uint32 BG_EY_FlagPoints[EY_POINTS_MAX] = {75, 85, 100, 500};
-
 //constant arrays:
 const BattleGroundEYPointIconsStruct m_PointsIconStruct[EY_POINTS_MAX] =
 {
@@ -337,7 +334,6 @@ class BattleGroundEY : public BattleGround
         virtual void FillInitialWorldStates(WorldPacket& data);
         void SetDroppedFlagGUID(uint64 guid)       { m_DroppedFlagGUID = guid;}
         uint64 GetDroppedFlagGUID() const          { return m_DroppedFlagGUID;}
-
         /* Battleground Events */
         virtual void EventPlayerClickedOnFlag(Player *Source, GameObject* target_obj);
         virtual void EventPlayerDroppedFlag(Player *Source);
@@ -360,7 +356,6 @@ class BattleGroundEY : public BattleGround
 
         void RemovePoint(uint32 TeamID, uint32 Points = 1) { m_TeamScores[GetTeamIndexByTeamId(TeamID)] -= Points; }
         void SetTeamPoint(uint32 TeamID, uint32 Points = 0) { m_TeamScores[GetTeamIndexByTeamId(TeamID)] = Points; }
-
         uint32 m_HonorScoreTics[2];
         uint32 m_TeamPointsCount[2];
 

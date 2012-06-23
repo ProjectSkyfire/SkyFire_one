@@ -6768,7 +6768,6 @@ typedef struct my_uca_scanner_handler_st
 } my_uca_scanner_handler;
 
 static uint16 nochar[]= {0,0};
-
 #ifdef HAVE_CHARSET_ucs2
 /*
   Initialize collation weight scanner
@@ -7406,7 +7405,6 @@ int my_wildcmp_uca(CHARSET_INFO *cs,
 
     if (w_wc == (my_wc_t)w_many)
     {						/* Found w_many */
-
       /* Remove any '%' and '_' from the wild search string */
       for ( ; wildstr != wildend ; )
       {
@@ -7500,7 +7498,6 @@ int my_wildcmp_uca(CHARSET_INFO *cs,
 
   Collation rules:
     <ruleset> :=  <rule>  { <ruleset> }
-
     <rule> :=   <d1>    <string>
               | <d2>    <string>
               | <d3>    <string>

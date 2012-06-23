@@ -38,7 +38,6 @@ EndScriptData */
 struct boss_magmadarAI : public ScriptedAI
 {
     boss_magmadarAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Frenzy_Timer;
     uint32 Panic_Timer;
     uint32 Lavabomb_Timer;

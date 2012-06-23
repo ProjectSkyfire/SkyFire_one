@@ -37,7 +37,6 @@ EndScriptData */
 struct boss_rasfrostAI : public ScriptedAI
 {
     boss_rasfrostAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 IceArmor_Timer;
     uint32 Frostbolt_Timer;
     uint32 Freeze_Timer;
@@ -58,7 +57,6 @@ struct boss_rasfrostAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/){}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

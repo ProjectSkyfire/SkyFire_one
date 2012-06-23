@@ -148,7 +148,6 @@ bool _handleDebugAssert_(
     const int cAbort        = 2;
 
     static const char* choices[] = {"Debug", "Ignore", "Exit"};
-
     // Log the error
     Log::common()->print(std::string("\n**************************\n\n") + dialogTitle + "\n" + dialogText);
 
@@ -201,7 +200,6 @@ bool _handleErrorCheck_(
     #endif
 
     static const char* choices[] = {"Ok"};
-
     const std::string& m =
         std::string("An internal error has occured in this program and it will now close.  "
         "The specific error is below. More information has been saved in \"") +

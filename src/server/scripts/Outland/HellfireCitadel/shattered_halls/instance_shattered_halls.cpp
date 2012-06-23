@@ -62,7 +62,6 @@ struct SpawnLocation
 };
 
 const float afExecutionerLoc[4] = {151.443f, -84.439f, 1.938f, 6.283f};
-
 static SpawnLocation aSoldiersLocs[]=
 {
     {0, NPC_SOLDIER_HORDE_1, 119.609f, 256.127f, -45.254f, 5.133f},
@@ -75,7 +74,6 @@ static SpawnLocation aSoldiersLocs[]=
 struct instance_shattered_halls : public ScriptedInstance
 {
     instance_shattered_halls(Map *map) : ScriptedInstance(map) {Initialize();};
-
     uint32 Encounter[ENCOUNTERS];
     std::string str_data;
 

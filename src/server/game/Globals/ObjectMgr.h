@@ -373,7 +373,6 @@ typedef std::multimap<uint32, uint32> QuestRelations;
 struct PetLevelInfo
 {
     PetLevelInfo() : health(0), mana(0) { for (int i = 0; i < MAX_STATS; ++i) stats[i] = 0; }
-
     uint16 stats[MAX_STATS];
     uint16 health;
     uint16 mana;
@@ -478,7 +477,6 @@ struct PlayerCondition
 
     PlayerCondition(uint8 _condition = 0, uint32 _value1 = 0, uint32 _value2 = 0)
         : condition(ConditionType(_condition)), value1(_value1), value2(_value2) {}
-
     static bool IsValid(ConditionType condition, uint32 value1, uint32 value2);
     // Checks correctness of values
     bool Meets(Player const * APlayer) const;               // Checks if the player meets the condition
@@ -558,16 +556,13 @@ class ObjectMgr
 
         Player* GetPlayer(const char* name) const { return sObjectAccessor->FindPlayerByName(name);}
         Player* GetPlayer(uint64 guid) const { return ObjectAccessor::FindPlayer(guid); }
-
         static GameObjectInfo const *GetGameObjectInfo(uint32 id) { return sGOStorage.LookupEntry<GameObjectInfo>(id); }
-
         void LoadGameobjectInfo();
         void AddGameobjectInfo(GameObjectInfo *goinfo);
 
         Group * GetGroupByLeader(const uint64 &guid) const;
         void AddGroup(Group* group) { mGroupSet.insert(group); }
         void RemoveGroup(Group* group) { mGroupSet.erase(group); }
-
         Guild* GetGuildByLeader(uint64 const&guid) const;
         Guild* GetGuildById(const uint32 GuildId) const;
         Guild* GetGuildByName(const std::string& guildname) const;
@@ -582,7 +577,6 @@ class ObjectMgr
         void RemoveArenaTeam(uint32 Id);
         ArenaTeamMap::iterator GetArenaTeamMapBegin() { return mArenaTeamMap.begin(); }
         ArenaTeamMap::iterator GetArenaTeamMapEnd()   { return mArenaTeamMap.end(); }
-
         static CreatureTemplate const* GetCreatureTemplate(uint32 id);
         CreatureModelInfo const *GetCreatureModelInfo(uint32 modelid);
         CreatureModelInfo const* GetCreatureModelRandomGender(uint32 display_id);
@@ -599,7 +593,6 @@ class ObjectMgr
         }
 
         static ItemPrototype const* GetItemPrototype(uint32 id) { return sItemStorage.LookupEntry<ItemPrototype>(id); }
-
         static InstanceTemplate const* GetInstanceTemplate(uint32 map)
         {
             return sInstanceTemplate.LookupEntry<InstanceTemplate>(map);
@@ -642,7 +635,6 @@ class ObjectMgr
             return itr != mQuestTemplates.end() ? itr->second : NULL;
         }
         QuestMap const& GetQuestTemplates() const { return mQuestTemplates; }
-
         uint32 GetQuestForAreaTrigger(uint32 Trigger_ID) const
         {
             QuestAreaTriggerMap::const_iterator itr = mQuestAreaTriggerMap.find(Trigger_ID);
@@ -652,7 +644,6 @@ class ObjectMgr
         }
         bool IsTavernAreaTrigger(uint32 Trigger_ID) const { return mTavernAreaTriggerSet.count(Trigger_ID) != 0; }
         bool IsGameObjectForQuests(uint32 entry) const { return mGameObjectForQuestSet.count(entry) != 0; }
-
         uint32 GetBattleMasterBG(uint32 entry) const
         {
             BattleMastersMap::const_iterator itr = mBattleMastersMap.find(entry);
@@ -920,7 +911,6 @@ class ObjectMgr
         const char *GetSkyFireStringForDBCLocale(int32 entry) const { return GetSkyFireString(entry, DBCLocaleIndex); }
         int32 GetDBCLocaleIndex() const { return DBCLocaleIndex; }
         void SetDBCLocaleIndex(uint32 lang) { DBCLocaleIndex = GetIndexForLocale(LocaleConstant(lang)); }
-
         void AddCorpseCellData(uint32 mapid, uint32 cellid, uint32 player_guid, uint32 instance);
         void DeleteCorpseCellData(uint32 mapid, uint32 cellid, uint32 player_guid);
 
@@ -956,12 +946,10 @@ class ObjectMgr
         bool IsPlayerSpellDisabled(uint32 spellid) { return (m_DisabledPlayerSpells.count(spellid) != 0); }
         bool IsCreatureSpellDisabled(uint32 spellid) { return (m_DisabledCreatureSpells.count(spellid) != 0); }
         bool IsPetSpellDisabled(uint32 spellid) { return (m_DisabledPetSpells.count(spellid) != 0); }
-
         int GetIndexForLocale(LocaleConstant loc);
         LocaleConstant GetLocaleForIndex(int i);
         // guild bank tabs
         uint32 GetGuildBankTabPrice(uint8 Index) const { return Index < GUILD_BANK_MAX_TABS ? mGuildBankTabPrice[Index] : 0; }
-
         uint16 GetConditionId(ConditionType condition, uint32 value1, uint32 value2);
         bool IsPlayerMeetToCondition(Player const* player, uint16 condition_id) const
         {

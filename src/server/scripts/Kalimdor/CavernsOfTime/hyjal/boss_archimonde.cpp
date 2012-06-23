@@ -97,9 +97,7 @@ struct mob_ancient_wispAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
-
     void DamageTaken(Unit* /*done_by*/, uint32 &damage) { damage = 0; }
-
     void UpdateAI(const uint32 diff)
     {
         if (!ArchimondeGUID)
@@ -132,7 +130,6 @@ struct mob_ancient_wispAI : public ScriptedAI
 struct mob_doomfireAI : public ScriptedAI
 {
     mob_doomfireAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 CheckTimer;
     uint32 RefreshTimer;
 
@@ -153,9 +150,7 @@ struct mob_doomfireAI : public ScriptedAI
     }
 
     void DamageTaken(Unit *done_by, uint32 &damage) { damage = 0; }
-
     void EnterCombat(Unit* who) { }
-
     void MoveInLineOfSight(Unit* who)
     {
         // Do not do anything if who does not exist, or we are refreshing our timer, or who is Doomfire, Archimonde or Doomfire targetting
@@ -224,7 +219,6 @@ struct mob_doomfireAI : public ScriptedAI
 struct mob_doomfire_targettingAI : public ScriptedAI
 {
     mob_doomfire_targettingAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 ChangeTargetTimer;
     uint32 SummonTimer;                                     // This timer will serve as both a summon timer for the doomfire that does damage as well as to check on Archionde
 
@@ -249,9 +243,7 @@ struct mob_doomfire_targettingAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
-
     void DamageTaken(Unit * /*done_by*/, uint32 &damage) { damage = 0; }
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

@@ -67,14 +67,11 @@ class Corpse : public WorldObject, public GridObject<Corpse>
         void DeleteFromDB();
 
         uint64 const& GetOwnerGUID() const { return GetUInt64Value(CORPSE_FIELD_OWNER); }
-
         time_t const& GetGhostTime() const { return m_time; }
         void ResetGhostTime() { m_time = time(NULL); }
         CorpseType GetType() const { return m_type; }
-
         GridPair const& GetGrid() const { return m_grid; }
         void SetGrid(GridPair const& grid) { m_grid = grid; }
-
         bool isVisibleForInState(Player const* u, bool inVisibleList) const;
 
         Loot loot;                                          // remove insignia ONLY at BG
@@ -89,7 +86,6 @@ class Corpse : public WorldObject, public GridObject<Corpse>
         void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId, language, TargetGuid); }
         void TextEmote(int32 textId, uint64 TargetGuid) { MonsterTextEmote(textId, TargetGuid); }
         void Whisper(int32 textId, uint64 receiver) { MonsterWhisper(textId, receiver); }
-
         bool IsExpired(time_t t) const;
 
     private:

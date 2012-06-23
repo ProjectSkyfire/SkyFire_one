@@ -42,7 +42,6 @@ EndScriptData */
 struct instance_scholomance : public ScriptedInstance
 {
     instance_scholomance(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     //Lord Alexei Barov, Doctor Theolen Krastinov, The Ravenian, Lorekeeper Polkelt, Instructor Malicia and the Lady Illucia Barov.
     bool IsBossDied[6];
     uint32 m_auiEncounter[MAX_ENCOUNTER];

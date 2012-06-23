@@ -106,11 +106,9 @@ static Position2d Coords[]=
 struct npc_enslaved_soulAI : public ScriptedAI
 {
     npc_enslaved_soulAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 ReliquaryGUID;
 
     void Reset() {ReliquaryGUID = 0;}
-
     void EnterCombat(Unit* /*who*/)
     {
         DoCast(me, ENSLAVED_SOUL_PASSIVE, true);
@@ -310,7 +308,6 @@ struct boss_reliquary_of_soulsAI : public ScriptedAI
 struct boss_essence_of_sufferingAI : public ScriptedAI
 {
     boss_essence_of_sufferingAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 StatAuraGUID;
 
     uint32 AggroYellTimer;
@@ -419,7 +416,6 @@ struct boss_essence_of_sufferingAI : public ScriptedAI
 struct boss_essence_of_desireAI : public ScriptedAI
 {
     boss_essence_of_desireAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 RuneShieldTimer;
     uint32 DeadenTimer;
     uint32 SoulShockTimer;
@@ -510,7 +506,6 @@ struct boss_essence_of_desireAI : public ScriptedAI
 struct boss_essence_of_angerAI : public ScriptedAI
 {
     boss_essence_of_angerAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 AggroTargetGUID;
 
     uint32 CheckTankTimer;

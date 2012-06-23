@@ -85,7 +85,6 @@ rtems_task Init (rtems_task_argument argument);
 #define RTEMS_SET_ETHERNET_ADDRESS
 #if (defined (RTEMS_SET_ETHERNET_ADDRESS))
 static char ethernet_address[6] = { 0x00, 0x80, 0x7F, 0x22, 0x61, 0x77 };
-
 #endif
 
 #define RTEMS_USE_LOOPBACK
@@ -163,7 +162,6 @@ struct rtems_bsdnet_config rtems_bsdnet_config = {
   "XXX.YYY.ZZZ.1",    /* Log host */
   {"XXX.YYY.ZZZ.1" }, /* Name server(s) */
   {"XXX.YYY.ZZZ.1" }, /* NTP server(s) */
-
   /*
   *  A real example -- DO NOT USE THIS YOURSELF!!!
   */

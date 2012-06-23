@@ -36,7 +36,6 @@ EndScriptData */
 struct boss_lorekeeperpolkeltAI : public ScriptedAI
 {
     boss_lorekeeperpolkeltAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 VolatileInfection_Timer;
     uint32 Darkplague_Timer;
     uint32 CorrosiveAcid_Timer;

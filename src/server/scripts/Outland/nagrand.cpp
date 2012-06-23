@@ -58,14 +58,12 @@ struct mob_shattered_rumblerAI : public ScriptedAI
     bool Spawn;
 
     mob_shattered_rumblerAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         Spawn = false;
     }
 
     void EnterCombat(Unit* who) {}
-
     void SpellHit(Unit *Hitter, const SpellEntry *Spellkind)
     {
         if (Spellkind->Id == 32001 && !Spawn)
@@ -240,7 +238,6 @@ bool GossipSelect_mob_lump(Player* player, Creature* creature, uint32 sender, ui
 struct mob_sunspring_villagerAI : public ScriptedAI
 {
     mob_sunspring_villagerAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         me->SetUInt32Value(UNIT_DYNAMIC_FLAGS, 32);
@@ -248,7 +245,6 @@ struct mob_sunspring_villagerAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void SpellHit(Unit *caster, const SpellEntry *spell)
     {
         if (spell->Id == 32146)
@@ -562,11 +558,9 @@ enum eMagharCaptive
 
 static float m_afAmbushA[]= {-1568.805786, 8533.873047, 1.958};
 static float m_afAmbushB[]= {-1491.554321, 8506.483398, 1.248};
-
 struct npc_maghar_captiveAI : public npc_escortAI
 {
     npc_maghar_captiveAI(Creature* creature) : npc_escortAI(creature) { Reset(); }
-
     uint32 m_uiChainLightningTimer;
     uint32 m_uiHealTimer;
     uint32 m_uiFrostShockTimer;
@@ -699,11 +693,8 @@ bool QuestAccept_npc_maghar_captive(Player* player, Creature* creature, const Qu
 struct npc_creditmarker_visit_with_ancestorsAI : public ScriptedAI
 {
     npc_creditmarker_visit_with_ancestorsAI(Creature* c) : ScriptedAI(c) {}
-
     void Reset() {}
-
     void EnterCombat(Unit* who) {}
-
     void MoveInLineOfSight(Unit *who)
     {
         if (!who)
@@ -740,7 +731,6 @@ CreatureAI* GetAI_npc_creditmarker_visit_with_ancestors(Creature* creature)
 struct mob_sparrowhawkAI : public ScriptedAI
 {
     mob_sparrowhawkAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Check_Timer;
     uint64 PlayerGUID;
     bool fleeing;
@@ -761,7 +751,6 @@ struct mob_sparrowhawkAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) {}
-
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || PlayerGUID)
@@ -853,7 +842,6 @@ enum
 struct npc_maghar_prisonerAI : public npc_escortAI
 {
     npc_maghar_prisonerAI(Creature* creature) : npc_escortAI(creature) {}
-
     uint64 uiPlayerGUID;
 
     void Reset()
@@ -1078,7 +1066,6 @@ enum
 struct npc_corki1AI : public npc_escortAI
 {
     npc_corki1AI(Creature* creature) : npc_escortAI(creature) {}
-
     uint64 uiPlayerGUID;
 
     void Reset()
@@ -1166,7 +1153,6 @@ enum
 struct npc_corki2AI : public npc_escortAI
 {
     npc_corki2AI(Creature* creature) : npc_escortAI(creature) {}
-
     uint64 uiPlayerGUID;
 
     void Reset()
@@ -1252,7 +1238,6 @@ enum
 struct npc_corki3AI : public npc_escortAI
 {
     npc_corki3AI(Creature* creature) : npc_escortAI(creature) {}
-
     uint64 uiPlayerGUID;
 
     void Reset()
@@ -1353,11 +1338,9 @@ enum
 
 static float m_afAmbushC[]= {-1531.204712, 8456.174805, -4.102};
 static float m_afAmbushD[]= {-1442.524780, 8500.364258, 6.381};
-
 struct npc_kurenai_captiveAI : public npc_escortAI
 {
     npc_kurenai_captiveAI(Creature* creature) : npc_escortAI(creature) { Reset(); }
-
     uint32 m_uiChainLightningTimer;
     uint32 m_uiHealTimer;
     uint32 m_uiFrostShockTimer;

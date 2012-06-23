@@ -52,7 +52,6 @@ EndScriptData */
 struct boss_lady_blaumeuxAI : public ScriptedAI
 {
     boss_lady_blaumeuxAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Mark_Timer;
     uint32 VoidZone_Timer;
     bool ShieldWall1;
@@ -148,7 +147,6 @@ CreatureAI* GetAI_boss_lady_blaumeux(Creature* creature)
 struct boss_rivendare_naxxAI : public ScriptedAI
 {
    boss_rivendare_naxxAI(Creature *c) : ScriptedAI(c) {}
-
    void Reset()
    {
    }
@@ -208,7 +206,6 @@ CreatureAI* GetAI_boss_rivendare_naxx(Creature* creature)
 struct boss_thane_korthazzAI : public ScriptedAI
 {
    boss_thane_korthazzAI(Creature *c) : ScriptedAI(c) {}
-
    uint32 Mark_Timer;
    uint32 Meteor_Timer;
    bool ShieldWall1;
@@ -303,7 +300,6 @@ CreatureAI* GetAI_boss_thane_korthazz(Creature* creature)
 struct boss_sir_zeliekAI : public ScriptedAI
 {
    boss_sir_zeliekAI(Creature *c) : ScriptedAI(c) {}
-
    uint32 Mark_Timer;
    uint32 HolyWrath_Timer;
    bool ShieldWall1;

@@ -59,7 +59,6 @@ bool GOHello_go_main_chambers_access_panel(Player* player, GameObject* _GO)
 struct instance_steam_vault : public ScriptedInstance
 {
     instance_steam_vault(Map *map) : ScriptedInstance(map) {Initialize();};
-
     uint32 Encounter[ENCOUNTERS];
 
     uint64 ThespiaGUID;

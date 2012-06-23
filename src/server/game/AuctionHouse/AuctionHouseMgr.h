@@ -86,10 +86,8 @@ class AuctionHouseObject
     typedef std::map<uint32, AuctionEntry*> AuctionEntryMap;
 
     uint32 Getcount() { return AuctionsMap.size(); }
-
     AuctionEntryMap::iterator GetAuctionsBegin() {return AuctionsMap.begin();}
     AuctionEntryMap::iterator GetAuctionsEnd() {return AuctionsMap.end();}
-
     AuctionEntry* GetAuction(uint32 id) const
     {
         AuctionEntryMap::const_iterator itr = AuctionsMap.find(id);

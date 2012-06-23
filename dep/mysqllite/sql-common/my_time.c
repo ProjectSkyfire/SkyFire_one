@@ -32,12 +32,10 @@ ulonglong log_10_int[20]=
 
 static uchar internal_format_positions[]=
 {0, 1, 2, 3, 4, 5, 6, (uchar) 255};
-
 static char time_separator=':';
 
 static ulong const days_at_timestart=719528;	/* daynr at 1970.01.01 */
 uchar days_in_month[]= {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 0};
-
 /*
   Offset of system time zone from UTC in seconds used to speed up
   work of my_system_gmt_sec() function.

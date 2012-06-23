@@ -48,7 +48,6 @@ EndScriptData */
 struct boss_high_botanist_freywinnAI : public ScriptedAI
 {
     boss_high_botanist_freywinnAI(Creature *c) : ScriptedAI(c) {}
-
     std::list<uint64> Adds_List;
 
     uint32 SummonSeedling_Timer;

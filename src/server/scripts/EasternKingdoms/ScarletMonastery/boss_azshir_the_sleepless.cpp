@@ -34,7 +34,6 @@ EndScriptData */
 struct boss_azshir_the_sleeplessAI : public ScriptedAI
 {
     boss_azshir_the_sleeplessAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 SoulSiphon_Timer;
     uint32 CallOftheGrave_Timer;
     uint32 Terrify_Timer;

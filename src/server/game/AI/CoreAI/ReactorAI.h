@@ -30,7 +30,6 @@ class ReactorAI : public CreatureAI
     public:
 
         explicit ReactorAI(Creature *c) : CreatureAI(c) {}
-
         void MoveInLineOfSight(Unit *);
 
         void UpdateAI(const uint32);

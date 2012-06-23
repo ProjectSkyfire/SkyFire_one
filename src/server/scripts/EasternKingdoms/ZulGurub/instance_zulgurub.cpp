@@ -31,7 +31,6 @@ EndScriptData */
 struct instance_zulgurub : public ScriptedInstance
 {
     instance_zulgurub(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     //If all High Priest bosses were killed. Lorkhan, Zath and Ohgan are added too.
     uint32 m_auiEncounter[MAX_ENCOUNTERS];
 

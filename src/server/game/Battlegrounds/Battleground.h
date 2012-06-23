@@ -109,7 +109,6 @@ enum BattleGroundBuffObjects
 };
 
 const uint32 Buff_Entries[3] = { BG_OBJECTID_SPEEDBUFF_ENTRY, BG_OBJECTID_REGENBUFF_ENTRY, BG_OBJECTID_BERSERKERBUFF_ENTRY };
-
 enum BattleGroundStatus
 {
     STATUS_NONE         = 0,                                // first status, should mean bg is not instance
@@ -128,7 +127,6 @@ struct BattleGroundPlayer
 struct BattleGroundObjectInfo
 {
     BattleGroundObjectInfo() : object(NULL), timer(0), spellid(0) {}
-
     GameObject  *object;
     int32       timer;
     uint32      spellid;
@@ -253,7 +251,6 @@ class BattleGroundScore
             BonusHonor(0), DamageDone(0), HealingDone(0)
         {}
         virtual ~BattleGroundScore() {}                     //virtual destructor is used when deleting score from scores map
-
         uint32 KillingBlows;
         uint32 Deaths;
         uint32 HonorableKills;
@@ -309,13 +306,10 @@ class BattleGround
         uint32 GetLastResurrectTime() const { return m_LastResurrectTime; }
         uint32 GetMaxPlayers() const        { return m_MaxPlayers; }
         uint32 GetMinPlayers() const        { return m_MinPlayers; }
-
         uint32 GetMinLevel() const          { return m_LevelMin; }
         uint32 GetMaxLevel() const          { return m_LevelMax; }
-
         uint32 GetMaxPlayersPerTeam() const { return m_MaxPlayersPerTeam; }
         uint32 GetMinPlayersPerTeam() const { return m_MinPlayersPerTeam; }
-
         int GetStartDelayTime() const       { return m_StartDelayTime; }
         uint8 GetArenaType() const          { return m_ArenaType; }
         uint8 GetWinner() const             { return m_Winner; }
@@ -337,13 +331,10 @@ class BattleGround
         void SetArenaType(uint8 type)       { m_ArenaType = type; }
         void SetArenaorBGType(bool _isArena) { m_IsArena = _isArena; }
         void SetWinner(uint8 winner)        { m_Winner = winner; }
-
         void ModifyStartDelayTime(int diff) { m_StartDelayTime -= diff; }
         void SetStartDelayTime(int Time)    { m_StartDelayTime = Time; }
-
         void SetMaxPlayersPerTeam(uint32 MaxPlayers) { m_MaxPlayersPerTeam = MaxPlayers; }
         void SetMinPlayersPerTeam(uint32 MinPlayers) { m_MinPlayersPerTeam = MinPlayers; }
-
         void AddToBGFreeSlotQueue();                        //this queue will be useful when more battlegrounds instances will be available
         void RemoveFromBGFreeSlotQueue();                   //this method could delete whole BG instance, if another free is available
 
@@ -363,19 +354,15 @@ class BattleGround
         bool isArena() const        { return m_IsArena; }
         bool isBattleGround() const { return !m_IsArena; }
         bool isRated() const        { return m_IsRated; }
-
         typedef std::map<uint64, BattleGroundPlayer> BattleGroundPlayerMap;
         BattleGroundPlayerMap const& GetPlayers() const { return m_Players; }
         uint32 GetPlayersSize() const { return m_Players.size(); }
         uint32 GetRemovedPlayersSize() const { return m_RemovedPlayers.size(); }
-
         typedef std::map<uint64, BattleGroundScore*> BattleGroundScoreMap;
         BattleGroundScoreMap::const_iterator GetPlayerScoresBegin() const { return m_PlayerScores.begin(); }
         BattleGroundScoreMap::const_iterator GetPlayerScoresEnd() const { return m_PlayerScores.end(); }
         uint32 GetPlayerScoresSize() const { return m_PlayerScores.size(); }
-
         uint32 GetReviveQueueSize() const { return m_ReviveQueue.size(); }
-
         void AddPlayerToResurrectQueue(uint64 npc_guid, uint64 player_guid);
         void RemovePlayerFromResurrectQueue(uint64 player_guid);
 
@@ -386,7 +373,6 @@ class BattleGround
         /* Location */
         void SetMapId(uint32 MapID) { m_MapId = MapID; }
         uint32 GetMapId() const { return m_MapId; }
-
         /* Map pointers */
         void SetBgMap(BattleGroundMap* map) { m_Map = map; }
         BattleGroundMap* GetBgMap()
@@ -407,7 +393,6 @@ class BattleGround
 
         void SetStartMaxDist(float startMaxDist) { m_StartMaxDist = startMaxDist; }
         float GetStartMaxDist() const { return m_StartMaxDist; }
-
         // Packet Transfer
         // method that should fill worldpacket with actual world states (not yet implemented for all battlegrounds!)
         virtual void FillInitialWorldStates(WorldPacket& /*data*/) {}
@@ -510,7 +495,6 @@ class BattleGround
         const char *GetSkyFireString(int32 entry);
 
         virtual bool HandlePlayerUnderMap(Player * /*plr*/) { return false; }
-
         // since arenas can be AvA or Hvh, we have to get the "temporary" team of a player
         uint32 GetPlayerTeam(uint64 guid);
         uint32 GetOtherTeam(uint32 teamId);
@@ -518,7 +502,6 @@ class BattleGround
         void PlayerRelogin(uint64 guid);
 
         void SetDeleteThis() {m_SetDeleteThis = true;}
-
         /* virtual score-array - get's used in bg-subclasses */
         int32 m_TeamScores[BG_TEAMS_COUNT];
 
@@ -532,7 +515,6 @@ class BattleGround
         BattleGroundScoreMap m_PlayerScores;                // Player scores
         // must be implemented in BG subclass
         virtual void RemovePlayer(Player * /*player*/, uint64 /*guid*/) {}
-
         /* Player lists, those need to be accessible by inherited classes */
         BattleGroundPlayerMap  m_Players;
                                                             // Spirit Guide guid + Player list GUIDS

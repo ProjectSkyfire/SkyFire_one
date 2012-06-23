@@ -56,7 +56,6 @@ const Position SpawnsLocation[] =
 struct instance_blackfathom_deeps : public ScriptedInstance
 {
     instance_blackfathom_deeps(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     uint64 m_uiTwilightLordKelrisGUID;
     uint64 m_uiShrine1GUID;
     uint64 m_uiShrine2GUID;

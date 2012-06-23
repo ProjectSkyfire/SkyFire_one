@@ -93,7 +93,6 @@ class PoolMgr
     friend class ACE_Singleton<PoolMgr, ACE_Null_Mutex>;
     PoolMgr();
     ~PoolMgr() {};
-
     public:
         void LoadFromDB();
         void Initialize();
@@ -103,7 +102,6 @@ class PoolMgr
 
         template<typename T>
         bool IsSpawnedObject(uint32 db_guid_or_pool_id) const { return mSpawnedData.IsSpawnedObject<T>(db_guid_or_pool_id); }
-
         bool CheckPool(uint16 pool_id) const;
 
         void SpawnPool(uint16 pool_id);

@@ -43,7 +43,6 @@ class AuthCrypt
         void EncryptSend(uint8 *, size_t);
 
         bool IsInitialized() { return _initialized; }
-
         static void GenerateKey(uint8 *, BigNumber *);
 
     private:

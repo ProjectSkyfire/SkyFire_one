@@ -420,7 +420,6 @@ struct boss_veknilashAI : public boss_twinemperorsAI
 {
     bool IAmVeklor() {return false;}
     boss_veknilashAI(Creature *c) : boss_twinemperorsAI(c) {}
-
     uint32 UpperCut_Timer;
     uint32 UnbalancingStrike_Timer;
     uint32 Scarabs_Timer;
@@ -500,7 +499,6 @@ struct boss_veklorAI : public boss_twinemperorsAI
 {
     bool IAmVeklor() {return true;}
     boss_veklorAI(Creature *c) : boss_twinemperorsAI(c) {}
-
     uint32 ShadowBolt_Timer;
     uint32 Blizzard_Timer;
     uint32 ArcaneBurst_Timer;

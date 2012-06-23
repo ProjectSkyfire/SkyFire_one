@@ -2482,7 +2482,6 @@ CreatureAI* GetAI_guard_shattrath(Creature* creature)
 struct guard_shattrath_aldorAI : public guardAI
 {
     guard_shattrath_aldorAI(Creature *c) : guardAI(c) {}
-
     uint32 Exile_Timer;
     uint32 Banish_Timer;
     uint64 PlayerGUID;
@@ -2497,7 +2496,6 @@ struct guard_shattrath_aldorAI : public guardAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
@@ -2678,7 +2676,6 @@ CreatureAI* GetAI_guard_shattrath_aldor(Creature* creature)
 struct guard_shattrath_scryerAI : public guardAI
 {
     guard_shattrath_scryerAI(Creature *c) : guardAI(c) {}
-
     uint32 Exile_Timer;
     uint32 Banish_Timer;
     uint64 PlayerGUID;
@@ -2693,7 +2690,6 @@ struct guard_shattrath_scryerAI : public guardAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

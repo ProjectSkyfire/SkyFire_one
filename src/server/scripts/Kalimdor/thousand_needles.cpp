@@ -50,13 +50,10 @@ enum eKanati
 };
 
 const float m_afGalakLoc[]= {-4867.387695f, -1357.353760f, -48.226f };
-
 struct npc_kanatiAI : public npc_escortAI
 {
     npc_kanatiAI(Creature* creature) : npc_escortAI(creature) { }
-
     void Reset() { }
-
     void WaypointReached(uint32 uiPointId)
     {
         switch (uiPointId)
@@ -135,9 +132,7 @@ float m_afBanditLoc[6][6]=
 struct npc_lakota_windsongAI : public npc_escortAI
 {
     npc_lakota_windsongAI(Creature* creature) : npc_escortAI(creature) { }
-
     void Reset() { }
-
     void WaypointReached(uint32 uiPointId)
     {
         switch (uiPointId)
@@ -213,9 +208,7 @@ float m_afWyvernLoc[3][3]=
 struct npc_paoka_swiftmountainAI : public npc_escortAI
 {
     npc_paoka_swiftmountainAI(Creature* creature) : npc_escortAI(creature) { }
-
     void Reset() { }
-
     void WaypointReached(uint32 uiPointId)
     {
         switch (uiPointId)
@@ -278,7 +271,6 @@ enum ePlucky
 struct npc_pluckyAI : public ScriptedAI
 {
     npc_pluckyAI(Creature *c) : ScriptedAI(c) { m_uiNormFaction = c->getFaction(); }
-
     uint32 m_uiNormFaction;
     uint32 m_uiResetTimer;
 
@@ -398,7 +390,6 @@ bool go_panther_cage(Player* player, GameObject* pGo)
 struct npc_enraged_pantherAI : public ScriptedAI
 {
     npc_enraged_pantherAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);

@@ -35,7 +35,6 @@ class MapRefManager : public RefManager<Map, Player>
         MapReference const* getFirst() const { return (MapReference const*)RefManager<Map, Player>::getFirst(); }
         MapReference* getLast() { return (MapReference*)RefManager<Map, Player>::getLast(); }
         MapReference const* getLast() const { return (MapReference const*)RefManager<Map, Player>::getLast(); }
-
         iterator begin() { return iterator(getFirst()); }
         iterator end() { return iterator(NULL); }
         iterator rbegin() { return iterator(getLast()); }

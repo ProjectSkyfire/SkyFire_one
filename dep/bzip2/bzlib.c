@@ -539,19 +539,16 @@ Bool unRLE_obuf_to_output_FAST ( DState* s )
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          s->state_out_len = 2;
          BZ_GET_FAST(k1); BZ_RAND_UPD_MASK;
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          s->state_out_len = 3;
          BZ_GET_FAST(k1); BZ_RAND_UPD_MASK;
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          BZ_GET_FAST(k1); BZ_RAND_UPD_MASK;
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          s->state_out_len = ((Int32)k1) + 4;
@@ -619,12 +616,10 @@ Bool unRLE_obuf_to_output_FAST ( DState* s )
          BZ_GET_FAST_C(k1); c_nblock_used++;
          if (c_nblock_used == s_save_nblockPP) continue;
          if (k1 != c_k0) { c_k0 = k1; continue; };
-
          c_state_out_len = 3;
          BZ_GET_FAST_C(k1); c_nblock_used++;
          if (c_nblock_used == s_save_nblockPP) continue;
          if (k1 != c_k0) { c_k0 = k1; continue; };
-
          BZ_GET_FAST_C(k1); c_nblock_used++;
          c_state_out_len = ((Int32)k1) + 4;
          BZ_GET_FAST_C(c_k0); c_nblock_used++;
@@ -702,19 +697,16 @@ Bool unRLE_obuf_to_output_SMALL ( DState* s )
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          s->state_out_len = 2;
          BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK;
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          s->state_out_len = 3;
          BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK;
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          BZ_GET_SMALL(k1); BZ_RAND_UPD_MASK;
          k1 ^= BZ_RAND_MASK; s->nblock_used++;
          s->state_out_len = ((Int32)k1) + 4;
@@ -748,17 +740,14 @@ Bool unRLE_obuf_to_output_SMALL ( DState* s )
          BZ_GET_SMALL(k1); s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          s->state_out_len = 2;
          BZ_GET_SMALL(k1); s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          s->state_out_len = 3;
          BZ_GET_SMALL(k1); s->nblock_used++;
          if (s->nblock_used == s->save_nblock+1) continue;
          if (k1 != s->k0) { s->k0 = k1; continue; };
-
          BZ_GET_SMALL(k1); s->nblock_used++;
          s->state_out_len = ((Int32)k1) + 4;
          BZ_GET_SMALL(s->k0); s->nblock_used++;
@@ -888,14 +877,11 @@ BZFILE* BZ_API(BZ2_bzWriteOpen)
        (workFactor < 0 || workFactor > 250) ||
        (verbosity < 0 || verbosity > 4))
       { BZ_SETERR(BZ_PARAM_ERROR); return NULL; };
-
    if (ferror(f))
       { BZ_SETERR(BZ_IO_ERROR); return NULL; };
-
    bzf = malloc ( sizeof(bzFile) );
    if (bzf == NULL)
       { BZ_SETERR(BZ_MEM_ERROR); return NULL; };
-
    BZ_SETERR(BZ_OK);
    bzf->initialisedOk = False;
    bzf->bufN          = 0;
@@ -910,7 +896,6 @@ BZFILE* BZ_API(BZ2_bzWriteOpen)
                               verbosity, workFactor );
    if (ret != BZ_OK)
       { BZ_SETERR(ret); free(bzf); return NULL; };
-
    bzf->strm.avail_in = 0;
    bzf->initialisedOk = True;
    return bzf;
@@ -933,10 +918,8 @@ void BZ_API(BZ2_bzWrite)
       { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };
    if (ferror(bzf->handle))
       { BZ_SETERR(BZ_IO_ERROR); return; };
-
    if (len == 0)
       { BZ_SETERR(BZ_OK); return; };
-
    bzf->strm.avail_in = len;
    bzf->strm.next_in  = buf;
 
@@ -946,7 +929,6 @@ void BZ_API(BZ2_bzWrite)
       ret = BZ2_bzCompress ( &(bzf->strm), BZ_RUN );
       if (ret != BZ_RUN_OK)
          { BZ_SETERR(ret); return; };
-
       if (bzf->strm.avail_out < BZ_MAX_UNUSED) {
          n = BZ_MAX_UNUSED - bzf->strm.avail_out;
          n2 = fwrite ( (void*)(bzf->buf), sizeof(UChar),
@@ -990,7 +972,6 @@ void BZ_API(BZ2_bzWriteClose64)
       { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };
    if (ferror(bzf->handle))
       { BZ_SETERR(BZ_IO_ERROR); return; };
-
    if (nbytes_in_lo32 != NULL) *nbytes_in_lo32 = 0;
    if (nbytes_in_hi32 != NULL) *nbytes_in_hi32 = 0;
    if (nbytes_out_lo32 != NULL) *nbytes_out_lo32 = 0;
@@ -1003,7 +984,6 @@ void BZ_API(BZ2_bzWriteClose64)
          ret = BZ2_bzCompress ( &(bzf->strm), BZ_FINISH );
          if (ret != BZ_FINISH_OK && ret != BZ_STREAM_END)
             { BZ_SETERR(ret); return; };
-
          if (bzf->strm.avail_out < BZ_MAX_UNUSED) {
             n = BZ_MAX_UNUSED - bzf->strm.avail_out;
             n2 = fwrite ( (void*)(bzf->buf), sizeof(UChar),
@@ -1056,14 +1036,11 @@ BZFILE* BZ_API(BZ2_bzReadOpen)
        (unused == NULL && nUnused != 0) ||
        (unused != NULL && (nUnused < 0 || nUnused > BZ_MAX_UNUSED)))
       { BZ_SETERR(BZ_PARAM_ERROR); return NULL; };
-
    if (ferror(f))
       { BZ_SETERR(BZ_IO_ERROR); return NULL; };
-
    bzf = malloc ( sizeof(bzFile) );
    if (bzf == NULL)
       { BZ_SETERR(BZ_MEM_ERROR); return NULL; };
-
    BZ_SETERR(BZ_OK);
 
    bzf->initialisedOk = False;
@@ -1083,7 +1060,6 @@ BZFILE* BZ_API(BZ2_bzReadOpen)
    ret = BZ2_bzDecompressInit ( &(bzf->strm), verbosity, small );
    if (ret != BZ_OK)
       { BZ_SETERR(ret); free(bzf); return NULL; };
-
    bzf->strm.avail_in = bzf->bufN;
    bzf->strm.next_in  = bzf->buf;
 
@@ -1099,10 +1075,8 @@ void BZ_API(BZ2_bzReadClose) ( int *bzerror, BZFILE *b )
    BZ_SETERR(BZ_OK);
    if (bzf == NULL)
       { BZ_SETERR(BZ_OK); return; };
-
    if (bzf->writing)
       { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };
-
    if (bzf->initialisedOk)
       (void)BZ2_bzDecompressEnd ( &(bzf->strm) );
    free ( bzf );
@@ -1122,20 +1096,16 @@ int BZ_API(BZ2_bzRead)
 
    if (bzf == NULL || buf == NULL || len < 0)
       { BZ_SETERR(BZ_PARAM_ERROR); return 0; };
-
    if (bzf->writing)
       { BZ_SETERR(BZ_SEQUENCE_ERROR); return 0; };
-
    if (len == 0)
       { BZ_SETERR(BZ_OK); return 0; };
-
    bzf->strm.avail_out = len;
    bzf->strm.next_out = buf;
 
    while (True) {
       if (ferror(bzf->handle))
          { BZ_SETERR(BZ_IO_ERROR); return 0; };
-
       if (bzf->strm.avail_in == 0 && !myfeof(bzf->handle)) {
          n = fread ( bzf->buf, sizeof(UChar),
                      BZ_MAX_UNUSED, bzf->handle );
@@ -1150,11 +1120,9 @@ int BZ_API(BZ2_bzRead)
 
       if (ret != BZ_OK && ret != BZ_STREAM_END)
          { BZ_SETERR(ret); return 0; };
-
       if (ret == BZ_OK && myfeof(bzf->handle) &&
           bzf->strm.avail_in == 0 && bzf->strm.avail_out > 0)
          { BZ_SETERR(BZ_UNEXPECTED_EOF); return 0; };
-
       if (ret == BZ_STREAM_END)
          { BZ_SETERR(BZ_STREAM_END);
            return len - bzf->strm.avail_out; };
@@ -1179,7 +1147,6 @@ void BZ_API(BZ2_bzReadGetUnused)
       { BZ_SETERR(BZ_SEQUENCE_ERROR); return; };
    if (unused == NULL || nUnused == NULL)
       { BZ_SETERR(BZ_PARAM_ERROR); return; };
-
    BZ_SETERR(BZ_OK);
    *nUnused = bzf->strm.avail_in;
    *unused = bzf->strm.next_in;

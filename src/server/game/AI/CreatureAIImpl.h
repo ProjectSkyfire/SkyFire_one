@@ -322,13 +322,9 @@ class EventMap : private std::map<uint32, uint32>
         uint32 m_time, m_phase;
     public:
         explicit EventMap() : m_phase(0), m_time(0) {}
-
         uint32 GetTimer() const { return m_time; }
-
         void Reset() { clear(); m_time = 0; m_phase = 0; }
-
         void Update(uint32 time) { m_time += time; }
-
         void SetPhase(uint32 phase)
         {
             if (phase && phase < 9)

@@ -257,7 +257,6 @@ struct mob_batriderAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void UpdateAI (const uint32 diff)
     {
         if (!UpdateVictim())

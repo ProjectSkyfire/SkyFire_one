@@ -632,9 +632,7 @@ struct mob_enchanted_elementalAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void MoveInLineOfSight(Unit * /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!instance)
@@ -929,9 +927,7 @@ struct mob_shield_generator_channelAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void MoveInLineOfSight(Unit * /*who*/) {}
-
     void UpdateAI (const uint32 diff)
     {
         if (!instance)

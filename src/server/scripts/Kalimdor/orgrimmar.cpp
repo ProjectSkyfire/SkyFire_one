@@ -82,7 +82,6 @@ enum eShenthul
 struct npc_shenthulAI : public ScriptedAI
 {
     npc_shenthulAI(Creature* c) : ScriptedAI(c) {}
-
     bool CanTalk;
     bool CanEmote;
     uint32 Salute_Timer;
@@ -99,7 +98,6 @@ struct npc_shenthulAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (CanEmote)
@@ -180,7 +178,6 @@ bool QuestAccept_npc_shenthul(Player* player, Creature* creature, Quest const* q
 struct npc_thrall_warchiefAI : public ScriptedAI
 {
     npc_thrall_warchiefAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 ChainLightning_Timer;
     uint32 Shock_Timer;
 
@@ -191,7 +188,6 @@ struct npc_thrall_warchiefAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

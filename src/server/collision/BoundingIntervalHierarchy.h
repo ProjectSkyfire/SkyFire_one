@@ -116,7 +116,6 @@ class BIH
             delete[] dat.indices;
         }
         uint32 primCount() { return objects.size(); }
-
         template<typename RayCallback>
         void intersectRay(const Ray &r, RayCallback& intersectCallback, float &maxDist, bool stopAtFirst=false) const
         {

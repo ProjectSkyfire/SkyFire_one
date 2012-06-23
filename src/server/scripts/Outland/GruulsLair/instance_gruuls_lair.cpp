@@ -38,7 +38,6 @@ EndScriptData */
 struct instance_gruuls_lair : public ScriptedInstance
 {
     instance_gruuls_lair(Map *map) : ScriptedInstance(map) {Initialize();};
-
     uint32 Encounters[ENCOUNTERS];
 
     uint64 MaulgarEvent_Tank;

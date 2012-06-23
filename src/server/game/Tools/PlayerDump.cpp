@@ -357,7 +357,6 @@ DumpReturn PlayerDumpWriter::WriteDump(const std::string& file, uint32 guid)
 
 // Reading - High-level functions
 #define ROLLBACK(DR) {CharacterDatabase.RollbackTransaction(); fclose(fin); return (DR);}
-
 DumpReturn PlayerDumpReader::LoadDump(const std::string& file, uint32 account, std::string name, uint32 guid)
 {
     // check character count

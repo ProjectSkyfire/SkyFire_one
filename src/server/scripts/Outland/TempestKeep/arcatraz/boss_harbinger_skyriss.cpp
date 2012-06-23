@@ -106,7 +106,6 @@ struct boss_harbinger_skyrissAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void JustDied(Unit* Killer)
     {
         DoScriptText(SAY_DEATH, me);
@@ -291,7 +290,6 @@ struct boss_harbinger_skyriss_illusionAI : public ScriptedAI
     bool HeroicMode;
 
     void Reset() { }
-
     void EnterCombat(Unit *who) { }
 };
 

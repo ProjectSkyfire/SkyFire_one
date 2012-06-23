@@ -47,7 +47,6 @@ class MovementGenerator
         virtual MovementGeneratorType GetMovementGeneratorType() = 0;
 
         virtual void unitSpeedChanged() { }
-
         virtual bool GetDestination(float& /*x*/, float& /*y*/, float& /*z*/) const { return false; }
 };
 
@@ -92,7 +91,6 @@ template<class REAL_MOVEMENT>
 struct MovementGeneratorFactory : public SelectableMovement
 {
     MovementGeneratorFactory(MovementGeneratorType mgt) : SelectableMovement(mgt) {}
-
     MovementGenerator* Create(void *) const;
 };
 

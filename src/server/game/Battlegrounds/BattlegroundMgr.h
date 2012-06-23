@@ -139,7 +139,6 @@ class BGQueueInviteEvent : public BasicEvent
     public:
         BGQueueInviteEvent(uint64 pl_guid, uint32 BgInstanceGUID) : m_PlayerGuid(pl_guid), m_BgInstanceGUID(BgInstanceGUID) {};
         virtual ~BGQueueInviteEvent() {};
-
         virtual bool Execute(uint64 e_time, uint32 p_time);
         virtual void Abort(uint64 e_time);
     private:
@@ -155,7 +154,6 @@ class BGQueueRemoveEvent : public BasicEvent
     public:
         BGQueueRemoveEvent(uint64 pl_guid, uint32 bgInstanceGUID, uint32 playersTeam) : m_PlayerGuid(pl_guid), m_BgInstanceGUID(bgInstanceGUID), m_PlayersTeam(playersTeam) {};
         virtual ~BGQueueRemoveEvent() {};
-
         virtual bool Execute(uint64 e_time, uint32 p_time);
         virtual void Abort(uint64 e_time);
     private:
@@ -191,7 +189,6 @@ class BattleGroundMgr
         /* Battlegrounds */
         BattleGroundSet::iterator GetBattleGroundsBegin() { return m_BattleGrounds.begin(); };
         BattleGroundSet::iterator GetBattleGroundsEnd() { return m_BattleGrounds.end(); };
-
         BattleGround* GetBattleGround(uint32 InstanceID)
         {
             if (!InstanceID)
@@ -232,7 +229,6 @@ class BattleGroundMgr
 
         uint32 GetMaxRatingDifference() const {return m_MaxRatingDifference;}
         uint32 GetRatingDiscardTimer() const {return m_RatingDiscardTimer;}
-
         void InitAutomaticArenaPointDistribution();
         void DistributeArenaPoints();
         uint32 GetPrematureFinishTime() const {return m_PrematureFinishTimer;}
@@ -240,7 +236,6 @@ class BattleGroundMgr
         void ToggleTesting();
         bool isArenaTesting() const { return m_ArenaTesting; }
         bool isTesting() const { return m_Testing; }
-
         void SetHolidayWeekends(uint32 mask);
     private:
 

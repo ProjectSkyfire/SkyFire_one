@@ -23,7 +23,6 @@
 #include "my_aes.h"
 
 enum encrypt_dir { AES_ENCRYPT, AES_DECRYPT };
-
 #define AES_BLOCK_SIZE 16	/* Block size in bytes */
 
 #define AES_BAD_DATA  -1	/* If bad data discovered during decoding */

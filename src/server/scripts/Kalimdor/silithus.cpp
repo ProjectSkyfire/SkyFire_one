@@ -373,13 +373,11 @@ static Location SpawnLocation[]=
     {-8085, 1524, 2.61f, 3.141592f},
     {-8080, 1522, 2.61f, 3.141592f},
     {-8085, 1520, 2.61f, 3.141592f},
-
     {-8085, 1524, 2.61f, 3.141592f},
     {-8080, 1522, 2.61f, 3.141592f},
     {-8085, 1520, 2.61f, 3.141592f},
     {-8080, 1518, 2.61f, 3.141592f},
     {-8085, 1516, 2.61f, 3.141592f},
-
     {-8085, 1518, 2.61f, 3.141592f},
     {-8080, 1516, 2.61f, 3.141592f},
     {-8080, 1520, 2.61f, 3.141592f},
@@ -391,30 +389,25 @@ static Location SpawnLocation[]=
     {-8082, 1524, 2.61f, 3.141592f},
     {-8078, 1526, 2.61f, 3.141592f},
     {-8082, 1527, 2.61f, 3.141592f},
-
     {-8082, 1524, 2.61f, 3.141592f},
     {-8078, 1522, 2.61f, 3.141592f},
     {-8082, 1520, 2.61f, 3.141592f},
     {-8078, 1518, 2.61f, 3.141592f},
     {-8082, 1516, 2.61f, 3.141592f},
-
     {-8082, 1523, 2.61f, 3.141592f},
     {-8078, 1521, 2.61f, 3.141592f},
     {-8082, 1528, 2.61f, 3.141592f},
     {-8078, 1519, 2.61f, 3.141592f},
     {-8082, 1526, 2.61f, 3.141592f},
-
     {-8082, 1524, 2.61f, 3.141592f},
     {-8078, 1522, 2.61f, 3.141592f},
     {-8082, 1520, 2.61f, 3.141592f},
     {-8078, 1518, 2.61f, 3.141592f},
     {-8082, 1516, 2.61f, 3.141592f},
-
     //Anubisath Conqueror
     {-8088, 1510, 2.61f, 0},
     {-8084, 1520, 2.61f, 0},
     {-8088, 1530, 2.61f, 0},
-
     //Qiraj Wasp
     {-8080, 1513, 2.61f, 0},
     {-8082, 1523, 2.61f, 0},
@@ -422,14 +415,12 @@ static Location SpawnLocation[]=
     {-8082, 1516, 2.61f, 0},
     {-8085, 1520, 2.61f, 0},
     {-8080, 1528, 2.61f, 0},
-
     {-8082, 1513, 2.61f, 0},
     {-8079, 1523, 2.61f, 0},
     {-8080, 1531, 2.61f, 0},
     {-8079, 1516, 2.61f, 0},
     {-8082, 1520, 2.61f, 0},
     {-8080, 1518, 2.61f, 0},
-
     //Qiraj Tank
     {-8081, 1514, 2.61f, 0},
     {-8081, 1520, 2.61f, 0},
@@ -437,7 +428,6 @@ static Location SpawnLocation[]=
     {-8081, 1512, 2.61f, 0},
     {-8082, 1520, 2.61f, 0},
     {-8081, 1528, 2.61f, 0},
-
     //Anubisath Conqueror
     {-8082, 1513, 2.61f, 3.141592f},
     {-8082, 1520, 2.61f, 3.141592f},
@@ -479,7 +469,6 @@ static SpawnSpells SpawnCast[]=//
 struct npc_anachronos_the_ancientAI : public ScriptedAI
 {
     npc_anachronos_the_ancientAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 AnimationTimer;
     uint8 AnimationCount;
 
@@ -807,7 +796,6 @@ struct npc_anachronos_the_ancientAI : public ScriptedAI
 struct mob_qiraj_war_spawnAI : public ScriptedAI
 {
     mob_qiraj_war_spawnAI(Creature* c) : ScriptedAI(c) {}
-
     uint64 MobGUID;
     uint64 PlayerGUID;
     uint32 SpellTimer1, SpellTimer2, SpellTimer3, SpellTimer4;
@@ -910,7 +898,6 @@ struct mob_qiraj_war_spawnAI : public ScriptedAI
 struct npc_anachronos_quest_triggerAI : public ScriptedAI
 {
     npc_anachronos_quest_triggerAI(Creature* c) : ScriptedAI(c) {}
-
     uint64 PlayerGUID;
 
     uint32 WaveTimer;

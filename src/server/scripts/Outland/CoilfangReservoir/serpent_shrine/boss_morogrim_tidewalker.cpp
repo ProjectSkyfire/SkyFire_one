@@ -310,7 +310,6 @@ struct boss_morogrim_tidewalkerAI : public ScriptedAI
 struct mob_water_globuleAI : public ScriptedAI
 {
     mob_water_globuleAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Check_Timer;
 
     void Reset()
@@ -323,7 +322,6 @@ struct mob_water_globuleAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void MoveInLineOfSight(Unit *who)
     {
         if (!who || me->getVictim())

@@ -221,13 +221,11 @@ class Aura
         int32 GetModifierValue() {return m_modifier.m_amount * m_stackAmount;}
         int32 GetMiscValue() {return m_spellProto->EffectMiscValue[m_effIndex];}
         int32 GetMiscBValue() {return m_spellProto->EffectMiscValueB[m_effIndex];}
-
         SpellEntry const* GetSpellProto() const { return m_spellProto; }
         uint32 GetId() const{ return m_spellProto->Id; }
         uint64 GetCastItemGUID() const { return m_castItemGuid; }
         uint32 GetEffIndex() const{ return m_effIndex; }
         int32 GetBasePoints() const { return m_currentBasePoints; }
-
         int32 GetAuraMaxDuration() const { return m_maxduration; }
         void SetAuraMaxDuration(int32 duration) { m_maxduration = duration; }
         int32 GetAuraDuration() const { return m_duration; }
@@ -240,13 +238,11 @@ class Aura
                 m_permanent=false;
         }
         time_t GetAuraApplyTime() { return m_applyTime; }
-
         bool IsExpired() const { return !GetAuraDuration() && !(IsPermanent() || IsPassive()); }
         void UpdateAuraDuration();
         void SendAuraDurationForCaster(Player* caster);
         void UpdateSlotCounterAndDuration();
         uint32 GetTickNumber() const { return m_tickNumber; }
-
         uint64 const& GetCasterGUID() const { return m_caster_guid; }
         Unit* GetCaster() const;
         Unit* GetTarget() const { return m_target; }
@@ -274,7 +270,6 @@ class Aura
         bool IsPositive() { return m_positive; }
         void SetNegative() { m_positive = false; }
         void SetPositive() { m_positive = true; }
-
         bool IsPermanent() const { return m_permanent; }
         bool IsAreaAura() const { return m_isAreaAura; }
         bool IsPeriodic() const { return m_isPeriodic; }
@@ -298,10 +293,8 @@ class Aura
         bool IsUpdated() { return m_updated; }
         void SetUpdated(bool val) { m_updated = val; }
         void SetRemoveMode(AuraRemoveMode mode) { m_removeMode = mode; }
-
         int32 m_procCharges;
         void SetAuraProcCharges(int32 charges) { m_procCharges = charges; }
-
         Unit* GetTriggerTarget() const;
 
         // add/remove SPELL_AURA_MOD_SHAPESHIFT (36) linked auras
@@ -310,13 +303,11 @@ class Aura
         // Allow Apply Aura Handler to modify and access m_AuraDRGroup
         void setDiminishGroup(DiminishingGroup group) { m_AuraDRGroup = group; }
         DiminishingGroup getDiminishGroup() const { return m_AuraDRGroup; }
-
         void PeriodicTick();
         void PeriodicDummyTick();
 
         int32 GetStackAmount() {return m_stackAmount;}
         void SetStackAmount(int32 amount) {m_stackAmount=amount;}
-
         // Single cast aura helpers
         void UnregisterSingleCastAura();
         bool IsSingleTarget() const {return m_isSingleTargetAura;}

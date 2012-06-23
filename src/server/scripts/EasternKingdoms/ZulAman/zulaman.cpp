@@ -50,9 +50,7 @@ struct npc_forest_frogAI : public ScriptedAI
     ScriptedInstance *instance;
 
     void Reset() {}
-
     void EnterCombat(Unit * /*who*/) {}
-
     void DoSpawnRandom()
     {
         if (instance)
@@ -107,7 +105,6 @@ CreatureAI* GetAI_npc_forest_frog(Creature* creature)
 
 static uint32 HostageEntry[] = {23790, 23999, 24001, 24024};
 static uint32 ChestEntry[] = {186648, 187021, 186672, 186667};
-
 struct npc_zulaman_hostageAI : public ScriptedAI
 {
     npc_zulaman_hostageAI(Creature *c) : ScriptedAI(c) {IsLoot = false;}

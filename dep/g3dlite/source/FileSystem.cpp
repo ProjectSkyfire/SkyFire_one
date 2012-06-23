@@ -57,7 +57,6 @@ void FileSystem::cleanup() {
 }
 
 FileSystem::FileSystem() : m_cacheLifetime(10) {}
-
 /////////////////////////////////////////////////////////////
 
 bool FileSystem::Dir::contains(const std::string& f) const {

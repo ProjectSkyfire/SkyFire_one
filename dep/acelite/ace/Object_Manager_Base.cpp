@@ -74,7 +74,6 @@ ACE_OS_Object_Manager *ACE_OS_Object_Manager::instance_ = 0;
 
 void *ACE_OS_Object_Manager::preallocated_object[
   ACE_OS_Object_Manager::ACE_OS_PREALLOCATED_OBJECTS] = { 0 };
-
 ACE_OS_Object_Manager::ACE_OS_Object_Manager (void)
   : default_mask_ (0)
   , thread_hook_ (0)

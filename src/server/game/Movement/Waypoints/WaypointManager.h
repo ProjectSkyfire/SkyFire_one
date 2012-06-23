@@ -46,7 +46,6 @@ class WaypointStore
     public:
         // Null Mutex is OK because WaypointMgr is initialized in the World thread before World is initialized
         static WaypointStore* instance() { return ACE_Singleton<WaypointStore, ACE_Null_Mutex>::instance(); }
-
         ~WaypointStore() { Free(); }
         void UpdatePath(uint32 id);
         void Load();

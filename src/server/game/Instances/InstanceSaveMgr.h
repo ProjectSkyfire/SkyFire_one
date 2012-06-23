@@ -58,13 +58,11 @@ class InstanceSave
 
         uint8 GetPlayerCount() { return m_playerList.size(); }
         uint8 GetGroupCount() { return m_groupList.size(); }
-
         /* A map corresponding to the InstanceId/MapId does not always exist.
         InstanceSave objects may be created on player logon but the maps are
         created and loaded only when a player actually enters the instance. */
         uint32 GetInstanceId() { return m_instanceid; }
         uint32 GetMapId() { return m_mapid; }
-
         /* Saved when the instance is generated for the first time */
         void SaveToDB();
         /* When the instance is being reset (permanently deleted) */
@@ -86,17 +84,14 @@ class InstanceSave
         /* all groups bound to the instance */
         void AddGroup(Group *group) { m_groupList.push_back(group); }
         bool RemoveGroup(Group *group) { m_groupList.remove(group); return UnloadIfEmpty(); }
-
         /* instances cannot be reset (except at the global reset time)
            if there are players permanently bound to it
            this is cached for the case when those players are offline */
         bool CanReset() { return m_canReset; }
         void SetCanReset(bool canReset) { m_canReset = canReset; }
-
         /* currently it is possible to omit this information from this structure
            but that would depend on a lot of things that can easily change in future */
         uint8 GetDifficulty() { return m_difficulty; }
-
         typedef std::list<Player*> PlayerListType;
         typedef std::list<Group*> GroupListType;
     private:

@@ -60,7 +60,6 @@ enum Creatures
 struct mob_av_marshal_or_warmasterAI : public ScriptedAI
 {
     mob_av_marshal_or_warmasterAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 uiChargeTimer;
     uint32 uiCleaveTimer;
     uint32 uiDemoralizingShoutTimer;

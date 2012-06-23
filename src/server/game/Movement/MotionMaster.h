@@ -90,7 +90,6 @@ class MotionMaster //: private std::stack<MovementGenerator *>
         bool empty() const { return i_top < 0; }
         void pop() { Impl[i_top] = NULL; --i_top; }
         void push(_Ty _Val) { ++i_top; Impl[i_top] = _Val; }
-
         bool needInitTop() const { return needInit[i_top]; }
         void InitTop();
     public:
@@ -111,7 +110,6 @@ class MotionMaster //: private std::stack<MovementGenerator *>
         int size() const { return i_top + 1; }
         _Ty top() const { return Impl[i_top]; }
         _Ty GetMotionSlot(int slot) const { return Impl[slot]; }
-
         void DirectDelete(_Ty curr);
         void DelayedDelete(_Ty curr);
 

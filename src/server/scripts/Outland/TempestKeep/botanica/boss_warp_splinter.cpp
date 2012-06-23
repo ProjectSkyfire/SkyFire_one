@@ -49,9 +49,7 @@ struct mob_treantAI  : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void MoveInLineOfSight(Unit*) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

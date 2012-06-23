@@ -99,7 +99,6 @@ CreatureAI* GetAI_boss_hungarfen(Creature* creature)
 struct mob_underbog_mushroomAI : public ScriptedAI
 {
     mob_underbog_mushroomAI(Creature *c) : ScriptedAI(c) {}
-
     bool Stop;
     uint32 Grow_Timer;
     uint32 Shrink_Timer;
@@ -115,11 +114,8 @@ struct mob_underbog_mushroomAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit *who) { return; }
-
     void AttackStart(Unit* who) { return; }
-
     void EnterCombat(Unit* who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (Stop)

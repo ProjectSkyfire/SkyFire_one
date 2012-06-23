@@ -46,7 +46,6 @@ EndScriptData */
 struct boss_jindoAI : public ScriptedAI
 {
     boss_jindoAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 BrainWashTotem_Timer;
     uint32 HealingWard_Timer;
     uint32 Hex_Timer;
@@ -205,7 +204,6 @@ struct mob_healing_wardAI : public ScriptedAI
 struct mob_shade_of_jindoAI : public ScriptedAI
 {
     mob_shade_of_jindoAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ShadowShock_Timer;
 
     void Reset()
@@ -215,7 +213,6 @@ struct mob_shade_of_jindoAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/){}
-
     void UpdateAI (const uint32 diff)
     {
         //ShadowShock_Timer

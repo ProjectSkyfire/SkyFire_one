@@ -38,7 +38,6 @@ EndScriptData */
 struct boss_highlordomokkAI : public ScriptedAI
 {
     boss_highlordomokkAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 WarStomp_Timer;
     uint32 Cleave_Timer;
     uint32 Strike_Timer;

@@ -34,7 +34,6 @@ EndScriptData */
 struct boss_shadowvoshAI : public ScriptedAI
 {
     boss_shadowvoshAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 CurseOfBlood_Timer;
     uint32 Hex_Timer;
     uint32 Cleave_Timer;
@@ -49,7 +48,6 @@ struct boss_shadowvoshAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/){}
-
     void UpdateAI(const uint32 diff)
     {
         //Return since we have no target

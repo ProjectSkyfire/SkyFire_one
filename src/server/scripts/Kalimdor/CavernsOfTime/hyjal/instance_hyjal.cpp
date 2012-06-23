@@ -42,7 +42,6 @@ EndScriptData */
 struct instance_mount_hyjal : public ScriptedInstance
 {
     instance_mount_hyjal(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     uint64 RageWinterchill;
     uint64 Anetheron;
     uint64 Kazrogal;

@@ -63,7 +63,6 @@ void BattleGroundAB::Update(time_t diff)
     if (GetStatus() == STATUS_IN_PROGRESS)
     {
         int team_points[BG_TEAMS_COUNT] = { 0, 0 };
-
         for (int node = 0; node < BG_AB_NODES_MAX; ++node)
         {
             // 3 sec delay to spawn new banner instead previous despawned one
@@ -302,7 +301,6 @@ int32 BattleGroundAB::_GetNodeNameId(uint8 node)
 void BattleGroundAB::FillInitialWorldStates(WorldPacket& data)
 {
     const uint8 plusArray[] = {0, 2, 3, 0, 1};
-
     // Node icons
     for (uint8 node = 0; node < BG_AB_NODES_MAX; ++node)
         data << uint32(BG_AB_OP_NODEICONS[node]) << uint32((m_Nodes[node] == 0)?1:0);
@@ -337,7 +335,6 @@ void BattleGroundAB::_SendNodeUpdate(uint8 node)
 {
     // Send node owner state update to refresh map icons on client
     const uint8 plusArray[] = {0, 2, 3, 0, 1};
-
     if (m_prevNodes[node])
         UpdateWorldState(BG_AB_OP_NODESTATES[node] + plusArray[m_prevNodes[node]], 0);
     else

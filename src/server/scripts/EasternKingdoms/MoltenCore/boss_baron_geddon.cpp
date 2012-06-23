@@ -37,7 +37,6 @@ EndScriptData */
 struct boss_baron_geddonAI : public ScriptedAI
 {
     boss_baron_geddonAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Inferno_Timer;
     uint32 IgniteMana_Timer;
     uint32 LivingBomb_Timer;

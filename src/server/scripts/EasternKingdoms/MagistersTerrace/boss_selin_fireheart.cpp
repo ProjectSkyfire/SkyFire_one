@@ -317,13 +317,11 @@ CreatureAI* GetAI_boss_selin_fireheart(Creature* creature)
 struct mob_fel_crystalAI : public ScriptedAI
 {
     mob_fel_crystalAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset() {}
     void EnterCombat(Unit* /*who*/) {}
     void AttackStart(Unit* /*who*/) {}
     void MoveInLineOfSight(Unit* /*who*/) {}
     void UpdateAI(const uint32 /*diff*/) {}
-
     void JustDied(Unit* /*killer*/)
     {
         if (ScriptedInstance* instance = me->GetInstanceScript())

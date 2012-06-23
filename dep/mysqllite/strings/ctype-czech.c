@@ -374,10 +374,8 @@ static my_bool my_like_range_czech(CHARSET_INFO *cs __attribute__((unused)),
     { break; }
     if (*ptr == w_many)		/* '%' in SQL */
     { break; }
-
     if (*ptr == escape && ptr+1 != end)
     { ptr++; }			/* Skip escape */
-
     value = CZ_SORT_TABLE[0][(int) (uchar) *ptr];
 
     if (value == 0)			/* Ignore in the first pass */
@@ -386,7 +384,6 @@ static my_bool my_like_range_czech(CHARSET_INFO *cs __attribute__((unused)),
     { break; }
     if (value == 255)		/* Double char too compicated */
     { break; }
-
     *min_str++= *max_str++ = *ptr;
   }
 

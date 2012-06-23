@@ -128,16 +128,12 @@ class ObjectGuid
         ObjectGuid() : m_guid(0) {}
         ObjectGuid(uint64 const& guid) : m_guid(guid) {}    // NOTE: must be explicit in future for more strict control type conversions
         ObjectGuid(HighGuid hi, uint32 entry, uint32 counter) : m_guid(uint64(counter) | (uint64(entry) << 24) | (uint64(hi) << 48)) {}
-
     public:                                                 // modifiers
         PackedGuidReader ReadAsPacked() { return PackedGuidReader(*this); }
-
         void Set(uint64 const& guid) { m_guid = guid; }
         void Clear() { m_guid = 0; }
-
         // Possible removed in future for more strict control type conversions
         void operator= (uint64 const& guid) { m_guid = guid; }
-
         PackedGuid WriteAsPacked() const;
     public:                                                 // accessors
         uint64 const& GetRawValue() const { return m_guid; }
@@ -162,7 +158,6 @@ class ObjectGuid
         bool IsCorpse()        const { return GetHigh() == HIGHGUID_CORPSE; }
         bool IsTransport()     const { return GetHigh() == HIGHGUID_TRANSPORT; }
         bool IsMOTransport()   const { return GetHigh() == HIGHGUID_MO_TRANSPORT; }
-
         TypeID GetTypeId()
         {
             switch (GetHigh())
@@ -216,14 +211,11 @@ class PackedGuid
         explicit PackedGuid() { m_packedGuid.appendPackGUID(0); }
         explicit PackedGuid(uint64 const& guid) { m_packedGuid.appendPackGUID(guid); }
         explicit PackedGuid(ObjectGuid const& guid) { m_packedGuid.appendPackGUID(guid.GetRawValue()); }
-
     public:                                                 // modifiers
         void Set(uint64 const& guid) { m_packedGuid.wpos(0); m_packedGuid.appendPackGUID(guid); }
         void Set(ObjectGuid const& guid) { m_packedGuid.wpos(0); m_packedGuid.appendPackGUID(guid.GetRawValue()); }
-
     public:                                                 // accessors
         size_t size() const { return m_packedGuid.size(); }
-
     private:                                                // fields
         ByteBuffer m_packedGuid;
 };
@@ -235,6 +227,5 @@ ByteBuffer& operator<< (ByteBuffer& buf, PackedGuid const& guid);
 ByteBuffer& operator>> (ByteBuffer& buf, PackedGuidReader const& guid);
 
 inline PackedGuid ObjectGuid::WriteAsPacked() const { return PackedGuid(*this); }
-
 #endif
 

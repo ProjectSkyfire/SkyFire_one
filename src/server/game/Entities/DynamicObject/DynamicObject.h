@@ -58,7 +58,6 @@ class DynamicObject : public WorldObject, public GridObject<DynamicObject>
         void Yell(int32 textId, uint32 language, uint64 TargetGuid) { MonsterYell(textId, language, TargetGuid); }
         void TextEmote(int32 textId, uint64 TargetGuid) { MonsterTextEmote(textId, TargetGuid); }
         void Whisper(int32 textId, uint64 receiver) { MonsterWhisper(textId, receiver); }
-
     protected:
         uint64 m_casterGuid;
         uint32 m_spellId;

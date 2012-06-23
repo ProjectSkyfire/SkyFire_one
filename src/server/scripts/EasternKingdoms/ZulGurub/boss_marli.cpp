@@ -252,7 +252,6 @@ struct boss_marliAI : public ScriptedAI
 struct mob_spawn_of_marliAI : public ScriptedAI
 {
     mob_spawn_of_marliAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Grow_Timer;
     float Growth_Level;
 

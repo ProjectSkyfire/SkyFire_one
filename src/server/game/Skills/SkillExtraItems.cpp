@@ -41,7 +41,6 @@ struct SkillExtraItemEntry
 
     SkillExtraItemEntry()
         : requiredSpecialization(0), additionalCreateChance(0.0f), additionalMaxNum(0) {}
-
     SkillExtraItemEntry(uint32 rS, float aCC, uint8 aMN)
         : requiredSpecialization(rS), additionalCreateChance(aCC), additionalMaxNum(aMN) {}
 };

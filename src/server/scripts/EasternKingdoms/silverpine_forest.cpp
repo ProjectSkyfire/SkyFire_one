@@ -44,7 +44,6 @@ EndContentData */
 struct npc_astor_hadrenAI : public ScriptedAI
 {
     npc_astor_hadrenAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         me->setFaction(68);
@@ -123,7 +122,6 @@ enum eErland
 struct npc_deathstalker_erlandAI : public npc_escortAI
 {
     npc_deathstalker_erlandAI(Creature *c) : npc_escortAI(c) {}
-
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -156,7 +154,6 @@ struct npc_deathstalker_erlandAI : public npc_escortAI
     }
 
     void Reset() {}
-
     void EnterCombat(Unit* who)
     {
         DoScriptText(RAND(SAY_AGGRO_1, SAY_AGGRO_2, SAY_AGGRO_3), me, who);
@@ -230,7 +227,6 @@ struct pyrewood_ambushAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/){}
-
     void JustSummoned(Creature *pSummoned)
     {
         Summons.Summon(pSummoned);

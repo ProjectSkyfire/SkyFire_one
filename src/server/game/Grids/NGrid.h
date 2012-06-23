@@ -45,7 +45,6 @@ public:
     void setUnloadReferenceLock( bool on ) { i_unloadReferenceLock = on; }
     void incUnloadActiveLock() { ++i_unloadActiveLockCount; }
     void decUnloadActiveLock() { if (i_unloadActiveLockCount) --i_unloadActiveLockCount; }
-
     void setTimer(const TimeTracker& pTimer) { i_timer = pTimer; }
     void ResetTimeTracker(time_t interval) { i_timer.Reset(interval); }
     void UpdateTimeTracker(time_t diff) { i_timer.Update(diff); }
@@ -106,14 +105,12 @@ class NGrid
         void SetGridState(grid_state_t s) { i_cellstate = s; }
         int32 getX() const { return i_x; }
         int32 getY() const { return i_y; }
-
         void link(GridRefManager<NGrid<N, ACTIVE_OBJECT, WORLD_OBJECT_TYPES, GRID_OBJECT_TYPES> >* pTo)
         {
             i_Reference.link(pTo, this);
         }
         bool isGridObjectDataLoaded() const { return i_GridObjectDataLoaded; }
         void setGridObjectDataLoaded(bool pLoaded) { i_GridObjectDataLoaded = pLoaded; }
-
         GridInfo* getGridInfoRef() { return &i_GridInfo; }
         const TimeTracker& getTimeTracker() const { return i_GridInfo.getTimeTracker(); }
         bool getUnloadLock() const { return i_GridInfo.getUnloadLock(); }
@@ -123,7 +120,6 @@ class NGrid
         void decUnloadActiveLock() { i_GridInfo.decUnloadActiveLock(); }
         void ResetTimeTracker(time_t interval) { i_GridInfo.ResetTimeTracker(interval); }
         void UpdateTimeTracker(time_t diff) { i_GridInfo.UpdateTimeTracker(diff); }
-
         template<class SPECIFIC_OBJECT> void AddWorldObject(const uint32 x, const uint32 y, SPECIFIC_OBJECT *obj)
         {
             getGridType(x, y).AddWorldObject(obj);

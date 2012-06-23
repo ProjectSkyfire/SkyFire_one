@@ -37,7 +37,6 @@ EndScriptData */
 
 #define RIFT_BOSS               1
 inline uint32 RandRiftBoss() { return rand()%2 ? C_RKEEP : C_RLORD; }
-
 float PortalLocation[4][4]=
 {
     {-2041.06f, 7042.08f, 29.99f, 1.30f},
@@ -65,7 +64,6 @@ static Wave RiftWaves[]=
 struct instance_dark_portal : public ScriptedInstance
 {
     instance_dark_portal(Map *map) : ScriptedInstance(map) {Initialize();};
-
     uint32 Encounter[ENCOUNTERS];
 
     uint32 mRiftPortalCount;

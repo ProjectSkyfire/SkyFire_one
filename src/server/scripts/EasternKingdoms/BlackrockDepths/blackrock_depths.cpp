@@ -363,7 +363,6 @@ enum PhalanxSpells
 struct mob_phalanxAI : public ScriptedAI
 {
     mob_phalanxAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ThunderClap_Timer;
     uint32 FireballVolley_Timer;
     uint32 MightyBlow_Timer;
@@ -577,7 +576,6 @@ enum DughalQuests
 struct npc_dughal_stormwingAI : public npc_escortAI
 {
     npc_dughal_stormwingAI(Creature *c) : npc_escortAI(c) {}
-
     void WaypointReached(uint32 i)
     {
     switch (i)
@@ -595,7 +593,6 @@ struct npc_dughal_stormwingAI : public npc_escortAI
 
     void EnterCombat(Unit* who) {}
     void Reset() {}
-
     void JustDied(Unit* killer)
     {
         if (IsBeingEscorted && killer == me)
@@ -737,7 +734,6 @@ struct npc_marshal_windsorAI : public npc_escortAI
         }
 
     void Reset() {}
-
     void JustDied(Unit *slayer)
     {
         instance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_FAILED);
@@ -931,7 +927,6 @@ struct npc_marshal_reginald_windsorAI : public npc_escortAI
         }
         }
     void Reset() {}
-
     void JustDied(Unit *slayer)
     {
         instance->SetData(DATA_QUEST_JAIL_BREAK, ENCOUNTER_STATE_FAILED);
@@ -1036,10 +1031,8 @@ CreatureAI* GetAI_npc_marshal_reginald_windsor(Creature* creature)
 struct npc_tobias_seecherAI : public npc_escortAI
 {
     npc_tobias_seecherAI(Creature *c) :npc_escortAI(c) {}
-
     void EnterCombat(Unit* who) {}
     void Reset() {}
-
     void JustDied(Unit* killer)
     {
         if (IsBeingEscorted && killer == me)

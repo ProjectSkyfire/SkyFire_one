@@ -65,7 +65,6 @@ bool GOHello_go_bridge_console(Player* /*player*/, GameObject* pGo)
 struct instance_serpentshrine_cavern : public ScriptedInstance
 {
     instance_serpentshrine_cavern(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     uint64 LurkerBelow;
     uint64 Sharkkis;
     uint64 Tidalvess;

@@ -442,7 +442,6 @@ struct mob_fel_orc_convertAI : public ScriptedAI
 struct mob_lesser_shadow_fissureAI : public ScriptedAI
 {
     mob_lesser_shadow_fissureAI(Creature *c) : ScriptedAI(c) {}
-
     bool Start;
     uint32 Stop_Timer;
 
@@ -453,11 +452,8 @@ struct mob_lesser_shadow_fissureAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* who) { }
-
     void MoveInLineOfSight(Unit *who) { return; }
-
     void AttackStart(Unit* who) { return; }
-
     void UpdateAI(const uint32 diff)
     {
         if (!Start)

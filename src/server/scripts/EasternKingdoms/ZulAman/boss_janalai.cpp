@@ -450,9 +450,7 @@ CreatureAI* GetAI_boss_janalaiAI(Creature* creature)
 struct mob_janalai_firebombAI : public ScriptedAI
 {
     mob_janalai_firebombAI(Creature *c) : ScriptedAI(c){}
-
     void Reset() {}
-
     void SpellHit(Unit * /*caster*/, const SpellEntry *spell)
     {
         if (spell->Id == SPELL_FIRE_BOMB_THROW)
@@ -460,11 +458,8 @@ struct mob_janalai_firebombAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
-
     void AttackStart(Unit* /*who*/) {}
-
     void MoveInLineOfSight(Unit* /*who*/) {}
-
     void UpdateAI(const uint32 /*diff*/) {}
 };
 
@@ -614,7 +609,6 @@ struct mob_hatchlingAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {/*DoZoneInCombat();*/}
-
     void UpdateAI(const uint32 diff)
     {
         if (!instance || !(instance->GetData(DATA_JANALAIEVENT) == IN_PROGRESS))
@@ -649,7 +643,6 @@ struct mob_eggAI : public ScriptedAI
     void AttackStart(Unit* /*who*/) {}
     void MoveInLineOfSight(Unit* /*who*/) {}
     void UpdateAI(const uint32 /*diff*/) {}
-
     void SpellHit(Unit * /*caster*/, const SpellEntry *spell)
     {
         if (spell->Id == SPELL_HATCH_EGG)

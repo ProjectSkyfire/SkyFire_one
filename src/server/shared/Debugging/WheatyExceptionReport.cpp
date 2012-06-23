@@ -552,7 +552,6 @@ LPTSTR WheatyExceptionReport::GetExceptionString(DWORD dwCode)
     // from NTDLL.DLL's message table.
 
     static TCHAR szBuffer[512] = { 0 };
-
     FormatMessage(FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE,
         GetModuleHandle(_T("NTDLL.DLL")),
         dwCode, 0, szBuffer, sizeof(szBuffer), 0);

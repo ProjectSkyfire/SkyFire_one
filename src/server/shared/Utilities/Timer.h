@@ -192,7 +192,6 @@ struct PeriodicTimer
         void TUpdate(int32 diff) { i_expireTime -= diff; }
         bool TPassed() const { return i_expireTime <= 0; }
         void TReset(int32 diff, int32 period)  { i_expireTime += period > diff ? period : diff; }
-
     private:
 
         int32 i_period;

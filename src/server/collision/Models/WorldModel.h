@@ -40,7 +40,6 @@ namespace VMAP
         public:
             MeshTriangle(){};
             MeshTriangle(uint32 na, uint32 nb, uint32 nc): idx0(na), idx1(nb), idx2(nc) {};
-
             uint32 idx0;
             uint32 idx1;
             uint32 idx2;
@@ -79,7 +78,6 @@ namespace VMAP
             GroupModel(uint32 mogpFlags, uint32 groupWMOID, const AABox &bound):
                         iBound(bound), iMogpFlags(mogpFlags), iGroupWMOID(groupWMOID), iLiquid(0) {}
             ~GroupModel() { delete iLiquid; }
-
             // pass mesh data to object and create BIH. Passed vectors get get swapped with old geometry.
             void setMeshData(std::vector<Vector3> &vert, std::vector<MeshTriangle> &tri);
             void setLiquidData(WmoLiquid *liquid) { iLiquid = liquid; }
@@ -106,7 +104,6 @@ namespace VMAP
     {
         public:
             WorldModel(): RootWMOID(0) {}
-
             // pass group models to WorldModel and create BIH. Passed vector is swapped with old geometry!
             void setGroupModels(std::vector<GroupModel> &models);
             void setRootWmoID(uint32 id) { RootWMOID = id; }

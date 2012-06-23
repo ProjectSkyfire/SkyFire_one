@@ -224,7 +224,6 @@ struct mob_steamrigger_mechanicAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
-
     void UpdateAI(const uint32 diff)
     {
         if (Repair_Timer <= diff)

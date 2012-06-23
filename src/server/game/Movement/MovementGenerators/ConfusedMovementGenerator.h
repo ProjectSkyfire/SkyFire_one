@@ -33,7 +33,6 @@ class ConfusedMovementGenerator
 {
     public:
         explicit ConfusedMovementGenerator() : i_nextMoveTime(0) {}
-
         void Initialize(T &);
         void Finalize(T &);
         void Reset(T &);

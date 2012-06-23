@@ -44,7 +44,6 @@ EndScriptData */
 struct boss_patchwerkAI : public ScriptedAI
 {
     boss_patchwerkAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 HatefullStrike_Timer;
     uint32 Enrage_Timer;
     uint32 Slimebolt_Timer;

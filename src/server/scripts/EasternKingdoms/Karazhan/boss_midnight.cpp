@@ -51,7 +51,6 @@ EndScriptData */
 struct boss_midnightAI : public ScriptedAI
 {
     boss_midnightAI(Creature *c) : ScriptedAI(c) {}
-
     uint64 Attumen;
     uint8 Phase;
     uint32 Mount_Timer;

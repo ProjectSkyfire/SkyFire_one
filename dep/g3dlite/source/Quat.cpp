@@ -43,7 +43,6 @@ Quat::Quat(const class Any& a) {
 
 Quat::Quat(const Matrix3& rot) {
     static const int plus1mod3[] = {1, 2, 0};
-
     // Find the index of the largest diagonal component
 	// These ? operations hopefully compile to conditional
 	// move instructions instead of branches.
@@ -248,7 +247,6 @@ Vector2 Quat::xw() const  { return Vector2       (x, w); }
 Vector2 Quat::yw() const  { return Vector2       (y, w); }
 Vector2 Quat::zw() const  { return Vector2       (z, w); }
 Vector2 Quat::ww() const  { return Vector2       (w, w); }
-
 // 3-char swizzles
 
 Vector3 Quat::xxx() const  { return Vector3       (x, x, x); }
@@ -315,7 +313,6 @@ Vector3 Quat::xww() const  { return Vector3       (x, w, w); }
 Vector3 Quat::yww() const  { return Vector3       (y, w, w); }
 Vector3 Quat::zww() const  { return Vector3       (z, w, w); }
 Vector3 Quat::www() const  { return Vector3       (w, w, w); }
-
 // 4-char swizzles
 
 Vector4 Quat::xxxx() const  { return Vector4       (x, x, x, x); }

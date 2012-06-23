@@ -206,7 +206,6 @@ AuthSocket::AuthSocket(RealmSocket& socket) : socket_(socket)
 
 // Close patch file descriptor before leaving
 AuthSocket::~AuthSocket(void) {}
-
 // Accept the connection and set the s random value for SRP6
 void AuthSocket::OnAccept(void)
 {
@@ -958,7 +957,6 @@ PatcherRunnable::PatcherRunnable(class AuthSocket* as)
 
 // Send content of patch file to the client
 void PatcherRunnable::run() {}
-
 // Preload MD5 hashes of existing patch files on server
 #ifndef _WIN32
 #include <dirent.h>

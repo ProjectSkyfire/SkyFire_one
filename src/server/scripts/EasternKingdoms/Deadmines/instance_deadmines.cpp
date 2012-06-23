@@ -48,7 +48,6 @@ enum Misc
 struct instance_deadmines : public ScriptedInstance
 {
     instance_deadmines(Map* pMap) : ScriptedInstance(pMap) { Initialize(); };
-
     uint64 FactoryDoorGUID;
     uint64 MastRoomDoorGUID;
     uint64 FoundryDoorGUID;

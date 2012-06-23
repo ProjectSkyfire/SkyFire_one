@@ -35,7 +35,6 @@ enum Spells
 struct boss_ambassador_flamelashAI : public ScriptedAI
 {
     boss_ambassador_flamelashAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 FireBlast_Timer;
     uint32 Spirit_Timer;
 
@@ -46,7 +45,6 @@ struct boss_ambassador_flamelashAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void SummonSpirits(Unit* victim)
     {
         if (Creature *Spirit = DoSpawnCreature(9178, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))

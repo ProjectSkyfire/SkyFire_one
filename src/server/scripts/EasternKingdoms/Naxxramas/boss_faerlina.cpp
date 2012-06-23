@@ -45,7 +45,6 @@ EndScriptData */
 struct boss_faerlinaAI : public ScriptedAI
 {
     boss_faerlinaAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 PoisonBoltVolley_Timer;
     uint32 RainOfFire_Timer;
     uint32 Enrage_Timer;

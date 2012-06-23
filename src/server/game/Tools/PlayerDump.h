@@ -71,7 +71,6 @@ class PlayerDumpWriter : public PlayerDump
 {
     public:
         PlayerDumpWriter() {}
-
         std::string GetDump(uint32 guid);
         DumpReturn WriteDump(const std::string& file, uint32 guid);
     private:
@@ -91,7 +90,6 @@ class PlayerDumpReader : public PlayerDump
 {
     public:
         PlayerDumpReader() {}
-
         DumpReturn LoadDump(const std::string& file, uint32 account, std::string name, uint32 guid);
 };
 

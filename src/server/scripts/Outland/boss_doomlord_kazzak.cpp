@@ -55,7 +55,6 @@ enum eKazzak
 struct boss_doomlordkazzakAI : public ScriptedAI
 {
     boss_doomlordkazzakAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ShadowVolley_Timer;
     uint32 Cleave_Timer;
     uint32 ThunderClap_Timer;

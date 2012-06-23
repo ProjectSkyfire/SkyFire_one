@@ -53,7 +53,6 @@ enum WaterElementalSpells
 struct mob_water_elementalAI : public ScriptedAI
 {
     mob_water_elementalAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 uiWaterBoltTimer;
     uint64 uiBalindaGUID;
     uint32 uiResetTimer;
@@ -91,7 +90,6 @@ struct mob_water_elementalAI : public ScriptedAI
 struct boss_balindaAI : public ScriptedAI
 {
     boss_balindaAI(Creature *c) : ScriptedAI(c), Summons(me) {}
-
     uint32 uiArcaneExplosionTimer;
     uint32 uiConeOfColdTimer;
     uint32 uiFireBoltTimer;

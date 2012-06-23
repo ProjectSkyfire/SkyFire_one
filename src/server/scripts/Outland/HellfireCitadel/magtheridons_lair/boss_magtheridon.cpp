@@ -135,7 +135,6 @@ struct mob_abyssalAI : public ScriptedAI
     void EnterCombat(Unit*) {DoZoneInCombat();}
     void AttackStart(Unit *who) {if (!trigger) ScriptedAI::AttackStart(who);}
     void MoveInLineOfSight(Unit *who) {if (!trigger) ScriptedAI::MoveInLineOfSight(who);}
-
     void UpdateAI(const uint32 diff)
     {
         if (trigger)
@@ -294,7 +293,6 @@ struct boss_magtheridonAI : public ScriptedAI
     }
 
     void MoveInLineOfSight(Unit*) {}
-
     void AttackStart(Unit *who)
     {
         if (!me->hasUnitState(UNIT_STAT_STUNNED))
@@ -453,9 +451,7 @@ struct mob_hellfire_channelerAI : public ScriptedAI
     }
 
     void JustSummoned(Creature *summon) {summon->AI()->AttackStart(me->getVictim());}
-
     void MoveInLineOfSight(Unit*) {}
-
     void DamageTaken(Unit*, uint32 &damage)
     {
         if (damage >= me->GetHealth())

@@ -172,7 +172,6 @@ Vector2 Vector2::xx() const  { return Vector2       (x, x); }
 Vector2 Vector2::yx() const  { return Vector2       (y, x); }
 Vector2 Vector2::xy() const  { return Vector2       (x, y); }
 Vector2 Vector2::yy() const  { return Vector2       (y, y); }
-
 // 3-char swizzles
 
 Vector3 Vector2::xxx() const  { return Vector3       (x, x, x); }
@@ -183,7 +182,6 @@ Vector3 Vector2::xxy() const  { return Vector3       (x, x, y); }
 Vector3 Vector2::yxy() const  { return Vector3       (y, x, y); }
 Vector3 Vector2::xyy() const  { return Vector3       (x, y, y); }
 Vector3 Vector2::yyy() const  { return Vector3       (y, y, y); }
-
 // 4-char swizzles
 
 Vector4 Vector2::xxxx() const  { return Vector4       (x, x, x, x); }

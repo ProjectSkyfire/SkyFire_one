@@ -236,7 +236,6 @@ static Speech Speeches[]=
     {SAY_KALECGOS_FATE,         DATA_KALECGOS_KJ,   2000},
     {SAY_ANVEENA_GOODBYE,       DATA_ANVEENA,       6000},
     {SAY_KJ_PHASE5,             DATA_KILJAEDEN,     5500},
-
     // use in End sequence?
     {SAY_KALECGOS_GOODBYE,      DATA_KALECGOS_KJ,   12000},
 };
@@ -977,7 +976,6 @@ CreatureAI* GetAI_mob_hand_of_the_deceiver(Creature* creature)
 struct mob_felfire_portalAI : public Scripted_NoMovementAI
 {
     mob_felfire_portalAI(Creature* c) : Scripted_NoMovementAI(c) {}
-
     uint32 uiSpawnFiendTimer;
 
     void Reset()
@@ -1015,7 +1013,6 @@ CreatureAI* GetAI_mob_felfire_portal(Creature* creature)
 struct mob_volatile_felfire_fiendAI : public ScriptedAI
 {
     mob_volatile_felfire_fiendAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 uiExplodeTimer;
 
     bool bLockedTarget;
@@ -1066,7 +1063,6 @@ CreatureAI* GetAI_mob_volatile_felfire_fiend(Creature* creature)
 struct mob_armageddonAI : public Scripted_NoMovementAI
 {
     mob_armageddonAI(Creature* c) : Scripted_NoMovementAI(c) {}
-
     uint8 spell;
     uint32 uiTimer;
 
@@ -1195,7 +1191,6 @@ CreatureAI* GetAI_mob_shield_orb(Creature* creature)
 struct mob_sinster_reflectionAI : public ScriptedAI
 {
     mob_sinster_reflectionAI(Creature* c) : ScriptedAI(c) {}
-
     uint8 victimClass;
     uint32 uiTimer[3];
 

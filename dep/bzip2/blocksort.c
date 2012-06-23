@@ -59,7 +59,6 @@ void fallbackSimpleSort ( UInt32* fmap,
 /*---------------------------------------------*/
 #define fswap(zz1, zz2) \
    { Int32 zztmp = zz1; zz1 = zz2; zz2 = zztmp; }
-
 #define fvswap(zzp1, zzp2, zzn)       \
 {                                     \
    Int32 yyp1 = (zzp1);               \
@@ -553,7 +552,6 @@ void mainSimpleSort ( UInt32* ptr,
 
 #define mswap(zz1, zz2) \
    { Int32 zztmp = zz1; zz1 = zz2; zz2 = zztmp; }
-
 #define mvswap(zzp1, zzp2, zzn)       \
 {                                     \
    Int32 yyp1 = (zzp1);               \
@@ -1064,7 +1062,6 @@ void BZ2_blockSort ( EState* s )
    for (i = 0; i < s->nblock; i++)
       if (ptr[i] == 0)
          { s->origPtr = i; break; };
-
    AssertH( s->origPtr != -1, 1003 );
 }
 

@@ -96,7 +96,6 @@ class ReactorRunnable : protected ACE_Task_Base
         }
 
         void Wait() { ACE_Task_Base::wait(); }
-
         long Connections()
         {
             return static_cast<long> (m_Connections.value());

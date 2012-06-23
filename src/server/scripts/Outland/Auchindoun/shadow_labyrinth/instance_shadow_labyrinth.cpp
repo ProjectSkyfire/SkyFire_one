@@ -43,7 +43,6 @@ EndScriptData */
 struct instance_shadow_labyrinth : public ScriptedInstance
 {
     instance_shadow_labyrinth(Map *map) : ScriptedInstance(map) {Initialize();};
-
     uint32 Encounter[ENCOUNTERS];
     std::string str_data;
 

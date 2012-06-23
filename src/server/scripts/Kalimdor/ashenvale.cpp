@@ -82,7 +82,6 @@ static float m_afSecondNagaCoord[3][3]=
 };
 
 static float m_fVorshaCoord[] = {3633.056885f, 1172.924072f, -5.388f};
-
 struct npc_muglashAI : public npc_escortAI
 {
     npc_muglashAI(Creature* creature) : npc_escortAI(creature)
@@ -269,7 +268,6 @@ enum
 struct npc_torekAI : public npc_escortAI
 {
     npc_torekAI(Creature *c) : npc_escortAI(c) {}
-
     uint32 Rend_Timer;
     uint32 Thunderclap_Timer;
     bool Completed;
@@ -315,7 +313,6 @@ struct npc_torekAI : public npc_escortAI
     }
 
     void EnterCombat(Unit* who) {}
-
     void JustSummoned(Creature* summoned)
     {
         summoned->AI()->AttackStart(me);
@@ -372,7 +369,6 @@ CreatureAI* GetAI_npc_torek(Creature* creature)
 struct npc_ruul_snowhoofAI : public npc_escortAI
 {
     npc_ruul_snowhoofAI(Creature *c) : npc_escortAI(c) {}
-
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -408,7 +404,6 @@ struct npc_ruul_snowhoofAI : public npc_escortAI
     }
 
     void EnterCombat(Unit* who) {}
-
     void Reset()
     {
         GameObject* Cage = me->FindNearestGameObject(GO_CAGE, 20);

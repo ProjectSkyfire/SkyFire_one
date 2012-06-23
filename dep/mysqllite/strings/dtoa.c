@@ -544,7 +544,6 @@ typedef int64 LLong;
 typedef uint64 ULLong;
 
 typedef union { double d; ULong L[2]; } U;
-
 #if defined(WORDS_BIGENDIAN) || (defined(__FLOAT_WORD_ORDER) &&        \
                                  (__FLOAT_WORD_ORDER == __BIG_ENDIAN))
 #define word0(x) (x)->L[0]
@@ -991,7 +990,6 @@ static Bigint *pow5mult(Bigint *b, int k, Stack_alloc *alloc)
   Bigint *b1, *p5, *p51;
   int i;
   static int p05[3]= { 5, 25, 125 };
-
   if ((i= k & 3))
     b= multadd(b, p05[i-1], 0, alloc);
 

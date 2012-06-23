@@ -44,7 +44,6 @@ enum eEnums
 };
 
 const float afKaelLandPoint[] = {225.045, -276.236, -5.434};
-
 #define GOSSIP_ITEM_KAEL_1      "Who are you?"
 #define GOSSIP_ITEM_KAEL_2      "What can we do to assist you?"
 #define GOSSIP_ITEM_KAEL_3      "What brings you to the Sunwell?"
@@ -56,7 +55,6 @@ const float afKaelLandPoint[] = {225.045, -276.236, -5.434};
 struct npc_kalecgosAI : public ScriptedAI
 {
     npc_kalecgosAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 m_uiTransformTimer;
 
     void Reset()

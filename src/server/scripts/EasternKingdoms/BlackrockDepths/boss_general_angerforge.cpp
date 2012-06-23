@@ -37,7 +37,6 @@ enum Spells
 struct boss_general_angerforgeAI : public ScriptedAI
 {
     boss_general_angerforgeAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 MightyBlow_Timer;
     uint32 HamString_Timer;
     uint32 Cleave_Timer;

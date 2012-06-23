@@ -39,7 +39,6 @@ enum Spells
 struct boss_anubshiahAI : public ScriptedAI
 {
     boss_anubshiahAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ShadowBolt_Timer;
     uint32 CurseOfTongues_Timer;
     uint32 CurseOfWeakness_Timer;

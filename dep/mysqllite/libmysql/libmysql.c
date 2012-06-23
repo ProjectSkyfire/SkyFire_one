@@ -220,7 +220,6 @@ void STDCALL mysql_server_end()
 
 static MYSQL_PARAMETERS mysql_internal_parameters=
 {&max_allowed_packet, &net_buffer_length, 0};
-
 MYSQL_PARAMETERS *STDCALL mysql_get_parameters(void)
 {
   return &mysql_internal_parameters;
@@ -1499,7 +1498,6 @@ mysql_stmt_init(MYSQL *mysql)
     number of columns in result set (if any), and result set metadata.
     At the same time allocate memory for input and output parameters
     to have less checks in mysql_stmt_bind_{param, result}.
-
   RETURN VALUES
     0  success
    !0  error

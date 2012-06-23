@@ -141,7 +141,6 @@ struct ActionButton
 {
     ActionButton() : action(0), type(0), misc(0), uState(ACTIONBUTTON_NEW) {}
     ActionButton(uint16 _action, uint8 _type, uint8 _misc) : action(_action), type(_type), misc(_misc), uState(ACTIONBUTTON_NEW) {}
-
     uint16 action;
     uint8 type;
     uint8 misc;
@@ -165,7 +164,6 @@ typedef std::pair<uint16, uint8> CreateSpellPair;
 struct PlayerCreateInfoItem
 {
     PlayerCreateInfoItem(uint32 id, uint32 amount) : item_id(id), item_amount(amount) {}
-
     uint32 item_id;
     uint32 item_amount;
 };
@@ -182,14 +180,12 @@ struct PlayerClassLevelInfo
 struct PlayerClassInfo
 {
     PlayerClassInfo() : levelInfo(NULL) { }
-
     PlayerClassLevelInfo* levelInfo;                        //[level-1] 0..MaxPlayerLevel-1
 };
 
 struct PlayerLevelInfo
 {
     PlayerLevelInfo() { for (int i = 0; i < MAX_STATS; ++i) stats[i] = 0; }
-
     uint8 stats[MAX_STATS];
 };
 
@@ -218,7 +214,6 @@ struct PlayerInfo
 struct PvPInfo
 {
     PvPInfo() : inHostileArea(false), inNoPvPArea(false), inFFAPvPArea(false), endTimer(0) {}
-
     bool inHostileArea;
     bool inNoPvPArea;
     bool inFFAPvPArea;
@@ -228,7 +223,6 @@ struct PvPInfo
 struct DuelInfo
 {
     DuelInfo() : initiator(NULL), opponent(NULL), startTimer(0), startTime(0), outOfBound(0) {}
-
     Player *initiator;
     Player *opponent;
     time_t startTimer;
@@ -275,7 +269,6 @@ struct EnchantDuration
 {
     EnchantDuration() : item(NULL), slot(MAX_ENCHANTMENT_SLOT), leftduration(0) {};
     EnchantDuration(Item * _item, EnchantmentSlot _slot, uint32 _leftduration) : item(_item), slot(_slot), leftduration(_leftduration) { assert(item); };
-
     Item * item;
     EnchantmentSlot slot;
     uint32 leftduration;
@@ -292,7 +285,6 @@ struct LookingForGroupSlot
     void Set(uint32 _entry, uint32 _type) { entry = _entry; type = _type; }
     bool Is(uint32 _entry, uint32 _type) const { return entry == _entry && type == _type; }
     bool canAutoJoin() const { return entry && (type == 1 || type == 5); }
-
     uint32 entry;
     uint32 type;
 };
@@ -832,7 +824,6 @@ struct BGData
 {
     BGData() : bgInstanceID(0), bgTypeID(0), bgAfkReportedCount(0), bgAfkReportedTimer(0),
         bgTeam(0), mountSpell(0) { ClearTaxiPath(); }
-
     uint32 bgInstanceID;                    // This variable is set to bg->m_InstanceID,
                                             //  when player is teleported to BG - (it is battleground's GUID)
     uint32 bgTypeID;
@@ -917,7 +908,6 @@ class Player : public Unit, public GridObject<Player>
         std::string dndMsg;
 
         PlayerSocial *GetSocial() { return m_social; }
-
         PlayerTaxi m_taxi;
         void InitTaxiNodesForLevel() { m_taxi.InitTaxiNodesForLevel(getRace(), getLevel()); }
         bool ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_id = 0 , Creature* npc = NULL);
@@ -935,7 +925,6 @@ class Player : public Unit, public GridObject<Player>
         bool isGMVisible() const { return !(m_ExtraFlags & PLAYER_EXTRA_GM_INVISIBLE); }
         void SetGMVisible(bool on);
         void SetPvPDeath(bool on) { if (on) m_ExtraFlags |= PLAYER_EXTRA_PVP_DEATH; else m_ExtraFlags &= ~PLAYER_EXTRA_PVP_DEATH; }
-
         void GiveXP(uint32 xp, Unit* victim);
         void GiveLevel(uint32 level);
         void InitStatsForLevel(bool reapplyMods = false);
@@ -946,7 +935,6 @@ class Player : public Unit, public GridObject<Player>
         uint32 m_Played_time[MAX_PLAYED_TIME_INDEX];
         uint32 GetTotalPlayedTime() { return m_Played_time[PLAYED_TIME_TOTAL]; }
         uint32 GetLevelPlayedTime() { return m_Played_time[PLAYED_TIME_LEVEL]; }
-
         void ResetTimeSync();
         void SendTimeSync();
 
@@ -966,15 +954,12 @@ class Player : public Unit, public GridObject<Player>
 
         RestType GetRestType() const { return rest_type; }
         void SetRestType(RestType n_r_type) { rest_type = n_r_type; }
-
         uint32 GetInnPosMapId() const { return inn_pos_mapid; }
         float GetInnPosX() const { return inn_pos_x; }
         float GetInnPosY() const { return inn_pos_y; }
         float GetInnPosZ() const { return inn_pos_z; }
-
         int GetTimeInnEnter() const { return time_inn_enter; }
         void UpdateInnerTime (int time) { time_inn_enter = time; }
-
         Pet* GetPet() const;
         Pet* SummonPet(uint32 entry, float x, float y, float z, float ang, PetType petType, uint32 despwtime);
         void RemovePet(Pet* pet, PetSaveMode mode, bool returnreagent = false);
@@ -1098,7 +1083,6 @@ class Player : public Unit, public GridObject<Player>
         void ClearTrade();
         void TradeCancel(bool sendback);
         uint16 GetItemPosByTradeSlot(uint32 slot) const { return tradeItems[slot]; }
-
         void UpdateEnchantTime(uint32 time);
         void UpdateItemDuration(uint32 time, bool realtimeonly=false);
         void AddEnchantmentDurations(Item *item);
@@ -1134,7 +1118,6 @@ class Player : public Unit, public GridObject<Player>
 
         // Return player level when QuestLevel is dynamic (-1)
         uint32 GetQuestLevelForPlayer(Quest const* pQuest) const { return pQuest && (pQuest->GetQuestLevel()>0) ? pQuest->GetQuestLevel() : getLevel(); }
-
         void PrepareQuestMenu(uint64 guid);
         void SendPreparedQuest(uint64 guid);
         bool IsActiveQuest(uint32 quest_id) const;
@@ -1229,14 +1212,10 @@ class Player : public Unit, public GridObject<Player>
 
         uint64 GetDivider() { return m_divider; }
         void SetDivider(uint64 guid) { m_divider = guid; }
-
         uint32 GetInGameTime() { return m_ingametime; }
-
         void SetInGameTime(uint32 time) { m_ingametime = time; }
-
         void AddTimedQuest(uint32 quest_id) { m_timedquests.insert(quest_id); }
         void RemoveTimedQuest(uint32 quest_id) { m_timedquests.erase(quest_id); }
-
         /*********************************************************/
         /***                   LOAD SYSTEM                     ***/
         /*********************************************************/
@@ -1284,7 +1263,6 @@ class Player : public Unit, public GridObject<Player>
         void RegenerateHealth();
         void setRegenTimer(uint32 time) {m_regenTimer = time;}
         void setWeaponChangeTimer(uint32 time) {m_weaponChangeTimer = time;}
-
         uint32 GetMoney() { return GetUInt32Value (PLAYER_FIELD_COINAGE); }
         void ModifyMoney(int32 d)
         {
@@ -1320,13 +1298,10 @@ class Player : public Unit, public GridObject<Player>
         }
 
         QuestStatusMap& getQuestStatusMap() { return mQuestStatus; };
-
         const uint64& GetSelection() const { return m_curSelection; }
         void SetSelection(const uint64 &guid) { m_curSelection = guid; SetUInt64Value(UNIT_FIELD_TARGET, guid); }
-
         uint8 GetComboPoints() { return m_comboPoints; }
         uint64 GetComboTarget() { return m_comboTarget; }
-
         void AddComboPoints(Unit* target, int8 count);
         void ClearComboPoints();
         void SendComboPoints();
@@ -1336,7 +1311,6 @@ class Player : public Unit, public GridObject<Player>
         void UpdateNextMailTimeAndUnreads();
         void AddNewMailDeliverTime(time_t deliver_time);
         bool IsMailsLoaded() const { return m_mailsLoaded; }
-
         //void SetMail(Mail *m);
         void RemoveMail(uint32 id);
 
@@ -1346,7 +1320,6 @@ class Player : public Unit, public GridObject<Player>
 
         PlayerMails::iterator GetmailBegin() { return m_mail.begin();};
         PlayerMails::iterator GetmailEnd() { return m_mail.end();};
-
         /*********************************************************/
         /*** MAILED ITEMS SYSTEM ***/
         /*********************************************************/
@@ -1407,7 +1380,6 @@ class Player : public Unit, public GridObject<Player>
 
         PlayerSpellMap const& GetSpellMap() const { return m_spells; }
         PlayerSpellMap      & GetSpellMap()       { return m_spells; }
-
         void AddSpellMod(SpellModifier* mod, bool apply);
         int32 GetTotalFlatMods(uint32 spellId, SpellModOp op);
         int32 GetTotalPctMods(uint32 spellId, SpellModOp op);
@@ -1536,10 +1508,8 @@ class Player : public Unit, public GridObject<Player>
         static uint32 GetArenaTeamIdFromDB(uint64 guid, uint8 slot);
         void SetArenaTeamIdInvited(uint32 ArenaTeamId) { m_ArenaTeamIdInvited = ArenaTeamId; }
         uint32 GetArenaTeamIdInvited() { return m_ArenaTeamIdInvited; }
-
         void SetDifficulty(uint32 dungeon_difficulty) { m_dungeonDifficulty = dungeon_difficulty; }
         uint8 GetDifficulty() { return m_dungeonDifficulty; }
-
         bool UpdateSkill(uint32 skill_id, uint32 step);
         bool UpdateSkillPro(uint16 SkillId, int32 Chance, uint32 step);
 
@@ -1595,12 +1565,10 @@ class Player : public Unit, public GridObject<Player>
 
         const uint64& GetLootGUID() const { return m_lootGuid; }
         void SetLootGUID(const uint64 &guid) { m_lootGuid = guid; }
-
         void RemovedInsignia(Player* looterPlr);
 
         WorldSession* GetSession() const { return m_session; }
         void SetSession(WorldSession *s) { m_session = s; }
-
         void BuildCreateUpdateBlockForPlayer(UpdateData *data, Player *target) const;
         void DestroyForPlayer(Player *target) const;
         void SendDelayResponse(const uint32);
@@ -1624,7 +1592,6 @@ class Player : public Unit, public GridObject<Player>
 
         virtual bool SetPosition(float x, float y, float z, float orientation, bool teleport = false);
         bool SetPosition(const Position &pos, bool teleport = false) { return SetPosition(pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation(), teleport); }
-
         void UpdateUnderwaterState(Map * m, float x, float y, float z);
 
         void SendMessageToSet(WorldPacket *data, bool self);// overwrite Object::SendMessageToSet
@@ -1906,13 +1873,11 @@ class Player : public Unit, public GridObject<Player>
 
         void SetBGTeam(uint32 team) { m_bgData.bgTeam = team; }
         uint32 GetBGTeam() const { return m_bgData.bgTeam ? m_bgData.bgTeam : GetTeam(); }
-
         void LeaveBattleground(bool teleportToEntryPoint = true);
         bool CanJoinToBattleground() const;
         bool CanReportAfkDueToLimit();
         void ReportedAfkBy(Player* reporter);
         void ClearAfkReports() { m_bgData.bgAfkReporter.clear(); }
-
         bool GetBGAccessByLevel(uint32 bgTypeId) const;
         bool isTotalImmunity();
         bool CanUseBattleGroundObject();
@@ -1934,7 +1899,6 @@ class Player : public Unit, public GridObject<Player>
         uint32 GetXPRestBonus(uint32 xp);
         uint32 GetRestTime() const { return m_restTime;}
         void SetRestTime(uint32 v) { m_restTime = v;}
-
         /*********************************************************/
         /***              ENVIROMENTAL SYSTEM                  ***/
         /*********************************************************/
@@ -1966,10 +1930,8 @@ class Player : public Unit, public GridObject<Player>
 
         bool isMoving() const { return HasUnitMovementFlag(MOVEFLAG_MOVING); }
         bool isMovingOrTurning() const { return HasUnitMovementFlag(MOVEFLAG_TURNING); }
-
         bool CanFly() const { return HasUnitMovementFlag(MOVEFLAG_CAN_FLY); }
         bool IsFlying() const { return HasUnitMovementFlag(MOVEFLAG_FLYING2); }
-
         void HandleFallDamage(MovementInfo& movementInfo);
         void HandleFallUnderMap();
 
@@ -1990,16 +1952,13 @@ class Player : public Unit, public GridObject<Player>
         // Transports
         Transport * GetTransport() const { return m_transport; }
         void SetTransport(Transport * t) { m_transport = t; }
-
         float GetTransOffsetX() const { return m_movementInfo.GetTransportPos()->m_positionX; }
         float GetTransOffsetY() const { return m_movementInfo.GetTransportPos()->m_positionY; }
         float GetTransOffsetZ() const { return m_movementInfo.GetTransportPos()->m_positionZ; }
         float GetTransOffsetO() const { return m_movementInfo.GetTransportPos()->m_orientation; }
         uint32 GetTransTime() const { return m_movementInfo.GetTransportTime(); }
-
         uint32 GetSaveTimer() const { return m_nextSave; }
         void   SetSaveTimer(uint32 timer) { m_nextSave = timer; }
-
         // Recall position
         uint32 m_recallMap;
         float  m_recallX;
@@ -2017,13 +1976,11 @@ class Player : public Unit, public GridObject<Player>
         void SetHomebindToLocation(WorldLocation const& loc, uint32 area_id);
         void RelocateToHomebind(uint32 & newMap) { newMap = m_homebindMapId; Relocate(m_homebindX, m_homebindY, m_homebindZ); }
         bool TeleportToHomebind(uint32 options = 0) { return TeleportTo(m_homebindMapId, m_homebindX, m_homebindY, m_homebindZ, GetOrientation(), options); }
-
         // currently visible objects at player client
         typedef std::set<uint64> ClientGUIDs;
         ClientGUIDs m_clientGUIDs;
 
         bool HaveAtClient(WorldObject const* u) const { return u == this || m_clientGUIDs.find(u->GetGUID()) != m_clientGUIDs.end(); }
-
         bool canSeeOrDetect(Unit const* u, bool detect, bool inVisibleList = false, bool is3dDistance = true) const;
         bool IsVisibleInGridForPlayer(Player const* pl) const;
         bool IsVisibleGloballyFor(Player* pl) const;
@@ -2043,7 +2000,6 @@ class Player : public Unit, public GridObject<Player>
 
         bool HasAtLoginFlag(AtLoginFlags f) const { return m_atLoginFlags & f; }
         void SetAtLoginFlag(AtLoginFlags f) { m_atLoginFlags |= f; }
-
         LookingForGroup m_lookingForGroup;
 
         // Temporarily removed pet cache
@@ -2051,7 +2007,6 @@ class Player : public Unit, public GridObject<Player>
         void SetTemporaryUnsummonedPetNumber(uint32 petnumber) { m_temporaryUnsummonedPetNumber = petnumber; }
         uint32 GetOldPetSpell() const { return m_oldpetspell; }
         void SetOldPetSpell(uint32 petspell) { m_oldpetspell = petspell; }
-
         void SendCinematicStart(uint32 CinematicSequenceId);
 
         /*********************************************************/
@@ -2105,7 +2060,6 @@ class Player : public Unit, public GridObject<Player>
         void SetOriginalGroup(Group *group, int8 subgroup = -1);
 
         MapReference &GetMapRef() { return m_mapRef; }
-
         // Set map to player and add reference
         void SetMap(Map * map);
         void ResetMap();

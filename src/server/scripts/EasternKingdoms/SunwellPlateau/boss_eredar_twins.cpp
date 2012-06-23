@@ -671,7 +671,6 @@ CreatureAI* GetAI_boss_alythess(Creature* creature)
 struct mob_shadow_imageAI : public ScriptedAI
 {
     mob_shadow_imageAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ShadowfuryTimer;
     uint32 KillTimer;
     uint32 DarkstrikeTimer;
@@ -685,7 +684,6 @@ struct mob_shadow_imageAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/){}
-
     void SpellHitTarget(Unit *pTarget, const SpellEntry* spell)
     {
         switch (spell->Id)

@@ -146,7 +146,6 @@ class SocialMgr
         ~SocialMgr();
         // Misc
         void RemovePlayerSocial(uint32 guid) { m_socialMap.erase(guid); }
-
         void GetFriendInfo(Player* player, uint32 friendGUID, FriendInfo &friendInfo);
         // Packet management
         void MakeFriendStatusPacket(FriendsResult result, uint32 friend_guid, WorldPacket *data);

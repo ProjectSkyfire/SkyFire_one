@@ -31,7 +31,6 @@ EndScriptData */
 struct instance_temple_of_ahnqiraj : public ScriptedInstance
 {
     instance_temple_of_ahnqiraj(Map *map) : ScriptedInstance(map) {Initialize();};
-
     //If Vem is dead...
     bool IsBossDied[3];
 

@@ -81,7 +81,6 @@ struct boss_mr_smiteAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*pWho*/) {}
-
     bool bCheckChances()
     {
         uint32 uiChances = urand(0, 99);

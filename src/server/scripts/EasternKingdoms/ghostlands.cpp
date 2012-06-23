@@ -158,7 +158,6 @@ enum eEnums
 struct npc_ranger_lilathaAI : public npc_escortAI
 {
     npc_ranger_lilathaAI(Creature *c) : npc_escortAI(c) {}
-
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();

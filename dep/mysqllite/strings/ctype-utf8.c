@@ -1798,7 +1798,6 @@ my_wildcmp_unicode(CHARSET_INFO *cs,
 
     if (w_wc == (my_wc_t) w_many)
     {                                             /* Found w_many */
-
       /* Remove any '%' and '_' from the wild search string */
       for ( ; wildstr != wildend ; )
       {

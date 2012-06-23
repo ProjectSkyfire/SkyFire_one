@@ -47,9 +47,7 @@ extern void   free   OF((voidpf ptr));
 
 #define ALLOC(size) malloc(size)
 #define TRYFREE(p) {if (p) free(p);}
-
 static int const gz_magic[2] = {0x1f, 0x8b}; /* gzip magic header */
-
 /* gzip flag byte */
 #define ASCII_FLAG   0x01 /* bit 0 set: file probably ascii text */
 #define HEAD_CRC     0x02 /* bit 1 set: header CRC present */

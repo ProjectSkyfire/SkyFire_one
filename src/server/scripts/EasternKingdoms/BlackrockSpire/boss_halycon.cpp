@@ -38,7 +38,6 @@ EndScriptData */
 struct boss_halyconAI : public ScriptedAI
 {
     boss_halyconAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 CrowdPummel_Timer;
     uint32 MightyBlow_Timer;
     bool Summoned;

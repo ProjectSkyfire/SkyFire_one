@@ -73,7 +73,6 @@ enum eAeranas
 struct npc_aeranasAI : public ScriptedAI
 {
     npc_aeranasAI(Creature* c) : ScriptedAI(c) {}
-
     uint32 Faction_Timer;
     uint32 EnvelopingWinds_Timer;
     uint32 Shock_Timer;
@@ -91,7 +90,6 @@ struct npc_aeranasAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (Faction_Timer)
@@ -156,7 +154,6 @@ enum
 struct npc_ancestral_wolfAI : public npc_escortAI
 {
     npc_ancestral_wolfAI(Creature* creature) : npc_escortAI(creature)  {}
-
     void Reset()
     {
         me->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
@@ -164,7 +161,6 @@ struct npc_ancestral_wolfAI : public npc_escortAI
 
     void AttackedBy(Unit* pWho) {}
     void AttackStart(Unit* pWho) {}
-
     void WaypointReached(uint32 uiPointId)
     {
         switch (uiPointId)
@@ -360,7 +356,6 @@ enum eFelGuard
 struct npc_fel_guard_houndAI : public ScriptedAI
 {
     npc_fel_guard_houndAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 uiCheckTimer;
     uint64 uiHelboarGUID;
 
@@ -553,7 +548,6 @@ enum eWoundedBloodElf
 struct npc_wounded_blood_elfAI : public npc_escortAI
 {
     npc_wounded_blood_elfAI(Creature *c) : npc_escortAI(c) {}
-
     void WaypointReached(uint32 i)
     {
         Player* player = GetPlayerForEscort();
@@ -590,7 +584,6 @@ struct npc_wounded_blood_elfAI : public npc_escortAI
     }
 
     void Reset() { }
-
     void EnterCombat(Unit* who)
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
@@ -641,9 +634,7 @@ enum
 struct npc_hand_berserkerAI : public ScriptedAI
 {
     npc_hand_berserkerAI(Creature* creature) : ScriptedAI(creature) {}
-
     void Reset() {}
-
     void AttackStart(Unit *pWho)
     {
         DoMeleeAttackIfReady();
@@ -706,7 +697,6 @@ enum
 struct npc_anchorite_relic_bunnyAI : public ScriptedAI
 {
     npc_anchorite_relic_bunnyAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 uiChTimer;
     uint32 uiEndTimer;
 
@@ -792,7 +782,6 @@ enum
 struct npc_anchorite_baradaAI : public ScriptedAI
 {
     npc_anchorite_baradaAI(Creature* creature) : ScriptedAI(creature) {}
-
     bool Exorcim;
 
     uint64 uiPlayerGUID;
@@ -811,7 +800,6 @@ struct npc_anchorite_baradaAI : public ScriptedAI
 
     void AttackedBy(Unit* pWho) {}
     void AttackStart(Unit* pWho) {}
-
     void DoSpawnDarkness()
     {
         me->SummonCreature(NPC_DARKNESS_RELEASED, -710.924, 2754.683, 105.0, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000);
@@ -985,7 +973,6 @@ enum
 struct npc_darkness_releasedAI : public ScriptedAI
 {
     npc_darkness_releasedAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 uiAtTimer;
     uint32 uiChTimer;
 
@@ -1007,7 +994,6 @@ struct npc_darkness_releasedAI : public ScriptedAI
 
     void AttackedBy(Unit* pWho) {}
     void AttackStart(Unit* pWho) {}
-
     void JustDied(Unit* pWho)
     {
         me->RemoveCorpse();
@@ -1059,7 +1045,6 @@ CreatureAI* GetAI_npc_darkness_released(Creature* creature)
 struct npc_foul_purgeAI : public ScriptedAI
 {
     npc_foul_purgeAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 uiChTimer;
 
     void Reset()
@@ -1115,7 +1100,6 @@ enum
 struct npc_sedai_quest_credit_markerAI : public ScriptedAI
 {
     npc_sedai_quest_credit_markerAI(Creature* creature) : ScriptedAI(creature) {}
-
     void Reset()
     {
         DoSpawn();
@@ -1164,7 +1148,6 @@ enum
 struct npc_vindicator_sedaiAI : public ScriptedAI
 {
     npc_vindicator_sedaiAI(Creature* creature) : ScriptedAI(creature) {}
-
     bool Vision;
 
     uint32 uiStepsTimer;
@@ -1341,10 +1324,8 @@ struct npc_demoniac_scryerAI : public ScriptedAI
     uint32 uiButtressCount;
 
     void Reset() {}
-
     void AttackedBy(Unit* pEnemy) {}
     void AttackStart(Unit* pEnemy) {}
-
     void DoSpawnButtress()
     {
         ++uiButtressCount;
@@ -1498,7 +1479,6 @@ enum
 struct npc_magic_sucker_device_spawnerAI : public ScriptedAI
 {
     npc_magic_sucker_device_spawnerAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 uiCastTimer;
     uint32 uiCheckTimer;
 
@@ -1558,7 +1538,6 @@ enum
 struct npc_living_flareAI : public ScriptedAI
 {
     npc_living_flareAI(Creature* creature) : ScriptedAI(creature) {}
-
     uint32 uiCheckTimer;
     uint64 uiSparkGUID;
     uint32 Count;
@@ -1573,7 +1552,6 @@ struct npc_living_flareAI : public ScriptedAI
 
     void AttackedBy(Unit* pWho) {}
     void AttackStart(Unit* pWho) {}
-
     void UpdateAI(const uint32 uiDiff)
     {
         if (uiCheckTimer <= uiDiff)
@@ -1632,7 +1610,6 @@ enum
 struct npc_pathaleon_imageAI : public ScriptedAI
 {
     npc_pathaleon_imageAI(Creature* creature) : ScriptedAI(creature) {}
-
     bool Event;
     bool SummonTrigger;
 

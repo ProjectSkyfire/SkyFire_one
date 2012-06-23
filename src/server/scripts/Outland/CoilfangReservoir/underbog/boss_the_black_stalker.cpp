@@ -68,7 +68,6 @@ struct boss_the_black_stalkerAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) {}
-
     void JustSummoned(Creature *summon)
     {
         if (summon && summon->GetEntry() == ENTRY_SPORE_STRIDER)

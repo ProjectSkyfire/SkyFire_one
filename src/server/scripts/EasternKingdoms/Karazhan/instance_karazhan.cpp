@@ -48,7 +48,6 @@ EndScriptData */
 struct instance_karazhan : public ScriptedInstance
 {
     instance_karazhan(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
-
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     uint32 m_uiOperaEvent;

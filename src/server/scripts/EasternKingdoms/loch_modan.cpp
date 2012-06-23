@@ -112,9 +112,7 @@ enum eMiran
 struct npc_miranAI : public npc_escortAI
 {
     npc_miranAI(Creature* creature) : npc_escortAI(creature) { }
-
     void Reset() { }
-
     void WaypointReached(uint32 uiPointId)
     {
         Player* player = GetPlayerForEscort();

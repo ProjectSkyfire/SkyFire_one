@@ -70,7 +70,6 @@ struct mob_naga_distillerAI : public ScriptedAI
     }
 
     void EnterCombat(Unit *who) { }
-
     void StartRageGen(Unit *caster)
     {
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);

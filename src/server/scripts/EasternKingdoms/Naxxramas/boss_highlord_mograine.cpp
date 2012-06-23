@@ -62,7 +62,6 @@ EndScriptData */
 struct boss_highlord_mograineAI : public ScriptedAI
 {
     boss_highlord_mograineAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 Mark_Timer;
     uint32 RighteousFire_Timer;
     bool ShieldWall1;

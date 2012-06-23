@@ -33,7 +33,6 @@ EndScriptData */
 struct boss_kormokAI : public ScriptedAI
 {
     boss_kormokAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ShadowVolley_Timer;
     uint32 BoneShield_Timer;
     uint32 Minion_Timer;

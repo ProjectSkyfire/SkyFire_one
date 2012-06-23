@@ -476,7 +476,6 @@ struct mob_felkael_phoenixAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
-
     void DamageTaken(Unit* /*pKiller*/, uint32 &damage)
     {
         if (damage < me->GetHealth())
@@ -556,7 +555,6 @@ struct mob_felkael_phoenixAI : public ScriptedAI
 struct mob_felkael_phoenix_eggAI : public ScriptedAI
 {
     mob_felkael_phoenix_eggAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 HatchTimer;
 
     void Reset()
@@ -566,7 +564,6 @@ struct mob_felkael_phoenix_eggAI : public ScriptedAI
 
     void EnterCombat(Unit* /*who*/) {}
     void MoveInLineOfSight(Unit* /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (HatchTimer <= diff)
@@ -580,7 +577,6 @@ struct mob_felkael_phoenix_eggAI : public ScriptedAI
 struct mob_arcane_sphereAI : public ScriptedAI
 {
     mob_arcane_sphereAI(Creature *c) : ScriptedAI(c) { Reset(); }
-
     uint32 DespawnTimer;
     uint32 ChangeTargetTimer;
 
@@ -596,7 +592,6 @@ struct mob_arcane_sphereAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (DespawnTimer <= diff)

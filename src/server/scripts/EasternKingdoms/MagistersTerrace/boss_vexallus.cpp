@@ -194,9 +194,7 @@ CreatureAI* GetAI_boss_vexallus(Creature* creature)
 struct mob_pure_energyAI : public ScriptedAI
 {
     mob_pure_energyAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset() {}
-
     void JustDied(Unit* slayer)
     {
         if (Unit *temp = me->GetOwner())

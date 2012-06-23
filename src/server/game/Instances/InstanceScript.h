@@ -93,29 +93,23 @@ class InstanceScript : public ZoneScript
 
         explicit InstanceScript(Map *map) : instance(map) {}
         virtual ~InstanceScript() {}
-
         Map *instance;
 
         //On creation, NOT load.
         virtual void Initialize() {}
-
         //On load
         virtual void Load(const char * data) { LoadBossState(data); }
-
         //When save is needed, this function generates the data
         virtual std::string GetSaveData() { return GetBossSaveData(); }
-
         void SaveToDB();
 
         virtual void Update(uint32 /*diff*/) {}
-
         //Used by the map's CanEnter function.
         //This is to prevent players from entering during boss encounters.
         virtual bool IsEncounterInProgress() const;
 
         //Called when a player successfully enters the instance.
         virtual void OnPlayerEnter(Player *) {}
-
         //Handle open / close objects
         //use HandleGameObject(NULL, boolen, GO); in OnObjectCreate in instance scripts
         //use HandleGameObject(GUID, boolen, NULL); in any other script

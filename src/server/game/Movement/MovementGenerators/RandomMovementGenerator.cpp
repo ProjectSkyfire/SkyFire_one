@@ -150,7 +150,6 @@ void RandomMovementGenerator<Creature>::Reset(Creature &creature)
 
 template<>
 void RandomMovementGenerator<Creature>::Finalize(Creature &creature){}
-
 template<>
 bool RandomMovementGenerator<Creature>::Update(Creature &creature, const uint32 &diff)
 {

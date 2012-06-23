@@ -34,7 +34,6 @@ EndScriptData */
 struct boss_gehennasAI : public ScriptedAI
 {
     boss_gehennasAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 ShadowBolt_Timer;
     uint32 RainOfFire_Timer;
     uint32 GehennasCurse_Timer;
@@ -47,7 +46,6 @@ struct boss_gehennasAI : public ScriptedAI
     }
 
     void EnterCombat(Unit * /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())

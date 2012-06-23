@@ -41,7 +41,6 @@ namespace ByteConverter
 
     template<> inline void convert<0>(char *) {}
     template<> inline void convert<1>(char *) {}            // ignore central byte
-
     template<typename T> inline void apply(T *val)
     {
         convert<sizeof(T)>((char *)(val));
@@ -63,6 +62,5 @@ inline void EndianConvert(uint8&) { }
 inline void EndianConvert( int8&) { }
 inline void EndianConvertReverse(uint8&) { }
 inline void EndianConvertReverse( int8&) { }
-
 #endif
 

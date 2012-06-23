@@ -481,7 +481,6 @@ struct MapEntry
 
     // Helpers
     uint32 Expansion() const { return addon; }
-
     bool IsDungeon() const { return map_type == MAP_INSTANCE || map_type == MAP_RAID; }
     bool Instanceable() const { return map_type == MAP_INSTANCE || map_type == MAP_RAID || map_type == MAP_BATTLEGROUND || map_type == MAP_ARENA; }
     bool IsRaid() const { return map_type == MAP_RAID; }
@@ -490,7 +489,6 @@ struct MapEntry
     bool IsBattleGroundOrArena() const { return map_type == MAP_BATTLEGROUND || map_type == MAP_ARENA; }
     bool SupportsHeroicMode() const { return resetTimeHeroic && !resetTimeRaid; }
     bool HasResetTime() const { return resetTimeHeroic || resetTimeRaid; }
-
     bool IsMountAllowed() const
     {
         return !IsDungeon() ||
@@ -922,7 +920,6 @@ struct TalentSpellPos
 {
     TalentSpellPos() : talent_id(0), rank(0) {}
     TalentSpellPos(uint16 _talent_id, uint8 _rank) : talent_id(_talent_id), rank(_rank) {}
-
     uint16 talent_id;
     uint8  rank;
 };
@@ -933,7 +930,6 @@ struct TaxiPathBySourceAndDestination
 {
     TaxiPathBySourceAndDestination() : ID(0), price(0) {}
     TaxiPathBySourceAndDestination(uint32 _id, uint32 _price) : ID(_id), price(_price) {}
-
     uint32    ID;
     uint32    price;
 };
@@ -944,7 +940,6 @@ struct TaxiPathNode
 {
     TaxiPathNode() : mapid(0), x(0), y(0), z(0), actionFlag(0), delay(0) {}
     TaxiPathNode(uint32 _mapid, float _x, float _y, float _z, uint32 _actionFlag, uint32 _delay) : mapid(_mapid), x(_x), y(_y), z(_z), actionFlag(_actionFlag), delay(_delay) {}
-
     uint32    mapid;
     float     x;
     float     y;

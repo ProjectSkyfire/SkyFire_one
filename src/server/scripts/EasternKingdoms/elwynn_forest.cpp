@@ -43,7 +43,6 @@ struct npc_henze_faulkAI : public ScriptedAI
     bool spellHit;
 
     npc_henze_faulkAI(Creature *c) : ScriptedAI(c) {}
-
     void Reset()
     {
         lifeTimer = 120000;

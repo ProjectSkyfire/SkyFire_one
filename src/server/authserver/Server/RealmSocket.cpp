@@ -29,9 +29,7 @@
 #endif
 
 RealmSocket::Session::Session(void) {}
-
 RealmSocket::Session::~Session(void) { }
-
 RealmSocket::RealmSocket(void) : input_buffer_(4096), session_(NULL), _remoteAddress()
 {
     reference_counting_policy().value(ACE_Event_Handler::Reference_Counting_Policy::ENABLED);

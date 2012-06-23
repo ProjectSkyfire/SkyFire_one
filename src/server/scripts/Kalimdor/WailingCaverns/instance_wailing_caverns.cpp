@@ -33,7 +33,6 @@ EndScriptData */
 struct instance_wailing_caverns : public ScriptedInstance
 {
     instance_wailing_caverns(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
-
     uint32 m_auiEncounter[MAX_ENCOUNTER];
 
     bool yelled;

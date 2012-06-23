@@ -3385,7 +3385,6 @@ ACE::wild_match(const char *str, const char *pat, bool case_sensitive,
           star = true;
           pat = p;
           while (*++pat == '*') {}
-
           if (*pat == '\0')
             return true;
           p = pat;
@@ -3426,7 +3425,6 @@ ACE::wild_match(const char *str, const char *pat, bool case_sensitive,
     }
   if (*p == '*')
     while (*++p == '*') {}
-
   return *p == '\0';
 }
 

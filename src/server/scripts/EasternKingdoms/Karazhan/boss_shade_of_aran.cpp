@@ -502,7 +502,6 @@ struct boss_aranAI : public ScriptedAI
 struct water_elementalAI : public ScriptedAI
 {
     water_elementalAI(Creature *c) : ScriptedAI(c) {}
-
     uint32 CastTimer;
 
     void Reset()
@@ -511,7 +510,6 @@ struct water_elementalAI : public ScriptedAI
     }
 
     void EnterCombat(Unit* /*who*/) {}
-
     void UpdateAI(const uint32 diff)
     {
         if (!UpdateVictim())
