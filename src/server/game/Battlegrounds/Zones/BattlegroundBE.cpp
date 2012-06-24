@@ -21,7 +21,7 @@
 #include "Object.h"
 #include "Player.h"
 #include "Battleground.h"
-#include "BattleGroundBE.h"
+#include "BattlegroundBE.h"
 #include "Creature.h"
 #include "ObjectMgr.h"
 #include "MapManager.h"
