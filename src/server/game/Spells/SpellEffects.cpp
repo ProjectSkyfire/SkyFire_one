@@ -20,7 +20,7 @@
 
 #include "Common.h"
 #include "SharedDefines.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "Opcodes.h"
@@ -48,8 +48,8 @@
 #include "Totem.h"
 #include "CreatureAI.h"
 #include "Battleground.h"
-#include "BattleGroundEY.h"
-#include "BattleGroundWS.h"
+#include "BattlegroundEY.h"
+#include "BattlegroundWS.h"
 #include "OutdoorPvPMgr.h"
 #include "Language.h"
 #include "SocialMgr.h"
@@ -4362,7 +4362,7 @@ void Spell::EffectHealMaxHealth(uint32 /*i*/)
         m_originalCaster->SendHealSpellLog(unitTarget, m_spellInfo->Id, addhealth, false);
 }
 
-void Spell::EffectInterruptCast(uint32 /*i*/)
+void Spell::EffectInterruptCast(uint32 eff)
 {
     if (!unitTarget)
         return;
@@ -4383,7 +4383,7 @@ void Spell::EffectInterruptCast(uint32 /*i*/)
             {
                 if (m_originalCaster)
                 {
-                    int32 duration = m_originalCaster->CalculateSpellDuration(m_spellInfo, i, unitTarget);
+                    int32 duration = m_originalCaster->CalculateSpellDuration(m_spellInfo, eff, unitTarget);
                     unitTarget->ProhibitSpellSchool(GetSpellSchoolMask(curSpellInfo), duration/*GetSpellDuration(m_spellInfo)*/);
                 }
                 unitTarget->InterruptSpell(CurrentSpellTypes(i), false);
