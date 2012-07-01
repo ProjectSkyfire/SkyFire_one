@@ -22,6 +22,7 @@
 #include "InstanceSaveMgr.h"
 #include "DatabaseEnv.h"
 #include "Log.h"
+#include "Language.h"
 #include "ObjectAccessor.h"
 #include "Transport.h"
 #include "GridDefines.h"
@@ -175,7 +176,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                 {
                     // probably there must be special opcode, because client has this string constant in GlobalStrings.lua
                     // TODO: this is not a good place to send the message
-                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetSkyFireString(810), mapName);
+                    player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetSkyFireString(LANG_INSTANCE_RAID_GROUP_ONLY), mapName);
                     sLog->outDebug("MAP: Player '%s' must be in a raid group to enter instance of '%s'", player->GetName(), mapName);
                     return false;
                 }
