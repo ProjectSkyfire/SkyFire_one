@@ -30,7 +30,7 @@
 #include "Object.h"
 #include "Chat.h"
 #include "BattlegroundMgr.h"
-#include "BattleGroundWS.h"
+#include "BattlegroundWS.h"
 #include "Battleground.h"
 #include "ArenaTeam.h"
 #include "Language.h"

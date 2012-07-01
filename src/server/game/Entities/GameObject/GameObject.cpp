@@ -30,7 +30,7 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "World.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "MapManager.h"
 #include "LootMgr.h"
 #include "GridNotifiers.h"
@@ -40,7 +40,7 @@
 #include "Battleground.h"
 #include "Util.h"
 #include "OutdoorPvPMgr.h"
-#include "BattleGroundAV.h"
+#include "BattlegroundAV.h"
 
 GameObject::GameObject() : WorldObject()
 {
