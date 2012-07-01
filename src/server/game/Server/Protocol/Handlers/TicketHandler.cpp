@@ -32,7 +32,7 @@
 void WorldSession::HandleGMTicketCreateOpcode(WorldPacket & recv_data)
 {
     // Let's see if we have a ticket already, if so don't create a new one
-    if (sTicketMgr.GetGMTicketByPlayer(GetPlayer()->GetGUID()))
+    if (sTicketMgr->GetGMTicketByPlayer(GetPlayer()->GetGUID()))
     {
         WorldPacket data(SMSG_GMTICKET_CREATE, 4);
         data << uint32(1); // You already have an open ticket.

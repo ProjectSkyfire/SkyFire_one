@@ -89,6 +89,6 @@ class TicketMgr
         uint64 m_GMSurveyID;
 };
 
-#endif
-#define sTicketMgr ACE_Singleton<TicketMgr, ACE_Thread_Mutex>::instance()
+#define sTicketMgr ACE_Singleton<TicketMgr, ACE_Null_Mutex>::instance()
 
+#endif // _TICKETMGR_
