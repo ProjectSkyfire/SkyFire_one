@@ -31,7 +31,7 @@
 #include "ObjectAccessor.h"
 #include "Group.h"
 #include "Battleground.h"
-#include "BattleGroundAV.h"
+#include "BattlegroundAV.h"
 #include "ScriptMgr.h"
 
 void WorldSession::HandleQuestgiverStatusQueryOpcode(WorldPacket & recv_data)

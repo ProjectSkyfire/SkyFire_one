@@ -2,5 +2,5 @@
 
 #include "Common.h"
 #include "Log.h"
-#include "SQLOperations.h"
+#include "SqlOperations.h"
 #include "Errors.h"
