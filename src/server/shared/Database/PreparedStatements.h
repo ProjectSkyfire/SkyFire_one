@@ -19,7 +19,7 @@
 #ifndef sPreparedStatement
 
 #include "ace/Singleton.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 
 class PreparedStatementHolder
 {

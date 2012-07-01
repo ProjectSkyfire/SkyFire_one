@@ -20,7 +20,7 @@
 
 #include "Common.h"
 #include "Log.h"
-#include "Configuration/Config.h"
+#include "Config.h"
 #include "Util.h"
 
 #include <stdarg.h>

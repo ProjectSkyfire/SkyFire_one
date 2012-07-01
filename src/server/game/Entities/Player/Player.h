@@ -26,7 +26,7 @@
 #include "Unit.h"
 #include "Item.h"
 
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "DBCStores.h"
 #include "NPCHandler.h"
 #include "QuestDef.h"

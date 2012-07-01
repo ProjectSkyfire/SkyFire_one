@@ -18,8 +18,8 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
-#include "Configuration/Config.h"
+#include "DatabaseEnv.h"
+#include "Config.h"
 #include "Log.h"
 #include "SystemConfig.h"
 #include "Util.h"

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Database/SqlDelayThread.h"
-#include "Database/SqlOperations.h"
+#include "Database.h"
+#include "SqlOperations.h"
 #include "DatabaseEnv.h"
 
 SqlDelayThread::SqlDelayThread(Database* db) : m_dbEngine(db), m_running(true)

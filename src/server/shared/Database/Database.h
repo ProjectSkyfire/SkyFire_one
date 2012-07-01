@@ -20,9 +20,9 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
-#include "Threading/Threading.h"
-#include "Dynamic/UnorderedMap.h"
-#include "Database/SqlDelayThread.h"
+#include "Threading.h"
+#include "UnorderedMap.h"
+#include "SqlDelayThread.h"
 
 #include <ace/Thread_Mutex.h>
 #include <ace/Guard_T.h>

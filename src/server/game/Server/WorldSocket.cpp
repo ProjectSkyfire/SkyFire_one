@@ -39,7 +39,7 @@
 #include "ByteBuffer.h"
 #include "AddonHandler.h"
 #include "Opcodes.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "SHA1.h"
 #include "WorldSession.h"
 #include "WorldSocketMgr.h"

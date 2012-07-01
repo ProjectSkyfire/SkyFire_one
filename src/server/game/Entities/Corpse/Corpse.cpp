@@ -24,7 +24,7 @@
 #include "UpdateMask.h"
 #include "MapManager.h"
 #include "ObjectAccessor.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Opcodes.h"
 #include "WorldSession.h"
 #include "WorldPacket.h"

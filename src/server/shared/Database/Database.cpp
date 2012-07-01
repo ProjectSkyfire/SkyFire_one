@@ -18,11 +18,9 @@
  */
 
 #include "DatabaseEnv.h"
-#include "Configuration/Config.h"
-
+#include "Config.h"
 #include "Common.h"
 #include "UpdateFields.h"
-
 #include "Util.h"
 #include "Define.h"
 #include "Threading.h"

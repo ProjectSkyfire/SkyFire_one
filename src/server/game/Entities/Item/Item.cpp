@@ -22,7 +22,7 @@
 #include "Item.h"
 #include "ObjectMgr.h"
 #include "WorldPacket.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "ItemEnchantmentMgr.h"
 
 void AddItemsSetItem(Player*player, Item *item)

@@ -38,7 +38,7 @@
 #include "Log.h"
 #include "Common.h"
 #include "Config.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "WorldSocket.h"
 
 /**

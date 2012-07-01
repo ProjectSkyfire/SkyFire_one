@@ -20,7 +20,7 @@
 
 #include "WorldSession.h"
 #include "Log.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Player.h"
 #include "WorldPacket.h"
 #include "ObjectMgr.h"

@@ -23,7 +23,7 @@
 
 #include "Define.h"
 #include "UnorderedMap.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 
 #include <ace/Singleton.h>
 #include <ace/Thread_Mutex.h>

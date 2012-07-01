@@ -33,12 +33,12 @@
 #include "Path.h"
 #include "ItemPrototype.h"
 #include "NPCHandler.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Mail.h"
 #include "Map.h"
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"
-#include "Database/SQLStorage.h"
+#include "SQLStorage.h"
 
 #include <ace/Singleton.h>
 #include <string>

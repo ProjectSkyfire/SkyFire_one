@@ -21,8 +21,6 @@
     \ingroup Trinityd
 */
 
-#include <ace/Sig_Handler.h>
-
 #include "Common.h"
 #include "SystemConfig.h"
 #include "SignalHandler.h"
@@ -30,9 +28,8 @@
 #include "WorldRunnable.h"
 #include "WorldSocket.h"
 #include "WorldSocketMgr.h"
-#include "Configuration/Config.h"
-#include "Database/DatabaseEnv.h"
-
+#include "Config.h"
+#include "DatabaseEnv.h"
 #include "CliRunnable.h"
 #include "Log.h"
 #include "Master.h"
@@ -41,8 +38,9 @@
 #include "Timer.h"
 #include "Util.h"
 #include "AuthSocket.h"
-
 #include "BigNumber.h"
+
+#include <ace/Sig_Handler.h>
 
 #ifdef _WIN32
 #include "ServiceWin32.h"

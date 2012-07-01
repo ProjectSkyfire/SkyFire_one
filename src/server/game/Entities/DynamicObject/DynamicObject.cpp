@@ -26,7 +26,7 @@
 #include "WorldSession.h"
 #include "World.h"
 #include "ObjectAccessor.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "SpellAuras.h"
 #include "MapManager.h"
 #include "GridNotifiers.h"

@@ -24,8 +24,8 @@
 #include "World.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
-#include "Database/DatabaseEnv.h"
-#include "Database/SQLStorage.h"
+#include "DatabaseEnv.h"
+#include "SQLStorage.h"
 #include "DBCStores.h"
 
 #include "AccountMgr.h"

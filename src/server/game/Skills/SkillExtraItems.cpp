@@ -19,7 +19,7 @@
  */
 
 #include "SkillExtraItems.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Log.h"
 
 #include "Player.h"

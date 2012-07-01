@@ -17,8 +17,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Database/Database.h"
-#include "Database/SqlOperations.h"
+#include "Database.h"
+#include "SqlOperations.h"
 
 /// Function body definitions for the template function members of the Database class
 

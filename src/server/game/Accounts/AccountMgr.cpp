@@ -17,7 +17,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 
 #include "AccountMgr.h"
 #include "ObjectAccessor.h"

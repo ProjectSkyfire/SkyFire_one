@@ -19,7 +19,7 @@
  */
 
 #include "InstanceScript.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Map.h"
 #include "GameObject.h"
 #include "Creature.h"

@@ -20,7 +20,7 @@
 
 #include "Common.h"
 #include "ObjectMgr.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 
 #include "Bag.h"
 #include "Log.h"

@@ -20,7 +20,7 @@
 
 #include "MapManager.h"
 #include "InstanceSaveMgr.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "Log.h"
 #include "ObjectAccessor.h"
 #include "Transport.h"
