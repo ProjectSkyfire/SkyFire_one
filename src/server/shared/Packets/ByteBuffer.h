@@ -24,7 +24,7 @@
 #include "Common.h"
 #include "Errors.h"
 #include "Log.h"
-#include "ByteConverter.h"
+#include "Utilities/ByteConverter.h"
 
 class ByteBufferException
 {
@@ -284,13 +284,6 @@ class ByteBuffer
             T r = read<T>(_rpos);
             _rpos += sizeof(T);
             return r;
-        }
-
-        template<> std::string read<std::string>()
-        {
-            std::string tmp;
-            *this >> tmp;
-            return tmp;
         }
 
         template <typename T> T read(size_t pos) const
