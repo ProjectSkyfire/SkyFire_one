@@ -39,13 +39,14 @@
 #include "WaypointManager.h"
 #include "CreatureGroups.h"
 #include "Util.h"
+#include "TicketMgr.h"
+#include "TargetedMovementGenerator.h"                      // for HandleNpcUnFollowCommand
+
 #include <cctype>
 #include <iostream>
 #include <fstream>
 #include <map>
-#include "TicketMgr.h"
-
-#include "TargetedMovementGenerator.h"                      // for HandleNpcUnFollowCommand
+#include <typeinfo>
 
 static uint32 ReputationRankStrIndex[MAX_REPUTATION_RANK] =
 {
