@@ -2440,6 +2440,9 @@ int32 Unit::GetMechanicResistChance(const SpellEntry *spell)
 // Melee based spells hit result calculations
 SpellMissInfo Unit::MeleeSpellHitResult(Unit *pVictim, SpellEntry const *spell, bool cMiss)
 {
+    if (spell->AttributesEx3 & SPELL_ATTR_EX3_IGNORE_HIT_RESULT)
+        return SPELL_MISS_NONE;
+
     WeaponAttackType attType = BASE_ATTACK;
 
     if (spell->DmgClass == SPELL_DAMAGE_CLASS_RANGED)

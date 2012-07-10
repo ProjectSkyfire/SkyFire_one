@@ -351,7 +351,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
 
     if (m_spellInfo->DmgClass == SPELL_DAMAGE_CLASS_MAGIC
         && !IsAreaOfEffectSpell(m_spellInfo)
-        && (m_spellInfo->AttributesEx2 & SPELL_ATTR_EX_CANT_REFLECTED) == 0)
+        && (m_spellInfo->AttributesEx2 & SPELL_ATTR_EX_CANT_BE_REFLECTED) == 0)
     {
         for (int j = 0; j < MAX_SPELL_EFFECTS; j++)
         {
@@ -360,8 +360,6 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
 
             if (!IsPositiveTarget(m_spellInfo->EffectImplicitTargetA[j], m_spellInfo->EffectImplicitTargetB[j]))
                 m_canReflect = true;
-            else
-                m_canReflect = (m_spellInfo->AttributesEx & SPELL_ATTR_EX_NEGATIVE) ? true : false;
 
             if (m_canReflect)
                 continue;
@@ -2352,17 +2350,20 @@ void Spell::handle_immediate()
         int32 duration = GetSpellDuration(m_spellInfo);
         if (duration)
         {
-            if (m_targets.getUnitTarget())
+            if (m_spellInfo->AttributesEx5 & SPELL_ATTR_EX5_HASTE_AFFECT_DURATION)
             {
-                DiminishingGroup DRgroup = GetDiminishingReturnsGroupForSpell(m_spellInfo, false);
-                m_targets.getUnitTarget()->ApplyDiminishingToDuration(DRgroup, duration, m_caster, m_targets.getUnitTarget()->GetDiminishing(DRgroup));
+                if (m_targets.getUnitTarget())
+                {
+                    DiminishingGroup DRgroup = GetDiminishingReturnsGroupForSpell(m_spellInfo, false);
+                    m_targets.getUnitTarget()->ApplyDiminishingToDuration(DRgroup, duration, m_caster, m_targets.getUnitTarget()->GetDiminishing(DRgroup));
+                }
+                // First apply duration mod and then haste
+                // Apply duration mod
+                if (Player* modOwner = m_caster->GetSpellModOwner())
+                    modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_DURATION, duration);
+                //apply haste mods
+                m_caster->ModSpellCastTime(m_spellInfo, duration, this);
             }
-
-            //apply haste mods
-            m_caster->ModSpellCastTime(m_spellInfo, duration, this);
-            // Apply duration mod
-            if (Player* modOwner = m_caster->GetSpellModOwner())
-                modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_DURATION, duration);
             m_spellState = SPELL_STATE_CASTING;
             m_caster->AddInterruptMask(m_spellInfo->ChannelInterruptFlags);
             SendChannelStart(duration);
@@ -3188,9 +3189,21 @@ void Spell::SendChannelStart(uint32 duration)
 
 void Spell::SendResurrectRequest(Player* target)
 {
-    WorldPacket data(SMSG_RESURRECT_REQUEST, (8+4+2+4));
-    data << m_caster->GetGUID();
-    data << uint32(1) << uint16(0) << uint32(1);
+    // get ressurector name for creature resurrections, otherwise packet will be not accepted
+    // for player resurrections the name is looked up by guid
+    char const* resurrectorName = m_caster->GetTypeId() == TYPEID_PLAYER ? "" : m_caster->GetNameForLocaleIdx(target->GetSession()->GetSessionDbLocaleIndex());
+
+    WorldPacket data(SMSG_RESURRECT_REQUEST, (8+4+strlen(resurrectorName)+1+1+1+4));
+    data << uint64(m_caster->GetGUID()); // resurrector guid
+    data << uint32(strlen(resurrectorName) + 1);
+
+    data << resurrectorName;
+    data << uint8(0); // null terminator
+
+    data << uint8(m_caster->GetTypeId() == TYPEID_PLAYER ? 0 : 1); // "you'll be afflicted with resurrection sickness"
+    // override delay sent with SMSG_CORPSE_RECLAIM_DELAY, set instant resurrection for spells with this attribute
+    if (m_spellInfo->AttributesEx3 & SPELL_ATTR_EX3_IGNORE_RESURRECTION_TIMER)
+        data << uint32(0);
 
     target->GetSession()->SendPacket(&data);
 }
@@ -5225,7 +5238,9 @@ Unit* Spell::SelectMagnetTarget()
 {
     Unit* target = m_targets.getUnitTarget();
 
-    if (target && m_spellInfo->DmgClass == SPELL_DAMAGE_CLASS_MAGIC && target->HasAuraType(SPELL_AURA_SPELL_MAGNET)) //Attributes & 0x10 what is this?
+    if (target && m_spellInfo->DmgClass == SPELL_DAMAGE_CLASS_MAGIC
+        && !(m_spellInfo->Attributes & SPELL_ATTR_ABILITY || m_spellInfo->AttributesEx & SPELL_ATTR_EX_CANT_BE_REDIRECTED || m_spellInfo->Attributes & SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY) // Patch 1.2 notes: Spell Reflection no longer reflects abilities
+        && target->HasAuraType(SPELL_AURA_SPELL_MAGNET))
     {
         Unit::AuraList const& magnetAuras = target->GetAurasByType(SPELL_AURA_SPELL_MAGNET);
         for (Unit::AuraList::const_iterator itr = magnetAuras.begin(); itr != magnetAuras.end(); ++itr)

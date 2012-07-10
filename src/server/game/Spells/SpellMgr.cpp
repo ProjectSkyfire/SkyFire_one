@@ -606,6 +606,7 @@ bool IsPositiveTarget(uint32 targetA, uint32 targetB)
     // non-positive targets
     switch (targetA)
     {
+        case TARGET_UNIT_NEARBY_ENEMY:
         case TARGET_UNIT_TARGET_ENEMY:
         case TARGET_UNIT_AREA_ENEMY_SRC:
         case TARGET_UNIT_AREA_ENEMY_DST:
@@ -820,8 +821,8 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
     if (!IsPositiveTarget(spellproto->EffectImplicitTargetA[effIndex], spellproto->EffectImplicitTargetB[effIndex]))
         return false;
 
-    // AttributesEx check
-    if (spellproto->AttributesEx & SPELL_ATTR_EX_NEGATIVE)
+    // AttributesEx check - this is only for sure, everything should work without this
+    if (spellproto->AttributesEx & SPELL_ATTR_EX_CANT_BE_REFLECTED) // boss spells should be always negative
         return false;
 
     // ok, positive
