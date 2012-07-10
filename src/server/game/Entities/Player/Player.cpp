@@ -17807,7 +17807,9 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
         (!GetCurrentSpell(CURRENT_GENERIC_SPELL) ||
         GetCurrentSpell(CURRENT_GENERIC_SPELL)->m_spellInfo->Effect[0] != SPELL_EFFECT_SEND_TAXI) &&
         IsNonMeleeSpellCasted(false) ||
-        isInCombat())
+        isInCombat() ||
+        hasUnitState(UNIT_STAT_STUNNED) ||
+        hasUnitState(UNIT_STAT_ROOT))
     {
         WorldPacket data(SMSG_ACTIVATETAXIREPLY, 4);
         data << uint32(ERR_TAXIPLAYERBUSY);
