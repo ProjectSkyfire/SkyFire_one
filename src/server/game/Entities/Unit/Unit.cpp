@@ -1049,13 +1049,13 @@ void Unit::CastSpell(Unit* Victim, SpellEntry const *spellInfo, bool triggered, 
     {
         if (sSpellMgr->SpellTargetType[spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET)
         {
-            /*SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(spellInfo->rangeIndex);
-            if (srange && GetSpellMaxRange(srange) == 0.0f)
+            //SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(spellInfo->rangeIndex);
+            if (spellInfo->Id == 3137 || spellInfo->Id == 10872) // Dirty hack for Abolish poison and Disease Effect. Which other spells should be here?
             {
                 Victim = this;
                 break;
             }
-            else */if (!Victim)
+            else if (!Victim)
             {
                 sLog->outError("CastSpell: spell id %i by caster: %s %u) does not have unit target", spellInfo->Id, (GetTypeId() == TYPEID_PLAYER ? "player (GUID:" : "creature (Entry:"), (GetTypeId() == TYPEID_PLAYER ? GetGUIDLow() : GetEntry()));
                 return;
