@@ -1543,6 +1543,9 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2, bool
 
     if (!sameCaster)
     {
+        if (spellInfo_1->AttributesEx3 & SPELL_ATTR_EX3_STACKS_FOR_DIFF_CASTERS)
+            return false;
+
         for (uint32 i = 0; i < 3; ++i)
             if (spellInfo_1->Effect[i] == SPELL_EFFECT_APPLY_AURA
                 || spellInfo_1->Effect[i] == SPELL_EFFECT_PERSISTENT_AREA_AURA)

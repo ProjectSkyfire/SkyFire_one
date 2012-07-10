@@ -221,6 +221,7 @@ const uint32 ItemQualityColors[MAX_ITEM_QUALITY] = {
 
 // ***********************************
 // Spell Attributes definitions
+// atributes with * in comment are not implemented yet
 // ***********************************
 
 #define SPELL_ATTR_UNK0                           0x00000001            // 0
@@ -329,7 +330,7 @@ const uint32 ItemQualityColors[MAX_ITEM_QUALITY] = {
 #define SPELL_ATTR_EX3_UNK4                       0x00000010            // 4 Druid Rebirth only this spell have this flag
 #define SPELL_ATTR_EX3_UNK5                       0x00000020            // 5
 #define SPELL_ATTR_EX3_UNK6                       0x00000040            // 6
-#define SPELL_ATTR_EX3_UNK7                       0x00000080            // 7
+#define SPELL_ATTR_EX3_STACKS_FOR_DIFF_CASTERS    0x00000080            // 7 separate stack for every caster
 #define SPELL_ATTR_EX3_PLAYERS_ONLY               0x00000100            // 8 Player only?
 #define SPELL_ATTR_EX3_UNK9                       0x00000200            // 9
 #define SPELL_ATTR_EX3_MAIN_HAND                  0x00000400            // 10 Main hand weapon required
