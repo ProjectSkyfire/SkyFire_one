@@ -497,6 +497,11 @@ struct MapEntry
             MapID == 568 || MapID == 309 || MapID == 209 || MapID == 534 ||
             MapID == 560 || MapID == 509 || MapID == 269;
     }
+
+    bool IsContinent() const
+    {
+        return MapID == 0 || MapID == 1 || MapID == 530;
+    }
 };
 
 struct QuestSortEntry
