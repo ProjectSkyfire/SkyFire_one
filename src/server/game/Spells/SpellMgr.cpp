@@ -641,6 +641,8 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
         case 31579:                                         // Arcane Empowerment Rank1 talent aura with one positive and one negative (check not needed in wotlk)
         case 31582:                                         // Arcane Empowerment Rank2
         case 31583:                                         // Arcane Empowerment Rank3
+        case 43945:                                         // You're...
+        case 44305:                                         // You're...
             return true;
         case  1852:                                         // Silenced (GM)
         case 46392:                                         // Focused Assault
@@ -654,6 +656,8 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
         case 31719:                                         // Suspension
         case 43501:                                         // Siphon Soul (Hexlord Spell)
         case 30457:                                         // Complete vulnerability
+        case 12292:                                         // Death Wish
+        case 38065:                                         // Death coil
             return false;
     }
 
