@@ -65,6 +65,9 @@ enum EventAI_Type
     EVENT_T_MISSING_AURA            = 27,                   // Param1 = SpellID, Param2 = Number of time stacked expected, Param3/4 Repeat Min/Max
     EVENT_T_TARGET_MISSING_AURA     = 28,                   // Param1 = SpellID, Param2 = Number of time stacked expected, Param3/4 Repeat Min/Max
 
+    // Trinity only
+    EVENT_T_RESET                   = 35,                   // Is it called after combat, when the creature respawn and spawn. -- TRINITY ONLY
+
     EVENT_T_END,
 };
 
@@ -113,13 +116,19 @@ enum EventAI_ActionType
     ACTION_T_SET_SHEATH                 = 40,               // Sheath (0-passive, 1-melee, 2-ranged)
     ACTION_T_FORCE_DESPAWN              = 41,               // No Params
     ACTION_T_SET_INVINCIBILITY_HP_LEVEL = 42,               // MinHpValue, format(0-flat, 1-percent from max health)
+    ACTION_T_MOUNT_TO_ENTRY_OR_MODEL    = 43,               // Creature_template entry(param1) OR ModelId (param2) (or 0 for both to unmount)
 
+    // Trinity only
+    ACTION_T_SET_PHASE_MASK             = 97,
+    ACTION_T_SET_STAND_STATE            = 98,
+    ACTION_T_MOVE_RANDOM_POINT          = 99,
+    ACTION_T_SET_VISIBILITY             = 100,
     ACTION_T_SET_ACTIVE                 = 101,  //Apply
     ACTION_T_SET_AGGRESSIVE             = 102,  //Apply
     ACTION_T_ATTACK_START_PULSE         = 103,  //Distance
     ACTION_T_SUMMON_GO                  = 104,  //GameObjectID, DespawnTime in ms
 
-    ACTION_T_END                        = 105,
+    ACTION_T_END,
 };
 
 enum Target
@@ -166,9 +175,11 @@ enum EventFlags
     EFLAG_HEROIC                = 0x04,                     //Event only occurs in Heroic instance difficulty
     EFLAG_RESERVED_3            = 0x08,
     EFLAG_RESERVED_4            = 0x10,
-    EFLAG_RESERVED_5            = 0x20,
+    EFLAG_RANDOM_ACTION         = 0x20,                     //Event only execute one from existed actions instead each action.
     EFLAG_RESERVED_6            = 0x40,
     EFLAG_DEBUG_ONLY            = 0x80,                     //Event only occurs in debug build
+    // no free bits, uint8 field
+    EFLAG_DIFFICULTY_ALL        = (EFLAG_NORMAL|EFLAG_HEROIC)
 };
 
 enum SpawnedEventMode
@@ -384,12 +395,24 @@ struct CreatureEventAI_Action
         {
             uint32 sheath;
         } set_sheath;
+        // ACTION_T_FORCE_DESPAWN                           = 41
+        struct
+        {
+            uint32 msDelay;
+        } forced_despawn;
         // ACTION_T_SET_INVINCIBILITY_HP_LEVEL              = 42
         struct
         {
             uint32 hp_level;
             uint32 is_percent;
         } invincibility_hp_level;
+        // ACTION_T_MOUNT_TO_ENTRY_OR_MODEL                 = 43
+        struct
+        {
+            uint32 creatureId;                              // set one from fields (or 0 for both to dismount)
+            uint32 modelId;
+        } mount;
+
         // RAW
         struct
         {
@@ -617,7 +640,7 @@ class CreatureEventAI : public CreatureAI
         uint32 EventDiff;                                   //Time between the last event call
         bool bEmptyList;
 
-        //Variables used by Events themselves
+        // Variables used by Events themselves
         uint8 Phase;                                        // Current phase, max 32 phases
         bool CombatMovementEnabled;                         // If we allow targeted movment gen (movement twoards top threat)
         bool MeleeEnabled;                                  // If we allow melee auto attack

@@ -566,19 +566,17 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                     {
                         const SpellEntry *spell = sSpellStore.LookupEntry(action.cast.spellId);
                         if (!spell)
-                            sLog->outErrorDb("CreatureEventAI:  Event %u Action %u uses invalid SpellID %u.", i, j+1, action.cast.spellId);
-                        /* FIXME: temp.raw.param3 not have event tipes with recovery time in it....
+                            sLog->outErrorDb("CreatureEventAI:  Event %u Action %u uses non-existent SpellID %u.", i, j+1, action.cast.spellId);
+                        /* FIXME: temp.raw.param3 not have event tipes with recovery time in it.... */
                         else
                         {
                             if (spell->RecoveryTime > 0 && temp.event_flags & EFLAG_REPEATABLE)
                             {
                                 //output as debug for now, also because there's no general rule all spells have RecoveryTime
-                                if (temp.event_param3 < spell->RecoveryTime)
-                                    sLog->outDebug("CreatureEventAI:  Event %u Action %u uses SpellID %u but cooldown is longer(%u) than minumum defined in event param3(%u).", i, j+1, action.cast.spellId, spell->RecoveryTime, temp.event_param3);
+                                if (temp.raw.param3 < spell->RecoveryTime)
+                                    sLog->outDebug("CreatureEventAI:  Event %u Action %u uses SpellID %u but cooldown is longer(%u) than minumum defined in event param3(%u).", i, j+1, action.cast.spellId, spell->RecoveryTime, temp.raw.param3);
                             }
                         }
-                        */
-
                         //Cast is always triggered if target is forced to cast on self
                         if (action.cast.castFlags & CAST_FORCE_TARGET_SELF)
                             action.cast.castFlags |= CAST_TRIGGERED;
@@ -702,14 +700,14 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                             sLog->outErrorDb("CreatureEventAI:  Event %u Action %u uses incorrect Target type", i, j+1);
                         break;
                     case ACTION_T_SET_INST_DATA:
-                        //if (!(temp.event_flags & EFLAG_NORMAL) && !(temp.event_flags & EFLAG_HEROIC))
-                        //    sLog->outErrorDb("CreatureEventAI:  Event %u Action %u. Cannot set instance data without event flags (normal/heroic).", i, j+1);
+                        if (!(temp.event_flags & EFLAG_DIFFICULTY_ALL))
+                            sLog->outErrorDb("CreatureEventAI:  Event %u Action %u. Cannot set instance data without event flags (normal/heroic).", i, j+1);
                         if (action.set_inst_data.value > 4/*SPECIAL*/)
                             sLog->outErrorDb("CreatureEventAI:  Event %u Action %u attempts to set instance data above encounter state 4. Custom case?", i, j+1);
                         break;
                     case ACTION_T_SET_INST_DATA64:
-                        //if (!(temp.event_flags & EFLAG_NORMAL) && !(temp.event_flags & EFLAG_HEROIC))
-                        //    sLog->outErrorDb("CreatureEventAI:  Event %u Action %u. Cannot set instance data without event flags (normal/heroic).", i, j+1);
+                        if (!(temp.event_flags & EFLAG_DIFFICULTY_ALL))
+                            sLog->outErrorDb("CreatureEventAI:  Event %u Action %u. Cannot set instance data without event flags (normal/heroic).", i, j+1);
                         if (action.set_inst_data64.target >= TARGET_T_END)
                             sLog->outErrorDb("CreatureEventAI:  Event %u Action %u uses incorrect Target type", i, j+1);
                         break;
@@ -734,6 +732,30 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                             }
                         }
                         break;
+                    case ACTION_T_MOUNT_TO_ENTRY_OR_MODEL:
+                        if (action.mount.creatureId != 0 || action.mount.modelId != 0)
+                        {
+                            if (action.mount.creatureId && !sCreatureStorage.LookupEntry<CreatureTemplate>(action.mount.creatureId))
+                            {
+                                sLog->outErrorDb("CreatureEventAI:  Event %u Action %u uses nonexistent Creature entry %u.", i, j+1, action.mount.creatureId);
+                                action.morph.creatureId = 0;
+                            }
+
+                            if (action.mount.modelId)
+                            {
+                                if (action.mount.creatureId)
+                                {
+                                    sLog->outErrorDb("CreatureEventAI:  Event %u Action %u have unused ModelId %u with also set creature id %u.", i, j+1, action.mount.modelId, action.mount.creatureId);
+                                    action.mount.modelId = 0;
+                                }
+                                else if (!sCreatureDisplayInfoStore.LookupEntry(action.mount.modelId))
+                                {
+                                    sLog->outErrorDb("CreatureEventAI:  Event %u Action %u uses nonexistent ModelId %u.", i, j+1, action.mount.modelId);
+                                    action.mount.modelId = 0;
+                                }
+                            }
+                        }
+                        break;
                     case ACTION_T_EVADE:                    //No Params
                     case ACTION_T_FLEE_FOR_ASSIST:          //No Params
                     case ACTION_T_DIE:                      //No Params
@@ -750,7 +772,10 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                     case ACTION_T_RANDOM_TEXTEMOTE:
                         sLog->outErrorDb("CreatureEventAI:  Event %u Action %u currently unused ACTION type. Did you forget to update database?", i, j+1);
                         break;
-
+                    case ACTION_T_MOVE_RANDOM_POINT:
+                    case ACTION_T_SET_STAND_STATE:
+                    case ACTION_T_SET_PHASE_MASK:
+                    case ACTION_T_SET_VISIBILITY:
                     case ACTION_T_SET_ACTIVE:
                     case ACTION_T_SET_AGGRESSIVE:
                     case ACTION_T_ATTACK_START_PULSE:
