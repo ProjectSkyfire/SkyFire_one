@@ -1017,6 +1017,20 @@ namespace Trinity
             float m_fRange;
     };
 
+    class ObjectTypeIdCheck
+    {
+        public:
+            ObjectTypeIdCheck(TypeID typeId, bool equals) : _typeId(typeId), _equals(equals) {}
+            bool operator()(WorldObject* object)
+            {
+                return (object->GetTypeId() == _typeId) == _equals;
+            }
+
+        private:
+            TypeID _typeId;
+            bool _equals;
+    };
+
     class PlayerAtMinimumRangeAway
     {
     public:

@@ -72,12 +72,6 @@ struct boss_netherspiteAI : public ScriptedAI
             BeamTarget[i] = 0;
             BeamerGUID[i] = 0;
         }
-        // need core fix
-        for (int i = 0; i < 3; ++i)
-        {
-            if (SpellEntry *spell = GET_SPELL(PlayerBuff[i]))
-                spell->AttributesEx |= SPELL_ATTR_EX_NEGATIVE;
-        }
     }
 
     ScriptedInstance* instance;

@@ -497,6 +497,11 @@ struct MapEntry
             MapID == 568 || MapID == 309 || MapID == 209 || MapID == 534 ||
             MapID == 560 || MapID == 509 || MapID == 269;
     }
+
+    bool IsContinent() const
+    {
+        return MapID == 0 || MapID == 1 || MapID == 530;
+    }
 };
 
 struct QuestSortEntry
@@ -595,7 +600,7 @@ struct SpellEntry
     uint32    AttributesEx3;                                // 8
     uint32    AttributesEx4;                                // 9
     uint32    AttributesEx5;                                // 10
-    //uint32    AttributesEx6;                              // 11 not used
+    uint32    AttributesEx6;                                // 11
     uint32    Stances;                                      // 12
     uint32    StancesNot;                                   // 13
     uint32    Targets;                                      // 14
