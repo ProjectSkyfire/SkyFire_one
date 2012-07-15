@@ -220,5 +220,17 @@ LocaleConstant GetLocaleByName(const std::string& name);
 #define M_PI            3.14159265358979323846
 #endif
 
+#define TRINITY_GUARD(MUTEX, LOCK) \
+  ACE_Guard< MUTEX > TRINITY_GUARD_OBJECT (LOCK); \
+    if (TRINITY_GUARD_OBJECT.locked() == 0) ASSERT(false);
+
+# define TRINITY_WRITE_GUARD(MUTEX, LOCK) \
+  ACE_Write_Guard< MUTEX > TRINITY_GUARD_OBJECT (LOCK); \
+    if (TRINITY_GUARD_OBJECT.locked() == 0) ASSERT(false);
+
+# define TRINITY_READ_GUARD(MUTEX, LOCK) \
+  ACE_Read_Guard< MUTEX > TRINITY_GUARD_OBJECT (LOCK); \
+    if (TRINITY_GUARD_OBJECT.locked() == 0) ASSERT(false);
+
 #endif
 
