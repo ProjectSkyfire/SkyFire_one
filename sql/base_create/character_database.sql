@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.5.18, for Win64 (x86)
+-- MySQL dump 10.13  Distrib 5.5.25, for Win64 (x86)
 --
 -- Host: localhost    Database: characters
 -- ------------------------------------------------------
--- Server version	5.5.18
+-- Server version	5.5.25
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +14,29 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `addons`
+--
+
+DROP TABLE IF EXISTS `addons`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `addons` (
+  `name` varchar(120) NOT NULL DEFAULT '',
+  `crc` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Addons';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `addons`
+--
+
+LOCK TABLES `addons` WRITE;
+/*!40000 ALTER TABLE `addons` DISABLE KEYS */;
+/*!40000 ALTER TABLE `addons` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `arena_team`
@@ -156,6 +179,34 @@ CREATE TABLE `bugreport` (
 LOCK TABLES `bugreport` WRITE;
 /*!40000 ALTER TABLE `bugreport` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bugreport` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `channels`
+--
+
+DROP TABLE IF EXISTS `channels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `channels` (
+  `m_name` text NOT NULL,
+  `m_team` int(10) unsigned NOT NULL,
+  `m_announce` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `m_moderate` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `m_public` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  `m_password` text,
+  `BannedList` longtext,
+  PRIMARY KEY (`m_name`(10),`m_team`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Channel System';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `channels`
+--
+
+LOCK TABLES `channels` WRITE;
+/*!40000 ALTER TABLE `channels` DISABLE KEYS */;
+/*!40000 ALTER TABLE `channels` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1587,4 +1638,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-03-12  4:50:04
+-- Dump completed on 2012-07-14 19:30:19
