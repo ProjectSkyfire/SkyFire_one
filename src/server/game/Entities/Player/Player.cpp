@@ -17714,10 +17714,10 @@ void Player::SetRestBonus (float rest_bonus_new)
         m_rest_bonus = rest_bonus_new;
 
     // update data for client
-    if (m_rest_bonus>10)
-        SetByteValue(PLAYER_BYTES_2, 3, 0x01);              // Set Reststate = Rested
+    if (m_rest_bonus > 10)
+        SetByteValue(PLAYER_BYTES_2, 3, REST_STATE_RESTED);
     else if (m_rest_bonus <= 1)
-        SetByteValue(PLAYER_BYTES_2, 3, 0x02);              // Set Reststate = Normal
+        SetByteValue(PLAYER_BYTES_2, 3, REST_STATE_NORMAL);
 
     //RestTickUpdate
     SetUInt32Value(PLAYER_REST_STATE_EXPERIENCE, uint32(m_rest_bonus));
