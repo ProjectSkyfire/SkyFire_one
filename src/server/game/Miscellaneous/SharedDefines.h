@@ -277,7 +277,7 @@ enum AttributesEx
     SPELL_ATTR_EX_CHANNEL_TRACK_TARGET        = 0x00004000,       // 14 *Client automatically forces player to face target when channeling
     SPELL_ATTR_EX_DISPEL_AURAS_ON_IMMUNITY    = 0x00008000,       // 15 remove auras on immunity
     SPELL_ATTR_EX_UNAFFECTED_BY_SCHOOL_IMMUNE = 0x00010000,       // 16 unaffected by school immunity
-    SPELL_ATTR_EX_UNAUTOCASTABLE_BY_PET       = 0x00020000,       // 17
+    SPELL_ATTR_EX_UNK17                       = 0x00020000,       // 17
     SPELL_ATTR_EX_UNK18                       = 0x00040000,       // 18 stun, polymorph, daze, hex
     SPELL_ATTR_EX_CANT_TARGET_SELF            = 0x00080000,       // 19 *Applies only to unit target - for example Divine Intervention (19752)
     SPELL_ATTR_EX_REQ_COMBO_POINTS1           = 0x00100000,       // 20 Req combo points on target
@@ -310,7 +310,7 @@ enum AttributesEx2
     SPELL_ATTR_EX2_HEALTH_FUNNEL              = 0x00000800,       // 11
     SPELL_ATTR_EX2_UNK12                      = 0x00001000,       // 12 *(swipe, cleave)
     SPELL_ATTR_EX2_CASTABLE_ON_ITEMS          = 0x00002000,       // 13 *item enchants, poisons, disenchant...
-    SPELL_ATTR_EX2_UNK14                      = 0x00004000,       // 14 *(picoviny)
+    SPELL_ATTR_EX2_UNK14                      = 0x00004000,       // 14
     SPELL_ATTR_EX2_UNK15                      = 0x00008000,       // 15 not set in 2.4.3
     SPELL_ATTR_EX2_TAME_BEAST                 = 0x00010000,       // 16
     SPELL_ATTR_EX2_NOT_RESET_AUTOSHOT         = 0x00020000,       // 17 Hunters Shot and Stings only have this flag
