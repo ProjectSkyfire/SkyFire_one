@@ -744,7 +744,7 @@ void GameEventMgr::LoadFromDB()
     }
 
     // set all flags to 0
-    mGameEventBattleGroundHolidays.resize(mGameEvent.size(), 0);
+    mGameEventBattlegroundHolidays.resize(mGameEvent.size(), 0);
     // load game event battleground flags
     //                                   0     1
     result = WorldDatabase.Query("SELECT event, bgflag FROM game_event_battleground_holiday");
@@ -771,7 +771,7 @@ void GameEventMgr::LoadFromDB()
 
             ++count;
 
-            mGameEventBattleGroundHolidays[event_id] = fields[1].GetUInt32();
+            mGameEventBattlegroundHolidays[event_id] = fields[1].GetUInt32();
         } while (result->NextRow());
         sLog->outString();
         sLog->outString(">> Loaded %u battleground holidays in game events", count);
@@ -940,7 +940,7 @@ void GameEventMgr::UnApplyEvent(uint16 event_id)
     // remove vendor items
     UpdateEventNPCVendor(event_id, false);
     // update bg holiday
-    UpdateBattleGroundSettings();
+    UpdateBattlegroundSettings();
 }
 
 void GameEventMgr::ApplyNewEvent(uint16 event_id)
@@ -970,7 +970,7 @@ void GameEventMgr::ApplyNewEvent(uint16 event_id)
     // add vendor items
     UpdateEventNPCVendor(event_id, true);
     // update bg holiday
-    UpdateBattleGroundSettings();
+    UpdateBattlegroundSettings();
 }
 
 void GameEventMgr::UpdateEventNPCFlags(uint16 event_id)
@@ -997,12 +997,12 @@ void GameEventMgr::UpdateEventNPCFlags(uint16 event_id)
     }
 }
 
-void GameEventMgr::UpdateBattleGroundSettings()
+void GameEventMgr::UpdateBattlegroundSettings()
 {
     uint32 mask = 0;
     for (ActiveEvents::const_iterator itr = m_ActiveEvents.begin(); itr != m_ActiveEvents.end(); ++itr)
-        mask |= mGameEventBattleGroundHolidays[*itr];
-    sBattleGroundMgr->SetHolidayWeekends(mask);
+        mask |= mGameEventBattlegroundHolidays[*itr];
+    sBattlegroundMgr->SetHolidayWeekends(mask);
 }
 
 void GameEventMgr::UpdateEventNPCVendor(uint16 event_id, bool activate)

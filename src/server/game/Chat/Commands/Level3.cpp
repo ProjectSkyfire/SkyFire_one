@@ -6696,7 +6696,7 @@ bool ChatHandler::HandleSendMessageCommand(const char *args)
 
 bool ChatHandler::HandleFlushArenaPointsCommand(const char * /*args*/)
 {
-    sBattleGroundMgr->DistributeArenaPoints();
+    sBattlegroundMgr->DistributeArenaPoints();
     return true;
 }
 

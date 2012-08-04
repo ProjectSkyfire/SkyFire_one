@@ -50,7 +50,7 @@ class CreatureGroup;
 struct ScriptInfo;
 struct ScriptAction;
 struct Position;
-class BattleGround;
+class Battleground;
 
 struct ScriptAction
 {
@@ -370,9 +370,9 @@ class Map : public GridRefManager<NGridType>
         bool IsDungeon() const { return i_mapEntry && i_mapEntry->IsDungeon(); }
         bool IsRaid() const { return i_mapEntry && i_mapEntry->IsRaid(); }
         bool IsHeroic() const { return i_spawnMode == DIFFICULTY_HEROIC; }
-        bool IsBattleGround() const { return i_mapEntry && i_mapEntry->IsBattleGround(); }
+        bool IsBattleground() const { return i_mapEntry && i_mapEntry->IsBattleground(); }
         bool IsBattleArena() const { return i_mapEntry && i_mapEntry->IsBattleArena(); }
-        bool IsBattleGroundOrArena() const { return i_mapEntry && i_mapEntry->IsBattleGroundOrArena(); }
+        bool IsBattlegroundOrArena() const { return i_mapEntry && i_mapEntry->IsBattlegroundOrArena(); }
 
         void AddObjectToRemoveList(WorldObject *obj);
         void AddObjectToSwitchList(WorldObject *obj, bool on);
@@ -589,11 +589,11 @@ class InstanceMap : public Map
         uint32 i_script_id;
 };
 
-class BattleGroundMap : public Map
+class BattlegroundMap : public Map
 {
     public:
-        BattleGroundMap(uint32 id, time_t, uint32 InstanceId, Map* _parent);
-        ~BattleGroundMap();
+        BattlegroundMap(uint32 id, time_t, uint32 InstanceId, Map* _parent);
+        ~BattlegroundMap();
 
         bool Add(Player *);
         void Remove(Player *, bool);
@@ -602,10 +602,10 @@ class BattleGroundMap : public Map
         void RemoveAllPlayers();
 
         virtual void InitVisibilityDistance();
-        BattleGround* GetBG() { return m_bg; }
-        void SetBG(BattleGround* bg) { m_bg = bg; }
+        Battleground* GetBG() { return m_bg; }
+        void SetBG(Battleground* bg) { m_bg = bg; }
     private:
-        BattleGround* m_bg;
+        Battleground* m_bg;
 };
 
 /*inline

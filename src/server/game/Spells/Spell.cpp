@@ -963,7 +963,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
 
         unitTarget->getHostileRefManager().threatAssist(caster, float(gain) * 0.5f, m_spellInfo);
         if (caster->GetTypeId() == TYPEID_PLAYER)
-            if (BattleGround *bg = caster->ToPlayer()->GetBattleGround())
+            if (Battleground *bg = caster->ToPlayer()->GetBattleground())
                 bg->UpdatePlayerScore(caster->ToPlayer(), SCORE_HEALING_DONE, gain);
     }
     // Do damage and triggers
@@ -3466,7 +3466,7 @@ uint8 Spell::CanCast(bool strict)
 
     // only allow triggered spells if at an ended battleground
     if (!m_IsTriggeredSpell && m_caster->GetTypeId() == TYPEID_PLAYER)
-        if (BattleGround * bg = m_caster->ToPlayer()->GetBattleGround())
+        if (Battleground * bg = m_caster->ToPlayer()->GetBattleground())
             if (bg->GetStatus() == STATUS_WAIT_LEAVE)
                 return SPELL_FAILED_DONT_REPORT;
 
@@ -3622,7 +3622,7 @@ uint8 Spell::CanCast(bool strict)
 
     // Spell casted only on battleground
     if ((m_spellInfo->AttributesEx3 & SPELL_ATTR_EX3_BATTLEGROUND) &&  m_caster->GetTypeId() == TYPEID_PLAYER)
-        if (!m_caster->ToPlayer()->InBattleGround())
+        if (!m_caster->ToPlayer()->InBattleground())
             return SPELL_FAILED_ONLY_BATTLEGROUNDS;
 
     // do not allow spells to be cast in arenas
@@ -3978,9 +3978,9 @@ uint8 Spell::CanCast(bool strict)
                     (!m_targets.getItemTarget() || !m_targets.getItemTarget()->GetProto()->LockID || m_targets.getItemTarget()->GetOwner() != m_caster))
                     return SPELL_FAILED_BAD_TARGETS;
 
-                // In BattleGround players can use only flags and banners
-                if (m_caster->ToPlayer()->InBattleGround() &&
-                    !m_caster->ToPlayer()->CanUseBattleGroundObject())
+                // In Battleground players can use only flags and banners
+                if (m_caster->ToPlayer()->InBattleground() &&
+                    !m_caster->ToPlayer()->CanUseBattlegroundObject())
                     return SPELL_FAILED_TRY_AGAIN;
 
                 // get the lock entry
@@ -4182,7 +4182,7 @@ uint8 Spell::CanCast(bool strict)
             {
               //Do not allow to cast it before BG starts.
                 if (m_caster->GetTypeId() == TYPEID_PLAYER)
-                    if (BattleGround const *bg = m_caster->ToPlayer()->GetBattleGround())
+                    if (Battleground const *bg = m_caster->ToPlayer()->GetBattleground())
                         if (bg->GetStatus() != STATUS_IN_PROGRESS)
                             return SPELL_FAILED_TRY_AGAIN;
                 break;
@@ -4192,7 +4192,7 @@ uint8 Spell::CanCast(bool strict)
                     //Do not allow use of Trinket before BG starts
                     if (m_caster->GetTypeId() == TYPEID_PLAYER)
                         if (m_spellInfo->Id == 22563 || m_spellInfo->Id == 22564)
-                            if (BattleGround const *bg = m_caster->ToPlayer()->GetBattleGround())
+                            if (Battleground const *bg = m_caster->ToPlayer()->GetBattleground())
                                 if (bg->GetStatus() != STATUS_IN_PROGRESS)
                                     return SPELL_FAILED_TRY_AGAIN;
                     break;

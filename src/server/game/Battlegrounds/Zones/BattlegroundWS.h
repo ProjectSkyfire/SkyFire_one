@@ -136,23 +136,23 @@ enum BG_WS_CarrierDebuffs
     WS_SPELL_BRUTAL_ASSAULT    = 46393
 };
 
-class BattleGroundWGScore : public BattleGroundScore
+class BattlegroundWGScore : public BattlegroundScore
 {
     public:
-        BattleGroundWGScore() : FlagCaptures(0), FlagReturns(0) {};
-        virtual ~BattleGroundWGScore() {};
+        BattlegroundWGScore() : FlagCaptures(0), FlagReturns(0) {};
+        virtual ~BattlegroundWGScore() {};
         uint32 FlagCaptures;
         uint32 FlagReturns;
 };
 
-class BattleGroundWS : public BattleGround
+class BattlegroundWS : public Battleground
 {
-    friend class BattleGroundMgr;
+    friend class BattlegroundMgr;
 
     public:
         /* Construction */
-        BattleGroundWS();
-        ~BattleGroundWS();
+        BattlegroundWS();
+        ~BattlegroundWS();
         void Update(time_t diff);
 
         /* inherited from BattlegroundClass */
@@ -183,7 +183,7 @@ class BattleGroundWS : public BattleGround
         void RemovePlayer(Player *plr, uint64 guid);
         void HandleAreaTrigger(Player *Source, uint32 Trigger);
         void HandleKillPlayer(Player* player, Player* killer);
-        bool SetupBattleGround();
+        bool SetupBattleground();
         virtual void ResetBGSubclass();
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* player);
 

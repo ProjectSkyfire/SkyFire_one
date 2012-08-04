@@ -107,20 +107,20 @@ void WorldSession::HandleMoveWorldportAckOpcode()
 
     // battleground state prepare (in case join to BG), at relogin/tele player not invited
     // only add to bg group and object, if the player was invited (else he entered through command)
-    if (GetPlayer()->InBattleGround())
+    if (GetPlayer()->InBattleground())
     {
         // cleanup setting if outdated
-        if (!mEntry->IsBattleGroundOrArena())
+        if (!mEntry->IsBattlegroundOrArena())
         {
             // We're not in BG
-            GetPlayer()->SetBattleGroundId(0);                          // We're not in BG.
+            GetPlayer()->SetBattlegroundId(0);                          // We're not in BG.
             // reset destination bg team
             GetPlayer()->SetBGTeam(0);
         }
         // join to bg case
-        else if (BattleGround *bg = GetPlayer()->GetBattleGround())
+        else if (Battleground *bg = GetPlayer()->GetBattleground())
         {
-            if (GetPlayer()->IsInvitedForBattleGroundInstance(GetPlayer()->GetBattleGroundId()))
+            if (GetPlayer()->IsInvitedForBattlegroundInstance(GetPlayer()->GetBattlegroundId()))
                 bg->AddPlayer(GetPlayer());
         }
     }
@@ -130,7 +130,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
     // flight fast teleport case
     if (GetPlayer()->GetMotionMaster()->GetCurrentMovementGeneratorType() == FLIGHT_MOTION_TYPE)
     {
-        if (!GetPlayer()->InBattleGround())
+        if (!GetPlayer()->InBattleground())
         {
             // short preparations to continue flight
             FlightPathMovementGenerator* flight = (FlightPathMovementGenerator*)(GetPlayer()->GetMotionMaster()->top());

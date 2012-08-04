@@ -435,10 +435,10 @@ void WorldSession::HandleQuestComplete(WorldPacket& recv_data)
     if (Quest const *pQuest = sObjectMgr->GetQuestTemplate(quest))
     {
         // TODO: need a virtual function
-        if (GetPlayer()->InBattleGround())
-            if (BattleGround* bg = GetPlayer()->GetBattleGround())
+        if (GetPlayer()->InBattleground())
+            if (Battleground* bg = GetPlayer()->GetBattleground())
                 if (bg->GetTypeID() == BATTLEGROUND_AV)
-                    ((BattleGroundAV*)bg)->HandleQuestComplete(quest, GetPlayer());
+                    ((BattlegroundAV*)bg)->HandleQuestComplete(quest, GetPlayer());
 
         if (_player->GetQuestStatus(quest) != QUEST_STATUS_COMPLETE)
         {

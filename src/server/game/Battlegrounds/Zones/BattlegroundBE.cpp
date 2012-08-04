@@ -27,7 +27,7 @@
 #include "MapManager.h"
 #include "Language.h"
 
-BattleGroundBE::BattleGroundBE()
+BattlegroundBE::BattlegroundBE()
 {
     m_BgObjects.resize(BG_BE_OBJECT_MAX);
 
@@ -42,16 +42,16 @@ BattleGroundBE::BattleGroundBE()
     m_StartMessageIds[BG_STARTING_EVENT_FOURTH] = LANG_ARENA_HAS_BEGUN;
 }
 
-BattleGroundBE::~BattleGroundBE()
+BattlegroundBE::~BattlegroundBE()
 {
 }
 
-void BattleGroundBE::Update(time_t diff)
+void BattlegroundBE::Update(time_t diff)
 {
-    BattleGround::Update(diff);
+    Battleground::Update(diff);
 }
 
-void BattleGroundBE::StartingEventCloseDoors()
+void BattlegroundBE::StartingEventCloseDoors()
 {
     for (uint32 i = BG_BE_OBJECT_DOOR_1; i <= BG_BE_OBJECT_DOOR_4; ++i)
         SpawnBGObject(i, RESPAWN_IMMEDIATELY);
@@ -60,7 +60,7 @@ void BattleGroundBE::StartingEventCloseDoors()
         SpawnBGObject(i, RESPAWN_ONE_DAY);
 }
 
-void BattleGroundBE::StartingEventOpenDoors()
+void BattlegroundBE::StartingEventOpenDoors()
 {
     for (uint32 i = BG_BE_OBJECT_DOOR_1; i <= BG_BE_OBJECT_DOOR_2; ++i)
         DoorOpen(i);
@@ -69,11 +69,11 @@ void BattleGroundBE::StartingEventOpenDoors()
         SpawnBGObject(i, 60);
 }
 
-void BattleGroundBE::AddPlayer(Player *plr)
+void BattlegroundBE::AddPlayer(Player *plr)
 {
-    BattleGround::AddPlayer(plr);
+    Battleground::AddPlayer(plr);
     //create score and add it to map, default values are set in constructor
-    BattleGroundBEScore* sc = new BattleGroundBEScore;
+    BattlegroundBEScore* sc = new BattlegroundBEScore;
 
     m_PlayerScores[plr->GetGUID()] = sc;
 
@@ -81,7 +81,7 @@ void BattleGroundBE::AddPlayer(Player *plr)
     UpdateWorldState(0x9f0, GetAlivePlayersCountByTeam(HORDE));
 }
 
-void BattleGroundBE::RemovePlayer(Player* /*plr*/, uint64 /*guid*/)
+void BattlegroundBE::RemovePlayer(Player* /*plr*/, uint64 /*guid*/)
 {
     if (GetStatus() == STATUS_WAIT_LEAVE)
         return;
@@ -92,7 +92,7 @@ void BattleGroundBE::RemovePlayer(Player* /*plr*/, uint64 /*guid*/)
     CheckArenaWinConditions();
 }
 
-void BattleGroundBE::HandleKillPlayer(Player* player, Player* killer)
+void BattlegroundBE::HandleKillPlayer(Player* player, Player* killer)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -103,7 +103,7 @@ void BattleGroundBE::HandleKillPlayer(Player* player, Player* killer)
         return;
     }
 
-    BattleGround::HandleKillPlayer(player, killer);
+    Battleground::HandleKillPlayer(player, killer);
 
     UpdateWorldState(0x9f1, GetAlivePlayersCountByTeam(ALLIANCE));
     UpdateWorldState(0x9f0, GetAlivePlayersCountByTeam(HORDE));
@@ -111,13 +111,13 @@ void BattleGroundBE::HandleKillPlayer(Player* player, Player* killer)
     CheckArenaWinConditions();
 }
 
-bool BattleGroundBE::HandlePlayerUnderMap(Player* player)
+bool BattlegroundBE::HandlePlayerUnderMap(Player* player)
 {
     player->TeleportTo(GetMapId(), 6238.930176, 262.963470, 0.889519, player->GetOrientation(), false);
     return true;
 }
 
-void BattleGroundBE::HandleAreaTrigger(Player *Source, uint32 Trigger)
+void BattlegroundBE::HandleAreaTrigger(Player *Source, uint32 Trigger)
 {
     // this is wrong way to implement these things. On official it done by gameobject spell cast.
     if (GetStatus() != STATUS_IN_PROGRESS)
@@ -143,18 +143,18 @@ void BattleGroundBE::HandleAreaTrigger(Player *Source, uint32 Trigger)
     //    HandleTriggerBuff(buff_guid, Source);
 }
 
-void BattleGroundBE::FillInitialWorldStates(WorldPacket &data)
+void BattlegroundBE::FillInitialWorldStates(WorldPacket &data)
 {
     data << uint32(0x9f1) << uint32(GetAlivePlayersCountByTeam(ALLIANCE));           // 7
     data << uint32(0x9f0) << uint32(GetAlivePlayersCountByTeam(HORDE));           // 8
     data << uint32(0x9f3) << uint32(1);           // 9
 }
 
-void BattleGroundBE::ResetBGSubclass()
+void BattlegroundBE::ResetBGSubclass()
 {
 }
 
-bool BattleGroundBE::SetupBattleGround()
+bool BattlegroundBE::SetupBattleground()
 {
     // gates
     if (  !AddObject(BG_BE_OBJECT_DOOR_1, BG_BE_OBJECT_TYPE_DOOR_1, 6287.277f, 282.1877f, 3.810925f, -2.260201f, 0, 0, 0.9044551f, -0.4265689f, RESPAWN_IMMEDIATELY)
@@ -172,14 +172,14 @@ bool BattleGroundBE::SetupBattleGround()
     return true;
 }
 
-void BattleGroundBE::UpdatePlayerScore(Player* Source, uint32 type, uint32 value)
+void BattlegroundBE::UpdatePlayerScore(Player* Source, uint32 type, uint32 value)
 {
-    BattleGroundScoreMap::iterator itr = m_PlayerScores.find(Source->GetGUID());
+    BattlegroundScoreMap::iterator itr = m_PlayerScores.find(Source->GetGUID());
     if (itr == m_PlayerScores.end())                         // player not found...
         return;
 
     //there is nothing special in this score
-    BattleGround::UpdatePlayerScore(Source, type, value);
+    Battleground::UpdatePlayerScore(Source, type, value);
 }
 
 /*

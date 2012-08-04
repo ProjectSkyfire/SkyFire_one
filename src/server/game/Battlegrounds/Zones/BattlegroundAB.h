@@ -21,7 +21,7 @@
 #ifndef __BATTLEGROUNDAB_H
 #define __BATTLEGROUNDAB_H
 
-class BattleGround;
+class Battleground;
 
 enum BG_AB_WorldStates
 {
@@ -222,22 +222,22 @@ struct BG_AB_BannerTimer
     uint8       teamIndex;
 };
 
-class BattleGroundABScore : public BattleGroundScore
+class BattlegroundABScore : public BattlegroundScore
 {
     public:
-        BattleGroundABScore(): BasesAssaulted(0), BasesDefended(0) {};
-        virtual ~BattleGroundABScore() {};
+        BattlegroundABScore(): BasesAssaulted(0), BasesDefended(0) {};
+        virtual ~BattlegroundABScore() {};
         uint32 BasesAssaulted;
         uint32 BasesDefended;
 };
 
-class BattleGroundAB : public BattleGround
+class BattlegroundAB : public Battleground
 {
-    friend class BattleGroundMgr;
+    friend class BattlegroundMgr;
 
     public:
-        BattleGroundAB();
-        ~BattleGroundAB();
+        BattlegroundAB();
+        ~BattlegroundAB();
 
         void Update(time_t diff);
         void AddPlayer(Player *plr);
@@ -245,7 +245,7 @@ class BattleGroundAB : public BattleGround
         virtual void StartingEventOpenDoors();
         void RemovePlayer(Player *plr, uint64 guid);
         void HandleAreaTrigger(Player *Source, uint32 Trigger);
-        virtual bool SetupBattleGround();
+        virtual bool SetupBattleground();
         virtual void ResetBGSubclass();
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* player);
 

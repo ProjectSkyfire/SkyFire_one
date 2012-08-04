@@ -597,13 +597,13 @@ bool ChatHandler::HandleGetItemState(const char* args)
 
 bool ChatHandler::HandleDebugBattlegroundCommand(const char * /*args*/)
 {
-    sBattleGroundMgr->ToggleTesting();
+    sBattlegroundMgr->ToggleTesting();
     return true;
 }
 
 bool ChatHandler::HandleDebugArenaCommand(const char * /*args*/)
 {
-    sBattleGroundMgr->ToggleArenaTesting();
+    sBattlegroundMgr->ToggleArenaTesting();
     return true;
 }
 

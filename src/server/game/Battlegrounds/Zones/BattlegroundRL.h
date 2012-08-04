@@ -21,9 +21,9 @@
 #ifndef __BATTLEGROUNDRL_H
 #define __BATTLEGROUNDRL_H
 
-class BattleGround;
+class Battleground;
 
-enum BattleGroundRLObjectTypes
+enum BattlegroundRLObjectTypes
 {
     BG_RL_OBJECT_DOOR_1         = 0,
     BG_RL_OBJECT_DOOR_2         = 1,
@@ -32,7 +32,7 @@ enum BattleGroundRLObjectTypes
     BG_RL_OBJECT_MAX            = 4
 };
 
-enum BattleGroundRLObjects
+enum BattlegroundRLObjects
 {
     BG_RL_OBJECT_TYPE_DOOR_1    = 185918,
     BG_RL_OBJECT_TYPE_DOOR_2    = 185917,
@@ -40,21 +40,21 @@ enum BattleGroundRLObjects
     BG_RL_OBJECT_TYPE_BUFF_2    = 184664
 };
 
-class BattleGroundRLScore : public BattleGroundScore
+class BattlegroundRLScore : public BattlegroundScore
 {
     public:
-        BattleGroundRLScore() {};
-        virtual ~BattleGroundRLScore() {};
+        BattlegroundRLScore() {};
+        virtual ~BattlegroundRLScore() {};
         //TODO fix me
 };
 
-class BattleGroundRL : public BattleGround
+class BattlegroundRL : public Battleground
 {
-    friend class BattleGroundMgr;
+    friend class BattlegroundMgr;
 
     public:
-        BattleGroundRL();
-        ~BattleGroundRL();
+        BattlegroundRL();
+        ~BattlegroundRL();
         void Update(time_t diff);
 
         /* inherited from BattlegroundClass */
@@ -64,7 +64,7 @@ class BattleGroundRL : public BattleGround
 
         void RemovePlayer(Player *plr, uint64 guid);
         void HandleAreaTrigger(Player *Source, uint32 Trigger);
-        bool SetupBattleGround();
+        bool SetupBattleground();
         virtual void ResetBGSubclass();
         virtual void FillInitialWorldStates(WorldPacket &d);
         void HandleKillPlayer(Player* player, Player* killer);

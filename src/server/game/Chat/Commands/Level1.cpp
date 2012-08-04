@@ -842,7 +842,7 @@ bool ChatHandler::HandleSummonCommand(const char* args)
 
         Map* pMap = m_session->GetPlayer()->GetMap();
 
-        if (pMap->IsBattleGroundOrArena())
+        if (pMap->IsBattlegroundOrArena())
         {
             // only allow if gm mode is on
             if (!target->isGameMaster())
@@ -852,7 +852,7 @@ bool ChatHandler::HandleSummonCommand(const char* args)
                 return false;
             }
             // if both players are in different bgs
-            else if (target->GetBattleGroundId() && m_session->GetPlayer()->GetBattleGroundId() != target->GetBattleGroundId())
+            else if (target->GetBattlegroundId() && m_session->GetPlayer()->GetBattlegroundId() != target->GetBattlegroundId())
             {
                 PSendSysMessage(LANG_CANNOT_GO_TO_BG_FROM_BG, target->GetName());
                 SetSentErrorMessage(true);
@@ -860,10 +860,10 @@ bool ChatHandler::HandleSummonCommand(const char* args)
             }
             // all's well, set bg id
             // when porting out from the bg, it will be reset to 0
-            target->SetBattleGroundId(m_session->GetPlayer()->GetBattleGroundId());
+            target->SetBattlegroundId(m_session->GetPlayer()->GetBattlegroundId());
             // remember current position as entry point for return at bg end teleportation
-            if (!target->GetMap()->IsBattleGroundOrArena())
-                target->SetBattleGroundEntryPoint();
+            if (!target->GetMap()->IsBattlegroundOrArena())
+                target->SetBattlegroundEntryPoint();
         }
         else if (pMap->IsDungeon())
         {
@@ -950,7 +950,7 @@ bool ChatHandler::HandleAppearCommand(const char* args)
     if (target)
     {
         Map* cMap = target->GetMap();
-        if (cMap->IsBattleGroundOrArena())
+        if (cMap->IsBattlegroundOrArena())
         {
             // only allow if gm mode is on
             if (!_player->isGameMaster())
@@ -960,7 +960,7 @@ bool ChatHandler::HandleAppearCommand(const char* args)
                 return false;
             }
             // if both players are in different bgs
-            else if (_player->GetBattleGroundId() && _player->GetBattleGroundId() != target->GetBattleGroundId())
+            else if (_player->GetBattlegroundId() && _player->GetBattlegroundId() != target->GetBattlegroundId())
             {
                 PSendSysMessage(LANG_CANNOT_GO_TO_BG_FROM_BG, target->GetName());
                 SetSentErrorMessage(true);
@@ -968,10 +968,10 @@ bool ChatHandler::HandleAppearCommand(const char* args)
             }
             // all's well, set bg id
             // when porting out from the bg, it will be reset to 0
-            _player->SetBattleGroundId(target->GetBattleGroundId());
+            _player->SetBattlegroundId(target->GetBattlegroundId());
             // remember current position as entry point for return at bg end teleportation
-            if (!_player->GetMap()->IsBattleGroundOrArena())
-                _player->SetBattleGroundEntryPoint();
+            if (!_player->GetMap()->IsBattlegroundOrArena())
+                _player->SetBattlegroundEntryPoint();
         }
         else if (cMap->IsDungeon())
         {
@@ -2107,7 +2107,7 @@ bool ChatHandler::HandleTeleCommand(const char * args)
     }
 
     MapEntry const * me = sMapStore.LookupEntry(tele->mapId);
-    if (!me || me->IsBattleGroundOrArena())
+    if (!me || me->IsBattlegroundOrArena())
     {
         SendSysMessage(LANG_CANNOT_TELE_TO_BG);
         SetSentErrorMessage(true);
@@ -2398,7 +2398,7 @@ bool ChatHandler::HandleNameTeleCommand(const char * args)
     }
 
     MapEntry const * me = sMapStore.LookupEntry(tele->mapId);
-    if (!me || me->IsBattleGroundOrArena())
+    if (!me || me->IsBattlegroundOrArena())
     {
         SendSysMessage(LANG_CANNOT_TELE_TO_BG);
         SetSentErrorMessage(true);
@@ -2467,7 +2467,7 @@ bool ChatHandler::HandleGroupTeleCommand(const char * args)
     }
 
     MapEntry const * me = sMapStore.LookupEntry(tele->mapId);
-    if (!me || me->IsBattleGroundOrArena())
+    if (!me || me->IsBattlegroundOrArena())
     {
         SendSysMessage(LANG_CANNOT_TELE_TO_BG);
         SetSentErrorMessage(true);

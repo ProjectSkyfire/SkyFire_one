@@ -1753,7 +1753,7 @@ void WorldObject::SetZoneScript()
     {
         if (map->IsDungeon())
             m_zoneScript = (ZoneScript*)((InstanceMap*)map)->GetInstanceScript();
-        else if (!map->IsBattleGroundOrArena())
+        else if (!map->IsBattlegroundOrArena())
             m_zoneScript = sOutdoorPvPMgr->GetZoneScript(GetZoneId());
     }
 }

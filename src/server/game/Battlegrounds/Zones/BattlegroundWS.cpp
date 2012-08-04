@@ -47,7 +47,7 @@ uint32 BG_WSG_Reputation[BG_HONOR_MODE_NUM][BG_WSG_REWARD_NUM] = {
     {0, 45, 0}  // holiday
 };
 
-BattleGroundWS::BattleGroundWS()
+BattlegroundWS::BattlegroundWS()
 {
     m_BothFlagsKept = false;
     m_BgObjects.resize(BG_WS_OBJECT_MAX);
@@ -59,13 +59,13 @@ BattleGroundWS::BattleGroundWS()
     m_StartMessageIds[BG_STARTING_EVENT_FOURTH] = LANG_BG_WS_HAS_BEGUN;
 }
 
-BattleGroundWS::~BattleGroundWS()
+BattlegroundWS::~BattlegroundWS()
 {
 }
 
-void BattleGroundWS::Update(time_t diff)
+void BattlegroundWS::Update(time_t diff)
 {
-    BattleGround::Update(diff);
+    Battleground::Update(diff);
 
     if (GetStatus() == STATUS_IN_PROGRESS)
     {
@@ -145,7 +145,7 @@ void BattleGroundWS::Update(time_t diff)
     }
 }
 
-void BattleGroundWS::StartingEventCloseDoors()
+void BattlegroundWS::StartingEventCloseDoors()
 {
     for (uint32 i = BG_WS_OBJECT_DOOR_A_1; i <= BG_WS_OBJECT_DOOR_H_4; ++i)
     {
@@ -156,7 +156,7 @@ void BattleGroundWS::StartingEventCloseDoors()
         SpawnBGObject(i, RESPAWN_ONE_DAY);
 }
 
-void BattleGroundWS::StartingEventOpenDoors()
+void BattlegroundWS::StartingEventOpenDoors()
 {
     for (uint32 i = BG_WS_OBJECT_DOOR_A_1; i <= BG_WS_OBJECT_DOOR_A_4; ++i)
         DoorOpen(i);
@@ -172,16 +172,16 @@ void BattleGroundWS::StartingEventOpenDoors()
         SpawnBGObject(i, RESPAWN_IMMEDIATELY);
 }
 
-void BattleGroundWS::AddPlayer(Player *plr)
+void BattlegroundWS::AddPlayer(Player *plr)
 {
-    BattleGround::AddPlayer(plr);
+    Battleground::AddPlayer(plr);
     //create score and add it to map, default values are set in constructor
-    BattleGroundWGScore* sc = new BattleGroundWGScore;
+    BattlegroundWGScore* sc = new BattlegroundWGScore;
 
     m_PlayerScores[plr->GetGUID()] = sc;
 }
 
-void BattleGroundWS::RespawnFlag(uint32 Team, bool captured)
+void BattlegroundWS::RespawnFlag(uint32 Team, bool captured)
 {
     if (Team == ALLIANCE)
     {
@@ -205,7 +205,7 @@ void BattleGroundWS::RespawnFlag(uint32 Team, bool captured)
     m_BothFlagsKept = false;
 }
 
-void BattleGroundWS::RespawnFlagAfterDrop(uint32 team)
+void BattlegroundWS::RespawnFlagAfterDrop(uint32 team)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -234,7 +234,7 @@ void BattleGroundWS::RespawnFlagAfterDrop(uint32 team)
     m_BothFlagsKept = false;
 }
 
-void BattleGroundWS::EventPlayerCapturedFlag(Player *Source)
+void BattlegroundWS::EventPlayerCapturedFlag(Player *Source)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -310,7 +310,7 @@ void BattleGroundWS::EventPlayerCapturedFlag(Player *Source)
         UpdateWorldState(BG_WS_FLAG_STATE_HORDE, 1);
 
         RewardHonorToTeam(BG_WSG_Honor[m_HonorMode][BG_WSG_WIN], winner);
-        EndBattleGround(winner);
+        EndBattleground(winner);
     }
     else
     {
@@ -318,7 +318,7 @@ void BattleGroundWS::EventPlayerCapturedFlag(Player *Source)
     }
 }
 
-void BattleGroundWS::EventPlayerDroppedFlag(Player *Source)
+void BattlegroundWS::EventPlayerDroppedFlag(Player *Source)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
     {
@@ -404,7 +404,7 @@ void BattleGroundWS::EventPlayerDroppedFlag(Player *Source)
     }
 }
 
-void BattleGroundWS::EventPlayerClickedOnFlag(Player *Source, GameObject* target_obj)
+void BattlegroundWS::EventPlayerClickedOnFlag(Player *Source, GameObject* target_obj)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
@@ -523,14 +523,14 @@ void BattleGroundWS::EventPlayerClickedOnFlag(Player *Source, GameObject* target
     Source->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_ENTER_PVP_COMBAT);
 }
 
-void BattleGroundWS::RemovePlayer(Player *plr, uint64 guid)
+void BattlegroundWS::RemovePlayer(Player *plr, uint64 guid)
 {
     // sometimes flag aura not removed :(
     if (IsAllianceFlagPickedup() && m_FlagKeepers[BG_TEAM_ALLIANCE] == guid)
     {
         if (!plr)
         {
-            sLog->outError("BattleGroundWS: Removing offline player who has the FLAG!!");
+            sLog->outError("BattlegroundWS: Removing offline player who has the FLAG!!");
             SetAllianceFlagPicker(0);
             RespawnFlag(ALLIANCE, false);
         }
@@ -541,7 +541,7 @@ void BattleGroundWS::RemovePlayer(Player *plr, uint64 guid)
     {
         if (!plr)
         {
-            sLog->outError("BattleGroundWS: Removing offline player who has the FLAG!!");
+            sLog->outError("BattlegroundWS: Removing offline player who has the FLAG!!");
             SetHordeFlagPicker(0);
             RespawnFlag(HORDE, false);
         }
@@ -550,7 +550,7 @@ void BattleGroundWS::RemovePlayer(Player *plr, uint64 guid)
     }
 }
 
-void BattleGroundWS::UpdateFlagState(uint32 team, uint32 value)
+void BattlegroundWS::UpdateFlagState(uint32 team, uint32 value)
 {
     if (team == ALLIANCE)
         UpdateWorldState(BG_WS_FLAG_STATE_ALLIANCE, value);
@@ -558,7 +558,7 @@ void BattleGroundWS::UpdateFlagState(uint32 team, uint32 value)
         UpdateWorldState(BG_WS_FLAG_STATE_HORDE, value);
 }
 
-void BattleGroundWS::UpdateTeamScore(uint32 team)
+void BattlegroundWS::UpdateTeamScore(uint32 team)
 {
     if (team == ALLIANCE)
         UpdateWorldState(BG_WS_FLAG_CAPTURES_ALLIANCE, GetTeamScore(team));
@@ -566,7 +566,7 @@ void BattleGroundWS::UpdateTeamScore(uint32 team)
         UpdateWorldState(BG_WS_FLAG_CAPTURES_HORDE, GetTeamScore(team));
 }
 
-void BattleGroundWS::HandleAreaTrigger(Player *Source, uint32 Trigger)
+void BattlegroundWS::HandleAreaTrigger(Player *Source, uint32 Trigger)
 {
     // this is wrong way to implement these things. On official it done by gameobject spell cast.
     if (GetStatus() != STATUS_IN_PROGRESS)
@@ -576,10 +576,10 @@ void BattleGroundWS::HandleAreaTrigger(Player *Source, uint32 Trigger)
     //uint64 buff_guid = 0;
     switch (Trigger)
     {
-        case 3686:                                          // Alliance elixir of speed spawn. Trigger not working, because located inside other areatrigger, can be replaced by IsWithinDist(object, dist) in BattleGround::Update().
+        case 3686:                                          // Alliance elixir of speed spawn. Trigger not working, because located inside other areatrigger, can be replaced by IsWithinDist(object, dist) in Battleground::Update().
             //buff_guid = m_BgObjects[BG_WS_OBJECT_SPEEDBUFF_1];
             break;
-        case 3687:                                          // Horde elixir of speed spawn. Trigger not working, because located inside other areatrigger, can be replaced by IsWithinDist(object, dist) in BattleGround::Update().
+        case 3687:                                          // Horde elixir of speed spawn. Trigger not working, because located inside other areatrigger, can be replaced by IsWithinDist(object, dist) in Battleground::Update().
             //buff_guid = m_BgObjects[BG_WS_OBJECT_SPEEDBUFF_2];
             break;
         case 3706:                                          // Alliance elixir of regeneration spawn
@@ -619,7 +619,7 @@ void BattleGroundWS::HandleAreaTrigger(Player *Source, uint32 Trigger)
     //    HandleTriggerBuff(buff_guid, Source);
 }
 
-bool BattleGroundWS::SetupBattleGround()
+bool BattlegroundWS::SetupBattleground()
 {
     // flags
     if (  !AddObject(BG_WS_OBJECT_A_FLAG, BG_OBJECT_A_FLAG_WS_ENTRY, 1540.423f, 1481.325f, 351.8284f, 3.089233f, 0, 0, 0.9996573f, 0.02617699f, BG_WS_FLAG_RESPAWN_TIME/1000)
@@ -645,21 +645,21 @@ bool BattleGroundWS::SetupBattleGround()
         || !AddObject(BG_WS_OBJECT_DOOR_H_4, BG_OBJECT_DOOR_H_4_WS_ENTRY, 950.7952f, 1459.583f, 342.1523f, 0.05235988f, 0, 0, 0.02617695f, 0.9996573f, RESPAWN_IMMEDIATELY)
 )
     {
-        sLog->outErrorDb("BatteGroundWS: Failed to spawn some object BattleGround not created!");
+        sLog->outErrorDb("BatteGroundWS: Failed to spawn some object Battleground not created!");
         return false;
     }
 
     WorldSafeLocsEntry const *sg = sWorldSafeLocsStore.LookupEntry(WS_GRAVEYARD_MAIN_ALLIANCE);
     if (!sg || !AddSpiritGuide(WS_SPIRIT_MAIN_ALLIANCE, sg->x, sg->y, sg->z, 3.124139f, ALLIANCE))
     {
-        sLog->outErrorDb("BatteGroundWS: Failed to spawn Alliance spirit guide! BattleGround not created!");
+        sLog->outErrorDb("BatteGroundWS: Failed to spawn Alliance spirit guide! Battleground not created!");
         return false;
     }
 
     sg = sWorldSafeLocsStore.LookupEntry(WS_GRAVEYARD_MAIN_HORDE);
     if (!sg || !AddSpiritGuide(WS_SPIRIT_MAIN_HORDE, sg->x, sg->y, sg->z, 3.193953f, HORDE))
     {
-        sLog->outErrorDb("BatteGroundWS: Failed to spawn Horde spirit guide! BattleGround not created!");
+        sLog->outErrorDb("BatteGroundWS: Failed to spawn Horde spirit guide! Battleground not created!");
         return false;
     }
 
@@ -668,7 +668,7 @@ bool BattleGroundWS::SetupBattleGround()
     return true;
 }
 
-void BattleGroundWS::ResetBGSubclass()
+void BattlegroundWS::ResetBGSubclass()
 {
     m_FlagKeepers[BG_TEAM_ALLIANCE]     = 0;
     m_FlagKeepers[BG_TEAM_HORDE]        = 0;
@@ -688,37 +688,37 @@ void BattleGroundWS::ResetBGSubclass()
     */
 }
 
-void BattleGroundWS::HandleKillPlayer(Player* player, Player* killer)
+void BattlegroundWS::HandleKillPlayer(Player* player, Player* killer)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
 
     EventPlayerDroppedFlag(player);
 
-    BattleGround::HandleKillPlayer(player, killer);
+    Battleground::HandleKillPlayer(player, killer);
 }
 
-void BattleGroundWS::UpdatePlayerScore(Player *Source, uint32 type, uint32 value)
+void BattlegroundWS::UpdatePlayerScore(Player *Source, uint32 type, uint32 value)
 {
-    BattleGroundScoreMap::iterator itr = m_PlayerScores.find(Source->GetGUID());
+    BattlegroundScoreMap::iterator itr = m_PlayerScores.find(Source->GetGUID());
     if (itr == m_PlayerScores.end())                         // player not found
         return;
 
     switch (type)
     {
         case SCORE_FLAG_CAPTURES:                           // flags captured
-            ((BattleGroundWGScore*)itr->second)->FlagCaptures += value;
+            ((BattlegroundWGScore*)itr->second)->FlagCaptures += value;
             break;
         case SCORE_FLAG_RETURNS:                            // flags returned
-            ((BattleGroundWGScore*)itr->second)->FlagReturns += value;
+            ((BattlegroundWGScore*)itr->second)->FlagReturns += value;
             break;
         default:
-            BattleGround::UpdatePlayerScore(Source, type, value);
+            Battleground::UpdatePlayerScore(Source, type, value);
             break;
     }
 }
 
-WorldSafeLocsEntry const* BattleGroundWS::GetClosestGraveYard(Player* player)
+WorldSafeLocsEntry const* BattlegroundWS::GetClosestGraveYard(Player* player)
 {
     //if status in progress, it returns main graveyards with spiritguides
     //else it will return the graveyard in the flagroom - this is especially good
@@ -741,7 +741,7 @@ WorldSafeLocsEntry const* BattleGroundWS::GetClosestGraveYard(Player* player)
     }
 }
 
-void BattleGroundWS::FillInitialWorldStates(WorldPacket& data)
+void BattlegroundWS::FillInitialWorldStates(WorldPacket& data)
 {
     data << uint32(BG_WS_FLAG_CAPTURES_ALLIANCE) << uint32(GetTeamScore(ALLIANCE));
     data << uint32(BG_WS_FLAG_CAPTURES_HORDE) << uint32(GetTeamScore(HORDE));

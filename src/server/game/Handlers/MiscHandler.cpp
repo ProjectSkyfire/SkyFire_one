@@ -726,7 +726,7 @@ void WorldSession::HandleCorpseReclaimOpcode(WorldPacket &recv_data)
         return;
 
     // resurrect
-    GetPlayer()->ResurrectPlayer(GetPlayer()->InBattleGround() ? 1.0f : 0.5f);
+    GetPlayer()->ResurrectPlayer(GetPlayer()->InBattleground() ? 1.0f : 0.5f);
 
     // spawn bones
     GetPlayer()->SpawnCorpseBones();
@@ -849,9 +849,9 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket & recv_data)
         return;
     }
 
-    if (GetPlayer()->InBattleGround())
+    if (GetPlayer()->InBattleground())
     {
-        BattleGround* bg = GetPlayer()->GetBattleGround();
+        Battleground* bg = GetPlayer()->GetBattleground();
         if (bg)
             if (bg->GetStatus() == STATUS_IN_PROGRESS)
                 bg->HandleAreaTrigger(GetPlayer(), Trigger_ID);

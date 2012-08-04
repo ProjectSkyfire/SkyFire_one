@@ -866,11 +866,11 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
 
     if (pVictim->GetTypeId() == TYPEID_PLAYER && GetTypeId() == TYPEID_PLAYER)
     {
-        if (pVictim->ToPlayer()->InBattleGround())
+        if (pVictim->ToPlayer()->InBattleground())
         {
             Player* killer = ToPlayer();
             if (killer != pVictim->ToPlayer())
-                if (BattleGround *bg = killer->GetBattleGround())
+                if (Battleground *bg = killer->GetBattleground())
                     bg->UpdatePlayerScore(killer, SCORE_DAMAGE_DONE, damage);
         }
     }
@@ -8455,7 +8455,7 @@ void Unit::Mount(uint32 mount)
         Pet* pet = ToPlayer()->GetPet();
         if (pet)
         {
-            BattleGround *bg = ToPlayer()->GetBattleGround();
+            Battleground *bg = ToPlayer()->GetBattleground();
             // don't unsummon pet in arena but SetFlag UNIT_FLAG_STUNNED to disable pet's interface
             if (bg && bg->isArena())
                 pet->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
@@ -11603,7 +11603,7 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
         pVictim->ToPlayer()->SetPvPDeath(player != NULL);
 
         // only if not player and not controlled by player pet. And not at BG
-        if (durabilityLoss && !player && !pVictim->ToPlayer()->InBattleGround())
+        if (durabilityLoss && !player && !pVictim->ToPlayer()->InBattleground())
         {
             sLog->outDebug("We are dead, loosing 10 percents durability");
             pVictim->ToPlayer()->DurabilityLossAll(0.10f, false);
@@ -11682,9 +11682,9 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
     //        pvp->HandlePlayerActivityChanged(pVictim->ToPlayer());
 
     // battleground things (do this at the end, so the death state flag will be properly set to handle in the bg->handlekill)
-    if (player && player->InBattleGround())
+    if (player && player->InBattleground())
     {
-        if (BattleGround *bg = player->GetBattleGround())
+        if (Battleground *bg = player->GetBattleground())
         {
             if (pVictim->GetTypeId() == TYPEID_PLAYER)
                 bg->HandleKillPlayer(pVictim->ToPlayer(), player);
