@@ -264,7 +264,7 @@ uint32 GetSpellCastTime(SpellEntry const* spellInfo, Spell const* spell)
         if (Player* modOwner = spell->GetCaster()->GetSpellModOwner())
             modOwner->ApplySpellMod(spellInfo->Id, SPELLMOD_CASTING_TIME, castTime, spell);
 
-        if (!(spellInfo->Attributes & (SPELL_ATTR_UNK4|SPELL_ATTR_TRADESPELL)))
+        if (!(spellInfo->Attributes & (SPELL_ATTR_ABILITY|SPELL_ATTR_TRADESPELL)))
             castTime = int32(castTime * spell->GetCaster()->GetFloatValue(UNIT_MOD_CAST_SPEED));
         else
         {
@@ -606,6 +606,7 @@ bool IsPositiveTarget(uint32 targetA, uint32 targetB)
     // non-positive targets
     switch (targetA)
     {
+        case TARGET_UNIT_NEARBY_ENEMY:
         case TARGET_UNIT_TARGET_ENEMY:
         case TARGET_UNIT_AREA_ENEMY_SRC:
         case TARGET_UNIT_AREA_ENEMY_DST:
@@ -640,6 +641,8 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
         case 31579:                                         // Arcane Empowerment Rank1 talent aura with one positive and one negative (check not needed in wotlk)
         case 31582:                                         // Arcane Empowerment Rank2
         case 31583:                                         // Arcane Empowerment Rank3
+        case 43945:                                         // You're...
+        case 44305:                                         // You're...
             return true;
         case  1852:                                         // Silenced (GM)
         case 46392:                                         // Focused Assault
@@ -653,6 +656,8 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
         case 31719:                                         // Suspension
         case 43501:                                         // Siphon Soul (Hexlord Spell)
         case 30457:                                         // Complete vulnerability
+        case 12292:                                         // Death Wish
+        case 38065:                                         // Death coil
             return false;
     }
 
@@ -820,8 +825,8 @@ bool IsPositiveEffect(uint32 spellId, uint32 effIndex)
     if (!IsPositiveTarget(spellproto->EffectImplicitTargetA[effIndex], spellproto->EffectImplicitTargetB[effIndex]))
         return false;
 
-    // AttributesEx check
-    if (spellproto->AttributesEx & SPELL_ATTR_EX_NEGATIVE)
+    // AttributesEx check - this is only for sure, everything should work without this
+    if (spellproto->AttributesEx & SPELL_ATTR_EX_CANT_BE_REFLECTED) // boss spells should be always negative
         return false;
 
     // ok, positive
@@ -1543,6 +1548,9 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2, bool
 
     if (!sameCaster)
     {
+        if (spellInfo_1->AttributesEx3 & SPELL_ATTR_EX3_STACKS_FOR_DIFF_CASTERS)
+            return false;
+
         for (uint32 i = 0; i < 3; ++i)
             if (spellInfo_1->Effect[i] == SPELL_EFFECT_APPLY_AURA
                 || spellInfo_1->Effect[i] == SPELL_EFFECT_PERSISTENT_AREA_AURA)
@@ -1587,8 +1595,8 @@ bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2, bool
     }
 
     //use data of highest rank spell(needed for spells which ranks have different effects)
-    spellInfo_1=sSpellStore.LookupEntry(GetLastSpellInChain(spellId_1));
-    spellInfo_2=sSpellStore.LookupEntry(GetLastSpellInChain(spellId_2));
+    spellInfo_1 = sSpellStore.LookupEntry(GetLastSpellInChain(spellId_1));
+    spellInfo_2 = sSpellStore.LookupEntry(GetLastSpellInChain(spellId_2));
 
     //if spells have exactly the same effect they cannot stack
     for (uint32 i = 0; i < 3; ++i)
@@ -1705,223 +1713,116 @@ void SpellMgr::LoadSpellRequired()
     sLog->outString(">> Loaded %u spell required records", rows);
 }
 
-struct SpellRankEntry
-{
-    uint32 SkillId;
-    char const *SpellName;
-    uint32 DurationIndex;
-    uint32 RangeIndex;
-    uint32 SpellVisual;
-    uint32 ProcFlags;
-    uint64 SpellFamilyFlags;
-    uint32 TargetAuraState;
-    uint32 ManaCost;
-
-    bool operator()(const SpellRankEntry & _Left, const SpellRankEntry & _Right)const
-    {
-        return (_Left.SkillId != _Right.SkillId ? _Left.SkillId < _Right.SkillId
-            : _Left.SpellName != _Right.SpellName ? _Left.SpellName < _Right.SpellName
-            : _Left.ProcFlags != _Right.ProcFlags ? _Left.ProcFlags < _Right.ProcFlags
-            : _Left.SpellFamilyFlags != _Right.SpellFamilyFlags ? _Left.SpellFamilyFlags < _Right.SpellFamilyFlags
-            : (_Left.SpellVisual != _Right.SpellVisual) && (!_Left.SpellVisual || !_Right.SpellVisual) ? _Left.SpellVisual < _Right.SpellVisual
-            : (_Left.ManaCost != _Right.ManaCost) && (!_Left.ManaCost || !_Right.ManaCost) ? _Left.ManaCost < _Right.ManaCost
-            : (_Left.DurationIndex != _Right.DurationIndex) && (!_Left.DurationIndex || !_Right.DurationIndex)? _Left.DurationIndex < _Right.DurationIndex
-            : (_Left.RangeIndex != _Right.RangeIndex) && (!_Left.RangeIndex || !_Right.RangeIndex || _Left.RangeIndex == 1 || !_Right.RangeIndex == 1) ? _Left.RangeIndex < _Right.RangeIndex
-            : _Left.TargetAuraState < _Right.TargetAuraState
-);
-    }
-};
-
-struct SpellRankValue
-{
-    uint32 Id;
-    char const *Rank;
-};
-
-void SpellMgr::LoadSpellChains()
+void SpellMgr::LoadSpellRanks()
 {
     mSpellChains.clear();                                   // need for reload case
 
-    std::vector<uint32> ChainedSpells;
-    for (uint32 ability_id=0;ability_id<sSkillLineAbilityStore.GetNumRows();ability_id++)
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT first_spell_id, spell_id, rank FROM spell_ranks ORDER BY first_spell_id, rank");
+
+    if (!result)
     {
-        SkillLineAbilityEntry const *AbilityInfo=sSkillLineAbilityStore.LookupEntry(ability_id);
-        if (!AbilityInfo)
-            continue;
-        if (AbilityInfo->spellId == 20154) //exception to these rules (not needed in 3.0.3)
-            continue;
-        if (!AbilityInfo->forward_spellid)
-            continue;
-        ChainedSpells.push_back(AbilityInfo->forward_spellid);
+        sLog->outString();
+        sLog->outString(">> Loaded 0 spell rank records");
+        sLog->outErrorDb("`spell_ranks` table is empty!");
+        return;
     }
 
-    std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry> RankMap;
+    uint32 rows = 0;
+    bool finished = false;
+    int32 countDeletedSpells = 0;
 
-    for (uint32 ability_id=0;ability_id<sSkillLineAbilityStore.GetNumRows();ability_id++)
+    do
     {
-        SkillLineAbilityEntry const *AbilityInfo=sSkillLineAbilityStore.LookupEntry(ability_id);
-        if (!AbilityInfo)
-            continue;
+        // spellid, rank
+        std::list < std::pair < int32, int32 > > rankChain;
+        int32 currentSpell = -1;
+        int32 lastSpell = -1;
 
-        //get only spell with lowest ability_id to prevent doubles
-        uint32 spell_id=AbilityInfo->spellId;
-        if (spell_id == 20154) //exception to these rules (not needed in 3.0.3)
-            continue;
-        bool found=false;
-        for (uint32 i = 0; i < ChainedSpells.size(); i++)
+        // fill one chain
+        while (currentSpell == lastSpell && !finished)
         {
-           if (ChainedSpells.at(i) == spell_id)
-               found=true;
-        }
-        if (found)
-            continue;
+            Field *fields = result->Fetch();
 
-        if (mSkillLineAbilityMap.lower_bound(spell_id)->second->id != ability_id)
-            continue;
-        SpellEntry const *SpellInfo=sSpellStore.LookupEntry(spell_id);
-        if (!SpellInfo)
-            continue;
-        std::string sRank = SpellInfo->Rank[sWorld->GetDefaultDbcLocale()];
-        if (sRank.empty())
-            continue;
-        //exception to polymorph spells-make pig and turtle other chain than sheep
-        if ((SpellInfo->SpellFamilyName == SPELLFAMILY_MAGE) && (SpellInfo->SpellFamilyFlags & 0x1000000) && (SpellInfo->SpellIconID != 82))
-            continue;
+            currentSpell = fields[0].GetUInt32();
+            if (lastSpell == -1)
+                lastSpell = currentSpell;
+            uint32 spell_id = fields[1].GetUInt32();
+            uint32 rank = fields[2].GetUInt32();
 
-        SpellRankEntry entry;
-        SpellRankValue value;
-        entry.SkillId=AbilityInfo->skillId;
-        entry.SpellName=SpellInfo->SpellName[sWorld->GetDefaultDbcLocale()];
-        entry.DurationIndex=SpellInfo->DurationIndex;
-        entry.RangeIndex=SpellInfo->rangeIndex;
-        entry.ProcFlags=SpellInfo->procFlags;
-        entry.SpellFamilyFlags=SpellInfo->SpellFamilyFlags;
-        entry.TargetAuraState=SpellInfo->TargetAuraState;
-        entry.SpellVisual=SpellInfo->SpellVisual;
-        entry.ManaCost=SpellInfo->manaCost;
-
-        for (;;)
-        {
-            AbilityInfo=mSkillLineAbilityMap.lower_bound(spell_id)->second;
-            value.Id=spell_id;
-            value.Rank=SpellInfo->Rank[sWorld->GetDefaultDbcLocale()];
-            RankMap.insert(std::pair<SpellRankEntry, SpellRankValue>(entry, value));
-            spell_id=AbilityInfo->forward_spellid;
-            SpellInfo=sSpellStore.LookupEntry(spell_id);
-            if (!SpellInfo)
+            // don't drop the row if we're moving to the next rank
+            if (currentSpell == lastSpell)
+            {
+                rankChain.push_back(std::make_pair(spell_id, rank));
+                if (!result->NextRow())
+                    finished = true;
+            }
+            else
                 break;
         }
-    }
-
-    uint32 count=0;
-
-    for (std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry>::iterator itr = RankMap.begin();itr != RankMap.end();)
-    {
-        SpellRankEntry entry=itr->first;
-        //trac errors in extracted data
-        std::multimap<char const *, std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry>::iterator> RankErrorMap;
-        for (std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry>::iterator itr2 = RankMap.lower_bound(entry);itr2 != RankMap.upper_bound(entry);itr2++)
+        // check if chain is made with valid first spell
+        SpellEntry const * first = sSpellStore.LookupEntry(lastSpell);
+        if (!first)
         {
-            RankErrorMap.insert(std::pair<char const *, std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry>::iterator>(itr2->second.Rank, itr2));
-        }
-        for (std::multimap<char const *, std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry>::iterator>::iterator itr2 = RankErrorMap.begin();itr2 != RankErrorMap.end();)
-        {
-            char const * err_entry=itr2->first;
-            uint32 rank_count=RankErrorMap.count(itr2->first);
-            if (rank_count>1)
-            for (itr2 = RankErrorMap.lower_bound(err_entry);itr2 != RankErrorMap.upper_bound(err_entry);itr2++)
-            {
-                sLog->outDebug("There is a duplicate rank entry (%s) for spell: %u", itr2->first, itr2->second->second.Id);
-                sLog->outDebug("Spell %u removed from chain data.", itr2->second->second.Id);
-                RankMap.erase(itr2->second);
-                itr=RankMap.lower_bound(entry);
-            }
-            else
-                itr2++;
-        }
-        //do not proceed for spells with less than 2 ranks
-        uint32 spell_max_rank=RankMap.count(entry);
-        if (spell_max_rank<2)
-        {
-            itr=RankMap.upper_bound(entry);
+            sLog->outErrorDb("Spell rank identifier(first_spell_id) %u listed in `spell_ranks` does not exist!", lastSpell);
             continue;
         }
-
-        itr=RankMap.upper_bound(entry);
-
-        //order spells by spells by spellLevel
-        std::list<uint32> RankedSpells;
-        uint32 min_spell_lvl=0;
-        std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry>::iterator min_itr;
-        for (;RankMap.count(entry);)
+        // check if chain is long enough
+        if (rankChain.size() < 2)
         {
-            for (std::multimap<SpellRankEntry, SpellRankValue, SpellRankEntry>::iterator itr2 = RankMap.lower_bound(entry);itr2 != RankMap.upper_bound(entry);itr2++)
-            {
-                SpellEntry const *SpellInfo=sSpellStore.LookupEntry(itr2->second.Id);
-                if (SpellInfo->spellLevel<min_spell_lvl || itr2 == RankMap.lower_bound(entry))
-                {
-                    min_spell_lvl=SpellInfo->spellLevel;
-                    min_itr=itr2;
-                }
-            }
-            RankedSpells.push_back(min_itr->second.Id);
-            RankMap.erase(min_itr);
+            sLog->outErrorDb("There is only 1 spell rank for identifier(first_spell_id) %u in `spell_ranks`, entry is not needed!", lastSpell);
+            continue;
         }
+        int32 curRank = 0;
+        bool valid = true;
 
-        //use data from talent.dbc
-        uint16 talent_id=0;
-        for (std::list<uint32>::iterator itr2 = RankedSpells.begin();itr2 != RankedSpells.end();)
+        // check spells in chain
+        for (std::list<std::pair<int32, int32> >::iterator itr = rankChain.begin() ; itr!= rankChain.end(); ++itr)
         {
-            if (TalentSpellPos const* TalentPos=GetTalentSpellPos(*itr2))
+            SpellEntry const * spell = sSpellStore.LookupEntry(itr->first);
+            if (!spell)
             {
-                talent_id=TalentPos->talent_id;
-                RankedSpells.erase(itr2);
-                itr2 = RankedSpells.begin();
+                sLog->outErrorDb("Spell %u (rank %u) listed in `spell_ranks` for chain %u does not exist!", itr->first, itr->second, lastSpell);
+                valid = false;
+                break;
+            }
+            ++curRank;
+            if (itr->second != curRank)
+            {
+                sLog->outErrorDb("Spell %u (rank %u) listed in `spell_ranks` for chain %u does not have proper rank value(should be %u)!", itr->first, itr->second, lastSpell, curRank);
+                valid = false;
+                break;;
+            }
+        }
+        if (!valid)
+            continue;
+        int32 prevRank = 0;
+
+        // insert the chain
+        std::list<std::pair<int32, int32> >::iterator itr = rankChain.begin();
+        do
+        {
+            int32 addedSpell = itr->first;
+            mSpellChains[addedSpell].first = lastSpell;
+            mSpellChains[addedSpell].last = rankChain.back().first;
+            mSpellChains[addedSpell].rank = itr->second;
+            mSpellChains[addedSpell].prev = prevRank;
+            prevRank = addedSpell;
+            ++itr;
+            if (itr == rankChain.end())
+            {
+                mSpellChains[addedSpell].next = 0;
+                break;
             }
             else
-                itr2++;
+                mSpellChains[addedSpell].next = itr->first;
         }
-        if (talent_id)
-        {
-            TalentEntry const *TalentInfo = sTalentStore.LookupEntry(talent_id);
-            for (uint8 rank=5;rank;rank--)
-            {
-                if (TalentInfo->RankID[rank-1])
-                    RankedSpells.push_front(TalentInfo->RankID[rank-1]);
-            }
-        }
+        while (true);
 
-        count++;
-
-        itr=RankMap.upper_bound(entry);
-        uint32 spell_rank=1;
-        for (std::list<uint32>::iterator itr2 = RankedSpells.begin();itr2 != RankedSpells.end();spell_rank++)
-        {
-            uint32 spell_id=*itr2;
-            mSpellChains[spell_id].rank=spell_rank;
-            mSpellChains[spell_id].first=RankedSpells.front();
-            mSpellChains[spell_id].last=RankedSpells.back();
-
-            itr2++;
-            if (spell_rank<2)
-                mSpellChains[spell_id].prev=0;
-
-            if (spell_id == RankedSpells.back())
-                mSpellChains[spell_id].next=0;
-            else
-            {
-                mSpellChains[*itr2].prev=spell_id;
-                mSpellChains[spell_id].next=*itr2;
-            }
-        }
-    }
-
-//uncomment these two lines to print yourself list of spell_chains on startup
-//    for (UNORDERED_MAP<uint32, SpellChainNode>::iterator itr=mSpellChains.begin();itr != mSpellChains.end();itr++)
-//       sLog->outString("Id: %u, Rank: %d , %s", itr->first, itr->second.rank, sSpellStore.LookupEntry(itr->first)->Rank[sWorld->GetDefaultDbcLocale()]);
+        ++rows;
+    } while (!finished);
 
     sLog->outString();
-    sLog->outString(">> Loaded %u spell chains", count);
+    sLog->outString(">> Loaded %u spell rank records", rows);
 }
 
 void SpellMgr::LoadSpellLearnSkills()
@@ -2621,6 +2522,23 @@ bool IsSpellAllowedInLocation(SpellEntry const *spellInfo, uint32 map_id, uint32
     // normal case
     if (spellInfo->AreaId && spellInfo->AreaId != zone_id && spellInfo->AreaId != area_id)
         return false;
+
+    // continent limitation (virtual continent)
+    if ((spellInfo->AttributesEx4 & SPELL_ATTR_EX4_CAST_ONLY_IN_OUTLAND))
+    {
+        uint32 v_map = GetVirtualMapForMapAndZone(map_id, zone_id);
+        MapEntry const* mapEntry = sMapStore.LookupEntry(v_map);
+        if (!mapEntry || mapEntry->addon < 1 || !mapEntry->IsContinent())
+            return SPELL_FAILED_REQUIRES_AREA;
+    }
+
+    // raid instance limitation
+    if (spellInfo->AttributesEx6 & SPELL_ATTR_EX6_NOT_IN_RAID_INSTANCE)
+    {
+        MapEntry const* mapEntry = sMapStore.LookupEntry(map_id);
+        if (!mapEntry || mapEntry->IsRaid())
+            return SPELL_FAILED_REQUIRES_AREA;
+    }
 
     // elixirs (all area dependent elixirs have family SPELLFAMILY_POTION, use this for speedup)
     if (spellInfo->SpellFamilyName == SPELLFAMILY_POTION)

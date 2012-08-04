@@ -65,7 +65,7 @@ bool AddonHandler::BuildAddonPacket(WorldPacket *Source, WorldPacket *Target)
     *Source >> TempValue;                                   // get real size of the packed structure
 
     // empty addon packet, nothing process, can't be received from real client
-    if(!TempValue)
+    if (!TempValue)
         return false;
 
     AddonRealSize = TempValue;                              // temp value because ZLIB only excepts uLongf
@@ -78,37 +78,34 @@ bool AddonHandler::BuildAddonPacket(WorldPacket *Source, WorldPacket *Target)
     {
         Target->Initialize(SMSG_ADDON_INFO);
 
-        uint32 addonsCount;
-        AddOnPacked >> addonsCount;                         // addons count?
-
-        for (uint32 i = 0; i < addonsCount; ++i)
+        while (AddOnPacked.rpos() < AddOnPacked.size())
         {
             std::string addonName;
-            uint8 enabled;
-            uint32 crc, unk2;
+            uint8 unk6;
+            uint32 crc, unk7;
 
             // check next addon data format correctness
-            if(AddOnPacked.rpos()+1 > AddOnPacked.size())
+            if (AddOnPacked.rpos()+1+4+4+1 > AddOnPacked.size())
                 return false;
 
             AddOnPacked >> addonName;
 
             // recheck next addon data format correctness
-            if(AddOnPacked.rpos()+1+4+4 > AddOnPacked.size())
+            if (AddOnPacked.rpos()+4+4+1 > AddOnPacked.size())
                 return false;
 
-            AddOnPacked >> enabled >> crc >> unk2;
+            AddOnPacked >> crc >> unk7 >> unk6;
 
-            sLog->outDebug("ADDON: Name: %s, Enabled: 0x%x, CRC: 0x%x, Unknown2: 0x%x", addonName.c_str(), enabled, crc, unk2);
+            //sLog->outDebug("ADDON: Name:%s CRC:%x Unknown1 :%x Unknown2 :%x", addonName.c_str(), crc, unk7, unk6);
 
-            uint8 state = (enabled ? 2 : 1);
+            uint8 state = 2;
             *Target << uint8(state);
 
-            uint8 unk1 = (enabled ? 1 : 0);
+            uint8 unk1 = 1;
             *Target << uint8(unk1);
             if (unk1)
             {
-                uint8 unk2 = (crc != 0x4c1c776d);           // If addon is Standard addon CRC
+                uint8 unk2 = crc != 0x1c776d01LL;           // If addon is Standard addon CRC
                 *Target << uint8(unk2);
                 if (unk2)
                     Target->append(tdata, sizeof(tdata));
@@ -116,30 +113,23 @@ bool AddonHandler::BuildAddonPacket(WorldPacket *Source, WorldPacket *Target)
                 *Target << uint32(0);
             }
 
-            uint8 unk3 = (enabled ? 0 : 1);
+            uint8 unk3 = 0;
             *Target << uint8(unk3);
             if (unk3)
             {
                 // String, 256 (null terminated?)
-                *Target << uint8(0);
             }
         }
-
+/*
         uint32 unk4;
         AddOnPacked >> unk4;
 
         uint32 count = 0;
         *Target << uint32(count);
-        /*for (uint32 i = 0; i < count; ++i)
-        {
-            uint32
-            string (16 bytes)
-            string (16 bytes)
-            uint32
-        }*/
 
         if(AddOnPacked.rpos() != AddOnPacked.size())
             sLog->outDebug("packet under read!");
+*/
     }
     else
     {

@@ -116,6 +116,13 @@ bool CreatureEventAI::ProcessEvent(CreatureEventAIHolder& pHolder, Unit* pAction
     if (pHolder.Event.event_inverse_phase_mask & (1 << Phase))
         return false;
 
+    //Store random here so that all random actions match up
+    uint32 rnd = rand();
+
+    //Return if chance for event is not met
+    if (pHolder.Event.event_chance <= rnd % 100)
+        return false;
+
     CreatureEventAI_Event const& event = pHolder.Event;
 
     //Check event conditions based on the event type, also reset events
@@ -129,7 +136,7 @@ bool CreatureEventAI::ProcessEvent(CreatureEventAIHolder& pHolder, Unit* pAction
             pHolder.UpdateRepeatTimer(me, event.timer.repeatMin, event.timer.repeatMax);
             break;
         case EVENT_T_TIMER_OOC:
-            if (me->isInCombat())
+            if (me->isInCombat() || me->IsInEvadeMode())
                 return false;
 
             //Repeat Timers
@@ -186,6 +193,7 @@ bool CreatureEventAI::ProcessEvent(CreatureEventAIHolder& pHolder, Unit* pAction
             //Repeat Timers
             pHolder.UpdateRepeatTimer(me, event.ooc_los.repeatMin, event.ooc_los.repeatMax);
             break;
+        case EVENT_T_RESET:
         case EVENT_T_SPAWNED:
             break;
         case EVENT_T_TARGET_HP:
@@ -354,16 +362,41 @@ bool CreatureEventAI::ProcessEvent(CreatureEventAIHolder& pHolder, Unit* pAction
     if (!(pHolder.Event.event_flags & EFLAG_REPEATABLE))
         pHolder.Enabled = false;
 
-    //Store random here so that all random actions match up
-    uint32 rnd = rand();
-
-    //Return if chance for event is not met
-    if (pHolder.Event.event_chance <= rnd % 100)
-        return false;
-
-    //Process actions
-    for (uint8 j = 0; j < MAX_ACTIONS; ++j)
+    //Process actions, normal case
+    if (!(pHolder.Event.event_flags & EFLAG_RANDOM_ACTION))
+    {
+        for (uint32 j = 0; j < MAX_ACTIONS; ++j)
         ProcessAction(pHolder.Event.action[j], rnd, pHolder.Event.event_id, pActionInvoker);
+    }
+    //Process actions, random case
+    else
+    {
+        // amount of real actions
+        uint32 count = 0;
+        for (uint32 j = 0; j < MAX_ACTIONS; j++)
+            if (pHolder.Event.action[j].type != ACTION_T_NONE)
+                ++count;
+
+        if (count)
+        {
+            // select action number from found amount
+            uint32 idx = urand(0, count-1);
+
+            // find selected action, skipping not used
+            uint32 j = 0;
+            for (; ; ++j)
+            {
+                if (pHolder.Event.action[j].type != ACTION_T_NONE)
+                {
+                    if (!idx)
+                        break;
+                    --idx;
+                }
+            }
+
+            ProcessAction(pHolder.Event.action[j], rnd, pHolder.Event.event_id, pActionInvoker);
+        }
+    }
 
     return true;
 }
@@ -775,9 +808,66 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
             me->CallForHelp(action.call_for_help.radius);
             break;
         }
+        case ACTION_T_SET_SHEATH:
+        {
+            me->SetSheath(SheathState(action.set_sheath.sheath));
+            break;
+        }
+        case ACTION_T_FORCE_DESPAWN:
+        {
+            me->ForcedDespawn(action.forced_despawn.msDelay);
+            break;
+        }
+        case ACTION_T_SET_INVINCIBILITY_HP_LEVEL:
+        {
+            if (action.invincibility_hp_level.is_percent)
+                InvinceabilityHpLevel = me->GetMaxHealth()*action.invincibility_hp_level.hp_level/100;
+            else
+                InvinceabilityHpLevel = action.invincibility_hp_level.hp_level;
+            break;
+        }
+        case ACTION_T_MOUNT_TO_ENTRY_OR_MODEL:
+        {
+            if (action.mount.creatureId || action.mount.modelId)
+            {
+                // set model based on entry from creature_template
+                if (action.mount.creatureId)
+                {
+                    if (CreatureTemplate const* cInfo = GetCreatureTemplateStore(action.mount.creatureId))
+                    {
+                        uint32 display_id = sObjectMgr->ChooseDisplayId(0, cInfo);
+                        me->Mount(display_id);
+                    }
+                }
+                //if no param1, then use value from param2 (modelId)
+                else
+                    me->Mount(action.mount.modelId);
+            }
+            else
+                me->Unmount();
+
+            break;
+        }
+
         break;
 
-        // Trinity ONLY
+        // TRINITY ONLY
+        case ACTION_T_MOVE_RANDOM_POINT: //dosen't work in combat
+        {
+            float x, y, z;
+            me->GetClosePoint(x, y, z, me->GetObjectSize() / 3, action.raw.param1);
+            me->GetMotionMaster()->MovePoint(0, x, y, z);
+            break;
+        }
+        case ACTION_T_SET_STAND_STATE:
+            me->SetStandState(UnitStandStateType(action.raw.param1));
+            break;
+        case ACTION_T_SET_PHASE_MASK:
+            // me->SetPhaseMask(action.raw.param1, true); // WOTLK
+            break;
+        case ACTION_T_SET_VISIBILITY:
+            me->SetVisibility(UnitVisibility(action.raw.param1));
+            break;
         case ACTION_T_SET_ACTIVE:
             me->setActive(action.raw.param1 ? true : false);
             break;
@@ -801,24 +891,6 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
             break;
         }
 
-        case ACTION_T_SET_SHEATH:
-        {
-            me->SetSheath(SheathState(action.set_sheath.sheath));
-            break;
-        }
-        case ACTION_T_FORCE_DESPAWN:
-        {
-            me->ForcedDespawn();
-            break;
-        }
-        case ACTION_T_SET_INVINCIBILITY_HP_LEVEL:
-        {
-            if (action.invincibility_hp_level.is_percent)
-                InvinceabilityHpLevel = me->GetMaxHealth()*action.invincibility_hp_level.hp_level/100;
-            else
-                InvinceabilityHpLevel = action.invincibility_hp_level.hp_level;
-            break;
-        }
     }
 }
 
@@ -842,6 +914,11 @@ void CreatureEventAI::Reset()
 
     if (bEmptyList)
         return;
+    for (std::list<CreatureEventAIHolder>::iterator i = CreatureEventAIList.begin(); i != CreatureEventAIList.end(); ++i)
+    {
+        if ((*i).Event.event_type == EVENT_T_RESET)
+            ProcessEvent(*i);
+    }
 
     //Reset all events to enabled
     for (std::list<CreatureEventAIHolder>::iterator i = CreatureEventAIList.begin(); i != CreatureEventAIList.end(); ++i)
@@ -1035,6 +1112,10 @@ void CreatureEventAI::UpdateAI(const uint32 diff)
 {
     //Check if we are in combat (also updates calls threat update code)
     bool Combat = UpdateVictim();
+
+    //Must return if creature isn't alive. Normally select hostil target and get victim prevent this
+    if (!me->isAlive())
+        return;
 
     if (!bEmptyList)
     {

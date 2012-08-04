@@ -151,6 +151,7 @@ bool ChatHandler::HandleReloadAllSpellCommand(const char*)
     HandleReloadSpellLearnSpellCommand("a");
     HandleReloadSpellLinkedSpellCommand("a");
     HandleReloadSpellProcEventCommand("a");
+    HandleReloadSpellRanksCommand("a");
     HandleReloadSpellScriptTargetCommand("a");
     HandleReloadSpellTargetPositionCommand("a");
     HandleReloadSpellThreatsCommand("a");
@@ -495,6 +496,14 @@ bool ChatHandler::HandleReloadSpellProcEventCommand(const char*)
     sLog->outString("Re-Loading Spell Proc Event conditions...");
     sSpellMgr->LoadSpellProcEvents();
     SendGlobalGMSysMessage("DB table spell_proc_event (spell proc trigger requirements) reloaded.");
+    return true;
+}
+
+bool ChatHandler::HandleReloadSpellRanksCommand(const char*)
+{
+    sLog->outString( "Re-Loading Spell Ranks..." );
+    sSpellMgr->LoadSpellRanks();
+    SendGlobalGMSysMessage("DB table `spell_ranks` reloaded.");
     return true;
 }
 

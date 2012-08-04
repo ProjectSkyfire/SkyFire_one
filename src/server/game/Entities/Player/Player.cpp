@@ -6851,14 +6851,18 @@ void Player::_ApplyItemMods(Item *item, uint8 slot, bool apply)
     if (slot >= INVENTORY_SLOT_BAG_END || !item)
         return;
 
-    // not apply mods for broken item
-    if (item->IsBroken() && apply)
-        return;
-
     ItemPrototype const *proto = item->GetProto();
 
     if (!proto)
         return;
+
+    // not apply mods for broken item
+    if (item->IsBroken())
+    {
+        if (proto->Socket[0].Color)
+            CorrectMetaGemEnchants(slot, apply);
+        return;
+    }
 
     sLog->outDetail("applying mods for item %u ", item->GetGUIDLow());
 
@@ -11872,7 +11876,7 @@ void Player::ClearTrade()
     tradeGold = 0;
     acceptTrade = false;
     for (int i = 0; i < TRADE_SLOT_COUNT; i++)
-        tradeItems[i] = NULL_SLOT;
+        tradeItems[i] = 0;
 }
 
 void Player::TradeCancel(bool sendback)
@@ -12080,7 +12084,9 @@ void Player::ApplyEnchantment(Item *item, EnchantmentSlot slot, bool apply, bool
     if (!ignore_condition && pEnchant->EnchantmentCondition && !EnchantmentFitsRequirements(pEnchant->EnchantmentCondition, -1))
         return;
 
-    for (int s=0; s<3; s++)
+    // Apply only if item is not broken
+    if (!item->IsBroken())
+    for (int s = 0; s < 3; s++)
     {
         uint32 enchant_display_type = pEnchant->type[s];
         uint32 enchant_amount = pEnchant->amount[s];
@@ -17801,7 +17807,9 @@ bool Player::ActivateTaxiPathTo(std::vector<uint32> const& nodes, uint32 mount_i
         (!GetCurrentSpell(CURRENT_GENERIC_SPELL) ||
         GetCurrentSpell(CURRENT_GENERIC_SPELL)->m_spellInfo->Effect[0] != SPELL_EFFECT_SEND_TAXI) &&
         IsNonMeleeSpellCasted(false) ||
-        isInCombat())
+        isInCombat() ||
+        hasUnitState(UNIT_STAT_STUNNED) ||
+        hasUnitState(UNIT_STAT_ROOT))
     {
         WorldPacket data(SMSG_ACTIVATETAXIREPLY, 4);
         data << uint32(ERR_TAXIPLAYERBUSY);
@@ -20609,7 +20617,7 @@ void Player::AddGlobalCooldown(SpellEntry const *spellInfo, Spell const *spell)
 
     uint32 cdTime = spellInfo->StartRecoveryTime;
 
-    if (!(spellInfo->Attributes & (SPELL_ATTR_UNK4|SPELL_ATTR_TRADESPELL)))
+    if (!(spellInfo->Attributes & (SPELL_ATTR_ABILITY|SPELL_ATTR_TRADESPELL)))
         cdTime *= GetFloatValue(UNIT_MOD_CAST_SPEED);
     else if (spell->IsRangedSpell() && !spell->IsAutoRepeat())
         cdTime *= m_modAttackSpeedPct[RANGED_ATTACK];

@@ -1049,13 +1049,13 @@ void Unit::CastSpell(Unit* Victim, SpellEntry const *spellInfo, bool triggered, 
     {
         if (sSpellMgr->SpellTargetType[spellInfo->EffectImplicitTargetA[i]] == TARGET_TYPE_UNIT_TARGET)
         {
-            /*SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(spellInfo->rangeIndex);
-            if (srange && GetSpellMaxRange(srange) == 0.0f)
+            //SpellRangeEntry const* srange = sSpellRangeStore.LookupEntry(spellInfo->rangeIndex);
+            if (spellInfo->Id == 3137 || spellInfo->Id == 10872) // Dirty hack for Abolish poison and Disease Effect. Which other spells should be here?
             {
                 Victim = this;
                 break;
             }
-            else */if (!Victim)
+            else if (!Victim)
             {
                 sLog->outError("CastSpell: spell id %i by caster: %s %u) does not have unit target", spellInfo->Id, (GetTypeId() == TYPEID_PLAYER ? "player (GUID:" : "creature (Entry:"), (GetTypeId() == TYPEID_PLAYER ? GetGUIDLow() : GetEntry()));
                 return;
@@ -2436,6 +2436,9 @@ int32 Unit::GetMechanicResistChance(const SpellEntry *spell)
 // Melee based spells hit result calculations
 SpellMissInfo Unit::MeleeSpellHitResult(Unit *pVictim, SpellEntry const *spell, bool cMiss)
 {
+    if (spell->AttributesEx3 & SPELL_ATTR_EX3_IGNORE_HIT_RESULT)
+        return SPELL_MISS_NONE;
+
     WeaponAttackType attType = BASE_ATTACK;
 
     if (spell->DmgClass == SPELL_DAMAGE_CLASS_RANGED)
@@ -2454,7 +2457,7 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit *pVictim, SpellEntry const *spell, 
 
     bool canDodge = true;
     bool canParry = true;
-    bool canBlock = spell->AttributesEx3 & SPELL_ATTR_EX3_UNK3;
+    bool canBlock = spell->AttributesEx3 & SPELL_ATTR_EX3_MELEE;
     //We use SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY until right Attribute was found
     bool canMiss = !(spell->Attributes & SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY) && cMiss;
 
@@ -3674,7 +3677,12 @@ bool Unit::RemoveNoStackAurasDueToAura(Aura *Aur)
             bool sameCaster = Aur->GetCasterGUID() == (*i).second->GetCasterGUID();
             if (sSpellMgr->IsNoStackSpellDueToSpell(spellId, i_spellId, sameCaster))
             {
-                //some spells should be not removed by lower rank of them (totem, paladin aura)
+                int32 aur1Rank = Aur->GetModifierValue();
+                int32 aur2Rank = (*i).second->GetModifierValue();
+                // Check if effect is "better"
+                if (!sameCaster && (abs(aur1Rank)-abs(aur2Rank)) < 0)
+                    return false;
+                // Some spells should be not removed by lower rank of them (totem, paladin aura)
                 if (!sameCaster
                     &&(spellProto->Effect[effIndex] == SPELL_EFFECT_APPLY_AREA_AURA_PARTY)
                     &&(spellProto->DurationIndex == 21)
@@ -4145,7 +4153,7 @@ void Unit::RemoveArenaAuras(bool onleave)
                                                             // don't remove stances, shadowform, pally/hunter auras
             !iter->second->IsPassive() &&                   // don't remove passive auras
             (!(iter->second->GetSpellProto()->Attributes & SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY) ||
-            !(iter->second->GetSpellProto()->Attributes & SPELL_ATTR_UNK8)) &&
+            !(iter->second->GetSpellProto()->Attributes & SPELL_ATTR_HIDE_IN_COMBAT_LOG)) &&
                                                             // not unaffected by invulnerability auras or not having that unknown flag (that seemed the most probable)
             (iter->second->IsPositive() ^ onleave))         // remove positive buffs on enter, negative buffs on leave
             RemoveAura(iter);

@@ -22,6 +22,7 @@
 #define __UNIT_H
 
 #include "Common.h"
+#include "Util.h"
 #include "Object.h"
 #include "Opcodes.h"
 #include "SpellAuraDefines.h"
