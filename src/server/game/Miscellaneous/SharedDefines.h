@@ -223,7 +223,8 @@ const uint32 ItemQualityColors[MAX_ITEM_QUALITY] = {
 // Spell Attributes definitions
 // atributes with * in comment are not implemented yet
 // ***********************************
-enum Attributes
+
+enum SpellAttributes
 {
     SPELL_ATTR_UNK0                           = 0x00000001,       // 0
     SPELL_ATTR_RANGED                         = 0x00000002,       // 1 All ranged abilities have this flag
@@ -258,7 +259,8 @@ enum Attributes
     SPELL_ATTR_BREAKABLE_BY_DAMAGE            = 0x40000000,       // 30 breakable by damage?
     SPELL_ATTR_CANT_CANCEL                    = 0x80000000        // 31 positive aura can't be canceled
 };
-enum AttributesEx
+
+enum SpellAttributesEx
 {
     SPELL_ATTR_EX_DISMISS_PET                 = 0x00000001,       // 0 *for these spells is old pet dismissed before summon new
     SPELL_ATTR_EX_DRAIN_ALL_POWER             = 0x00000002,       // 1 use all power (Only paladin Lay of Hands and Bunyanize)
@@ -294,7 +296,7 @@ enum AttributesEx
     SPELL_ATTR_EX_UNK31                       = 0x80000000        // 31
 };
 
-enum AttributesEx2
+enum SpellAttributesEx2
 {
     SPELL_ATTR_EX2_ALLOW_DEAD_TARGET          = 0x00000001,       // 0 *can target dead target
     SPELL_ATTR_EX2_TRANSPARENT                = 0x00000002,       // 1 *make caster transparent
@@ -330,7 +332,7 @@ enum AttributesEx2
     SPELL_ATTR_EX2_FOOD                       = 0x80000000        // 31 food, well-fed, and a few others
 };
 
-enum AttributesEx3
+enum SpellAttributesEx3
 {
     SPELL_ATTR_EX3_UNK0                       = 0x00000001,       // 0
     SPELL_ATTR_EX3_UNK1                       = 0x00000002,       // 1
@@ -366,7 +368,7 @@ enum AttributesEx3
     SPELL_ATTR_EX3_UNK31                      = 0x80000000        // 31
 };
 
-enum AttributesEx4
+enum SpellAttributesEx4
 {
     SPELL_ATTR_EX4_UNK0                       = 0x00000001,        // 0
     SPELL_ATTR_EX4_PROC_ONLY_ON_DUMMY         = 0x00000002,        // 1 * proc only on SPELL_EFFECT_DUMMY?
@@ -402,7 +404,7 @@ enum AttributesEx4
     SPELL_ATTR_EX4_UNK31                      = 0x80000000         // 31
 };
 
-enum AttributesEx5
+enum SpellAttributesEx5
 {
     SPELL_ATTR_EX5_UNK0                       = 0x00000001,        // 0
     SPELL_ATTR_EX5_NO_REAGENT_WHILE_PREP      = 0x00000002,        // 1 not need reagents if UNIT_FLAG_PREPARATION
@@ -438,7 +440,7 @@ enum AttributesEx5
     SPELL_ATTR_EX5_USE_MELEE_HIT              = 0x80000000         // 31 Use melee hit rating, even if using spell dmg class
 };
 
-enum AttributesEx6
+enum SpellAttributesEx6
 {
     SPELL_ATTR_EX6_DONT_DISPLAY_COOLDOWN      = 0x00000001,        // 0 Only Move spell have this flag
     SPELL_ATTR_EX6_ONLY_IN_ARENA              = 0x00000002,        // 1 not set in 2.4.3
@@ -558,6 +560,7 @@ enum Team
 
 enum SpellEffects
 {
+    SPELL_EFFECT_NONE                      = 0,
     SPELL_EFFECT_INSTAKILL                 = 1,
     SPELL_EFFECT_SCHOOL_DAMAGE             = 2,
     SPELL_EFFECT_DUMMY                     = 3,
@@ -939,9 +942,10 @@ enum SpellHitType
 {
     SPELL_HIT_TYPE_UNK1 = 0x00001,
     SPELL_HIT_TYPE_CRIT = 0x00002,
-    SPELL_HIT_TYPE_UNK2 = 0x00004,
-    SPELL_HIT_TYPE_UNK3 = 0x00008,
-    SPELL_HIT_TYPE_UNK4 = 0x00020
+    SPELL_HIT_TYPE_UNK3 = 0x00004,
+    SPELL_HIT_TYPE_UNK4 = 0x00008,
+    SPELL_HIT_TYPE_UNK5 = 0x00010,
+    SPELL_HIT_TYPE_UNK6 = 0x00020
 };
 
 enum SpellDmgClass
@@ -1314,7 +1318,8 @@ enum Emote
     EMOTE_ONESHOT_CUSTOMSPELL10        = 411,
     EMOTE_STATE_EXCLAIM                = 412,
     EMOTE_STATE_SIT_CHAIR_MED          = 415,
-    EMOTE_STATE_SPELLEFFECT_HOLD       = 422
+    EMOTE_STATE_SPELLEFFECT_HOLD       = 422,
+    EMOTE_STATE_EAT_NO_SHEATHE         = 423
 };
 
 enum Anim
@@ -1586,6 +1591,7 @@ enum TrainerType                                            // this is important
 
 #define MAX_TRAINER_TYPE 4
 
+// CreatureType.dbc
 enum CreatureType
 {
     CREATURE_TYPE_BEAST            = 1,
@@ -1605,6 +1611,7 @@ enum CreatureType
 
 uint32 const CREATURE_TYPEMASK_HUMANOID_OR_UNDEAD = (1 << (CREATURE_TYPE_HUMANOID-1)) | (1 << (CREATURE_TYPE_UNDEAD-1));
 
+// CreatureFamily.dbc
 enum CreatureFamily
 {
     CREATURE_FAMILY_WOLF           = 1,
@@ -1744,6 +1751,8 @@ inline uint8 ClassByQuestSort(int32 QuestSort)
 
 enum SkillType
 {
+    SKILL_NONE                     = 0,
+
     SKILL_FROST                    = 6,
     SKILL_FIRE                     = 8,
     SKILL_ARMS                     = 26,
@@ -1940,6 +1949,7 @@ enum TotemCategory
 
 enum UnitDynFlags
 {
+    UNIT_DYNFLAG_NONE              = 0x0000,
     UNIT_DYNFLAG_LOOTABLE          = 0x0001,
     UNIT_DYNFLAG_TRACK_UNIT        = 0x0002,
     UNIT_DYNFLAG_OTHER_TAGGER      = 0x0004,
