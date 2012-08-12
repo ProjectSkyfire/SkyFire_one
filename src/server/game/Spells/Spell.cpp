@@ -276,7 +276,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
     switch (m_spellInfo->DmgClass)
     {
         case SPELL_DAMAGE_CLASS_MELEE:
-            if (m_spellInfo->AttributesEx3 & SPELL_ATTR_EX3_REQ_OFFHAND)
+            if (m_spellInfo->HasAttribute(SPELL_ATTR_EX3_REQ_OFFHAND))
                 m_attackType = OFF_ATTACK;
             else
                 m_attackType = BASE_ATTACK;
@@ -286,7 +286,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
             break;
         default:
                                                             // Wands
-            if (m_spellInfo->AttributesEx2 & SPELL_ATTR_EX2_AUTOREPEAT_FLAG)
+            if (m_spellInfo->HasAttribute(SPELL_ATTR_EX2_AUTOREPEAT_FLAG))
                 m_attackType = RANGED_ATTACK;
             else
                 m_attackType = BASE_ATTACK;
@@ -327,7 +327,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
 
     m_castPositionX = m_castPositionY = m_castPositionZ = 0;
     m_TriggerSpells.clear();
-    m_IsTriggeredSpell = bool(triggered || (info->AttributesEx4 & SPELL_ATTR_EX4_FORCE_TRIGGERED));
+    m_IsTriggeredSpell = bool(triggered || (info->HasAttribute(SPELL_ATTR_EX4_FORCE_TRIGGERED)));
     //m_AreaAura = false;
     m_CastItem = NULL;
 
@@ -352,7 +352,7 @@ Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 origin
 
     if (m_spellInfo->DmgClass == SPELL_DAMAGE_CLASS_MAGIC
         && !IsAreaOfEffectSpell(m_spellInfo)
-        && (m_spellInfo->AttributesEx2 & SPELL_ATTR_EX_CANT_BE_REFLECTED) == 0)
+        && !(m_spellInfo->HasAttribute(SPELL_ATTR_EX_CANT_BE_REFLECTED)))
     {
         for (int j = 0; j < MAX_SPELL_EFFECTS; j++)
         {
@@ -535,7 +535,7 @@ void Spell::FillTargetMap()
                     break;
                 case SPELL_EFFECT_APPLY_AREA_AURA_PARTY:
                                                             // AreaAura
-                    if (m_spellInfo->Attributes == 0x9050000 || m_spellInfo->Attributes == 0x10000)
+                    if ((m_spellInfo->Attributes == (SPELL_ATTR_NOT_SHAPESHIFT | SPELL_ATTR_DONT_AFFECT_SHEATH_STATE | SPELL_ATTR_CASTABLE_WHILE_MOUNTED | SPELL_ATTR_CASTABLE_WHILE_SITTING)) || (m_spellInfo->Attributes == SPELL_ATTR_NOT_SHAPESHIFT))
                         SetTargetMap(i, TARGET_UNIT_PARTY_TARGET);
                     break;
                 case SPELL_EFFECT_SKIN_PLAYER_CORPSE:
@@ -1562,7 +1562,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             switch (cur)
             {
                 case TARGET_UNIT_TARGET_ENEMY:
-                    if ((m_spellInfo->AttributesEx & (0x8 | 0x80)) == 0)
+                    if ((m_spellInfo->AttributesEx & (SPELL_ATTR_EX_CANT_BE_REDIRECTED | SPELL_ATTR_EX_CANT_BE_REFLECTED)) == 0)
                     {
                         // try to select magnet target first
                         if (SelectMagnetTarget() == m_targets.getUnitTarget())
@@ -3601,7 +3601,7 @@ uint8 Spell::CanCast(bool strict)
         }*/
 
         //Must be behind the target.
-        if (m_spellInfo->AttributesEx2 == 0x100000 && (m_spellInfo->AttributesEx & 0x200) == 0x200 && target->HasInArc(M_PI, m_caster)
+        if (m_spellInfo->AttributesEx2 == SPELL_ATTR_EX2_MUST_BEHIND_TARGET && m_spellInfo->HasAttribute(SPELL_ATTR_EX_MELEE_COMBAT_SPELL) && target->HasInArc(M_PI, m_caster)
             && (m_spellInfo->SpellFamilyName != SPELLFAMILY_DRUID || m_spellInfo->SpellFamilyFlags != 0x0000000000020000LL))
         {
             SendInterrupted(2);
@@ -3609,7 +3609,7 @@ uint8 Spell::CanCast(bool strict)
         }
 
         //Target must be facing you.
-        if ((m_spellInfo->Attributes == 0x150010) && !target->HasInArc(M_PI, m_caster))
+        if ((m_spellInfo->Attributes == (SPELL_ATTR_ABILITY | SPELL_ATTR_NOT_SHAPESHIFT | SPELL_ATTR_DONT_AFFECT_SHEATH_STATE | SPELL_ATTR_STOP_ATTACK_TARGET)) && !target->HasInArc(M_PI, m_caster))
         {
             SendInterrupted(2);
             return SPELL_FAILED_NOT_INFRONT;
@@ -4415,7 +4415,7 @@ uint8 Spell::CheckCasterAuras() const
 {
     // Flag drop spells totally immuned to caster auras
     // FIXME: find more nice check for all totally immuned spells
-    // AttributesEx3 & 0x10000000?
+    // HasAttribute(SPELL_ATTR_EX3_ALWAYS_CAST_OK)?
     if (m_spellInfo->Id == 23336 || m_spellInfo->Id == 23334 || m_spellInfo->Id == 34991)
         return 0;
 
