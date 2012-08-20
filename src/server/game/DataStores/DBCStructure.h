@@ -23,6 +23,7 @@
 
 #include "DBCEnums.h"
 #include "Define.h"
+#include "SharedDefines.h"
 
 #include <map>
 #include <set>
@@ -688,6 +689,14 @@ struct SpellEntry
     uint32    TotemCategory[2];                             // 212-213
     uint32    AreaId;                                       // 214
     uint32    SchoolMask;                                   // 215 school mask
+
+    inline bool HasAttribute(SpellAttributes attribute) const { return Attributes & attribute; }
+    inline bool HasAttribute(SpellAttributesEx attribute) const { return AttributesEx & attribute; }
+    inline bool HasAttribute(SpellAttributesEx2 attribute) const { return AttributesEx2 & attribute; }
+    inline bool HasAttribute(SpellAttributesEx3 attribute) const { return AttributesEx3 & attribute; }
+    inline bool HasAttribute(SpellAttributesEx4 attribute) const { return AttributesEx4 & attribute; }
+    inline bool HasAttribute(SpellAttributesEx5 attribute) const { return AttributesEx5 & attribute; }
+    inline bool HasAttribute(SpellAttributesEx6 attribute) const { return AttributesEx6 & attribute; }
 
     private:
         // prevent creating custom entries (copy data from original in fact)
