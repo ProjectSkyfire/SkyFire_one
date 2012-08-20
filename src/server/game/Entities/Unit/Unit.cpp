@@ -2455,9 +2455,9 @@ SpellMissInfo Unit::MeleeSpellHitResult(Unit *pVictim, SpellEntry const *spell, 
     uint32 roll = urand (0, 10000);
     uint32 tmp = 0;
 
-    bool canDodge = true;
-    bool canParry = true;
-    bool canBlock = spell->AttributesEx3 & SPELL_ATTR_EX3_MELEE;
+    bool canDodge = spell->DmgClass == SPELL_DAMAGE_CLASS_MELEE;
+    bool canParry = spell->DmgClass == SPELL_DAMAGE_CLASS_MELEE;
+    bool canBlock = spell->HasAttribute(SPELL_ATTR_EX3_BLOCKABLE_SPELL);
     //We use SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY until right Attribute was found
     bool canMiss = !(spell->Attributes & SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY) && cMiss;
 
