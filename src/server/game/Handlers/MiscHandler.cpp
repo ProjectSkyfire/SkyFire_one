@@ -496,7 +496,7 @@ void WorldSession::HandleStandStateChangeOpcode(WorldPacket & recv_data)
     _player->SetStandState(animstate);
 }
 
-void WorldSession::HandleFriendListOpcode(WorldPacket & recv_data)
+void WorldSession::HandleContactListOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug("WORLD: Received CMSG_CONTACT_LIST");
     uint32 unk;
@@ -669,7 +669,7 @@ void WorldSession::HandleDelIgnoreOpcode(WorldPacket & recv_data)
     sLog->outDebug("WORLD: Sent motd (SMSG_FRIEND_STATUS)");
 }
 
-void WorldSession::HandleSetFriendNoteOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetContactNotesOpcode(WorldPacket & recv_data)
 {
     uint64 guid;
     std::string note;

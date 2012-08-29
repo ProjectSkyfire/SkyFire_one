@@ -290,7 +290,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
  * @param recv_data the packet containing information about the mail the player read.
  *
  */
-void WorldSession::HandleMarkAsRead(WorldPacket & recv_data)
+void WorldSession::HandleMailMarkAsRead(WorldPacket & recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -357,7 +357,7 @@ void WorldSession::HandleMailDelete(WorldPacket & recv_data)
  * @param recv_data The packet containing information about the mail being returned.
  *
  */
-void WorldSession::HandleReturnToSender(WorldPacket & recv_data)
+void WorldSession::HandleMailReturnToSender(WorldPacket & recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -412,7 +412,7 @@ void WorldSession::HandleReturnToSender(WorldPacket & recv_data)
 /**
  * Handles the packet sent by the client when taking an item from the mail.
  */
-void WorldSession::HandleTakeItem(WorldPacket & recv_data)
+void WorldSession::HandleMailTakeItem(WorldPacket & recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -510,7 +510,7 @@ void WorldSession::HandleTakeItem(WorldPacket & recv_data)
 /**
  * Handles the packet sent by the client when taking money from the mail.
  */
-void WorldSession::HandleTakeMoney(WorldPacket & recv_data)
+void WorldSession::HandleMailTakeMoney(WorldPacket & recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -741,7 +741,7 @@ void WorldSession::HandleMailCreateTextItem(WorldPacket & recv_data)
 /**
  * No idea when this is called.
  */
-void WorldSession::HandleMsgQueryNextMailtime(WorldPacket & /*recv_data*/)
+void WorldSession::HandleQueryNextMailTime(WorldPacket & /*recv_data*/)
 {
     WorldPacket data(MSG_QUERY_NEXT_MAIL_TIME, 8);
 

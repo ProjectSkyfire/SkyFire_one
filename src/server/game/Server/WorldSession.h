@@ -301,14 +301,14 @@ class WorldSession
         void HandleSetSelectionOpcode(WorldPacket& recvPacket);
         void HandleStandStateChangeOpcode(WorldPacket& recvPacket);
         void HandleEmoteOpcode(WorldPacket& recvPacket);
-        void HandleFriendListOpcode(WorldPacket& recvPacket);
+        void HandleContactListOpcode(WorldPacket& recvPacket);
         void HandleAddFriendOpcode(WorldPacket& recvPacket);
         static void HandleAddFriendOpcodeCallBack(QueryResult_AutoPtr result, uint32 accountId, std::string friendNote);
         void HandleDelFriendOpcode(WorldPacket& recvPacket);
         void HandleAddIgnoreOpcode(WorldPacket& recvPacket);
         static void HandleAddIgnoreOpcodeCallBack(QueryResult_AutoPtr result, uint32 accountId);
         void HandleDelIgnoreOpcode(WorldPacket& recvPacket);
-        void HandleSetFriendNoteOpcode(WorldPacket& recvPacket);
+        void HandleSetContactNotesOpcode(WorldPacket& recvPacket);
         void HandleBugOpcode(WorldPacket& recvPacket);
         void HandleSetAmmoOpcode(WorldPacket& recvPacket);
         void HandleItemNameQueryOpcode(WorldPacket& recvPacket);
@@ -352,7 +352,7 @@ class WorldSession
         //void HandleGroupCancelOpcode(WorldPacket& recvPacket);
         void HandleGroupAcceptOpcode(WorldPacket& recvPacket);
         void HandleGroupDeclineOpcode(WorldPacket& recvPacket);
-        void HandleGroupUninviteNameOpcode(WorldPacket& recvPacket);
+        void HandleGroupUninviteOpcode(WorldPacket& recvPacket);
         void HandleGroupUninviteGuidOpcode(WorldPacket& recvPacket);
         void HandleGroupSetLeaderOpcode(WorldPacket& recvPacket);
         void HandleGroupLeaveOpcode(WorldPacket& recvPacket);
@@ -362,10 +362,10 @@ class WorldSession
         void HandleRequestPartyMemberStatsOpcode(WorldPacket &recv_data);
         void HandleRaidIconTargetOpcode(WorldPacket & recv_data);
         void HandleRaidReadyCheckOpcode(WorldPacket & recv_data);
-        void HandleRaidReadyCheckFinishOpcode(WorldPacket & recv_data);
+        void HandleRaidReadyCheckFinishedOpcode(WorldPacket & recv_data);
         void HandleRaidConvertOpcode(WorldPacket & recv_data);
         void HandleGroupChangeSubGroupOpcode(WorldPacket & recv_data);
-        void HandleGroupAssistantOpcode(WorldPacket & recv_data);
+        void HandleGroupAssistantLeaderOpcode(WorldPacket & recv_data);
         void HandleGroupPromoteOpcode(WorldPacket & recv_data);
 
         void HandlePetitionBuyOpcode(WorldPacket& recv_data);
@@ -403,7 +403,7 @@ class WorldSession
         void HandleTaxiNodeStatusQueryOpcode(WorldPacket& recvPacket);
         void HandleTaxiQueryAvailableNodesOpcode(WorldPacket& recvPacket);
         void HandleActivateTaxiOpcode(WorldPacket& recvPacket);
-        void HandleActivateTaxiFarOpcode(WorldPacket& recvPacket);
+        void HandleActivateTaxiExpressOpcode(WorldPacket& recvPacket);
         void HandleTaxiNextDestinationOpcode(WorldPacket& recvPacket);
 
         void HandleTabardVendorActivateOpcode(WorldPacket& recvPacket);
@@ -448,14 +448,14 @@ class WorldSession
 
         void HandleGetMail(WorldPacket & recv_data);
         void HandleSendMail(WorldPacket & recv_data);
-        void HandleTakeMoney(WorldPacket & recv_data);
-        void HandleTakeItem(WorldPacket & recv_data);
-        void HandleMarkAsRead(WorldPacket & recv_data);
-        void HandleReturnToSender(WorldPacket & recv_data);
+        void HandleMailTakeMoney(WorldPacket & recv_data);
+        void HandleMailTakeItem(WorldPacket & recv_data);
+        void HandleMailMarkAsRead(WorldPacket & recv_data);
+        void HandleMailReturnToSender(WorldPacket & recv_data);
         void HandleMailDelete(WorldPacket & recv_data);
         void HandleItemTextQuery(WorldPacket & recv_data);
         void HandleMailCreateTextItem(WorldPacket & recv_data);
-        void HandleMsgQueryNextMailtime(WorldPacket & recv_data);
+        void HandleQueryNextMailTime(WorldPacket & recv_data);
         void HandleCancelChanneling(WorldPacket & recv_data);
 
         void SendItemPageInfo(ItemPrototype *itemProto);

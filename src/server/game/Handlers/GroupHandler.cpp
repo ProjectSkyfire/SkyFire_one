@@ -273,7 +273,7 @@ void WorldSession::HandleGroupUninviteGuidOpcode(WorldPacket & recv_data)
     SendPartyResult(PARTY_OP_LEAVE, "", PARTY_RESULT_NOT_IN_YOUR_PARTY);
 }
 
-void WorldSession::HandleGroupUninviteNameOpcode(WorldPacket & recv_data)
+void WorldSession::HandleGroupUninviteOpcode(WorldPacket & recv_data)
 {
     std::string membername;
     recv_data >> membername;
@@ -285,7 +285,7 @@ void WorldSession::HandleGroupUninviteNameOpcode(WorldPacket & recv_data)
     // can't uninvite yourself
     if (GetPlayer()->GetName() == membername)
     {
-        sLog->outError("WorldSession::HandleGroupUninviteNameOpcode: leader %s(%d) tried to uninvite himself from the group.", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow());
+        sLog->outError("WorldSession::HandleGroupUninviteOpcode: leader %s(%d) tried to uninvite himself from the group.", GetPlayer()->GetName(), GetPlayer()->GetGUIDLow());
         return;
     }
 
@@ -523,7 +523,7 @@ void WorldSession::HandleGroupChangeSubGroupOpcode(WorldPacket & recv_data)
         group->ChangeMembersGroup(sObjectMgr->GetPlayerGUIDByName(name.c_str()), groupNr);
 }
 
-void WorldSession::HandleGroupAssistantOpcode(WorldPacket & recv_data)
+void WorldSession::HandleGroupAssistantLeaderOpcode(WorldPacket & recv_data)
 {
     Group *group = GetPlayer()->GetGroup();
     if (!group)
@@ -603,7 +603,7 @@ void WorldSession::HandleRaidReadyCheckOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleRaidReadyCheckFinishOpcode(WorldPacket & recv_data)
+void WorldSession::HandleRaidReadyCheckFinishedOpcode(WorldPacket & recv_data)
 {
     //Group* group = GetPlayer()->GetGroup();
     //if (!group)

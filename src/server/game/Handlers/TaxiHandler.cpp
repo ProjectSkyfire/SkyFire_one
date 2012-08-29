@@ -151,7 +151,7 @@ bool WorldSession::SendLearnNewTaxiNode(Creature* unit)
         return false;
 }
 
-void WorldSession::HandleActivateTaxiFarOpcode (WorldPacket & recv_data)
+void WorldSession::HandleActivateTaxiExpressOpcode (WorldPacket & recv_data)
 {
     sLog->outDebug("WORLD: Received CMSG_ACTIVATETAXIEXPRESS");
 
@@ -163,7 +163,7 @@ void WorldSession::HandleActivateTaxiFarOpcode (WorldPacket & recv_data)
     Creature *npc = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_FLIGHTMASTER);
     if (!npc)
     {
-        sLog->outDebug("WORLD: HandleActivateTaxiFarOpcode - Unit (GUID: %u) not found or you can't interact with it.", uint32(GUID_LOPART(guid)));
+        sLog->outDebug("WORLD: HandleActivateTaxiExpressOpcode - Unit (GUID: %u) not found or you can't interact with it.", uint32(GUID_LOPART(guid)));
         return;
     }
     std::vector<uint32> nodes;
