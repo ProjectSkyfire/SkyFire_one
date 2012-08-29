@@ -41,6 +41,7 @@ file(GLOB_RECURSE scripts_EK_SunwellPlateau EasternKingdoms/SunwellPlateau/*.cpp
 file(GLOB_RECURSE scripts_EK_Uldaman EasternKingdoms/Uldaman/*.cpp EasternKingdoms/Uldaman/*.h)
 file(GLOB_RECURSE scripts_EK_ZulAman EasternKingdoms/ZulAman/*.cpp EasternKingdoms/ZulAman/*.h)
 file(GLOB_RECURSE scripts_EK_ZulGurub EasternKingdoms/ZulGurub/*.cpp EasternKingdoms/ZulGurub/*.h)
+file(GLOB_RECURSE scripts_EK_Zones EasternKingdoms/Zones/*.cpp EasternKingdoms/ZulGurub/*.h)
   # Kalimbdor
 file(GLOB scripts_kalimdor Kalimdor/*.cpp Kalimdor/*.h)
 file(GLOB_RECURSE scripts_K_BlackfathomDeeps Kalimdor/BlackfathomDeeps/*.cpp Kalimdor/BlackfathomDeeps/*.h)
@@ -55,6 +56,7 @@ file(GLOB_RECURSE scripts_K_RuinsOfAhnQiraj Kalimdor/RuinsOfAhnQiraj/*.cpp Kalim
 file(GLOB_RECURSE scripts_K_TempleOfAhnQiraj Kalimdor/TempleOfAhnQiraj/*.cpp Kalimdor/TempleOfAhnQiraj/*.h)
 file(GLOB_RECURSE scripts_K_WailingCaverns Kalimdor/WailingCaverns/*.cpp Kalimdor/WailingCaverns/*.h)
 file(GLOB_RECURSE scripts_K_ZulFarrak Kalimdor/ZulFarrak/*.cpp Kalimdor/ZulFarrak/*.h)
+file(GLOB_RECURSE scripts_K_Zones Kalimdor/Zones/*.cpp Kalimdor/ZulGurub/*.h)
   # Outland
 file(GLOB scripts_outland Outland/*.cpp Outland/*.h)
 file(GLOB_RECURSE scripts_O_AuchenaiCrypts Outland/Auchindoun/AuchenaiCrypts/*.cpp Outland/Auchindoun/AuchenaiCrypts/*.h)
@@ -70,10 +72,11 @@ file(GLOB_RECURSE scripts_O_BloodFurnace Outland/HellfireCitadel/BloodFurnace/*.
 file(GLOB_RECURSE scripts_O_HellfireRamparts Outland/HellfireCitadel/HellfireRamparts/*.cpp Outland/HellfireCitadel/HellfireRamparts/*.h)
 file(GLOB_RECURSE scripts_O_MagtheridonsLair Outland/HellfireCitadel/MagtheridonsLair/*.cpp Outland/HellfireCitadel/MagtheridonsLair/*.h)
 file(GLOB_RECURSE scripts_O_ShatteredHalls Outland/HellfireCitadel/ShatteredHalls/*.cpp Outland/HellfireCitadel/ShatteredHalls/*.h)
-file(GLOB_RECURSE scripts_O_arcatraz Outland/TempestKeep/arcatraz/*.cpp Kalimdor/TempestKeep/arcatraz/*.h)
-file(GLOB_RECURSE scripts_O_botanica Outland/TempestKeep/botanica/*.cpp Kalimdor/TempestKeep/botanica/*.h)
-file(GLOB_RECURSE scripts_O_Eye Outland/TempestKeep/Eye/*.cpp Kalimdor/TempestKeep/Eye/*.h)
+file(GLOB_RECURSE scripts_O_arcatraz Outland/TempestKeep/arcatraz/*.cpp Outland/TempestKeep/arcatraz/*.h)
+file(GLOB_RECURSE scripts_O_botanica Outland/TempestKeep/botanica/*.cpp Outland/TempestKeep/botanica/*.h)
+file(GLOB_RECURSE scripts_O_Eye Outland/TempestKeep/Eye/*.cpp Outland/TempestKeep/Eye/*.h)
 file(GLOB_RECURSE scripts_O_Mechanar Outland/TempestKeep/Mechanar/*.cpp Outland/TempestKeep/Mechanar/*.h)
+file(GLOB_RECURSE scripts_O_Zones Outland/Zones/*.cpp Outland/Zones/*.h)
 file(GLOB_RECURSE scripts_world World/*.cpp World/*.h)
 file(GLOB_RECURSE scripts_examples Examples/*.cpp Examples/*.h)
 
@@ -101,6 +104,7 @@ source_group("Eastern Kingdoms\\SunwellPlateau"       FILES ${scripts_EK_Sunwell
 source_group("Eastern Kingdoms\\Uldaman"              FILES ${scripts_EK_Uldaman})
 source_group("Eastern Kingdoms\\ZulAman"              FILES ${scripts_EK_ZulAman})
 source_group("Eastern Kingdoms\\ZulGurub"             FILES ${scripts_EK_ZulGurub})
+source_group("Eastern Kingdoms\\Zones"                FILES ${scripts_EK_Zones})
   # Kalimbdor
 source_group("Kalimdor"                                               FILES ${scripts_kalimdor})
 source_group("Kalimdor\\Blackfathom Deeps"                            FILES ${scripts_K_BlackfathomDeeps})
@@ -115,8 +119,9 @@ source_group("Kalimdor\\Ruins Of Ahn Qiraj"                           FILES ${sc
 source_group("Kalimdor\\Temple Of Ahn Qiraj"                          FILES ${scripts_K_TempleOfAhnQiraj})
 source_group("Kalimdor\\Wailing Caverns"                              FILES ${scripts_K_WailingCaverns})
 source_group("Kalimdor\\Zul Farrak"                                   FILES ${scripts_K_ZulFarrak})
+source_group("Kalimdor\\Zones"                                        FILES ${scripts_K_Zones})
   # Outland
-source_group("Outland" FILES ${scripts_outland})
+source_group("Outland"                                                FILES ${scripts_outland})
 source_group("Outland\\Auchindoun\\AuchenaiCrypts"                    FILES ${scripts_O_AuchenaiCrypts})
 source_group("Outland\\Auchindoun\\ManaTombs"                         FILES ${scripts_O_ManaTombs})
 source_group("Outland\\Auchindoun\\SethekkHalls"                      FILES ${scripts_O_SethekkHalls})
@@ -134,6 +139,7 @@ source_group("Outland\\TempestKeep\\arcatraz"                         FILES ${sc
 source_group("Outland\\TempestKeep\\botanica"                         FILES ${scripts_O_botanica})
 source_group("Outland\\TempestKeep\\Eye"                              FILES ${scripts_O_Eye})
 source_group("Outland\\TempestKeep\\Mechanar"                         FILES ${scripts_O_Mechanar})
+source_group("Outland\\Zones"                                         FILES ${scripts_O_Zones})
 source_group(World FILES ${scripts_world})
 source_group(Examples ${scripts_examples})
 
@@ -178,6 +184,7 @@ if (SCRIPTS)
     ${scripts_EK_Uldaman}
     ${scripts_EK_ZulAman}
     ${scripts_EK_ZulGurub}
+	${scripts_EK_Zones}
     # Kalibmdor
     ${scripts_kalimdor}
     ${scripts_K_BlackfathomDeeps}
@@ -192,6 +199,7 @@ if (SCRIPTS)
     ${scripts_K_TempleOfAhnQiraj}
     ${scripts_K_WailingCaverns}
     ${scripts_K_ZulFarrak}
+	${scripts_K_Zones}
     # Outland
     ${scripts_outland}
     ${scripts_O_AuchenaiCrypts}
@@ -211,6 +219,7 @@ if (SCRIPTS)
     ${scripts_O_botanica}
     ${scripts_O_Eye}
     ${scripts_O_Mechanar}
+	${scripts_O_Zones}
     # World
     ${scripts_world}
     ${scripts_examples}
