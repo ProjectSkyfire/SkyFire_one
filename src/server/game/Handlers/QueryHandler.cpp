@@ -391,7 +391,7 @@ void WorldSession::HandleNpcTextQueryOpcode(WorldPacket & recv_data)
     sLog->outDebug("WORLD: Sent SMSG_NPC_TEXT_UPDATE");
 }
 
-void WorldSession::HandlePageQueryOpcode(WorldPacket & recv_data)
+void WorldSession::HandlePageTextQueryOpcode(WorldPacket & recv_data)
 {
     sLog->outDetail("WORLD: Received CMSG_PAGE_TEXT_QUERY");
     recv_data.hexlike();

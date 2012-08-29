@@ -225,7 +225,7 @@ void WorldSession::HandleQuestgiverAcceptQuestOpcode(WorldPacket & recv_data)
     _player->PlayerTalkClass->CloseGossip();
 }
 
-void WorldSession::HandleQuestgiverQuestQueryOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestgiverQueryQuestOpcode(WorldPacket & recv_data)
 {
     uint64 guid;
     uint32 quest;
@@ -421,7 +421,7 @@ void WorldSession::HandleQuestConfirmAccept(WorldPacket& recv_data)
     }
 }
 
-void WorldSession::HandleQuestComplete(WorldPacket& recv_data)
+void WorldSession::HandleQuestgiverCompleteQuest(WorldPacket& recv_data)
 {
     uint32 quest;
     uint64 guid;
@@ -438,7 +438,7 @@ void WorldSession::HandleQuestComplete(WorldPacket& recv_data)
         if (GetPlayer()->InBattleground())
             if (Battleground* bg = GetPlayer()->GetBattleground())
                 if (bg->GetTypeID() == BATTLEGROUND_AV)
-                    ((BattlegroundAV*)bg)->HandleQuestComplete(quest, GetPlayer());
+                    ((BattlegroundAV*)bg)->HandleQuestgiverCompleteQuest(quest, GetPlayer());
 
         if (_player->GetQuestStatus(quest) != QUEST_STATUS_COMPLETE)
         {
@@ -452,7 +452,7 @@ void WorldSession::HandleQuestComplete(WorldPacket& recv_data)
     }
 }
 
-void WorldSession::HandleQuestAutoLaunch(WorldPacket& /*recvPacket*/)
+void WorldSession::HandleQuestgiverQuestAutoLaunch(WorldPacket& /*recvPacket*/)
 {
     sLog->outDebug("WORLD: Received CMSG_QUESTGIVER_QUEST_AUTOLAUNCH");
 }

@@ -250,7 +250,7 @@ void WorldSession::HandleArenaTeamDisbandOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleArenaTeamRemoveFromTeamOpcode(WorldPacket & recv_data)
+void WorldSession::HandleArenaTeamRemoveOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug("CMSG_ARENA_TEAM_REMOVE_FROM_TEAM");
 

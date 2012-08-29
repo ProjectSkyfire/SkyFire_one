@@ -1343,7 +1343,7 @@ GameEventMgr::GameEventMgr()
     isSystemInit = false;
 }
 
-void GameEventMgr::HandleQuestComplete(uint32 quest_id)
+void GameEventMgr::HandleQuestgiverCompleteQuest(uint32 quest_id)
 {
     // translate the quest to event and condition
     QuestIdToEventConditionMap::iterator itr = mQuestToEventConditions.find(quest_id);

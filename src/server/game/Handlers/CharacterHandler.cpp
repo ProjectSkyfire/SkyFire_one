@@ -923,7 +923,7 @@ void WorldSession::HandleChangePlayerNameOpcodeCallBack(QueryResult_AutoPtr resu
     session->SendPacket(&data);
 }
 
-void WorldSession::HandleDeclinedPlayerNameOpcode(WorldPacket& recv_data)
+void WorldSession::HandleSetPlayerDeclinedNamesOpcode(WorldPacket& recv_data)
 {
     uint64 guid;
 

@@ -469,9 +469,9 @@ class WorldSession
         void HandleBuyItemOpcode(WorldPacket& recvPacket);
         void HandleListInventoryOpcode(WorldPacket& recvPacket);
         void HandleAutoStoreBagItemOpcode(WorldPacket& recvPacket);
-        void HandleReadItem(WorldPacket& recvPacket);
+        void HandleReadItemOpcode(WorldPacket& recvPacket);
         void HandleAutoEquipItemSlotOpcode(WorldPacket & recvPacket);
-        void HandleSwapItem(WorldPacket & recvPacket);
+        void HandleSwapItemOpcode(WorldPacket & recvPacket);
         void HandleBuybackItem(WorldPacket & recvPacket);
         void HandleAutoBankItemOpcode(WorldPacket& recvPacket);
         void HandleAutoStoreBankItemOpcode(WorldPacket& recvPacket);
@@ -497,7 +497,7 @@ class WorldSession
         void HandleQuestgiverStatusQueryMultipleOpcode(WorldPacket& recvPacket);
         void HandleQuestgiverHelloOpcode(WorldPacket& recvPacket);
         void HandleQuestgiverAcceptQuestOpcode(WorldPacket& recvPacket);
-        void HandleQuestgiverQuestQueryOpcode(WorldPacket& recvPacket);
+        void HandleQuestgiverQueryQuestOpcode(WorldPacket& recvPacket);
         void HandleQuestgiverChooseRewardOpcode(WorldPacket& recvPacket);
         void HandleQuestgiverRequestRewardOpcode(WorldPacket& recvPacket);
         void HandleQuestQueryOpcode(WorldPacket& recvPacket);
@@ -505,8 +505,8 @@ class WorldSession
         void HandleQuestLogSwapQuest(WorldPacket& recv_data);
         void HandleQuestLogRemoveQuest(WorldPacket& recv_data);
         void HandleQuestConfirmAccept(WorldPacket& recv_data);
-        void HandleQuestComplete(WorldPacket& recv_data);
-        void HandleQuestAutoLaunch(WorldPacket& recvPacket);
+        void HandleQuestgiverCompleteQuest(WorldPacket& recv_data);
+        void HandleQuestgiverQuestAutoLaunch(WorldPacket& recvPacket);
         void HandleQuestPushToParty(WorldPacket& recvPacket);
         void HandleQuestPushResult(WorldPacket& recvPacket);
 
@@ -543,11 +543,11 @@ class WorldSession
         void HandleGetChannelMemberCount(WorldPacket& recvPacket);
         void HandleSetChannelWatch(WorldPacket& recvPacket);
 
-        void HandleCompleteCinema(WorldPacket& recvPacket);
+        void HandleCompleteCinematic(WorldPacket& recvPacket);
         void HandleNextCinematicCamera(WorldPacket& recvPacket);
 
         void HandlePageQuerySkippedOpcode(WorldPacket& recvPacket);
-        void HandlePageQueryOpcode(WorldPacket& recvPacket);
+        void HandlePageTextQueryOpcode(WorldPacket& recvPacket);
 
         void HandleTutorialFlag (WorldPacket & recv_data);
         void HandleTutorialClear(WorldPacket & recv_data);
@@ -565,13 +565,13 @@ class WorldSession
         void HandlePetSpellAutocastOpcode(WorldPacket& recvPacket);
         void HandlePetCastSpellOpcode(WorldPacket& recvPacket);
 
-        void HandleSetActionBar(WorldPacket& recv_data);
+        void HandleSetActionBarTogglesOpcode(WorldPacket& recv_data);
 
         void HandleChangePlayerNameOpcode(WorldPacket& recv_data);
         static void HandleChangePlayerNameOpcodeCallBack(QueryResult_AutoPtr result, uint32 accountId, std::string newname);
-        void HandleDeclinedPlayerNameOpcode(WorldPacket& recv_data);
+        void HandleSetPlayerDeclinedNamesOpcode(WorldPacket& recv_data);
 
-        void HandleTotemDestroy(WorldPacket& recv_data);
+        void HandleTotemDestroyed(WorldPacket& recv_data);
 
         //Battleground
         void HandleBattlegroundHelloOpcode(WorldPacket &recv_data);
@@ -591,7 +591,7 @@ class WorldSession
         void HandleFarSightOpcode(WorldPacket& recv_data);
         void HandleSetLfgOpcode(WorldPacket& recv_data);
         void HandleDungeonDifficultyOpcode(WorldPacket& recv_data);
-        void HandleMoveFlyModeChangeAckOpcode(WorldPacket& recv_data);
+        void HandleMoveSetCanFlyAckOpcode(WorldPacket& recv_data);
         void HandleLfgSetAutoJoinOpcode(WorldPacket& recv_data);
         void HandleLfgClearAutoJoinOpcode(WorldPacket& recv_data);
         void HandleLfmSetAutoFillOpcode(WorldPacket& recv_data);
@@ -600,7 +600,7 @@ class WorldSession
         void HandleLfmClearOpcode(WorldPacket& recv_data);
         void HandleSetLfmOpcode(WorldPacket& recv_data);
         void HandleSetLfgCommentOpcode(WorldPacket& recv_data);
-        void HandleChooseTitleOpcode(WorldPacket& recv_data);
+        void HandleSetTitleOpcode(WorldPacket& recv_data);
         void HandleRealmStateRequestOpcode(WorldPacket& recv_data);
         void HandleTimeSyncResp(WorldPacket& recv_data);
         void HandleWhoisOpcode(WorldPacket& recv_data);
@@ -614,13 +614,13 @@ class WorldSession
         void HandleArenaTeamInviteAcceptOpcode(WorldPacket& recv_data);
         void HandleArenaTeamInviteDeclineOpcode(WorldPacket& recv_data);
         void HandleArenaTeamLeaveOpcode(WorldPacket& recv_data);
-        void HandleArenaTeamRemoveFromTeamOpcode(WorldPacket& recv_data);
+        void HandleArenaTeamRemoveOpcode(WorldPacket& recv_data);
         void HandleArenaTeamDisbandOpcode(WorldPacket& recv_data);
         void HandleArenaTeamPromoteToCaptainOpcode(WorldPacket& recv_data);
 
         void HandleAreaSpiritHealerQueryOpcode(WorldPacket& recv_data);
         void HandleAreaSpiritHealerQueueOpcode(WorldPacket& recv_data);
-        void HandleDismountOpcode(WorldPacket& recv_data);
+        void HandleCancelMountAuraOpcode(WorldPacket& recv_data);
         void HandleSelfResOpcode(WorldPacket& recv_data);
         void HandleReportSpamOpcode(WorldPacket& recv_data);
         void HandleRequestPetInfoOpcode(WorldPacket& recv_data);
@@ -628,7 +628,7 @@ class WorldSession
         // Socket gem
         void HandleSocketOpcode(WorldPacket& recv_data);
 
-        void HandleCancelTempItemEnchantmentOpcode(WorldPacket& recv_data);
+        void HandleCancelTempEnchantmentOpcode(WorldPacket& recv_data);
 
         void HandleChannelEnableVoiceOpcode(WorldPacket & recv_data);
         void HandleVoiceSettingsOpcode(WorldPacket& recv_data);

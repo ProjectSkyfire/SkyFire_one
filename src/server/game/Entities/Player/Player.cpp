@@ -14323,7 +14323,7 @@ void Player::SendQuestReward(Quest const *pQuest, uint32 XP, Object * questGiver
 {
     uint32 questid = pQuest->GetQuestId();
     sLog->outDebug("WORLD: Sent SMSG_QUESTGIVER_QUEST_COMPLETE quest = %u", questid);
-    sGameEventMgr->HandleQuestComplete(questid);
+    sGameEventMgr->HandleQuestgiverCompleteQuest(questid);
     WorldPacket data(SMSG_QUESTGIVER_QUEST_COMPLETE, (4+4+4+4+4+4+pQuest->GetRewItemsCount()*8));
     data << questid;
     data << uint32(0x03);

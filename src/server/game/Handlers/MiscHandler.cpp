@@ -924,7 +924,7 @@ void WorldSession::HandleSetActionButtonOpcode(WorldPacket& recv_data)
     }
 }
 
-void WorldSession::HandleCompleteCinema(WorldPacket & /*recv_data*/)
+void WorldSession::HandleCompleteCinematic(WorldPacket & /*recv_data*/)
 {
     sLog->outDebug("WORLD: Player is watching cinema");
 }
@@ -1000,7 +1000,7 @@ void WorldSession::HandleMoveRootAck(WorldPacket& recv_data)
     */
 }
 
-void WorldSession::HandleSetActionBar(WorldPacket& recv_data)
+void WorldSession::HandleSetActionBarTogglesOpcode(WorldPacket& recv_data)
 {
     uint8 ActionBar;
     recv_data >> ActionBar;
@@ -1008,7 +1008,7 @@ void WorldSession::HandleSetActionBar(WorldPacket& recv_data)
     if (!GetPlayer())                                        // ignore until not logged (check needed because STATUS_AUTHED)
     {
         if (ActionBar != 0)
-            sLog->outError("WorldSession::HandleSetActionBar in not logged state with value: %u, ignored", uint32(ActionBar));
+            sLog->outError("WorldSession::HandleSetActionBarTogglesOpcode in not logged state with value: %u, ignored", uint32(ActionBar));
         return;
     }
 
@@ -1315,7 +1315,7 @@ void WorldSession::HandleFarSightOpcode(WorldPacket & recv_data)
     GetPlayer()->UpdateVisibilityForPlayer();
 }
 
-void WorldSession::HandleChooseTitleOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetTitleOpcode(WorldPacket & recv_data)
 {
     sLog->outDebug("CMSG_SET_TITLE");
 
@@ -1412,7 +1412,7 @@ void WorldSession::HandleDungeonDifficultyOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleDismountOpcode(WorldPacket & /*recv_data*/)
+void WorldSession::HandleCancelMountAuraOpcode(WorldPacket & /*recv_data*/)
 {
     sLog->outDebug("WORLD: CMSG_CANCEL_MOUNT_AURA");
 

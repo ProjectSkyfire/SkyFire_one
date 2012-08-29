@@ -121,7 +121,7 @@ void BattlegroundAV::HandleKillUnit(Creature *unit, Player* killer)
         ChangeMineOwner(BG_AV_SOUTH_MINE, killer->GetTeam());
 }
 
-void BattlegroundAV::HandleQuestComplete(uint32 questid, Player* player)
+void BattlegroundAV::HandleQuestgiverCompleteQuest(uint32 questid, Player* player)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;//maybe we should log this, cause this must be a cheater or a big bug

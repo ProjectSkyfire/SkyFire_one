@@ -429,7 +429,7 @@ void WorldSession::HandleCancelChanneling(WorldPacket & recv_data)
     recv_data.read_skip<uint32>();                          // spellid, not used
 }
 
-void WorldSession::HandleTotemDestroy(WorldPacket& recvPacket)
+void WorldSession::HandleTotemDestroyed(WorldPacket& recvPacket)
 {
     uint8 slotId;
 
