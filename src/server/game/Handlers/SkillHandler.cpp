@@ -30,7 +30,7 @@
 #include "UpdateMask.h"
 #include "SpellAuras.h"
 
-void WorldSession::HandleLearnTalentOpcode(WorldPacket & recv_data)
+void WorldSession::HandleLearnTalentOpcode(WorldPacket& recv_data)
 {
     uint32 talent_id, requested_rank;
     recv_data >> talent_id >> requested_rank;
@@ -138,7 +138,7 @@ void WorldSession::HandleLearnTalentOpcode(WorldPacket & recv_data)
     GetPlayer()->SetFreeTalentPoints(CurTalentPoints - 1);
 }
 
-void WorldSession::HandleTalentWipeOpcode(WorldPacket & recv_data)
+void WorldSession::HandleTalentWipeOpcode(WorldPacket& recv_data)
 {
     sLog->outDetail("MSG_TALENT_WIPE_CONFIRM");
     uint64 guid;
@@ -167,7 +167,7 @@ void WorldSession::HandleTalentWipeOpcode(WorldPacket & recv_data)
     unit->CastSpell(_player, 14867, true);                  //spell: "Untalent Visual Effect"
 }
 
-void WorldSession::HandleUnlearnSkillOpcode(WorldPacket & recv_data)
+void WorldSession::HandleUnlearnSkillOpcode(WorldPacket& recv_data)
 {
     uint32 skill_id;
     recv_data >> skill_id;

@@ -29,7 +29,7 @@
 #include "World.h"
 #include "Chat.h"
 
-void WorldSession::HandleGMTicketCreateOpcode(WorldPacket & recv_data)
+void WorldSession::HandleGMTicketCreateOpcode(WorldPacket& recv_data)
 {
     // Let's see if we have a ticket already, if so don't create a new one
     if (sTicketMgr->GetGMTicketByPlayer(GetPlayer()->GetGUID()))
@@ -91,7 +91,7 @@ void WorldSession::HandleGMTicketCreateOpcode(WorldPacket & recv_data)
     sWorld->SendGMText(LANG_COMMAND_TICKETNEW, ticket->name.c_str(), ticket->guid);
 }
 
-void WorldSession::HandleGMTicketUpdateOpcode(WorldPacket & recv_data)
+void WorldSession::HandleGMTicketUpdateOpcode(WorldPacket& recv_data)
 {
     std::string message = "";
     time_t t = time(NULL);

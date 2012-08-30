@@ -52,7 +52,7 @@
  *
  * @param recv_data the WorldPacket containing the data sent by the client.
  */
-void WorldSession::HandleSendMail(WorldPacket & recv_data)
+void WorldSession::HandleSendMail(WorldPacket& recv_data)
 {
     uint64 mailbox, unk3;
     std::string receiver, subject, body;
@@ -290,7 +290,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
  * @param recv_data the packet containing information about the mail the player read.
  *
  */
-void WorldSession::HandleMailMarkAsRead(WorldPacket & recv_data)
+void WorldSession::HandleMailMarkAsRead(WorldPacket& recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -320,7 +320,7 @@ void WorldSession::HandleMailMarkAsRead(WorldPacket & recv_data)
  * @param recv_data The packet containing information about the mail being deleted.
  *
  */
-void WorldSession::HandleMailDelete(WorldPacket & recv_data)
+void WorldSession::HandleMailDelete(WorldPacket& recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -357,7 +357,7 @@ void WorldSession::HandleMailDelete(WorldPacket & recv_data)
  * @param recv_data The packet containing information about the mail being returned.
  *
  */
-void WorldSession::HandleMailReturnToSender(WorldPacket & recv_data)
+void WorldSession::HandleMailReturnToSender(WorldPacket& recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -412,7 +412,7 @@ void WorldSession::HandleMailReturnToSender(WorldPacket & recv_data)
 /**
  * Handles the packet sent by the client when taking an item from the mail.
  */
-void WorldSession::HandleMailTakeItem(WorldPacket & recv_data)
+void WorldSession::HandleMailTakeItem(WorldPacket& recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -510,7 +510,7 @@ void WorldSession::HandleMailTakeItem(WorldPacket & recv_data)
 /**
  * Handles the packet sent by the client when taking money from the mail.
  */
-void WorldSession::HandleMailTakeMoney(WorldPacket & recv_data)
+void WorldSession::HandleMailTakeMoney(WorldPacket& recv_data)
 {
     uint64 mailbox;
     uint32 mailId;
@@ -547,7 +547,7 @@ void WorldSession::HandleMailTakeMoney(WorldPacket & recv_data)
  * Handles the packet sent by the client when requesting the current mail list.
  * It will send a list of all available mails in the players mailbox to the client.
  */
-void WorldSession::HandleGetMail(WorldPacket & recv_data)
+void WorldSession::HandleGetMail(WorldPacket& recv_data)
 {
     uint64 mailbox;
     recv_data >> mailbox;
@@ -662,7 +662,7 @@ void WorldSession::HandleGetMail(WorldPacket & recv_data)
  * This function is called when client needs mail message body,
  * or when player clicks on item which has some flag set
  */
-void WorldSession::HandleItemTextQuery(WorldPacket & recv_data)
+void WorldSession::HandleItemTextQuery(WorldPacket& recv_data)
 {
     uint32 itemTextId;
     uint32 mailId;                                          //this value can be item id in bag, but it is also mail id
@@ -687,7 +687,7 @@ void WorldSession::HandleItemTextQuery(WorldPacket & recv_data)
  * a new item with the text of the mail and store it in the players inventory (if possible).
  *
  */
-void WorldSession::HandleMailCreateTextItem(WorldPacket & recv_data)
+void WorldSession::HandleMailCreateTextItem(WorldPacket& recv_data)
 {
     uint64 mailbox;
     uint32 mailId;

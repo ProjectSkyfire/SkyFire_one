@@ -34,7 +34,7 @@
 #include "Pet.h"
 #include "Language.h"
 
-void WorldSession::HandlePetAction(WorldPacket & recv_data)
+void WorldSession::HandlePetAction(WorldPacket& recv_data)
 {
     uint64 guid1;
     uint16 spellid;
@@ -380,7 +380,7 @@ void WorldSession::SendPetNameQuery(uint64 petguid, uint32 petnumber)
     _player->GetSession()->SendPacket(&data);
 }
 
-void WorldSession::HandlePetSetAction(WorldPacket & recv_data)
+void WorldSession::HandlePetSetAction(WorldPacket& recv_data)
 {
     sLog->outDetail("HandlePetSetAction. CMSG_PET_SET_ACTION");
 
@@ -441,7 +441,7 @@ void WorldSession::HandlePetSetAction(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandlePetRename(WorldPacket & recv_data)
+void WorldSession::HandlePetRename(WorldPacket& recv_data)
 {
     sLog->outDetail("HandlePetRename. CMSG_PET_RENAME");
 
@@ -513,7 +513,7 @@ void WorldSession::HandlePetRename(WorldPacket & recv_data)
     pet->SetUInt32Value(UNIT_FIELD_PET_NAME_TIMESTAMP, time(NULL));
 }
 
-void WorldSession::HandlePetAbandon(WorldPacket & recv_data)
+void WorldSession::HandlePetAbandon(WorldPacket& recv_data)
 {
     uint64 guid;
     recv_data >> guid;                                      //pet guid

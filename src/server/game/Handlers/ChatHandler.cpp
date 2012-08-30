@@ -60,7 +60,7 @@ bool WorldSession::processChatmessageFurtherAfterSecurityChecks(std::string& msg
     return true;
 }
 
-void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
+void WorldSession::HandleMessagechatOpcode(WorldPacket& recv_data)
 {
     uint32 type;
     uint32 lang;
@@ -575,7 +575,7 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleEmoteOpcode(WorldPacket & recv_data)
+void WorldSession::HandleEmoteOpcode(WorldPacket& recv_data)
 {
     if (!GetPlayer()->isAlive())
         return;
@@ -585,7 +585,7 @@ void WorldSession::HandleEmoteOpcode(WorldPacket & recv_data)
     GetPlayer()->HandleEmoteCommand(emote);
 }
 
-void WorldSession::HandleTextEmoteOpcode(WorldPacket & recv_data)
+void WorldSession::HandleTextEmoteOpcode(WorldPacket& recv_data)
 {
     if (!GetPlayer()->isAlive())
         return;

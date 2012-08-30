@@ -34,7 +34,7 @@
 #include "BattlegroundAV.h"
 #include "ScriptMgr.h"
 
-void WorldSession::HandleQuestgiverStatusQueryOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestgiverStatusQueryOpcode(WorldPacket& recv_data)
 {
     uint64 guid;
     recv_data >> guid;
@@ -80,7 +80,7 @@ void WorldSession::HandleQuestgiverStatusQueryOpcode(WorldPacket & recv_data)
     _player->PlayerTalkClass->SendQuestGiverStatus(questStatus, guid);
 }
 
-void WorldSession::HandleQuestgiverHelloOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestgiverHelloOpcode(WorldPacket& recv_data)
 {
     uint64 guid;
     recv_data >> guid;
@@ -107,7 +107,7 @@ void WorldSession::HandleQuestgiverHelloOpcode(WorldPacket & recv_data)
     _player->SendPreparedGossip(creature);
 }
 
-void WorldSession::HandleQuestgiverAcceptQuestOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestgiverAcceptQuestOpcode(WorldPacket& recv_data)
 {
     uint64 guid;
     uint32 quest;
@@ -225,7 +225,7 @@ void WorldSession::HandleQuestgiverAcceptQuestOpcode(WorldPacket & recv_data)
     _player->PlayerTalkClass->CloseGossip();
 }
 
-void WorldSession::HandleQuestgiverQueryQuestOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestgiverQueryQuestOpcode(WorldPacket& recv_data)
 {
     uint64 guid;
     uint32 quest;
@@ -247,7 +247,7 @@ void WorldSession::HandleQuestgiverQueryQuestOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleQuestQueryOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestQueryOpcode(WorldPacket& recv_data)
 {
     uint32 quest;
     recv_data >> quest;
@@ -258,7 +258,7 @@ void WorldSession::HandleQuestQueryOpcode(WorldPacket & recv_data)
         _player->PlayerTalkClass->SendQuestQueryResponse(pQuest);
 }
 
-void WorldSession::HandleQuestgiverChooseRewardOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestgiverChooseRewardOpcode(WorldPacket& recv_data)
 {
     uint32 quest, reward;
     uint64 guid;
@@ -314,7 +314,7 @@ void WorldSession::HandleQuestgiverChooseRewardOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleQuestgiverRequestRewardOpcode(WorldPacket & recv_data)
+void WorldSession::HandleQuestgiverRequestRewardOpcode(WorldPacket& recv_data)
 {
     uint32 quest;
     uint64 guid;

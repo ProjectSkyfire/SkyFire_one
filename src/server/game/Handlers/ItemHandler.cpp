@@ -29,7 +29,7 @@
 #include "UpdateData.h"
 #include "ObjectAccessor.h"
 
-void WorldSession::HandleSplitItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSplitItemOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_SPLIT_ITEM");
     uint8 srcbag, srcslot, dstbag, dstslot, count;
@@ -61,7 +61,7 @@ void WorldSession::HandleSplitItemOpcode(WorldPacket & recv_data)
     _player->SplitItem(src, dst, count);
 }
 
-void WorldSession::HandleSwapInvItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSwapInvItemOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_SWAP_INV_ITEM");
     uint8 srcslot, dstslot;
@@ -91,7 +91,7 @@ void WorldSession::HandleSwapInvItemOpcode(WorldPacket & recv_data)
     _player->SwapItem(src, dst);
 }
 
-void WorldSession::HandleAutoEquipItemSlotOpcode(WorldPacket & recv_data)
+void WorldSession::HandleAutoEquipItemSlotOpcode(WorldPacket& recv_data)
 {
     uint64 itemguid;
     uint8 dstslot;
@@ -110,7 +110,7 @@ void WorldSession::HandleAutoEquipItemSlotOpcode(WorldPacket & recv_data)
     _player->SwapItem(item->GetPos(), dstpos);
 }
 
-void WorldSession::HandleSwapItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSwapItemOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_SWAP_ITEM");
     uint8 dstbag, dstslot, srcbag, srcslot;
@@ -140,7 +140,7 @@ void WorldSession::HandleSwapItemOpcode(WorldPacket & recv_data)
     _player->SwapItem(src, dst);
 }
 
-void WorldSession::HandleAutoEquipItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleAutoEquipItemOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_AUTOEQUIP_ITEM");
     uint8 srcbag, srcslot;
@@ -234,7 +234,7 @@ void WorldSession::HandleAutoEquipItemOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleDestroyItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleDestroyItemOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_DESTROYITEM");
     uint8 bag, slot, count, data1, data2, data3;
@@ -272,7 +272,7 @@ void WorldSession::HandleDestroyItemOpcode(WorldPacket & recv_data)
 }
 
 // Only _static_ data send in this packet !!!
-void WorldSession::HandleItemQuerySingleOpcode(WorldPacket & recv_data)
+void WorldSession::HandleItemQuerySingleOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_ITEM_QUERY_SINGLE");
     uint32 item;
@@ -428,7 +428,7 @@ void WorldSession::HandleItemQuerySingleOpcode(WorldPacket & recv_data)
     }
 }
 
-void WorldSession::HandleReadItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleReadItemOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_READ_ITEM");
 
@@ -461,7 +461,7 @@ void WorldSession::HandleReadItemOpcode(WorldPacket & recv_data)
         _player->SendEquipError(EQUIP_ERR_ITEM_NOT_FOUND, NULL, NULL);
 }
 
-void WorldSession::HandlePageQuerySkippedOpcode(WorldPacket & recv_data)
+void WorldSession::HandlePageQuerySkippedOpcode(WorldPacket& recv_data)
 {
     sLog->outDebug("WORLD: Received CMSG_PAGE_TEXT_QUERY");
 
@@ -474,7 +474,7 @@ void WorldSession::HandlePageQuerySkippedOpcode(WorldPacket & recv_data)
         itemid, GUID_LOPART(guid), GUID_ENPART(guid), GUID_HIPART(guid));
 }
 
-void WorldSession::HandleSellItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSellItemOpcode(WorldPacket& recv_data)
 {
     sLog->outDebug("WORLD: Received CMSG_SELL_ITEM");
     uint64 vendorguid, itemguid;
@@ -583,7 +583,7 @@ void WorldSession::HandleSellItemOpcode(WorldPacket & recv_data)
     return;
 }
 
-void WorldSession::HandleBuybackItem(WorldPacket & recv_data)
+void WorldSession::HandleBuybackItem(WorldPacket& recv_data)
 {
     sLog->outDebug("WORLD: Received CMSG_BUYBACK_ITEM");
     uint64 vendorguid;
@@ -630,7 +630,7 @@ void WorldSession::HandleBuybackItem(WorldPacket & recv_data)
         _player->SendBuyError(BUY_ERR_CANT_FIND_ITEM, creature, 0, 0);
 }
 
-void WorldSession::HandleBuyItemInSlotOpcode(WorldPacket & recv_data)
+void WorldSession::HandleBuyItemInSlotOpcode(WorldPacket& recv_data)
 {
     sLog->outDebug("WORLD: Received CMSG_BUY_ITEM_IN_SLOT");
     uint64 vendorguid, bagguid;
@@ -672,7 +672,7 @@ void WorldSession::HandleBuyItemInSlotOpcode(WorldPacket & recv_data)
     GetPlayer()->BuyItemFromVendor(vendorguid, item, count, bag, slot);
 }
 
-void WorldSession::HandleBuyItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleBuyItemOpcode(WorldPacket& recv_data)
 {
     sLog->outDebug("WORLD: Received CMSG_BUY_ITEM");
     uint64 vendorguid;
@@ -684,7 +684,7 @@ void WorldSession::HandleBuyItemOpcode(WorldPacket & recv_data)
     GetPlayer()->BuyItemFromVendor(vendorguid, item, count, NULL_BAG, NULL_SLOT);
 }
 
-void WorldSession::HandleListInventoryOpcode(WorldPacket & recv_data)
+void WorldSession::HandleListInventoryOpcode(WorldPacket& recv_data)
 {
     uint64 guid;
 
@@ -776,7 +776,7 @@ void WorldSession::SendListInventory(uint64 vendorguid)
     SendPacket(&data);
 }
 
-void WorldSession::HandleAutoStoreBagItemOpcode(WorldPacket & recv_data)
+void WorldSession::HandleAutoStoreBagItemOpcode(WorldPacket& recv_data)
 {
     //sLog->outDebug("WORLD: CMSG_AUTOSTORE_BAG_ITEM");
     uint8 srcbag, srcslot, dstbag;
@@ -941,7 +941,7 @@ void WorldSession::HandleAutoStoreBankItemOpcode(WorldPacket& recvPacket)
     }
 }
 
-void WorldSession::HandleSetAmmoOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetAmmoOpcode(WorldPacket& recv_data)
 {
     if (!GetPlayer()->isAlive())
     {
@@ -982,7 +982,7 @@ void WorldSession::SendItemEnchantTimeUpdate(uint64 Playerguid, uint64 Itemguid,
     SendPacket(&data);
 }
 
-void WorldSession::HandleItemNameQueryOpcode(WorldPacket & recv_data)
+void WorldSession::HandleItemNameQueryOpcode(WorldPacket& recv_data)
 {
     uint32 itemid;
     recv_data >> itemid;

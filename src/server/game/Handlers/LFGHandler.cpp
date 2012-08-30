@@ -205,7 +205,7 @@ void WorldSession::HandleLfmClearOpcode(WorldPacket & /*recv_data */)
     _player->m_lookingForGroup.more.Clear();
 }
 
-void WorldSession::HandleSetLfmOpcode(WorldPacket &recv_data)
+void WorldSession::HandleSetLfmOpcode(WorldPacket& recv_data)
 {
     sLog->outDebug("CMSG_SET_LOOKING_FOR_MORE");
 
@@ -225,7 +225,7 @@ void WorldSession::HandleSetLfmOpcode(WorldPacket &recv_data)
     SendLfgResult(type, entry, 1);
 }
 
-void WorldSession::HandleSetLfgCommentOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetLfgCommentOpcode(WorldPacket& recv_data)
 {
     sLog->outDebug("CMSG_SET_LFG_COMMENT");
     //recv_data.hexlike();
@@ -322,7 +322,7 @@ void WorldSession::SendLfgResult(uint32 type, uint32 entry, uint8 lfg_type)
     SendPacket(&data);
 }
 
-void WorldSession::HandleSetLfgOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetLfgOpcode(WorldPacket& recv_data)
 {
     sLog->outDebug("CMSG_SET_LOOKING_FOR_GROUP");
     //recv_data.hexlike();

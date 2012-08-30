@@ -26,7 +26,7 @@
 #include "CreatureAI.h"
 #include "ObjectGuid.h"
 
-void WorldSession::HandleAttackSwingOpcode(WorldPacket & recv_data)
+void WorldSession::HandleAttackSwingOpcode(WorldPacket& recv_data)
 {
     ObjectGuid guid;
     recv_data >> guid;
@@ -64,7 +64,7 @@ void WorldSession::HandleAttackStopOpcode(WorldPacket & /*recv_data*/)
     GetPlayer()->AttackStop();
 }
 
-void WorldSession::HandleSetSheathedOpcode(WorldPacket & recv_data)
+void WorldSession::HandleSetSheathedOpcode(WorldPacket& recv_data)
 {
     uint32 sheathed;
     recv_data >> sheathed;
