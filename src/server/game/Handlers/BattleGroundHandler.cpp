@@ -163,9 +163,9 @@ void WorldSession::HandleBattlegroundJoinOpcode(WorldPacket& recv_data)
 
             uint32 queueSlot = member->AddBattlegroundQueueId(bgQueueTypeId);           // add to queue
 
-            // store entry point coords (same as leader entry point)
+            // store entry point coords
             if (!sWorld->getConfig(CONFIG_BATTLEGROUND_WRATH_LEAVE_MODE))
-                member->SetBattlegroundEntryPoint(_player->GetMapId(), _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetOrientation());
+				member->SetBattlegroundEntryPoint(member->GetMapId(), member->GetPositionX(), member->GetPositionY(), member->GetPositionZ(), member->GetOrientation());
 
             WorldPacket data;
                                                             // send status packet (in queue)
