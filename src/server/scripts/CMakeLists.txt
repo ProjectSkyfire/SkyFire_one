@@ -20,6 +20,7 @@ endif()
 
 # ------ Pooling ------
 file(GLOB_RECURSE scripts_custom Custom/*.cpp Custom/*.h)
+file(GLOB_RECURSE sources_PrecompiledHeaders PrecompiledHeaders/*.cpp PrecompiledHeaders/*.h)
   # Eastern Kingdoms
 file(GLOB scripts_easternkingdoms EasternKingdoms/*.cpp EasternKingdoms/*.h)
 file(GLOB_RECURSE scripts_EK_AlteracValley EasternKingdoms/AlteracValley/*.cpp EasternKingdoms/AlteracValley/*.h)
@@ -82,6 +83,7 @@ file(GLOB_RECURSE scripts_examples Examples/*.cpp Examples/*.h)
 
 # ------- Filters ---------
 source_group(CMake FILES CMakeLists.txt)
+source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
 source_group(Custom FILES ${scripts_custom})
   # Eastern Kingdoms
 source_group("Eastern Kingdoms"                       FILES ${scripts_easternkingdoms})
@@ -143,21 +145,26 @@ source_group("Outland\\Zones"                                         FILES ${sc
 source_group(World FILES ${scripts_world})
 source_group(Examples ${scripts_examples})
 
-if (USE_SCRIPTPCH AND MSVC)
+ if( USE_SCRIPTPCH AND MSVC )
+  file(GLOB_RECURSE sources_PreHeaders PrecompiledHeaders/ScriptPCH.cpp PrecompiledHeaders/ScriptPCH.h)
+  source_group(PrecompiledHeaders FILES ${sources_PreHeaders})
   set(scripts_STAT_SRCS
-    PrecompiledHeaders/ScriptPCH.cpp
-    PrecompiledHeaders/ScriptPCH.h
+  ${sources_PreHeaders}
   )
-endif()
+ endif()
 
-set(scripts_STAT_SRCS
-  ${scripts_STAT_SRCS}
-  ../game/AI/ScriptedAI/ScriptedEscortAI.cpp
-  ../game/AI/ScriptedAI/ScriptedGuardAI.cpp
+file(GLOB_RECURSE sources_ScriptedAI 
+  ../game/AI/ScriptedAI/ScriptedEscortAI.cpp 
   ../game/AI/ScriptedAI/ScriptedCreature.cpp
-  ../game/AI/ScriptedAI/ScriptedFollowerAI.cpp
-  ../game/AI/ScriptedAI/ScriptedSimpleAI.cpp
-)
+  ../game/AI/ScriptedAI/ScriptedFollowerAI.cpp 
+  )
+
+source_group(ScriptedAI FILES ${sources_ScriptedAI})
+  
+ set(scripts_STAT_SRCS
+  ${scripts_STAT_SRCS}
+  ${sources_ScriptedAI}
+  )
 
 if (SCRIPTS)
   set(scripts_STAT_SRCS

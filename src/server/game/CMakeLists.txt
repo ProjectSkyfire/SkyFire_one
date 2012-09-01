@@ -15,6 +15,7 @@ if ( USE_COREPCH )
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
+file(GLOB_RECURSE sources_PrecompiledHeaders PrecompiledHeaders/*.cpp PrecompiledHeaders/*.h)
 file(GLOB_RECURSE sources_Accounts Accounts/*.cpp Accounts/*.h)
 file(GLOB_RECURSE sources_Addons Addons/*.cpp Addons/*.h)
 file(GLOB_RECURSE sources_AI AI/*.cpp AI/*.h)
@@ -50,6 +51,7 @@ file(GLOB_RECURSE sources_Weather Weather/*.cpp Weather/*.h)
 file(GLOB_RECURSE sources_World World/*.cpp World/*.h)
 
 source_group(CMake FILES CMakeLists.txt)
+source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
 source_group(Accounts FILES ${sources_Accounts})
 source_group(Addons FILES ${sources_Addons})
 source_group(AI FILES ${sources_AI})
@@ -60,9 +62,9 @@ source_group(Chat FILES ${sources_Chat})
 source_group(Combat FILES ${sources_Combat})
 source_group(Conditions FILES ${sources_Conditions})
 source_group(DataStores FILES ${sources_DataStores})
-source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
 source_group(Entities FILES ${sources_Entities})
 source_group(Events FILES ${sources_Events})
+source_group(Handlers FILES ${sources_Handlers})
 source_group(Globals FILES ${sources_Globals})
 source_group(Grids FILES ${sources_Grids})
 source_group(Groups FILES ${sources_Groups})
@@ -121,6 +123,7 @@ set(game_STAT_SRCS
   ${sources_Movement}
   ${sources_OutdoorPvP}
   ${sources_Pools}
+  ${sources_PrecompiledHeaders}  
   ${sources_Quests}
   ${sources_Scripting}
   ${sources_Server}
