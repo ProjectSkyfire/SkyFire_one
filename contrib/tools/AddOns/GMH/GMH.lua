@@ -2,7 +2,7 @@
 --$Author: Bootz $
 --SOriginal GMH Authors ssargon, Maven $
 --$Date: 2012-09-02 01:01:44 (Sun, 09 Sept 2012) $
---$Revision: 000 $
+--$Revision: 0.0.1 $
 --**********************************************************************
 
 chanvar = "GUILD";
@@ -19,7 +19,7 @@ function OpenMain()
     end
 end
 
-function TogleAddon()
+function ToggleAddon()
 if( addonopen == 1 ) then
 ItemFormSearch:Hide();
 FullForm:Hide();
@@ -71,7 +71,7 @@ function GMHelperOnLoad()
 end
 
 function GMHelper_Loaded()
-UIErrorsFrame:AddMessage("SkyFireONE.GM.Helper v0.0.0a loaded!", 0.0, 1.0, 0.0, 53, 2);
+UIErrorsFrame:AddMessage("SkyFireONE GM Helper v0.0.1 loaded!", 0.0, 1.0, 0.0, 53, 2);
 SendChatMessage(".gm on", chanvar, nil, nil);
 OpenMain();
 addonopen = 1;
@@ -84,7 +84,7 @@ end
 
 -- Binding Variables
 BINDING_HEADER_GMHelper = "SkyFireONE GM Helper";
-BINDING_NAME_TOGLEADDON = "Togles GM Helper";
+BINDING_NAME_TOGGLEADDON = "Toggles GM Helper";
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 -- AnnounceScript
 function SetAnnouncementChecked()
@@ -193,17 +193,17 @@ end
 -- Ban Script
 
 function BanPlayer()
-result=".ban char "..CharName:GetText().." "..BanReason:GetText();   
+result=".ban character "..CharName:GetText().." "..BanLength:GetText().." "..BanReason:GetText();   
 outSAY(result);
 end
 
 function UnBanPlayer()
-result=".unban char "..CharName:GetText();    
+result=".unban character "..CharName:GetText();   
 outSAY(result);
 end
 
 function AddIPBan()
-result=".ban ip "..IPAddress1:GetText().." "..Duration1:GetText();    
+result=".ban ip "..IPAddress1:GetText().." "..Duration1:GetText();   
 outSAY(result);
 end
 
@@ -213,29 +213,29 @@ outSAY(result);
 end
 
 function KickPlayer()
-result=".kickplayer "..CharName:GetText().." "..BanReason:GetText();    
+result=".kick "..CharName:GetText().." "..BanReason:GetText();    
 outSAY(result);
 end
 
 function ParPlayer()
-result=".paralyze "..CharName:GetText();    
+result=".freeze";     
 outSAY(result);
 end
 
 function UnParPlayer()
-result=".unparalyze "..CharName:GetText();    
+result=".unfreeze";     
 outSAY(result);
 end
 
 function PInfo()
-result=".playerinfo "..CharName:GetText();    
+result=".pinfo "..CharName:GetText(); -- this option does not work if you have TrinityAdmin enabled    
 outSAY(result);
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- BattlegroundScript
 
 function BGStart()
-    result=".battleground startbg";
+    result=".debug bg"; -- arcemu is .battleground startbg
     outSAY(result);
 end
 
@@ -274,14 +274,14 @@ else
 	outSAY(result);
 end
 if ( ScreenCheck:GetChecked() ) then--Announce
-	result=".wannounce "..AnnounceText:GetText();
+	result=".nameannounce "..AnnounceText:GetText();
 	outSAY(result);
 else
     result="";
 	outSAY(result);
 end
 if ( GMAnnounceCheck:GetChecked() ) then--Announce
-	result=".gmannounce "..AnnounceText:GetText();
+	result=".gmnameannounce "..AnnounceText:GetText();
 	outSAY(result);
 else
     result="";
@@ -290,12 +290,12 @@ end
 end
 
 function WhisperOn()
-result=".gm allowwhispers "..PlayerName2:GetText();
+result=".whispers on;"
 outSAY(result);
 end
 
 function WhisperOff()
-result=".gm blockwhispers "..PlayerName2:GetText();  
+result=".whispers off";
 outSAY(result);
 end
 
@@ -716,17 +716,17 @@ end
 
 function CheatUpdate()
 if ( FlyCheck:GetChecked() ) then--fly
-	result=".cheat fly on";
+	result=".gm fly on";
 	outSAY(result);
 else
-	result=".cheat fly off";
+	result=".gm fly off";
 	outSAY(result);
 end
 if ( GodCheck:GetChecked() ) then--god
-	result=".cheat god on";
+	result=".gm on";
 	outSAY(result);
 else
-	result=".cheat god off";
+	result=".gm off";
 	outSAY(result);
 end
 if ( NCDCheck:GetChecked() ) then--cooldown
@@ -793,7 +793,7 @@ outSAY(result);
 end
 
 function RevivePlayer2()
-result=".reviveplr "..RevivePlayer:GetText();
+result=".revive "..RevivePlayer:GetText();
 outSAY(result);
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -877,91 +877,91 @@ end
 --QuickItemScript
 
 function GmOutfit()
-result=".character additem 2586"--Gamemaster's Robe
+result=".additem 2586"--Gamemaster's Robe
 outSAY(result);
-result=".character additem 11508"--Gamemaster's Slippers
+result=".additem 11508"--Gamemaster's Slippers
 outSAY(result);
-result=".character additem 12064"--Gamemaster's Hood
+result=".additem 12064"--Gamemaster's Hood
 outSAY(result);
-result=".character additem 12947"--Alex's Ring of Audacity
+result=".additem 12947"--Alex's Ring of Audacity
 outSAY(result);
-result=".character additem 12947"--Alex's Ring of Audacity
+result=".additem 12947"--Alex's Ring of Audacity
 outSAY(result);
-result=".character additem 192"--Martin Thunder
+result=".additem 192"--Martin Thunder
 outSAY(result);
-result=".character additem 19879"--Alex's Test Beatdown Staff
+result=".additem 19879"--Alex's Test Beatdown Staff
 outSAY(result);
-result=".character additem 19160"--Contest Winner's Tabbard
+result=".additem 19160"--Contest Winner's Tabbard
 outSAY(result);
-result=".character additem 23162"--Foror's Crate of Endless Resist Gear Storage
+result=".additem 23162"--Foror's Crate of Endless Resist Gear Storage
 outSAY(result);
-result=".character additem 23162"--Foror's Crate of Endless Resist Gear Storage
+result=".additem 23162"--Foror's Crate of Endless Resist Gear Storage
 outSAY(result);
-result=".character additem 23162"--Foror's Crate of Endless Resist Gear Storage
+result=".additem 23162"--Foror's Crate of Endless Resist Gear Storage
 outSAY(result);
-result=".character additem 23162"--Foror's Crate of Endless Resist Gear Storage
+result=".additem 23162"--Foror's Crate of Endless Resist Gear Storage
 outSAY(result);
 end
 --Gamemaster's Robe, Gamemaster's Slippers, Gamemaster's Hood, Alex's Ring of Audacity X2, Martin Thunder, Alex's Test Beatdown Staff, Contest Winner's Tabbard, Foror's Crate of Endless Resist Gear Storage X4
 
 function MageT6()
-result=".character additemset 671"
+result=".additemset 671"
 outSAY(result);
 end
 
 function HunterT6()
-result=".character additemset 669"
+result=".additemset 669"
 outSAY(result);
 end
 
 function RogueT6()
-result=".character additemset 668"
+result=".cadditemset 668"
 outSAY(result);
 end
 
 function WarlockT6()
-result=".character additemset 670"
+result=".additemset 670"
 outSAY(result);
 end
 
 function WarriorT6()
-result=".character additemset 673"
+result=".additemset 673"
 outSAY(result);
-result=".character additemset 672"
+result=".additemset 672"
 outSAY(result);
 end
 
 function ShamanT6()
-result=".character additemset 682"
+result=".additemset 682"
 outSAY(result);
-result=".character additemset 683"
+result=".additemset 683"
 outSAY(result);
-result=".character additemset 684"
+result=".additemset 684"
 outSAY(result);
 end
 
 function PriestT6()
-result=".character additemset 674"
+result=".additemset 674"
 outSAY(result);
-result=".character additemset 675"
+result=".additemset 675"
 outSAY(result);
 end
 
 function DruidT6()
-result=".character additemset 676"
+result=".additemset 676"
 outSAY(result);
-result=".character additemset 677"
+result=".additemset 677"
 outSAY(result);
-result=".character additemset 678"
+result=".additemset 678"
 outSAY(result);
 end
 
 function PaladinT6()
-result=".character additemset 679"
+result=".additemset 679"
 outSAY(result);
-result=".character additemset 680"
+result=".additemset 680"
 outSAY(result);
-result=".character additemset 681"
+result=".additemset 681"
 outSAY(result);
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1053,17 +1053,17 @@ end
 -- SpellScript
 
 function LearnSpell()
-result=".character learn "..SpellNumber:GetText();    
+result=".learn "..SpellNumber:GetText();    
 outSAY(result);
 end
 
 function UnlearnSpell()
-result=".character unlearn "..SpellNumber:GetText();    
+result=".unlearn "..SpellNumber:GetText();    
 outSAY(result);
 end
 
 function LearnAll()
-result=".character learn all";
+result=".learnall";
 outSAY(result);
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1080,27 +1080,27 @@ outSAY(result);
 end
 
 function SearchTele()
-result=".recall list "   
+result=".tele list "   
 outSAY(result);
 end
 
 function Tele()
-result=".recall port "..ZoneName:GetText(); 
+result=".tele port "..ZoneName:GetText(); 
 outSAY(result);
 end
 
 function AddPort()
-result=".recall add "..ZoneName:GetText(); 
+result=".tele add "..ZoneName:GetText(); 
 outSAY(result);
 end
 
 function DelPort()
-result=".recall del "..ZoneName:GetText(); 
+result=".tele del "..ZoneName:GetText(); 
 outSAY(result);
 end
 
 function PortPlayer()
-result=".recall PortPlayer "..ToPlayerName:GetText().." " ..ZoneName:GetText(); 
+result=".tele PortPlayer "..ToPlayerName:GetText().." " ..ZoneName:GetText(); 
 outSAY(result);
 end
 
