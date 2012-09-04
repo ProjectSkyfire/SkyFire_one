@@ -359,7 +359,7 @@ end
 while IntGold >= 100 do
 	 IntGold = IntGold-100;
 end]]
-result = ".modify gold " ..IntGold*10000+IntSilver*100+IntCopper;
+result = ".mod money " ..IntGold*10000+IntSilver*100+IntCopper;
 outSAY(result);
 end
 
@@ -497,19 +497,23 @@ function SInfo()
 end
 
 function Invis()
-    result=".invisible";
-    outSAY(result);
+if ( InvisCheck:GetChecked() ) then--invis
+	result=".gm vis on";
+	outSAY(result);
+else
+	result=".gm vis off";
+	outSAY(result);
 end
-
+end 
 function Invince()
-    result=".invincible";
+    result=".gm on";
     outSAY(result);
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --ModifyScript
 
  function ModSpeed()
-	result=".modify speed "..ModifyEditBox:GetText();
+	result=".modify aspeed "..ModifyEditBox:GetText();
 	outSAY(result);
 end
 
@@ -569,7 +573,7 @@ function ModRage()
 	outSAY(result);
 end
 
-function ModResistance()
+--[[function ModResistance()
 	result=".modify holy "..ModifyEditBox:GetText();
 	outSAY(result);
     result=".modify fire "..ModifyEditBox:GetText();
@@ -592,10 +596,10 @@ end
 function ModDamage()
 	result=".modify damage "..ModifyEditBox:GetText();
 	outSAY(result);
-end
+end]]
 
 function ModDisplay()
-	result=".modify displayid "..ModifyEditBox:GetText();
+	result=".modify morph "..ModifyEditBox:GetText();
 	outSAY(result);
 end
 
@@ -605,7 +609,7 @@ function Demorph()
 end
 
 function ModSpeed()
-	result=".modify speed "..ModifyEditBox:GetText();
+	result=".modify aspeed "..ModifyEditBox:GetText();
 	outSAY(result);
 end
 
@@ -614,13 +618,13 @@ function ModScale()
 	outSAY(result);
 end
 
-function ModSpirit()
+--[[function ModSpirit()
 	result=".modify spirit "..ModifyEditBox:GetText();
 	outSAY(result);
-end
+end]]
 
 function ModTP()
-	result=".modify talentpoints "..ModifyEditBox:GetText();
+	result=".modify tp "..ModifyEditBox:GetText();
 	outSAY(result);
 end
 
@@ -632,17 +636,17 @@ end
 -- NPCScript
 
 function AddItemVendor()
-result=".npc vendoradditem "..NPCItemNumber:GetText();    
+result=".npc additem "..NPCItemNumber:GetText();    
 outSAY(result);
 end
 
 function RemoveItemVendor()
-result=".npc vendorremoveitem "..NPCItemNumber:GetText();    
+result=".npc delitem "..NPCItemNumber:GetText();    
 outSAY(result);
 end
 
 function SpawnNPC()
-result=".npc spawn "..NPCNumber:GetText();    
+result=".npc add "..NPCNumber:GetText();    
 outSAY(result);
 end
 
@@ -657,14 +661,14 @@ outSAY(result);
 end
 
 function NPCCome()
-    result=".npc come";
+    result=".npc move"..NPCNumber:GetText();
     outSAY(result);
 end
 
-function NPCPos()
-    result=".npc possess";
-    outSAY(result);
-end
+-- function NPCPos()
+--    result=".npc possess";
+--    outSAY(result);
+-- end
 
 function NPCInfo()
 result=".npc info";
@@ -674,17 +678,17 @@ end
 -- ObjectScript
 
 function TargetObject()
-result=".go select ";    
+result=".gobject target ";    
 outSAY(result);
 end
 
 function ObjectInfo()
-result=".go info "; 
+result=".gobject info "; 
 outSAY(result);
 end
 
 function DeleteObject()
-result=".go delete ";    
+result=".gobject delete "..ObjectNumber:GetText();    
 outSAY(result);
 end
 
@@ -698,10 +702,10 @@ end
 
 function PlaceObjectTrue()
 if NoSaveCheck:GetChecked() then
-        result=".go spawn "..ObjectNumber:GetText();
+        result=".gobject addtemp "..ObjectNumber:GetText();
         outSAY(result)
     else
-        result=".go spawn "..ObjectNumber:GetText().." 1";
+        result=".gobject add "..ObjectNumber:GetText();
         outSAY(result)
 end
 end
@@ -709,10 +713,10 @@ end
 -- OverridesScript
 
 
-function CheatStatus()
-	result=".cheat status";
-	outSAY(result);
-end
+--function CheatStatus()
+--	result=".cheat status";
+--	outSAY(result);
+-- end
 
 function CheatUpdate()
 if ( FlyCheck:GetChecked() ) then--fly
@@ -730,53 +734,53 @@ else
 	outSAY(result);
 end
 if ( NCDCheck:GetChecked() ) then--cooldown
-	result=".cheat cooldown on";
+	result=".cooldown ";
 	outSAY(result);
 else
-	result=".cheat cooldown off";
+	result="";
 	outSAY(result);
 end
-if ( NCTCheck:GetChecked() ) then--casttime
+--[[if ( NCTCheck:GetChecked() ) then--casttime
 	result=".cheat casttime on";
 	outSAY(result);
-else
-	result=".cheat casttime off";
+ else
+	result="";
 	outSAY(result);
-end
-if ( PowCheck:GetChecked() ) then--power
+ end
+ if ( PowCheck:GetChecked() ) then--power
 	result=".cheat power on";
 	outSAY(result);
-else
+ else
 	result=".cheat power off";
 	outSAY(result);
-end
+ end
 if ( AuraCheck:GetChecked() ) then--stack
 	result=".cheat stack on";
 	outSAY(result);
 else
 	result=".cheat stack off";
 	outSAY(result);
-end
+ end
 if ( TrigCheck:GetChecked() ) then--triggers
 	result=".cheat triggerpass on";
 	outSAY(result);
 else
 	result=".cheat triggerpass off";
 	outSAY(result);
-end
+end]]
 end
 
 function FlySpeed()
-result=".cheat flyspeed "..FlyEntry:GetText();
+result=".mod aspeed "..FlyEntry:GetText();
 outSAY(result);
 end
 
 function FlightPath()
 if ( TaxiCheck:GetChecked() ) then --Taxi
-    result=".cheat taxi on";
+    result=".taxi on";
     outSAY(result);
 else
-    result=".cheat taxi off";
+    result="";
     outSAY(result);
 end
 end
@@ -788,7 +792,7 @@ outSAY(result);
 end
 
 function LevelPlayer()
-result=".mod level "..PlayerLevel:GetText();    
+result=".level "..PlayerLevel:GetText();    
 outSAY(result);
 end
 
@@ -915,7 +919,7 @@ outSAY(result);
 end
 
 function RogueT6()
-result=".cadditemset 668"
+result=".additemset 668"
 outSAY(result);
 end
 
@@ -1062,10 +1066,10 @@ result=".unlearn "..SpellNumber:GetText();
 outSAY(result);
 end
 
-function LearnAll()
-result=".learnall";
+--[[function LearnAll()
+result="";
 outSAY(result);
-end
+end]]
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- TeleScript
 
@@ -1116,7 +1120,7 @@ outSAY(result);
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- WaypointScript
-function WaypointsAdd()
+--[[function WaypointsAdd()
     result=".waypoint add";
     outSAY(result);
 end
@@ -1135,7 +1139,7 @@ function WaypointsHide()
     result=".waypoint hide";
     outSAY(result);
 end
-
+--]]
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- WepskScript
