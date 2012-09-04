@@ -1,3 +1,3 @@
-chmod +x oregon restarter
-cp oregon /etc/init.d/
-cp restarter /opt/oregon/
+chmod +x Skyfire restarter
+cp skyfire /etc/init.d/
+cp restarter /opt/skyfire/

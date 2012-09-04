@@ -1,11 +1,11 @@
-= Oregon Core -- Linux Restarter =
+= SkyFire One Core -- Linux Restarter =
 
-Copyright (C) Oregon Core (http://www.oregoncore.com)
+Copyright (C) SkyFire One Core (http://www.projectskyfire.org)
 
 Content :
-- File "oregon" is an interface to use easier "screen" command.
+- File "skyfire" is an interface to use easier "screen" command.
 - File "restarter" is to restart a screen if he stopped.
-- install.sh to install oregon in /etc/init.d and restarter in /opt/oregon.
+- install.sh to install skyfire in /etc/init.d and restarter in /opt/skyfire.
 
 Autor :
 - MiLk

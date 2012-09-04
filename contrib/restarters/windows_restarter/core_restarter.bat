@@ -1,9 +1,9 @@
 @ECHO OFF
-@title OregonCore
+@title SkyFire One
 CLS
 ECHO Initializing Core (World-Server)...
 :1
-start "Oregon Core" /B /MIN /WAIT oregon-core.exe -c oregoncore.conf
+start "SkyFire World Server" /B /MIN /WAIT worldserver.exe -c worldserver.conf
 if %errorlevel% == 0 goto end
 goto 1
 :end

@@ -1,9 +1,9 @@
 @ECHO OFF
-@title OregonRealm
+@title SkyFire One
 CLS
 ECHO Initializing Realm (Logon-Server)...
 :1
-start "Oregon Realm" /B /MIN /WAIT oregon-realm.exe -c oregonrealm.conf
+start "SkyFire Realm Server" /B /MIN /WAIT authserver.exe -c authserver.conf
 if %errorlevel% == 0 goto end
 goto 1
 :end

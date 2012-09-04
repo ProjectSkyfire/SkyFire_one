@@ -1,27 +1,27 @@
 #! /bin/bash
-OREGON_DIR='/opt/oregon/';
+SKYFIRE_DIR='/opt/skyfire_one/';
 RETVAL=0;
  
 start(){
-	screen -AmdS oregon_restarter ${OREGON_DIR}restarter
+	screen -AmdS skyfire_restarter ${SKYFIRE_DIR}restarter
 }
 stop(){
-	screen -dr oregon_restarter -X "quit"
+	screen -dr skyfire_restarter -X "quit"
 }
  
 start-realm(){
-	screen -AmdS oregon_realm ${OREGON_DIR}bin/oregon-realm -c ${OREGON_DIR}etc/oregonrealm.conf
+	screen -AmdS skyfire_realm ${SKYFIRE_DIR}bin/skyfire-realm -c ${SKYFIRE_DIR}etc/authserver.conf
 }
 stop-realm(){
-	screen -dr oregon_realm -X "quit"
+	screen -dr skyfire_realm -X "quit"
 }
  
 start-core(){
-    cd ${OREGON_DIR}
-	screen -AmdS oregon_core ${OREGON_DIR}bin/oregon-core -c ${OREGON_DIR}etc/oregoncore.conf
+    cd ${SKYFIRE_DIR}
+	screen -AmdS skyfire_core ${SKYFIRE_DIR}bin/skyfire-core -c ${SKYFIRE_DIR}etc/worldserver.conf
 }
 stop-core(){
-	screen -dr oregon_core -X "quit"
+	screen -dr skyfire_core -X "quit"
 }
  
 case $1 in
@@ -100,13 +100,13 @@ status)
 	screen -ls
 ;;
 restarter)
-	screen -r oregon_restarter
+	screen -r skyfire_restarter
 ;;
 realm)
-	screen -r oregon_realm
+	screen -r skyfire_realm
 ;;
 core)
-	screen -r oregon_core
+	screen -r skyfire_core
 ;;
 *)
 	echo "Usage: $0 {start|stop|restart|start-realm|stop-realm|restart-realm|start-core|stop-core|restart-core|start-restarter|stop-restarter|restart-restarter|status|restarter|realm|core}"
