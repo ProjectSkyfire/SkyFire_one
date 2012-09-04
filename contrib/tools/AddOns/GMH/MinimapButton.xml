@@ -1,18 +1,19 @@
-﻿<Ui xmlns="http://www.blizzard.com/wow/ui" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\..\FrameXML\UI.xsd">
 <!-- MINIMAP BUTTON (start) -->
-<Button name="GMHelper_MinimapButton" toplevel="true" frameStrata="LOW" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+<Button name="GMHelper_MinimapButton" toplevel="true" frameStrata="LOW" parent="Minimap" enableMouse="true" movable="true" hidden="false" clampedToScreen="true">
 	<Size>
 		<AbsDimension x="27" y="27"/>
 	</Size>
 	<Anchors>
-		<Anchor point="TOPLEFT">
+		<Anchor point="TOPLEFT" relativeTo="Minimap">
 			<Offset>
 				<AbsDimension x="-25" y="-60"/>
 			</Offset>
 		</Anchor>
 	</Anchors>
-    <NormalTexture file = "Interface\AddOns\GMH\Textures\MMB_Up"/>
-    <PushedTexture file = "Interface\AddOns\GMH\Textures\MMB_Down"/>
+    <NormalTexture file = "Interface\AddOns\GMH\Textures\Minimap-Button-Up"/>
+    <PushedTexture file = "Interface\AddOns\GMH\Textures\Minimap-Button-Down"/>
 	<Layers>
 		<Layer level="BACKGROUND">
 			<!--Texture name="$parent_Texture" file="Interface\AddOns\GMHelper\Textures\MMB.jpg"-->
@@ -44,30 +45,28 @@
 	<HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
 	<Scripts>
 		<OnLoad>
-			this:RegisterForClicks("LeftButtonUp","RightButtonUp");
-			this:RegisterForDrag("RightButton");
+			self:RegisterForClicks("LeftButtonUp","RightButtonUp");
+			self:RegisterForDrag("RightButton");
 		</OnLoad>
 		<OnEnter>
-			GameTooltip:SetOwner(this, "ANCHOR_LEFT");
-			GameTooltip:AddLine("GMH");
-			GameTooltip:AddLine("Left click to show/hide");
-			GameTooltip:AddLine("Right click to drag this");
-			GameTooltip:Show();
+		ShowGMHMinimap()
 		</OnEnter>
 		<OnLeave>
 			GameTooltip:Hide();
 		</OnLeave>
 		<OnClick>
-			TogleAddon()
+			ToggleAddon()
 		</OnClick>
 <OnLoad>
-this:RegisterForDrag("RightButton");
+self:RegisterForDrag("RightButton");
 </OnLoad>
 		<OnDragStart>
-				this:StartMoving();
+				self:StartMoving();
+				GameTooltip:Hide();
 		</OnDragStart>
 		<OnDragStop>
-				this:StopMovingOrSizing();
+				self:StopMovingOrSizing();
+				ShowGMHMinimap();
 		</OnDragStop>
 	</Scripts>
 </Button>

@@ -72,14 +72,20 @@ end
 
 function GMHelper_Loaded()
 UIErrorsFrame:AddMessage("SkyFireONE GM Helper v0.0.1 loaded!", 0.0, 1.0, 0.0, 53, 2);
-SendChatMessage(".gm on", chanvar, nil, nil);
 OpenMain();
 addonopen = 1;
-PSoundF("Interface\\Addons\\GMH\\Sounds\\Omega.wav");
 end
 
 function PSoundF(file)
     PlaySoundFile(file);
+end
+
+function ShowGMHMinimap()
+GameTooltip:SetOwner(this, "ANCHOR_LEFT");
+GameTooltip:AddLine( "|cFF00FF00Trinity GM Helper|r" );
+GameTooltip:AddLine( "|cFF00FFCCLeft click to show/hide|r" );
+GameTooltip:AddLine( "|cFFFF0000Right click to drag this|r" );
+GameTooltip:Show();
 end
 
 -- Binding Variables
