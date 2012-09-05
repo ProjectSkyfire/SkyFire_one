@@ -1,20 +1,22 @@
 ## Interface: 20400
-## Title: GMH (GameMaster's Helper) v0.9.0
-## Author: Stephen "Skate" Lovik | Skyler "Maven"
-## Version: 0.9.0
-## Notes: An addon to manage GM commands in an A.R.C. Emu based World of Warcraft private server.
-## eMail: Skate555@gmail.com | Maven01@live.com
-## URL: http://opensvn.csie.org/GMHelper/|http://arcemu.info/svn
+## Title: |cFF00FF00SkyFireONE GameMaster Helper|r
+## Author: Bootz
+## credits: Stephen "Skate" Lovik | Skyler "Maven"
+## Version: 0.0.1
+## Notes: TrinityCore GM Helper converted to SkyFireONE(TBC).
+## eMail: bootz@projectskyfire.org
+## URL: https://github.com/ProjectSkyfire/SkyFire_one
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: firstannounce,secondannounce,thirdeannounce,forthannounce,fifthannounce,view,TicketChannel,TicketPassword
 GMH.lua
+TicketTracker.lua
+MinimapButton.xml
 FullForm.xml
 MiniForm.xml
 MinipForm.xml
 ViewForm.xml
 bindings.xml
-MinimapButton.xml
 CommForm.xml
 ItemForm.xml
 ItemFormSearch.xml
@@ -38,7 +40,6 @@ Skill2Form.xml
 TicketShowForm.xml
 TicketView.xml
 TicketTracker.xml
-TicketTracker.lua
 WaypointForm.xml
 
 

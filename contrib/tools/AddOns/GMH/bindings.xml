@@ -6,7 +6,7 @@ $Revision: 5 $
 **********************************************************************
 -->
 <Bindings>
-  <Binding name="TOGLEADDON" description="Hide/Show GM Helper" header="GMHelper">
-    TogleAddon();
-  </Binding>
+    <Binding name="TOGGLEADDON" description="Hide/Show GM Helper" header="GMHelper">
+		ToggleAddon();
+	</Binding>
 </Bindings>

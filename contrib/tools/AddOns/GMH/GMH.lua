@@ -72,6 +72,7 @@ end
 
 function GMHelper_Loaded()
 UIErrorsFrame:AddMessage("SkyFireONE GM Helper v0.0.1 loaded!", 0.0, 1.0, 0.0, 53, 2);
+PSoundF("Interface\\Addons\\GMH\\Sounds\\Omega.wav");
 OpenMain();
 addonopen = 1;
 end
@@ -82,7 +83,7 @@ end
 
 function ShowGMHMinimap()
 GameTooltip:SetOwner(this, "ANCHOR_LEFT");
-GameTooltip:AddLine( "|cFF00FF00Trinity GM Helper|r" );
+GameTooltip:AddLine( "|cFF00FF00SkyFireONE GM Helper|r" );
 GameTooltip:AddLine( "|cFF00FFCCLeft click to show/hide|r" );
 GameTooltip:AddLine( "|cFFFF0000Right click to drag this|r" );
 GameTooltip:Show();
@@ -328,7 +329,7 @@ end
 -- ItemScript
 
 function RemoveItem()
-result=".character removeitem "..ItemNumber:GetText();    
+result=".removeitem "..ItemNumber:GetText();    
 outSAY(result);
 end
 
@@ -336,13 +337,13 @@ function AddItem()
 if ItemNumber:GetText() == "" then
 UIErrorsFrame:AddMessage("Specify an Item Number or Name!", 1.0, 0.0, 0.0, 53, 2);
 else
-result=".character additem "..ItemNumber:GetText().." "..ItemQuantity1:GetText();    
+result=".additem "..ItemNumber:GetText().." "..ItemQuantity1:GetText();    
 outSAY(result);
 end
 end
 
 function AddItemSet()
-result=".character additemset "..ItemSetNumber:GetText();    
+result=".additemset "..ItemSetNumber:GetText();    
 outSAY(result);
 end
 
@@ -487,7 +488,7 @@ end
 
 -- When a button is clicked, add to inventory
 function ResultButton_OnClick(button_number)
-    text = ".character additem "..item_search_results[button_number];
+    text = ".additem "..item_search_results[button_number];
     outSAY(text);
 end
 
@@ -1072,10 +1073,11 @@ result=".unlearn "..SpellNumber:GetText();
 outSAY(result);
 end
 
---[[function LearnAll()
-result="";
+function LearnAll()
+result=".learn all";
 outSAY(result);
-end]]
+end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- TeleScript
 
@@ -1126,8 +1128,8 @@ outSAY(result);
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- WaypointScript
---[[function WaypointsAdd()
-    result=".waypoint add";
+function WaypointsAdd()
+    result=".wp add";
     outSAY(result);
 end
 
@@ -1137,7 +1139,7 @@ function WaypointsDel()
 end
 
 function WaypointsShow()
-    result=".waypoint show";
+    result=".wp show";
     outSAY(result);
 end
 
@@ -1145,7 +1147,7 @@ function WaypointsHide()
     result=".waypoint hide";
     outSAY(result);
 end
---]]
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- WepskScript
