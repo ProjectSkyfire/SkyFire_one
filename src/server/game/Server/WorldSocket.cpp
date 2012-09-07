@@ -604,6 +604,12 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
 
     const ACE_UINT16 opcode = new_pct->GetOpcode();
 
+    if (opcode >= NUM_MSG_TYPES)
+    {
+        sLog->outError( "SESSION: received non-existed opcode 0x%.4X", opcode);
+        return -1;
+    }
+
     if (closing_)
         return -1;
 
@@ -992,10 +998,10 @@ int WorldSocket::iSendPacket (const WorldPacket& pct)
         errno = ENOBUFS;
         return -1;
     }
- 
- 
+
+
     m_Crypt.EncryptSend(header.header, header.getHeaderLength());
- 
+
     if (m_OutBuffer->copy((char*) header.header, header.getHeaderLength()) == -1)
         ACE_ASSERT (false);
 
@@ -1028,7 +1034,7 @@ int WorldSocket::iSendPartialPacket(WorldPacket& pct)
         }
 
         m_Crypt.EncryptSend(header.header, header.getHeaderLength());
-     
+
         if (m_OutBuffer->copy((char*) header.header, header.getHeaderLength()) == -1)
             ACE_ASSERT (false);
 
@@ -1038,7 +1044,7 @@ int WorldSocket::iSendPartialPacket(WorldPacket& pct)
         }
     }
 
-    if ((m_OutBuffer->space()) < remainingLen) 
+    if ((m_OutBuffer->space()) < remainingLen)
     {
         size_t len = m_OutBuffer->space();
 
@@ -1051,8 +1057,8 @@ int WorldSocket::iSendPartialPacket(WorldPacket& pct)
 
     if (m_OutBuffer->copy ((char*) (pct.contents() + pct.rpos()), remainingLen) == -1)
          ACE_ASSERT (false);
- 
-     return 1; // some byte written and packet completed 
+
+     return 1; // some byte written and packet completed
  }
 
 bool WorldSocket::iFlushPacketQueue()
@@ -1064,7 +1070,7 @@ bool WorldSocket::iFlushPacketQueue()
     {
         int result = iSendPartialPacket(*pct);
 
-        if (result != 0) 
+        if (result != 0)
         {
             // some bytes were written
             haveone = true;
