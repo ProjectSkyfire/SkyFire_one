@@ -264,8 +264,11 @@ bool WorldSession::Update(uint32 /*diff*/)
 
         delete packet;
     }
-
+ 
     ///- Cleanup socket pointer if need
+	if (m_Socket && !m_Socket->IsClosed() && m_Warden)
+	 m_Warden->Update();
+
     if (m_Socket && m_Socket->IsClosed())
     {
         m_Socket->RemoveReference();
