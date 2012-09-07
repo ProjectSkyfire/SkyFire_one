@@ -212,6 +212,19 @@ bool WorldSession::Update(uint32 diff)
 
                         // lag can cause STATUS_LOGGEDIN opcodes to arrive after the player started a transfer
                         break;
+                    case STATUS_LOGGEDIN_OR_RECENTLY_LOGGOUT:
+                        if (!_player && !m_playerRecentlyLogout)
+                        {
+                            LogUnexpectedOpcode(packet, "the player has not logged in yet and not recently logout");
+                        }
+                        else
+                        {
+                            // not expected _player or must checked in packet hanlder
+                            (this->*opHandle.handler)(*packet);
+                            if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
+                                LogUnprocessedTail(packet);
+                        }
+                        break;                    
                     case STATUS_TRANSFER_PENDING:
                         if (!_player)
                             LogUnexpectedOpcode(packet, "the player has not logged in yet");
