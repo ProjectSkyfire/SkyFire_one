@@ -543,16 +543,19 @@ void WorldSession::HandleGroupAssistantLeaderOpcode(WorldPacket& recv_data)
     group->SetAssistant(guid, (flag == 0?false:true));
 }
 
-void WorldSession::HandleGroupPromoteOpcode(WorldPacket& recv_data)
+void WorldSession::HandlePartyAssignmentOpcode(WorldPacket& recv_data)
 {
-    Group *group = GetPlayer()->GetGroup();
-    if (!group)
-        return;
-
     uint8 flag1, flag2;
     uint64 guid;
     recv_data >> flag1 >> flag2;
     recv_data >> guid;
+
+    sLog->outDebug("MSG_PARTY_ASSIGNMENT");
+
+    Group* group = GetPlayer()->GetGroup();
+    if (!group)
+        return;
+
     // if (flag1) Main Assist
     //     0x4
     // if (flag2) Main Tank
@@ -563,7 +566,7 @@ void WorldSession::HandleGroupPromoteOpcode(WorldPacket& recv_data)
         return;
     /********************/
 
-    // everything's fine, do it
+    // everything is fine, do it
     if (flag1 == 1)
         group->SetMainAssistant(guid);
     if (flag2 == 1)
