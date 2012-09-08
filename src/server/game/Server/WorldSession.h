@@ -40,6 +40,7 @@ class WorldSocket;
 class QueryResult;
 class LoginQueryHolder;
 class CharacterHandler;
+class WorldSession;
 
 struct OpcodeHandler;
 
@@ -62,6 +63,44 @@ enum PartyResult
     PARTY_RESULT_TARGET_UNFRIENDLY    = 8,
     PARTY_RESULT_TARGET_IGNORE_YOU    = 9,
     PARTY_RESULT_INVITE_RESTRICTED    = 13
+};
+
+// class to deal with packet processing
+// allows to determine if next packet is safe to be processed
+class PacketFilter
+{
+    public:
+        explicit PacketFilter(WorldSession * pSession) : m_pSession(pSession) {}
+        virtual ~PacketFilter() {}
+
+        virtual bool Process(WorldPacket * packet) { return true; }
+        virtual bool ProcessLogout() const { return true; }
+
+    protected:
+        WorldSession * const m_pSession;
+};
+
+// process only thread-safe packets in Map::Update()
+class MapSessionFilter : public PacketFilter
+{
+    public:
+        explicit MapSessionFilter(WorldSession * pSession) : PacketFilter(pSession) {}
+        ~MapSessionFilter() {}
+
+        virtual bool Process(WorldPacket * packet);
+        // in Map::Update() we do not process player logout!
+        virtual bool ProcessLogout()const { return false; }
+};
+
+// class used to filer only thread-unsafe packets from queue
+// in order to update only be used in World::UpdateSessions()
+class WorldSessionFilter : public PacketFilter
+{
+    public:
+        explicit WorldSessionFilter(WorldSession * pSession) : PacketFilter(pSession) {}
+        ~WorldSessionFilter() {}
+
+        virtual bool Process(WorldPacket* packet);
 };
 
 // Player session in the World
@@ -120,7 +159,7 @@ class WorldSession
         void KickPlayer();
 
         void QueuePacket(WorldPacket* new_packet);
-        bool Update(uint32 diff);
+        bool Update(PacketFilter& updater);
 
         // Handle the authentication waiting queue (to be completed)
         void SendAuthWaitQue(uint32 position);

@@ -209,7 +209,7 @@ World::AddSession_ (WorldSession* s)
         if (old != m_sessions.end())
         {
             // prevent decrease sessions count if session queued
-            if (RemoveQueuedPlayer(old->second))
+            if (RemoveQueuedSession(old->second))
                 decrease_session = false;
             // not remove replaced session form queue if listed
             delete old->second;
@@ -306,7 +306,7 @@ void World::AddQueuedPlayer(WorldSession* sess)
     //sess->SendAuthWaitQue (GetQueuePos (sess));
 }
 
-bool World::RemoveQueuedPlayer(WorldSession* sess)
+bool World::RemoveQueuedSession(WorldSession* sess)
 {
     // sessions count including queued to remove (if removed_session set)
     uint32 sessions = GetActiveSessionCount();
@@ -2247,12 +2247,14 @@ void World::UpdateSessions(time_t diff)
             continue;
 
         // and remove not active sessions from the list
-        if (!itr->second->Update(diff))                      // As interval = 0
+        WorldSession * pSession = itr->second;
+        WorldSessionFilter updater(pSession);
+
+        if (!pSession->Update(updater))    // As interval = 0
         {
-            if (!RemoveQueuedPlayer(itr->second) && itr->second && getConfig(CONFIG_INTERVAL_DISCONNECT_TOLERANCE))
-                m_disconnects[itr->second->GetAccountId()] = time(NULL);
-            delete itr->second;
+            RemoveQueuedSession(pSession);
             m_sessions.erase(itr);
+            delete pSession;
         }
     }
 }

@@ -40,6 +40,46 @@
 #include "WardenWin.h"
 #include "WardenMac.h"
 
+// select opcodes appropriate for processing in Map::Update context for current session state
+static bool MapSessionFilterHelper(WorldSession* session, OpcodeHandler const& opHandle)
+{
+    // we do not process thread-unsafe packets
+    if (opHandle.packetProcessing == PROCESS_THREADUNSAFE)
+        return false;
+
+    // we do not process not loggined player packets
+    Player * plr = session->GetPlayer();
+    if (!plr)
+        return false;
+
+    // in Map::Update() we do not process packets where player is not in world!
+    return plr->IsInWorld();
+}
+
+
+bool MapSessionFilter::Process(WorldPacket * packet)
+{
+    OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];
+    if (opHandle.packetProcessing == PROCESS_INPLACE)
+        return true;
+
+    // let's check if our opcode can be really processed in Map::Update()
+    return MapSessionFilterHelper(m_pSession, opHandle);
+}
+
+// we should process ALL packets when player is not in world/logged in
+// OR packet handler is not thread-safe!
+bool WorldSessionFilter::Process(WorldPacket* packet)
+{
+    OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];
+    // check if packet handler is supposed to be safe
+    if (opHandle.packetProcessing == PROCESS_INPLACE)
+        return true;
+
+    // let's check if our opcode can't be processed in Map::Update()
+    return !MapSessionFilterHelper(m_pSession, opHandle);
+}
+
 // WorldSession constructor
 WorldSession::WorldSession(uint32 id, WorldSocket *sock, uint32 sec, uint8 expansion, time_t mute_time, LocaleConstant locale) :
 LookingForGroup_auto_join(false), LookingForGroup_auto_add(false), m_muteTime(mute_time),
@@ -166,12 +206,12 @@ void WorldSession::LogUnprocessedTail(WorldPacket *packet)
 }
 
 // Update the WorldSession (triggered by World update)
-bool WorldSession::Update(uint32 /*diff*/)
+bool WorldSession::Update(PacketFilter& updater)
 {
     // Retrieve packets from the receive queue and call the appropriate handlers
     // not process packets if socket already closed
-    WorldPacket* packet;
-    while (_recvQueue.next(packet) && m_Socket && !m_Socket->IsClosed())
+    WorldPacket* packet = NULL;
+    while (m_Socket && !m_Socket->IsClosed() && _recvQueue.next(packet))
     {
         /*#if 1
         sLog->outError("MOEP: %s (0x%.4X)",
@@ -259,13 +299,18 @@ bool WorldSession::Update(uint32 /*diff*/)
         m_Socket = NULL;
     }
 
-    // If necessary, log the player out
-    time_t currTime = time(NULL);
-    if (!m_Socket || (ShouldLogOut(currTime) && !m_playerLoading))
-        LogoutPlayer(true);
+    //check if we are safe to proceed with logout
+    //logout procedure should happen only in World::UpdateSessions() method!!!
+    if (updater.ProcessLogout())
+    {
+        //- If necessary, log the player out
+        time_t currTime = time(NULL);
+        if (!m_Socket || (ShouldLogOut(currTime) && !m_playerLoading))
+            LogoutPlayer(true);
 
-    if (!m_Socket)
-        return false;                                       // Will remove this session from the world session map
+        if (!m_Socket)
+            return false;              // Will remove this session from the world session map
+    }
 
     return true;
 }
