@@ -169,7 +169,7 @@ void WorldSession::LogUnprocessedTail(WorldPacket *packet)
 bool WorldSession::Update(uint32 /*diff*/)
 {
     // Retrieve packets from the receive queue and call the appropriate handlers
-    // not proccess packets if socket already closed
+    // not process packets if socket already closed
     WorldPacket* packet;
     while (_recvQueue.next(packet) && m_Socket && !m_Socket->IsClosed())
     {
@@ -179,7 +179,7 @@ bool WorldSession::Update(uint32 /*diff*/)
                         packet->GetOpcode());
         #endif*/
 
-        OpcodeHandler& opHandle = opcodeTable[packet->GetOpcode()];
+        OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];
         try
         {
             switch (opHandle.status)
@@ -192,11 +192,8 @@ bool WorldSession::Update(uint32 /*diff*/)
                             LogUnexpectedOpcode(packet, "the player has not logged in yet");
                     }
                     else if (_player->IsInWorld())
-                    {
-                        (this->*opHandle.handler)(*packet);
-                        if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
-                            LogUnprocessedTail(packet);
-                    }
+                        ExecuteOpcode(opHandle, packet);
+
                     // lag can cause STATUS_LOGGEDIN opcodes to arrive after the player started a transfer
                     break;
                 case STATUS_LOGGEDIN_OR_RECENTLY_LOGGEDOUT:
@@ -205,12 +202,8 @@ bool WorldSession::Update(uint32 /*diff*/)
                         LogUnexpectedOpcode(packet, "the player has not logged in yet and not recently logout");
                     }
                     else
-                    {
                         // not expected _player or must checked in packet hanlder
-                        (this->*opHandle.handler)(*packet);
-                        if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
-                            LogUnprocessedTail(packet);
-                    }
+                        ExecuteOpcode(opHandle, packet);
                     break;
                 case STATUS_TRANSFER_PENDING:
                     if (!_player)
@@ -218,11 +211,7 @@ bool WorldSession::Update(uint32 /*diff*/)
                     else if (_player->IsInWorld())
                         LogUnexpectedOpcode(packet, "the player is still in world");
                     else
-                    {
-                        (this->*opHandle.handler)(*packet);
-                        if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
-                            LogUnprocessedTail(packet);
-                    }
+                        ExecuteOpcode(opHandle, packet);
                     break;
                 case STATUS_AUTHED:
                     // prevent cheating with skip queue wait
@@ -237,9 +226,7 @@ bool WorldSession::Update(uint32 /*diff*/)
                     if (packet->GetOpcode() != CMSG_SET_ACTIVE_VOICE_CHANNEL)
                         m_playerRecentlyLogout = false;
 
-                    (this->*opHandle.handler)(*packet);
-                    if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
-                        LogUnprocessedTail(packet);
+                    ExecuteOpcode(opHandle, packet);
                     break;
                 case STATUS_NEVER:
                     sLog->outError( "SESSION: received not allowed opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
@@ -265,17 +252,14 @@ bool WorldSession::Update(uint32 /*diff*/)
         delete packet;
     }
  
-    ///- Cleanup socket pointer if need
-	if (m_Socket && !m_Socket->IsClosed() && m_Warden)
-	 m_Warden->Update();
-
+    // Cleanup socket pointer if need
     if (m_Socket && m_Socket->IsClosed())
     {
         m_Socket->RemoveReference();
         m_Socket = NULL;
     }
 
-    ///- If necessary, log the player out
+    // If necessary, log the player out
     time_t currTime = time(NULL);
     if (!m_Socket || (ShouldLogOut(currTime) && !m_playerLoading))
         LogoutPlayer(true);
@@ -601,4 +585,3 @@ void WorldSession::ExecuteOpcode(OpcodeHandler const& opHandle, WorldPacket* pac
     if (packet->rpos() < packet->wpos())
         LogUnprocessedTail(packet);
 }
-
