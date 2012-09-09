@@ -677,15 +677,15 @@ void AreaAura::Update(uint32 diff)
                     break;
                 case AREA_AURA_FRIEND:
                 {
-                    Trinity::AnyFriendlyUnitInObjectRangeCheck u_check(caster, caster, m_radius);
-                    Trinity::UnitListSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
+                    SkyFire::AnyFriendlyUnitInObjectRangeCheck u_check(caster, caster, m_radius);
+                    SkyFire::UnitListSearcher<SkyFire::AnyFriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
                     caster->VisitNearbyObject(m_radius, searcher);
                     break;
                 }
                 case AREA_AURA_ENEMY:
                 {
-                    Trinity::AnyAoETargetUnitInObjectRangeCheck u_check(caster, caster, m_radius); // No GetCharmer in searcher
-                    Trinity::UnitListSearcher<Trinity::AnyAoETargetUnitInObjectRangeCheck> searcher(targets, u_check);
+                    SkyFire::AnyAoETargetUnitInObjectRangeCheck u_check(caster, caster, m_radius); // No GetCharmer in searcher
+                    SkyFire::UnitListSearcher<SkyFire::AnyAoETargetUnitInObjectRangeCheck> searcher(targets, u_check);
                     caster->VisitNearbyObject(m_radius, searcher);
                     break;
                 }
@@ -3028,7 +3028,7 @@ void Aura::HandleChannelDeathItem(bool apply, bool Real)
 
         // Soul Shard only from non-grey units
         if (spellInfo->EffectItemType[m_effIndex] == 6265 &&
-            (victim->getLevel() <= Trinity::XP::GetGrayLevel(caster->getLevel()) ||
+            (victim->getLevel() <= SkyFire::XP::GetGrayLevel(caster->getLevel()) ||
              victim->GetTypeId() == TYPEID_UNIT && !caster->ToPlayer()->isAllowedToLoot(victim->ToCreature())))
             return;
         ItemPosCountVec dest;
@@ -3205,8 +3205,8 @@ void Aura::HandleFeignDeath(bool apply, bool Real)
         */
 
         std::list<Unit*> targets;
-        Trinity::AnyUnfriendlyUnitInObjectRangeCheck u_check(m_target, m_target, m_target->GetMap()->GetVisibilityDistance());
-        Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
+        SkyFire::AnyUnfriendlyUnitInObjectRangeCheck u_check(m_target, m_target, m_target->GetMap()->GetVisibilityDistance());
+        SkyFire::UnitListSearcher<SkyFire::AnyUnfriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
         m_target->VisitNearbyObject(m_target->GetMap()->GetVisibilityDistance(), searcher);
         for (std::list<Unit*>::iterator iter = targets.begin(); iter != targets.end(); ++iter)
         {

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_ANIMAL_RANDOMMOVEMENTGENERATOR_H
-#define TRINITY_ANIMAL_RANDOMMOVEMENTGENERATOR_H
+#ifndef SKYFIRE_ANIMAL_RANDOMMOVEMENTGENERATOR_H
+#define SKYFIRE_ANIMAL_RANDOMMOVEMENTGENERATOR_H
 
 /** AnimalRandomMovementGenerator follows the research on
  *  quantifying scale-dependant effects of animal movement

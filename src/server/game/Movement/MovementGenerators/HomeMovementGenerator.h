@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_HOMEMOVEMENTGENERATOR_H
-#define TRINITY_HOMEMOVEMENTGENERATOR_H
+#ifndef SKYFIRE_HOMEMOVEMENTGENERATOR_H
+#define SKYFIRE_HOMEMOVEMENTGENERATOR_H
 
 #include "MovementGenerator.h"
 #include "DestinationHolder.h"

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_DESTINATIONHOLDERIMP_H
-#define TRINITY_DESTINATIONHOLDERIMP_H
+#ifndef SKYFIRE_DESTINATIONHOLDERIMP_H
+#define SKYFIRE_DESTINATIONHOLDERIMP_H
 
 #include "MapManager.h"
 #include "DestinationHolder.h"

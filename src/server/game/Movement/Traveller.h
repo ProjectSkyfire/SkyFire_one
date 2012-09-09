@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_TRAVELLER_H
-#define TRINITY_TRAVELLER_H
+#ifndef SKYFIRE_TRAVELLER_H
+#define SKYFIRE_TRAVELLER_H
 
 #include "Creature.h"
 #include "Player.h"

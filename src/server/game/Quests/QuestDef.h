@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_QUEST_H
-#define TRINITY_QUEST_H
+#ifndef SKYFIRE_QUEST_H
+#define SKYFIRE_QUEST_H
 
 #include "Define.h"
 #include "DatabaseEnv.h"
@@ -130,16 +130,16 @@ enum __QuestFlags
     QUEST_FLAGS_TBC_RACES      = 0x00000800,                // Not used currently: Blood elf/Draenei starting zone quests
     QUEST_FLAGS_DAILY          = 0x00001000,                // Used to know quest is Daily one
 
-    // Trinity flags for set SpecialFlags in DB if required but used only at server
-    QUEST_TRINITY_FLAGS_REPEATABLE           = 0x010000,     // Set by 1 in SpecialFlags from DB
-    QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT = 0x020000,     // Set by 2 in SpecialFlags from DB (if required area explore, spell SPELL_EFFECT_QUEST_COMPLETE casting, table `*_script` command SCRIPT_COMMAND_QUEST_EXPLORED use, set from script DLL)
-    QUEST_TRINITY_FLAGS_DB_ALLOWED = 0xFFFF | QUEST_TRINITY_FLAGS_REPEATABLE | QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT,
+    // SkyFire flags for set SpecialFlags in DB if required but used only at server
+    QUEST_SKYFIRE_FLAGS_REPEATABLE           = 0x010000,     // Set by 1 in SpecialFlags from DB
+    QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT = 0x020000,     // Set by 2 in SpecialFlags from DB (if required area explore, spell SPELL_EFFECT_QUEST_COMPLETE casting, table `*_script` command SCRIPT_COMMAND_QUEST_EXPLORED use, set from script DLL)
+    QUEST_SKYFIRE_FLAGS_DB_ALLOWED = 0xFFFF | QUEST_SKYFIRE_FLAGS_REPEATABLE | QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT,
 
-    // Trinity flags for internal use only
-    QUEST_TRINITY_FLAGS_DELIVER              = 0x040000,     // Internal flag computed only
-    QUEST_TRINITY_FLAGS_SPEAKTO              = 0x080000,     // Internal flag computed only
-    QUEST_TRINITY_FLAGS_KILL_OR_CAST         = 0x100000,     // Internal flag computed only
-    QUEST_TRINITY_FLAGS_TIMED                = 0x200000,     // Internal flag computed only
+    // SkyFire flags for internal use only
+    QUEST_SKYFIRE_FLAGS_DELIVER              = 0x040000,     // Internal flag computed only
+    QUEST_SKYFIRE_FLAGS_SPEAKTO              = 0x080000,     // Internal flag computed only
+    QUEST_SKYFIRE_FLAGS_KILL_OR_CAST         = 0x100000,     // Internal flag computed only
+    QUEST_SKYFIRE_FLAGS_TIMED                = 0x200000,     // Internal flag computed only
 };
 
 struct QuestLocale
@@ -216,7 +216,7 @@ class Quest
         uint32 GetCompleteEmote() const { return CompleteEmote; }
         uint32 GetQuestStartScript() const { return QuestStartScript; }
         uint32 GetQuestCompleteScript() const { return QuestCompleteScript; }
-        bool   IsRepeatable() const { return QuestFlags & QUEST_TRINITY_FLAGS_REPEATABLE; }
+        bool   IsRepeatable() const { return QuestFlags & QUEST_SKYFIRE_FLAGS_REPEATABLE; }
         bool   IsAutoComplete() const { return QuestMethod ? false : true; }
         uint32 GetFlags() const { return QuestFlags; }
         bool   IsDaily() const { return QuestFlags & QUEST_FLAGS_DAILY; }

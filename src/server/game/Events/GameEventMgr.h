@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_GAMEEVENT_MGR_H
-#define TRINITY_GAMEEVENT_MGR_H
+#ifndef SKYFIRE_GAMEEVENT_MGR_H
+#define SKYFIRE_GAMEEVENT_MGR_H
 
 #include "Define.h"
 #include "Creature.h"
