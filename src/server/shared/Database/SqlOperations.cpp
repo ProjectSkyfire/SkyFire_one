@@ -85,7 +85,7 @@ void SqlQuery::Execute(Database *db)
 void SqlResultQueue::Update()
 {
     // execute the callbacks waiting in the synchronization queue
-    Trinity::IQueryCallback* callback;
+    SkyFire::IQueryCallback* callback;
     while (next(callback))
     {
         callback->Execute();
@@ -93,7 +93,7 @@ void SqlResultQueue::Update()
     }
 }
 
-bool SqlQueryHolder::Execute(Trinity::IQueryCallback * callback, SqlDelayThread *thread, SqlResultQueue *queue)
+bool SqlQueryHolder::Execute(SkyFire::IQueryCallback * callback, SqlDelayThread *thread, SqlResultQueue *queue)
 {
     if (!callback || !thread || !queue)
         return false;
