@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MANGOS_CREATURE_EAI_H
-#define MANGOS_CREATURE_EAI_H
+#ifndef SKYFIRE_CREATURE_EAI_H
+#define SKYFIRE_CREATURE_EAI_H
 
 #include "Common.h"
 #include "Creature.h"

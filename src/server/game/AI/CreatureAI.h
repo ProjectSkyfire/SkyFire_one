@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_CREATUREAI_H
-#define TRINITY_CREATUREAI_H
+#ifndef SKYFIRE_CREATUREAI_H
+#define SKYFIRE_CREATUREAI_H
 
 #include "UnitAI.h"
 #include "Common.h"
