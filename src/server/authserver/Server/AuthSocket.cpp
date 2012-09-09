@@ -612,7 +612,7 @@ bool AuthSocket::_HandleLogonProof()
         sha.UpdateBigNumbers(&A, &M, &K, NULL);
         sha.Finalize();
 
-        if ((_expversion & POST_BC_EXP_FLAG) || (_expversion & POST_WOTLK_EXP_FLAG))     // 2.x, 3.x, 4.x
+        if ((_expversion & POST_BC_EXP_FLAG))     // 2.x
         {
             sAuthLogonProof_S proof;
             memcpy(proof.M2, sha.GetDigest(), 20);
@@ -828,7 +828,7 @@ bool AuthSocket::_HandleRealmList()
     for (RealmList::RealmMap::const_iterator i = sRealmList->begin(); i != sRealmList->end(); ++i)
     {
         // don't work with realms which not compatible with the client
-        if ((_expversion & POST_BC_EXP_FLAG) || (_expversion & POST_WOTLK_EXP_FLAG))
+        if ((_expversion & POST_BC_EXP_FLAG))
         {
            if (i->second.gamebuild != _build)
             {
@@ -852,7 +852,7 @@ bool AuthSocket::_HandleRealmList()
         uint8 lock = (i->second.allowedSecurityLevel > _accountSecurityLevel) ? 1 : 0;
 
         pkt << i->second.icon;                                       // realm type
-        if (_expversion & (POST_BC_EXP_FLAG | POST_WOTLK_EXP_FLAG))  // 2.x, 3.x, and 4.x clients
+        if (_expversion & (POST_BC_EXP_FLAG)                         // 2.x clients
             pkt << lock;                                             // if 1, then realm locked
         pkt << i->second.color;                                      // if 2, then realm is offline
         pkt << i->first;
@@ -860,7 +860,7 @@ bool AuthSocket::_HandleRealmList()
         pkt << i->second.populationLevel;
         pkt << AmountOfCharacters;
         pkt << i->second.timezone;                                   // realm category
-        if (_expversion & (POST_BC_EXP_FLAG | POST_WOTLK_EXP_FLAG))  // 2.x, 3.x, and 4.x clients
+        if (_expversion & (POST_BC_EXP_FLAG)                         // 2.x clients
             pkt << (uint8)0x2C;                                      // unk, may be realm number/id?
         else
             pkt << (uint8)0x0;                                       // 1.12.1 and 1.12.2 clients
@@ -868,7 +868,7 @@ bool AuthSocket::_HandleRealmList()
         ++RealmListSize;
     }
 
-    if ((_expversion & POST_BC_EXP_FLAG) || (_expversion & POST_WOTLK_EXP_FLAG))  // 2.x, 3.x, and 4.x clients
+    if ((_expversion & POST_BC_EXP_FLAG))  // 2.x clients
     {
         pkt << (uint8)0x10;
         pkt << (uint8)0x00;
