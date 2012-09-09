@@ -18,7 +18,7 @@
  */
 
 /** \file
-    \ingroup Trinityd
+    \ingroup SkyFired
 */
 
 #include "Common.h"
