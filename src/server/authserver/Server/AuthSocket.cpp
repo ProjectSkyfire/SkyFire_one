@@ -612,7 +612,7 @@ bool AuthSocket::_HandleLogonProof()
         sha.UpdateBigNumbers(&A, &M, &K, NULL);
         sha.Finalize();
 
-        if ((_expversion & POST_BC_EXP_FLAG))     // 2.x
+        if (_expversion & POST_BC_EXP_FLAG)     // 2.x
         {
             sAuthLogonProof_S proof;
             memcpy(proof.M2, sha.GetDigest(), 20);
@@ -828,7 +828,7 @@ bool AuthSocket::_HandleRealmList()
     for (RealmList::RealmMap::const_iterator i = sRealmList->begin(); i != sRealmList->end(); ++i)
     {
         // don't work with realms which not compatible with the client
-        if ((_expversion & POST_BC_EXP_FLAG))
+        if (_expversion & POST_BC_EXP_FLAG)
         {
            if (i->second.gamebuild != _build)
             {
@@ -868,7 +868,7 @@ bool AuthSocket::_HandleRealmList()
         ++RealmListSize;
     }
 
-    if ((_expversion & POST_BC_EXP_FLAG))  // 2.x clients
+    if (_expversion & POST_BC_EXP_FLAG)  // 2.x clients
     {
         pkt << (uint8)0x10;
         pkt << (uint8)0x00;
@@ -882,7 +882,7 @@ bool AuthSocket::_HandleRealmList()
     // make a ByteBuffer which stores the RealmList's size
     ByteBuffer RealmListSizeBuffer;
     RealmListSizeBuffer << (uint32)0;
-    if ((_expversion & POST_BC_EXP_FLAG) || (_expversion & POST_WOTLK_EXP_FLAG))  // 2.x, 3.x, and 4.x clients
+    if (_expversion & POST_BC_EXP_FLAG)  // 2.x clients
         RealmListSizeBuffer << (uint16)RealmListSize;
     else
         RealmListSizeBuffer << (uint32)RealmListSize;
