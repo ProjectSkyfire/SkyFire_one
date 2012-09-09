@@ -484,14 +484,14 @@ struct boss_felmystAI : public ScriptedAI
         float x, y, z;
         me->GetPosition(x, y, z);
 
-        CellPair pair(Trinity::ComputeCellPair(x, y));
+        CellPair pair(SkyFire::ComputeCellPair(x, y));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Trinity::AllCreaturesOfEntryInRange check(me, entry, 100);
-        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(templist, check);
-        TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+        SkyFire::AllCreaturesOfEntryInRange check(me, entry, 100);
+        SkyFire::CreatureListSearcher<SkyFire::AllCreaturesOfEntryInRange> searcher(templist, check);
+        TypeContainerVisitor<SkyFire::CreatureListSearcher<SkyFire::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
         cell.Visit(pair, cSearcher, *(me->GetMap()));
 
         for (std::list<Creature*>::const_iterator i = templist.begin(); i != templist.end(); ++i)
