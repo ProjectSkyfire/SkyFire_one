@@ -66,11 +66,13 @@ enum LoginResult
     LOGIN_LOCKED_ENFORCED                        = 0x10,
 };
 
-#define POST_BC_ACCEPTED_CLIENT_BUILD                 {8606, 0}
+#define POST_WOTLK_ACCEPTED_CLIENT_BUILD              {14480, 14333, 13623, 13596, 13329, 0}
+#define POST_BC_ACCEPTED_CLIENT_BUILD                 {13205, 13164, 12340, 11723, 11403, 11159, 10571, 10505, 10146, 9947, 8606, 0}
 #define PRE_BC_ACCEPTED_CLIENT_BUILD                  {5875, 6005, 0}
 
 enum ExpansionFlags
 {
+    POST_WOTLK_EXP_FLAG                          = 0x4,
     POST_BC_EXP_FLAG                             = 0x2,
     PRE_BC_EXP_FLAG                              = 0x1,
     NO_VALID_EXP_FLAG                            = 0x0
@@ -79,6 +81,7 @@ enum ExpansionFlags
 namespace AuthHelper
 {
     bool IsAcceptedClientBuild(int build);
+    bool IsPostWotLKAcceptedClientBuild(int build);
     bool IsPostBCAcceptedClientBuild(int build);
     bool IsPreBCAcceptedClientBuild(int build);
 };
