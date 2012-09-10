@@ -1062,8 +1062,6 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_INTERVAL_LOG_UPDATE] = ConfigMgr::GetIntDefault("RecordUpdateTimeDiffInterval", 60000);
     m_configs[CONFIG_MIN_LOG_UPDATE] = ConfigMgr::GetIntDefault("MinRecordUpdateTimeDiff", 100);
     m_configs[CONFIG_NUMTHREADS] = ConfigMgr::GetIntDefault("MapUpdate.Threads", 1);
-    m_configs[CONFIG_DUEL_MOD] = ConfigMgr::GetBoolDefault("DuelMod.Enable", false);
-    m_configs[CONFIG_DUEL_CD_RESET] = ConfigMgr::GetBoolDefault("DuelMod.Cooldowns", false);
     m_configs[CONFIG_AUTOBROADCAST_TIMER] = ConfigMgr::GetIntDefault("AutoBroadcast.Timer", 60000);
     m_configs[CONFIG_AUTOBROADCAST_ENABLED] = ConfigMgr::GetIntDefault("AutoBroadcast.On", 0);
     m_configs[CONFIG_AUTOBROADCAST_CENTER] = ConfigMgr::GetIntDefault("AutoBroadcast.Center", 0);

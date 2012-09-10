@@ -53,22 +53,8 @@ void WorldSession::HandleDuelAcceptedOpcode(WorldPacket& recvPacket)
     player->duel->startTimer   = now;
     plTarget->duel->startTimer = now;
 
-    if (sWorld->getConfig(CONFIG_DUEL_MOD))
-    {
-        player->ResetAllPowers();
-        plTarget->ResetAllPowers();
-
-        if (sWorld->getConfig(CONFIG_DUEL_CD_RESET) && !player->GetMap()->IsDungeon())
-            player->RemoveArenaSpellCooldowns();
-
-        if (sWorld->getConfig(CONFIG_DUEL_CD_RESET) && !plTarget->GetMap()->IsDungeon())
-            plTarget->RemoveArenaSpellCooldowns();
-    }
-
-    WorldPacket data(SMSG_DUEL_COUNTDOWN, 4);
-    data << (uint32)3000;                                   // 3 seconds
-    player->GetSession()->SendPacket(&data);
-    plTarget->GetSession()->SendPacket(&data);
+    player->SendDuelCountdown(3000);
+    plTarget->SendDuelCountdown(3000);
 }
 
 void WorldSession::HandleDuelCancelledOpcode(WorldPacket& recvPacket)

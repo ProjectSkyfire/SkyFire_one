@@ -5727,6 +5727,13 @@ void Player::CheckAreaExploreAndOutdoor()
     }
 }
 
+void Player::SendDuelCountdown(uint32 counter)
+{
+    WorldPacket data(SMSG_DUEL_COUNTDOWN, 4);
+    data << uint32(counter);                                // seconds
+    GetSession()->SendPacket(&data);
+}
+
 uint32 Player::TeamForRace(uint8 race)
 {
     ChrRacesEntry const* rEntry = sChrRacesStore.LookupEntry(race);

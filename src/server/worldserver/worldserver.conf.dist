@@ -1734,11 +1734,6 @@ CharDelete.KeepDays = 30
 #       Default: 0 (Disabled)
 #                1 - Enabled
 #
-#   DuelMod.Cooldowns
-#       Makes the players arena cooldowns reset before each duel.
-#       Default: 0 (Disabled)
-#                1 - Enabled
-#
 ###############################################################################
 
 PlayerStart.AllReputation = 0
@@ -1756,8 +1751,6 @@ ShowKickInWorld = 0
 RecordUpdateTimeDiffInterval = 60000
 MinRecordUpdateTimeDiff = 100
 PlayerStart.String = ""
-DuelMod.Enable = 0
-DuelMod.Cooldowns = 0
 
 ###############################################################################
 # AUTO BROADCAST

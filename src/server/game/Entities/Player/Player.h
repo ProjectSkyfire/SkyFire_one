@@ -1518,6 +1518,7 @@ class Player : public Unit, public GridObject<Player>
         void UpdateDuelFlag(time_t currTime);
         void CheckDuelDistance(time_t currTime);
         void DuelComplete(DuelCompleteType type);
+        void SendDuelCountdown(uint32 counter);
 
         bool IsGroupVisibleFor(Player* p) const;
         bool IsInSameGroupWith(Player const* p) const;
