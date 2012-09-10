@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_DESTINATION_HOLDER_H
-#define TRINITY_DESTINATION_HOLDER_H
+#ifndef SKYFIRE_DESTINATION_HOLDER_H
+#define SKYFIRE_DESTINATION_HOLDER_H
 
 #include "Define.h"
 #include "Timer.h"

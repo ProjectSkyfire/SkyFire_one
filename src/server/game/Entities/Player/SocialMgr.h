@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __TRINITY_SOCIALMGR_H
-#define __TRINITY_SOCIALMGR_H
+#ifndef __SKYFIRE_SOCIALMGR_H
+#define __SKYFIRE_SOCIALMGR_H
 
 #include "DatabaseEnv.h"
 #include "Common.h"

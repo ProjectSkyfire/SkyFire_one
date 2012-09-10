@@ -18,12 +18,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_FORMULAS_H
-#define TRINITY_FORMULAS_H
+#ifndef SKYFIRE_FORMULAS_H
+#define SKYFIRE_FORMULAS_H
 
 #include "World.h"
 
-namespace Trinity
+namespace SkyFire
 {
     namespace Honor
     {

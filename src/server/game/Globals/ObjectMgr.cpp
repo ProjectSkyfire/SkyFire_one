@@ -115,7 +115,7 @@ std::string GetScriptCommandName(ScriptCommands command)
         case SCRIPT_COMMAND_LOAD_PATH: res = "SCRIPT_COMMAND_LOAD_PATH"; break;
         case SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT: res = "SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT"; break;
         case SCRIPT_COMMAND_KILL: res = "SCRIPT_COMMAND_KILL"; break;
-        // Trinity only
+        // SkyFire only
         case SCRIPT_COMMAND_ORIENTATION: res = "SCRIPT_COMMAND_ORIENTATION"; break;
         case SCRIPT_COMMAND_EQUIP: res = "SCRIPT_COMMAND_EQUIP"; break;
         case SCRIPT_COMMAND_MODEL: res = "SCRIPT_COMMAND_MODEL"; break;
@@ -1114,7 +1114,7 @@ void ObjectMgr::AddCreatureToGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = SkyFire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1130,7 +1130,7 @@ void ObjectMgr::RemoveCreatureFromGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = SkyFire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1329,7 +1329,7 @@ void ObjectMgr::AddGameobjectToGrid(uint32 guid, GameObjectData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = SkyFire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1345,7 +1345,7 @@ void ObjectMgr::RemoveGameobjectFromGrid(uint32 guid, GameObjectData const* data
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = SkyFire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1895,7 +1895,7 @@ void ObjectMgr::LoadPetLevelInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog->outErrorDb("Wrong (> %u) level %u in pet_levelstats table, ignoring.", STRONG_MAX_LEVEL, current_level);
                 else
-                    sLog->outDetail("Unused (> MaxPlayerLevel in Trinityd.conf) level %u in pet_levelstats table, ignoring.", current_level);
+                    sLog->outDetail("Unused (> MaxPlayerLevel in SkyFired.conf) level %u in pet_levelstats table, ignoring.", current_level);
                 continue;
             }
             else if (current_level < 1)
@@ -2242,7 +2242,7 @@ void ObjectMgr::LoadPlayerInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog->outErrorDb("Wrong (> %u) level %u in player_classlevelstats table, ignoring.", STRONG_MAX_LEVEL, current_level);
                 else
-                    sLog->outDetail("Unused (> MaxPlayerLevel in Trinityd.conf) level %u in player_classlevelstats table, ignoring.", current_level);
+                    sLog->outDetail("Unused (> MaxPlayerLevel in SkyFired.conf) level %u in player_classlevelstats table, ignoring.", current_level);
                 continue;
             }
 
@@ -2330,7 +2330,7 @@ void ObjectMgr::LoadPlayerInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog->outErrorDb("Wrong (> %u) level %u in player_levelstats table, ignoring.", STRONG_MAX_LEVEL, current_level);
                 else
-                    sLog->outDetail("Unused (> MaxPlayerLevel in Trinityd.conf) level %u in player_levelstats table, ignoring.", current_level);
+                    sLog->outDetail("Unused (> MaxPlayerLevel in SkyFired.conf) level %u in player_levelstats table, ignoring.", current_level);
                 continue;
             }
 
@@ -2812,19 +2812,19 @@ void ObjectMgr::LoadQuests()
             sLog->outErrorDb("Quest %u has Method = %u, expected values are 0, 1 or 2.", qinfo->GetQuestId(), qinfo->GetQuestMethod());
         }
 
-        if (qinfo->QuestFlags & ~QUEST_TRINITY_FLAGS_DB_ALLOWED)
+        if (qinfo->QuestFlags & ~QUEST_SKYFIRE_FLAGS_DB_ALLOWED)
         {
             sLog->outErrorDb("Quest %u has SpecialFlags = %u > max allowed value. Correct SpecialFlags to value <= %u",
-                qinfo->GetQuestId(), qinfo->QuestFlags, QUEST_TRINITY_FLAGS_DB_ALLOWED >> 16);
-            qinfo->QuestFlags &= QUEST_TRINITY_FLAGS_DB_ALLOWED;
+                qinfo->GetQuestId(), qinfo->QuestFlags, QUEST_SKYFIRE_FLAGS_DB_ALLOWED >> 16);
+            qinfo->QuestFlags &= QUEST_SKYFIRE_FLAGS_DB_ALLOWED;
         }
 
         if (qinfo->QuestFlags & QUEST_FLAGS_DAILY)
         {
-            if (!(qinfo->QuestFlags & QUEST_TRINITY_FLAGS_REPEATABLE))
+            if (!(qinfo->QuestFlags & QUEST_SKYFIRE_FLAGS_REPEATABLE))
             {
                 sLog->outErrorDb("Daily Quest %u not marked as repeatable in SpecialFlags, added.", qinfo->GetQuestId());
-                qinfo->QuestFlags |= QUEST_TRINITY_FLAGS_REPEATABLE;
+                qinfo->QuestFlags |= QUEST_SKYFIRE_FLAGS_REPEATABLE;
             }
         }
 
@@ -3037,7 +3037,7 @@ void ObjectMgr::LoadQuests()
                     // no changes, quest can't be done for this requirement
                 }
 
-                qinfo->SetFlag(QUEST_TRINITY_FLAGS_DELIVER);
+                qinfo->SetFlag(QUEST_SKYFIRE_FLAGS_DELIVER);
 
                 if (!sItemStorage.LookupEntry<ItemPrototype>(id))
                 {
@@ -3154,12 +3154,12 @@ void ObjectMgr::LoadQuests()
 
                     if (found)
                     {
-                        if (!qinfo->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
+                        if (!qinfo->HasFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT))
                         {
-                            sLog->outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE or SPELL_EFFECT_SEND_EVENT for quest %u and ReqCreatureOrGOId%d = 0, but quest does not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT. Quest flags or ReqCreatureOrGOId%d must be fixed, quest modified to enable objective.", spellInfo->Id, qinfo->QuestId, j+1, j+1);
+                            sLog->outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE or SPELL_EFFECT_SEND_EVENT for quest %u and ReqCreatureOrGOId%d = 0, but quest does not have flag QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT. Quest flags or ReqCreatureOrGOId%d must be fixed, quest modified to enable objective.", spellInfo->Id, qinfo->QuestId, j+1, j+1);
 
                             // this will prevent quest completing without objective
-                            //const_cast<Quest*>(qinfo)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
+                            //const_cast<Quest*>(qinfo)->SetFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT);
                         }
                     }
                     else
@@ -3193,7 +3193,7 @@ void ObjectMgr::LoadQuests()
             {
                 // In fact SpeakTo and Kill are quite same: either you can speak to mob:SpeakTo or you can't:Kill/Cast
 
-                qinfo->SetFlag(QUEST_TRINITY_FLAGS_KILL_OR_CAST | QUEST_TRINITY_FLAGS_SPEAKTO);
+                qinfo->SetFlag(QUEST_SKYFIRE_FLAGS_KILL_OR_CAST | QUEST_SKYFIRE_FLAGS_SPEAKTO);
 
                 if (!qinfo->ReqCreatureOrGOCount[j])
                 {
@@ -3380,10 +3380,10 @@ void ObjectMgr::LoadQuests()
         if (qinfo->ExclusiveGroup)
             mExclusiveQuestGroups.insert(std::pair<int32, uint32>(qinfo->ExclusiveGroup, qinfo->GetQuestId()));
         if (qinfo->LimitTime)
-            qinfo->SetFlag(QUEST_TRINITY_FLAGS_TIMED);
+            qinfo->SetFlag(QUEST_SKYFIRE_FLAGS_TIMED);
     }
 
-    // check QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT for spell with SPELL_EFFECT_QUEST_COMPLETE
+    // check QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT for spell with SPELL_EFFECT_QUEST_COMPLETE
     for (uint32 i = 0; i < sSpellStore.GetNumRows(); ++i)
     {
         SpellEntry const *spellInfo = sSpellStore.LookupEntry(i);
@@ -3403,12 +3403,12 @@ void ObjectMgr::LoadQuests()
             if (!quest)
                 continue;
 
-            if (!quest->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
+            if (!quest->HasFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT))
             {
-                sLog->outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE for quest %u , but quest does not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT. Quest flags must be fixed, quest modified to enable objective.", spellInfo->Id, quest_id);
+                sLog->outErrorDb("Spell (id: %u) has SPELL_EFFECT_QUEST_COMPLETE for quest %u , but quest does not have flag QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT. Quest flags must be fixed, quest modified to enable objective.", spellInfo->Id, quest_id);
 
                 // this will prevent quest completing without objective
-                //const_cast<Quest*>(quest)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
+                //const_cast<Quest*>(quest)->SetFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT);
             }
         }
     }
@@ -3678,7 +3678,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                     continue;
                 }
 
-                if (!Trinity::IsValidMapCoord(tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation))
+                if (!SkyFire::IsValidMapCoord(tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation))
                 {
                     sLog->outErrorDb("Table `%s` has invalid coordinates (X: %f Y: %f Z: %f O: %f) in SCRIPT_COMMAND_TELEPORT_TO for script id %u",
                         tableName.c_str(), tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation, tmp.id);
@@ -3697,13 +3697,13 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                     continue;
                 }
 
-                if (!quest->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
+                if (!quest->HasFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT))
                 {
-                    sLog->outErrorDb("Table `%s` has quest (ID: %u) in SCRIPT_COMMAND_QUEST_EXPLORED in `datalong` for script id %u, but quest not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT in quest flags. Script command or quest flags wrong. Quest modified to require objective.",
+                    sLog->outErrorDb("Table `%s` has quest (ID: %u) in SCRIPT_COMMAND_QUEST_EXPLORED in `datalong` for script id %u, but quest not have flag QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT in quest flags. Script command or quest flags wrong. Quest modified to require objective.",
                         tableName.c_str(), tmp.QuestExplored.QuestID, tmp.id);
 
                     // this will prevent quest completing without objective
-                    const_cast<Quest*>(quest)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
+                    const_cast<Quest*>(quest)->SetFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT);
 
                     // continue; - quest objective requirement set and command can be allowed
                 }
@@ -3776,7 +3776,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
 
             case SCRIPT_COMMAND_TEMP_SUMMON_CREATURE:
             {
-                if (!Trinity::IsValidMapCoord(tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation))
+                if (!SkyFire::IsValidMapCoord(tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation))
                 {
                     sLog->outErrorDb("Table `%s` has invalid coordinates (X: %f Y: %f Z: %f O: %f) in SCRIPT_COMMAND_TEMP_SUMMON_CREATURE for script id %u",
                         tableName.c_str(), tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation, tmp.id);
@@ -4472,12 +4472,12 @@ void ObjectMgr::LoadQuestAreaTriggers()
             continue;
         }
 
-        if (!quest->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT))
+        if (!quest->HasFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT))
         {
-            sLog->outErrorDb("Table areatrigger_involvedrelation has record (id: %u) for not quest %u, but quest does not have flag QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT. Trigger or quest flags must be fixed, quest modified to require objective.", trigger_ID, quest_ID);
+            sLog->outErrorDb("Table areatrigger_involvedrelation has record (id: %u) for not quest %u, but quest does not have flag QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT. Trigger or quest flags must be fixed, quest modified to require objective.", trigger_ID, quest_ID);
 
             // this will prevent quest completing without objective
-            const_cast<Quest*>(quest)->SetFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT);
+            const_cast<Quest*>(quest)->SetFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT);
 
             // continue; - quest modified to required objective and trigger can be allowed.
         }
@@ -6282,7 +6282,7 @@ bool ObjectMgr::LoadSkyFireStrings(DatabaseType& db, char const* table, int32 mi
     {
         sLog->outString();
         if (min_value == MIN_SKYFIRE_STRING_ID)              // error only in case internal strings
-            sLog->outErrorDb(">> Loaded 0 Trinity strings. DB table %s is empty. Cannot continue.", table);
+            sLog->outErrorDb(">> Loaded 0 SkyFire strings. DB table %s is empty. Cannot continue.", table);
         else
             sLog->outString(">> Loaded 0 string templates. DB table %s is empty.", table);
         return false;
@@ -6341,7 +6341,7 @@ bool ObjectMgr::LoadSkyFireStrings(DatabaseType& db, char const* table, int32 mi
 
     sLog->outString();
     if (min_value == MIN_SKYFIRE_STRING_ID)
-        sLog->outString(">> Loaded %u Trinity strings from table %s", count, table);
+        sLog->outString(">> Loaded %u SkyFire strings from table %s", count, table);
     else
         sLog->outString(">> Loaded %u string templates from %s", count, table);
 
@@ -6363,7 +6363,7 @@ const char *ObjectMgr::GetSkyFireString(int32 entry, int locale_idx) const
     if (entry > 0)
         sLog->outErrorDb("Entry %i not found in skyfire_string table.", entry);
     else
-        sLog->outErrorDb("Trinity string entry %i not found in DB.", entry);
+        sLog->outErrorDb("SkyFire string entry %i not found in DB.", entry);
     return "<error>";
 }
 

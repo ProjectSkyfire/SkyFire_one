@@ -324,7 +324,7 @@ void Object::_BuildMovementUpdate(ByteBuffer * data, uint8 updateFlags) const
                 *data << (float)ToPlayer()->GetTransOffsetO();
                 *data << (uint32)ToPlayer()->GetTransTime();
             }
-            //Trinity currently not have support for other than player on transport
+            //SkyFire currently not have support for other than player on transport
         }
 
         // 0x02200000
@@ -1365,8 +1365,8 @@ void WorldObject::GetRandomPoint(const Position &pos, float distance, float &ran
     rand_y = pos.m_positionY + new_dist * sin(angle);
     rand_z = pos.m_positionZ;
 
-    Trinity::NormalizeMapCoord(rand_x);
-    Trinity::NormalizeMapCoord(rand_y);
+    SkyFire::NormalizeMapCoord(rand_x);
+    SkyFire::NormalizeMapCoord(rand_y);
     UpdateGroundPositionZ(rand_x, rand_y, rand_z);            // update to LOS height if available
 }
 
@@ -1379,7 +1379,7 @@ void WorldObject::UpdateGroundPositionZ(float x, float y, float &z) const
 
 bool Position::IsPositionValid() const
 {
-    return Trinity::IsValidMapCoord(m_positionX, m_positionY, m_positionZ, m_orientation);
+    return SkyFire::IsValidMapCoord(m_positionX, m_positionY, m_positionZ, m_orientation);
 }
 
 void WorldObject::MonsterSay(const char* text, uint32 language, uint64 TargetGuid)
@@ -1438,7 +1438,7 @@ void Object::ForceValuesUpdateAtIndex(uint32 i)
     }
 }
 
-namespace Trinity
+namespace SkyFire
 {
     class MonsterChatBuilder
     {
@@ -1460,42 +1460,42 @@ namespace Trinity
             uint32 i_language;
             uint64 i_targetGUID;
     };
-}                                                           // namespace Trinity
+}                                                           // namespace SkyFire
 
 void WorldObject::MonsterSay(int32 textId, uint32 language, uint64 TargetGuid)
 {
-    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = SkyFire::ComputeCellPair(GetPositionX(), GetPositionY());
 
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_SAY, textId, language, TargetGuid);
-    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
-    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(sWorld->getConfig(CONFIG_LISTEN_RANGE_SAY), say_do);
-    TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
+    SkyFire::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_SAY, textId, language, TargetGuid);
+    SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> say_do(say_build);
+    SkyFire::PlayerDistWorker<SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> > say_worker(sWorld->getConfig(CONFIG_LISTEN_RANGE_SAY), say_do);
+    TypeContainerVisitor<SkyFire::PlayerDistWorker<SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
     cell.Visit(p, message, *GetMap(), *this, sWorld->getConfig(CONFIG_LISTEN_RANGE_SAY));
 }
 
 void WorldObject::MonsterYell(int32 textId, uint32 language, uint64 TargetGuid)
 {
-    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = SkyFire::ComputeCellPair(GetPositionX(), GetPositionY());
 
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId, language, TargetGuid);
-    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
-    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(sWorld->getConfig(CONFIG_LISTEN_RANGE_YELL), say_do);
-    TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
+    SkyFire::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId, language, TargetGuid);
+    SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> say_do(say_build);
+    SkyFire::PlayerDistWorker<SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> > say_worker(sWorld->getConfig(CONFIG_LISTEN_RANGE_YELL), say_do);
+    TypeContainerVisitor<SkyFire::PlayerDistWorker<SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
     cell.Visit(p, message, *GetMap(), *this, sWorld->getConfig(CONFIG_LISTEN_RANGE_YELL));
 }
 
 void WorldObject::MonsterYellToZone(int32 textId, uint32 language, uint64 TargetGuid)
 {
-    Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId, language, TargetGuid);
-    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
+    SkyFire::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId, language, TargetGuid);
+    SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> say_do(say_build);
 
     uint32 zoneid = GetZoneId();
 
@@ -1507,16 +1507,16 @@ void WorldObject::MonsterYellToZone(int32 textId, uint32 language, uint64 Target
 
 void WorldObject::MonsterTextEmote(int32 textId, uint64 TargetGuid, bool IsBossEmote)
 {
-    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = SkyFire::ComputeCellPair(GetPositionX(), GetPositionY());
 
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::MonsterChatBuilder say_build(*this, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, textId, LANG_UNIVERSAL, TargetGuid);
-    Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
-    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(sWorld->getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), say_do);
-    TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
+    SkyFire::MonsterChatBuilder say_build(*this, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, textId, LANG_UNIVERSAL, TargetGuid);
+    SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> say_do(say_build);
+    SkyFire::PlayerDistWorker<SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> > say_worker(sWorld->getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE), say_do);
+    TypeContainerVisitor<SkyFire::PlayerDistWorker<SkyFire::LocalizedPacketDo<SkyFire::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
     cell.Visit(p, message, *GetMap(), *this, sWorld->getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE));
 }
 
@@ -1560,13 +1560,13 @@ void WorldObject::BuildMonsterChat(WorldPacket *data, uint8 msgtype, char const*
 
 void WorldObject::SendMessageToSet(WorldPacket *data, bool /*fake*/)
 {
-    Trinity::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
+    SkyFire::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), notifier);
 }
 
 void WorldObject::SendMessageToSetInRange(WorldPacket *data, float dist, bool /*bToSelf*/)
 {
-    Trinity::MessageDistDeliverer notifier(this, data, dist);
+    SkyFire::MessageDistDeliverer notifier(this, data, dist);
     VisitNearbyWorldObject(dist, notifier);
 }
 
@@ -1915,8 +1915,8 @@ Creature* WorldObject::SummonTrigger(float x, float y, float z, float ang, uint3
 Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive)
 {
     Creature* creature = NULL;
-    Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck checker(*this, entry, alive, range);
-    Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, checker);
+    SkyFire::NearestCreatureEntryWithLiveStateInObjectRangeCheck checker(*this, entry, alive, range);
+    SkyFire::CreatureLastSearcher<SkyFire::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, checker);
     VisitNearbyObject(range, searcher);
     return creature;
 }
@@ -1924,36 +1924,36 @@ Creature* WorldObject::FindNearestCreature(uint32 entry, float range, bool alive
 GameObject* WorldObject::FindNearestGameObject(uint32 entry, float range)
 {
     GameObject *go = NULL;
-    Trinity::NearestGameObjectEntryInObjectRangeCheck checker(*this, entry, range);
-    Trinity::GameObjectLastSearcher<Trinity::NearestGameObjectEntryInObjectRangeCheck> searcher(go, checker);
+    SkyFire::NearestGameObjectEntryInObjectRangeCheck checker(*this, entry, range);
+    SkyFire::GameObjectLastSearcher<SkyFire::NearestGameObjectEntryInObjectRangeCheck> searcher(go, checker);
     VisitNearbyGridObject(range, searcher);
     return go;
 }
 
 void WorldObject::GetGameObjectListWithEntryInGrid(std::list<GameObject*>& lList, uint32 uiEntry, float fMaxSearchRange)
 {
-    CellPair pair(Trinity::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
+    CellPair pair(SkyFire::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::AllGameObjectsWithEntryInRange check(this, uiEntry, fMaxSearchRange);
-    Trinity::GameObjectListSearcher<Trinity::AllGameObjectsWithEntryInRange> searcher(lList, check);
-    TypeContainerVisitor<Trinity::GameObjectListSearcher<Trinity::AllGameObjectsWithEntryInRange>, GridTypeMapContainer> visitor(searcher);
+    SkyFire::AllGameObjectsWithEntryInRange check(this, uiEntry, fMaxSearchRange);
+    SkyFire::GameObjectListSearcher<SkyFire::AllGameObjectsWithEntryInRange> searcher(lList, check);
+    TypeContainerVisitor<SkyFire::GameObjectListSearcher<SkyFire::AllGameObjectsWithEntryInRange>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(this->GetMap()));
 }
 
 void WorldObject::GetCreatureListWithEntryInGrid(std::list<Creature*>& lList, uint32 uiEntry, float fMaxSearchRange)
 {
-    CellPair pair(Trinity::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
+    CellPair pair(SkyFire::ComputeCellPair(this->GetPositionX(), this->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::AllCreaturesOfEntryInRange check(this, uiEntry, fMaxSearchRange);
-    Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(lList, check);
-    TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
+    SkyFire::AllCreaturesOfEntryInRange check(this, uiEntry, fMaxSearchRange);
+    SkyFire::CreatureListSearcher<SkyFire::AllCreaturesOfEntryInRange> searcher(lList, check);
+    TypeContainerVisitor<SkyFire::CreatureListSearcher<SkyFire::AllCreaturesOfEntryInRange>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(this->GetMap()));
 }
@@ -1963,8 +1963,8 @@ void WorldObject::GetNearPoint2D(float &x, float &y, float distance2d, float abs
     x = GetPositionX() + (GetObjectSize() + distance2d) * cos(absAngle);
     y = GetPositionY() + (GetObjectSize() + distance2d) * sin(absAngle);
 
-    Trinity::NormalizeMapCoord(x);
-    Trinity::NormalizeMapCoord(y);
+    SkyFire::NormalizeMapCoord(x);
+    SkyFire::NormalizeMapCoord(y);
 }
 
 void WorldObject::GetNearPoint(WorldObject const* /*searcher*/, float &x, float &y, float &z, float searcher_size, float distance2d, float absAngle) const
@@ -1979,8 +1979,8 @@ void WorldObject::MovePosition(Position &pos, float dist, float angle)
     angle += m_orientation;
     pos.m_positionX += dist * cos(angle);
     pos.m_positionY += dist * sin(angle);
-    Trinity::NormalizeMapCoord(pos.m_positionX);
-    Trinity::NormalizeMapCoord(pos.m_positionY);
+    SkyFire::NormalizeMapCoord(pos.m_positionX);
+    SkyFire::NormalizeMapCoord(pos.m_positionY);
     UpdateGroundPositionZ(pos.m_positionX, pos.m_positionY, pos.m_positionZ);
     pos.m_orientation = m_orientation;
 }
@@ -2029,8 +2029,8 @@ void WorldObject::MovePositionToFirstCollision(Position &pos, float dist, float 
         }
         }
 
-        Trinity::NormalizeMapCoord(pos.m_positionX);
-        Trinity::NormalizeMapCoord(pos.m_positionY);
+        SkyFire::NormalizeMapCoord(pos.m_positionX);
+        SkyFire::NormalizeMapCoord(pos.m_positionY);
         UpdateGroundPositionZ(pos.m_positionX, pos.m_positionY, pos.m_positionZ);
         pos.m_orientation = m_orientation;
 }
@@ -2062,8 +2062,8 @@ void WorldObject::DestroyForNearbyPlayers()
         return;
 
     std::list<Player*> targets;
-    Trinity::AnyPlayerInObjectRangeCheck check(this, GetMap()->GetVisibilityDistance());
-    Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(targets, check);
+    SkyFire::AnyPlayerInObjectRangeCheck check(this, GetMap()->GetVisibilityDistance());
+    SkyFire::PlayerListSearcher<SkyFire::AnyPlayerInObjectRangeCheck> searcher(targets, check);
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), searcher);
     for (std::list<Player*>::const_iterator iter = targets.begin(); iter != targets.end(); ++iter)
     {
@@ -2086,7 +2086,7 @@ void WorldObject::DestroyForNearbyPlayers()
 void WorldObject::UpdateObjectVisibility(bool /*forced*/)
 {
     //updates object's visibility for nearby players
-    Trinity::VisibleChangesNotifier notifier(*this);
+    SkyFire::VisibleChangesNotifier notifier(*this);
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), notifier);
 }
 
@@ -2151,7 +2151,7 @@ struct WorldObjectChangeAccumulator
 
 void WorldObject::BuildUpdate(UpdateDataMapType& data_map)
 {
-    CellPair p = Trinity::ComputeCellPair(GetPositionX(), GetPositionY());
+    CellPair p = SkyFire::ComputeCellPair(GetPositionX(), GetPositionY());
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();

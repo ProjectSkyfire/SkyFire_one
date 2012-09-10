@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_COMMON_H
-#define TRINITY_COMMON_H
+#ifndef SKYFIRE_COMMON_H
+#define SKYFIRE_COMMON_H
 
 // config.h needs to be included 1st
 // TODO this thingy looks like hack , but its not, need to
@@ -27,7 +27,7 @@
 #ifdef HAVE_CONFIG_H
 // Remove Some things that we will define
 // This is in case including another config.h
-// before Trinity config.h
+// before SkyFire config.h
 #ifdef PACKAGE
 #undef PACKAGE
 #endif //PACKAGE
@@ -220,17 +220,17 @@ LocaleConstant GetLocaleByName(const std::string& name);
 #define M_PI            3.14159265358979323846
 #endif
 
-#define TRINITY_GUARD(MUTEX, LOCK) \
-  ACE_Guard< MUTEX > TRINITY_GUARD_OBJECT (LOCK); \
-    if (TRINITY_GUARD_OBJECT.locked() == 0) ASSERT(false);
+#define SKYFIRE_GUARD(MUTEX, LOCK) \
+  ACE_Guard< MUTEX > SKYFIRE_GUARD_OBJECT (LOCK); \
+    if (SKYFIRE_GUARD_OBJECT.locked() == 0) ASSERT(false);
 
-# define TRINITY_WRITE_GUARD(MUTEX, LOCK) \
-  ACE_Write_Guard< MUTEX > TRINITY_GUARD_OBJECT (LOCK); \
-    if (TRINITY_GUARD_OBJECT.locked() == 0) ASSERT(false);
+# define SKYFIRE_WRITE_GUARD(MUTEX, LOCK) \
+  ACE_Write_Guard< MUTEX > SKYFIRE_GUARD_OBJECT (LOCK); \
+    if (SKYFIRE_GUARD_OBJECT.locked() == 0) ASSERT(false);
 
-# define TRINITY_READ_GUARD(MUTEX, LOCK) \
-  ACE_Read_Guard< MUTEX > TRINITY_GUARD_OBJECT (LOCK); \
-    if (TRINITY_GUARD_OBJECT.locked() == 0) ASSERT(false);
+# define SKYFIRE_READ_GUARD(MUTEX, LOCK) \
+  ACE_Read_Guard< MUTEX > SKYFIRE_GUARD_OBJECT (LOCK); \
+    if (SKYFIRE_GUARD_OBJECT.locked() == 0) ASSERT(false);
 
 #endif
 

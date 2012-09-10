@@ -23,7 +23,7 @@
 
 #include <ace/Event_Handler.h>
 
-namespace Trinity
+namespace SkyFire
 {
 /// Handle termination signals
 class SignalHandler : public ACE_Event_Handler

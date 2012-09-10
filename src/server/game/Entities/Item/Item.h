@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_ITEM_H
-#define TRINITY_ITEM_H
+#ifndef SKYFIRE_ITEM_H
+#define SKYFIRE_ITEM_H
 
 #include "Common.h"
 #include "Object.h"

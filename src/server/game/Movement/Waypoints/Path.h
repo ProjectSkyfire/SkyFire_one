@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_PATH_H
-#define TRINITY_PATH_H
+#ifndef SKYFIRE_PATH_H
+#define SKYFIRE_PATH_H
 
 #include "Common.h"
 #include <vector>

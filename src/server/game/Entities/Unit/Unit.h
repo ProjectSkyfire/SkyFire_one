@@ -1623,7 +1623,7 @@ class Unit : public WorldObject
         uint32 m_procDeep;
 };
 
-namespace Trinity
+namespace SkyFire
 {
     template<class T>
     void RandomResizeList(std::list<T> &_list, uint32 _size)

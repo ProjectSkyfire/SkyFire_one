@@ -17,12 +17,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_CALLBACK_H
-#define TRINITY_CALLBACK_H
+#ifndef SKYFIRE_CALLBACK_H
+#define SKYFIRE_CALLBACK_H
 
 /// ------------ BASE CLASSES ------------
 
-namespace Trinity
+namespace SkyFire
 {
     template < class Class, typename ParamType1 = void, typename ParamType2 = void, typename ParamType3 = void, typename ParamType4 = void >
     class _Callback
@@ -194,7 +194,7 @@ namespace Trinity
 
 /// --------- GENERIC CALLBACKS ----------
 
-namespace Trinity
+namespace SkyFire
 {
     class ICallback
     {
@@ -271,7 +271,7 @@ namespace Trinity
 #include "QueryResult.h"
 class QueryResult;
 
-namespace Trinity
+namespace SkyFire
 {
     class IQueryCallback
     {

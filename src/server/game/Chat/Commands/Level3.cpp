@@ -5627,15 +5627,15 @@ bool ChatHandler::HandleRespawnCommand(const char* /*args*/)
         return true;
     }
 
-    CellPair p(Trinity::ComputeCellPair(pl->GetPositionX(), pl->GetPositionY()));
+    CellPair p(SkyFire::ComputeCellPair(pl->GetPositionX(), pl->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::RespawnDo u_do;
-    Trinity::WorldObjectWorker<Trinity::RespawnDo> worker(u_do);
+    SkyFire::RespawnDo u_do;
+    SkyFire::WorldObjectWorker<SkyFire::RespawnDo> worker(u_do);
 
-    TypeContainerVisitor<Trinity::WorldObjectWorker<Trinity::RespawnDo>, GridTypeMapContainer > obj_worker(worker);
+    TypeContainerVisitor<SkyFire::WorldObjectWorker<SkyFire::RespawnDo>, GridTypeMapContainer > obj_worker(worker);
     cell.Visit(p, obj_worker, *pl->GetMap());
 
     return true;
@@ -6763,7 +6763,7 @@ bool ChatHandler::HandleModifyGenderCommand(const char *args)
 }
 
 /*------------------------------------------
- *-------------Trinity----------------------
+ *-------------SkyFire----------------------
  *-------------------------------------*/
 
 bool ChatHandler::HandlePlayAllCommand(const char *args)

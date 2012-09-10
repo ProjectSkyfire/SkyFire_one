@@ -431,8 +431,8 @@ void Spell::FillTargetMap()
                             float max_range = GetSpellMaxRange(srange);
                             WorldObject* result = NULL;
 
-                            Trinity::CannibalizeObjectCheck u_check(m_caster, max_range);
-                            Trinity::WorldObjectSearcher<Trinity::CannibalizeObjectCheck > searcher(result, u_check);
+                            SkyFire::CannibalizeObjectCheck u_check(m_caster, max_range);
+                            SkyFire::WorldObjectSearcher<SkyFire::CannibalizeObjectCheck > searcher(result, u_check);
                             m_caster->VisitNearbyGridObject(max_range, searcher);
                             if (!result)
                                 m_caster->VisitNearbyWorldObject(max_range, searcher);
@@ -1413,11 +1413,11 @@ void Spell::SearchAreaTarget(std::list<Unit*> &TagUnitMap, float radius, const u
             break;
     }
 
-    Trinity::SpellNotifierCreatureAndPlayer notifier(*this, TagUnitMap, radius, type, TargetType, pos, entry);
+    SkyFire::SpellNotifierCreatureAndPlayer notifier(*this, TagUnitMap, radius, type, TargetType, pos, entry);
     if ((m_spellInfo->AttributesEx3 & SPELL_ATTR_EX3_PLAYERS_ONLY) || TargetType == SPELL_TARGETS_ENTRY && !entry)
     {
         m_caster->GetMap()->VisitWorld(pos->m_positionX, pos->m_positionY, radius, notifier);
-        TagUnitMap.remove_if(Trinity::ObjectTypeIdCheck(TYPEID_PLAYER, false)); // above line will select also pets and totems, remove them
+        TagUnitMap.remove_if(SkyFire::ObjectTypeIdCheck(TYPEID_PLAYER, false)); // above line will select also pets and totems, remove them
     }
     else
         m_caster->GetMap()->VisitAll(pos->m_positionX, pos->m_positionY, radius, notifier);
@@ -1491,16 +1491,16 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType)
         case SPELL_TARGETS_ENEMY:
         {
             Unit *target = NULL;
-            Trinity::AnyUnfriendlyUnitInObjectRangeCheck u_check(m_caster, m_caster, range);
-            Trinity::UnitLastSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(target, u_check);
+            SkyFire::AnyUnfriendlyUnitInObjectRangeCheck u_check(m_caster, m_caster, range);
+            SkyFire::UnitLastSearcher<SkyFire::AnyUnfriendlyUnitInObjectRangeCheck> searcher(target, u_check);
             m_caster->VisitNearbyObject(range, searcher);
             return target;
         }
         case SPELL_TARGETS_ALLY:
         {
             Unit *target = NULL;
-            Trinity::AnyFriendlyUnitInObjectRangeCheck u_check(m_caster, m_caster, range);
-            Trinity::UnitLastSearcher<Trinity::AnyFriendlyUnitInObjectRangeCheck> searcher(target, u_check);
+            SkyFire::AnyFriendlyUnitInObjectRangeCheck u_check(m_caster, m_caster, range);
+            SkyFire::UnitLastSearcher<SkyFire::AnyFriendlyUnitInObjectRangeCheck> searcher(target, u_check);
             m_caster->VisitNearbyObject(range, searcher);
             return target;
         }
@@ -2034,7 +2034,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
                 if (m_spellInfo->Id == 5246) //Intimidating Shout
                     unitList.remove(m_targets.getUnitTarget());
 
-                Trinity::RandomResizeList(unitList, m_spellValue->MaxAffectedTargets);
+                SkyFire::RandomResizeList(unitList, m_spellValue->MaxAffectedTargets);
             }else if (m_spellInfo->Id == 27285) // Seed of Corruption proc spell
                 unitList.remove(m_targets.getUnitTarget());
 
@@ -4749,15 +4749,15 @@ uint8 Spell::CheckItems()
 
     if (m_spellInfo->RequiresSpellFocus)
     {
-        CellPair p(Trinity::ComputeCellPair(m_caster->GetPositionX(), m_caster->GetPositionY()));
+        CellPair p(SkyFire::ComputeCellPair(m_caster->GetPositionX(), m_caster->GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 
         GameObject* ok = NULL;
-        Trinity::GameObjectFocusCheck go_check(m_caster, m_spellInfo->RequiresSpellFocus);
-        Trinity::GameObjectSearcher<Trinity::GameObjectFocusCheck> checker(ok, go_check);
+        SkyFire::GameObjectFocusCheck go_check(m_caster, m_spellInfo->RequiresSpellFocus);
+        SkyFire::GameObjectSearcher<SkyFire::GameObjectFocusCheck> checker(ok, go_check);
 
-        TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectFocusCheck>, GridTypeMapContainer > object_checker(checker);
+        TypeContainerVisitor<SkyFire::GameObjectSearcher<SkyFire::GameObjectFocusCheck>, GridTypeMapContainer > object_checker(checker);
         Map& map = *m_caster->GetMap();
         cell.Visit(p, object_checker, map, *m_caster, map.GetVisibilityDistance());
 

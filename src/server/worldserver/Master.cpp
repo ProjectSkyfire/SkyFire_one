@@ -18,7 +18,7 @@
  */
 
 /** \file
-    \ingroup Trinityd
+    \ingroup SkyFired
 */
 
 #include "Common.h"
@@ -48,7 +48,7 @@ extern int m_ServiceStatus;
 #endif
 
 /// Handle worldservers's termination signals
-class WorldServerSignalHandler : public Trinity::SignalHandler
+class WorldServerSignalHandler : public SkyFire::SignalHandler
 {
     public:
         virtual void HandleSignal(int SigNum)

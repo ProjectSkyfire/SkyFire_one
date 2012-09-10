@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_CHAT_H
-#define TRINITY_CHAT_H
+#ifndef SKYFIRE_CHAT_H
+#define SKYFIRE_CHAT_H
 
 #include "SharedDefines.h"
 

@@ -1964,7 +1964,7 @@ void Player::Regenerate(Powers power)
             bool recentCast = IsUnderLastManaUseEffect();
             float ManaIncreaseRate = sWorld->getRate(RATE_POWER_MANA);
 
-            if (recentCast) // Trinity Updates Mana in intervals of 2s, which is correct
+            if (recentCast) // SkyFire Updates Mana in intervals of 2s, which is correct
                 addvalue = GetFloatValue(PLAYER_FIELD_MOD_MANA_REGEN_INTERRUPT) *  ManaIncreaseRate * 2.00f;
 
             else
@@ -2384,7 +2384,7 @@ void Player::GiveLevel(uint32 level)
 
     GetSession()->SendPacket(&data);
 
-    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, Trinity::XP::xp_to_level(level));
+    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, SkyFire::XP::xp_to_level(level));
 
     //update level, max level of skills
     if (getLevel() != level)
@@ -2464,7 +2464,7 @@ void Player::InitStatsForLevel(bool reapplyMods)
     sObjectMgr->GetPlayerLevelInfo(getRace(), getClass(), getLevel(), &info);
 
     SetUInt32Value(PLAYER_FIELD_MAX_LEVEL, sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL));
-    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, Trinity::XP::xp_to_level(getLevel()));
+    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, SkyFire::XP::xp_to_level(getLevel()));
 
     UpdateSkillsForLevel ();
 
@@ -5150,7 +5150,7 @@ void Player::UpdateCombatSkills(Unit *pVictim, WeaponAttackType attType, MeleeHi
     }
 */
     uint32 plevel = getLevel();                             // if defense than pVictim == attacker
-    uint32 greylevel = Trinity::XP::GetGrayLevel(plevel);
+    uint32 greylevel = SkyFire::XP::GetGrayLevel(plevel);
     uint32 moblevel = pVictim->getLevelForTarget(this);
     if (moblevel < greylevel)
         return;
@@ -5557,7 +5557,7 @@ void Player::removeActionButton(uint8 button)
 bool Player::SetPosition(float x, float y, float z, float orientation, bool teleport)
 {
     // prevent crash when a bad coord is sent by the client
-    if (!Trinity::IsValidMapCoord(x, y, z, orientation))
+    if (!SkyFire::IsValidMapCoord(x, y, z, orientation))
     {
         sLog->outDebug("Player::SetPosition(%f, %f, %f, %f, %d) .. bad coordinates for player %d!", x, y, z, orientation, teleport, GetGUIDLow());
         return false;
@@ -5618,7 +5618,7 @@ void Player::SendMessageToSet(WorldPacket *data, bool self)
 
     // we use World::GetMaxVisibleDistance() because i cannot see why not use a distance
     // update: replaced by GetMap()->GetVisibilityDistance()
-    Trinity::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
+    SkyFire::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), notifier);
 }
 
@@ -5627,7 +5627,7 @@ void Player::SendMessageToSetInRange(WorldPacket *data, float dist, bool self)
     if (self)
         GetSession()->SendPacket(data);
 
-    Trinity::MessageDistDeliverer notifier(this, data, dist);
+    SkyFire::MessageDistDeliverer notifier(this, data, dist);
     VisitNearbyWorldObject(dist, notifier);
 }
 
@@ -5636,7 +5636,7 @@ void Player::SendMessageToSetInRange(WorldPacket *data, float dist, bool self, b
     if (self)
         GetSession()->SendPacket(data);
 
-    Trinity::MessageDistDeliverer notifier(this, data, dist, own_team_only);
+    SkyFire::MessageDistDeliverer notifier(this, data, dist, own_team_only);
     VisitNearbyWorldObject(dist, notifier);
 }
 
@@ -6189,7 +6189,7 @@ int32 Player::CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, bo
 
     float rate = for_quest ? sWorld->getRate(RATE_REPUTATION_LOWLEVEL_QUEST) : sWorld->getRate(RATE_REPUTATION_LOWLEVEL_KILL);
 
-    if (rate != 1.0f && creatureOrQuestLevel <= Trinity::XP::GetGrayLevel(getLevel()))
+    if (rate != 1.0f && creatureOrQuestLevel <= SkyFire::XP::GetGrayLevel(getLevel()))
         percent *= rate;
 
     int32 repMod = GetTotalAuraModifier(SPELL_AURA_MOD_REPUTATION_GAIN);
@@ -13055,7 +13055,7 @@ bool Player::CanCompleteQuest(uint32 quest_id)
     if (q_status.m_status != QUEST_STATUS_INCOMPLETE)
         return false;
 
-    if (qInfo->HasFlag(QUEST_TRINITY_FLAGS_DELIVER))
+    if (qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_DELIVER))
     {
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
         {
@@ -13064,7 +13064,7 @@ bool Player::CanCompleteQuest(uint32 quest_id)
         }
     }
 
-    if (qInfo->HasFlag(QUEST_TRINITY_FLAGS_KILL_OR_CAST | QUEST_TRINITY_FLAGS_SPEAKTO))
+    if (qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_KILL_OR_CAST | QUEST_SKYFIRE_FLAGS_SPEAKTO))
     {
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
         {
@@ -13076,10 +13076,10 @@ bool Player::CanCompleteQuest(uint32 quest_id)
         }
     }
 
-    if (qInfo->HasFlag(QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT) && !q_status.m_explored)
+    if (qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_EXPLORATION_OR_EVENT) && !q_status.m_explored)
         return false;
 
-    if (qInfo->HasFlag(QUEST_TRINITY_FLAGS_TIMED) && q_status.m_timer == 0)
+    if (qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_TIMED) && q_status.m_timer == 0)
         return false;
 
     if (qInfo->GetRewOrReqMoney() < 0)
@@ -13103,7 +13103,7 @@ bool Player::CanCompleteRepeatableQuest(Quest const *pQuest)
     if (!CanTakeQuest(pQuest, false))
         return false;
 
-    if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_DELIVER))
+    if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_DELIVER))
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
             if (pQuest->ReqItemId[i] && pQuest->ReqItemCount[i] && !HasItemCount(pQuest->ReqItemId[i], pQuest->ReqItemCount[i]))
                 return false;
@@ -13129,7 +13129,7 @@ bool Player::CanRewardQuest(Quest const *pQuest, bool msg)
         return false;
 
     // prevent receive reward with quest items in bank
-    if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_DELIVER))
+    if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_DELIVER))
     {
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
         {
@@ -13204,13 +13204,13 @@ void Player::AddQuest(Quest const *pQuest, Object *questGiver)
     questStatusData.m_status = QUEST_STATUS_INCOMPLETE;
     questStatusData.m_explored = false;
 
-    if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_DELIVER))
+    if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_DELIVER))
     {
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
             questStatusData.m_itemcount[i] = 0;
     }
 
-    if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_KILL_OR_CAST | QUEST_TRINITY_FLAGS_SPEAKTO))
+    if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_KILL_OR_CAST | QUEST_SKYFIRE_FLAGS_SPEAKTO))
     {
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
             questStatusData.m_creatureOrGOcount[i] = 0;
@@ -13223,7 +13223,7 @@ void Player::AddQuest(Quest const *pQuest, Object *questGiver)
         SetFactionVisibleForFactionId(pQuest->GetRepObjectiveFaction());
 
     uint32 qtime = 0;
-    if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_TIMED))
+    if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_TIMED))
     {
         uint32 limittime = pQuest->GetLimitTime();
 
@@ -13344,7 +13344,7 @@ void Player::RewardQuest(Quest const *pQuest, uint32 reward, Object* questGiver,
 
     // honor reward
     if (pQuest->GetRewHonorableKills())
-        RewardHonor(NULL, 0, Trinity::Honor::hk_honor_at_level(getLevel(), pQuest->GetRewHonorableKills()));
+        RewardHonor(NULL, 0, SkyFire::Honor::hk_honor_at_level(getLevel(), pQuest->GetRewHonorableKills()));
 
     // title reward
     if (pQuest->GetCharTitleId())
@@ -13393,7 +13393,7 @@ void Player::FailQuest(uint32 questId)
             SetQuestSlotState(log_slot, QUEST_STATE_FAIL);
         }
 
-        if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_TIMED))
+        if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_TIMED))
         {
             QuestStatusData& q_status = mQuestStatus[questId];
 
@@ -13625,7 +13625,7 @@ bool Player::SatisfyQuestStatus(Quest const* qInfo, bool msg)
 
 bool Player::SatisfyQuestTimed(Quest const* qInfo, bool msg)
 {
-    if (!m_timedquests.empty() && qInfo->HasFlag(QUEST_TRINITY_FLAGS_TIMED))
+    if (!m_timedquests.empty() && qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_TIMED))
     {
         if (msg)
             SendCanTakeQuestResponse(INVALIDREASON_QUEST_ONLY_ONE_TIMED);
@@ -13868,7 +13868,7 @@ void Player::SetQuestStatus(uint32 quest_id, QuestStatus status)
     UpdateForQuestsGO();
 }
 
-// not used in Trinity, but used in scripting code
+// not used in SkyFire, but used in scripting code
 uint32 Player::GetReqKillOrCastCurrentCount(uint32 quest_id, int32 entry)
 {
     Quest const* qInfo = sObjectMgr->GetQuestTemplate(quest_id);
@@ -13884,7 +13884,7 @@ uint32 Player::GetReqKillOrCastCurrentCount(uint32 quest_id, int32 entry)
 
 void Player::AdjustQuestReqItemCount(Quest const* pQuest)
 {
-    if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_DELIVER))
+    if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_DELIVER))
     {
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
         {
@@ -13932,7 +13932,7 @@ void Player::AreaExploredOrEventHappens(uint32 questId)
     }
 }
 
-//not used in Trinityd, function for external script library
+//not used in SkyFired, function for external script library
 void Player::GroupEventHappens(uint32 questId, WorldObject const* pEventObject)
 {
     if (Group *pGroup = GetGroup())
@@ -13964,7 +13964,7 @@ void Player::ItemAddedQuestCheck(uint32 entry, uint32 count)
             continue;
 
         Quest const* qInfo = sObjectMgr->GetQuestTemplate(questid);
-        if (!qInfo || !qInfo->HasFlag(QUEST_TRINITY_FLAGS_DELIVER))
+        if (!qInfo || !qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_DELIVER))
             continue;
 
         for (int j = 0; j < QUEST_OBJECTIVES_COUNT; ++j)
@@ -14001,7 +14001,7 @@ void Player::ItemRemovedQuestCheck(uint32 entry, uint32 count)
         Quest const* qInfo = sObjectMgr->GetQuestTemplate(questid);
         if (!qInfo)
             continue;
-        if (!qInfo->HasFlag(QUEST_TRINITY_FLAGS_DELIVER))
+        if (!qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_DELIVER))
             continue;
 
         for (int j = 0; j < QUEST_OBJECTIVES_COUNT; ++j)
@@ -14058,7 +14058,7 @@ void Player::KilledMonsterCredit(uint32 entry, uint64 guid)
         QuestStatusData& q_status = mQuestStatus[questid];
         if (q_status.m_status == QUEST_STATUS_INCOMPLETE && (!GetGroup() || !GetGroup()->isRaidGroup() || qInfo->GetType() == QUEST_TYPE_RAID))
         {
-            if (qInfo->HasFlag(QUEST_TRINITY_FLAGS_KILL_OR_CAST))
+            if (qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_KILL_OR_CAST))
             {
                 for (uint8 j = 0; j < QUEST_OBJECTIVES_COUNT; ++j)
                 {
@@ -14112,7 +14112,7 @@ void Player::CastedCreatureOrGO(uint32 entry, uint64 guid, uint32 spell_id)
         if (!qInfo)
             continue;
 
-        if (!qInfo->HasFlag(QUEST_TRINITY_FLAGS_KILL_OR_CAST))
+        if (!qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_KILL_OR_CAST))
             continue;
 
         QuestStatusData& q_status = mQuestStatus[questid];
@@ -14184,7 +14184,7 @@ void Player::TalkedToCreature(uint32 entry, uint64 guid)
 
         if (q_status.m_status == QUEST_STATUS_INCOMPLETE)
         {
-            if (qInfo->HasFlag(QUEST_TRINITY_FLAGS_KILL_OR_CAST | QUEST_TRINITY_FLAGS_SPEAKTO))
+            if (qInfo->HasFlag(QUEST_SKYFIRE_FLAGS_KILL_OR_CAST | QUEST_SKYFIRE_FLAGS_SPEAKTO))
             {
                 for (int j = 0; j < QUEST_OBJECTIVES_COUNT; ++j)
                 {
@@ -14797,7 +14797,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
 
         m_movementInfo.SetTransportData(transGUID, fields[27].GetFloat(), fields[28].GetFloat(), fields[29].GetFloat(), fields[30].GetFloat(), 0);
 
-        if (!Trinity::IsValidMapCoord(
+        if (!SkyFire::IsValidMapCoord(
             GetPositionX() + m_movementInfo.GetTransportPos()->GetPositionX(), GetPositionY() + m_movementInfo.GetTransportPos()->GetPositionY(),
             GetPositionZ() + m_movementInfo.GetTransportPos()->GetPositionZ(), GetOrientation() + m_movementInfo.GetTransportPos()->GetOrientation()) ||
             // transport size limited
@@ -15631,7 +15631,7 @@ void Player::_LoadQuestStatus(QueryResult_AutoPtr result)
 
                 time_t quest_time = time_t(fields[4].GetUInt64());
 
-                if (pQuest->HasFlag(QUEST_TRINITY_FLAGS_TIMED) && !GetQuestRewardStatus(quest_id) &&  questStatusData.m_status != QUEST_STATUS_NONE)
+                if (pQuest->HasFlag(QUEST_SKYFIRE_FLAGS_TIMED) && !GetQuestRewardStatus(quest_id) &&  questStatusData.m_status != QUEST_STATUS_NONE)
                 {
                     AddTimedQuest(quest_id);
 
@@ -16837,7 +16837,7 @@ void Player::_SaveTutorials()
 
 void Player::outDebugValues() const
 {
-    #ifdef TRINITY_DEBUG
+    #ifdef SKYFIRE_DEBUG
     if (!sLog->IsOutDebug())                                  // optimize disabled debug output
         return;
 
@@ -17734,8 +17734,8 @@ void Player::SetRestBonus (float rest_bonus_new)
 void Player::HandleStealthedUnitsDetection()
 {
     std::list<Unit*> stealthedUnits;
-    Trinity::AnyStealthedCheck u_check;
-    Trinity::UnitListSearcher<Trinity::AnyStealthedCheck > searcher(stealthedUnits, u_check);
+    SkyFire::AnyStealthedCheck u_check;
+    SkyFire::UnitListSearcher<SkyFire::AnyStealthedCheck > searcher(stealthedUnits, u_check);
     VisitNearbyObject(GetMap()->GetVisibilityDistance(), searcher);
 
     for (std::list<Unit*>::iterator i = stealthedUnits.begin(); i != stealthedUnits.end(); ++i)
@@ -17753,7 +17753,7 @@ void Player::HandleStealthedUnitsDetection()
                 (*i)->SendUpdateToPlayer(this);
                 m_clientGUIDs.insert((*i)->GetGUID());
 
-                #ifdef TRINITY_DEBUG
+                #ifdef SKYFIRE_DEBUG
                 if ((sLog->getLogFilter() & LOG_FILTER_VISIBILITY_CHANGES) == 0)
                     sLog->outDebug("Object %u (Type: %u) is detected in stealth by player %u. Distance = %f", (*i)->GetGUIDLow(), (*i)->GetTypeId(), GetGUIDLow(), GetDistance(*i));
                 #endif
@@ -18945,7 +18945,7 @@ void Player::UpdateVisibilityOf(WorldObject* target)
             target->DestroyForPlayer(this);
             m_clientGUIDs.erase(target->GetGUID());
 
-            #ifdef TRINITY_DEBUG
+            #ifdef SKYFIRE_DEBUG
             if ((sLog->getLogFilter() & LOG_FILTER_VISIBILITY_CHANGES) == 0)
                 sLog->outDebug("Object %u (Type: %u) out of range for player %u. Distance = %f", target->GetGUIDLow(), target->GetTypeId(), GetGUIDLow(), GetDistance(target));
             #endif
@@ -18959,7 +18959,7 @@ void Player::UpdateVisibilityOf(WorldObject* target)
             if (target->GetTypeId() != TYPEID_GAMEOBJECT||!((GameObject*)target)->IsTransport())
                 m_clientGUIDs.insert(target->GetGUID());
 
-            #ifdef TRINITY_DEBUG
+            #ifdef SKYFIRE_DEBUG
             if ((sLog->getLogFilter() & LOG_FILTER_VISIBILITY_CHANGES) == 0)
                 sLog->outDebug("Object %u (Type: %u) is visible now for player %u. Distance = %f", target->GetGUIDLow(), target->GetTypeId(), GetGUIDLow(), GetDistance(target));
             #endif
@@ -18998,7 +18998,7 @@ void Player::UpdateVisibilityOf(T* target, UpdateData& data, std::set<Unit*>& vi
             target->BuildOutOfRangeUpdateBlock(&data);
             m_clientGUIDs.erase(target->GetGUID());
 
-            #ifdef TRINITY_DEBUG
+            #ifdef SKYFIRE_DEBUG
             if ((sLog->getLogFilter() & LOG_FILTER_VISIBILITY_CHANGES) == 0)
                 sLog->outDebug("Object %u (Type: %u, Entry: %u) is out of range for player %u. Distance = %f", target->GetGUIDLow(), target->GetTypeId(), target->GetEntry(), GetGUIDLow(), GetDistance(target));
             #endif
@@ -19011,7 +19011,7 @@ void Player::UpdateVisibilityOf(T* target, UpdateData& data, std::set<Unit*>& vi
             target->BuildCreateUpdateBlockForPlayer(&data, this);
             UpdateVisibilityOf_helper(m_clientGUIDs, target, visibleNow);
 
-            #ifdef TRINITY_DEBUG
+            #ifdef SKYFIRE_DEBUG
             if ((sLog->getLogFilter() & LOG_FILTER_VISIBILITY_CHANGES) == 0)
                 sLog->outDebug("Object %u (Type: %u, Entry: %u) is visible now for player %u. Distance = %f", target->GetGUIDLow(), target->GetTypeId(), target->GetEntry(), GetGUIDLow(), GetDistance(target));
             #endif
@@ -19033,7 +19033,7 @@ void Player::UpdateObjectVisibility(bool forced)
     {
         Unit::UpdateObjectVisibility(true);
         // updates visibility of all objects around point of view for current player
-        Trinity::VisibleNotifier notifier(*this);
+        SkyFire::VisibleNotifier notifier(*this);
         m_seer->VisitNearbyObject(GetMap()->GetVisibilityDistance(), notifier);
         notifier.SendToSelf();   // send gathered data
     }
@@ -19041,7 +19041,7 @@ void Player::UpdateObjectVisibility(bool forced)
 
 void Player::UpdateVisibilityForPlayer()
 {
-    Trinity::VisibleNotifier notifier(*this);
+    SkyFire::VisibleNotifier notifier(*this);
     m_seer->VisitNearbyObject(GetMap()->GetVisibilityDistance(), notifier);
     notifier.SendToSelf();   // send gathered data
 }
@@ -19865,7 +19865,7 @@ uint32 Player::GetResurrectionSpellId()
 bool Player::isHonorOrXPTarget(Unit* pVictim) const
 {
     uint32 v_level = pVictim->getLevel();
-    uint32 k_grey  = Trinity::XP::GetGrayLevel(getLevel());
+    uint32 k_grey  = SkyFire::XP::GetGrayLevel(getLevel());
 
     // Victim level less gray level
     if (v_level<=k_grey)
@@ -19901,12 +19901,12 @@ void Player::RewardPlayerAndGroupAtKill(Unit* pVictim)
         {
             // PvP kills doesn't yield experience
             // also no XP gained if there is no member below gray level
-            xp = (PvP || !not_gray_member_with_max_level) ? 0 : Trinity::XP::Gain(not_gray_member_with_max_level, pVictim);
+            xp = (PvP || !not_gray_member_with_max_level) ? 0 : SkyFire::XP::Gain(not_gray_member_with_max_level, pVictim);
 
             // skip in check PvP case (for speed, not used)
             bool is_raid = PvP ? false : sMapStore.LookupEntry(GetMapId())->IsRaid() && pGroup->isRaidGroup();
             bool is_dungeon = PvP ? false : sMapStore.LookupEntry(GetMapId())->IsDungeon();
-            float group_rate = Trinity::XP::xp_in_group_rate(count, is_raid);
+            float group_rate = SkyFire::XP::xp_in_group_rate(count, is_raid);
 
             for (GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
             {
@@ -19954,7 +19954,7 @@ void Player::RewardPlayerAndGroupAtKill(Unit* pVictim)
     }
     else                                                    // if (!pGroup)
     {
-        xp = PvP ? 0 : Trinity::XP::Gain(this, pVictim);
+        xp = PvP ? 0 : SkyFire::XP::Gain(this, pVictim);
 
         // honor can be in PvP and !PvP (racial leader) cases
         RewardHonor(pVictim, 1, -1, true);
@@ -20362,7 +20362,7 @@ bool ItemPosCount::isContainedIn(ItemPosCountVec const& vec) const
 }
 
 //***********************************
-//-------------Trinity---------------
+//-------------SkyFire---------------
 //***********************************
 
 void Player::HandleFallDamage(MovementInfo& movementInfo)
@@ -20555,7 +20555,7 @@ void Player::SetTitle(CharTitlesEntry const* title, bool lost)
     GetSession()->SendPacket(&data);
 }
 
-/*-----------------------Trinity--------------------------*/
+/*-----------------------SkyFire--------------------------*/
 bool Player::isTotalImmunity()
 {
     AuraList const& immune = GetAurasByType(SPELL_AURA_SCHOOL_IMMUNITY);

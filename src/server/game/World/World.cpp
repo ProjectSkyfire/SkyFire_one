@@ -577,7 +577,7 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_SESSION_ADD_DELAY] = ConfigMgr::GetIntDefault("SessionAddDelay", 10000);
 
     m_configs[CONFIG_GROUP_XP_DISTANCE] = ConfigMgr::GetIntDefault("MaxGroupXPDistance", 74);
-    // todo Add MonsterSight and GuarderSight (with meaning) in Trinityd.conf or put them as define
+    // todo Add MonsterSight and GuarderSight (with meaning) in SkyFired.conf or put them as define
     m_configs[CONFIG_SIGHT_MONSTER] = ConfigMgr::GetIntDefault("MonsterSight", 50);
     m_configs[CONFIG_SIGHT_GUARDER] = ConfigMgr::GetIntDefault("GuarderSight", 50);
 
@@ -1015,7 +1015,7 @@ void World::LoadConfigSettings(bool reload)
     if (reload)
     {
         if (dataPath != m_dataPath)
-            sLog->outError("DataDir option can't be changed at trinitycore.conf reload, using current value (%s).", m_dataPath.c_str());
+            sLog->outError("DataDir option can't be changed at worldserver.conf reload, using current value (%s).", m_dataPath.c_str());
     }
     else
     {
@@ -1123,7 +1123,7 @@ void World::SetInitialWorldSettings()
         ||m_configs[CONFIG_EXPANSION] && (
         !sMapMgr->ExistMapAndVMap(530, 10349.6f, -6357.29f) || !sMapMgr->ExistMapAndVMap(530, -3961.64f, -13931.2f)))
     {
-        sLog->outError("Correct *.map files not found in path '%smaps' or *.vmtree/*.vmtile files in '%svmaps'. Please place *.map/*.vmtree/*.vmtile files in appropriate directories or correct the DataDir value in the trinitycore.conf file.", m_dataPath.c_str(), m_dataPath.c_str());
+        sLog->outError("Correct *.map files not found in path '%smaps' or *.vmtree/*.vmtile files in '%svmaps'. Please place *.map/*.vmtree/*.vmtile files in appropriate directories or correct the DataDir value in the worldserver.conf file.", m_dataPath.c_str(), m_dataPath.c_str());
         exit(1);
     }
 

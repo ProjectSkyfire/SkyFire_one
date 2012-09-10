@@ -31,7 +31,7 @@
 #include "Util.h"
 #include "GridNotifiersImpl.h"
 
-namespace Trinity
+namespace SkyFire
 {
     class BattlegroundChatBuilder
     {
@@ -111,7 +111,7 @@ namespace Trinity
             int32 i_arg1;
             int32 i_arg2;
     };
-}                                                           // namespace Trinity
+}                                                           // namespace SkyFire
 
 template<class Do>
 void Battleground::BroadcastWorker(Do& _do)
@@ -1696,8 +1696,8 @@ bool Battleground::AddSpiritGuide(uint32 type, float x, float y, float z, float 
 
 void Battleground::SendMessageToAll(int32 entry, ChatMsg type, Player const* source)
 {
-    Trinity::BattlegroundChatBuilder bg_builder(type, entry, source);
-    Trinity::LocalizedPacketDo<Trinity::BattlegroundChatBuilder> bg_do(bg_builder);
+    SkyFire::BattlegroundChatBuilder bg_builder(type, entry, source);
+    SkyFire::LocalizedPacketDo<SkyFire::BattlegroundChatBuilder> bg_do(bg_builder);
     BroadcastWorker(bg_do);
 }
 
@@ -1706,8 +1706,8 @@ void Battleground::PSendMessageToAll(int32 entry, ChatMsg type, Player const* so
     va_list ap;
     va_start(ap, source);
 
-    Trinity::BattlegroundChatBuilder bg_builder(type, entry, source, &ap);
-    Trinity::LocalizedPacketDo<Trinity::BattlegroundChatBuilder> bg_do(bg_builder);
+    SkyFire::BattlegroundChatBuilder bg_builder(type, entry, source, &ap);
+    SkyFire::LocalizedPacketDo<SkyFire::BattlegroundChatBuilder> bg_do(bg_builder);
     BroadcastWorker(bg_do);
 
     va_end(ap);
@@ -1715,8 +1715,8 @@ void Battleground::PSendMessageToAll(int32 entry, ChatMsg type, Player const* so
 
 void Battleground::SendMessage2ToAll(int32 entry, ChatMsg type, Player const* source, int32 arg1, int32 arg2)
 {
-    Trinity::Battleground2ChatBuilder bg_builder(type, entry, source, arg1, arg2);
-    Trinity::LocalizedPacketDo<Trinity::Battleground2ChatBuilder> bg_do(bg_builder);
+    SkyFire::Battleground2ChatBuilder bg_builder(type, entry, source, arg1, arg2);
+    SkyFire::LocalizedPacketDo<SkyFire::Battleground2ChatBuilder> bg_do(bg_builder);
     BroadcastWorker(bg_do);
 }
 

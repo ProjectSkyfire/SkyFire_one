@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_GRIDDEFINES_H
-#define TRINITY_GRIDDEFINES_H
+#ifndef SKYFIRE_GRIDDEFINES_H
+#define SKYFIRE_GRIDDEFINES_H
 
 #include "Common.h"
 #include "NGrid.h"
@@ -126,7 +126,7 @@ struct CoordPair
 typedef CoordPair<MAX_NUMBER_OF_GRIDS> GridPair;
 typedef CoordPair<TOTAL_NUMBER_OF_CELLS_PER_MAP> CellPair;
 
-namespace Trinity
+namespace SkyFire
 {
     template<class RET_TYPE, int CENTER_VAL>
         inline RET_TYPE Compute(float x, float y, float center_offset, float size)

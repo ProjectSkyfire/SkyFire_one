@@ -43,7 +43,7 @@ struct ItemPrototype;
 
 #define MAX_SCRIPTS         5000                            //72 bytes each (approx 351kb)
 #define VISIBLE_RANGE       (166.0f)                        //MAX visible range (size of grid)
-#define DEFAULT_TEXT        "<Trinity Script Text Entry Missing!>"
+#define DEFAULT_TEXT        "<SkyFire Script Text Entry Missing!>"
 
 struct Script
 {

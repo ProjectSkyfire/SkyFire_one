@@ -443,7 +443,7 @@ struct boss_archimondeAI : public hyjal_trashAI
         if (targets.empty())
             return false;
 
-        targets.sort(Trinity::ObjectDistanceOrderPred(me));
+        targets.sort(SkyFire::ObjectDistanceOrderPred(me));
         Unit *pTarget = targets.front();
         if (pTarget)
         {

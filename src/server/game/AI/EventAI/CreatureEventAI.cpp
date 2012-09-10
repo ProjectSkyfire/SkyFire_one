@@ -66,7 +66,7 @@ CreatureEventAI::CreatureEventAI(Creature *c) : CreatureAI(c)
         for (i = (*CreatureEvents).second.begin(); i != (*CreatureEvents).second.end(); ++i)
         {
             //Debug check
-            #ifndef TRINITY_DEBUG
+            #ifndef SKYFIRE_DEBUG
             if ((*i).event_flags & EFLAG_DEBUG_ONLY)
                 continue;
             #endif
@@ -1228,17 +1228,17 @@ inline Unit* CreatureEventAI::GetTargetByType(uint32 Target, Unit* pActionInvoke
 
 Unit* CreatureEventAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 {
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair p(SkyFire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
     Unit* pUnit = NULL;
 
-    Trinity::MostHPMissingInRange u_check(me, range, MinHPDiff);
-    Trinity::UnitLastSearcher<Trinity::MostHPMissingInRange> searcher(pUnit, u_check);
+    SkyFire::MostHPMissingInRange u_check(me, range, MinHPDiff);
+    SkyFire::UnitLastSearcher<SkyFire::MostHPMissingInRange> searcher(pUnit, u_check);
 
-    TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+    TypeContainerVisitor<SkyFire::UnitLastSearcher<SkyFire::MostHPMissingInRange>, GridTypeMapContainer >  grid_unit_searcher(searcher);
 
     cell.Visit(p, grid_unit_searcher, *me->GetMap(), *me, range);
     return pUnit;
@@ -1246,30 +1246,30 @@ Unit* CreatureEventAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 
 void CreatureEventAI::DoFindFriendlyCC(std::list<Creature*>& _list, float range)
 {
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair p(SkyFire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::FriendlyCCedInRange u_check(me, range);
-    Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange> searcher(_list, u_check);
+    SkyFire::FriendlyCCedInRange u_check(me, range);
+    SkyFire::CreatureListSearcher<SkyFire::FriendlyCCedInRange> searcher(_list, u_check);
 
-    TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+    TypeContainerVisitor<SkyFire::CreatureListSearcher<SkyFire::FriendlyCCedInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
     cell.Visit(p, grid_creature_searcher, *me->GetMap(), *me, range);
 }
 
 void CreatureEventAI::DoFindFriendlyMissingBuff(std::list<Creature*>& _list, float range, uint32 spellid)
 {
-    CellPair p(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair p(SkyFire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::FriendlyMissingBuffInRange u_check(me, range, spellid);
-    Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange> searcher(_list, u_check);
+    SkyFire::FriendlyMissingBuffInRange u_check(me, range, spellid);
+    SkyFire::CreatureListSearcher<SkyFire::FriendlyMissingBuffInRange> searcher(_list, u_check);
 
-    TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+    TypeContainerVisitor<SkyFire::CreatureListSearcher<SkyFire::FriendlyMissingBuffInRange>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
     cell.Visit(p, grid_creature_searcher, *me->GetMap(), *me, range);
 }

@@ -482,7 +482,7 @@ void WorldSession::HandleSellItemOpcode(WorldPacket& recv_data)
 
     recv_data >> vendorguid >> itemguid >> _count;
 
-    // prevent possible overflow, as Trinity uses uint32 for item count
+    // prevent possible overflow, as SkyFire uses uint32 for item count
     uint32 count = _count;
 
     if (!itemguid)

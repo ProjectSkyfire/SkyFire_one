@@ -89,7 +89,7 @@ void MapManager::checkAndCorrectGridStatesArray()
             ok = false;
             si_GridStates[i] = i_GridStates[i];
         }
-        #ifdef TRINITY_DEBUG
+        #ifdef SKYFIRE_DEBUG
         // inner class checking only when compiled with debug
         if (!si_GridStates[i]->checkMagic())
         {
@@ -265,7 +265,7 @@ void MapManager::DoDelayedMovesAndRemoves()
 
 bool MapManager::ExistMapAndVMap(uint32 mapid, float x, float y)
 {
-    GridPair p = Trinity::ComputeGridPair(x, y);
+    GridPair p = SkyFire::ComputeGridPair(x, y);
 
     int gx=63-p.x_coord;
     int gy=63-p.y_coord;

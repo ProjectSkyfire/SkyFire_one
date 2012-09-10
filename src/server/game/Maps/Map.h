@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_MAP_H
-#define TRINITY_MAP_H
+#ifndef SKYFIRE_MAP_H
+#define SKYFIRE_MAP_H
 
 #include "Define.h"
 
@@ -290,13 +290,13 @@ class Map : public GridRefManager<NGridType>
 
         bool IsRemovalGrid(float x, float y) const
         {
-            GridPair p = Trinity::ComputeGridPair(x, y);
+            GridPair p = SkyFire::ComputeGridPair(x, y);
             return !getNGrid(p.x_coord, p.y_coord) || getNGrid(p.x_coord, p.y_coord)->GetGridState() == GRID_STATE_REMOVAL;
         }
 
         bool IsLoaded(float x, float y) const
         {
-            GridPair p = Trinity::ComputeGridPair(x, y);
+            GridPair p = SkyFire::ComputeGridPair(x, y);
             return loaded(p);
         }
 
@@ -638,7 +638,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitAll(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Trinity::ComputeCellPair(x, y));
+    CellPair p(SkyFire::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -653,7 +653,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitWorld(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Trinity::ComputeCellPair(x, y));
+    CellPair p(SkyFire::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -666,7 +666,7 @@ template<class NOTIFIER>
 inline void
 Map::VisitGrid(const float &x, const float &y, float radius, NOTIFIER &notifier)
 {
-    CellPair p(Trinity::ComputeCellPair(x, y));
+    CellPair p(SkyFire::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
