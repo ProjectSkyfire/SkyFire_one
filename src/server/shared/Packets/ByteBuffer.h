@@ -1,12 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -22,35 +21,54 @@
 #define _BYTEBUFFER_H
 
 #include "Common.h"
-#include "Errors.h"
-#include "Log.h"
+#include "Debugging/Errors.h"
+#include "Logging/Log.h"
 #include "Utilities/ByteConverter.h"
 
 class ByteBufferException
 {
     public:
-        ByteBufferException(bool _add, size_t _pos, size_t _esize, size_t _size)
-            : add(_add), pos(_pos), esize(_esize), size(_size)
-        {
-            PrintPosError();
-        }
+        ByteBufferException(size_t pos, size_t size, size_t valueSize) : Pos(pos), Size(size), ValueSize(valueSize) {}
 
-        void PrintPosError() const
-        {
-            sLog->outError("ERROR: Attempted to %s in ByteBuffer (pos: " SIZEFMTD " size: "SIZEFMTD") value with size: " SIZEFMTD,
-                (add ? "put" : "get"), pos, size, esize);
-        }
-    private:
-        bool add;
-        size_t pos;
-        size_t esize;
-        size_t size;
+    protected:
+        size_t Pos;
+        size_t Size;
+        size_t ValueSize;
 };
 
-template<class T>
-struct Unused
+class ByteBufferPositionException : public ByteBufferException
 {
-    Unused() {}
+    public:
+        ByteBufferPositionException(bool add, size_t pos, size_t size, size_t valueSize) : ByteBufferException(pos, size, valueSize), _add(add)
+        {
+            PrintError();
+        }
+
+    protected:
+        void PrintError() const
+        {
+            sLog->outError("Attempted to %s value with size: "SIZEFMTD" in ByteBuffer (pos: " SIZEFMTD " size: "SIZEFMTD") " ,
+                (_add ? "put" : "get"), ValueSize, Pos, Size);
+        }
+
+    private:
+        bool _add;
+};
+
+class ByteBufferSourceException : public ByteBufferException
+{
+    public:
+        ByteBufferSourceException(size_t pos, size_t size, size_t valueSize) : ByteBufferException(pos, size, valueSize)
+        {
+            PrintError();
+        }
+
+    protected:
+        void PrintError() const
+        {
+            sLog->outError("Attempted to put a %s in ByteBuffer (pos: "SIZEFMTD" size: "SIZEFMTD")",
+                (ValueSize > 0 ? "NULL-pointer" : "zero-sized value"), Pos, Size);
+        }
 };
 
 class ByteBuffer
@@ -71,7 +89,7 @@ class ByteBuffer
         }
 
         // copy constructor
-        ByteBuffer(const ByteBuffer &buf): _rpos(buf._rpos), _wpos(buf._wpos), _storage(buf._storage) { }
+        ByteBuffer(const ByteBuffer &buf): _rpos(buf._rpos), _wpos(buf._wpos), _storage(buf._storage) {}
 
         void clear()
         {
@@ -79,156 +97,165 @@ class ByteBuffer
             _rpos = _wpos = 0;
         }
 
+        template <typename T> void append(T value)
+        {
+            EndianConvert(value);
+            append((uint8 *)&value, sizeof(value));
+        }
+
         template <typename T> void put(size_t pos, T value)
         {
             EndianConvert(value);
-            put(pos,(uint8 *)&value, sizeof(value));
+            put(pos, (uint8 *)&value, sizeof(value));
         }
 
-        ByteBuffer &operator<<(uint8 value)
+        ByteBuffer &operator << (uint8 value)
         {
             append<uint8>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(uint16 value)
+        ByteBuffer &operator << (uint16 value)
         {
             append<uint16>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(uint32 value)
+        ByteBuffer &operator << (uint32 value)
         {
             append<uint32>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(uint64 value)
+        ByteBuffer &operator << (uint64 value)
         {
             append<uint64>(value);
             return *this;
         }
 
         // signed as in 2e complement
-        ByteBuffer &operator<<(int8 value)
+        ByteBuffer &operator << (int8 value)
         {
             append<int8>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(int16 value)
+        ByteBuffer &operator << (int16 value)
         {
             append<int16>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(int32 value)
+        ByteBuffer &operator << (int32 value)
         {
             append<int32>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(int64 value)
+        ByteBuffer &operator << (int64 value)
         {
             append<int64>(value);
             return *this;
         }
 
         // floating points
-        ByteBuffer &operator<<(float value)
+        ByteBuffer &operator << (float value)
         {
             append<float>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(double value)
+        ByteBuffer &operator << (double value)
         {
             append<double>(value);
             return *this;
         }
 
-        ByteBuffer &operator<<(const std::string &value)
+        ByteBuffer &operator << (const std::string &value)
         {
-            append((uint8 const *)value.c_str(), value.length());
+            if (size_t len = value.length())
+                append((uint8 const*)value.c_str(), len);
             append((uint8)0);
             return *this;
         }
 
-        ByteBuffer &operator<<(const char *str)
+        ByteBuffer &operator << (const char *str)
         {
-            append((uint8 const *)str, str ? strlen(str) : 0);
+            size_t len = 0;
+            if (str && (len = strlen(str)))
+                append((uint8 const*)str, len);
             append((uint8)0);
             return *this;
         }
 
-        ByteBuffer &operator>>(bool &value)
+        ByteBuffer &operator >> (bool &value)
         {
             value = read<char>() > 0 ? true : false;
             return *this;
         }
 
-        ByteBuffer &operator>>(uint8 &value)
+        ByteBuffer &operator >> (uint8 &value)
         {
             value = read<uint8>();
             return *this;
         }
 
-        ByteBuffer &operator>>(uint16 &value)
+        ByteBuffer &operator >> (uint16 &value)
         {
             value = read<uint16>();
             return *this;
         }
 
-        ByteBuffer &operator>>(uint32 &value)
+        ByteBuffer &operator >> (uint32 &value)
         {
             value = read<uint32>();
             return *this;
         }
 
-        ByteBuffer &operator>>(uint64 &value)
+        ByteBuffer &operator >> (uint64 &value)
         {
             value = read<uint64>();
             return *this;
         }
 
-        // signed as in 2e complement
-        ByteBuffer &operator>>(int8 &value)
+        //signed as in 2e complement
+        ByteBuffer &operator >> (int8 &value)
         {
             value = read<int8>();
             return *this;
         }
 
-        ByteBuffer &operator>>(int16 &value)
+        ByteBuffer &operator >> (int16 &value)
         {
             value = read<int16>();
             return *this;
         }
 
-        ByteBuffer &operator>>(int32 &value)
+        ByteBuffer &operator >> (int32 &value)
         {
             value = read<int32>();
             return *this;
         }
 
-        ByteBuffer &operator>>(int64 &value)
+        ByteBuffer &operator >> (int64 &value)
         {
             value = read<int64>();
             return *this;
         }
 
-        ByteBuffer &operator>>(float &value)
+        ByteBuffer &operator >> (float &value)
         {
             value = read<float>();
             return *this;
         }
 
-        ByteBuffer &operator>>(double &value)
+        ByteBuffer &operator >> (double &value)
         {
             value = read<double>();
             return *this;
         }
 
-        ByteBuffer &operator>>(std::string& value)
+        ByteBuffer &operator >> (std::string& value)
         {
             value.clear();
             while (rpos() < size())                         // prevent crash at wrong string format in packet
@@ -238,13 +265,6 @@ class ByteBuffer
                     break;
                 value += c;
             }
-            return *this;
-        }
-
-        template<class T>
-        ByteBuffer &operator>>(Unused<T> const&)
-        {
-            read_skip<T>();
             return *this;
         }
 
@@ -261,6 +281,11 @@ class ByteBuffer
             return _rpos;
         }
 
+        void rfinish()
+        {
+            _rpos = wpos();
+        }
+
         size_t wpos() const { return _wpos; }
 
         size_t wpos(size_t wpos_)
@@ -275,7 +300,7 @@ class ByteBuffer
         void read_skip(size_t skip)
         {
             if (_rpos + skip > size())
-                throw ByteBufferException(false, _rpos, skip, size());
+                throw ByteBufferPositionException(false, _rpos, skip, size());
             _rpos += skip;
         }
 
@@ -289,7 +314,7 @@ class ByteBuffer
         template <typename T> T read(size_t pos) const
         {
             if (pos + sizeof(T) > size())
-                throw ByteBufferException(false, pos, sizeof(T), size());
+                throw ByteBufferPositionException(false, pos, sizeof(T), size());
             T val = *((T const*)&_storage[pos]);
             EndianConvert(val);
             return val;
@@ -298,14 +323,18 @@ class ByteBuffer
         void read(uint8 *dest, size_t len)
         {
             if (_rpos  + len > size())
-                throw ByteBufferException(false, _rpos, len, size());
+               throw ByteBufferPositionException(false, _rpos, len, size());
             memcpy(dest, &_storage[_rpos], len);
             _rpos += len;
         }
 
-        uint64 readPackGUID()
+        void readPackGUID(uint64& guid)
         {
-            uint64 guid = 0;
+            if (rpos() + 1 > size())
+                throw ByteBufferPositionException(false, _rpos, 1, size());
+
+            guid = 0;
+
             uint8 guidmark = 0;
             (*this) >> guidmark;
 
@@ -313,13 +342,14 @@ class ByteBuffer
             {
                 if (guidmark & (uint8(1) << i))
                 {
+                    if (rpos() + 1 > size())
+                        throw ByteBufferPositionException(false, _rpos, 1, size());
+
                     uint8 bit;
                     (*this) >> bit;
                     guid |= (uint64(bit) << (i * 8));
                 }
             }
-
-            return guid;
         }
 
         const uint8 *contents() const { return &_storage[0]; }
@@ -329,7 +359,7 @@ class ByteBuffer
 
         void resize(size_t newsize)
         {
-            _storage.resize(newsize);
+            _storage.resize(newsize, 0);
             _rpos = 0;
             _wpos = size();
         }
@@ -338,11 +368,6 @@ class ByteBuffer
         {
             if (ressize > size())
                 _storage.reserve(ressize);
-        }
-
-        void append(const std::string& str)
-        {
-            append((uint8 const*)str.c_str(), str.size() + 1);
         }
 
         void append(const char *src, size_t cnt)
@@ -358,7 +383,10 @@ class ByteBuffer
         void append(const uint8 *src, size_t cnt)
         {
             if (!cnt)
-                return;
+                throw ByteBufferSourceException(_wpos, size(), cnt);
+
+            if (!src)
+                throw ByteBufferSourceException(_wpos, size(), cnt);
 
             ASSERT(size() < 10000000);
 
@@ -383,13 +411,13 @@ class ByteBuffer
             packed |= ((int)(z / 0.25f) & 0x3FF) << 22;
             *this << packed;
         }
-        
+
         void appendPackGUID(uint64 guid)
         {
             uint8 packGUID[8+1];
             packGUID[0] = 0;
             size_t size = 1;
-            for (uint8 i = 0; guid != 0; ++i)
+            for (uint8 i = 0;guid != 0;++i)
             {
                 if (guid & 0xFF)
                 {
@@ -400,14 +428,17 @@ class ByteBuffer
 
                 guid >>= 8;
             }
-
             append(packGUID, size);
         }
 
         void put(size_t pos, const uint8 *src, size_t cnt)
         {
             if (pos + cnt > size())
-                throw ByteBufferException(true, pos, cnt, size());
+                throw ByteBufferPositionException(true, pos, cnt, size());
+
+            if (!src)
+                throw ByteBufferSourceException(_wpos, size(), cnt);
+
             memcpy(&_storage[pos], src, cnt);
         }
 
@@ -487,13 +518,6 @@ class ByteBuffer
             }
             sLog->outDebugInLine("\n");
         }
-    private:
-        // limited for internal use because can "append" any unexpected type (like pointer and etc) with hard detection problem
-        template <typename T> void append(T value)
-        {
-            EndianConvert(value);
-            append((uint8 *)&value, sizeof(value));
-        }
 
     protected:
         size_t _rpos, _wpos;
@@ -501,7 +525,7 @@ class ByteBuffer
 };
 
 template <typename T>
-inline ByteBuffer &operator<<(ByteBuffer &b, std::vector<T> const& v)
+inline ByteBuffer &operator << (ByteBuffer &b, std::vector<T> v)
 {
     b << (uint32)v.size();
     for (typename std::vector<T>::iterator i = v.begin(); i != v.end(); ++i)
@@ -512,12 +536,12 @@ inline ByteBuffer &operator<<(ByteBuffer &b, std::vector<T> const& v)
 }
 
 template <typename T>
-inline ByteBuffer &operator>>(ByteBuffer &b, std::vector<T> &v)
+inline ByteBuffer &operator >> (ByteBuffer &b, std::vector<T> &v)
 {
     uint32 vsize;
     b >> vsize;
     v.clear();
-    while(vsize--)
+    while (vsize--)
     {
         T t;
         b >> t;
@@ -527,7 +551,7 @@ inline ByteBuffer &operator>>(ByteBuffer &b, std::vector<T> &v)
 }
 
 template <typename T>
-inline ByteBuffer &operator<<(ByteBuffer &b, std::list<T> const& v)
+inline ByteBuffer &operator << (ByteBuffer &b, std::list<T> v)
 {
     b << (uint32)v.size();
     for (typename std::list<T>::iterator i = v.begin(); i != v.end(); ++i)
@@ -538,12 +562,12 @@ inline ByteBuffer &operator<<(ByteBuffer &b, std::list<T> const& v)
 }
 
 template <typename T>
-inline ByteBuffer &operator>>(ByteBuffer &b, std::list<T> &v)
+inline ByteBuffer &operator >> (ByteBuffer &b, std::list<T> &v)
 {
     uint32 vsize;
     b >> vsize;
     v.clear();
-    while(vsize--)
+    while (vsize--)
     {
         T t;
         b >> t;
@@ -553,7 +577,7 @@ inline ByteBuffer &operator>>(ByteBuffer &b, std::list<T> &v)
 }
 
 template <typename K, typename V>
-inline ByteBuffer &operator<<(ByteBuffer &b, std::map<K, V> &m)
+inline ByteBuffer &operator << (ByteBuffer &b, std::map<K, V> &m)
 {
     b << (uint32)m.size();
     for (typename std::map<K, V>::iterator i = m.begin(); i != m.end(); ++i)
@@ -564,12 +588,12 @@ inline ByteBuffer &operator<<(ByteBuffer &b, std::map<K, V> &m)
 }
 
 template <typename K, typename V>
-inline ByteBuffer &operator>>(ByteBuffer &b, std::map<K, V> &m)
+inline ByteBuffer &operator >> (ByteBuffer &b, std::map<K, V> &m)
 {
     uint32 msize;
     b >> msize;
     m.clear();
-    while(msize--)
+    while (msize--)
     {
         K k;
         V v;
@@ -577,6 +601,14 @@ inline ByteBuffer &operator>>(ByteBuffer &b, std::map<K, V> &m)
         m.insert(make_pair(k, v));
     }
     return b;
+}
+
+// TODO: Make a ByteBuffer.cpp and move all this inlining to it.
+template<> inline std::string ByteBuffer::read<std::string>()
+{
+    std::string tmp;
+    *this >> tmp;
+    return tmp;
 }
 
 template<>
@@ -597,5 +629,5 @@ inline void ByteBuffer::read_skip<std::string>()
 {
     read_skip<char*>();
 }
-#endif
 
+#endif

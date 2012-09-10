@@ -192,14 +192,14 @@ void SpellCastTargets::read(ByteBuffer& data, Unit *caster)
     {
         data >> m_srcPos.m_positionX >> m_srcPos.m_positionY >> m_srcPos.m_positionZ;
         if (!m_srcPos.IsPositionValid())
-            throw ByteBufferException(false, data.rpos(), 0, data.size());
+            throw ByteBufferException(data.rpos(), 0, data.size());
     }
 
     if (m_targetMask & TARGET_FLAG_DEST_LOCATION)
     {
         data >> m_dstPos.m_positionX >> m_dstPos.m_positionY >> m_dstPos.m_positionZ;
         if (!m_dstPos.IsPositionValid())
-            throw ByteBufferException(false, data.rpos(), 0, data.size());
+            throw ByteBufferException(data.rpos(), 0, data.size());
     }
 
     if (m_targetMask & TARGET_FLAG_STRING)

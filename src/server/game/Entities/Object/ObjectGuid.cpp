@@ -69,7 +69,9 @@ ByteBuffer& operator<< (ByteBuffer& buf, PackedGuid const& guid)
 
 ByteBuffer &operator>>(ByteBuffer& buf, PackedGuidReader const& guid)
 {
-    guid.m_guidPtr->Set(buf.readPackGUID());
+    uint64 tmp;
+    buf.readPackGUID(tmp);
+    guid.m_guidPtr->Set(tmp);
     return buf;
 }
 
