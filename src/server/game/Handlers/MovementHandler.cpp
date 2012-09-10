@@ -494,7 +494,8 @@ void WorldSession::HandleMoveHoverAck(WorldPacket& recv_data)
     recv_data.read_skip<uint32>();                          // unk
 
     MovementInfo movementInfo;
-
+    recv_data >> movementInfo;
+    
     recv_data.read_skip<uint32>();                          // unk2
 }
 
@@ -508,7 +509,8 @@ void WorldSession::HandleMoveWaterWalkAck(WorldPacket& recv_data)
     recv_data.read_skip<uint32>();                          // unk
 
     MovementInfo movementInfo;
-
+    recv_data >> movementInfo;
+    
     recv_data.read_skip<uint32>();                          // unk2
 }
 
