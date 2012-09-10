@@ -191,7 +191,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
     {
         DoScriptText(SAY_GAMESBEGIN_2, me);
 
-        //Trinity::Singleton<MapManager>::Instance().GetMap(me->GetMapId(), me)->GetPlayers().begin();
+        //Skyfire::Singleton<MapManager>::Instance().GetMap(me->GetMapId(), me)->GetPlayers().begin();
         /*
         list <Player*>::const_iterator i = sMapMgr->GetMap(me->GetMapId(), me)->GetPlayers().begin();
 
@@ -303,7 +303,7 @@ struct boss_victor_nefariusAI : public ScriptedAI
                     //Make super invis
                     DoCast(me, 8149);
 
-                    //Teleport self to a hiding spot (this causes errors in the Trinity log but no real issues)
+                    //Teleport self to a hiding spot (this causes errors in the Skyfire log but no real issues)
                     DoTeleportTo(HIDE_X, HIDE_Y, HIDE_Z);
                     me->addUnitState(UNIT_STAT_FLEEING);
 

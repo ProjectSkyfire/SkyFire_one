@@ -443,14 +443,14 @@ struct npc_lord_gregor_lescovarAI : public npc_escortAI
         std::list<Creature*> lCreatureList;
 
         me->GetPosition(x, y, z);
-        CellPair pair(Trinity::ComputeCellPair(x, y));
+        CellPair pair(Skyfire::ComputeCellPair(x, y));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Trinity::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
-        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
-        TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+        Skyfire::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
+        Skyfire::CreatureListSearcher<Skyfire::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
+        TypeContainerVisitor<Skyfire::CreatureListSearcher<Skyfire::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
         cell.Visit(pair, cSearcher, *(me->GetMap()));
 
         if (!lCreatureList.empty())
@@ -667,14 +667,14 @@ struct npc_tyrion_spybotAI : public npc_escortAI
         std::list<Creature*> lCreatureList;
 
         me->GetPosition(x, y, z);
-        CellPair pair(Trinity::ComputeCellPair(x, y));
+        CellPair pair(Skyfire::ComputeCellPair(x, y));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Trinity::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
-        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
-        TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+        Skyfire::AllCreaturesOfEntryInRange check(me, NPC_STORMWIND_ROYAL, 10);
+        Skyfire::CreatureListSearcher<Skyfire::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
+        TypeContainerVisitor<Skyfire::CreatureListSearcher<Skyfire::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
         cell.Visit(pair, cSearcher, *(me->GetMap()));
 
         if (!lCreatureList.empty())

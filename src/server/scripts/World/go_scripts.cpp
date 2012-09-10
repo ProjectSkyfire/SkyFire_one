@@ -164,7 +164,7 @@ bool GOHello_go_tablet_of_madness(Player* player, GameObject * /*pGO*/)
 ## go_tablet_of_the_seven
 ######*/
 
-//TODO: use gossip option ("Transcript the Tablet") instead, if Trinity adds support.
+//TODO: use gossip option ("Transcript the Tablet") instead, if Skyfire adds support.
 bool GOHello_go_tablet_of_the_seven(Player* player, GameObject *pGO)
 {
     if (pGO->GetGoType() != GAMEOBJECT_TYPE_QUESTGIVER)

@@ -271,14 +271,14 @@ inline GameObject* Map::_FindGameObject(WorldObject* pSearchObject, uint32 guid)
 {
     GameObject *pGameObject = NULL;
 
-    CellPair p(Trinity::ComputeCellPair(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
+    CellPair p(Skyfire::ComputeCellPair(pSearchObject->GetPositionX(), pSearchObject->GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
 
-    Trinity::GameObjectWithDbGUIDCheck goCheck(*pSearchObject, guid);
-    Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck> checker(pGameObject, goCheck);
+    Skyfire::GameObjectWithDbGUIDCheck goCheck(*pSearchObject, guid);
+    Skyfire::GameObjectSearcher<Skyfire::GameObjectWithDbGUIDCheck> checker(pGameObject, goCheck);
 
-    TypeContainerVisitor<Trinity::GameObjectSearcher<Trinity::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > objectChecker(checker);
+    TypeContainerVisitor<Skyfire::GameObjectSearcher<Skyfire::GameObjectWithDbGUIDCheck>, GridTypeMapContainer > objectChecker(checker);
     cell.Visit(p, objectChecker, *pSearchObject->GetMap());
 
     return pGameObject;
@@ -832,14 +832,14 @@ void Map::ScriptsProcess()
                 {
                     WorldObject* wSource = dynamic_cast <WorldObject*> (source);
 
-                    CellPair p(Trinity::ComputeCellPair(wSource->GetPositionX(), wSource->GetPositionY()));
+                    CellPair p(Skyfire::ComputeCellPair(wSource->GetPositionX(), wSource->GetPositionY()));
                     Cell cell(p);
                     cell.data.Part.reserved = ALL_DISTRICT;
 
-                    Trinity::CreatureWithDbGUIDCheck target_check(wSource, step.script->CallScript.CreatureEntry);
-                    Trinity::CreatureSearcher<Trinity::CreatureWithDbGUIDCheck> checker(cTarget, target_check);
+                    Skyfire::CreatureWithDbGUIDCheck target_check(wSource, step.script->CallScript.CreatureEntry);
+                    Skyfire::CreatureSearcher<Skyfire::CreatureWithDbGUIDCheck> checker(cTarget, target_check);
 
-                    TypeContainerVisitor<Trinity::CreatureSearcher <Trinity::CreatureWithDbGUIDCheck>, GridTypeMapContainer > unit_checker(checker);
+                    TypeContainerVisitor<Skyfire::CreatureSearcher <Skyfire::CreatureWithDbGUIDCheck>, GridTypeMapContainer > unit_checker(checker);
                     cell.Visit(p, unit_checker, *wSource->GetMap());
                 }
                 else //check hashmap holders

@@ -833,7 +833,7 @@ enum SkyFireStrings
     LANG_COMMAND_TICKETLISTADDCOMMENT   = 2024,
     LANG_COMMAND_TICKETLISTAGECREATE    = 2025,
 
-    // Trinity strings                     5000-9999
+    // Skyfire strings                     5000-9999
     LANG_COMMAND_FREEZE                 = 5000,
     LANG_COMMAND_FREEZE_ERROR           = 5001,
     LANG_COMMAND_FREEZE_WRONG           = 5002,
@@ -846,7 +846,7 @@ enum SkyFireStrings
     LANG_COMMAND_PLAYED_TO_ALL          = 5009,
     LANG_CHANNEL_NOT_PUBLIC             = 5010,
     LANG_CHANNEL_PUBLIC_CHANGED         = 5011,
-    // Room for more Trinity strings       5012-9999
+    // Room for more Skyfire strings       5012-9999
 
     // Used for GM Announcements
     LANG_GM_BROADCAST                    = 6613,

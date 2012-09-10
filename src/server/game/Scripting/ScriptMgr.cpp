@@ -242,7 +242,7 @@ void ScriptMgr::OnPVPKill(Player* killer, Player *killed)
 
 char const* ScriptMgr::ScriptsVersion()
 {
-    return "Integrated Trinity Scripts";
+    return "Integrated Skyfire Scripts";
 }
 
 bool ScriptMgr::GossipHello (Player * player, Creature* creature)

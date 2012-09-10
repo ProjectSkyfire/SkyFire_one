@@ -65,8 +65,8 @@ enum EventAI_Type
     EVENT_T_MISSING_AURA            = 27,                   // Param1 = SpellID, Param2 = Number of time stacked expected, Param3/4 Repeat Min/Max
     EVENT_T_TARGET_MISSING_AURA     = 28,                   // Param1 = SpellID, Param2 = Number of time stacked expected, Param3/4 Repeat Min/Max
 
-    // Trinity only
-    EVENT_T_RESET                   = 35,                   // Is it called after combat, when the creature respawn and spawn. -- TRINITY ONLY
+    // Skyfire only
+    EVENT_T_RESET                   = 35,                   // Is it called after combat, when the creature respawn and spawn. -- SKYFIRE ONLY
 
     EVENT_T_END,
 };
@@ -118,7 +118,7 @@ enum EventAI_ActionType
     ACTION_T_SET_INVINCIBILITY_HP_LEVEL = 42,               // MinHpValue, format(0-flat, 1-percent from max health)
     ACTION_T_MOUNT_TO_ENTRY_OR_MODEL    = 43,               // Creature_template entry(param1) OR ModelId (param2) (or 0 for both to unmount)
 
-    // Trinity only
+    // Skyfire only
     ACTION_T_SET_PHASE_MASK             = 97,
     ACTION_T_SET_STAND_STATE            = 98,
     ACTION_T_MOVE_RANDOM_POINT          = 99,

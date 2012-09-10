@@ -226,7 +226,7 @@ void Spell::EffectNULL(uint32 /*i*/)
 
 void Spell::EffectUnused(uint32 /*i*/)
 {
-    // NOT USED BY ANY SPELL OR USELESS OR IMPLEMENTED IN DIFFERENT WAY IN MANGOS
+    // NOT USED BY ANY SPELL OR USELESS OR IMPLEMENTED IN DIFFERENT WAY IN SKYFIRE
 }
 
 void Spell::EffectResurrectNew(uint32 i)
@@ -5170,8 +5170,8 @@ void Spell::EffectSanctuary(uint32 /*i*/)
         return;
 
     std::list<Unit*> targets;
-    Trinity::AnyUnfriendlyUnitInObjectRangeCheck u_check(unitTarget, unitTarget, m_caster->GetMap()->GetVisibilityDistance());
-    Trinity::UnitListSearcher<Trinity::AnyUnfriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
+    Skyfire::AnyUnfriendlyUnitInObjectRangeCheck u_check(unitTarget, unitTarget, m_caster->GetMap()->GetVisibilityDistance());
+    Skyfire::UnitListSearcher<Skyfire::AnyUnfriendlyUnitInObjectRangeCheck> searcher(targets, u_check);
     unitTarget->VisitNearbyObject(m_caster->GetMap()->GetVisibilityDistance(), searcher);
     for (std::list<Unit*>::iterator iter = targets.begin(); iter != targets.end(); ++iter)
     {

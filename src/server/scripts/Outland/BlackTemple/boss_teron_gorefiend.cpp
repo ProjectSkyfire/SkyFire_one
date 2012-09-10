@@ -157,7 +157,7 @@ struct mob_shadowy_constructAI : public ScriptedAI
             if (pUnit && pUnit->isAlive())
                 targets.push_back(pUnit);
         }
-        targets.sort(Trinity::ObjectDistanceOrderPred(me));
+        targets.sort(Skyfire::ObjectDistanceOrderPred(me));
         Unit *pTarget = targets.front();
         if (pTarget && me->IsWithinDistInMap(pTarget, me->GetAttackDistance(pTarget)))
         {
@@ -311,7 +311,7 @@ struct boss_teron_gorefiendAI : public ScriptedAI
     {
         /************************************************************************/
         /** NOTE FOR FUTURE DEVELOPER: PROPERLY IMPLEMENT THE GHOST PORTION *****/
-        /**  ONLY AFTER Trinity FULLY IMPLEMENTS MIND CONTROL ABILITIES      *****/
+        /**  ONLY AFTER Skyfire FULLY IMPLEMENTS MIND CONTROL ABILITIES      *****/
         /**   THE CURRENT CODE IN THIS FUNCTION IS ONLY THE BEGINNING OF    *****/
         /**    WHAT IS FULLY NECESSARY FOR GOREFIEND TO BE 100% COMPLETE    *****/
         /************************************************************************/

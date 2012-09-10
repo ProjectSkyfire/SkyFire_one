@@ -163,14 +163,14 @@ struct boss_nalorakkAI : public ScriptedAI
         me->GetPosition(x, y, z);
 
         {
-            CellPair pair(Trinity::ComputeCellPair(x, y));
+            CellPair pair(Skyfire::ComputeCellPair(x, y));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
-            Trinity::AllFriendlyCreaturesInGrid check(me);
-            Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid> searcher(templist, check);
-            TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>, GridTypeMapContainer> cSearcher(searcher);
+            Skyfire::AllFriendlyCreaturesInGrid check(me);
+            Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid> searcher(templist, check);
+            TypeContainerVisitor<Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid>, GridTypeMapContainer> cSearcher(searcher);
             cell.Visit(pair, cSearcher, *(me->GetMap()));
         }
 

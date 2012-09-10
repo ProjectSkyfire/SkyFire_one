@@ -144,7 +144,7 @@ void DynamicObject::Update(uint32 p_time)
     {
         if (m_updateTimer < p_time)
         {
-            Trinity::DynamicObjectUpdater notifier(*this, caster);
+            Skyfire::DynamicObjectUpdater notifier(*this, caster);
             VisitNearbyObject(GetRadius(), notifier);
             m_updateTimer = 500; // is this official-like?
         }else m_updateTimer -= p_time;

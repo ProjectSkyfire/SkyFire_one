@@ -27,7 +27,7 @@
 #ifdef HAVE_CONFIG_H
 // Remove Some things that we will define
 // This is in case including another config.h
-// before Trinity config.h
+// before Skyfire config.h
 #ifdef PACKAGE
 #undef PACKAGE
 #endif //PACKAGE

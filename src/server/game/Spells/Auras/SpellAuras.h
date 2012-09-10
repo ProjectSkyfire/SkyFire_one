@@ -58,9 +58,9 @@ typedef void(Aura::*pAuraHandler)(bool Apply, bool Real);
 //      (percent auras, stats mods, etc)
 // Second rule: Code must be guarded by if (Real) check if it modifies object state (start/stop attack, send packets to client, etc)
 //
-// Other case choice: each code line moved under if (Real) check is Trinity speedup,
-//      each setting object update field code line moved under if (Real) check is significant Trinity speedup, and less server->client data sends
-//      each packet sending code moved under if (Real) check is _large_ Trinity speedup, and lot less server->client data sends
+// Other case choice: each code line moved under if (Real) check is Skyfire speedup,
+//      each setting object update field code line moved under if (Real) check is significant Skyfire speedup, and less server->client data sends
+//      each packet sending code moved under if (Real) check is _large_ Skyfire speedup, and lot less server->client data sends
 
 class Aura
 {

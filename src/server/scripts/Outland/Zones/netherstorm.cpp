@@ -301,7 +301,7 @@ CreatureAI* GetAI_npc_manaforge_control_console(Creature* creature)
 ## go_manaforge_control_console
 ######*/
 
-//TODO: clean up this workaround when Trinity adds support to do it properly (with gossip selections instead of instant summon)
+//TODO: clean up this workaround when Skyfire adds support to do it properly (with gossip selections instead of instant summon)
 bool GOHello_go_manaforge_control_console(Player* player, GameObject* _GO)
 {
     if (_GO->GetGoType() == GAMEOBJECT_TYPE_QUESTGIVER)
@@ -412,14 +412,14 @@ struct npc_commander_dawnforgeAI : public ScriptedAI
     {
         Creature* creature = NULL;
 
-        CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+        CellPair pair(Skyfire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
-        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
-        TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+        Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
+        Skyfire::CreatureLastSearcher<Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
+        TypeContainerVisitor<Skyfire::CreatureLastSearcher<Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
         cell.Visit(pair, creature_searcher,*(me->GetMap()));
 
         return creature;
@@ -644,14 +644,14 @@ Creature* SearchDawnforge(Player *source, uint32 entry, float range)
 {
     Creature* creature = NULL;
 
-    CellPair pair(Trinity::ComputeCellPair(source->GetPositionX(), source->GetPositionY()));
+    CellPair pair(Skyfire::ComputeCellPair(source->GetPositionX(), source->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*source, entry, true, range);
-    Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
-    TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+    Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*source, entry, true, range);
+    Skyfire::CreatureLastSearcher<Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
+    TypeContainerVisitor<Skyfire::CreatureLastSearcher<Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
     cell.Visit(pair, creature_searcher,*(source->GetMap()));
 
     return creature;

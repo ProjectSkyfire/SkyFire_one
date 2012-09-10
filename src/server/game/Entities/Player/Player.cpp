@@ -1964,7 +1964,7 @@ void Player::Regenerate(Powers power)
             bool recentCast = IsUnderLastManaUseEffect();
             float ManaIncreaseRate = sWorld->getRate(RATE_POWER_MANA);
 
-            if (recentCast) // Trinity Updates Mana in intervals of 2s, which is correct
+            if (recentCast) // Skyfire Updates Mana in intervals of 2s, which is correct
                 addvalue = GetFloatValue(PLAYER_FIELD_MOD_MANA_REGEN_INTERRUPT) *  ManaIncreaseRate * 2.00f;
 
             else
@@ -2384,7 +2384,7 @@ void Player::GiveLevel(uint32 level)
 
     GetSession()->SendPacket(&data);
 
-    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, Trinity::XP::xp_to_level(level));
+    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, Skyfire::XP::xp_to_level(level));
 
     //update level, max level of skills
     if (getLevel() != level)
@@ -2464,7 +2464,7 @@ void Player::InitStatsForLevel(bool reapplyMods)
     sObjectMgr->GetPlayerLevelInfo(getRace(), getClass(), getLevel(), &info);
 
     SetUInt32Value(PLAYER_FIELD_MAX_LEVEL, sWorld->getConfig(CONFIG_MAX_PLAYER_LEVEL));
-    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, Trinity::XP::xp_to_level(getLevel()));
+    SetUInt32Value(PLAYER_NEXT_LEVEL_XP, Skyfire::XP::xp_to_level(getLevel()));
 
     UpdateSkillsForLevel ();
 
@@ -5150,7 +5150,7 @@ void Player::UpdateCombatSkills(Unit *pVictim, WeaponAttackType attType, MeleeHi
     }
 */
     uint32 plevel = getLevel();                             // if defense than pVictim == attacker
-    uint32 greylevel = Trinity::XP::GetGrayLevel(plevel);
+    uint32 greylevel = Skyfire::XP::GetGrayLevel(plevel);
     uint32 moblevel = pVictim->getLevelForTarget(this);
     if (moblevel < greylevel)
         return;
@@ -5557,7 +5557,7 @@ void Player::removeActionButton(uint8 button)
 bool Player::SetPosition(float x, float y, float z, float orientation, bool teleport)
 {
     // prevent crash when a bad coord is sent by the client
-    if (!Trinity::IsValidMapCoord(x, y, z, orientation))
+    if (!Skyfire::IsValidMapCoord(x, y, z, orientation))
     {
         sLog->outDebug("Player::SetPosition(%f, %f, %f, %f, %d) .. bad coordinates for player %d!", x, y, z, orientation, teleport, GetGUIDLow());
         return false;
@@ -5618,7 +5618,7 @@ void Player::SendMessageToSet(WorldPacket *data, bool self)
 
     // we use World::GetMaxVisibleDistance() because i cannot see why not use a distance
     // update: replaced by GetMap()->GetVisibilityDistance()
-    Trinity::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
+    Skyfire::MessageDistDeliverer notifier(this, data, GetMap()->GetVisibilityDistance());
     VisitNearbyWorldObject(GetMap()->GetVisibilityDistance(), notifier);
 }
 
@@ -5627,7 +5627,7 @@ void Player::SendMessageToSetInRange(WorldPacket *data, float dist, bool self)
     if (self)
         GetSession()->SendPacket(data);
 
-    Trinity::MessageDistDeliverer notifier(this, data, dist);
+    Skyfire::MessageDistDeliverer notifier(this, data, dist);
     VisitNearbyWorldObject(dist, notifier);
 }
 
@@ -5636,7 +5636,7 @@ void Player::SendMessageToSetInRange(WorldPacket *data, float dist, bool self, b
     if (self)
         GetSession()->SendPacket(data);
 
-    Trinity::MessageDistDeliverer notifier(this, data, dist, own_team_only);
+    Skyfire::MessageDistDeliverer notifier(this, data, dist, own_team_only);
     VisitNearbyWorldObject(dist, notifier);
 }
 
@@ -6189,7 +6189,7 @@ int32 Player::CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, bo
 
     float rate = for_quest ? sWorld->getRate(RATE_REPUTATION_LOWLEVEL_QUEST) : sWorld->getRate(RATE_REPUTATION_LOWLEVEL_KILL);
 
-    if (rate != 1.0f && creatureOrQuestLevel <= Trinity::XP::GetGrayLevel(getLevel()))
+    if (rate != 1.0f && creatureOrQuestLevel <= Skyfire::XP::GetGrayLevel(getLevel()))
         percent *= rate;
 
     int32 repMod = GetTotalAuraModifier(SPELL_AURA_MOD_REPUTATION_GAIN);
@@ -13344,7 +13344,7 @@ void Player::RewardQuest(Quest const *pQuest, uint32 reward, Object* questGiver,
 
     // honor reward
     if (pQuest->GetRewHonorableKills())
-        RewardHonor(NULL, 0, Trinity::Honor::hk_honor_at_level(getLevel(), pQuest->GetRewHonorableKills()));
+        RewardHonor(NULL, 0, Skyfire::Honor::hk_honor_at_level(getLevel(), pQuest->GetRewHonorableKills()));
 
     // title reward
     if (pQuest->GetCharTitleId())
@@ -13868,7 +13868,7 @@ void Player::SetQuestStatus(uint32 quest_id, QuestStatus status)
     UpdateForQuestsGO();
 }
 
-// not used in Trinity, but used in scripting code
+// not used in Skyfire, but used in scripting code
 uint32 Player::GetReqKillOrCastCurrentCount(uint32 quest_id, int32 entry)
 {
     Quest const* qInfo = sObjectMgr->GetQuestTemplate(quest_id);
@@ -14797,7 +14797,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
 
         m_movementInfo.SetTransportData(transGUID, fields[27].GetFloat(), fields[28].GetFloat(), fields[29].GetFloat(), fields[30].GetFloat(), 0);
 
-        if (!Trinity::IsValidMapCoord(
+        if (!Skyfire::IsValidMapCoord(
             GetPositionX() + m_movementInfo.GetTransportPos()->GetPositionX(), GetPositionY() + m_movementInfo.GetTransportPos()->GetPositionY(),
             GetPositionZ() + m_movementInfo.GetTransportPos()->GetPositionZ(), GetOrientation() + m_movementInfo.GetTransportPos()->GetOrientation()) ||
             // transport size limited
@@ -17734,8 +17734,8 @@ void Player::SetRestBonus (float rest_bonus_new)
 void Player::HandleStealthedUnitsDetection()
 {
     std::list<Unit*> stealthedUnits;
-    Trinity::AnyStealthedCheck u_check;
-    Trinity::UnitListSearcher<Trinity::AnyStealthedCheck > searcher(stealthedUnits, u_check);
+    Skyfire::AnyStealthedCheck u_check;
+    Skyfire::UnitListSearcher<Skyfire::AnyStealthedCheck > searcher(stealthedUnits, u_check);
     VisitNearbyObject(GetMap()->GetVisibilityDistance(), searcher);
 
     for (std::list<Unit*>::iterator i = stealthedUnits.begin(); i != stealthedUnits.end(); ++i)
@@ -19033,7 +19033,7 @@ void Player::UpdateObjectVisibility(bool forced)
     {
         Unit::UpdateObjectVisibility(true);
         // updates visibility of all objects around point of view for current player
-        Trinity::VisibleNotifier notifier(*this);
+        Skyfire::VisibleNotifier notifier(*this);
         m_seer->VisitNearbyObject(GetMap()->GetVisibilityDistance(), notifier);
         notifier.SendToSelf();   // send gathered data
     }
@@ -19041,7 +19041,7 @@ void Player::UpdateObjectVisibility(bool forced)
 
 void Player::UpdateVisibilityForPlayer()
 {
-    Trinity::VisibleNotifier notifier(*this);
+    Skyfire::VisibleNotifier notifier(*this);
     m_seer->VisitNearbyObject(GetMap()->GetVisibilityDistance(), notifier);
     notifier.SendToSelf();   // send gathered data
 }
@@ -19865,7 +19865,7 @@ uint32 Player::GetResurrectionSpellId()
 bool Player::isHonorOrXPTarget(Unit* pVictim) const
 {
     uint32 v_level = pVictim->getLevel();
-    uint32 k_grey  = Trinity::XP::GetGrayLevel(getLevel());
+    uint32 k_grey  = Skyfire::XP::GetGrayLevel(getLevel());
 
     // Victim level less gray level
     if (v_level<=k_grey)
@@ -19901,12 +19901,12 @@ void Player::RewardPlayerAndGroupAtKill(Unit* pVictim)
         {
             // PvP kills doesn't yield experience
             // also no XP gained if there is no member below gray level
-            xp = (PvP || !not_gray_member_with_max_level) ? 0 : Trinity::XP::Gain(not_gray_member_with_max_level, pVictim);
+            xp = (PvP || !not_gray_member_with_max_level) ? 0 : Skyfire::XP::Gain(not_gray_member_with_max_level, pVictim);
 
             // skip in check PvP case (for speed, not used)
             bool is_raid = PvP ? false : sMapStore.LookupEntry(GetMapId())->IsRaid() && pGroup->isRaidGroup();
             bool is_dungeon = PvP ? false : sMapStore.LookupEntry(GetMapId())->IsDungeon();
-            float group_rate = Trinity::XP::xp_in_group_rate(count, is_raid);
+            float group_rate = Skyfire::XP::xp_in_group_rate(count, is_raid);
 
             for (GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
             {
@@ -19954,7 +19954,7 @@ void Player::RewardPlayerAndGroupAtKill(Unit* pVictim)
     }
     else                                                    // if (!pGroup)
     {
-        xp = PvP ? 0 : Trinity::XP::Gain(this, pVictim);
+        xp = PvP ? 0 : Skyfire::XP::Gain(this, pVictim);
 
         // honor can be in PvP and !PvP (racial leader) cases
         RewardHonor(pVictim, 1, -1, true);
@@ -20362,7 +20362,7 @@ bool ItemPosCount::isContainedIn(ItemPosCountVec const& vec) const
 }
 
 //***********************************
-//-------------Trinity---------------
+//-------------Skyfire---------------
 //***********************************
 
 void Player::HandleFallDamage(MovementInfo& movementInfo)
@@ -20555,7 +20555,7 @@ void Player::SetTitle(CharTitlesEntry const* title, bool lost)
     GetSession()->SendPacket(&data);
 }
 
-/*-----------------------Trinity--------------------------*/
+/*-----------------------Skyfire--------------------------*/
 bool Player::isTotalImmunity()
 {
     AuraList const& immune = GetAurasByType(SPELL_AURA_SCHOOL_IMMUNITY);

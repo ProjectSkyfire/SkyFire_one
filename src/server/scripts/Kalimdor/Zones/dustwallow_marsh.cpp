@@ -855,14 +855,14 @@ struct npc_private_hendelAI : public ScriptedAI
         float x, y, z;
 
         me->GetPosition(x, y, z);
-        CellPair pair(Trinity::ComputeCellPair(x, y));
+        CellPair pair(Skyfire::ComputeCellPair(x, y));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Trinity::AllCreaturesOfEntryInRange check(me, NPC_SENTRY, 20);
-        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
-        TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
+        Skyfire::AllCreaturesOfEntryInRange check(me, NPC_SENTRY, 20);
+        Skyfire::CreatureListSearcher<Skyfire::AllCreaturesOfEntryInRange> searcher(lCreatureList, check);
+        TypeContainerVisitor<Skyfire::CreatureListSearcher<Skyfire::AllCreaturesOfEntryInRange>, GridTypeMapContainer> cSearcher(searcher);
         cell.Visit(pair, cSearcher, *(me->GetMap()));
 
         if (!lCreatureList.empty())

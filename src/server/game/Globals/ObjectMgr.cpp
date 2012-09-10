@@ -115,7 +115,7 @@ std::string GetScriptCommandName(ScriptCommands command)
         case SCRIPT_COMMAND_LOAD_PATH: res = "SCRIPT_COMMAND_LOAD_PATH"; break;
         case SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT: res = "SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT"; break;
         case SCRIPT_COMMAND_KILL: res = "SCRIPT_COMMAND_KILL"; break;
-        // Trinity only
+        // Skyfire only
         case SCRIPT_COMMAND_ORIENTATION: res = "SCRIPT_COMMAND_ORIENTATION"; break;
         case SCRIPT_COMMAND_EQUIP: res = "SCRIPT_COMMAND_EQUIP"; break;
         case SCRIPT_COMMAND_MODEL: res = "SCRIPT_COMMAND_MODEL"; break;
@@ -1114,7 +1114,7 @@ void ObjectMgr::AddCreatureToGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Skyfire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1130,7 +1130,7 @@ void ObjectMgr::RemoveCreatureFromGrid(uint32 guid, CreatureData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Skyfire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1329,7 +1329,7 @@ void ObjectMgr::AddGameobjectToGrid(uint32 guid, GameObjectData const* data)
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Skyfire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -1345,7 +1345,7 @@ void ObjectMgr::RemoveGameobjectFromGrid(uint32 guid, GameObjectData const* data
     {
         if (mask & 1)
         {
-            CellPair cell_pair = Trinity::ComputeCellPair(data->posX, data->posY);
+            CellPair cell_pair = Skyfire::ComputeCellPair(data->posX, data->posY);
             uint32 cell_id = (cell_pair.y_coord*TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
             CellObjectGuids& cell_guids = mMapObjectGuids[MAKE_PAIR32(data->mapid, i)][cell_id];
@@ -3678,7 +3678,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                     continue;
                 }
 
-                if (!Trinity::IsValidMapCoord(tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation))
+                if (!Skyfire::IsValidMapCoord(tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation))
                 {
                     sLog->outErrorDb("Table `%s` has invalid coordinates (X: %f Y: %f Z: %f O: %f) in SCRIPT_COMMAND_TELEPORT_TO for script id %u",
                         tableName.c_str(), tmp.TeleportTo.DestX, tmp.TeleportTo.DestY, tmp.TeleportTo.DestZ, tmp.TeleportTo.Orientation, tmp.id);
@@ -3776,7 +3776,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
 
             case SCRIPT_COMMAND_TEMP_SUMMON_CREATURE:
             {
-                if (!Trinity::IsValidMapCoord(tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation))
+                if (!Skyfire::IsValidMapCoord(tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation))
                 {
                     sLog->outErrorDb("Table `%s` has invalid coordinates (X: %f Y: %f Z: %f O: %f) in SCRIPT_COMMAND_TEMP_SUMMON_CREATURE for script id %u",
                         tableName.c_str(), tmp.TempSummonCreature.PosX, tmp.TempSummonCreature.PosY, tmp.TempSummonCreature.PosZ, tmp.TempSummonCreature.Orientation, tmp.id);
@@ -6282,7 +6282,7 @@ bool ObjectMgr::LoadSkyFireStrings(DatabaseType& db, char const* table, int32 mi
     {
         sLog->outString();
         if (min_value == MIN_SKYFIRE_STRING_ID)              // error only in case internal strings
-            sLog->outErrorDb(">> Loaded 0 Trinity strings. DB table %s is empty. Cannot continue.", table);
+            sLog->outErrorDb(">> Loaded 0 Skyfire strings. DB table %s is empty. Cannot continue.", table);
         else
             sLog->outString(">> Loaded 0 string templates. DB table %s is empty.", table);
         return false;
@@ -6341,7 +6341,7 @@ bool ObjectMgr::LoadSkyFireStrings(DatabaseType& db, char const* table, int32 mi
 
     sLog->outString();
     if (min_value == MIN_SKYFIRE_STRING_ID)
-        sLog->outString(">> Loaded %u Trinity strings from table %s", count, table);
+        sLog->outString(">> Loaded %u Skyfire strings from table %s", count, table);
     else
         sLog->outString(">> Loaded %u string templates from %s", count, table);
 
@@ -6363,7 +6363,7 @@ const char *ObjectMgr::GetSkyFireString(int32 entry, int locale_idx) const
     if (entry > 0)
         sLog->outErrorDb("Entry %i not found in skyfire_string table.", entry);
     else
-        sLog->outErrorDb("Trinity string entry %i not found in DB.", entry);
+        sLog->outErrorDb("Skyfire string entry %i not found in DB.", entry);
     return "<error>";
 }
 

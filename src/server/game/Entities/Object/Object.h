@@ -790,7 +790,7 @@ class WorldObject : public Object, public WorldLocation
         uint16 m_executed_notifies;
 };
 
-namespace Trinity
+namespace Skyfire
 {
     // Binary predicate to sort WorldObjects based on the distance to a reference WorldObject
     class ObjectDistanceOrderPred

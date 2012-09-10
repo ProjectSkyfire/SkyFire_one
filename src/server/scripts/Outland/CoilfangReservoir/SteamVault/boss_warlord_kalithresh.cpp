@@ -141,14 +141,14 @@ struct boss_warlord_kalithreshAI : public ScriptedAI
     {
         Creature* creature = NULL;
 
-        CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+        CellPair pair(Skyfire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
-        Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
-        Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
-        TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
+        Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck creature_check(*me, entry, true, range);
+        Skyfire::CreatureLastSearcher<Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck> searcher(creature, creature_check);
+        TypeContainerVisitor<Skyfire::CreatureLastSearcher<Skyfire::NearestCreatureEntryWithLiveStateInObjectRangeCheck>, GridTypeMapContainer> creature_searcher(searcher);
         cell.Visit(pair, creature_searcher,*(me->GetMap()));
 
         return creature;

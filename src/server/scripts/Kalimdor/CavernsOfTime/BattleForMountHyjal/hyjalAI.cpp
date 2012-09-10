@@ -943,17 +943,17 @@ void hyjalAI::JustDied(Unit* /*killer*/)
 }
 void hyjalAI::HideNearPos(float x, float y)
 {
-    CellPair pair(Trinity::ComputeCellPair(x, y));
+    CellPair pair(Skyfire::ComputeCellPair(x, y));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
     // First get all creatures.
     std::list<Creature*> creatures;
-    Trinity::AllFriendlyCreaturesInGrid creature_check(me);
-    Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid> creature_searcher(creatures, creature_check);
+    Skyfire::AllFriendlyCreaturesInGrid creature_check(me);
+    Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid> creature_searcher(creatures, creature_check);
     TypeContainerVisitor
-        <Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>,
+        <Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid>,
         GridTypeMapContainer> creature_visitor(creature_searcher);
 
                                                             // Get Creatures
@@ -970,14 +970,14 @@ void hyjalAI::HideNearPos(float x, float y)
 }
 void hyjalAI::RespawnNearPos(float x, float y)
 {
-    CellPair p(Trinity::ComputeCellPair(x, y));
+    CellPair p(Skyfire::ComputeCellPair(x, y));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::RespawnDo u_do;
-    Trinity::WorldObjectWorker<Trinity::RespawnDo> worker(u_do);
-    TypeContainerVisitor<Trinity::WorldObjectWorker<Trinity::RespawnDo>, GridTypeMapContainer > obj_worker(worker);
+    Skyfire::RespawnDo u_do;
+    Skyfire::WorldObjectWorker<Skyfire::RespawnDo> worker(u_do);
+    TypeContainerVisitor<Skyfire::WorldObjectWorker<Skyfire::RespawnDo>, GridTypeMapContainer > obj_worker(worker);
     cell.Visit(p, obj_worker, *me->GetMap());
 }
 void hyjalAI::WaypointReached(uint32 i)
@@ -1001,17 +1001,17 @@ void hyjalAI::WaypointReached(uint32 i)
         }
         //do some talking
         //all alive guards walk near here
-        CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+        CellPair pair(Skyfire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
         Cell cell(pair);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
 
         // First get all creatures.
         std::list<Creature*> creatures;
-        Trinity::AllFriendlyCreaturesInGrid creature_check(me);
-        Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid> creature_searcher(creatures, creature_check);
+        Skyfire::AllFriendlyCreaturesInGrid creature_check(me);
+        Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid> creature_searcher(creatures, creature_check);
         TypeContainerVisitor
-            <Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>,
+            <Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid>,
             GridTypeMapContainer> creature_visitor(creature_searcher);
 
         cell.Visit(pair, creature_visitor, *(me->GetMap()));
@@ -1043,16 +1043,16 @@ void hyjalAI::DoOverrun(uint32 faction, const uint32 diff)
     {
         if (TeleportTimer <= diff)
         {
-            CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+            CellPair pair(Skyfire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
             Cell cell(pair);
             cell.data.Part.reserved = ALL_DISTRICT;
             cell.SetNoCreate();
 
             std::list<Creature*> creatures;
-            Trinity::AllFriendlyCreaturesInGrid creature_check(me);
-            Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid> creature_searcher(creatures, creature_check);
+            Skyfire::AllFriendlyCreaturesInGrid creature_check(me);
+            Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid> creature_searcher(creatures, creature_check);
             TypeContainerVisitor
-                <Trinity::CreatureListSearcher<Trinity::AllFriendlyCreaturesInGrid>,
+                <Skyfire::CreatureListSearcher<Skyfire::AllFriendlyCreaturesInGrid>,
                 GridTypeMapContainer> creature_visitor(creature_searcher);
 
             cell.Visit(pair, creature_visitor, *(me->GetMap()));

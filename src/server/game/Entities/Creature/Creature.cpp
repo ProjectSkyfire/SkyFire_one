@@ -1673,14 +1673,14 @@ void Creature::DoFleeToGetAssistance()
     {
         Creature* creature = NULL;
 
-        CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+        CellPair p(Skyfire::ComputeCellPair(GetPositionX(), GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
         cell.SetNoCreate();
-        Trinity::NearestAssistCreatureInCreatureRangeCheck u_check(this, getVictim(), radius);
-        Trinity::CreatureLastSearcher<Trinity::NearestAssistCreatureInCreatureRangeCheck> searcher(creature, u_check);
+        Skyfire::NearestAssistCreatureInCreatureRangeCheck u_check(this, getVictim(), radius);
+        Skyfire::CreatureLastSearcher<Skyfire::NearestAssistCreatureInCreatureRangeCheck> searcher(creature, u_check);
 
-        TypeContainerVisitor<Trinity::CreatureLastSearcher<Trinity::NearestAssistCreatureInCreatureRangeCheck>, GridTypeMapContainer > grid_creature_searcher(searcher);
+        TypeContainerVisitor<Skyfire::CreatureLastSearcher<Skyfire::NearestAssistCreatureInCreatureRangeCheck>, GridTypeMapContainer > grid_creature_searcher(searcher);
 
         cell.Visit(p, grid_creature_searcher, *GetMap(), *this, radius);
 
@@ -1694,7 +1694,7 @@ void Creature::DoFleeToGetAssistance()
 
 Unit* Creature::SelectNearestTarget(float dist) const
 {
-    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+    CellPair p(Skyfire::ComputeCellPair(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
@@ -1702,11 +1702,11 @@ Unit* Creature::SelectNearestTarget(float dist) const
     Unit *target = NULL;
 
     {
-        Trinity::NearestHostileUnitInAttackDistanceCheck u_check(this, dist);
-        Trinity::UnitLastSearcher<Trinity::NearestHostileUnitInAttackDistanceCheck> searcher(target, u_check);
+        Skyfire::NearestHostileUnitInAttackDistanceCheck u_check(this, dist);
+        Skyfire::UnitLastSearcher<Skyfire::NearestHostileUnitInAttackDistanceCheck> searcher(target, u_check);
 
-        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestHostileUnitInAttackDistanceCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
-        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestHostileUnitInAttackDistanceCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
+        TypeContainerVisitor<Skyfire::UnitLastSearcher<Skyfire::NearestHostileUnitInAttackDistanceCheck>, WorldTypeMapContainer > world_unit_searcher(searcher);
+        TypeContainerVisitor<Skyfire::UnitLastSearcher<Skyfire::NearestHostileUnitInAttackDistanceCheck>, GridTypeMapContainer >  grid_unit_searcher(searcher);
 
         cell.Visit(p, world_unit_searcher, *GetMap(), *this, ATTACK_DISTANCE);
         cell.Visit(p, grid_unit_searcher, *GetMap(), *this, ATTACK_DISTANCE);
@@ -1727,15 +1727,15 @@ void Creature::CallAssistance()
             std::list<Creature*> assistList;
 
             {
-                CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+                CellPair p(Skyfire::ComputeCellPair(GetPositionX(), GetPositionY()));
                 Cell cell(p);
                 cell.data.Part.reserved = ALL_DISTRICT;
                 cell.SetNoCreate();
 
-                Trinity::AnyAssistCreatureInRangeCheck u_check(this, getVictim(), radius);
-                Trinity::CreatureListSearcher<Trinity::AnyAssistCreatureInRangeCheck> searcher(assistList, u_check);
+                Skyfire::AnyAssistCreatureInRangeCheck u_check(this, getVictim(), radius);
+                Skyfire::CreatureListSearcher<Skyfire::AnyAssistCreatureInRangeCheck> searcher(assistList, u_check);
 
-                TypeContainerVisitor<Trinity::CreatureListSearcher<Trinity::AnyAssistCreatureInRangeCheck>, GridTypeMapContainer >  grid_creature_searcher(searcher);
+                TypeContainerVisitor<Skyfire::CreatureListSearcher<Skyfire::AnyAssistCreatureInRangeCheck>, GridTypeMapContainer >  grid_creature_searcher(searcher);
 
                 cell.Visit(p, grid_creature_searcher, *GetMap(), *this, radius);
             }
@@ -1760,15 +1760,15 @@ void Creature::CallForHelp(float fRadius)
     if (fRadius <= 0.0f || !getVictim() || isPet() || isCharmed())
         return;
 
-    CellPair p(Trinity::ComputeCellPair(GetPositionX(), GetPositionY()));
+    CellPair p(Skyfire::ComputeCellPair(GetPositionX(), GetPositionY()));
     Cell cell(p);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::CallOfHelpCreatureInRangeDo u_do(this, getVictim(), fRadius);
-    Trinity::CreatureWorker<Trinity::CallOfHelpCreatureInRangeDo> worker(u_do);
+    Skyfire::CallOfHelpCreatureInRangeDo u_do(this, getVictim(), fRadius);
+    Skyfire::CreatureWorker<Skyfire::CallOfHelpCreatureInRangeDo> worker(u_do);
 
-    TypeContainerVisitor<Trinity::CreatureWorker<Trinity::CallOfHelpCreatureInRangeDo>, GridTypeMapContainer >  grid_creature_searcher(worker);
+    TypeContainerVisitor<Skyfire::CreatureWorker<Skyfire::CallOfHelpCreatureInRangeDo>, GridTypeMapContainer >  grid_creature_searcher(worker);
 
     cell.Visit(p, grid_creature_searcher, *GetMap(), *this, fRadius);
 }

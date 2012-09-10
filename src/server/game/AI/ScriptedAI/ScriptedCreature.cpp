@@ -476,8 +476,8 @@ void ScriptedAI::DoTeleportAll(float fX, float fY, float fZ, float fO)
 Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 {
     Unit* pUnit = NULL;
-    Trinity::MostHPMissingInRange u_check(me, fRange, uiMinHPDiff);
-    Trinity::UnitLastSearcher<Trinity::MostHPMissingInRange> searcher(pUnit, u_check);
+    Skyfire::MostHPMissingInRange u_check(me, fRange, uiMinHPDiff);
+    Skyfire::UnitLastSearcher<Skyfire::MostHPMissingInRange> searcher(pUnit, u_check);
     me->VisitNearbyObject(fRange, searcher);
 
     return pUnit;
@@ -486,8 +486,8 @@ Unit* ScriptedAI::DoSelectLowestHpFriendly(float fRange, uint32 uiMinHPDiff)
 std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 {
     std::list<Creature*> pList;
-    Trinity::FriendlyCCedInRange u_check(me, fRange);
-    Trinity::CreatureListSearcher<Trinity::FriendlyCCedInRange> searcher(pList, u_check);
+    Skyfire::FriendlyCCedInRange u_check(me, fRange);
+    Skyfire::CreatureListSearcher<Skyfire::FriendlyCCedInRange> searcher(pList, u_check);
     me->VisitNearbyObject(fRange, searcher);
     return pList;
 }
@@ -495,8 +495,8 @@ std::list<Creature*> ScriptedAI::DoFindFriendlyCC(float fRange)
 std::list<Creature*> ScriptedAI::DoFindFriendlyMissingBuff(float fRange, uint32 uiSpellid)
 {
     std::list<Creature*> pList;
-    Trinity::FriendlyMissingBuffInRange u_check(me, fRange, uiSpellid);
-    Trinity::CreatureListSearcher<Trinity::FriendlyMissingBuffInRange> searcher(pList, u_check);
+    Skyfire::FriendlyMissingBuffInRange u_check(me, fRange, uiSpellid);
+    Skyfire::CreatureListSearcher<Skyfire::FriendlyMissingBuffInRange> searcher(pList, u_check);
     me->VisitNearbyObject(fRange, searcher);
     return pList;
 }
@@ -505,14 +505,14 @@ Player* ScriptedAI::GetPlayerAtMinimumRange(float fMinimumRange)
 {
     Player* player = NULL;
 
-    CellPair pair(Trinity::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
+    CellPair pair(Skyfire::ComputeCellPair(me->GetPositionX(), me->GetPositionY()));
     Cell cell(pair);
     cell.data.Part.reserved = ALL_DISTRICT;
     cell.SetNoCreate();
 
-    Trinity::PlayerAtMinimumRangeAway check(me, fMinimumRange);
-    Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway> searcher(player, check);
-    TypeContainerVisitor<Trinity::PlayerSearcher<Trinity::PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
+    Skyfire::PlayerAtMinimumRangeAway check(me, fMinimumRange);
+    Skyfire::PlayerSearcher<Skyfire::PlayerAtMinimumRangeAway> searcher(player, check);
+    TypeContainerVisitor<Skyfire::PlayerSearcher<Skyfire::PlayerAtMinimumRangeAway>, GridTypeMapContainer> visitor(searcher);
 
     cell.Visit(pair, visitor, *(me->GetMap()));
 

@@ -68,11 +68,11 @@ void RARunnable::run()
 
     if (acceptor.open(listen_addr, m_Reactor) == -1)
     {
-        sLog->outError("Trinity RA can not bind to port %d on %s", raport, stringip.c_str());
+        sLog->outError("Skyfire RA can not bind to port %d on %s", raport, stringip.c_str());
         return;
     }
 
-    sLog->outString("Starting Trinity RA on port %d on %s", raport, stringip.c_str());
+    sLog->outString("Starting Skyfire RA on port %d on %s", raport, stringip.c_str());
 
     while (!World::IsStopped())
     {
@@ -83,5 +83,5 @@ void RARunnable::run()
             break;
     }
 
-    sLog->outString("Trinity RA thread exiting");
+    sLog->outString("Skyfire RA thread exiting");
 }

@@ -172,7 +172,7 @@ struct boss_gurtogg_bloodboilAI : public ScriptedAI
         }
 
         //Sort the list of players
-        targets.sort(Trinity::ObjectDistanceOrderPred(me, false));
+        targets.sort(Skyfire::ObjectDistanceOrderPred(me, false));
         //Resize so we only get top 5
         targets.resize(5);
 

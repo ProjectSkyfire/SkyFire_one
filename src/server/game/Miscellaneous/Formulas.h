@@ -23,7 +23,7 @@
 
 #include "World.h"
 
-namespace Trinity
+namespace Skyfire
 {
     namespace Honor
     {

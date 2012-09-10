@@ -70,7 +70,7 @@ bool
 Database::AsyncQuery(Class* object, void (Class::*method)(QueryResult_AutoPtr), const char* sql)
 {
     ASYNC_QUERY_BODY(sql, itr)
-    return m_threadBody->Delay(new SqlQuery(sql, new Trinity::QueryCallback<Class>(object, method), itr->second));
+    return m_threadBody->Delay(new SqlQuery(sql, new Skyfire::QueryCallback<Class>(object, method), itr->second));
 }
 
 template<class Class, typename ParamType1>
@@ -78,7 +78,7 @@ bool
 Database::AsyncQuery(Class* object, void (Class::*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char* sql)
 {
     ASYNC_QUERY_BODY(sql, itr)
-    return m_threadBody->Delay(new SqlQuery(sql, new Trinity::QueryCallback<Class, ParamType1>(object, method, (QueryResult_AutoPtr)NULL, param1), itr->second));
+    return m_threadBody->Delay(new SqlQuery(sql, new Skyfire::QueryCallback<Class, ParamType1>(object, method, (QueryResult_AutoPtr)NULL, param1), itr->second));
 }
 
 template<class Class, typename ParamType1, typename ParamType2>
@@ -86,7 +86,7 @@ bool
 Database::AsyncQuery(Class* object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char* sql)
 {
     ASYNC_QUERY_BODY(sql, itr)
-    return m_threadBody->Delay(new SqlQuery(sql, new Trinity::QueryCallback<Class, ParamType1, ParamType2>(object, method, (QueryResult_AutoPtr)NULL, param1, param2), itr->second));
+    return m_threadBody->Delay(new SqlQuery(sql, new Skyfire::QueryCallback<Class, ParamType1, ParamType2>(object, method, (QueryResult_AutoPtr)NULL, param1, param2), itr->second));
 }
 
 template<class Class, typename ParamType1, typename ParamType2, typename ParamType3>
@@ -94,7 +94,7 @@ bool
 Database::AsyncQuery(Class* object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char* sql)
 {
     ASYNC_QUERY_BODY(sql, itr)
-    return m_threadBody->Delay(new SqlQuery(sql, new Trinity::QueryCallback<Class, ParamType1, ParamType2, ParamType3>(object, method, (QueryResult_AutoPtr)NULL, param1, param2, param3), itr->second));
+    return m_threadBody->Delay(new SqlQuery(sql, new Skyfire::QueryCallback<Class, ParamType1, ParamType2, ParamType3>(object, method, (QueryResult_AutoPtr)NULL, param1, param2, param3), itr->second));
 }
 
 // -- Query / static --
@@ -104,7 +104,7 @@ bool
 Database::AsyncQuery(void (*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char* sql)
 {
     ASYNC_QUERY_BODY(sql, itr)
-    return m_threadBody->Delay(new SqlQuery(sql, new Trinity::SQueryCallback<ParamType1>(method, (QueryResult_AutoPtr)NULL, param1), itr->second));
+    return m_threadBody->Delay(new SqlQuery(sql, new Skyfire::SQueryCallback<ParamType1>(method, (QueryResult_AutoPtr)NULL, param1), itr->second));
 }
 
 template<typename ParamType1, typename ParamType2>
@@ -112,7 +112,7 @@ bool
 Database::AsyncQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char* sql)
 {
     ASYNC_QUERY_BODY(sql, itr)
-    return m_threadBody->Delay(new SqlQuery(sql, new Trinity::SQueryCallback<ParamType1, ParamType2>(method, (QueryResult_AutoPtr)NULL, param1, param2), itr->second));
+    return m_threadBody->Delay(new SqlQuery(sql, new Skyfire::SQueryCallback<ParamType1, ParamType2>(method, (QueryResult_AutoPtr)NULL, param1, param2), itr->second));
 }
 
 template<typename ParamType1, typename ParamType2, typename ParamType3>
@@ -120,7 +120,7 @@ bool
 Database::AsyncQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char* sql)
 {
     ASYNC_QUERY_BODY(sql, itr)
-    return m_threadBody->Delay(new SqlQuery(sql, new Trinity::SQueryCallback<ParamType1, ParamType2, ParamType3>(method, (QueryResult_AutoPtr)NULL, param1, param2, param3), itr->second));
+    return m_threadBody->Delay(new SqlQuery(sql, new Skyfire::SQueryCallback<ParamType1, ParamType2, ParamType3>(method, (QueryResult_AutoPtr)NULL, param1, param2, param3), itr->second));
 }
 
 // -- PQuery / member --
@@ -190,7 +190,7 @@ bool
 Database::DelayQueryHolder(Class* object, void (Class::*method)(QueryResult_AutoPtr, SqlQueryHolder*), SqlQueryHolder* holder)
 {
     ASYNC_DELAYHOLDER_BODY(holder, itr)
-    return holder->Execute(new Trinity::QueryCallback<Class, SqlQueryHolder*>(object, method, (QueryResult_AutoPtr)NULL, holder), m_threadBody, itr->second);
+    return holder->Execute(new Skyfire::QueryCallback<Class, SqlQueryHolder*>(object, method, (QueryResult_AutoPtr)NULL, holder), m_threadBody, itr->second);
 }
 
 template<class Class, typename ParamType1>
@@ -198,7 +198,7 @@ bool
 Database::DelayQueryHolder(Class* object, void (Class::*method)(QueryResult_AutoPtr, SqlQueryHolder*, ParamType1), SqlQueryHolder* holder, ParamType1 param1)
 {
     ASYNC_DELAYHOLDER_BODY(holder, itr)
-    return holder->Execute(new Trinity::QueryCallback<Class, SqlQueryHolder*, ParamType1>(object, method, (QueryResult_AutoPtr)NULL, holder, param1), m_threadBody, itr->second);
+    return holder->Execute(new Skyfire::QueryCallback<Class, SqlQueryHolder*, ParamType1>(object, method, (QueryResult_AutoPtr)NULL, holder, param1), m_threadBody, itr->second);
 }
 
 #undef ASYNC_QUERY_BODY

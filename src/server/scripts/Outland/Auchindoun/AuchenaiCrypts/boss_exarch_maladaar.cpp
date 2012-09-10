@@ -201,7 +201,7 @@ struct boss_exarch_maladaarAI : public ScriptedAI
     {
         if (summoned->GetEntry() == ENTRY_STOLEN_SOUL)
         {
-            //SPELL_STOLEN_SOUL_VISUAL has shapeshift effect, but not implemented feature in TRINITY for this spell.
+            //SPELL_STOLEN_SOUL_VISUAL has shapeshift effect, but not implemented feature in SKYFIRE for this spell.
             summoned->CastSpell(summoned, SPELL_STOLEN_SOUL_VISUAL, false);
             summoned->SetDisplayId(soulmodel);
             summoned->setFaction(me->getFaction());

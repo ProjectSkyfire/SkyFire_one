@@ -82,17 +82,17 @@ TotemAI::UpdateAI(const uint32 /*diff*/)
         !victim->isTargetableForAttack() || !i_totem.IsWithinDistInMap(victim, max_range) ||
         i_totem.IsFriendlyTo(victim) || !victim->isVisibleForOrDetect(&i_totem, false))
     {
-        CellPair p(Trinity::ComputeCellPair(i_totem.GetPositionX(), i_totem.GetPositionY()));
+        CellPair p(Skyfire::ComputeCellPair(i_totem.GetPositionX(), i_totem.GetPositionY()));
         Cell cell(p);
         cell.data.Part.reserved = ALL_DISTRICT;
 
         victim = NULL;
 
-        Trinity::NearestAttackableUnitInObjectRangeCheck u_check(&i_totem, &i_totem, max_range);
-        Trinity::UnitLastSearcher<Trinity::NearestAttackableUnitInObjectRangeCheck> checker(victim, u_check);
+        Skyfire::NearestAttackableUnitInObjectRangeCheck u_check(&i_totem, &i_totem, max_range);
+        Skyfire::UnitLastSearcher<Skyfire::NearestAttackableUnitInObjectRangeCheck> checker(victim, u_check);
 
-        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestAttackableUnitInObjectRangeCheck>, GridTypeMapContainer > grid_object_checker(checker);
-        TypeContainerVisitor<Trinity::UnitLastSearcher<Trinity::NearestAttackableUnitInObjectRangeCheck>, WorldTypeMapContainer > world_object_checker(checker);
+        TypeContainerVisitor<Skyfire::UnitLastSearcher<Skyfire::NearestAttackableUnitInObjectRangeCheck>, GridTypeMapContainer > grid_object_checker(checker);
+        TypeContainerVisitor<Skyfire::UnitLastSearcher<Skyfire::NearestAttackableUnitInObjectRangeCheck>, WorldTypeMapContainer > world_object_checker(checker);
 
         //TODO: Backport mangos-0.12 r638: [7667] Add to CreatureAI field pointing to creature itself
         //cell.Visit(p, grid_object_checker,  *m_creature.GetMap(), *m_creature, max_range);

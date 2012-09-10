@@ -22,7 +22,7 @@
 
 /// ------------ BASE CLASSES ------------
 
-namespace Trinity
+namespace Skyfire
 {
     template < class Class, typename ParamType1 = void, typename ParamType2 = void, typename ParamType3 = void, typename ParamType4 = void >
     class _Callback
@@ -194,7 +194,7 @@ namespace Trinity
 
 /// --------- GENERIC CALLBACKS ----------
 
-namespace Trinity
+namespace Skyfire
 {
     class ICallback
     {
@@ -271,7 +271,7 @@ namespace Trinity
 #include "QueryResult.h"
 class QueryResult;
 
-namespace Trinity
+namespace Skyfire
 {
     class IQueryCallback
     {

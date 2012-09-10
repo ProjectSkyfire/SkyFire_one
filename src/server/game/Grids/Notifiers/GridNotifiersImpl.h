@@ -31,7 +31,7 @@
 
 template<class T>
 inline void
-Trinity::VisibleNotifier::Visit(GridRefManager<T> &m)
+Skyfire::VisibleNotifier::Visit(GridRefManager<T> &m)
 {
     for (typename GridRefManager<T>::iterator iter = m.begin(); iter != m.end(); ++iter)
     {
@@ -41,7 +41,7 @@ Trinity::VisibleNotifier::Visit(GridRefManager<T> &m)
 }
 
 inline void
-Trinity::ObjectUpdater::Visit(CreatureMapType &m)
+Skyfire::ObjectUpdater::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator iter=m.begin(); iter != m.end(); ++iter)
         if (iter->getSource()->IsInWorld() && !iter->getSource()->isSpiritService())
@@ -53,7 +53,7 @@ Trinity::ObjectUpdater::Visit(CreatureMapType &m)
 // WorldObject searchers & workers
 
 template<class Check>
-void Trinity::WorldObjectSearcher<Check>::Visit(GameObjectMapType &m)
+void Skyfire::WorldObjectSearcher<Check>::Visit(GameObjectMapType &m)
 {
     // already found
     if (i_object)
@@ -70,7 +70,7 @@ void Trinity::WorldObjectSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectSearcher<Check>::Visit(PlayerMapType &m)
+void Skyfire::WorldObjectSearcher<Check>::Visit(PlayerMapType &m)
 {
     // already found
     if (i_object)
@@ -87,7 +87,7 @@ void Trinity::WorldObjectSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::WorldObjectSearcher<Check>::Visit(CreatureMapType &m)
 {
     // already found
     if (i_object)
@@ -104,7 +104,7 @@ void Trinity::WorldObjectSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectSearcher<Check>::Visit(CorpseMapType &m)
+void Skyfire::WorldObjectSearcher<Check>::Visit(CorpseMapType &m)
 {
     // already found
     if (i_object)
@@ -121,7 +121,7 @@ void Trinity::WorldObjectSearcher<Check>::Visit(CorpseMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType &m)
+void Skyfire::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType &m)
 {
     // already found
     if (i_object)
@@ -138,7 +138,7 @@ void Trinity::WorldObjectSearcher<Check>::Visit(DynamicObjectMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectListSearcher<Check>::Visit(PlayerMapType &m)
+void Skyfire::WorldObjectListSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -146,7 +146,7 @@ void Trinity::WorldObjectListSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectListSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::WorldObjectListSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -154,7 +154,7 @@ void Trinity::WorldObjectListSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectListSearcher<Check>::Visit(CorpseMapType &m)
+void Skyfire::WorldObjectListSearcher<Check>::Visit(CorpseMapType &m)
 {
     for (CorpseMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -162,7 +162,7 @@ void Trinity::WorldObjectListSearcher<Check>::Visit(CorpseMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectListSearcher<Check>::Visit(GameObjectMapType &m)
+void Skyfire::WorldObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 {
     for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -170,7 +170,7 @@ void Trinity::WorldObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Trinity::WorldObjectListSearcher<Check>::Visit(DynamicObjectMapType &m)
+void Skyfire::WorldObjectListSearcher<Check>::Visit(DynamicObjectMapType &m)
 {
     for (DynamicObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -180,7 +180,7 @@ void Trinity::WorldObjectListSearcher<Check>::Visit(DynamicObjectMapType &m)
 // Gameobject searchers
 
 template<class Check>
-void Trinity::GameObjectSearcher<Check>::Visit(GameObjectMapType &m)
+void Skyfire::GameObjectSearcher<Check>::Visit(GameObjectMapType &m)
 {
     // already found
     if (i_object)
@@ -197,7 +197,7 @@ void Trinity::GameObjectSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Trinity::GameObjectLastSearcher<Check>::Visit(GameObjectMapType &m)
+void Skyfire::GameObjectLastSearcher<Check>::Visit(GameObjectMapType &m)
 {
     for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -207,7 +207,7 @@ void Trinity::GameObjectLastSearcher<Check>::Visit(GameObjectMapType &m)
 }
 
 template<class Check>
-void Trinity::GameObjectListSearcher<Check>::Visit(GameObjectMapType &m)
+void Skyfire::GameObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 {
     for (GameObjectMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -217,7 +217,7 @@ void Trinity::GameObjectListSearcher<Check>::Visit(GameObjectMapType &m)
 // Unit searchers
 
 template<class Check>
-void Trinity::UnitSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::UnitSearcher<Check>::Visit(CreatureMapType &m)
 {
     // already found
     if (i_object)
@@ -234,7 +234,7 @@ void Trinity::UnitSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Trinity::UnitSearcher<Check>::Visit(PlayerMapType &m)
+void Skyfire::UnitSearcher<Check>::Visit(PlayerMapType &m)
 {
     // already found
     if (i_object)
@@ -251,7 +251,7 @@ void Trinity::UnitSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Trinity::UnitLastSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::UnitLastSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -261,7 +261,7 @@ void Trinity::UnitLastSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Trinity::UnitLastSearcher<Check>::Visit(PlayerMapType &m)
+void Skyfire::UnitLastSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -271,7 +271,7 @@ void Trinity::UnitLastSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Trinity::UnitListSearcher<Check>::Visit(PlayerMapType &m)
+void Skyfire::UnitListSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -279,7 +279,7 @@ void Trinity::UnitListSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Trinity::UnitListSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::UnitListSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -289,7 +289,7 @@ void Trinity::UnitListSearcher<Check>::Visit(CreatureMapType &m)
 // Creature searchers
 
 template<class Check>
-void Trinity::CreatureSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::CreatureSearcher<Check>::Visit(CreatureMapType &m)
 {
     // already found
     if (i_object)
@@ -306,7 +306,7 @@ void Trinity::CreatureSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Trinity::CreatureLastSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::CreatureLastSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
     {
@@ -316,7 +316,7 @@ void Trinity::CreatureLastSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Trinity::CreatureListSearcher<Check>::Visit(CreatureMapType &m)
+void Skyfire::CreatureListSearcher<Check>::Visit(CreatureMapType &m)
 {
     for (CreatureMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -324,7 +324,7 @@ void Trinity::CreatureListSearcher<Check>::Visit(CreatureMapType &m)
 }
 
 template<class Check>
-void Trinity::PlayerListSearcher<Check>::Visit(PlayerMapType &m)
+void Skyfire::PlayerListSearcher<Check>::Visit(PlayerMapType &m)
 {
     for (PlayerMapType::iterator itr=m.begin(); itr != m.end(); ++itr)
         if (i_check(itr->getSource()))
@@ -332,7 +332,7 @@ void Trinity::PlayerListSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Check>
-void Trinity::PlayerSearcher<Check>::Visit(PlayerMapType &m)
+void Skyfire::PlayerSearcher<Check>::Visit(PlayerMapType &m)
 {
     // already found
     if (i_object)
@@ -349,7 +349,7 @@ void Trinity::PlayerSearcher<Check>::Visit(PlayerMapType &m)
 }
 
 template<class Builder>
-void Trinity::LocalizedPacketDo<Builder>::operator()(Player* p)
+void Skyfire::LocalizedPacketDo<Builder>::operator()(Player* p)
 {
     uint32 loc_idx = p->GetSession()->GetSessionDbLocaleIndex();
     uint32 cache_idx = loc_idx+1;
@@ -374,7 +374,7 @@ void Trinity::LocalizedPacketDo<Builder>::operator()(Player* p)
 }
 
 template<class Builder>
-void Trinity::LocalizedPacketListDo<Builder>::operator()(Player* p)
+void Skyfire::LocalizedPacketListDo<Builder>::operator()(Player* p)
 {
     uint32 loc_idx = p->GetSession()->GetSessionDbLocaleIndex();
     uint32 cache_idx = loc_idx+1;
