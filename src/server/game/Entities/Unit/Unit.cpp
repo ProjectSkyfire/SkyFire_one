@@ -8568,7 +8568,7 @@ void Unit::CombatStart(Unit* target, bool initialAggro)
 void Unit::SetInCombatState(bool PvP, Unit* enemy)
 {
     // only alive units can be in combat
-    if (!isAlive())
+    if (!isAlive() || isDying())
         return;
 
     if (PvP)
