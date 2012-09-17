@@ -469,7 +469,7 @@ enum AtLoginFlags
     AT_LOGIN_RESET_TALENTS     = 0x04,
     //AT_LOGIN_CUSTOMIZE         = 0x08, -- used in post-3.x
     //AT_LOGIN_RESET_PET_TALENTS = 0x10, -- used in post-3.x
-    AT_LOGIN_FIRST             = 0x20   
+    AT_LOGIN_FIRST             = 0x20
 };
 
 typedef std::map<uint32, QuestStatusData> QuestStatusMap;
@@ -1193,8 +1193,8 @@ class Player : public Unit, public GridObject<Player>
             }
         }
         uint32 GetReqKillOrCastCurrentCount(uint32 quest_id, int32 entry);
-        
-        int32 CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, bool for_quest);       
+
+        int32 CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, bool for_quest);
         void AdjustQuestReqItemCount(Quest const* pQuest);
         void AreaExploredOrEventHappens(uint32 questId);
         void GroupEventHappens(uint32 questId, WorldObject const* pEventObject);
@@ -1205,7 +1205,7 @@ class Player : public Unit, public GridObject<Player>
         void CastedCreatureOrGO(uint32 entry, uint64 guid, uint32 spell_id);
         void TalkedToCreature(uint32 entry, uint64 guid);
         void MoneyChanged(uint32 value);
-        void ReputationChanged(FactionEntry const* factionEntry);        
+        void ReputationChanged(FactionEntry const* factionEntry);
         bool HasQuestForItem(uint32 itemid) const;
         bool HasQuestForGO(int32 GOId);
         void UpdateForQuestsGO();
@@ -1694,14 +1694,14 @@ class Player : public Unit, public GridObject<Player>
         void RewardPlayerAndGroupAtKill(Unit* pVictim);
         void RewardPlayerAndGroupAtEvent(uint32 creature_id, WorldObject* pRewardSource);
         bool isHonorOrXPTarget(Unit* pVictim) const;
-        
+
         ReputationMgr&       GetReputationMgr()       { return m_reputationMgr; }
         ReputationMgr const& GetReputationMgr() const { return m_reputationMgr; }
         ReputationRank GetReputationRank(uint32 faction_id) const;
-        
-		void RewardReputation(Unit *pVictim, float rate);
+
+        void RewardReputation(Unit *pVictim, float rate);
         void RewardReputation(Quest const *pQuest);
-        
+
         void UpdateSkillsForLevel();
         void UpdateSkillsToMaxSkillsForLevel();             // for .levelup
         void ModifySkillBonus(uint32 skillid, int32 val, bool talent);
@@ -2350,10 +2350,10 @@ class Player : public Unit, public GridObject<Player>
         bool m_bCanDelayTeleport;
         bool m_bHasDelayedTeleport;
         bool m_bHasBeenAliveAtDelayedTeleport;
-       
+
         uint32 m_DetectInvTimer;
 
-		ReputationMgr  m_reputationMgr;
+        ReputationMgr  m_reputationMgr;
 
         // Temporary removed pet cache
         uint32 m_temporaryUnsummonedPetNumber;
