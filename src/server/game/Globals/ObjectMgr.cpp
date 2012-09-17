@@ -2943,10 +2943,10 @@ void ObjectMgr::LoadQuests()
             // no changes, quest can't be done for this requirement
         }
 
-        if (qinfo->RequiredMinRepValue && qinfo->RequiredMinRepValue > Player::Reputation_Cap)
+        if (qinfo->RequiredMinRepValue && qinfo->RequiredMinRepValue > ReputationMgr::Reputation_Cap)
         {
             sLog->outErrorDb("Quest %u has RequiredMinRepValue = %d but max reputation is %u, quest cannot be completed.",
-                qinfo->GetQuestId(), qinfo->RequiredMinRepValue, Player::Reputation_Cap);
+                qinfo->GetQuestId(), qinfo->RequiredMinRepValue, ReputationMgr::Reputation_Cap);
             // no changes, quest can't be done for this requirement
         }
 
@@ -6508,7 +6508,7 @@ bool PlayerCondition::Meets(Player const * player) const
         case CONDITION_REPUTATION_RANK:
         {
             FactionEntry const* faction = sFactionStore.LookupEntry(value1);
-            return faction && player->GetReputationRank(faction) >= value2;
+            return faction && player->GetReputationRank(uint32(faction)) >= value2;
         }
         case CONDITION_TEAM:
             return player->GetTeam() == value1;

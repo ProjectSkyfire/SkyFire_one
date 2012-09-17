@@ -36,6 +36,7 @@
 #include "Pet.h"
 #include "MapReference.h"
 #include "Util.h"                                           // for Tokens typedef
+#include "ReputationMgr.h"
 
 #include<string>
 #include<vector>
@@ -245,31 +246,6 @@ struct Areas
     float y1;
     float y2;
 };
-
-enum FactionFlags
-{
-    FACTION_FLAG_VISIBLE            = 0x01,                 // makes visible in client (set or can be set at interaction with target of this faction)
-    FACTION_FLAG_AT_WAR             = 0x02,                 // enable AtWar-button in client. player controlled (except opposition team always war state), Flag only set on initial creation
-    FACTION_FLAG_HIDDEN             = 0x04,                 // hidden faction from reputation pane in client (player can gain reputation, but this update not sent to client)
-    FACTION_FLAG_INVISIBLE_FORCED   = 0x08,                 // always overwrite FACTION_FLAG_VISIBLE and hide faction in rep.list, used for hide opposite team factions
-    FACTION_FLAG_PEACE_FORCED       = 0x10,                 // always overwrite FACTION_FLAG_AT_WAR, used for prevent war with own team factions
-    FACTION_FLAG_INACTIVE           = 0x20,                 // player controlled, state stored in characters.data (CMSG_SET_FACTION_INACTIVE)
-    FACTION_FLAG_RIVAL              = 0x40                  // flag for the two competing outland factions
-};
-
-typedef uint32 RepListID;
-struct FactionState
-{
-    uint32 ID;
-    RepListID ReputationListID;
-    uint32 Flags;
-    int32  Standing;
-    bool Changed;
-};
-
-typedef std::map<RepListID, FactionState> FactionStateList;
-
-typedef std::map<uint32, ReputationRank> ForcedReactions;
 
 struct EnchantDuration
 {
@@ -1217,6 +1193,8 @@ class Player : public Unit, public GridObject<Player>
             }
         }
         uint32 GetReqKillOrCastCurrentCount(uint32 quest_id, int32 entry);
+        
+        int32 CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, bool for_quest);       
         void AdjustQuestReqItemCount(Quest const* pQuest);
         void AreaExploredOrEventHappens(uint32 questId);
         void GroupEventHappens(uint32 questId, WorldObject const* pEventObject);
@@ -1227,6 +1205,7 @@ class Player : public Unit, public GridObject<Player>
         void CastedCreatureOrGO(uint32 entry, uint64 guid, uint32 spell_id);
         void TalkedToCreature(uint32 entry, uint64 guid);
         void MoneyChanged(uint32 value);
+        void ReputationChanged(FactionEntry const* factionEntry);        
         bool HasQuestForItem(uint32 itemid) const;
         bool HasQuestForGO(int32 GOId);
         void UpdateForQuestsGO();
@@ -1715,40 +1694,14 @@ class Player : public Unit, public GridObject<Player>
         void RewardPlayerAndGroupAtKill(Unit* pVictim);
         void RewardPlayerAndGroupAtEvent(uint32 creature_id, WorldObject* pRewardSource);
         bool isHonorOrXPTarget(Unit* pVictim) const;
-
-        FactionStateList m_factions;
-        ForcedReactions m_forcedReactions;
-        FactionStateList const& GetFactionStateList() { return m_factions; }
-        uint32 GetDefaultReputationFlags(const FactionEntry *factionEntry) const;
-        int32 GetBaseReputation(const FactionEntry *factionEntry) const;
-        int32 GetReputation(uint32 faction_id) const;
-        int32 GetReputation(const FactionEntry *factionEntry) const;
-        ReputationRank GetReputationRank(uint32 faction) const;
-        ReputationRank GetReputationRank(const FactionEntry *factionEntry) const;
-        ReputationRank GetBaseReputationRank(const FactionEntry *factionEntry) const;
-        ReputationRank ReputationToRank(int32 standing) const;
-        const static int32 ReputationRank_Length[MAX_REPUTATION_RANK];
-        const static int32 Reputation_Cap    =  42999;
-        const static int32 Reputation_Bottom = -42000;
-        bool ModifyFactionReputation(uint32 FactionTemplateId, int32 DeltaReputation);
-        bool ModifyFactionReputation(FactionEntry const* factionEntry, int32 standing);
-        bool ModifyOneFactionReputation(FactionEntry const* factionEntry, int32 standing);
-        bool SetFactionReputation(uint32 FactionTemplateId, int32 standing);
-        bool SetFactionReputation(FactionEntry const* factionEntry, int32 standing);
-        bool SetOneFactionReputation(FactionEntry const* factionEntry, int32 standing);
-        int32 CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, bool for_quest);
-        void RewardReputation(Unit *pVictim, float rate);
+        
+        ReputationMgr&       GetReputationMgr()       { return m_reputationMgr; }
+        ReputationMgr const& GetReputationMgr() const { return m_reputationMgr; }
+        ReputationRank GetReputationRank(uint32 faction_id) const;
+        
+		void RewardReputation(Unit *pVictim, float rate);
         void RewardReputation(Quest const *pQuest);
-        void SetInitialFactions();
-        void UpdateReputation() const;
-        void SendFactionState(FactionState const* faction) const;
-        void SendInitialReputations();
-        FactionState const* GetFactionState(FactionEntry const* factionEntry) const;
-        void SetFactionAtWar(FactionState* faction, bool atWar);
-        void SetFactionInactive(FactionState* faction, bool inactive);
-        void SetFactionVisible(FactionState* faction);
-        void SetFactionVisibleForFactionTemplateId(uint32 FactionTemplateId);
-        void SetFactionVisibleForFactionId(uint32 FactionId);
+        
         void UpdateSkillsForLevel();
         void UpdateSkillsToMaxSkillsForLevel();             // for .levelup
         void ModifySkillBonus(uint32 skillid, int32 val, bool talent);
@@ -2178,7 +2131,6 @@ class Player : public Unit, public GridObject<Player>
         void _LoadQuestStatus(QueryResult_AutoPtr result);
         void _LoadDailyQuestStatus(QueryResult_AutoPtr result);
         void _LoadGroup(QueryResult_AutoPtr result);
-        void _LoadReputation(QueryResult_AutoPtr result);
         void _LoadSkills(QueryResult_AutoPtr result);
         void _LoadSpells(QueryResult_AutoPtr result);
         void _LoadTutorials(QueryResult_AutoPtr result);
@@ -2198,7 +2150,6 @@ class Player : public Unit, public GridObject<Player>
         void _SaveMail();
         void _SaveQuestStatus();
         void _SaveDailyQuestStatus();
-        void _SaveReputation();
         void _SaveSkills();
         void _SaveSpells();
         void _SaveTutorials();
@@ -2399,16 +2350,18 @@ class Player : public Unit, public GridObject<Player>
         bool m_bCanDelayTeleport;
         bool m_bHasDelayedTeleport;
         bool m_bHasBeenAliveAtDelayedTeleport;
-
+       
         uint32 m_DetectInvTimer;
+
+		ReputationMgr  m_reputationMgr;
 
         // Temporary removed pet cache
         uint32 m_temporaryUnsummonedPetNumber;
         uint32 m_oldpetspell;
 };
 
-void AddItemsSetItem(Player*player, Item *item);
-void RemoveItemsSetItem(Player*player, ItemPrototype const *proto);
+void AddItemsSetItem(Player* player, Item* item);
+void RemoveItemsSetItem(Player* player, ItemPrototype const* proto);
 
 // "the bodies of template functions must be made available in a header file"
 template <class T> T Player::ApplySpellMod(uint32 spellId, SpellModOp op, T &basevalue, Spell const* spell)
