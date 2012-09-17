@@ -6539,9 +6539,8 @@ bool Unit::IsHostileTo(Unit const* unit) const
     if (tester->GetTypeId() == TYPEID_PLAYER)
     {
         // forced reaction
-        ForcedReactions::const_iterator forceItr = tester->ToPlayer()->m_forcedReactions.find(target_faction->faction);
-        if (forceItr != tester->ToPlayer()->m_forcedReactions.end())
-            return forceItr->second <= REP_HOSTILE;
+        if (ReputationRank const* force =((Player*)tester)->GetForcedRankIfAny(target_faction))
+            return *force <= REP_HOSTILE;
 
         // if faction have reputation then hostile state for tester at 100% dependent from at_war state
         if (FactionEntry const* raw_target_faction = sFactionStore.LookupEntry(target_faction->faction))
@@ -6553,9 +6552,8 @@ bool Unit::IsHostileTo(Unit const* unit) const
     else if (target->GetTypeId() == TYPEID_PLAYER)
     {
         // forced reaction
-        ForcedReactions::const_iterator forceItr = target->ToPlayer()->m_forcedReactions.find(tester_faction->faction);
-        if (forceItr != target->ToPlayer()->m_forcedReactions.end())
-            return forceItr->second <= REP_HOSTILE;
+        if (ReputationRank const* force = ((Player*)target)->GetForcedRankIfAny(tester_faction))
+            return *force <= REP_HOSTILE;
 
         // apply reputation state
         FactionEntry const* raw_tester_faction = sFactionStore.LookupEntry(tester_faction->faction);
@@ -6648,9 +6646,8 @@ bool Unit::IsFriendlyTo(Unit const* unit) const
     if (tester->GetTypeId() == TYPEID_PLAYER)
     {
         // forced reaction
-        ForcedReactions::const_iterator forceItr = tester->ToPlayer()->m_forcedReactions.find(target_faction->faction);
-        if (forceItr != tester->ToPlayer()->m_forcedReactions.end())
-            return forceItr->second >= REP_FRIENDLY;
+        if (ReputationRank const* force =((Player*)tester)->GetForcedRankIfAny(target_faction))
+            return *force >= REP_FRIENDLY;
 
         // if faction have reputation then friendly state for tester at 100% dependent from at_war state
         if (FactionEntry const* raw_target_faction = sFactionStore.LookupEntry(target_faction->faction))
@@ -6662,9 +6659,8 @@ bool Unit::IsFriendlyTo(Unit const* unit) const
     else if (target->GetTypeId() == TYPEID_PLAYER)
     {
         // forced reaction
-        ForcedReactions::const_iterator forceItr = target->ToPlayer()->m_forcedReactions.find(tester_faction->faction);
-        if (forceItr != target->ToPlayer()->m_forcedReactions.end())
-            return forceItr->second >= REP_FRIENDLY;
+        if (ReputationRank const* force =((Player*)target)->GetForcedRankIfAny(tester_faction))
+            return *force >= REP_FRIENDLY;
 
         // apply reputation state
         if (FactionEntry const* raw_tester_faction = sFactionStore.LookupEntry(tester_faction->faction))
