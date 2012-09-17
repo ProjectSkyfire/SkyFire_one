@@ -700,7 +700,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
     //Reputations if "StartAllReputation" is enabled
     if (sWorld->getConfig(CONFIG_START_ALL_REP))
     {
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(942), 42999);
+        /*pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(942), 42999);
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(935), 42999);
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(936), 42999);
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1011), 42999);
@@ -711,30 +711,30 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(934), 42999);
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1038), 42999);
         pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(1077), 42999);
-        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(990), 42999);
+        pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(990), 42999);*/
 
         // Factions depending on team, like cities and some more stuff
         switch (pCurrChar->GetTeam())
         {
         case ALLIANCE:
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(72), 42999);
+            /*pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(72), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(47), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(69), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(930), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(730), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(978), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(54), 42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(946), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(946), 42999);*/
             break;
         case HORDE:
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(76), 42999);
+            /*pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(76), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(68), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(81), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(911), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(729), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(941), 42999);
             pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(530), 42999);
-            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(947), 42999);
+            pCurrChar->SetFactionReputation(sFactionStore.LookupEntry(947), 42999);*/
             break;
         default:
                 break;
@@ -766,7 +766,7 @@ void WorldSession::HandleSetFactionAtWar(WorldPacket& recv_data)
     recv_data >> repListID;
     recv_data >> flag;
 
-    GetPlayer()->SetFactionAtWar(repListID, flag);
+    GetPlayer()->GetReputationMgr().SetAtWar(repListID, flag);
 }
 
 //I think this function is never used :/ I dunno, but i guess this opcode not exists
@@ -794,7 +794,7 @@ void WorldSession::HandleSetFactionCheat( WorldPacket & /*recv_data*/ )
             }
         }
     */
-    GetPlayer()->SendFactionStates();
+    GetPlayer()->GetReputationMgr().SendStates();
 }
 void WorldSession::HandleMeetingStoneInfo(WorldPacket & /*recv_data*/)
 {
@@ -852,7 +852,7 @@ void WorldSession::HandleSetWatchedFactionInactiveOpcode(WorldPacket& recv_data)
     uint8 inactive;
     recv_data >> replistid >> inactive;
 
-    _player->SetFactionInactive(replistid, inactive);
+    _player->GetReputationMgr().SetInactive(replistid, inactive);
 }
 
 void WorldSession::HandleToggleHelmOpcode(WorldPacket & /*recv_data*/)
