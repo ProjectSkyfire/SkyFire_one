@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_GRIDLOADER_H
-#define TRINITY_GRIDLOADER_H
+#ifndef SKYFIRE_GRIDLOADER_H
+#define SKYFIRE_GRIDLOADER_H
 
 /*
   The GridLoader is working in conjuction with the Grid and responsible

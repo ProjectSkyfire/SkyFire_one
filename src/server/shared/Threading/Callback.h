@@ -17,8 +17,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_CALLBACK_H
-#define TRINITY_CALLBACK_H
+#ifndef SKYFIRE_CALLBACK_H
+#define SKYFIRE_CALLBACK_H
 
 /// ------------ BASE CLASSES ------------
 

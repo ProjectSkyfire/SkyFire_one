@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_CREATURE_H
-#define TRINITY_CREATURE_H
+#ifndef SKYFIRE_CREATURE_H
+#define SKYFIRE_CREATURE_H
 
 #include "Common.h"
 #include "Unit.h"

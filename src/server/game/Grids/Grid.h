@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_GRID_H
-#define TRINITY_GRID_H
+#ifndef SKYFIRE_GRID_H
+#define SKYFIRE_GRID_H
 
 /*
   Grid is a logical segment of the game world represented inside Skyfire.

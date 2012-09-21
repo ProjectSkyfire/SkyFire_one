@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_DYNAMICOBJECT_H
-#define TRINITY_DYNAMICOBJECT_H
+#ifndef SKYFIRE_DYNAMICOBJECT_H
+#define SKYFIRE_DYNAMICOBJECT_H
 
 #include "Object.h"
 
