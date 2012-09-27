@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_OBJECT_GUID_H
-#define TRINITY_OBJECT_GUID_H
+#ifndef SKYFIRE_OBJECT_GUID_H
+#define SKYFIRE_OBJECT_GUID_H
 
 #include "Common.h"
 #include "ByteBuffer.h"

@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_PET_H
-#define TRINITY_PET_H
+#ifndef SKYFIRE_PET_H
+#define SKYFIRE_PET_H
 
 #include "ObjectGuid.h"
 #include "Unit.h"

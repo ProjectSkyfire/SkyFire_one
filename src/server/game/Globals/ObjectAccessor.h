@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_OBJECTACCESSOR_H
-#define TRINITY_OBJECTACCESSOR_H
+#ifndef SKYFIRE_OBJECTACCESSOR_H
+#define SKYFIRE_OBJECTACCESSOR_H
 
 #include "Define.h"
 #include "UnorderedMap.h"

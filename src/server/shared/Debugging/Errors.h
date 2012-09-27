@@ -18,8 +18,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRINITY_ERRORS_H
-#define TRINITY_ERRORS_H
+#ifndef SKYFIRE_ERRORS_H
+#define SKYFIRE_ERRORS_H
 
 #include "Common.h"
 
