@@ -950,14 +950,15 @@ void Group::UpdatePlayerOutOfRange(Player* player)
     if (!player || !player->IsInWorld())
         return;
 
+    Player* member;
     WorldPacket data;
     player->GetSession()->BuildPartyMemberStatsChangedPacket(player, &data);
 
     for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
     {
-        player = itr->getSource();
-        if (player && player != player && !player->isVisibleFor(player))
-            player->GetSession()->SendPacket(&data);
+        member = itr->getSource();
+        if (member && member != player && !player->isVisibleFor(member))
+            member->GetSession()->SendPacket(&data);
     }
 }
 
