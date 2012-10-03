@@ -185,6 +185,7 @@ class BattlegroundWS : public Battleground
         void HandleKillPlayer(Player* player, Player* killer);
         bool SetupBattleground();
         virtual void ResetBGSubclass();
+        void EndBattleground(uint32 winner);        
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* player);
 
         void UpdateFlagState(uint32 team, uint32 value);
@@ -211,6 +212,9 @@ class BattlegroundWS : public Battleground
         int32 m_FlagSpellBrutalTimer;
         bool m_BothFlagsKept;
         uint8 m_FlagDebuffState;                            // 0 - no debuffs, 1 - focused assault, 2 - brutal assault
+
+        uint32 m_ReputationCapture;
+        uint32 m_HonorWinKills;
+        uint32 m_HonorEndKills;
 };
 #endif
-

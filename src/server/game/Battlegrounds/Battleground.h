@@ -89,7 +89,6 @@ enum BattlegroundTimeIntervals
     RESPAWN_ONE_DAY                 = 86400,                // secs
     RESPAWN_IMMEDIATELY             = 0,                    // secs
     BUFF_RESPAWN_TIME               = 180,                  // secs
-    BG_HONOR_SCORE_TICKS            = 330                   // points
 };
 
 enum BattlegroundStartTimeIntervals
@@ -321,6 +320,7 @@ class Battleground
         uint8 GetArenaType() const          { return m_ArenaType; }
         uint8 GetWinner() const             { return m_Winner; }
         uint32 GetBattlemasterEntry() const;
+        uint32 GetBonusHonorFromKill(uint32 kills) const;
 
         // Set methods:
         void SetName(char const* Name)      { m_Name = Name; }

@@ -173,6 +173,11 @@ enum BG_AB_Sounds
     BG_AB_SOUND_NEAR_VICTORY            = 8456
 };
 
+#define BG_AB_NotABBGWeekendHonorTicks      260
+#define BG_AB_ABBGWeekendHonorTicks         160
+#define BG_AB_NotABBGWeekendReputationTicks 160
+#define BG_AB_ABBGWeekendReputationTicks    120
+
 // x, y, z, o
 const float BG_AB_NodePositions[BG_AB_NODES_MAX][4] = {
     {1166.785f, 1200.132f, -56.70859f, 0.9075713f},        // stables
@@ -247,6 +252,7 @@ class BattlegroundAB : public Battleground
         void HandleAreaTrigger(Player *Source, uint32 Trigger);
         virtual bool SetupBattleground();
         virtual void ResetBGSubclass();
+        void EndBattleground(uint32 winner);        
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* player);
 
         /* Scorekeeping */
@@ -284,6 +290,8 @@ class BattlegroundAB : public Battleground
         uint32              m_HonorScoreTics[BG_TEAMS_COUNT];
         uint32              m_ReputationScoreTics[BG_TEAMS_COUNT];
         bool                m_IsInformedNearVictory;
+        uint32              m_HonorTics;
+        uint32              m_ReputationTics;        
 };
 #endif
 

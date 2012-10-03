@@ -131,10 +131,10 @@ void BattlegroundEY::AddPoints(uint32 Team, uint32 Points)
     m_TeamScores[team_index] += Points;
     m_score[team_index] = m_TeamScores[team_index];
     m_HonorScoreTics[team_index] += Points;
-    if (m_HonorScoreTics[team_index] >= BG_EY_HonorScoreTicks[m_HonorMode])
+    if (m_HonorScoreTics[team_index] >= m_HonorTics)
     {
-        RewardHonorToTeam(20, Team);
-        m_HonorScoreTics[team_index] -= BG_EY_HonorScoreTicks[m_HonorMode];
+        RewardHonorToTeam(GetBonusHonorFromKill(1), Team);
+        m_HonorScoreTics[team_index] -= m_HonorTics;
     }
     UpdateTeamScore(Team);
 }
@@ -278,6 +278,20 @@ void BattlegroundEY::UpdateTeamScore(uint32 Team)
         UpdateWorldState(EY_ALLIANCE_RESOURCES, score);
     else
         UpdateWorldState(EY_HORDE_RESOURCES, score);
+}
+
+void BattlegroundEY::EndBattleground(uint32 winner)
+{
+    // win reward
+    if (winner == ALLIANCE)
+        RewardHonorToTeam(GetBonusHonorFromKill(1), ALLIANCE);
+    if (winner == HORDE)
+        RewardHonorToTeam(GetBonusHonorFromKill(1), HORDE);
+    // complete map reward
+    RewardHonorToTeam(GetBonusHonorFromKill(1), ALLIANCE);
+    RewardHonorToTeam(GetBonusHonorFromKill(1), HORDE);
+
+    Battleground::EndBattleground(winner);
 }
 
 void BattlegroundEY::UpdatePointsCount(uint32 Team)
@@ -501,6 +515,8 @@ void BattlegroundEY::ResetBGSubclass()
     m_DroppedFlagGUID = 0;
     m_PointAddingTimer = 0;
     m_TowerCapCheckTimer = 0;
+    bool isBGWeekend = false;           // TODO FIXME - call sBattlegroundMgr->IsBGWeekend(m_TypeID); - you must also implement that call!
+    uint32 m_HonorTics = (isBGWeekend) ? BG_EY_EYWeekendHonorTicks : BG_EY_NotEYWeekendHonorTicks;
 
     for (uint8 i = 0; i < EY_POINTS_MAX; ++i)
     {

@@ -30,6 +30,7 @@
 #include "World.h"
 #include "Util.h"
 #include "GridNotifiersImpl.h"
+#include "Formulas.h"
 
 namespace Skyfire
 {
@@ -364,6 +365,13 @@ void Battleground::Update(time_t diff)
         else if (m_PrematureCountDownTimer < diff)
         {
             // time's up!
+            uint32 winner = 0;
+            if (GetPlayersCountByTeam(ALLIANCE) >= GetMinPlayersPerTeam())
+                winner = ALLIANCE;
+            else if (GetPlayersCountByTeam(HORDE) >= GetMinPlayersPerTeam())
+                winner = HORDE;
+
+            EndBattleground(winner);            
             EndBattleground(0); // noone wins
             m_PrematureCountDown = false;
         }
@@ -825,7 +833,6 @@ void Battleground::EndBattleground(uint32 winner)
         if (team == winner)
         {
             RewardMark(plr, ITEM_WINNER_COUNT);
-            UpdatePlayerScore(plr, SCORE_BONUS_HONOR, 20);
             RewardQuest(plr);
         }
         else if (winner != 0)
@@ -876,6 +883,13 @@ void Battleground::EndBattleground(uint32 winner)
 
     if (winmsg_id)
         SendMessageToAll(winmsg_id, CHAT_MSG_BG_SYSTEM_NEUTRAL);
+}
+
+uint32 Battleground::GetBonusHonorFromKill(uint32 kills) const
+{
+    // Variable kills means how many honorable kills you scored (so we need kills * honor_for_one_kill)
+    uint32 maxLevel = std::min(GetMaxLevel(), 70U);
+    return Skyfire::Honor::hk_honor_at_level(maxLevel, float(kills));
 }
 
 uint32 Battleground::GetBattlemasterEntry() const
