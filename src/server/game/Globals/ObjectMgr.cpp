@@ -1435,7 +1435,7 @@ uint64 ObjectMgr::GetPlayerGUIDByName(std::string name) const
 bool ObjectMgr::GetPlayerNameByGUID(const uint64 &guid, std::string &name) const
 {
     // prevent DB access for online player
-    if (Player* player = GetPlayer(guid))
+    if (Player* player = ObjectAccessor::FindPlayer(guid))
     {
         name = player->GetName();
         return true;
@@ -4383,7 +4383,7 @@ void ObjectMgr::ReturnOrDeleteOldMails(bool serverUp)
 
         Player *pl = 0;
         if (serverUp)
-            pl = GetPlayer((uint64)m->receiver);
+            pl = ObjectAccessor::FindPlayer((uint64)m->receiver);
         if (pl && pl->m_mailsLoaded)
         {                                                   //this code will run very improbably (the time is between 4 and 5 am, in game is online a player, who has old mail
             //his in mailbox and he has already listed his mails)

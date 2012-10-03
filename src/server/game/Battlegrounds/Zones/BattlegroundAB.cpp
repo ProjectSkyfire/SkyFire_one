@@ -386,7 +386,7 @@ void BattlegroundAB::_NodeDeOccupied(uint8 node)
         WorldSafeLocsEntry const *ClosestGrave = NULL;
         for (std::vector<uint64>::iterator itr = ghost_list.begin(); itr != ghost_list.end(); ++itr)
         {
-            Player* plr = sObjectMgr->GetPlayer(*itr);
+            Player* plr = ObjectAccessor::FindPlayer(*itr);
             if (!plr)
                 continue;
 

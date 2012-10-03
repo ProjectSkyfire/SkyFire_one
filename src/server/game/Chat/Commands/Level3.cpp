@@ -1977,7 +1977,7 @@ bool ChatHandler::HandleLearnAllDefaultCommand(const char *args)
             return false;
         }
 
-        player = sObjectMgr->GetPlayer(name.c_str());
+        player = sObjectAccessor->FindPlayerByName(name.c_str());
     }
     else
         player = getSelectedPlayer();
@@ -3597,7 +3597,7 @@ bool ChatHandler::HandleReviveCommand(const char *args)
             return false;
         }
 
-        player = sObjectMgr->GetPlayer(name.c_str());
+        player = sObjectAccessor->FindPlayerByName(name.c_str());
         if (!player)
             player_guid = sObjectMgr->GetPlayerGUIDByName(name);
     }
@@ -4002,7 +4002,7 @@ bool ChatHandler::HandleLevelUpCommand(const char *args)
             return false;
         }
 
-        chr = sObjectMgr->GetPlayer(name.c_str());
+        chr = sObjectAccessor->FindPlayerByName(name.c_str());
         if (!chr)                                            // not in game
         {
             chr_guid = sObjectMgr->GetPlayerGUIDByName(name);
@@ -4498,7 +4498,7 @@ bool ChatHandler::HandleResetHonorCommand (const char * args)
         }
 
         uint64 guid = sObjectMgr->GetPlayerGUIDByName(name.c_str());
-        player = sObjectMgr->GetPlayer(guid);
+        player = ObjectAccessor::FindPlayer(guid);
     }
     else
         player = getSelectedPlayer();
@@ -4603,7 +4603,7 @@ bool ChatHandler::HandleResetLevelCommand(const char * args)
         }
 
         uint64 guid = sObjectMgr->GetPlayerGUIDByName(name.c_str());
-        player = sObjectMgr->GetPlayer(guid);
+        player = ObjectAccessor::FindPlayer(guid);
     }
     else
         player = getSelectedPlayer();
@@ -4647,7 +4647,7 @@ bool ChatHandler::HandleResetStatsCommand(const char * args)
         }
 
         uint64 guid = sObjectMgr->GetPlayerGUIDByName(name.c_str());
-        player = sObjectMgr->GetPlayer(guid);
+        player = ObjectAccessor::FindPlayer(guid);
     }
     else
         player = getSelectedPlayer();
@@ -4685,7 +4685,7 @@ bool ChatHandler::HandleResetSpellsCommand(const char * args)
             return false;
         }
 
-        player = sObjectMgr->GetPlayer(name.c_str());
+        player = sObjectAccessor->FindPlayerByName(name.c_str());
         if (!player)
             playerGUID = sObjectMgr->GetPlayerGUIDByName(name.c_str());
     }
@@ -4732,7 +4732,7 @@ bool ChatHandler::HandleResetTalentsCommand(const char * args)
             return false;
         }
 
-        player = sObjectMgr->GetPlayer(name.c_str());
+        player = sObjectAccessor->FindPlayerByName(name.c_str());
         if (!player)
             playerGUID = sObjectMgr->GetPlayerGUIDByName(name.c_str());
     }
@@ -6541,7 +6541,7 @@ bool ChatHandler::HandleSendItemsCommand(const char *args)
 
     uint32 itemTextId = !text.empty() ? sObjectMgr->CreateItemText(text) : 0;
 
-    Player *receiver = sObjectMgr->GetPlayer(receiver_guid);
+    Player *receiver = ObjectAccessor::FindPlayer(receiver_guid);
 
     // fill mail
     MailDraft draft(subject, itemTextId);
@@ -6641,7 +6641,7 @@ bool ChatHandler::HandleSendMoneyCommand(const char *args)
 
     uint32 itemTextId = !text.empty() ? sObjectMgr->CreateItemText(text) : 0;
 
-    Player *receiver = sObjectMgr->GetPlayer(receiver_guid);
+    Player *receiver = ObjectAccessor::FindPlayer(receiver_guid);
 
         MailDraft(subject, itemTextId)
         .AddMoney(money)
@@ -6667,7 +6667,7 @@ bool ChatHandler::HandleSendMessageCommand(const char *args)
         return false;
 
     // Find the player and check that he is not logging out.
-    Player *rPlayer = sObjectMgr->GetPlayer(name.c_str());
+    Player *rPlayer = sObjectAccessor->FindPlayerByName(name.c_str());
     if (!rPlayer)
     {
         SendSysMessage(LANG_PLAYER_NOT_FOUND);
@@ -6804,7 +6804,7 @@ bool ChatHandler::HandleFreezeCommand(const char *args)
     {
         name = TargetName;
         normalizePlayerName(name);
-        player = sObjectMgr->GetPlayer(name.c_str()); //get player by name
+        player = sObjectAccessor->FindPlayerByName(name.c_str()); //get player by name
     }
 
     if (!player)
@@ -6884,7 +6884,7 @@ bool ChatHandler::HandleUnFreezeCommand(const char *args)
     {
         name = TargetName;
         normalizePlayerName(name);
-        player = sObjectMgr->GetPlayer(name.c_str()); //get player by name
+        player = sObjectAccessor->FindPlayerByName(name.c_str()); //get player by name
     }
 
     //effect

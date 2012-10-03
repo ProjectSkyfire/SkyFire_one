@@ -1581,7 +1581,7 @@ Player * ChatHandler::getSelectedPlayer()
     if (guid == 0)
         return m_session->GetPlayer();
 
-    return sObjectMgr->GetPlayer(guid);
+    return ObjectAccessor::FindPlayer(guid);
 }
 
 Unit* ChatHandler::getSelectedUnit()
@@ -1708,12 +1708,12 @@ char* ChatHandler::extractKeyFromLink(char* text, char const* const* linkTypes, 
 
 char const *fmtstring(char const *format, ...)
 {
-    va_list        argptr;
-    #define    MAX_FMT_STRING    32000
-    static char        temp_buffer[MAX_FMT_STRING];
-    static char        string[MAX_FMT_STRING];
-    static int        index = 0;
-    char    *buf;
+    va_list      argptr;
+    #define      MAX_FMT_STRING    32000
+    static char  temp_buffer[MAX_FMT_STRING];
+    static char  string[MAX_FMT_STRING];
+    static int   index = 0;
+    char *buf;
     int len;
 
     va_start(argptr, format);
@@ -1887,7 +1887,7 @@ bool ChatHandler::GetPlayerGroupAndGUIDByName(const char* cname, Player* &plr, G
                 return false;
             }
 
-            plr = sObjectMgr->GetPlayer(name.c_str());
+            plr = sObjectAccessor->FindPlayerByName(name.c_str());
             if (offline)
                 guid = sObjectMgr->GetPlayerGUIDByName(name.c_str());
         }
