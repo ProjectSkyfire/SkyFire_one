@@ -587,6 +587,7 @@ struct SoundEntriesEntry
 };
 
 #define MAX_SPELL_EFFECTS 3
+#define MAX_SPELL_REAGENTS 8
 
 struct SpellEntry
 {
@@ -635,8 +636,8 @@ struct SpellEntry
     //uint32    modalNextSpell;                             // 42
     uint32    StackAmount;                                  // 43
     uint32    Totem[2];                                     // 44-45
-    int32     Reagent[8];                                   // 46-53
-    uint32    ReagentCount[8];                              // 54-61
+    int32     Reagent[MAX_SPELL_REAGENTS];                  // 46-53
+    uint32    ReagentCount[MAX_SPELL_REAGENTS];             // 54-61
     int32     EquippedItemClass;                            // 62 (value)
     int32     EquippedItemSubClassMask;                     // 63 (mask)
     int32     EquippedItemInventoryTypeMask;                // 64 (mask)

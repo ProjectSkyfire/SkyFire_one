@@ -4770,7 +4770,7 @@ uint8 Spell::CheckItems()
     if (!(m_spellInfo->AttributesEx5 & SPELL_ATTR_EX5_NO_REAGENT_WHILE_PREP &&
         m_caster->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PREPARATION)))
     {
-        for (uint32 i = 0;i < 8;i++)
+        for (uint32 i = 0; i < MAX_SPELL_REAGENTS; i++)
         {
             if (m_spellInfo->Reagent[i] <= 0)
                 continue;

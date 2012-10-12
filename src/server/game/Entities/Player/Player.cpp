@@ -16752,7 +16752,7 @@ void Player::RemovePet(Pet* pet, PetSaveMode mode, bool returnreagent)
 
         if (spellInfo)
         {
-            for (uint32 i = 0; i < 7; ++i)
+            for (uint32 i = 0; i < MAX_SPELL_REAGENTS; ++i)
             {
                 if (spellInfo->Reagent[i] > 0)
                 {
