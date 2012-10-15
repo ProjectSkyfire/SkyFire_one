@@ -6,7 +6,7 @@
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -209,24 +209,6 @@ enum SpellFailedReason
     SPELL_FAILED_ONLY_IN_ARENA                  = 0xA6,
     SPELL_FAILED_TARGET_LOCKED_TO_RAID_INSTANCE = 0xA7,
     SPELL_FAILED_UNKNOWN                        = 0xA8,
-};
-
-enum SpellFamilyNames
-{
-    SPELLFAMILY_GENERIC     = 0,
-    SPELLFAMILY_UNK1        = 1,                            // events, holidays
-    // 2 - unused
-    SPELLFAMILY_MAGE        = 3,
-    SPELLFAMILY_WARRIOR     = 4,
-    SPELLFAMILY_WARLOCK     = 5,
-    SPELLFAMILY_PRIEST      = 6,
-    SPELLFAMILY_DRUID       = 7,
-    SPELLFAMILY_ROGUE       = 8,
-    SPELLFAMILY_HUNTER      = 9,
-    SPELLFAMILY_PALADIN     = 10,
-    SPELLFAMILY_SHAMAN      = 11,
-    SPELLFAMILY_UNK2        = 12,
-    SPELLFAMILY_POTION      = 13
 };
 
 enum SpellDisableTypes
@@ -642,10 +624,11 @@ enum SpellScriptTargetType
 {
     SPELL_TARGET_TYPE_GAMEOBJECT = 0,
     SPELL_TARGET_TYPE_CREATURE   = 1,
-    SPELL_TARGET_TYPE_DEAD       = 2
+    SPELL_TARGET_TYPE_DEAD       = 2,
+    SPELL_TARGET_TYPE_CONTROLLED = 3,
 };
 
-#define MAX_SPELL_TARGET_TYPE 3
+#define MAX_SPELL_TARGET_TYPE 4
 
 struct SpellTargetEntry
 {
@@ -655,6 +638,7 @@ struct SpellTargetEntry
 };
 
 typedef std::multimap<uint32, SpellTargetEntry> SpellScriptTarget;
+typedef std::pair<SpellScriptTarget::const_iterator, SpellScriptTarget::const_iterator> SpellScriptTargetBounds;
 
 // coordinates for spells (accessed using SpellMgr functions)
 struct SpellTargetPosition
@@ -667,6 +651,7 @@ struct SpellTargetPosition
 };
 
 typedef UNORDERED_MAP<uint32, SpellTargetPosition> SpellTargetPositionMap;
+
 
 // Spell pet auras
 class PetAura
@@ -727,22 +712,27 @@ struct SpellChainNode
     uint32 next;
     uint32 first;
     uint32 last;
-    uint8  rank;
+    uint32 req; // this is needed for helper. (will fix struct later)
+    uint8  rank;    
 };
 
 typedef UNORDERED_MAP<uint32, SpellChainNode> SpellChainMap;
 
-//                 spell_id  req_spell
-typedef UNORDERED_MAP<uint32, uint32> SpellRequiredMap;
+//                   spell_id  req_spell
+typedef std::multimap<uint32, uint32> SpellRequiredMap;
+typedef std::pair<SpellRequiredMap::const_iterator, SpellRequiredMap::const_iterator> SpellRequiredMapBounds;
 
+//                   req_spell spell_id
 typedef std::multimap<uint32, uint32> SpellsRequiringSpellMap;
+typedef std::pair<SpellsRequiringSpellMap::const_iterator, SpellsRequiringSpellMap::const_iterator> SpellsRequiringSpellMapBounds;
 
 // Spell learning properties (accessed using SpellMgr functions)
 struct SpellLearnSkillNode
 {
-    uint32 skill;
-    uint32 value;                                           // 0  - max skill value for player level
-    uint32 maxvalue;                                        // 0  - max skill value for player level
+    uint16 skill;
+    uint16 step;
+    uint16 value;                                           // 0  - max skill value for player level
+    uint16 maxvalue;                                        // 0  - max skill value for player level
 };
 
 typedef std::map<uint32, SpellLearnSkillNode> SpellLearnSkillMap;
@@ -750,12 +740,15 @@ typedef std::map<uint32, SpellLearnSkillNode> SpellLearnSkillMap;
 struct SpellLearnSpellNode
 {
     uint32 spell;
+    bool active;                                            // show in spellbook or not
     bool autoLearned;
 };
 
 typedef std::multimap<uint32, SpellLearnSpellNode> SpellLearnSpellMap;
+typedef std::pair<SpellLearnSpellMap::const_iterator, SpellLearnSpellMap::const_iterator> SpellLearnSpellMapBounds;
 
 typedef std::multimap<uint32, SkillLineAbilityEntry const*> SkillLineAbilityMap;
+typedef std::pair<SkillLineAbilityMap::const_iterator, SkillLineAbilityMap::const_iterator> SkillLineAbilityMapBounds;
 
 inline bool IsPrimaryProfessionSkill(uint32 skill)
 {
@@ -892,20 +885,24 @@ class SpellMgr
             return &itr->second;
         }
 
-        uint32 GetSpellRequired(uint32 spell_id) const
-        {
-            SpellRequiredMap::const_iterator itr = mSpellReq.find(spell_id);
-            if (itr == mSpellReq.end())
-                return NULL;
-
-            return itr->second;
-        }
-
         uint32 GetFirstSpellInChain(uint32 spell_id) const
         {
             if (SpellChainNode const* node = GetSpellChainNode(spell_id))
-                return node->first;
+                return node->rank;
 
+            return spell_id;
+        }
+
+        // not strict check returns provided spell if rank not avalible
+        uint32 GetSpellWithRank(uint32 spell_id, uint32 rank, bool strict = false) const
+        {
+            if (SpellChainNode const* node = GetSpellChainNode(spell_id))
+            {
+                if (rank != node->rank)
+                    return GetSpellWithRank(node->rank < rank ? node->next : node->prev, rank, strict);
+            }
+            else if (strict && rank > 1)
+                return 0;
             return spell_id;
         }
 
@@ -917,10 +914,34 @@ class SpellMgr
             return 0;
         }
 
-        SpellsRequiringSpellMap const& GetSpellsRequiringSpell() const { return mSpellsReqSpell; }
+        uint32 GetNextSpellInChain(uint32 spell_id) const
+        {
+            if (SpellChainNode const* node = GetSpellChainNode(spell_id))
+                return node->next;
 
-        // Note: not use rank for compare to spell ranks: spell chains isn't linear order
-        // Use IsHighRankOfSpell instead
+            return 0;
+        }
+
+        SpellRequiredMapBounds GetSpellsRequiredForSpellBounds(uint32 spell_id) const
+        {
+            return SpellRequiredMapBounds(mSpellReq.lower_bound(spell_id), mSpellReq.upper_bound(spell_id));
+        }
+
+        SpellsRequiringSpellMapBounds GetSpellsRequiringSpellBounds(uint32 spell_id) const
+        {
+            return SpellsRequiringSpellMapBounds(mSpellsReqSpell.lower_bound(spell_id), mSpellsReqSpell.upper_bound(spell_id));
+        }
+        bool IsSpellRequiringSpell(uint32 spellid, uint32 req_spellid) const
+        {
+            SpellsRequiringSpellMapBounds spellsRequiringSpell = GetSpellsRequiringSpellBounds(req_spellid);
+            for (SpellsRequiringSpellMap::const_iterator itr = spellsRequiringSpell.first; itr != spellsRequiringSpell.second; ++itr)
+            {
+                if (itr->second == spellid)
+                    return true;
+            }
+            return false;
+        }
+
         uint8 GetSpellRank(uint32 spell_id) const
         {
             if (SpellChainNode const* node = GetSpellChainNode(spell_id))
@@ -937,27 +958,28 @@ class SpellMgr
             return spell_id;
         }
 
+        /*uint32 IsArenaAllowedEnchancment(uint32 ench_id) const
+        {
+            return mEnchantCustomAttr[ench_id];
+        } */
+
         uint8 IsHighRankOfSpell(uint32 spell1, uint32 spell2) const
         {
-            SpellChainMap::const_iterator itr = mSpellChains.find(spell1);
-
-            uint32 rank2 = GetSpellRank(spell2);
-
-            // not ordered correctly by rank value
-            if (itr == mSpellChains.end() || !rank2 || itr->second.rank <= rank2)
+            SpellChainMap::const_iterator itr1 = mSpellChains.find(spell1);
+            SpellChainMap::const_iterator itr2 = mSpellChains.find(spell2);
+            if (itr1 == mSpellChains.end() || itr2 == mSpellChains.end())
                 return false;
 
-            // check present in same rank chain
-            for (; itr != mSpellChains.end(); itr = mSpellChains.find(itr->second.prev))
-                if (itr->second.prev == spell2)
+            if (itr1->second.first == itr2->second.first)
+                if (itr1->second.rank > itr2->second.rank)
                     return true;
-
             return false;
         }
 
+        bool IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2) const;
         bool IsRankSpellDueToSpell(SpellEntry const *spellInfo_1, uint32 spellId_2) const;
         static bool canStackSpellRanks(SpellEntry const *spellInfo);
-        bool IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2, bool sameCaster) const;
+        bool CanAurasStack(Aura const *aura1, Aura const *aura2, bool sameCaster) const;
 
         SpellEntry const* SelectAuraRankForPlayerLevel(SpellEntry const* spellInfo, uint32 playerLevel) const;
 
@@ -973,24 +995,18 @@ class SpellMgr
 
         bool IsSpellLearnSpell(uint32 spell_id) const
         {
-            return mSpellLearnSpells.count(spell_id) != 0;
+            return mSpellLearnSpells.find(spell_id) != mSpellLearnSpells.end();
         }
 
-        SpellLearnSpellMap::const_iterator GetBeginSpellLearnSpell(uint32 spell_id) const
+        SpellLearnSpellMapBounds GetSpellLearnSpellMapBounds(uint32 spell_id) const
         {
-            return mSpellLearnSpells.lower_bound(spell_id);
-        }
-
-        SpellLearnSpellMap::const_iterator GetEndSpellLearnSpell(uint32 spell_id) const
-        {
-            return mSpellLearnSpells.upper_bound(spell_id);
+            return SpellLearnSpellMapBounds(mSpellLearnSpells.lower_bound(spell_id), mSpellLearnSpells.upper_bound(spell_id));
         }
 
         bool IsSpellLearnToSpell(uint32 spell_id1, uint32 spell_id2) const
         {
-            SpellLearnSpellMap::const_iterator b = GetBeginSpellLearnSpell(spell_id1);
-            SpellLearnSpellMap::const_iterator e = GetEndSpellLearnSpell(spell_id1);
-            for (SpellLearnSpellMap::const_iterator i = b; i != e; ++i)
+            SpellLearnSpellMapBounds bounds = GetSpellLearnSpellMapBounds(spell_id1);
+            for (SpellLearnSpellMap::const_iterator i = bounds.first; i != bounds.second; ++i)
                 if (i->second.spell == spell_id2)
                     return true;
             return false;
@@ -999,29 +1015,19 @@ class SpellMgr
         static bool IsProfessionSpell(uint32 spellId);
         static bool IsPrimaryProfessionSpell(uint32 spellId);
         bool IsPrimaryProfessionFirstRankSpell(uint32 spellId) const;
-
+    
         // Spell script targets
-        SpellScriptTarget::const_iterator GetBeginSpellScriptTarget(uint32 spell_id) const
+        SpellScriptTargetBounds GetSpellScriptTargetBounds(uint32 spell_id) const
         {
-            return mSpellScriptTarget.lower_bound(spell_id);
-        }
-
-        SpellScriptTarget::const_iterator GetEndSpellScriptTarget(uint32 spell_id) const
-        {
-            return mSpellScriptTarget.upper_bound(spell_id);
+            return mSpellScriptTarget.equal_range(spell_id);
         }
 
         // Spell correctess for client using
         static bool IsSpellValid(SpellEntry const * spellInfo, Player* pl = NULL, bool msg = true);
 
-        SkillLineAbilityMap::const_iterator GetBeginSkillLineAbilityMap(uint32 spell_id) const
+        SkillLineAbilityMapBounds GetSkillLineAbilityMapBounds(uint32 spell_id) const
         {
-            return mSkillLineAbilityMap.lower_bound(spell_id);
-        }
-
-        SkillLineAbilityMap::const_iterator GetEndSkillLineAbilityMap(uint32 spell_id) const
-        {
-            return mSkillLineAbilityMap.upper_bound(spell_id);
+            return SkillLineAbilityMapBounds(mSkillLineAbilityMap.lower_bound(spell_id), mSkillLineAbilityMap.upper_bound(spell_id));
         }
 
         PetAura const* GetPetAura(uint32 spell_id)
@@ -1039,11 +1045,6 @@ class SpellMgr
                 return 0;
             else
                 return mSpellCustomAttr[spell_id];
-            /*SpellCustomAttrMap::const_iterator itr = mSpellCustomAttrMap.find(spell_id);
-            if (itr != mSpellCustomAttrMap.end())
-                return itr->second;
-            else
-                return 0;*/
         }
 
         const std::vector<int32> *GetSpellLinked(int32 spell_id) const

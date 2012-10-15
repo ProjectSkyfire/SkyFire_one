@@ -505,9 +505,9 @@ void Spell::SpellDamageSchoolDmg(SpellEffIndex effIndex)
                         }
                     }
                 }
-                //Mangle Bonus for the initial damage of Lacerate and Rake
-                if ((m_spellInfo->SpellFamilyFlags == 0x0000000000001000LL && m_spellInfo->SpellIconID == 494) ||
-                    (m_spellInfo->SpellFamilyFlags == 0x0000010000000000LL && m_spellInfo->SpellIconID == 2246))
+                // Mangle Bonus for the initial damage of Lacerate and Rake
+                if ((m_spellInfo->SpellFamilyFlags & 0x0000000000001000LL && m_spellInfo->SpellIconID == 494) ||
+                    (m_spellInfo->SpellFamilyFlags & 0x0000010000000000LL && m_spellInfo->SpellIconID == 2246))
                 {
                     Unit::AuraList const& mDummyAuras = unitTarget->GetAurasByType(SPELL_AURA_DUMMY);
                     for (Unit::AuraList::const_iterator i = mDummyAuras.begin(); i != mDummyAuras.end(); ++i)
@@ -1451,7 +1451,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
             break;
         case SPELLFAMILY_WARLOCK:
             //Life Tap (only it have this with dummy effect)
-            if (m_spellInfo->SpellFamilyFlags == 0x40000)
+            if (m_spellInfo->SpellFamilyFlags & 0x40000)
             {
                 float cost = damage;
 
@@ -2495,11 +2495,11 @@ void Spell::EffectPowerBurn(SpellEffIndex effIndex)
         m_originalCaster->DealDamage(unitTarget, new_damage);
 }
 
-void Spell::EffectHeal(SpellEffIndex effIndex)
+void Spell::EffectHeal(SpellEffIndex /*effIndex*/)
 {
 }
 
-void Spell::SpellDamageHeal(SpellEffIndex effIndex)
+void Spell::SpellDamageHeal(SpellEffIndex /*effIndex*/)
 {
     if (unitTarget && unitTarget->isAlive() && damage >= 0)
     {
@@ -2517,66 +2517,72 @@ void Spell::SpellDamageHeal(SpellEffIndex effIndex)
         {
             // Amount of heal - depends from stacked Holy Energy
             int damageAmount = 0;
-            Unit::AuraList const& mDummyAuras = m_caster->GetAurasByType(SPELL_AURA_DUMMY);
-            for (Unit::AuraList::const_iterator i = mDummyAuras.begin();i != mDummyAuras.end(); ++i)
-                if ((*i)->GetId() == 45062)
-                    damageAmount+=(*i)->GetModifierValue();
-            if (damageAmount)
+            if (AuraEffect const * aurEff = m_caster->GetAuraEffect(45062, 0))
+            {
+                damageAmount+= aurEff->GetAmount();
                 m_caster->RemoveAurasDueToSpell(45062);
+            }
 
             addhealth += damageAmount;
         }
         // Swiftmend - consumes Regrowth or Rejuvenation
-        else if (m_spellInfo->TargetAuraState == AURA_STATE_SWIFTMEND && unitTarget->HasAuraState(AURA_STATE_SWIFTMEND))
+        else if (m_spellInfo->TargetAuraState == AURA_STATE_SWIFTMEND && unitTarget->HasAuraState(AURA_STATE_SWIFTMEND, m_spellInfo, m_caster))
         {
-            Unit::AuraList const& RejorRegr = unitTarget->GetAurasByType(SPELL_AURA_PERIODIC_HEAL);
+            Unit::AuraEffectList const& RejorRegr = unitTarget->GetAuraEffectsByType(SPELL_AURA_PERIODIC_HEAL);
             // find most short by duration
-            Aura *targetAura = NULL;
-            for (Unit::AuraList::const_iterator i = RejorRegr.begin(); i != RejorRegr.end(); ++i)
+            AuraEffect *targetAura = NULL;
+            for (Unit::AuraEffectList::const_iterator i = RejorRegr.begin(); i != RejorRegr.end(); ++i)
             {
                 if ((*i)->GetSpellProto()->SpellFamilyName == SPELLFAMILY_DRUID
-                    && ((*i)->GetSpellProto()->SpellFamilyFlags == 0x40 || (*i)->GetSpellProto()->SpellFamilyFlags == 0x10))
+                    && (*i)->GetSpellProto()->SpellFamilyFlags[0] & 0x50)
                 {
-                    if (!targetAura || (*i)->GetAuraDuration() < targetAura->GetAuraDuration())
+                    if (!targetAura || (*i)->GetBase()->GetDuration() < targetAura->GetBase()->GetDuration())
                         targetAura = *i;
                 }
             }
 
             if (!targetAura)
             {
-                sLog->outError("Target(GUID:" UI64FMTD ") has aurastate AURA_STATE_SWIFTMEND but no matching aura.", unitTarget->GetGUID());
+                sLog.outError("Target(GUID:" UI64FMTD ") has aurastate AURA_STATE_SWIFTMEND but no matching aura.", unitTarget->GetGUID());
                 return;
             }
 
-            int32 tickheal = targetAura->GetModifierValuePerStack();
+            int32 tickheal = targetAura->GetAmount();
             if (Unit* auraCaster = targetAura->GetCaster())
-                tickheal = auraCaster->SpellHealingBonus(targetAura->GetSpellProto(), tickheal, DOT, unitTarget);
+                tickheal = auraCaster->SpellHealingBonus(unitTarget, targetAura->GetSpellProto(), tickheal, DOT);
             //int32 tickheal = targetAura->GetSpellProto()->EffectBasePoints[idx] + 1;
             //It is said that talent bonus should not be included
-            //int32 tickheal = targetAura->GetModifierValue();
-            int32 tickcount = 0;
-            if (targetAura->GetSpellProto()->SpellFamilyName == SPELLFAMILY_DRUID)
-            {
-                switch (targetAura->GetSpellProto()->SpellFamilyFlags)//TODO: proper spellfamily for 3.0.x
-                {
-                    case 0x10:  tickcount = 4;  break; // Rejuvenation
-                    case 0x40:  tickcount = 6;  break; // Regrowth
-                }
-            }
-            addhealth += tickheal * tickcount;
-            unitTarget->RemoveAurasByCasterSpell(targetAura->GetId(), targetAura->GetCasterGUID());
 
-            //addhealth += tickheal * tickcount;
-            //addhealth = caster->SpellHealingBonus(m_spellInfo, addhealth, HEAL, unitTarget);
+            int32 tickcount = 0;
+            // Rejuvenation
+            if (targetAura->GetSpellProto()->SpellFamilyFlags[0] & 0x10)
+                tickcount = 4;
+            // Regrowth
+            else // if (targetAura->GetSpellProto()->SpellFamilyFlags[0] & 0x40)
+                tickcount = 6;
+
+            addhealth += tickheal * tickcount;
         }
-        else
-            addhealth = caster->SpellHealingBonus(m_spellInfo, addhealth, HEAL, unitTarget);
+        // Lifebloom - final heal coef multiplied by original DoT stack
+        else if (m_spellInfo->Id == 33778)
+            addhealth = caster->SpellHealingBonus(unitTarget, m_spellInfo, addhealth, HEAL, m_spellValue->EffectBasePoints[1]);
+        // Riptide - increase healing done by Chain Heal
+        else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_SHAMAN && m_spellInfo->SpellFamilyFlags[0] & 0x100)
+        {
+            addhealth = caster->SpellHealingBonus(unitTarget, m_spellInfo, addhealth, HEAL);
+            if (AuraEffect * aurEff = unitTarget->GetAuraEffect(SPELL_AURA_PERIODIC_HEAL, SPELLFAMILY_SHAMAN, 0, 0, 0x10, m_originalCasterGUID))
+            {
+                addhealth = int32(addhealth * 1.25f);
+                // consume aura
+                unitTarget->RemoveAura(aurEff->GetBase());
+            }
+        }
 
         m_damage -= addhealth;
     }
 }
 
-void Spell::EffectHealPct(SpellEffIndex effIndex)
+void Spell::EffectHealPct(SpellEffIndex /*effIndex*/)
 {
     if (unitTarget && unitTarget->isAlive() && damage >= 0)
     {
@@ -2587,16 +2593,10 @@ void Spell::EffectHealPct(SpellEffIndex effIndex)
         if (!caster)
             return;
 
-        uint32 addhealth = unitTarget->GetMaxHealth() * damage / 100;
-        caster->SendHealSpellLog(unitTarget, m_spellInfo->Id, addhealth, false);
+    } 
+    
+    m_healing += m_originalCaster->SpellHealingBonus(unitTarget, m_spellInfo, effIndex, unitTarget->CountPctFromMaxHealth(damage), HEAL);
 
-        int32 gain = unitTarget->ModifyHealth(int32(addhealth));
-        unitTarget->getHostileRefManager().threatAssist(m_caster, float(gain) * 0.5f, m_spellInfo);
-
-        if (caster->GetTypeId() == TYPEID_PLAYER)
-            if (Battleground *bg = caster->ToPlayer()->GetBattleground())
-                bg->UpdatePlayerScore(caster->ToPlayer(), SCORE_HEALING_DONE, gain);
-    }
 }
 
 void Spell::EffectHealMechanical(SpellEffIndex effIndex)
@@ -3401,7 +3401,7 @@ void Spell::EffectLearnSpell(SpellEffIndex effIndex)
     Player* player = unitTarget->ToPlayer();
 
     uint32 spellToLearn = (m_spellInfo->Id == SPELL_ID_GENERIC_LEARN) ? damage : m_spellInfo->EffectTriggerSpell[effIndex];
-    player->learnSpell(spellToLearn);
+    player->learnSpell(spellToLearn, false);
 
     sLog->outDebug("Spell: Player %u has learned spell %u from NpcGUID=%u", player->GetGUIDLow(), spellToLearn, m_caster->GetGUIDLow());
 }
@@ -3674,7 +3674,7 @@ void Spell::EffectLearnSkill(SpellEffIndex effIndex)
 
     uint32 skillid =  m_spellInfo->EffectMiscValue[effIndex];
     uint16 skillval = unitTarget->ToPlayer()->GetPureSkillValue(skillid);
-    unitTarget->ToPlayer()->SetSkill(skillid, skillval?skillval:1, damage*75);
+    ((Player*)unitTarget)->SetSkill(skillid, skillval ? skillval : 1, damage * 75, damage);
 }
 
 void Spell::EffectAddHonor(SpellEffIndex effIndex)
@@ -4104,7 +4104,7 @@ void Spell::SpellDamageWeaponDmg(SpellEffIndex effIndex)
                 {
                     SpellEntry const *proto = (*itr)->GetSpellProto();
                     if (proto->SpellFamilyName == SPELLFAMILY_WARRIOR
-                        && proto->SpellFamilyFlags == SPELLFAMILYFLAG_WARRIOR_SUNDERARMOR)
+                        && proto->SpellFamilyFlags & SPELLFAMILYFLAG_WARRIOR_SUNDERARMOR)
                     {
                         int32 duration = GetSpellDuration(proto);
                         (*itr)->SetAuraDuration(duration);
@@ -4137,7 +4137,7 @@ void Spell::SpellDamageWeaponDmg(SpellEffIndex effIndex)
                         if (!spellInfo)
                             continue;
 
-                        if (spellInfo->SpellFamilyFlags == SPELLFAMILYFLAG_WARRIOR_SUNDERARMOR
+                        if (spellInfo->SpellFamilyFlags & SPELLFAMILYFLAG_WARRIOR_SUNDERARMOR
                             && spellInfo->Id != m_spellInfo->Id
                             && spellInfo->SpellFamilyName == SPELLFAMILY_WARRIOR)
                         {
@@ -4204,7 +4204,7 @@ void Spell::SpellDamageWeaponDmg(SpellEffIndex effIndex)
         case SPELLFAMILY_DRUID:
         {
             // Mangle (Cat): CP
-            if (m_spellInfo->SpellFamilyFlags == 0x0000040000000000LL)
+            if (m_spellInfo->SpellFamilyFlags & 0x0000040000000000LL)
             {
                 if (m_caster->GetTypeId() == TYPEID_PLAYER)
                     m_caster->ToPlayer()->AddComboPoints(unitTarget, 1);
@@ -5060,7 +5060,7 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
         case SPELLFAMILY_PALADIN:
         {
             // Judgement (seal trigger)
-            if (m_spellInfo->SpellFamilyFlags == 0x800000LL)
+            if (m_spellInfo->SpellFamilyFlags & 0x800000LL)
             {
                 if (!unitTarget || !unitTarget->isAlive())
                     return;

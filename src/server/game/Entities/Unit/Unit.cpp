@@ -1861,7 +1861,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
         int32 currentAbsorb;
 
         //Reflective Shield
-        if ((pVictim != this) && (*i)->GetSpellProto()->SpellFamilyName == SPELLFAMILY_PRIEST && (*i)->GetSpellProto()->SpellFamilyFlags == 0x1)
+        if ((pVictim != this) && (*i)->GetSpellProto()->SpellFamilyName == SPELLFAMILY_PRIEST && (*i)->GetSpellProto()->SpellFamilyFlags & 0x1)
         {
             if (Unit* caster = (*i)->GetCaster())
             {
@@ -4592,7 +4592,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
 
                     target = SelectNearbyTarget();
 
-                    if (procSpell && procSpell->SpellFamilyFlags == 536870912 && procSpell->SpellIconID == 1648)        // Prevent Execute proc on targets with > 20% health
+                    if (procSpell && procSpell->SpellFamilyFlags & 536870912 && procSpell->SpellIconID == 1648)        // Prevent Execute proc on targets with > 20% health
                         if (target && target->GetHealth() > target->GetMaxHealth()*0.2)
                                 return false;
 
@@ -4976,7 +4976,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
         case SPELLFAMILY_WARRIOR:
         {
             // Retaliation
-            if (dummySpell->SpellFamilyFlags == 0x0000000800000000LL)
+            if (dummySpell->SpellFamilyFlags & 0x0000000800000000LL)
             {
                 // check attack comes not from behind
                 if (!HasInArc(M_PI, pVictim))

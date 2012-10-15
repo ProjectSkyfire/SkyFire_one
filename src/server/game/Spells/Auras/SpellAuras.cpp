@@ -974,7 +974,7 @@ void Aura::_AddAura()
             m_target->ModifyAuraState(AURA_STATE_IMMOLATE, true);
 
         if (GetSpellProto()->SpellFamilyName == SPELLFAMILY_DRUID
-            && (GetSpellProto()->SpellFamilyFlags == 0x40 || GetSpellProto()->SpellFamilyFlags == 0x10))
+            && (GetSpellProto()->SpellFamilyFlags & 0x40 || GetSpellProto()->SpellFamilyFlags & 0x10))
         {
             m_target->ModifyAuraState(AURA_STATE_SWIFTMEND, true);
         }
@@ -1047,14 +1047,14 @@ void Aura::_RemoveAura()
 
         // Swiftmend aura state
         if (GetSpellProto()->SpellFamilyName == SPELLFAMILY_DRUID
-            && (GetSpellProto()->SpellFamilyFlags == 0x40 || GetSpellProto()->SpellFamilyFlags == 0x10))
+            && (GetSpellProto()->SpellFamilyFlags & 0x40 || GetSpellProto()->SpellFamilyFlags & 0x10))
         {
             bool found = false;
             Unit::AuraList const& RejorRegr = m_target->GetAurasByType(SPELL_AURA_PERIODIC_HEAL);
             for (Unit::AuraList::const_iterator i = RejorRegr.begin(); i != RejorRegr.end(); ++i)
             {
                 if ((*i)->GetSpellProto()->SpellFamilyName == SPELLFAMILY_DRUID
-                    && ((*i)->GetSpellProto()->SpellFamilyFlags == 0x40 || (*i)->GetSpellProto()->SpellFamilyFlags == 0x10))
+                    && ((*i)->GetSpellProto()->SpellFamilyFlags & 0x40 || (*i)->GetSpellProto()->SpellFamilyFlags & 0x10))
                 {
                     found = true;
                     break;

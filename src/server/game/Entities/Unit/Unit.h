@@ -290,6 +290,7 @@ struct SpellEntry;
 struct SpellValue;
 
 class Aura;
+
 class Creature;
 class Spell;
 class DynamicObject;

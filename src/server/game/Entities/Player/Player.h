@@ -89,14 +89,16 @@ enum PlayerSpellState
     PLAYERSPELL_UNCHANGED = 0,
     PLAYERSPELL_CHANGED   = 1,
     PLAYERSPELL_NEW       = 2,
-    PLAYERSPELL_REMOVED   = 3
+    PLAYERSPELL_REMOVED   = 3,
+    PLAYERSPELL_TEMPORARY = 4
 };
 
 struct PlayerSpell
 {
     PlayerSpellState state : 8;
-    bool active            : 1;
-    bool disabled          : 1;
+    bool active            : 1;                             // show in spellbook
+    bool dependent         : 1;                             // learned as result another spell learn, skill grow, quest reward, etc
+    bool disabled          : 1;                             // first rank has been learned in result talent learn but currently talent unlearned, save max learned ranks
 };
 
 // Spell modifier (used for modify other spells)
@@ -1098,6 +1100,7 @@ class Player : public Unit, public GridObject<Player>
         void AddEnchantmentDuration(Item *item, EnchantmentSlot slot, uint32 duration);
         void ApplyEnchantment(Item *item, EnchantmentSlot slot, bool apply, bool apply_dur = true, bool ignore_condition = false);
         void ApplyEnchantment(Item *item, bool apply);
+        void UpdateSkillEnchantments(uint16 skill_id, uint16 curr_value, uint16 new_value);        
         void SendEnchantmentDurations();
         void AddItemDurations(Item *item);
         void RemoveItemDurations(Item *item);
@@ -1375,19 +1378,20 @@ class Player : public Unit, public GridObject<Player>
         void PossessSpellInitialize();
         void SendRemoveControlBar();
         bool HasSpell(uint32 spell) const;
-        TrainerSpellState GetTrainerSpellState(TrainerSpell const* trainer_spell) const;
+        TrainerSpellState GetTrainerSpellState(TrainerSpell const* trainer_spell, uint32 reqLevel) const;
         bool IsSpellFitByClassAndRace(uint32 spell_id) const;
 
         void SendProficiency(uint8 pr1, uint32 pr2);
         void SendInitialSpells();
         bool addSpell(uint32 spell_id, bool active, bool learning = true, bool loading = false, bool disabled = false);
-        void learnSpell(uint32 spell_id);
-        void removeSpell(uint32 spell_id, bool disabled = false);
+        void learnSpell(uint32 spell_id, bool dependent);
+        void removeSpell(uint32 spell_id, bool disabled = false, bool learn_low_rank = true);
         void resetSpells();
         void learnDefaultSpells(bool loading = false);
         void learnQuestRewardedSpells();
         void learnQuestRewardedSpells(Quest const* quest);
         void learnSpellHighRank(uint32 spellid);
+        void LearnTalent(uint32 talentId, uint32 talentRank, bool one = true);
 
         uint32 GetFreeTalentPoints() const { return GetUInt32Value(PLAYER_CHARACTER_POINTS1); }
         void SetFreeTalentPoints(uint32 points) { SetUInt32Value(PLAYER_CHARACTER_POINTS1, points); }
@@ -1663,16 +1667,17 @@ class Player : public Unit, public GridObject<Player>
         void UpdateWeaponSkill (WeaponAttackType attType);
         void UpdateCombatSkills(Unit *pVictim, WeaponAttackType attType, MeleeHitOutcome outcome, bool defence);
 
-        void SetSkill(uint32 id, uint16 currVal, uint16 maxVal);
+        void SetSkill(uint16 id, uint16 step, uint16 currVal, uint16 maxVal);
         uint16 GetMaxSkillValue(uint32 skill) const;        // max + perm. bonus
         uint16 GetPureMaxSkillValue(uint32 skill) const;    // max
         uint16 GetSkillValue(uint32 skill) const;           // skill value + perm. bonus + temp bonus
         uint16 GetBaseSkillValue(uint32 skill) const;       // skill value + perm. bonus
         uint16 GetPureSkillValue(uint32 skill) const;       // skill value
+        int16 GetSkillPermBonusValue(uint32 skill) const;
         int16 GetSkillTempBonusValue(uint32 skill) const;
+        uint16 GetSkillStep(uint16 skill) const;            // 0...6
         bool HasSkill(uint32 skill) const;
-        void learnSkillRewardedSpells(uint32 id);
-        void learnSkillRewardedSpells();
+        void learnSkillRewardedSpells(uint32 id, uint32 value);
 
         WorldLocation& GetTeleportDest() { return m_teleport_dest; }
         bool IsBeingTeleported() const { return mSemaphoreTeleport_Near || mSemaphoreTeleport_Far; }

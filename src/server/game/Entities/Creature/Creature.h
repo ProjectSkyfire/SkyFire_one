@@ -379,20 +379,30 @@ typedef std::list<VendorItemCount> VendorItemCounts;
 
 struct TrainerSpell
 {
+    TrainerSpell() : spell(0), spellCost(0), reqSkill(0), reqSkillValue(0), reqLevel(0), isProvidedReqLevel(false) {}
+
+    TrainerSpell(uint32 _spell, uint32 _spellCost, uint32 _reqSkill, uint32 _reqSkillValue, uint32 _reqLevel, bool _isProvidedReqLevel)
+        : spell(_spell), spellCost(_spellCost), reqSkill(_reqSkill), reqSkillValue(_reqSkillValue), reqLevel(_reqLevel), isProvidedReqLevel(_isProvidedReqLevel)
+    {}
+
     uint32 spell;
-    uint32 spellcost;
-    uint32 reqskill;
-    uint32 reqskillvalue;
-    uint32 reqlevel;
+    uint32 spellCost;
+    uint32 reqSkill;
+    uint32 reqSkillValue;
+    uint32 reqLevel;
+    bool isProvidedReqLevel;
+
+    // helpers
+    //bool IsCastable() const { return learnedSpell[0] != spell; }
 };
 
-typedef std::vector<TrainerSpell*> TrainerSpellList;
+typedef UNORDERED_MAP<uint32 /*spellid*/, TrainerSpell> TrainerSpellMap;
 
 struct TrainerSpellData
 {
     TrainerSpellData() : trainerType(0) {}
 
-    TrainerSpellList spellList;
+    TrainerSpellMap spellList;
     uint32 trainerType;                                     // trainer type based at trainer spells, can be different from creature_template value.
                                                             // req. for correct show non-prof. trainers like weaponmaster, allowed values 0 and 2.
 
@@ -518,6 +528,7 @@ class Creature : public Unit, public GridObject<Creature>
         uint32 UpdateVendorItemCurrentCount(VendorItem const* vItem, uint32 used_count);
 
         TrainerSpellData const* GetTrainerSpells() const;
+        TrainerSpellData const* GetTrainerTemplateSpells() const;
 
         CreatureTemplate const* GetCreatureTemplate() const { return m_creatureInfo; }
         CreatureData const *GetCreatureData() const { return m_creatureData; }

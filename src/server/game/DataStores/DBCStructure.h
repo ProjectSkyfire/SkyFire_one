@@ -586,6 +586,39 @@ struct SoundEntriesEntry
                                                             // 24-28, unknown
 };
 
+struct ClassFamilyMask
+{
+    uint64 Flags;
+
+    ClassFamilyMask() : Flags(0) {}
+    explicit ClassFamilyMask(uint64 familyFlags) : Flags(familyFlags) {}
+
+    bool Empty() const { return Flags == 0; }
+    bool operator!() const { return Empty(); }
+    operator void const*() const { return Empty() ? NULL : this; } // for allow normal use in if(mask)
+
+    bool IsFitToFamilyMask(uint64 familyFlags) const
+    {
+        return Flags & familyFlags;
+    }
+
+    bool IsFitToFamilyMask(ClassFamilyMask const& mask) const
+    {
+        return Flags & mask.Flags;
+    }
+
+    uint64 operator& (uint64 mask) const                    // possible will removed at finish convertion code use IsFitToFamilyMask
+    {
+        return Flags & mask;
+    }
+
+    ClassFamilyMask& operator|= (ClassFamilyMask const& mask)
+    {
+        Flags |= mask.Flags;
+        return *this;
+    }
+};
+
 #define MAX_SPELL_EFFECTS 3
 #define MAX_SPELL_REAGENTS 8
 
@@ -678,7 +711,7 @@ struct SpellEntry
     uint32    StartRecoveryTime;                            // 197
     uint32    MaxTargetLevel;                               // 198
     uint32    SpellFamilyName;                              // 199
-    uint64    SpellFamilyFlags;                             // 200+201
+    ClassFamilyMask SpellFamilyFlags;                       // 200+201
     uint32    MaxAffectedTargets;                           // 202
     uint32    DmgClass;                                     // 203 defenseType
     uint32    PreventionType;                               // 204
@@ -690,6 +723,27 @@ struct SpellEntry
     uint32    TotemCategory[2];                             // 212-213
     uint32    AreaId;                                       // 214
     uint32    SchoolMask;                                   // 215 school mask
+    
+    // helpers
+    bool IsFitToFamilyMask(uint64 familyFlags) const
+    {
+        return SpellFamilyFlags.IsFitToFamilyMask(familyFlags);
+    }
+
+    bool IsFitToFamily(SpellFamily family, uint64 familyFlags) const
+    {
+        return SpellFamily(SpellFamilyName) == family && IsFitToFamilyMask(familyFlags);
+    }
+
+    bool IsFitToFamilyMask(ClassFamilyMask const& mask) const
+    {
+        return SpellFamilyFlags.IsFitToFamilyMask(mask);
+    }
+
+    bool IsFitToFamily(SpellFamily family, ClassFamilyMask const& mask) const
+    {
+        return SpellFamily(SpellFamilyName) == family && IsFitToFamilyMask(mask);
+    }
 
     inline bool HasAttribute(SpellAttributes attribute) const { return Attributes & attribute; }
     inline bool HasAttribute(SpellAttributesEx attribute) const { return AttributesEx & attribute; }
@@ -815,6 +869,8 @@ struct SummonPropertiesEntry
     uint32  Slot;                                           // 4, 0-6
     uint32  Flags;                                          // 5
 };
+
+#define MAX_TALENT_RANK 5
 
 struct TalentEntry
 {

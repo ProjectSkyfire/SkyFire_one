@@ -727,8 +727,6 @@ enum SpellEffects
     TOTAL_SPELL_EFFECTS                    = 154
 };
 
-#define MAX_SPELL_EFFECTS 3
-
 // Spell aura states
 enum AuraState
 {   // (C) used in caster aura state     (T) used in target aura state

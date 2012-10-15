@@ -708,8 +708,11 @@ bool Pet::CanTakeMoreActiveSpells(uint32 spellid)
 
     chainstartstore[0] = sSpellMgr->GetFirstSpellInChain(spellid);
 
-    for (PetSpellMap::iterator itr = m_spells.begin(); itr != m_spells.end(); ++itr)
+    for (PetSpellMap::const_iterator itr = m_spells.begin(); itr != m_spells.end(); ++itr)
     {
+        if (itr->second.state == PETSPELL_REMOVED)
+            continue;
+
         if (IsPassiveSpell(itr->first))
             continue;
 
@@ -717,13 +720,13 @@ bool Pet::CanTakeMoreActiveSpells(uint32 spellid)
 
         uint8 x;
 
-        for (x = 0; x < activecount; x++)
+        for (x = 0; x < activecount; ++x)
         {
             if (chainstart == chainstartstore[x])
                 break;
         }
 
-        if (x == activecount)                                //spellchain not yet saved -> add active count
+        if (x == activecount)                               // spellchain not yet saved -> add active count
         {
             ++activecount;
             if (activecount > ACTIVE_SPELLS_MAX)
@@ -746,9 +749,8 @@ int32 Pet::GetTPForSpell(uint32 spellid)
 {
     uint32 basetrainp = 0;
 
-    SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(spellid);
-    SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(spellid);
-    for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
+    SkillLineAbilityMapBounds bounds = sSpellMgr->GetSkillLineAbilityMapBounds(spellid);
+    for (SkillLineAbilityMap::const_iterator _spell_idx = bounds.first; _spell_idx != bounds.second; ++_spell_idx)
     {
         if (!_spell_idx->second->reqtrainpoints)
             return 0;
@@ -767,10 +769,9 @@ int32 Pet::GetTPForSpell(uint32 spellid)
 
         if (sSpellMgr->GetFirstSpellInChain(itr->first) == chainstart)
         {
-            SkillLineAbilityMap::const_iterator _lower = sSpellMgr->GetBeginSkillLineAbilityMap(itr->first);
-            SkillLineAbilityMap::const_iterator _upper = sSpellMgr->GetEndSkillLineAbilityMap(itr->first);
+            SkillLineAbilityMapBounds _bounds = sSpellMgr->GetSkillLineAbilityMapBounds(itr->first);
 
-            for (SkillLineAbilityMap::const_iterator _spell_idx2 = _lower; _spell_idx2 != _upper; ++_spell_idx2)
+            for (SkillLineAbilityMap::const_iterator _spell_idx2 = _bounds.first; _spell_idx2 != _bounds.second; ++_spell_idx2)
             {
                 if (_spell_idx2->second->reqtrainpoints > spenttrainp)
                 {
@@ -1568,24 +1569,21 @@ void Pet::InitPetCreateSpells()
                 petspellid = learn_spellproto->EffectTriggerSpell[0];
                 if (p_owner && !p_owner->HasSpell(learn_spellproto->Id))
                 {
-                    if (IsPassiveSpell(petspellid))          //learn passive skills when tamed, not sure if thats right
-                        p_owner->learnSpell(learn_spellproto->Id);
+                    if (IsPassiveSpell(petspellid))         // learn passive skills when tamed, not sure if thats right
+                        p_owner->learnSpell(learn_spellproto->Id, false);
                     else
-                        AddTeachSpell(learn_spellproto->EffectTriggerSpell[0], learn_spellproto->Id);
-                }
+                        AddTeachSpell(learn_spellproto->EffectTriggerSpell[0], learn_spellproto->Id);                }
             }
             else
                 petspellid = learn_spellproto->Id;
 
             addSpell(petspellid);
 
-            SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(learn_spellproto->EffectTriggerSpell[0]);
-            SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(learn_spellproto->EffectTriggerSpell[0]);
+            SkillLineAbilityMapBounds bounds = sSpellMgr->GetSkillLineAbilityMapBounds(learn_spellproto->EffectTriggerSpell[0]);
 
-            for (SkillLineAbilityMap::const_iterator _spell_idx = lower; _spell_idx != upper; ++_spell_idx)
+            for (SkillLineAbilityMap::const_iterator _spell_idx = bounds.first; _spell_idx != bounds.second; ++_spell_idx)
             {
                 usedtrainpoints += _spell_idx->second->reqtrainpoints;
-                break;
             }
         }
     }
@@ -1614,7 +1612,7 @@ void Pet::CheckLearning(uint32 spellid)
 
     if (urand(0, 100) < 10)
     {
-        owner->ToPlayer()->learnSpell(itr->second);
+        ((Player*)owner)->learnSpell(itr->second, false);
         m_teachspells.erase(itr);
     }
 }

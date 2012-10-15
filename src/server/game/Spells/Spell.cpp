@@ -1429,9 +1429,8 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType)
     {
         case SPELL_TARGETS_ENTRY:
         {
-            SpellScriptTarget::const_iterator lower = sSpellMgr->GetBeginSpellScriptTarget(m_spellInfo->Id);
-            SpellScriptTarget::const_iterator upper = sSpellMgr->GetEndSpellScriptTarget(m_spellInfo->Id);
-            if (lower == upper)
+           SpellScriptTargetBounds bounds = sSpellMgr->GetSpellScriptTargetBounds(m_spellInfo->Id);
+            if (bounds.first == bounds.second)
             {
                 sLog->outErrorDb("Spell (ID: %u) (caster Entry: %u) does not have record in spell_script_target", m_spellInfo->Id, m_caster->GetEntry());
                 if (IsPositiveSpell(m_spellInfo->Id))
@@ -1443,10 +1442,10 @@ WorldObject* Spell::SearchNearbyTarget(float range, SpellTargets TargetType)
             Creature* creatureScriptTarget = NULL;
             GameObject* goScriptTarget = NULL;
 
-            for (SpellScriptTarget::const_iterator i_spellST = lower; i_spellST != upper; ++i_spellST)
-            {
-                switch (i_spellST->second.type)
+            for (SpellScriptTarget::const_iterator i_spellST = bounds.first; i_spellST != bounds.second; ++i_spellST)
                 {
+                    switch (i_spellST->second.type)
+                    {
                     case SPELL_TARGET_TYPE_GAMEOBJECT:
                         if (i_spellST->second.targetEntry)
                         {
@@ -1942,7 +1941,7 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_RADIUS, radius, this);
 
         std::list<Unit*> unitList;
-
+        SpellTargets targetType;
         switch (cur)
         {
             case TARGET_UNIT_AREA_ENEMY_SRC:
@@ -1967,30 +1966,9 @@ void Spell::SetTargetMap(uint32 i, uint32 cur)
             case TARGET_UNIT_AREA_ENTRY_SRC:
             case TARGET_UNIT_AREA_ENTRY_DST:
             case TARGET_UNIT_CONE_ENTRY: // fix me
-            {
-                SpellScriptTarget::const_iterator lower = sSpellMgr->GetBeginSpellScriptTarget(m_spellInfo->Id);
-                SpellScriptTarget::const_iterator upper = sSpellMgr->GetEndSpellScriptTarget(m_spellInfo->Id);
                 radius = GetSpellRadius(m_spellInfo, i, IsPositiveSpell(m_spellInfo->Id));
-                if (lower == upper)
-                {
-                    sLog->outErrorDb("Spell (ID: %u) (caster Entry: %u) does not have record in spell_script_target", m_spellInfo->Id, m_caster->GetEntry());
-
-                    if (IsPositiveEffect(m_spellInfo->Id, i))
-                        SearchAreaTarget(unitList, radius, pushType, SPELL_TARGETS_ALLY);
-                    else
-                        SearchAreaTarget(unitList, radius, pushType, SPELL_TARGETS_ENEMY);
-                }
-                // let it be done in one check?
-                else
-                {
-                    for (SpellScriptTarget::const_iterator i_spellST = lower; i_spellST != upper; ++i_spellST)
-                    {
-                        if (i_spellST->second.type == SPELL_TARGET_TYPE_CREATURE)
-                            SearchAreaTarget(unitList, radius, pushType, SPELL_TARGETS_ENTRY, i_spellST->second.targetEntry);
-                    }
-                }
+                targetType = SPELL_TARGETS_ENTRY;
                 break;
-            }
             case TARGET_UNIT_PARTY_TARGET:
                 m_targets.getUnitTarget()->GetPartyMember(unitList, radius);
                 break;
@@ -3674,7 +3652,7 @@ uint8 Spell::CanCast(bool strict)
                 Creature* creatureScriptTarget = NULL;
                 GameObject* goScriptTarget = NULL;
 
-                for (SpellScriptTarget::const_iterator i_spellST = lower; i_spellST != upper; ++i_spellST)
+                for (SpellScriptTarget::const_iterator i_spellST = bounds.first; i_spellST != bounds.second; ++i_spellST)
                 {
                     switch (i_spellST->second.type)
                     {

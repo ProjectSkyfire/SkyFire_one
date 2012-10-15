@@ -1146,7 +1146,7 @@ bool SpellMgr::IsAffectedBySpell(SpellEntry const *spellInfo, uint32 spellId, ui
     }
 
     // true
-    if (familyFlags & spellInfo->SpellFamilyFlags)
+    if (familyFlags && spellInfo->SpellFamilyFlags)
         return true;
 
     return false;
@@ -1364,7 +1364,7 @@ bool SpellMgr::IsSpellProcEventCanTriggeredBy(SpellProcEventEntry const * spellP
             // spellFamilyName is Ok need check for spellFamilyMask if present
             if (spellProcEvent->spellFamilyMask)
             {
-                if ((spellProcEvent->spellFamilyMask & procSpell->SpellFamilyFlags) == 0)
+                if ((spellProcEvent->spellFamilyMask && procSpell->SpellFamilyFlags) == 0)
                     return false;
                 active = true; // Spell added manualy -> so its active spell
             }
@@ -1498,113 +1498,35 @@ bool SpellMgr::IsRankSpellDueToSpell(SpellEntry const *spellInfo_1, uint32 spell
 
 bool SpellMgr::canStackSpellRanks(SpellEntry const *spellInfo)
 {
+    if (IsPassiveSpell(spellInfo->Id))                       // ranked passive spell
+        return false;
     if (spellInfo->powerType != POWER_MANA && spellInfo->powerType != POWER_HEALTH)
         return false;
-    if (IsProfessionSpell(spellInfo->Id))
-        return false;
+
 
     // All stance spells. if any better way, change it.
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
-        // Paladin aura Spell
-        if (spellInfo->SpellFamilyName == SPELLFAMILY_PALADIN
-            && spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AREA_AURA_PARTY)
-            return false;
-        // Druid form Spell
-        if (spellInfo->SpellFamilyName == SPELLFAMILY_DRUID
-            && spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA
-            && spellInfo->EffectApplyAuraName[i] == SPELL_AURA_MOD_SHAPESHIFT)
-            return false;
-        // Rogue Stealth
-        if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE
-            && spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA
-            && spellInfo->EffectApplyAuraName[i] == SPELL_AURA_MOD_SHAPESHIFT)
-            return false;
+        switch(spellInfo->SpellFamilyName)
+        {
+            case SPELLFAMILY_PALADIN:
+                // Paladin aura Spell
+                if (spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AREA_AURA_PARTY)
+                    return false;
+                break;
+            case SPELLFAMILY_DRUID:
+                // Druid form Spell
+                if (spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA &&
+                    spellInfo->EffectApplyAuraName[i] == SPELL_AURA_MOD_SHAPESHIFT)
+                    return false;
+                break;
+            case SPELLFAMILY_ROGUE:
+                // Rogue Stealth
+                if (spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA &&
+                    spellInfo->EffectApplyAuraName[i] == SPELL_AURA_MOD_SHAPESHIFT)
+                    return false;
+        }
     }
-    return true;
-}
-
-bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2, bool sameCaster) const
-{
-    SpellEntry const *spellInfo_1 = sSpellStore.LookupEntry(spellId_1);
-    SpellEntry const *spellInfo_2 = sSpellStore.LookupEntry(spellId_2);
-
-    if (!spellInfo_1 || !spellInfo_2)
-        return false;
-
-    SpellSpecific spellId_spec_1 = GetSpellSpecific(spellId_1);
-    SpellSpecific spellId_spec_2 = GetSpellSpecific(spellId_2);
-    if (spellId_spec_1 && spellId_spec_2)
-        if (IsSingleFromSpellSpecificPerTarget(spellId_spec_1, spellId_spec_2)
-            ||(IsSingleFromSpellSpecificPerCaster(spellId_spec_1, spellId_spec_2) && sameCaster))
-            return true;
-
-    // spells with different specific always stack
-    if (spellId_spec_1 != spellId_spec_2)
-        return false;
-
-    if (spellInfo_1->SpellFamilyName != spellInfo_2->SpellFamilyName)
-        return false;
-
-    if (!sameCaster)
-    {
-        if (spellInfo_1->AttributesEx3 & SPELL_ATTR_EX3_STACKS_FOR_DIFF_CASTERS)
-            return false;
-
-        for (uint32 i = 0; i < 3; ++i)
-            if (spellInfo_1->Effect[i] == SPELL_EFFECT_APPLY_AURA
-                || spellInfo_1->Effect[i] == SPELL_EFFECT_PERSISTENT_AREA_AURA)
-                // not area auras (shaman totem)
-                switch (spellInfo_1->EffectApplyAuraName[i])
-                {
-                    // DOT or HOT from different casters will stack
-                    case SPELL_AURA_PERIODIC_DAMAGE:
-                    case SPELL_AURA_PERIODIC_HEAL:
-                    case SPELL_AURA_PERIODIC_TRIGGER_SPELL:
-                    case SPELL_AURA_PERIODIC_ENERGIZE:
-                    case SPELL_AURA_PERIODIC_MANA_LEECH:
-                    case SPELL_AURA_PERIODIC_LEECH:
-                    case SPELL_AURA_POWER_BURN_MANA:
-                    case SPELL_AURA_OBS_MOD_MANA:
-                    case SPELL_AURA_OBS_MOD_HEALTH:
-                    case SPELL_AURA_PERIODIC_TRIGGER_SPELL_WITH_VALUE:
-                        return false;
-                    default:
-                        break;
-                }
-    }
-
-//    not needed now because we compare effects last rank of spells
-//    if (spellInfo_1->SpellFamilyName && IsRankSpellDueToSpell(spellInfo_1, spellId_2))
-//        return true;
-
-    // generic spells
-    if (!spellInfo_1->SpellFamilyName)
-    {
-        if (!spellInfo_1->SpellIconID
-            || spellInfo_1->SpellIconID == 1
-            || spellInfo_1->SpellIconID != spellInfo_2->SpellIconID)
-            return false;
-    }
-
-    // check for class spells
-    else
-    {
-        if (spellInfo_1->SpellFamilyFlags != spellInfo_2->SpellFamilyFlags)
-            return false;
-    }
-
-    //use data of highest rank spell(needed for spells which ranks have different effects)
-    spellInfo_1 = sSpellStore.LookupEntry(GetLastSpellInChain(spellId_1));
-    spellInfo_2 = sSpellStore.LookupEntry(GetLastSpellInChain(spellId_2));
-
-    //if spells have exactly the same effect they cannot stack
-    for (uint32 i = 0; i < 3; ++i)
-        if (spellInfo_1->Effect[i] != spellInfo_2->Effect[i]
-            || spellInfo_1->EffectApplyAuraName[i] != spellInfo_2->EffectApplyAuraName[i]
-            || spellInfo_1->EffectMiscValue[i] != spellInfo_2->EffectMiscValue[i]) // paladin resist aura
-            return false; // need itemtype check? need an example to add that check
-
     return true;
 }
 
@@ -1614,12 +1536,18 @@ bool SpellMgr::IsProfessionSpell(uint32 spellId)
     if (!spellInfo)
         return false;
 
-    if (spellInfo->Effect[1] != SPELL_EFFECT_SKILL)
-        return false;
+    for (uint8 i = 0 ; i < MAX_SPELL_EFFECTS ; ++i)
+    {
+        if (spellInfo->Effect[i] == SPELL_EFFECT_SKILL)
+        {
+            uint32 skill = spellInfo->EffectMiscValue[i];
 
-    uint32 skill = spellInfo->EffectMiscValue[1];
-
-    return IsProfessionSkill(skill);
+            bool found = IsProfessionSkill(skill);
+            if (found)
+                return true;
+        }
+    }
+    return false;
 }
 
 bool SpellMgr::IsPrimaryProfessionSpell(uint32 spellId)
@@ -1628,12 +1556,427 @@ bool SpellMgr::IsPrimaryProfessionSpell(uint32 spellId)
     if (!spellInfo)
         return false;
 
-    if (spellInfo->Effect[1] != SPELL_EFFECT_SKILL)
+    for (uint8 i = 0 ; i < MAX_SPELL_EFFECTS ; ++i)
+    {
+        if (spellInfo->Effect[i] == SPELL_EFFECT_SKILL)
+        {
+            uint32 skill = spellInfo->EffectMiscValue[i];
+
+            bool found = IsPrimaryProfessionSkill(skill);
+            if (found)
+                return true;
+        }
+    }
+    return false;
+}
+
+bool SpellMgr::IsNoStackSpellDueToSpell(uint32 spellId_1, uint32 spellId_2) const
+{
+    SpellEntry const* spellInfo_1 = sSpellStore.LookupEntry(spellId_1);
+    SpellEntry const* spellInfo_2 = sSpellStore.LookupEntry(spellId_2);
+
+    if (!spellInfo_1 || !spellInfo_2)
         return false;
 
-    uint32 skill = spellInfo->EffectMiscValue[1];
+    if (spellId_1 == spellId_2)
+        return false;
 
-    return IsPrimaryProfessionSkill(skill);
+    // Resurrection sickness
+    if ((spellInfo_1->Id == SPELL_ID_PASSIVE_RESURRECTION_SICKNESS) != (spellInfo_2->Id == SPELL_ID_PASSIVE_RESURRECTION_SICKNESS))
+        return false;
+
+    // Allow stack passive and not passive spells
+    if (spellInfo_1->HasAttribute(SPELL_ATTR_PASSIVE) != spellInfo_2->HasAttribute(SPELL_ATTR_PASSIVE))
+        return false;
+
+    // Specific spell family spells
+    switch (spellInfo_1->SpellFamilyName)
+    {
+        case SPELLFAMILY_GENERIC:
+            switch (spellInfo_2->SpellFamilyName)
+            {
+                case SPELLFAMILY_GENERIC:                   // same family case
+                {
+                    // Thunderfury
+                    if ((spellInfo_1->Id == 21992 && spellInfo_2->Id == 27648) ||
+                        (spellInfo_2->Id == 21992 && spellInfo_1->Id == 27648))
+                        return false;
+
+                    // Lightning Speed (Mongoose) and Fury of the Crashing Waves (Tsunami Talisman)
+                    if ((spellInfo_1->Id == 28093 && spellInfo_2->Id == 42084) ||
+                        (spellInfo_2->Id == 28093 && spellInfo_1->Id == 42084))
+                        return false;
+
+                    // Soulstone Resurrection and Twisting Nether (resurrector)
+                    if (spellInfo_1->SpellIconID == 92 && spellInfo_2->SpellIconID == 92 && (
+                            (spellInfo_1->SpellVisual == 99 && spellInfo_2->SpellVisual == 0) ||
+                            (spellInfo_2->SpellVisual == 99 && spellInfo_1->SpellVisual == 0)))
+                        return false;
+
+                    // Heart of the Wild, Agility and various Idol Triggers
+                    if (spellInfo_1->SpellIconID == 240 && spellInfo_2->SpellIconID == 240)
+                        return false;
+
+                    // Personalized Weather (thunder effect should overwrite rainy aura)
+                    if (spellInfo_1->SpellIconID == 2606 && spellInfo_2->SpellIconID == 2606)
+                        return false;
+
+                    // Brood Affliction: Bronze
+                    if ((spellInfo_1->Id == 23170 && spellInfo_2->Id == 23171) ||
+                        (spellInfo_2->Id == 23170 && spellInfo_1->Id == 23171))
+                        return false;
+
+                    // Male Shadowy Disguise
+                    if ((spellInfo_1->Id == 32756 && spellInfo_2->Id == 38080) ||
+                        (spellInfo_2->Id == 32756 && spellInfo_1->Id == 38080))
+                        return false;
+
+                    // Female Shadowy Disguise
+                    if ((spellInfo_1->Id == 32756 && spellInfo_2->Id == 38081) ||
+                        (spellInfo_2->Id == 32756 && spellInfo_1->Id == 38081))
+                        return false;
+
+                    // Regular and Night Elf Ghost
+                    if ((spellInfo_1->Id == 8326 && spellInfo_2->Id == 20584) ||
+                        (spellInfo_2->Id == 8326 && spellInfo_1->Id == 20584))
+                        return false;
+
+                    // Blood Fury and Rage of the Unraveller
+                    if (spellInfo_1->SpellIconID == 1662 && spellInfo_2->SpellIconID == 1662)
+                        return false;
+
+                    break;
+                }
+                case SPELLFAMILY_MAGE:
+                    // Arcane Intellect and Insight
+                    if (spellInfo_2->SpellIconID == 125 && spellInfo_1->Id == 18820)
+                        return false;
+                    break;
+                case SPELLFAMILY_WARRIOR:
+                {
+                    // Scroll of Protection and Defensive Stance (multi-family check)
+                    if (spellInfo_1->SpellIconID == 276 && spellInfo_1->SpellVisual == 196 && spellInfo_2->Id == 71)
+                        return false;
+
+                    // Improved Hamstring -> Hamstring (multi-family check)
+                    if ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x2)) && spellInfo_1->Id == 23694)
+                        return false;
+
+                    break;
+                }
+                case SPELLFAMILY_DRUID:
+                {
+                    // Scroll of Stamina and Leader of the Pack (multi-family check)
+                    if (spellInfo_1->SpellIconID == 312 && spellInfo_1->SpellVisual == 216 && spellInfo_2->Id == 24932)
+                        return false;
+
+                    // Dragonmaw Illusion (multi-family check)
+                    if (spellId_1 == 40216 && spellId_2 == 42016)
+                        return false;
+
+                    break;
+                }
+                case SPELLFAMILY_ROGUE:
+                {
+                    // Garrote-Silence -> Garrote (multi-family check)
+                    if (spellInfo_1->SpellIconID == 498 && spellInfo_1->SpellVisual == 0 && spellInfo_2->SpellIconID == 498)
+                        return false;
+
+                    break;
+                }
+                case SPELLFAMILY_HUNTER:
+                {
+                    // Concussive Shot and Imp. Concussive Shot (multi-family check)
+                    if (spellInfo_1->Id == 19410 && spellInfo_2->Id == 5116)
+                        return false;
+
+                    // Improved Wing Clip -> Wing Clip (multi-family check)
+                    if ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x40)) && spellInfo_1->Id == 19229)
+                        return false;
+                    break;
+                }
+                case SPELLFAMILY_PALADIN:
+                {
+                    // Unstable Currents and other -> *Sanctity Aura (multi-family check)
+                    if (spellInfo_2->SpellIconID == 502 && spellInfo_1->SpellIconID == 502 && spellInfo_1->SpellVisual == 969)
+                        return false;
+
+                    // *Band of Eternal Champion and Seal of Command(multi-family check)
+                    if (spellId_1 == 35081 && spellInfo_2->SpellIconID == 561 && spellInfo_2->SpellVisual == 7992)
+                        return false;
+
+                    break;
+                }
+            }
+            // Dragonmaw Illusion, Blood Elf Illusion, Human Illusion, Illidari Agent Illusion, Scarlet Crusade Disguise
+            if (spellInfo_1->SpellIconID == 1691 && spellInfo_2->SpellIconID == 1691)
+                return false;
+            break;
+        case SPELLFAMILY_MAGE:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_MAGE)
+            {
+                // Blizzard & Chilled (and some other stacked with blizzard spells
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x80)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x100000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x80)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x100000))))
+                    return false;
+
+                // Blink & Improved Blink
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x0000000000010000)) && (spellInfo_2->SpellVisual == 72 && spellInfo_2->SpellIconID == 1499)) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x0000000000010000)) && (spellInfo_1->SpellVisual == 72 && spellInfo_1->SpellIconID == 1499)))
+                    return false;
+
+                // Fireball & Pyroblast (Dots)
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x1)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x400000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x1)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x400000))))
+                    return false;
+            }
+            // Detect Invisibility and Mana Shield (multi-family check)
+            if (spellInfo_2->Id == 132 && spellInfo_1->SpellIconID == 209 && spellInfo_1->SpellVisual == 968)
+                return false;
+
+            // Combustion and Fire Protection Aura (multi-family check)
+            if (spellInfo_1->Id == 11129 && spellInfo_2->SpellIconID == 33 && spellInfo_2->SpellVisual == 321)
+                return false;
+
+            // Arcane Intellect and Insight
+            if (spellInfo_1->SpellIconID == 125 && spellInfo_2->Id == 18820)
+                return false;
+
+            break;
+        case SPELLFAMILY_WARLOCK:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_WARLOCK)
+            {
+                // Siphon Life and Drain Life
+                if ((spellInfo_1->SpellIconID == 152 && spellInfo_2->SpellIconID == 546) ||
+                    (spellInfo_2->SpellIconID == 152 && spellInfo_1->SpellIconID == 546))
+                    return false;
+
+                // Corruption & Seed of corruption
+                if ((spellInfo_1->SpellIconID == 313 && spellInfo_2->SpellIconID == 1932) ||
+                    (spellInfo_2->SpellIconID == 313 && spellInfo_1->SpellIconID == 1932))
+                    if (spellInfo_1->SpellVisual != 0 && spellInfo_2->SpellVisual != 0)
+                        return true;                        // can't be stacked
+
+                // Corruption and Unstable Affliction
+                if ((spellInfo_1->SpellIconID == 313 && spellInfo_2->SpellIconID == 2039) ||
+                    (spellInfo_2->SpellIconID == 313 && spellInfo_1->SpellIconID == 2039))
+                    return false;
+
+                // (Corruption or Unstable Affliction) and (Curse of Agony or Curse of Doom)
+                if (((spellInfo_1->SpellIconID == 313 || spellInfo_1->SpellIconID == 2039) && (spellInfo_2->SpellIconID == 544  || spellInfo_2->SpellIconID == 91)) ||
+                    ((spellInfo_2->SpellIconID == 313 || spellInfo_2->SpellIconID == 2039) && (spellInfo_1->SpellIconID == 544  || spellInfo_1->SpellIconID == 91)))
+                    return false;
+            }
+            // Detect Invisibility and Mana Shield (multi-family check)
+            if (spellInfo_1->Id == 132 && spellInfo_2->SpellIconID == 209 && spellInfo_2->SpellVisual == 968)
+                return false;
+            break;
+        case SPELLFAMILY_WARRIOR:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_WARRIOR)
+            {
+                // Rend and Deep Wound
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x20)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x1000000000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x20)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x1000000000))))
+                    return false;
+
+                // Battle Shout and Rampage
+                if ((spellInfo_1->SpellIconID == 456 && spellInfo_2->SpellIconID == 2006) ||
+                    (spellInfo_2->SpellIconID == 456 && spellInfo_1->SpellIconID == 2006))
+                    return false;
+
+                // Defensive/Berserker/Battle stance aura can not stack (needed for dummy auras)
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x800000)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x800000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x800000)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x800000))))
+                    return true;
+            }
+
+            // Hamstring -> Improved Hamstring (multi-family check)
+            if ((spellInfo_1->SpellFamilyFlags & UI64LIT(0x2)) && spellInfo_2->Id == 23694)
+                return false;
+
+            // Defensive Stance and Scroll of Protection (multi-family check)
+            if (spellInfo_1->Id == 71 && spellInfo_2->SpellIconID == 276 && spellInfo_2->SpellVisual == 196)
+                return false;
+
+            // Bloodlust and Bloodthirst (multi-family check)
+            if (spellInfo_2->Id == 2825 && spellInfo_1->SpellIconID == 38 && spellInfo_1->SpellVisual == 0)
+                return false;
+
+            break;
+        case SPELLFAMILY_PRIEST:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_PRIEST)
+            {
+                // Devouring Plague and Shadow Vulnerability
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x2000000)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x800000000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x2000000)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x800000000))))
+                    return false;
+
+                // StarShards and Shadow Word: Pain
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x200000)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x8000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x200000)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x8000))))
+                    return false;
+            }
+            break;
+        case SPELLFAMILY_DRUID:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_DRUID)
+            {
+                // Omen of Clarity and Blood Frenzy
+                if (((spellInfo_1->SpellFamilyFlags == UI64LIT(0x0) && spellInfo_1->SpellIconID == 108) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x20000000000000))) ||
+                    ((spellInfo_2->SpellFamilyFlags == UI64LIT(0x0) && spellInfo_2->SpellIconID == 108) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x20000000000000))))
+                    return false;
+
+                //  Tree of Life (Shapeshift) and 34123 Tree of Life (Passive)
+                if ((spellId_1 == 33891 && spellId_2 == 34123) ||
+                    (spellId_2 == 33891 && spellId_1 == 34123))
+                    return false;
+
+                // Wrath of Elune and Nature's Grace
+                if ((spellInfo_1->Id == 16886 && spellInfo_2->Id == 46833) ||
+                    (spellInfo_2->Id == 16886 && spellInfo_1->Id == 46833))
+                    return false;
+
+                // Bear Rage (Feral T4 (2)) and Omen of Clarity
+                if ((spellInfo_1->Id == 16864 && spellInfo_2->Id == 37306) ||
+                    (spellInfo_2->Id == 16864 && spellInfo_1->Id == 37306))
+                    return false;
+
+                // Cat Energy (Feral T4 (2)) and Omen of Clarity
+                if ((spellInfo_1->Id == 16864 && spellInfo_2->Id == 37311) ||
+                    (spellInfo_2->Id == 16864 && spellInfo_1->Id == 37311))
+                    return false;
+            }
+
+            // Leader of the Pack and Scroll of Stamina (multi-family check)
+            if (spellInfo_1->Id == 24932 && spellInfo_2->SpellIconID == 312 && spellInfo_2->SpellVisual == 216)
+                return false;
+
+            // Dragonmaw Illusion (multi-family check)
+            if (spellId_1 == 42016 && spellId_2 == 40216)
+                return false;
+
+            break;
+        case SPELLFAMILY_ROGUE:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_ROGUE)
+            {
+                // Master of Subtlety
+                if ((spellId_1 == 31665 && spellId_2 == 31666) ||
+                    (spellId_1 == 31666 && spellId_2 == 31665))
+                    return false;
+            }
+
+            // Garrote -> Garrote-Silence (multi-family check)
+            if (spellInfo_1->SpellIconID == 498 && spellInfo_2->SpellIconID == 498 && spellInfo_2->SpellVisual == 0)
+                return false;
+            break;
+        case SPELLFAMILY_HUNTER:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_HUNTER)
+            {
+                // Rapid Fire & Quick Shots
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x20)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x20000000000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x20)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x20000000000))))
+                    return false;
+
+                // Serpent Sting & (Immolation/Explosive Trap Effect)
+                if (((spellInfo_1->SpellFamilyFlags & UI64LIT(0x4)) && (spellInfo_2->SpellFamilyFlags & UI64LIT(0x00000004000))) ||
+                    ((spellInfo_2->SpellFamilyFlags & UI64LIT(0x4)) && (spellInfo_1->SpellFamilyFlags & UI64LIT(0x00000004000))))
+                    return false;
+
+                // Bestial Wrath
+                if (spellInfo_1->SpellIconID == 1680 && spellInfo_2->SpellIconID == 1680)
+                    return false;
+            }
+
+            // Wing Clip -> Improved Wing Clip (multi-family check)
+            if ((spellInfo_1->SpellFamilyFlags & UI64LIT(0x40)) && spellInfo_2->Id == 19229)
+                return false;
+
+            // Concussive Shot and Imp. Concussive Shot (multi-family check)
+            if (spellInfo_2->Id == 19410 && spellInfo_1->Id == 5116)
+                return false;
+            break;
+        case SPELLFAMILY_PALADIN:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_PALADIN)
+            {
+                // Paladin Seals
+                if (IsSealSpell(spellInfo_1) && IsSealSpell(spellInfo_2))
+                    return true;
+                // Concentration Aura and Improved Concentration Aura and Aura Mastery
+                if ((spellInfo_1->SpellIconID == 1487) && (spellInfo_2->SpellIconID == 1487))
+                    return false;
+            }
+
+            // Combustion and Fire Protection Aura (multi-family check)
+            if (spellInfo_2->Id == 11129 && spellInfo_1->SpellIconID == 33 && spellInfo_1->SpellVisual == 321)
+                return false;
+
+            // *Sanctity Aura -> Unstable Currents and other (multi-family check)
+            if (spellInfo_1->SpellIconID == 502 && spellInfo_2->SpellFamilyName == SPELLFAMILY_GENERIC && spellInfo_2->SpellIconID == 502 && spellInfo_2->SpellVisual == 969)
+                return false;
+
+            // *Seal of Command and Band of Eternal Champion (multi-family check)
+            if (spellInfo_1->SpellIconID == 561 && spellInfo_1->SpellVisual == 7992 && spellId_2 == 35081)
+                return false;
+            break;
+        case SPELLFAMILY_SHAMAN:
+            if (spellInfo_2->SpellFamilyName == SPELLFAMILY_SHAMAN)
+            {
+                // Windfury weapon
+                if (spellInfo_1->SpellIconID == 220 && spellInfo_2->SpellIconID == 220 &&
+                    !spellInfo_1->IsFitToFamilyMask(spellInfo_2->SpellFamilyFlags))
+                    return false;
+            }
+            // Bloodlust and Bloodthirst (multi-family check)
+            if (spellInfo_1->Id == 2825 && spellInfo_2->SpellIconID == 38 && spellInfo_2->SpellVisual == 0)
+                return false;
+            break;
+        default:
+            break;
+    }
+
+    // more generic checks
+    if (spellInfo_1->SpellIconID == spellInfo_2->SpellIconID &&
+        spellInfo_1->SpellIconID != 0 && spellInfo_2->SpellIconID != 0)
+    {
+        bool isModifier = false;
+        for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
+        {
+            if (spellInfo_1->EffectApplyAuraName[i] == SPELL_AURA_ADD_FLAT_MODIFIER ||
+                spellInfo_1->EffectApplyAuraName[i] == SPELL_AURA_ADD_PCT_MODIFIER  ||
+                spellInfo_2->EffectApplyAuraName[i] == SPELL_AURA_ADD_FLAT_MODIFIER ||
+                spellInfo_2->EffectApplyAuraName[i] == SPELL_AURA_ADD_PCT_MODIFIER)
+                isModifier = true;
+        }
+
+        if (!isModifier)
+            return true;
+    }
+
+    if (IsRankSpellDueToSpell(spellInfo_1, spellId_2))
+        return true;
+
+    if (spellInfo_1->SpellFamilyName == 0 || spellInfo_2->SpellFamilyName == 0)
+        return false;
+
+    if (spellInfo_1->SpellFamilyName != spellInfo_2->SpellFamilyName)
+        return false;
+
+    bool dummy_only = true;
+    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
+    {
+        if (spellInfo_1->Effect[i] != spellInfo_2->Effect[i] ||
+            spellInfo_1->EffectItemType[i] != spellInfo_2->EffectItemType[i] ||
+            spellInfo_1->EffectMiscValue[i] != spellInfo_2->EffectMiscValue[i] ||
+            spellInfo_1->EffectApplyAuraName[i] != spellInfo_2->EffectApplyAuraName[i])
+            return false;
+
+        // ignore dummy only spells
+        if (spellInfo_1->Effect[i] && spellInfo_1->Effect[i] != SPELL_EFFECT_DUMMY && spellInfo_1->EffectApplyAuraName[i] != SPELL_AURA_DUMMY)
+            dummy_only = false;
+    }
+    if (dummy_only)
+        return false;
+
+    return true;
 }
 
 bool SpellMgr::IsPrimaryProfessionFirstRankSpell(uint32 spellId) const
@@ -1703,14 +2046,38 @@ void SpellMgr::LoadSpellRequired()
 
         uint32 spell_id = fields[0].GetUInt32();
         uint32 spell_req = fields[1].GetUInt32();
+        // check if chain is made with valid first spell
+        SpellEntry const * spell = sSpellStore.LookupEntry(spell_id);
+        if (!spell)
+        {
+            sLog->outErrorDb("spell_id %u in `spell_required` table is not found in dbcs, skipped", spell_id);
+            continue;
+        }
+        SpellEntry const * req_spell = sSpellStore.LookupEntry(spell_req);
+        if (!req_spell)
+        {
+            sLog->outErrorDb("req_spell %u in `spell_required` table is not found in dbcs, skipped", spell_req);
+            continue;
+        }
+        if (GetFirstSpellInChain(spell_id) == GetFirstSpellInChain(spell_req))
+        {
+            sLog->outErrorDb("req_spell %u and spell_id %u in `spell_required` table are ranks of the same spell, entry not needed, skipped", spell_req, spell_id);
+            continue;
+        }
+        if (IsSpellRequiringSpell(spell_id, spell_req))
+        {
+            sLog->outErrorDb("duplicated entry of req_spell %u and spell_id %u in `spell_required`, skipped", spell_req, spell_id);
+            continue;
+        }
 
+        mSpellReq.insert (std::pair<uint32, uint32>(spell_id, spell_req));
         mSpellsReqSpell.insert (std::pair<uint32, uint32>(spell_req, spell_id));
-        mSpellReq[spell_id] = spell_req;
         ++rows;
-    } while (result->NextRow());
+    }
+    while (result->NextRow());
 
-    sLog->outString();
     sLog->outString(">> Loaded %u spell required records", rows);
+    sLog->outString();
 }
 
 void SpellMgr::LoadSpellRanks()
@@ -1827,10 +2194,13 @@ void SpellMgr::LoadSpellRanks()
 
 void SpellMgr::LoadSpellLearnSkills()
 {
+    uint32 oldMSTime = getMSTime();
+
     mSpellLearnSkills.clear();                              // need for reload case
 
     // search auto-learned skills and add its to map also for use in unlearn spells/talents
     uint32 dbc_count = 0;
+
     for (uint32 spell = 0; spell < sSpellStore.GetNumRows(); ++spell)
     {
         SpellEntry const* entry = sSpellStore.LookupEntry(spell);
@@ -1838,20 +2208,17 @@ void SpellMgr::LoadSpellLearnSkills()
         if (!entry)
             continue;
 
-        for (int i = 0; i < 3; ++i)
+        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         {
             if (entry->Effect[i] == SPELL_EFFECT_SKILL)
             {
                 SpellLearnSkillNode dbc_node;
-                dbc_node.skill    = entry->EffectMiscValue[i];
+                dbc_node.skill = entry->EffectMiscValue[i];
                 if (dbc_node.skill != SKILL_RIDING)
-                    dbc_node.value    = 1;
+                    dbc_node.value = 1;
                 else
                     dbc_node.value    = (entry->EffectBasePoints[i]+1)*75;
                 dbc_node.maxvalue = (entry->EffectBasePoints[i]+1)*75;
-
-                SpellLearnSkillNode const* db_node = GetSpellLearnSkill(spell);
-
                 mSpellLearnSkills[spell] = dbc_node;
                 ++dbc_count;
                 break;
@@ -1859,20 +2226,23 @@ void SpellMgr::LoadSpellLearnSkills()
         }
     }
 
+    sLog->outString(">> Loaded %u Spell Learn Skills from DBC in %u ms", dbc_count, GetMSTimeDiffToNow(oldMSTime));
     sLog->outString();
-    sLog->outString(">> Loaded %u Spell Learn Skills from DBC", dbc_count);
 }
 
 void SpellMgr::LoadSpellLearnSpells()
 {
+    uint32 oldMSTime = getMSTime();
+
     mSpellLearnSpells.clear();                              // need for reload case
 
-    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, SpellID FROM spell_learn_spell");
+    //                                                  0      1        2
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, SpellID, Active FROM spell_learn_spell");
     if (!result)
     {
         sLog->outString();
         sLog->outString(">> Loaded 0 spell learn spells");
-        sLog->outErrorDb("spell_learn_spell table is empty!");
+        sLog->outErrorDb("`spell_learn_spell` table is empty!");
         return;
     }
 
@@ -1882,28 +2252,36 @@ void SpellMgr::LoadSpellLearnSpells()
     {
         Field *fields = result->Fetch();
 
-        uint32 spell_id    = fields[0].GetUInt32();
+        uint32 spell_id = fields[0].GetUInt32();
 
         SpellLearnSpellNode node;
         node.spell      = fields[1].GetUInt32();
+        node.active     = fields[2].GetBool();
         node.autoLearned= false;
 
         if (!sSpellStore.LookupEntry(spell_id))
         {
-            sLog->outErrorDb("Spell %u listed in spell_learn_spell does not exist", spell_id);
+            sLog->outErrorDb("Spell %u listed in `spell_learn_spell` does not exist", spell_id);
             continue;
         }
 
         if (!sSpellStore.LookupEntry(node.spell))
         {
-            sLog->outErrorDb("Spell %u listed in spell_learn_spell does not exist", node.spell);
+            sLog->outErrorDb("Spell %u listed in `spell_learn_spell` learning not existed spell %u", spell_id, node.spell);
+            continue;
+        }
+
+        if (GetTalentSpellCost(node.spell))
+        {
+            sLog->outErrorDb("Spell %u listed in `spell_learn_spell` attempt learning talent spell %u, skipped", spell_id, node.spell);
             continue;
         }
 
         mSpellLearnSpells.insert(SpellLearnSpellMap::value_type(spell_id, node));
 
-        ++count;
-    } while (result->NextRow());
+        count++;
+    }
+    while (result->NextRow());
 
     // search auto-learned spells and add its to map also for use in unlearn spells/talents
     uint32 dbc_count = 0;
@@ -1914,23 +2292,31 @@ void SpellMgr::LoadSpellLearnSpells()
         if (!entry)
             continue;
 
-        for (int i = 0; i < 3; ++i)
+        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         {
             if (entry->Effect[i] == SPELL_EFFECT_LEARN_SPELL)
             {
                 SpellLearnSpellNode dbc_node;
-                dbc_node.spell       = entry->EffectTriggerSpell[i];
-                dbc_node.autoLearned = true;
+                dbc_node.spell = entry->EffectTriggerSpell[i];
+                dbc_node.active = true;                     // all dbc based learned spells is active (show in spell book or hide by client itself)
 
-                SpellLearnSpellMap::const_iterator db_node_begin = GetBeginSpellLearnSpell(spell);
-                SpellLearnSpellMap::const_iterator db_node_end   = GetEndSpellLearnSpell(spell);
+                // ignore learning not existed spells (broken/outdated/or generic learnig spell 483
+                if (!sSpellStore.LookupEntry(dbc_node.spell))
+                    continue;
+
+                // talent or passive spells or skill-step spells auto-casted and not need dependent learning,
+                // pet teaching spells don't must be dependent learning (casted)
+                // other required explicit dependent learning
+                dbc_node.autoLearned = entry->EffectImplicitTargetA[i] == TARGET_UNIT_PET || GetTalentSpellCost(spell) > 0 || IsPassiveSpell(spell) || IsSpellHaveEffect(entry, SPELL_EFFECT_SKILL_STEP);
+
+                SpellLearnSpellMapBounds db_node_bounds = GetSpellLearnSpellMapBounds(spell);
 
                 bool found = false;
-                for (SpellLearnSpellMap::const_iterator itr = db_node_begin; itr != db_node_end; ++itr)
+                for (SpellLearnSpellMap::const_iterator itr = db_node_bounds.first; itr != db_node_bounds.second; ++itr)
                 {
                     if (itr->second.spell == dbc_node.spell)
                     {
-                        sLog->outErrorDb("Spell %u auto-learn spell %u in spell.dbc then the record in spell_learn_spell is redundant, please fix DB.",
+                        sLog->outErrorDb("Spell %u auto-learn spell %u in spell.dbc then the record in `spell_learn_spell` is redundant, please fix DB.",
                             spell, dbc_node.spell);
                         found = true;
                         break;
@@ -1946,8 +2332,8 @@ void SpellMgr::LoadSpellLearnSpells()
         }
     }
 
+    sLog->outString(">> Loaded %u spell learn spells + %u found in DBC in %u ms", count, dbc_count, GetMSTimeDiffToNow(oldMSTime));
     sLog->outString();
-    sLog->outString(">> Loaded %u spell learn spells + %u found in DBC", count, dbc_count);
 }
 
 void SpellMgr::LoadSpellScriptTarget()
@@ -2062,9 +2448,7 @@ void SpellMgr::LoadSpellScriptTarget()
         {
             if (spellInfo->EffectImplicitTargetA[j] == TARGET_UNIT_NEARBY_ENTRY || spellInfo->EffectImplicitTargetA[j] != TARGET_UNIT_CASTER && spellInfo->EffectImplicitTargetB[j] == TARGET_UNIT_NEARBY_ENTRY)
             {
-                SpellScriptTarget::const_iterator lower = sSpellMgr->GetBeginSpellScriptTarget(spellInfo->Id);
-                SpellScriptTarget::const_iterator upper = sSpellMgr->GetEndSpellScriptTarget(spellInfo->Id);
-                if (lower == upper)
+                if (!spellmgr.GetSpellTargetPosition(i))
                 {
                     sLog->outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = %u (TARGET_UNIT_NEARBY_ENTRY), but does not have record in spell_script_target", spellInfo->Id, TARGET_UNIT_NEARBY_ENTRY);
                     break;                                  // effects of spell

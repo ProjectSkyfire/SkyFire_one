@@ -386,6 +386,7 @@ class ChatHandler
         bool HandleAddWeaponCommand(const char* args);
         bool HandleAllowMovementCommand(const char* args);
         bool HandleGoCommand(const char* args);
+        void HandleLearnSkillRecipesHelper(Player* player, uint32 skill_id);
 
         bool HandleCooldownCommand(const char* args);
         bool HandleUnLearnCommand(const char* args);

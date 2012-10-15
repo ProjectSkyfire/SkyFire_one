@@ -1262,15 +1262,13 @@ valid examples:
                         if (linkedSpell->Attributes & SPELL_ATTR_TRADESPELL)
                         {
                             // lookup skillid
-                            SkillLineAbilityMap::const_iterator lower = sSpellMgr->GetBeginSkillLineAbilityMap(linkedSpell->Id);
-                            SkillLineAbilityMap::const_iterator upper = sSpellMgr->GetEndSkillLineAbilityMap(linkedSpell->Id);
-
-                            if (lower == upper)
+                            SkillLineAbilityMapBounds bounds = sSpellMgr->GetSkillLineAbilityMapBounds(linkedSpell->Id);
+                            if (bounds.first == bounds.second)
                             {
                                 return false;
                             }
 
-                            SkillLineAbilityEntry const *skillInfo = lower->second;
+                            SkillLineAbilityEntry const *skillInfo = bounds.first->second;
 
                             if (!skillInfo)
                             {

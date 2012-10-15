@@ -95,11 +95,13 @@ void WorldSession::SendShowBank(uint64 guid)
     SendPacket(&data);
 }
 
-void WorldSession::HandleTrainerListOpcode(WorldPacket& recv_data)
+void WorldSession::HandleTrainerListOpcode(WorldPacket & recv_data)
 {
     uint64 guid;
+    uint32 spellId;
+    uint32 unk;
 
-    recv_data >> guid;
+    recv_data >> guid >> spellId >> unk;
     SendTrainerList(guid);
 }
 
@@ -109,11 +111,33 @@ void WorldSession::SendTrainerList(uint64 guid)
     SendTrainerList(guid, str);
 }
 
+
+static void SendTrainerSpellHelper(WorldPacket& data, TrainerSpell const* tSpell, TrainerSpellState state, float fDiscountMod, bool can_learn_primary_prof, uint32 reqLevel)
+{
+    bool primary_prof_first_rank = sSpellMgr->IsPrimaryProfessionFirstRankSpell(tSpell->spell);
+
+    SpellChainNode const* chain_node = sSpellMgr->GetSpellChainNode(tSpell->spell);
+
+    data << uint32(tSpell->spell);
+    data << uint8(state);
+    data << uint32(floor(tSpell->spellCost * fDiscountMod));
+
+    data << uint32(primary_prof_first_rank && can_learn_primary_prof ? 1 : 0);
+    // primary prof. learn confirmation dialog
+    data << uint32(primary_prof_first_rank ? 1 : 0);    // must be equal prev. field to have learn button in enabled state
+    data << uint8(reqLevel);
+    data << uint32(tSpell->reqSkill);
+    data << uint32(tSpell->reqSkillValue);
+    data << uint32(chain_node ? (chain_node->prev ? chain_node->prev : chain_node->req) : 0);
+    data << uint32(chain_node && chain_node->prev ? chain_node->req : 0);
+    data << uint32(0);
+}
+
 void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
 {
     sLog->outDebug("WORLD: SendTrainerList");
 
-    Creature *unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
+    Creature* unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
     if (!unit)
     {
         sLog->outDebug("WORLD: SendTrainerList - Unit (GUID: %u) not found or you can not interact with him.", uint32(GUID_LOPART(guid)));
@@ -128,59 +152,76 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
     if (!unit->isCanTrainingOf(_player, true))
         return;
 
-    CreatureTemplate const* ci = unit->GetCreatureTemplate();
-
+    CreatureTemplate const *ci = unit->GetCreatureTemplate();
     if (!ci)
     {
         sLog->outDebug("WORLD: SendTrainerList - (GUID: %u) NO CREATUREINFO!", GUID_LOPART(guid));
         return;
     }
-
-    TrainerSpellData const* trainer_spells = unit->GetTrainerSpells();
-    if (!trainer_spells)
+    
+    TrainerSpellData const* cSpells = unit->GetTrainerSpells();
+    if (!cSpells)
     {
         sLog->outDebug("WORLD: SendTrainerList - Training spells not found for creature (GUID: %u Entry: %u)",
             GUID_LOPART(guid), unit->GetEntry());
         return;
     }
+    TrainerSpellData const* tSpells = unit->GetTrainerTemplateSpells();
 
-    WorldPacket data(SMSG_TRAINER_LIST, 8+4+4+trainer_spells->spellList.size()*38 + strTitle.size()+1);
+    uint32 maxcount = (cSpells ? cSpells->spellList.size() : 0) + (tSpells ? tSpells->spellList.size() : 0);
+    uint32 trainer_type = cSpells && cSpells->trainerType ? cSpells->trainerType : (tSpells ? tSpells->trainerType : 0);
+
+    WorldPacket data(SMSG_TRAINER_LIST, 8 + 4 + 4 + maxcount * 38 + strTitle.size() + 1);
     data << uint64(guid);
-    data << uint32(trainer_spells->trainerType);
+    data << uint32(trainer_type);
 
     size_t count_pos = data.wpos();
-    data << uint32(trainer_spells->spellList.size());
+    data << uint32(maxcount);
 
     // reputation discount
     float fDiscountMod = _player->GetReputationPriceDiscount(unit);
+    bool can_learn_primary_prof = GetPlayer()->GetFreePrimaryProfessionPoints() > 0;
 
     uint32 count = 0;
-    for (TrainerSpellList::const_iterator itr = trainer_spells->spellList.begin(); itr != trainer_spells->spellList.end(); ++itr)
+
+    if (cSpells)
     {
-        TrainerSpell const* tSpell = *itr;
+        for (TrainerSpellMap::const_iterator itr = cSpells->spellList.begin(); itr != cSpells->spellList.end(); ++itr)
+        {
+            TrainerSpell const* tSpell = &itr->second;
 
-        if (!_player->IsSpellFitByClassAndRace(tSpell->spell))
-            continue;
+            uint32 reqLevel = 0;
+            if (!_player->IsSpellFitByClassAndRace(tSpell->spell, &reqLevel))
+                continue;
 
-        ++count;
+            reqLevel = tSpell->isProvidedReqLevel ? tSpell->reqLevel : std::max(reqLevel, tSpell->reqLevel);
 
-        bool primary_prof_first_rank = sSpellMgr->IsPrimaryProfessionFirstRankSpell(tSpell->spell);
+            TrainerSpellState state = _player->GetTrainerSpellState(tSpell, reqLevel);
 
-        SpellChainNode const* chain_node = sSpellMgr->GetSpellChainNode(tSpell->spell);
-        uint32 req_spell = sSpellMgr->GetSpellRequired(tSpell->spell);
+            SendTrainerSpellHelper(data, tSpell, state, fDiscountMod, can_learn_primary_prof, reqLevel);
 
-        data << uint32(tSpell->spell);
-        data << uint8(_player->GetTrainerSpellState(tSpell));
-        data << uint32(floor(tSpell->spellcost * fDiscountMod));
+            ++count;
+        }
+    }
 
-        data << uint32(primary_prof_first_rank ? 1 : 0);    // primary prof. learn confirmation dialog
-        data << uint32(primary_prof_first_rank ? 1 : 0);    // must be equal prev. field to have learn button in enabled state
-        data << uint8(tSpell->reqlevel);
-        data << uint32(tSpell->reqskill);
-        data << uint32(tSpell->reqskillvalue);
-        data << uint32(chain_node && chain_node->prev ? chain_node->prev : req_spell);
-        data << uint32(chain_node && chain_node->prev ? req_spell : 0);
-        data << uint32(0);
+    if (tSpells)
+    {
+        for (TrainerSpellMap::const_iterator itr = tSpells->spellList.begin(); itr != tSpells->spellList.end(); ++itr)
+        {
+            TrainerSpell const* tSpell = &itr->second;
+
+            uint32 reqLevel = 0;
+            if (!_player->IsSpellFitByClassAndRace(tSpell->spell, &reqLevel))
+                continue;
+
+            reqLevel = tSpell->isProvidedReqLevel ? tSpell->reqLevel : std::max(reqLevel, tSpell->reqLevel);
+
+            TrainerSpellState state = _player->GetTrainerSpellState(tSpell, reqLevel);
+
+            SendTrainerSpellHelper(data, tSpell, state, fDiscountMod, can_learn_primary_prof, reqLevel);
+
+            ++count;
+        }
     }
 
     data << strTitle;
@@ -188,6 +229,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
     data.put<uint32>(count_pos, count);
     SendPacket(&data);
 }
+
 
 void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket& recv_data)
 {
@@ -222,11 +264,12 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket& recv_data)
         return;
 
     // can't be learn, cheat? Or double learn with lags...
-    if (_player->GetTrainerSpellState(trainer_spell) != TRAINER_SPELL_GREEN)
+    uint32 reqLevel = 0;
+    if (!_player->IsSpellFitByClassAndRace(trainer_spell->spell, &reqLevel))
         return;
 
     // apply reputation discount
-    uint32 nSpellCost = uint32(floor(trainer_spell->spellcost * _player->GetReputationPriceDiscount(unit)));
+    uint32 nSpellCost = uint32(floor(trainer_spell->spellCost * _player->GetReputationPriceDiscount(unit)));
 
     // check money requirement
     if (_player->GetMoney() < nSpellCost)
@@ -245,7 +288,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket& recv_data)
     SendPacket(&data);
 
     // learn explicitly to prevent lost money at lags, learning spell will be only show spell animation
-    _player->learnSpell(trainer_spell->spell);
+    _player->learnSpell(trainer_spell->spell, false);
 
     data.Initialize(SMSG_TRAINER_BUY_SUCCEEDED, 12);
     data << uint64(guid);
