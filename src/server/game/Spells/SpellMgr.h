@@ -750,6 +750,9 @@ typedef std::pair<SpellLearnSpellMap::const_iterator, SpellLearnSpellMap::const_
 typedef std::multimap<uint32, SkillLineAbilityEntry const*> SkillLineAbilityMap;
 typedef std::pair<SkillLineAbilityMap::const_iterator, SkillLineAbilityMap::const_iterator> SkillLineAbilityMapBounds;
 
+typedef std::multimap<uint32, SkillRaceClassInfoEntry const*> SkillRaceClassInfoMap;
+typedef std::pair<SkillRaceClassInfoMap::const_iterator, SkillRaceClassInfoMap::const_iterator> SkillRaceClassInfoMapBounds;
+
 inline bool IsPrimaryProfessionSkill(uint32 skill)
 {
     SkillLineEntry const *pSkill = sSkillLineStore.LookupEntry(skill);
@@ -1030,6 +1033,11 @@ class SpellMgr
             return SkillLineAbilityMapBounds(mSkillLineAbilityMap.lower_bound(spell_id), mSkillLineAbilityMap.upper_bound(spell_id));
         }
 
+        SkillRaceClassInfoMapBounds GetSkillRaceClassInfoMapBounds(uint32 skill_id) const
+        {
+            return mSkillRaceClassInfoMap.equal_range(skill_id);
+        }
+
         PetAura const* GetPetAura(uint32 spell_id)
         {
             SpellPetAuraMap::const_iterator itr = mSpellPetAuraMap.find(spell_id);
@@ -1078,21 +1086,22 @@ class SpellMgr
         void LoadSpellEnchantProcData();
 
     private:
-        SpellScriptTarget  mSpellScriptTarget;
-        SpellChainMap      mSpellChains;
-        SpellsRequiringSpellMap   mSpellsReqSpell;
-        SpellRequiredMap   mSpellReq;
-        SpellLearnSkillMap mSpellLearnSkills;
-        SpellLearnSpellMap mSpellLearnSpells;
-        SpellTargetPositionMap mSpellTargetPositions;
-        SpellAffectMap     mSpellAffectMap;
-        SpellElixirMap     mSpellElixirs;
-        SpellProcEventMap  mSpellProcEventMap;
-        SkillLineAbilityMap mSkillLineAbilityMap;
-        SpellPetAuraMap     mSpellPetAuraMap;
-        SpellCustomAttribute  mSpellCustomAttr;
-        SpellLinkedMap      mSpellLinkedMap;
-        SpellEnchantProcEventMap     mSpellEnchantProcEventMap;
+        SpellScriptTarget           mSpellScriptTarget;
+        SpellChainMap               mSpellChains;
+        SpellsRequiringSpellMap     mSpellsReqSpell;
+        SpellRequiredMap            mSpellReq;
+        SpellLearnSkillMap          mSpellLearnSkills;
+        SpellLearnSpellMap          mSpellLearnSpells;
+        SpellTargetPositionMap      mSpellTargetPositions;
+        SpellAffectMap              mSpellAffectMap;
+        SpellElixirMap              mSpellElixirs;
+        SpellProcEventMap           mSpellProcEventMap;
+        SkillLineAbilityMap         mSkillLineAbilityMap;
+        SkillRaceClassInfoMap       mSkillRaceClassInfoMap;
+        SpellPetAuraMap             mSpellPetAuraMap;
+        SpellCustomAttribute        mSpellCustomAttr;
+        SpellLinkedMap              mSpellLinkedMap;
+        SpellEnchantProcEventMap    mSpellEnchantProcEventMap;
 };
 
 #define sSpellMgr ACE_Singleton<SpellMgr, ACE_Null_Mutex>::instance()

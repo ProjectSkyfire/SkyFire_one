@@ -3680,7 +3680,7 @@ bool Unit::RemoveNoStackAurasDueToAura(Aura *Aur)
         if (!is_triggered_by_spell)
         {
             bool sameCaster = Aur->GetCasterGUID() == (*i).second->GetCasterGUID();
-            if (sSpellMgr->IsNoStackSpellDueToSpell(spellId, i_spellId, sameCaster))
+            if (sSpellMgr->IsNoStackSpellDueToSpell(spellId, i_spellId))
             {
                 int32 aur1Rank = Aur->GetModifierValue();
                 int32 aur2Rank = (*i).second->GetModifierValue();
@@ -5615,7 +5615,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, Aura* triggeredByAu
             }
 
             // Earth Shield
-            if (dummySpell->SpellFamilyFlags == 0x40000000000LL)
+            if (dummySpell->SpellFamilyFlags & 0x40000000000LL)
             {
                 // Now correctly uses the Shaman's own spell critical strike chance to determine the chance of a critical heal.
                 originalCaster = triggeredByAura->GetCasterGUID();
@@ -5834,7 +5834,7 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, Aura* triggeredB
                 break;
             case SPELLFAMILY_WARRIOR:
                 // Rampage
-                if (auraSpellInfo->SpellIconID == 2006 && auraSpellInfo->SpellFamilyFlags == 0x100000)
+                if (auraSpellInfo->SpellIconID == 2006 && auraSpellInfo->SpellFamilyFlags & 0x100000)
                 {
                     switch (auraSpellInfo->Id)
                     {
@@ -5903,7 +5903,7 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, Aura* triggeredB
                 if (auraSpellInfo->Id == 37594)
                     trigger_spell_id = 37595;
                 // Shadowguard
-                else if (auraSpellInfo->SpellFamilyFlags == 0x100080000000LL && auraSpellInfo->SpellVisual == 7958)
+                else if (auraSpellInfo->SpellFamilyFlags & 0x100080000000LL && auraSpellInfo->SpellVisual == 7958)
                 {
                     switch (auraSpellInfo->Id)
                     {
@@ -6083,7 +6083,7 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, Aura* triggeredB
                     default:
                     {
                         // Lightning Shield (overwrite non existing triggered spell call in spell.dbc
-                        if (auraSpellInfo->SpellFamilyFlags == 0x00000400 && auraSpellInfo->SpellVisual == 37)
+                        if (auraSpellInfo->SpellFamilyFlags & 0x00000400 && auraSpellInfo->SpellVisual == 37)
                         {
                             switch (auraSpellInfo->Id)
                             {
@@ -6890,7 +6890,7 @@ void Unit::ModifyAuraState(AuraState flag, bool apply)
                 {
                     // exceptions (applied at state but not removed at state change)
                     // Rampage
-                    if (spellProto->SpellIconID == 2006 && spellProto->SpellFamilyName == SPELLFAMILY_WARRIOR && spellProto->SpellFamilyFlags == 0x100000)
+                    if (spellProto->SpellIconID == 2006 && spellProto->SpellFamilyName == SPELLFAMILY_WARRIOR && spellProto->SpellFamilyFlags & 0x100000)
                     {
                         ++itr;
                         continue;
@@ -8196,20 +8196,26 @@ bool Unit::IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) con
     return false;
 }
 
-bool Unit::IsDamageToThreatSpell(SpellEntry const * spellInfo) const
+bool Unit::IsDamageToThreatSpell(SpellEntry const* spellInfo) const
 {
     if (!spellInfo)
         return false;
 
-    uint32 family = spellInfo->SpellFamilyName;
-    uint64 flags = spellInfo->SpellFamilyFlags;
-
-    if ((family == 5 && flags == 256) ||                     //Searing Pain
-        (family == SPELLFAMILY_SHAMAN && flags == SPELLFAMILYFLAG_SHAMAN_FROST_SHOCK))
-        return true;
+    switch(spellInfo->SpellFamilyName)
+    {
+        case SPELLFAMILY_WARLOCK:
+            if (spellInfo->SpellFamilyFlags[0] == 0x100) // Searing Pain
+                return true;
+            break;
+        case SPELLFAMILY_SHAMAN:
+            if (spellInfo->SpellFamilyFlags[0] == SPELLFAMILYFLAG_SHAMAN_FROST_SHOCK)
+                return true;
+            break;
+    }
 
     return false;
 }
+
 
 void Unit::MeleeDamageBonus(Unit *pVictim, uint32 *pdamage, WeaponAttackType attType, SpellEntry const *spellProto)
 {
@@ -8324,7 +8330,7 @@ void Unit::MeleeDamageBonus(Unit *pVictim, uint32 *pdamage, WeaponAttackType att
                 if (spellProto == NULL)
                     break;
                 // Should increase Shred (initial Damage of Lacerate and Rake handled in Spell::EffectSchoolDMG)
-                if (spellProto->SpellFamilyName == SPELLFAMILY_DRUID && (spellProto->SpellFamilyFlags == 0x00008000LL))
+                if (spellProto->SpellFamilyName == SPELLFAMILY_DRUID && (spellProto->SpellFamilyFlags & 0x00008000LL))
                     TakenTotalMod *= (100.0f+(*i)->GetModifier()->m_amount)/100.0f;
                 break;
         }

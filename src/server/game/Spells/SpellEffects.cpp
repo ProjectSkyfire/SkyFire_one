@@ -1770,7 +1770,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
             }
 
             //Shaman Rockbiter Weapon
-            if (m_spellInfo->SpellFamilyFlags == 0x400000)
+            if (m_spellInfo->SpellFamilyFlags & 0x400000)
             {
                 uint32 spell_id = 0;
                 switch (m_spellInfo->Id)
@@ -2363,7 +2363,7 @@ void Spell::EffectPowerDrain(SpellEffIndex effIndex)
     uint32 curPower = unitTarget->GetPower(drain_power);
 
     //add spell damage bonus
-    damage=m_caster->SpellDamageBonus(unitTarget, m_spellInfo, uint32(damage), SPELL_DIRECT_DAMAGE);
+    damage = m_caster->SpellDamageBonus(unitTarget, m_spellInfo, uint32(damage), SPELL_DIRECT_DAMAGE);
 
     // resilience reduce mana draining effect at spell crit damage reduction (added in 2.4)
     uint32 power = damage;
@@ -2517,72 +2517,67 @@ void Spell::SpellDamageHeal(SpellEffIndex /*effIndex*/)
         {
             // Amount of heal - depends from stacked Holy Energy
             int damageAmount = 0;
-            if (AuraEffect const * aurEff = m_caster->GetAuraEffect(45062, 0))
-            {
-                damageAmount+= aurEff->GetAmount();
+            Unit::AuraList const& mDummyAuras = m_caster->GetAurasByType(SPELL_AURA_DUMMY);
+            for (Unit::AuraList::const_iterator i = mDummyAuras.begin(); i != mDummyAuras.end(); ++i)
+                if ((*i)->GetId() == 45062)
+                    damageAmount += (*i)->GetModifier()->m_amount;
+            if (damageAmount)
                 m_caster->RemoveAurasDueToSpell(45062);
-            }
 
             addhealth += damageAmount;
         }
         // Swiftmend - consumes Regrowth or Rejuvenation
-        else if (m_spellInfo->TargetAuraState == AURA_STATE_SWIFTMEND && unitTarget->HasAuraState(AURA_STATE_SWIFTMEND, m_spellInfo, m_caster))
+        else if (m_spellInfo->TargetAuraState == AURA_STATE_SWIFTMEND && unitTarget->HasAuraState(AURA_STATE_SWIFTMEND))
         {
-            Unit::AuraEffectList const& RejorRegr = unitTarget->GetAuraEffectsByType(SPELL_AURA_PERIODIC_HEAL);
+            Unit::AuraList const& RejorRegr = unitTarget->GetAurasByType(SPELL_AURA_PERIODIC_HEAL);
             // find most short by duration
-            AuraEffect *targetAura = NULL;
-            for (Unit::AuraEffectList::const_iterator i = RejorRegr.begin(); i != RejorRegr.end(); ++i)
+            Aura* targetAura = NULL;
+            for (Unit::AuraList::const_iterator i = RejorRegr.begin(); i != RejorRegr.end(); ++i)
             {
-                if ((*i)->GetSpellProto()->SpellFamilyName == SPELLFAMILY_DRUID
-                    && (*i)->GetSpellProto()->SpellFamilyFlags[0] & 0x50)
+                if ((*i)->GetSpellProto()->SpellFamilyName == SPELLFAMILY_DRUID &&
+                    // Regrowth or Rejuvenation 0x40 | 0x10
+                    ((*i)->GetSpellProto()->SpellFamilyFlags & UI64LIT(0x0000000000000050)))
                 {
-                    if (!targetAura || (*i)->GetBase()->GetDuration() < targetAura->GetBase()->GetDuration())
+                    if (!targetAura || (*i)->GetAuraDuration() < targetAura->GetAuraDuration())
                         targetAura = *i;
                 }
             }
 
             if (!targetAura)
             {
-                sLog.outError("Target(GUID:" UI64FMTD ") has aurastate AURA_STATE_SWIFTMEND but no matching aura.", unitTarget->GetGUID());
+                sLog->outError("Target (GUID: %u TypeId: %u) has aurastate AURA_STATE_SWIFTMEND but no matching aura.", unitTarget->GetGUIDLow(), unitTarget->GetTypeId());
                 return;
             }
+            int idx = 0;
+            while (idx < 3)
+            {
+                if (targetAura->GetSpellProto()->EffectApplyAuraName[idx] == SPELL_AURA_PERIODIC_HEAL)
+                    break;
+                idx++;
+            }
 
-            int32 tickheal = targetAura->GetAmount();
-            if (Unit* auraCaster = targetAura->GetCaster())
-                tickheal = auraCaster->SpellHealingBonus(unitTarget, targetAura->GetSpellProto(), tickheal, DOT);
-            //int32 tickheal = targetAura->GetSpellProto()->EffectBasePoints[idx] + 1;
-            //It is said that talent bonus should not be included
+            int32 tickheal = targetAura->GetModifier()->m_amount;
+            int32 tickcount = GetSpellDuration(targetAura->GetSpellProto()) / targetAura->GetSpellProto()->EffectAmplitude[idx] - 1;
 
-            int32 tickcount = 0;
-            // Rejuvenation
-            if (targetAura->GetSpellProto()->SpellFamilyFlags[0] & 0x10)
-                tickcount = 4;
-            // Regrowth
-            else // if (targetAura->GetSpellProto()->SpellFamilyFlags[0] & 0x40)
-                tickcount = 6;
+            unitTarget->RemoveAurasDueToSpell(targetAura->GetId());
 
             addhealth += tickheal * tickcount;
         }
-        // Lifebloom - final heal coef multiplied by original DoT stack
-        else if (m_spellInfo->Id == 33778)
-            addhealth = caster->SpellHealingBonus(unitTarget, m_spellInfo, addhealth, HEAL, m_spellValue->EffectBasePoints[1]);
-        // Riptide - increase healing done by Chain Heal
-        else if (m_spellInfo->SpellFamilyName == SPELLFAMILY_SHAMAN && m_spellInfo->SpellFamilyFlags[0] & 0x100)
-        {
-            addhealth = caster->SpellHealingBonus(unitTarget, m_spellInfo, addhealth, HEAL);
-            if (AuraEffect * aurEff = unitTarget->GetAuraEffect(SPELL_AURA_PERIODIC_HEAL, SPELLFAMILY_SHAMAN, 0, 0, 0x10, m_originalCasterGUID))
-            {
-                addhealth = int32(addhealth * 1.25f);
-                // consume aura
-                unitTarget->RemoveAura(aurEff->GetBase());
-            }
-        }
 
-        m_damage -= addhealth;
+        addhealth = caster->SpellHealingBonus(m_spellInfo, addhealth, HEAL, unitTarget);
+        addhealth = unitTarget->SpellDamageBonus(caster, m_spellInfo, addhealth, HEAL);
+
+        m_healing += addhealth;
+
+        // Lifebloom - final heal coef multiplied by original DoT stack
+        /*else if (m_spellInfo->Id == 33778)
+            addhealth = caster->SpellHealingBonus(m_spellInfo, addhealth, HEAL, unitTarget);
+
+        m_damage -= addhealth;*/
     }
 }
 
-void Spell::EffectHealPct(SpellEffIndex /*effIndex*/)
+void Spell::EffectHealPct(SpellEffIndex effIndex)
 {
     if (unitTarget && unitTarget->isAlive() && damage >= 0)
     {
@@ -2592,11 +2587,17 @@ void Spell::EffectHealPct(SpellEffIndex /*effIndex*/)
         // Skip if m_originalCaster not available
         if (!caster)
             return;
-
-    } 
     
-    m_healing += m_originalCaster->SpellHealingBonus(unitTarget, m_spellInfo, effIndex, unitTarget->CountPctFromMaxHealth(damage), HEAL);
+        uint32 addhealth = unitTarget->GetMaxHealth() * damage / 100;
+        m_caster->SendHealSpellLog(unitTarget, m_spellInfo->Id, addhealth, false);
+	  	
+        int32 gain = unitTarget->ModifyHealth(int32(addhealth));
+        unitTarget->getHostileRefManager().threatAssist(m_caster, float(gain) * 0.5f, m_spellInfo);
 
+        if (caster->GetTypeId() == TYPEID_PLAYER)
+            if (Battleground *bg = caster->ToPlayer()->GetBattleground())
+                bg->UpdatePlayerScore(caster->ToPlayer(), SCORE_HEALING_DONE, gain);
+    } 
 }
 
 void Spell::EffectHealMechanical(SpellEffIndex effIndex)
