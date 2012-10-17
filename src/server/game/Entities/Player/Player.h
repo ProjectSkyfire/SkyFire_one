@@ -1379,7 +1379,6 @@ class Player : public Unit, public GridObject<Player>
         void SendRemoveControlBar();
         bool HasSpell(uint32 spell) const;
         TrainerSpellState GetTrainerSpellState(TrainerSpell const* trainer_spell, uint32 reqLevel) const;
-        //bool IsSpellFitByClassAndRace(uint32 spell_id) const;
         bool IsSpellFitByClassAndRace(uint32 spell_id, uint32* pReqlevel = NULL) const;
 
         void SendProficiency(uint8 pr1, uint32 pr2);
@@ -2417,4 +2416,3 @@ template <class T> T Player::ApplySpellMod(uint32 spellId, SpellModOp op, T &bas
     return T(diff);
 }
 #endif
-
