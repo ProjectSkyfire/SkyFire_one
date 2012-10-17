@@ -3719,7 +3719,7 @@ bool Player::HasSpell(uint32 spell) const
     return (itr != m_spells.end() && itr->second->state != PLAYERSPELL_REMOVED && !itr->second->disabled);
 }
 
-TrainerSpellState Player::GetTrainerSpellState(TrainerSpell const* trainer_spell) const
+TrainerSpellState Player::GetTrainerSpellState(TrainerSpell const* trainer_spell, uint32 reqLevel) const
 {
     if (!trainer_spell)
         return TRAINER_SPELL_RED;
@@ -3736,7 +3736,7 @@ TrainerSpellState Player::GetTrainerSpellState(TrainerSpell const* trainer_spell
         return TRAINER_SPELL_RED;
 
     // check level requirement
-    if (getLevel() < trainer_spell->reqlevel)
+    if (getLevel() < trainer_spell->reqLevel)
         return TRAINER_SPELL_RED;
 
     if (SpellChainNode const* spell_chain = sSpellMgr->GetSpellChainNode(trainer_spell->spell))
@@ -3746,15 +3746,16 @@ TrainerSpellState Player::GetTrainerSpellState(TrainerSpell const* trainer_spell
             return TRAINER_SPELL_RED;
     }
 
-    if (uint32 spell_req = sSpellMgr->GetSpellRequired(trainer_spell->spell))
+    SpellsRequiringSpellMapBounds spellsRequired = sSpellMgr->GetSpellsRequiredForSpellBounds(trainer_spell->learnedSpell[i]);
+    for (SpellsRequiringSpellMap::const_iterator itr = spellsRequired.first; itr != spellsRequired.second; ++itr)
     {
         // check additional spell requirement
-        if (!HasSpell(spell_req))
+        if (!HasSpell(itr->second))
             return TRAINER_SPELL_RED;
     }
 
     // check skill requirement
-    if (trainer_spell->reqskill && GetBaseSkillValue(trainer_spell->reqskill) < trainer_spell->reqskillvalue)
+    if (trainer_spell->reqSkill && GetBaseSkillValue(trainer_spell->reqSkill) < trainer_spell->reqSkillValue)
         return TRAINER_SPELL_RED;
 
     // exist, already checked at loading
@@ -18947,7 +18948,7 @@ void Player::learnDefaultSpells(bool loading)
             if (loading || !spell_itr->second)               // not care about passive spells or loading case
                 addSpell(tspell, spell_itr->second);
             else                                            // but send in normal spell in game learn case
-                learnSpell(tspell);
+                learnSpell(tspell, true);
         }
     }
 }

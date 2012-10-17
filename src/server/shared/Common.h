@@ -208,17 +208,25 @@ extern char const* localeNames[TOTAL_LOCALES];
 
 LocaleConstant GetLocaleByName(const std::string& name);
 
-// we always use stdlibc++ std::max/std::min, undefine some not C++ standard defines (Win API and some other platforms)
+// we always use stdlibc++ std::max/std::min, undefine some not C++ standard defines (Win API and some pother platforms)
 #ifdef max
-#undef max
+#  undef max
 #endif
 
 #ifdef min
-#undef min
+#  undef min
 #endif
 
 #ifndef M_PI
-#define M_PI            3.14159265358979323846
+#  define M_PI          3.14159265358979323846
+#endif
+
+#ifndef M_PI_F
+#  define M_PI_F        float(M_PI)
+#endif
+
+#ifndef countof
+#define countof(array) (sizeof(array) / sizeof((array)[0]))
 #endif
 
 #define SKYFIRE_GUARD(MUTEX, LOCK) \

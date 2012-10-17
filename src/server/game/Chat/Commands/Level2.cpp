@@ -3525,7 +3525,7 @@ void ChatHandler::HandleLearnSkillRecipesHelper(Player* player, uint32 skill_id)
     }
 }
 
-bool ChatHandler::HandleLearnAllCraftsCommand(char* /*args*/)
+bool ChatHandler::HandleLearnAllCraftsCommand(const char* /*args*/)
 {
     for (uint32 i = 0; i < sSkillLineStore.GetNumRows(); ++i)
     {
@@ -3543,7 +3543,7 @@ bool ChatHandler::HandleLearnAllCraftsCommand(char* /*args*/)
     return true;
 }
 
-bool ChatHandler::HandleLearnAllRecipesCommand(char* args)
+bool ChatHandler::HandleLearnAllRecipesCommand(const char* args)
 {
     //  Learns all recipes of specified profession and sets skill to max
     //  Example: .learn all_recipes enchanting
@@ -3579,7 +3579,7 @@ bool ChatHandler::HandleLearnAllRecipesCommand(char* args)
             skillInfo->categoryId != SKILL_CATEGORY_SECONDARY)
             continue;
 
-        int loc = GetSessionDbcLocale();
+        int loc = m_session->GetSessionDbcLocale();
         name = skillInfo->name[loc];
         if (name.empty())
             continue;
@@ -3589,7 +3589,7 @@ bool ChatHandler::HandleLearnAllRecipesCommand(char* args)
             loc = 0;
             for (; loc < TOTAL_LOCALES; ++loc)
             {
-                if (loc == GetSessionDbcLocale())
+                if (loc == m_session->GetSessionDbcLocale())
                     continue;
 
                 name = skillInfo->name[loc];

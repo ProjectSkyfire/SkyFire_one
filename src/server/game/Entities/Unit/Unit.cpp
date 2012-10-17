@@ -8204,11 +8204,11 @@ bool Unit::IsDamageToThreatSpell(SpellEntry const* spellInfo) const
     switch(spellInfo->SpellFamilyName)
     {
         case SPELLFAMILY_WARLOCK:
-            if (spellInfo->SpellFamilyFlags[0] == 0x100) // Searing Pain
+            if (spellInfo->SpellFamilyFlags & 0x100) // Searing Pain
                 return true;
             break;
         case SPELLFAMILY_SHAMAN:
-            if (spellInfo->SpellFamilyFlags[0] == SPELLFAMILYFLAG_SHAMAN_FROST_SHOCK)
+            if (spellInfo->SpellFamilyFlags & SPELLFAMILYFLAG_SHAMAN_FROST_SHOCK)
                 return true;
             break;
     }
