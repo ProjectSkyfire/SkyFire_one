@@ -97,6 +97,7 @@ extern DBCStorage <GtOCTRegenHPEntry>            sGtOCTRegenHPStore;
 extern DBCStorage <GtRegenHPPerSptEntry>         sGtRegenHPPerSptStore;
 extern DBCStorage <GtRegenMPPerSptEntry>         sGtRegenMPPerSptStore;
 extern DBCStorage <ItemEntry>                    sItemStore;
+extern DBCStorage <ItemClassEntry>               sItemClassStore;
 //extern DBCStorage <ItemDisplayInfoEntry>         sItemDisplayInfoStore; -- not used currently
 extern DBCStorage <ItemExtendedCostEntry>        sItemExtendedCostStore;
 extern DBCStorage <ItemRandomPropertiesEntry>    sItemRandomPropertiesStore;
