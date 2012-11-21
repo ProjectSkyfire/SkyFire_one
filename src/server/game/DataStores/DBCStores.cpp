@@ -90,7 +90,7 @@ DBCStorage <GtOCTRegenHPEntry>                  sGtOCTRegenHPStore(GtOCTRegenHPf
 DBCStorage <GtRegenHPPerSptEntry>               sGtRegenHPPerSptStore(GtRegenHPPerSptfmt);
 DBCStorage <GtRegenMPPerSptEntry>               sGtRegenMPPerSptStore(GtRegenMPPerSptfmt);
 DBCStorage <ItemEntry>                          sItemStore(Itemfmt);
-DBCStorage <ItemClassEntry>						sItemClassStore(ItemClassfmt);
+DBCStorage <ItemClassEntry>                     sItemClassStore(ItemClassfmt);
 //DBCStorage <ItemCondExtCostsEntry>              sItemCondExtCostsStore(ItemCondExtCostsEntryfmt);
 //DBCStorage <ItemDisplayInfoEntry>               sItemDisplayInfoStore(ItemDisplayTemplateEntryfmt); -- not used currently
 DBCStorage <ItemExtendedCostEntry>              sItemExtendedCostStore(ItemExtendedCostEntryfmt);
