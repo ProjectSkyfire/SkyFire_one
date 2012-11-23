@@ -1,6 +1,6 @@
 @ECHO OFF
 SET ver=2.4.3
-TITLE SkyFireONE %ver% Project Building Tool
+TITLE SkyFireONE %ver% Simple Project Building Tool
 COLOR 0A
 rem Credits to:
 rem MangosR2 and to /Dev/RSA for the base installer

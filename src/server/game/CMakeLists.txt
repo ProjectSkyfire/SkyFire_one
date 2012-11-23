@@ -1,7 +1,5 @@
 # Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-# Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
 # Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2005-2012 MaNGOS <http://www.getmangos.com/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -61,7 +59,6 @@ source_group(AuctionHouse FILES ${sources_AuctionHouse})
 source_group(Battlegrounds FILES ${sources_Battlegrounds})
 source_group(Chat FILES ${sources_Chat})
 source_group(Combat FILES ${sources_Combat})
-source_group(Conditions FILES ${sources_Conditions})
 source_group(DataStores FILES ${sources_DataStores})
 source_group(Entities FILES ${sources_Entities})
 source_group(Events FILES ${sources_Events})
@@ -108,7 +105,6 @@ set(game_STAT_SRCS
   ${sources_Battlegrounds}
   ${sources_Chat}
   ${sources_Combat}
-  ${sources_Conditions}
   ${sources_DataStores}
   ${sources_Entities}
   ${sources_Events}
@@ -125,7 +121,7 @@ set(game_STAT_SRCS
   ${sources_Movement}
   ${sources_OutdoorPvP}
   ${sources_Pools}
-  ${sources_PrecompiledHeaders}  
+  ${sources_PrecompiledHeaders}
   ${sources_Quests}
   ${sources_Reputation}
   ${sources_Scripting}
@@ -134,7 +130,7 @@ set(game_STAT_SRCS
   ${sources_Spells}
   ${sources_Tools}
   ${sources_Tickets}
-  ${sources_Warden}  
+  ${sources_Warden}
   ${sources_Weather}
   ${sources_World}
 )
@@ -146,6 +142,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/zlib
   ${CMAKE_SOURCE_DIR}/src/server/collision
   ${CMAKE_SOURCE_DIR}/src/server/collision/Management
+  ${CMAKE_SOURCE_DIR}/src/server/collision/Models
+  ${CMAKE_SOURCE_DIR}/src/server/collision/Maps
   ${CMAKE_SOURCE_DIR}/src/server/shared
   ${CMAKE_SOURCE_DIR}/src/server/shared/Configuration
   ${CMAKE_SOURCE_DIR}/src/server/shared/Cryptography
@@ -166,6 +164,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/CoreAI
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/EventAI
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/ScriptedAI
+#  ${CMAKE_CURRENT_SOURCE_DIR}/AI/SmartScripts       -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/AuctionHouse
   ${CMAKE_CURRENT_SOURCE_DIR}/Battlegrounds
   ${CMAKE_CURRENT_SOURCE_DIR}/Battlegrounds/Zones
@@ -173,7 +172,9 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Chat/Channels
   ${CMAKE_CURRENT_SOURCE_DIR}/Chat/Commands
   ${CMAKE_CURRENT_SOURCE_DIR}/Combat
+#  ${CMAKE_CURRENT_SOURCE_DIR}/Conditions       		-- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/DataStores
+#  ${CMAKE_CURRENT_SOURCE_DIR}/DungeonFinding       -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Creature
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Corpse
@@ -205,12 +206,12 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement/MovementGenerators
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement/Waypoints
   ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP
-  ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP/Zones  
+  ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP/Zones
   ${CMAKE_CURRENT_SOURCE_DIR}/Pools
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders
   ${CMAKE_CURRENT_SOURCE_DIR}/Quests
   ${CMAKE_CURRENT_SOURCE_DIR}/Reputation
-  ${CMAKE_CURRENT_SOURCE_DIR}/Scripting 
+  ${CMAKE_CURRENT_SOURCE_DIR}/Scripting
   ${CMAKE_CURRENT_SOURCE_DIR}/Server/Protocol
   ${CMAKE_CURRENT_SOURCE_DIR}/Server
   ${CMAKE_CURRENT_SOURCE_DIR}/Skills
@@ -218,7 +219,8 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Spells/Auras
   ${CMAKE_CURRENT_SOURCE_DIR}/Tools
   ${CMAKE_CURRENT_SOURCE_DIR}/Tickets
-  ${CMAKE_CURRENT_SOURCE_DIR}/Warden  
+  ${CMAKE_CURRENT_SOURCE_DIR}/Warden
+  ${CMAKE_CURRENT_SOURCE_DIR}/Warden/Modules
   ${CMAKE_CURRENT_SOURCE_DIR}/Weather
   ${CMAKE_CURRENT_SOURCE_DIR}/World
   ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders
@@ -229,13 +231,22 @@ include_directories(
 
 add_library(game STATIC ${game_STAT_SRCS})
 
+if(UNIX)
+  # Both systems don't have libdl and don't need them
+  if (NOT (CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "NetBSD"))
+    target_link_libraries(game
+      dl
+    )
+  endif()
+endif()
+
 add_dependencies(game revision.h)
 
 # Generate precompiled header
-if (USE_COREPCH)
-  if (CMAKE_COMPILER_IS_GNUCXX)
+if( USE_COREPCH )
+  if(CMAKE_COMPILER_IS_GNUCXX)
     add_precompiled_header(game ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/gamePCH.h)
-  elseif (MSVC)
+  elseif(MSVC)
     add_native_precompiled_header(game ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/gamePCH)
   endif()
 endif()

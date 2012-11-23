@@ -1,3 +1,4 @@
+# Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
 # Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
@@ -14,7 +15,7 @@ file(GLOB_RECURSE sources_TCSoap TCSoap/*.cpp TCSoap/*.h)
 file(GLOB_RECURSE sources_WorldThread WorldThread/*.cpp WorldThread/*.h)
 file(GLOB sources_localdir *.cpp *.h)
 
-if ( USE_COREPCH )
+if( USE_COREPCH )
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -34,7 +35,7 @@ set(worldserver_SRCS
   ${sources_localdir}
 )
 
-if ( WIN32 )
+if( WIN32 )
   set(worldserver_SRCS
     ${worldserver_SRCS}
     ${sources_Debugging}
@@ -48,7 +49,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/gsoap
   ${CMAKE_SOURCE_DIR}/dep/sockets/include
   ${CMAKE_SOURCE_DIR}/dep/SFMT
-  ${CMAKE_SOURCE_DIR}/dep/mersennetwister
   ${CMAKE_SOURCE_DIR}/src/server/collision
   ${CMAKE_SOURCE_DIR}/src/server/collision/Management
   ${CMAKE_SOURCE_DIR}/src/server/collision/Models
@@ -67,25 +67,22 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
   ${CMAKE_SOURCE_DIR}/src/server/game
   ${CMAKE_SOURCE_DIR}/src/server/game/Accounts
-  ${CMAKE_SOURCE_DIR}/src/server/game/Achievements
   ${CMAKE_SOURCE_DIR}/src/server/game/Addons
   ${CMAKE_SOURCE_DIR}/src/server/game/AI
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/CoreAI
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/EventAI
+  ${CMAKE_SOURCE_DIR}/src/server/game/AI/EventAI
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/ScriptedAI
-  ${CMAKE_SOURCE_DIR}/src/server/game/AI/SmartScripts
+#  ${CMAKE_SOURCE_DIR}/src/server/game/AI/SmartScripts    -- NYI
   ${CMAKE_SOURCE_DIR}/src/server/game/AuctionHouse
-  ${CMAKE_SOURCE_DIR}/src/server/game/AuctionHouse/AuctionHouseBot
   ${CMAKE_SOURCE_DIR}/src/server/game/Battlegrounds
   ${CMAKE_SOURCE_DIR}/src/server/game/Battlegrounds/Zones
-  ${CMAKE_SOURCE_DIR}/src/server/game/Calendar
   ${CMAKE_SOURCE_DIR}/src/server/game/Chat
   ${CMAKE_SOURCE_DIR}/src/server/game/Chat/Channels
-  ${CMAKE_SOURCE_DIR}/src/server/game/Chat/Commands
   ${CMAKE_SOURCE_DIR}/src/server/game/Combat
-  ${CMAKE_SOURCE_DIR}/src/server/game/Conditions
+#  ${CMAKE_SOURCE_DIR}/src/server/game/Conditions         -- NYI
   ${CMAKE_SOURCE_DIR}/src/server/game/DataStores
-  ${CMAKE_SOURCE_DIR}/src/server/game/DungeonFinding
+#  ${CMAKE_SOURCE_DIR}/src/server/game/DungeonFinding     -- NYI
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Creature
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Corpse
@@ -99,7 +96,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Player
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Totem
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Unit
-  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Vehicle
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Transport
   ${CMAKE_SOURCE_DIR}/src/server/game/Events
   ${CMAKE_SOURCE_DIR}/src/server/game/Globals
@@ -130,9 +126,11 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Spells/Auras
   ${CMAKE_SOURCE_DIR}/src/server/game/Tools
   ${CMAKE_SOURCE_DIR}/src/server/game/Warden
+  ${CMAKE_SOURCE_DIR}/src/server/game/Warden/Modules
   ${CMAKE_SOURCE_DIR}/src/server/game/Weather
   ${CMAKE_SOURCE_DIR}/src/server/game/World
   ${CMAKE_SOURCE_DIR}/src/server/authserver/Server
+  ${CMAKE_SOURCE_DIR}/src/server/authserver/Realms
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/CommandLine
   ${CMAKE_CURRENT_SOURCE_DIR}/RemoteAccess
@@ -147,14 +145,18 @@ set(worldserver_LINK_FLAGS "")
 
 add_executable(worldserver ${worldserver_SRCS})
 
-if ( NOT WIN32 )
+if( NOT WIN32 )
   add_definitions(-D_SKYFIRE_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"')
 endif()
 
 add_dependencies(worldserver revision.h)
 
-if ( UNIX )
+if( UNIX )
   set(worldserver_LINK_FLAGS "-pthread -lncurses ${worldserver_LINK_FLAGS}")
+endif()
+
+if(APPLE)
+  set(worldserver_LINK_FLAGS "-framework Carbon ${worldserver_LINK_FLAGS}")
 endif()
 
 set_target_properties(worldserver PROPERTIES LINK_FLAGS "${worldserver_LINK_FLAGS}")
@@ -177,14 +179,14 @@ target_link_libraries(worldserver
   ${OSX_LIBS}
 )
 
-if ( WIN32 )
+if( WIN32 )
   add_custom_command(TARGET worldserver
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/worldserver.conf.dist ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/
   )
 endif()
 
-if ( UNIX )
+if( UNIX )
   install(TARGETS worldserver DESTINATION bin)
   install(FILES worldserver.conf.dist DESTINATION etc)
 elseif( WIN32 )
@@ -193,11 +195,10 @@ elseif( WIN32 )
 endif()
 
 # Generate precompiled header
-if ( USE_COREPCH )
-  if (CMAKE_COMPILER_IS_GNUCXX)
+if( USE_COREPCH )
+  if(CMAKE_COMPILER_IS_GNUCXX)
     add_precompiled_header(worldserver ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH.h)
   elseif(MSVC)
     add_native_precompiled_header(worldserver ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH)
   endif()
 endif()
-
