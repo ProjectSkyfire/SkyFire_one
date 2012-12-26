@@ -1489,43 +1489,32 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
     return true;
 }
 
-bool Player::ToggleAFK()
+void Player::ToggleAFK()
 {
     ToggleFlag(PLAYER_FLAGS, PLAYER_FLAGS_AFK);
 
-    bool state = HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_AFK);
-
     // afk player not allowed in battleground
-    if (state && InBattleground())
+    if (isAFK() && InBattleground() && !InArena())
         LeaveBattleground();
-
-    return state;
 }
 
-bool Player::ToggleDND()
+void Player::ToggleDND()
 {
     ToggleFlag(PLAYER_FLAGS, PLAYER_FLAGS_DND);
-
-    return HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_DND);
 }
 
-uint8 Player::chatTag() const
+uint8 Player::GetChatTag() const
 {
-    // it's bitmask
-    // 0x8 - ??
-    // 0x4 - gm
-    // 0x2 - dnd
-    // 0x1 - afk
-    if (isGMChat())
-        return 4;
-
-    if (isDND())
-        return 3;
+    uint8 tag = CHAT_TAG_NONE;
 
     if (isAFK())
-        return 1;
+        tag |= CHAT_TAG_AFK;
+    if (isDND())
+        tag |= CHAT_TAG_DND;
+    if (isGMChat())
+        tag |= CHAT_TAG_GM;
 
-    return 0;
+    return tag;
 }
 
 bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientation, uint32 options)
@@ -3456,7 +3445,7 @@ Mail* Player::GetMail(uint32 id)
     return NULL;
 }
 
-void Player::_SetCreateBits(UpdateMask *updateMask, Player *target) const
+void Player::_SetCreateBits(UpdateMask* updateMask, Player* target) const
 {
     if (target == this)
     {
@@ -3464,7 +3453,7 @@ void Player::_SetCreateBits(UpdateMask *updateMask, Player *target) const
     }
     else
     {
-        for (uint16 index = 0; index < m_valuesCount; index++)
+        for (uint16 index = 0; index < m_valuesCount; ++index)
         {
             if (GetUInt32Value(index) != 0 && updateVisualBits.GetBit(index))
                 updateMask->SetBit(index);
@@ -3472,7 +3461,7 @@ void Player::_SetCreateBits(UpdateMask *updateMask, Player *target) const
     }
 }
 
-void Player::_SetUpdateBits(UpdateMask *updateMask, Player *target) const
+void Player::_SetUpdateBits(UpdateMask* updateMask, Player* target) const
 {
     if (target == this)
     {
@@ -3494,36 +3483,28 @@ void Player::InitVisibleBits()
     updateVisualBits.SetBit(OBJECT_FIELD_GUID);
     updateVisualBits.SetBit(OBJECT_FIELD_TYPE);
     updateVisualBits.SetBit(OBJECT_FIELD_SCALE_X);
-
-    updateVisualBits.SetBit(UNIT_FIELD_CHARM);
-    updateVisualBits.SetBit(UNIT_FIELD_CHARM+1);
-
-    updateVisualBits.SetBit(UNIT_FIELD_SUMMON);
-    updateVisualBits.SetBit(UNIT_FIELD_SUMMON+1);
-
-    updateVisualBits.SetBit(UNIT_FIELD_CHARMEDBY);
-    updateVisualBits.SetBit(UNIT_FIELD_CHARMEDBY+1);
-
-    updateVisualBits.SetBit(UNIT_FIELD_TARGET);
-    updateVisualBits.SetBit(UNIT_FIELD_TARGET+1);
-
-    updateVisualBits.SetBit(UNIT_FIELD_CHANNEL_OBJECT);
-    updateVisualBits.SetBit(UNIT_FIELD_CHANNEL_OBJECT+1);
-
+    updateVisualBits.SetBit(UNIT_FIELD_CHARM + 0);
+    updateVisualBits.SetBit(UNIT_FIELD_CHARM + 1);
+    updateVisualBits.SetBit(UNIT_FIELD_SUMMON + 0);
+    updateVisualBits.SetBit(UNIT_FIELD_SUMMON + 1);
+    updateVisualBits.SetBit(UNIT_FIELD_CHARMEDBY + 0);
+    updateVisualBits.SetBit(UNIT_FIELD_CHARMEDBY + 1);
+    updateVisualBits.SetBit(UNIT_FIELD_TARGET + 0);
+    updateVisualBits.SetBit(UNIT_FIELD_TARGET + 1);
+    updateVisualBits.SetBit(UNIT_FIELD_CHANNEL_OBJECT + 0);
+    updateVisualBits.SetBit(UNIT_FIELD_CHANNEL_OBJECT + 1);
     updateVisualBits.SetBit(UNIT_FIELD_HEALTH);
     updateVisualBits.SetBit(UNIT_FIELD_POWER1);
     updateVisualBits.SetBit(UNIT_FIELD_POWER2);
     updateVisualBits.SetBit(UNIT_FIELD_POWER3);
     updateVisualBits.SetBit(UNIT_FIELD_POWER4);
     updateVisualBits.SetBit(UNIT_FIELD_POWER5);
-
     updateVisualBits.SetBit(UNIT_FIELD_MAXHEALTH);
     updateVisualBits.SetBit(UNIT_FIELD_MAXPOWER1);
     updateVisualBits.SetBit(UNIT_FIELD_MAXPOWER2);
     updateVisualBits.SetBit(UNIT_FIELD_MAXPOWER3);
     updateVisualBits.SetBit(UNIT_FIELD_MAXPOWER4);
     updateVisualBits.SetBit(UNIT_FIELD_MAXPOWER5);
-
     updateVisualBits.SetBit(UNIT_FIELD_LEVEL);
     updateVisualBits.SetBit(UNIT_FIELD_FACTIONTEMPLATE);
     updateVisualBits.SetBit(UNIT_FIELD_BYTES_0);
@@ -3532,7 +3513,7 @@ void Player::InitVisibleBits()
     for (uint16 i = UNIT_FIELD_AURA; i < UNIT_FIELD_AURASTATE; ++i)
         updateVisualBits.SetBit(i);
     updateVisualBits.SetBit(UNIT_FIELD_AURASTATE);
-    updateVisualBits.SetBit(UNIT_FIELD_BASEATTACKTIME);
+    updateVisualBits.SetBit(UNIT_FIELD_BASEATTACKTIME + 0);
     updateVisualBits.SetBit(UNIT_FIELD_BASEATTACKTIME + 1);
     updateVisualBits.SetBit(UNIT_FIELD_BOUNDINGRADIUS);
     updateVisualBits.SetBit(UNIT_FIELD_COMBATREACH);
@@ -3547,8 +3528,8 @@ void Player::InitVisibleBits()
     updateVisualBits.SetBit(UNIT_MOD_CAST_SPEED);
     updateVisualBits.SetBit(UNIT_FIELD_BYTES_2);
 
-    updateVisualBits.SetBit(PLAYER_DUEL_ARBITER);
-    updateVisualBits.SetBit(PLAYER_DUEL_ARBITER+1);
+    updateVisualBits.SetBit(PLAYER_DUEL_ARBITER + 0);
+    updateVisualBits.SetBit(PLAYER_DUEL_ARBITER + 1);
     updateVisualBits.SetBit(PLAYER_FLAGS);
     updateVisualBits.SetBit(PLAYER_GUILDID);
     updateVisualBits.SetBit(PLAYER_GUILDRANK);
@@ -3559,18 +3540,18 @@ void Player::InitVisibleBits()
     updateVisualBits.SetBit(PLAYER_GUILD_TIMESTAMP);
 
     // PLAYER_QUEST_LOG_x also visible bit on official (but only on party/raid)...
-    for (uint16 i = PLAYER_QUEST_LOG_1_1; i < PLAYER_QUEST_LOG_25_2; i+=4)
+    for (uint16 i = PLAYER_QUEST_LOG_1_1; i < PLAYER_QUEST_LOG_25_2; i += MAX_QUEST_OFFSET)
         updateVisualBits.SetBit(i);
 
-    //Players visible items are not inventory stuff
+    // Players visible items are not inventory stuff
     //431) = 884 (0x374) = main weapon
     for (uint16 i = 0; i < EQUIPMENT_SLOT_END; i++)
     {
         // item creator
-        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_CREATOR + (i*MAX_VISIBLE_ITEM_OFFSET) + 0);
-        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_CREATOR + (i*MAX_VISIBLE_ITEM_OFFSET) + 1);
+        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_CREATOR + (i * MAX_VISIBLE_ITEM_OFFSET) + 0);
+        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_CREATOR + (i * MAX_VISIBLE_ITEM_OFFSET) + 1);
 
-        uint16 visual_base = PLAYER_VISIBLE_ITEM_1_0 + (i*MAX_VISIBLE_ITEM_OFFSET);
+        uint16 visual_base = PLAYER_VISIBLE_ITEM_1_0 + (i * MAX_VISIBLE_ITEM_OFFSET);
 
         // item entry
         updateVisualBits.SetBit(visual_base + 0);
@@ -3580,8 +3561,8 @@ void Player::InitVisibleBits()
             updateVisualBits.SetBit(visual_base + 1 + j);
 
         // random properties
-        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_PROPERTIES + 0 + (i*MAX_VISIBLE_ITEM_OFFSET));
-        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_PROPERTIES + 1 + (i*MAX_VISIBLE_ITEM_OFFSET));
+        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_PROPERTIES + 0 + (i * MAX_VISIBLE_ITEM_OFFSET));
+        updateVisualBits.SetBit(PLAYER_VISIBLE_ITEM_1_PROPERTIES + 1 + (i * MAX_VISIBLE_ITEM_OFFSET));
     }
 
     updateVisualBits.SetBit(PLAYER_CHOSEN_TITLE);
@@ -16856,7 +16837,7 @@ void Player::BuildPlayerChat(WorldPacket *data, uint8 msgtype, const std::string
     *data << (uint64)GetGUID();
     *data << (uint32)(text.length()+1);
     *data << text;
-    *data << (uint8)chatTag();
+    *data << uint8(GetChatTag());
 }
 
 void Player::Say(const std::string& text, const uint32 language)
