@@ -1,12 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -19,12 +18,6 @@
  */
 
 #include "OutdoorPvPMgr.h"
-#include "OutdoorPvPHP.h"
-#include "OutdoorPvPNA.h"
-#include "OutdoorPvPTF.h"
-#include "OutdoorPvPZM.h"
-#include "OutdoorPvPSI.h"
-#include "OutdoorPvPEP.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
@@ -35,7 +28,7 @@ OutdoorPvPMgr::OutdoorPvPMgr()
     //sLog->outDebug("Instantiating OutdoorPvPMgr");
 }
 
-OutdoorPvPMgr::~OutdoorPvPMgr()
+void OutdoorPvPMgr::Die()
 {
     //sLog->outDebug("Deleting OutdoorPvPMgr");
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
@@ -46,70 +39,104 @@ OutdoorPvPMgr::~OutdoorPvPMgr()
 }
 
 void OutdoorPvPMgr::InitOutdoorPvP()
+    uint32 oldMSTime = getMSTime();
+    //                                                       0       1
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT TypeId, ScriptName FROM outdoorpvp_template");
+
+    if (!result)
+        sLog->outErrorDb(">> Loaded 0 outdoor PvP definitions. DB table `outdoorpvp_template` is empty.");
+        sLog->outString();
+        return;
+
+    uint32 count = 0;
+    uint32 typeId = 0;
+
+    do
 {
-    //LoadTemplates();
+        Field* fields = result.Fetch();
+
+        typeId = fields[0].GetUInt32();
+
+        if (typeId >= MAX_OUTDOORPVP_TYPES)
+        {
+            sLog->outErrorDb("Invalid OutdoorPvPTypes value %u in outdoorpvp_template; skipped.", typeId);
+            continue;
+        }
+
+        OutdoorPvPData* data = new OutdoorPvPData();
+        OutdoorPvPTypes realTypeId = OutdoorPvPTypes(typeId);
+        data->TypeId = realTypeId;
+        data->ScriptId = sObjectMgr->GetScriptId(fields[1].GetCString());
+        m_OutdoorPvPDatas[realTypeId] = data;
+
+        ++count;
+    }
+    while (result.NextRow());
 
     OutdoorPvP* pvp;
-    for (uint8 i = 0; i < MAX_OUTDOORPVP_TYPES; ++i)
+    for (uint8 i = 1; i < MAX_OUTDOORPVP_TYPES; ++i)
     {
         OutdoorPvPDataMap::iterator iter = m_OutdoorPvPDatas.find(OutdoorPvPTypes(i));
         if (iter == m_OutdoorPvPDatas.end())
         {
-            sLog->outErrorDb("Could not initialize OutdoorPvP object for type ID %u; no entry in database.", uint32(iter->first));
+            sLog->outErrorDb("Could not initialize OutdoorPvP object for type ID %u; no entry in database.", uint32(i));
             continue;
         }
 
         pvp = sScriptMgr->CreateOutdoorPvP(iter->second);
         if (!pvp)
         {
-            sLog->outError("Could not initialize OutdoorPvP object for type ID %u; got NULL pointer from script.", uint32(iter->first));
+            sLog->outError("Could not initialize OutdoorPvP object for type ID %u; got NULL pointer from script.", uint32(i));
             continue;
         }
 
         if (!pvp->SetupOutdoorPvP())
         {
-            sLog->outError("Could not initialize OutdoorPvP object for type ID %u; SetupOutdoorPvP failed.", uint32(iter->first));
+            sLog->outError("Could not initialize OutdoorPvP object for type ID %u; SetupOutdoorPvP failed.", uint32(i));
             delete pvp;
             continue;
         }
 
         m_OutdoorPvPSet.push_back(pvp);
     }
+
+    sLog->outString(">> Loaded %u outdoor PvP definitions in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+    sLog->outString();
 }
 
-void OutdoorPvPMgr::AddZone(uint32 zoneid, OutdoorPvP *handle)
+void OutdoorPvPMgr::AddZone(uint32 zoneid, OutdoorPvP* handle)
 {
     m_OutdoorPvPMap[zoneid] = handle;
 }
 
-void OutdoorPvPMgr::HandlePlayerEnterZone(Player *plr, uint32 zoneid)
+void OutdoorPvPMgr::HandlePlayerEnterZone(Player* player, uint32 zoneid)
 {
     OutdoorPvPMap::iterator itr = m_OutdoorPvPMap.find(zoneid);
     if (itr == m_OutdoorPvPMap.end())
         return;
 
-    if (itr->second->HasPlayer(plr))
+    if (itr->second->HasPlayer(player))
         return;
 
-    itr->second->HandlePlayerEnterZone(plr, zoneid);
-    sLog->outDebug("Player %u entered outdoorpvp id %u", plr->GetGUIDLow(), itr->second->GetTypeId());
+    itr->second->HandlePlayerEnterZone(player, zoneid);
+    sLog->outDebug("Player %u entered outdoorpvp id %u", player->GetGUIDLow(), itr->second->GetTypeId());
 }
 
-void OutdoorPvPMgr::HandlePlayerLeaveZone(Player *plr, uint32 zoneid)
+void OutdoorPvPMgr::HandlePlayerLeaveZone(Player* player, uint32 zoneid)
 {
     OutdoorPvPMap::iterator itr = m_OutdoorPvPMap.find(zoneid);
     if (itr == m_OutdoorPvPMap.end())
         return;
 
     // teleport: remove once in removefromworld, once in updatezone
-    if (!itr->second->HasPlayer(plr))
+    if (!itr->second->HasPlayer(player))
         return;
 
-    itr->second->HandlePlayerLeaveZone(plr, zoneid);
-    sLog->outDebug("Player %u left outdoorpvp id %u", plr->GetGUIDLow(), itr->second->GetTypeId());
+    itr->second->HandlePlayerLeaveZone(player, zoneid);
+    sLog->outDebug("Player %u left outdoorpvp id %u", player->GetGUIDLow(), itr->second->GetTypeId());
 }
 
-OutdoorPvP * OutdoorPvPMgr::GetOutdoorPvPToZoneId(uint32 zoneid)
+OutdoorPvP* OutdoorPvPMgr::GetOutdoorPvPToZoneId(uint32 zoneid)
 {
     OutdoorPvPMap::iterator itr = m_OutdoorPvPMap.find(zoneid);
     if (itr == m_OutdoorPvPMap.end())
@@ -131,17 +158,17 @@ void OutdoorPvPMgr::Update(uint32 diff)
     }
 }
 
-bool OutdoorPvPMgr::HandleCustomSpell(Player *plr, uint32 spellId, GameObject * go)
+bool OutdoorPvPMgr::HandleCustomSpell(Player* player, uint32 spellId, GameObject* go)
 {
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
     {
-        if ((*itr)->HandleCustomSpell(plr, spellId, go))
+        if ((*itr)->HandleCustomSpell(player, spellId, go))
             return true;
     }
     return false;
 }
 
-ZoneScript * OutdoorPvPMgr::GetZoneScript(uint32 zoneId)
+ZoneScript* OutdoorPvPMgr::GetZoneScript(uint32 zoneId)
 {
     OutdoorPvPMap::iterator itr = m_OutdoorPvPMap.find(zoneId);
     if (itr != m_OutdoorPvPMap.end())
@@ -150,41 +177,50 @@ ZoneScript * OutdoorPvPMgr::GetZoneScript(uint32 zoneId)
         return NULL;
 }
 
-bool OutdoorPvPMgr::HandleOpenGo(Player *plr, uint64 guid)
+bool OutdoorPvPMgr::HandleOpenGo(Player* player, uint64 guid)
 {
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
     {
-        if ((*itr)->HandleOpenGo(plr, guid))
+        if ((*itr)->HandleOpenGo(player, guid))
             return true;
     }
     return false;
 }
 
-void OutdoorPvPMgr::HandleGossipOption(Player *plr, uint64 guid, uint32 gossipid)
+void OutdoorPvPMgr::HandleGossipOption(Player* player, uint64 guid, uint32 gossipid)
 {
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
     {
-        if ((*itr)->HandleGossipOption(plr, guid, gossipid))
+        if ((*itr)->HandleGossipOption(player, guid, gossipid))
             return;
     }
 }
 
-bool OutdoorPvPMgr::CanTalkTo(Player * plr, Creature * c, GossipMenuItems gso)
+bool OutdoorPvPMgr::CanTalkTo(Player* player, Creature* creature, GossipMenuItems const& gso)
 {
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
     {
-        if ((*itr)->CanTalkTo(plr, c, gso))
+        if ((*itr)->CanTalkTo(player, creature, gso))
             return true;
     }
     return false;
 }
 
-void OutdoorPvPMgr::HandleDropFlag(Player *plr, uint32 spellId)
+void OutdoorPvPMgr::HandleDropFlag(Player* player, uint32 spellId)
 {
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
     {
-        if ((*itr)->HandleDropFlag(plr, spellId))
+        if ((*itr)->HandleDropFlag(player, spellId))
             return;
     }
 }
 
+void OutdoorPvPMgr::HandlePlayerResurrects(Player* player, uint32 zoneid)
+{
+    OutdoorPvPMap::iterator itr = m_OutdoorPvPMap.find(zoneid);
+    if (itr == m_OutdoorPvPMap.end())
+        return;
+
+    if (itr->second->HasPlayer(player))
+        itr->second->HandlePlayerResurrects(player, zoneid);
+}

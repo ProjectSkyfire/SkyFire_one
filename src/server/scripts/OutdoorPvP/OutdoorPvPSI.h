@@ -1,12 +1,10 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -62,20 +60,20 @@ class OutdoorPvPSI : public OutdoorPvP
 
         bool SetupOutdoorPvP();
 
-        void HandlePlayerEnterZone(Player *plr, uint32 zone);
-        void HandlePlayerLeaveZone(Player *plr, uint32 zone);
+        void HandlePlayerEnterZone(Player* player, uint32 zone);
+        void HandlePlayerLeaveZone(Player* player, uint32 zone);
 
         bool Update(uint32 diff);
 
         void FillInitialWorldStates(WorldPacket &data);
 
-        void SendRemoveWorldStates(Player * plr);
+        void SendRemoveWorldStates(Player* player);
 
-        bool HandleAreaTrigger(Player * plr, uint32 trigger);
+        bool HandleAreaTrigger(Player* player, uint32 trigger);
 
-        bool HandleDropFlag(Player * plr, uint32 spellId);
+        bool HandleDropFlag(Player* player, uint32 spellId);
 
-        bool HandleCustomSpell(Player * plr, uint32 spellId, GameObject *go);
+        bool HandleCustomSpell(Player* player, uint32 spellId, GameObject* go);
 
         void UpdateWorldState();
 
@@ -88,4 +86,3 @@ class OutdoorPvPSI : public OutdoorPvP
 };
 
 #endif
-

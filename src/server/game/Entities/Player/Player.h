@@ -1685,8 +1685,8 @@ class Player : public Unit, public GridObject<Player>
         void CheckAreaExploreAndOutdoor(void);
 
         static uint32 TeamForRace(uint8 race);
-        uint32 GetTeam() const { return m_team; }
-        TeamId GetTeamId() const { return m_team == ALLIANCE ? TEAM_ALLIANCE : TEAM_HORDE; }
+        uint32 GetTeam() const { return _team; }
+        TeamId GetTeamId() const { return _team == ALLIANCE ? TEAM_ALLIANCE : TEAM_HORDE; }
         static uint32 getFactionForRace(uint8 race);
         void setFactionForRace(uint8 race);
 
@@ -2176,7 +2176,7 @@ class Player : public Unit, public GridObject<Player>
         bool _removeSpell(uint16 spell_id);
         uint64 m_lootGuid;
 
-        uint32 m_team;
+        uint32 _team;
         uint32 m_nextSave;
         time_t m_speakTime;
         uint32 m_speakCount;

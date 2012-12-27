@@ -5765,7 +5765,7 @@ uint32 Player::getFactionForRace(uint8 race)
 
 void Player::setFactionForRace(uint8 race)
 {
-    m_team = TeamForRace(race);
+    _team = TeamForRace(race);
     setFaction(getFactionForRace(race));
 }
 
@@ -14321,8 +14321,8 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     sLog->outDebug("Load Basic value of player %s is: ", m_name.c_str());
     outDebugValues();
 
-    //Need to call it to initialize m_team (m_team can be calculated from race)
-    //Other way is to saves m_team into characters table.
+    //Need to call it to initialize _team (_team can be calculated from race)
+    //Other way is to saves _team into characters table.
     setFactionForRace(getRace());
 
     // load home bind and check in same time class/race pair, it used later for restore broken positions

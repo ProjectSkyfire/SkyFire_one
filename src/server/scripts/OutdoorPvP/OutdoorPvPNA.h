@@ -1,12 +1,10 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -255,11 +253,9 @@ class OutdoorPvPNA;
 
 class OPvPCapturePointNA : public OPvPCapturePoint
 {
-    friend class OutdoorPvPNA;
-
     public:
 
-        OPvPCapturePointNA(OutdoorPvP * pvp);
+        OPvPCapturePointNA(OutdoorPvP* pvp);
 
         bool Update(uint32 diff);
 
@@ -270,14 +266,15 @@ class OPvPCapturePointNA : public OPvPCapturePoint
         void FillInitialWorldStates(WorldPacket & data);
 
         // used when player is activated/inactivated in the area
-        bool HandlePlayerEnter(Player * plr);
-        void HandlePlayerLeave(Player * plr);
+        bool HandlePlayerEnter(Player* player);
+        void HandlePlayerLeave(Player* player);
 
-        bool HandleCustomSpell(Player *plr, uint32 spellId, GameObject * go);
+        bool HandleCustomSpell(Player* player, uint32 spellId, GameObject* go);
 
-        int32 HandleOpenGo(Player *plr, uint64 guid);
+        int32 HandleOpenGo(Player* player, uint64 guid);
 
         uint32 GetAliveGuardsCount();
+        uint32 GetControllingFaction() const;
 
     protected:
 
@@ -315,24 +312,22 @@ class OPvPCapturePointNA : public OPvPCapturePoint
 
 class OutdoorPvPNA : public OutdoorPvP
 {
-    friend class OPvPCapturePointNA;
-
     public:
 
         OutdoorPvPNA();
 
         bool SetupOutdoorPvP();
 
-        void HandlePlayerEnterZone(Player *plr, uint32 zone);
-        void HandlePlayerLeaveZone(Player *plr, uint32 zone);
+        void HandlePlayerEnterZone(Player* player, uint32 zone);
+        void HandlePlayerLeaveZone(Player* player, uint32 zone);
 
         bool Update(uint32 diff);
 
         void FillInitialWorldStates(WorldPacket &data);
 
-        void SendRemoveWorldStates(Player * plr);
+        void SendRemoveWorldStates(Player* player);
 
-        void HandleKillImpl(Player * plr, Unit * killed);
+        void HandleKillImpl(Player* player, Unit* killed);
 
     private:
 
@@ -340,4 +335,3 @@ class OutdoorPvPNA : public OutdoorPvP
 };
 
 #endif
-

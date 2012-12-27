@@ -13,7 +13,6 @@ if ( USE_COREPCH )
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
-file(GLOB_RECURSE sources_PrecompiledHeaders PrecompiledHeaders/*.cpp PrecompiledHeaders/*.h)
 file(GLOB_RECURSE sources_Accounts Accounts/*.cpp Accounts/*.h)
 file(GLOB_RECURSE sources_Addons Addons/*.cpp Addons/*.h)
 file(GLOB_RECURSE sources_AI AI/*.cpp AI/*.h)
@@ -37,6 +36,7 @@ file(GLOB_RECURSE sources_Miscellaneous Miscellaneous/*.cpp Miscellaneous/*.h)
 file(GLOB_RECURSE sources_Movement Movement/*.cpp Movement/*.h)
 file(GLOB_RECURSE sources_OutdoorPvP OutdoorPvP/*.cpp OutdoorPvP/*.h)
 file(GLOB_RECURSE sources_Pools Pools/*.cpp Pools/*.h)
+file(GLOB_RECURSE sources_PrecompiledHeaders PrecompiledHeaders/*.cpp PrecompiledHeaders/*.h)
 file(GLOB_RECURSE sources_Quests Quests/*.cpp Quests/*.h)
 file(GLOB_RECURSE sources_Reputation Reputation/*.cpp Reputation/*.h)
 file(GLOB_RECURSE sources_Scripting Scripting/*.cpp Scripting/*.h)
@@ -50,7 +50,6 @@ file(GLOB_RECURSE sources_Weather Weather/*.cpp Weather/*.h)
 file(GLOB_RECURSE sources_World World/*.cpp World/*.h)
 
 source_group(CMake FILES CMakeLists.txt)
-source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
 source_group(Accounts FILES ${sources_Accounts})
 source_group(Addons FILES ${sources_Addons})
 source_group(AI FILES ${sources_AI})
@@ -75,6 +74,7 @@ source_group(Miscellaneous FILES ${sources_Miscellaneous})
 source_group(Movement FILES ${sources_Movement})
 source_group(OutdoorPvP FILES ${sources_OutdoorPvP})
 source_group(Pools FILES ${sources_Pools})
+source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
 source_group(Quests FILES ${sources_Quests})
 source_group(Reputation FILES ${sources_Reputation})
 source_group(Scripting FILES ${sources_Scripting})
@@ -89,7 +89,7 @@ source_group(World FILES ${sources_World})
 
 # Create game-libary
 
-if (USE_COREPCH AND MSVC)
+if( USE_COREPCH AND MSVC )
   set(game_STAT_SRCS
     PrecompiledHeaders/gamePCH.cpp
     PrecompiledHeaders/gamePCH.h
@@ -164,7 +164,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/CoreAI
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/EventAI
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/ScriptedAI
-#  ${CMAKE_CURRENT_SOURCE_DIR}/AI/SmartScripts       -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/AuctionHouse
   ${CMAKE_CURRENT_SOURCE_DIR}/Battlegrounds
   ${CMAKE_CURRENT_SOURCE_DIR}/Battlegrounds/Zones
@@ -172,9 +171,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Chat/Channels
   ${CMAKE_CURRENT_SOURCE_DIR}/Chat/Commands
   ${CMAKE_CURRENT_SOURCE_DIR}/Combat
-#  ${CMAKE_CURRENT_SOURCE_DIR}/Conditions       		-- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/DataStores
-#  ${CMAKE_CURRENT_SOURCE_DIR}/DungeonFinding       -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Creature
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Corpse
@@ -206,7 +203,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement/MovementGenerators
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement/Waypoints
   ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP
-  ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP/Zones
   ${CMAKE_CURRENT_SOURCE_DIR}/Pools
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders
   ${CMAKE_CURRENT_SOURCE_DIR}/Quests
@@ -224,12 +220,11 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Weather
   ${CMAKE_CURRENT_SOURCE_DIR}/World
   ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders
+  ${CMAKE_SOURCE_DIR}/src/server/scripts/OutdoorPvP
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
 )
-
-add_library(game STATIC ${game_STAT_SRCS})
 
 if(UNIX)
   # Both systems don't have libdl and don't need them
@@ -239,6 +234,8 @@ if(UNIX)
     )
   endif()
 endif()
+
+add_library(game STATIC ${game_STAT_SRCS})
 
 add_dependencies(game revision.h)
 

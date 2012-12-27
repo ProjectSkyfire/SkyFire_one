@@ -319,6 +319,16 @@ set(ace_STAT_SRCS
   XTI_ATM_Mcast.cpp
 )
 
+if(WIN32)
+    if(MSYS OR MINGW)
+        find_library(WS2_32_LIBRARY ws2_32)
+        target_link_libraries(ace ${WS2_32_LIBRARY})
+        #MESSAGE(STATUS "Link Flags for ACE: ${CMAKE_SHARED_LINKER_FLAGS}")
+        #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lws2_32")
+        #MESSAGE(STATUS "Link Flags for ACE after: ${CMAKE_SHARED_LINKER_FLAGS}")
+    endif()
+endif()
+
 include_directories(
   ${CMAKE_SOURCE_DIR}/dep/acelite
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders
@@ -331,16 +341,6 @@ set_source_files_properties(Atomic_Op_Sparc.c Rtems_init.c PROPERTIES LANGUAGE C
 add_definitions(-DACE_BUILD_DLL)
 
 add_library(ace SHARED ${ace_STAT_SRCS})
-
-if ( WIN32 )
-    if (MSYS OR MINGW)
-        find_library(WS2_32_LIBRARY ws2_32)
-        target_link_libraries(ace ${WS2_32_LIBRARY})
-        #MESSAGE(STATUS "Link Flags for ACE: ${CMAKE_SHARED_LINKER_FLAGS}")
-        #set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lws2_32")
-        #MESSAGE(STATUS "Link Flags for ACE after: ${CMAKE_SHARED_LINKER_FLAGS}")
-    endif()
-endif()
 
 add_native_precompiled_header(ace ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/WinAcePCH)
 

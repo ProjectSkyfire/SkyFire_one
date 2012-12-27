@@ -80,6 +80,7 @@ file(GLOB_RECURSE scripts_O_Mechanar Outland/TempestKeep/Mechanar/*.cpp Outland/
 file(GLOB_RECURSE scripts_O_Zones Outland/Zones/*.cpp Outland/Zones/*.h)
 file(GLOB_RECURSE scripts_world World/*.cpp World/*.h)
 file(GLOB_RECURSE scripts_examples Examples/*.cpp Examples/*.h)
+file(GLOB_RECURSE sources_OutdoorPvP OutdoorPvP/*.cpp OutdoorPvP/*.h)
 
 # ------- Filters ---------
 source_group(CMake FILES CMakeLists.txt)
@@ -143,7 +144,8 @@ source_group("Outland\\TempestKeep\\Eye"                              FILES ${sc
 source_group("Outland\\TempestKeep\\Mechanar"                         FILES ${scripts_O_Mechanar})
 source_group("Outland\\Zones"                                         FILES ${scripts_O_Zones})
 source_group(World FILES ${scripts_world})
-source_group(Examples ${scripts_examples})
+source_group(Examples FILES ${scripts_examples})
+source_group(OutdoorPvP FILES ${sources_OutdoorPvP})
 
  if( USE_SCRIPTPCH AND MSVC )
   file(GLOB_RECURSE sources_PreHeaders PrecompiledHeaders/ScriptPCH.cpp PrecompiledHeaders/ScriptPCH.h)
@@ -232,6 +234,7 @@ if (SCRIPTS)
     # World
     ${scripts_world}
     ${scripts_examples}
+    ${scripts_OutdoorPvP}
   )
 endif()
 
@@ -243,7 +246,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared
   ${CMAKE_SOURCE_DIR}/src/server/shared/Configuration
   ${CMAKE_SOURCE_DIR}/src/server/shared/Cryptography
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Cryptography/Authentication  
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Cryptography/Authentication
   ${CMAKE_SOURCE_DIR}/src/server/shared/Database
   ${CMAKE_SOURCE_DIR}/src/server/shared/DataStores
   ${CMAKE_SOURCE_DIR}/src/server/shared/Debugging
@@ -253,23 +256,17 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
   ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
   ${CMAKE_SOURCE_DIR}/src/server/game/Accounts
-  ${CMAKE_SOURCE_DIR}/src/server/game/Achievements
   ${CMAKE_SOURCE_DIR}/src/server/game/Addons
   ${CMAKE_SOURCE_DIR}/src/server/game/AI
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/CoreAI
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/EventAI
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/ScriptedAI
-  ${CMAKE_SOURCE_DIR}/src/server/game/AI/SmartScripts
   ${CMAKE_SOURCE_DIR}/src/server/game/AuctionHouse
-  ${CMAKE_SOURCE_DIR}/src/server/game/Battlefields
-  ${CMAKE_SOURCE_DIR}/src/server/game/Battlefields/Zones  
   ${CMAKE_SOURCE_DIR}/src/server/game/Battlegrounds
   ${CMAKE_SOURCE_DIR}/src/server/game/Battlegrounds/Zones
   ${CMAKE_SOURCE_DIR}/src/server/game/Calendar
   ${CMAKE_SOURCE_DIR}/src/server/game/Chat
   ${CMAKE_SOURCE_DIR}/src/server/game/Chat/Channels
-  ${CMAKE_SOURCE_DIR}/src/server/game/Conditions
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Configuration
   ${CMAKE_SOURCE_DIR}/src/server/game/Combat
   ${CMAKE_SOURCE_DIR}/src/server/game/DataStores
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Corpse
@@ -314,9 +311,11 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Spells/Auras
   ${CMAKE_SOURCE_DIR}/src/server/game/Tickets
   ${CMAKE_SOURCE_DIR}/src/server/game/Tools
-  ${CMAKE_SOURCE_DIR}/src/server/game/Warden   
+  ${CMAKE_SOURCE_DIR}/src/server/game/Warden 
+  ${CMAKE_SOURCE_DIR}/src/server/game/Warden/Modules   
   ${CMAKE_SOURCE_DIR}/src/server/game/Weather
-  ${CMAKE_SOURCE_DIR}/src/server/game/World  
+  ${CMAKE_SOURCE_DIR}/src/server/game/World
+  ${CMAKE_SOURCE_DIR}/src/server/scripts/OutdoorPvP    
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
