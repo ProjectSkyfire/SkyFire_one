@@ -26,71 +26,71 @@ enum Spells
     SPELL_POISON_CLOUD                                     = 3815,
     SPELL_FRENZIED_RAGE                                    = 3490
 };
-
-struct boss_aku_maiAI : public ScriptedAI
+class boss_aku_mai : public CreatureScript
 {
-    boss_aku_maiAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_aku_mai() : CreatureScript("boss_aku_mai") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
+        return new boss_aku_maiAI (creature);
     }
 
-    uint32 uiPoisonCloudTimer;
-    bool bIsEnraged;
-
-    ScriptedInstance *instance;
-
-    void Reset()
+    struct boss_aku_maiAI : public ScriptedAI
     {
-        uiPoisonCloudTimer = urand(5000, 9000);
-        bIsEnraged = false;
-        if (instance)
-            instance->SetData(TYPE_AKU_MAI, NOT_STARTED);
-    }
-
-    void EnterCombat(Unit* /*who*/)
-    {
-        if (instance)
-            instance->SetData(TYPE_AKU_MAI, IN_PROGRESS);
-    }
-
-    void JustDied(Unit* /*killer*/)
-    {
-        if (instance)
-            instance->SetData(TYPE_AKU_MAI, DONE);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (uiPoisonCloudTimer < diff)
+        boss_aku_maiAI(Creature *c) : ScriptedAI(c)
         {
-            DoCastVictim(SPELL_POISON_CLOUD);
-            uiPoisonCloudTimer = urand(25000, 50000);
-        } else uiPoisonCloudTimer -= diff;
-
-        if (!bIsEnraged && HealthBelowPct(30))
-        {
-            DoCast(me, SPELL_FRENZIED_RAGE);
-            bIsEnraged = true;
+            instance = c->GetInstanceScript();
         }
 
-        DoMeleeAttackIfReady();
-    }
-};
+        uint32 uiPoisonCloudTimer;
+        bool bIsEnraged;
 
-CreatureAI* GetAI_boss_aku_mai(Creature* creature)
-{
-    return new boss_aku_maiAI (creature);
-}
+        ScriptedInstance *instance;
+
+        void Reset()
+        {
+            uiPoisonCloudTimer = urand(5000, 9000);
+            bIsEnraged = false;
+            if (instance)
+                instance->SetData(TYPE_AKU_MAI, NOT_STARTED);
+        }
+
+        void EnterCombat(Unit* /*who*/)
+        {
+            if (instance)
+                instance->SetData(TYPE_AKU_MAI, IN_PROGRESS);
+        }
+
+        void JustDied(Unit* /*killer*/)
+        {
+            if (instance)
+                instance->SetData(TYPE_AKU_MAI, DONE);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (uiPoisonCloudTimer < diff)
+            {
+                DoCastVictim(SPELL_POISON_CLOUD);
+                uiPoisonCloudTimer = urand(25000, 50000);
+            } else uiPoisonCloudTimer -= diff;
+
+            if (!bIsEnraged && HealthBelowPct(30))
+            {
+                DoCast(me, SPELL_FRENZIED_RAGE);
+                bIsEnraged = true;
+            }
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
 
 void AddSC_boss_aku_mai()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_aku_mai";
-    newscript->GetAI = &GetAI_boss_aku_mai;
-    newscript->RegisterSelf();
+    new boss_aku_mai();
 }

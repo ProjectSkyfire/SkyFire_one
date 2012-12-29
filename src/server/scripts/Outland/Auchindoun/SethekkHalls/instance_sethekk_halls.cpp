@@ -49,215 +49,217 @@ static Location SpawnLocation[]=
 {
     {-158.226898f, 158.690933f, 0.009380f, 1.212f}
 };
-
-struct instance_sethekk_halls : public ScriptedInstance
+class instance_sethekk_halls : public InstanceMapScript
 {
-    instance_sethekk_halls(Map *map) : ScriptedInstance(map) {Initialize();};
+public:
+    instance_sethekk_halls() : InstanceMapScript("instance_sethekk_halls") { }
 
-    uint64 IkissDoorGUID;
-    uint32 Encounter[ENCOUNTERS];
-    std::string str_data;
-
-    bool SummonLakka;
-
-    void Initialize()
+    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
     {
-        IkissDoorGUID = NULL;
-        SummonLakka = false;
-
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        return new instance_sethekk_halls_InstanceMapScript(map);
     }
 
-    bool IsEncounterInProgress() const
+    struct instance_sethekk_halls_InstanceMapScript : public ScriptedInstance
     {
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
-            if (Encounter[i] == IN_PROGRESS) return true;
+        instance_sethekk_halls_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
 
-        return false;
-    }
+        uint64 IkissDoorGUID;
+        uint32 Encounter[ENCOUNTERS];
+        std::string str_data;
 
-    void OnPlayerEnter(Player* player)
-    {
-        if ((CAST_PLR(player)->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE) && !SummonLakka)
+        bool SummonLakka;
+
+        void Initialize()
         {
-            player->SummonCreature(NPC_LAKKA, SpawnLocation[0].fLocX, SpawnLocation[0].fLocY, SpawnLocation[0].fLocZ, SpawnLocation[0].fOrient, TEMPSUMMON_DEAD_DESPAWN, 0);
-            SummonLakka = true;
+            IkissDoorGUID = NULL;
+            SummonLakka = false;
+
+            for (uint8 i = 0; i < ENCOUNTERS; i++)
+                Encounter[i] = NOT_STARTED;
         }
-    }
 
-    void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
-    {
-        switch (pGo->GetEntry())
+        bool IsEncounterInProgress() const
         {
-            case IKISS_DOOR: IkissDoorGUID = pGo->GetGUID(); break;
+            for (uint8 i = 0; i < ENCOUNTERS; i++)
+                if (Encounter[i] == IN_PROGRESS) return true;
+
+            return false;
         }
-    }
 
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
+        void OnPlayerEnter(Player* player)
         {
-            for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            if ((CAST_PLR(player)->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE) && !SummonLakka)
             {
-                if (Player* plr = itr->getSource())
-                    return plr;
+                player->SummonCreature(NPC_LAKKA, SpawnLocation[0].fLocX, SpawnLocation[0].fLocY, SpawnLocation[0].fLocZ, SpawnLocation[0].fOrient, TEMPSUMMON_DEAD_DESPAWN, 0);
+                SummonLakka = true;
             }
         }
 
-        sLog->outDebug("TSCR: Instance Sethekk Halls: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
-
-    void SetData(uint32 type, uint32 data)
-    {
-        switch (type)
+        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            case DATA_SYTHEVENT:
-                if (Encounter[0] != DONE)
-                    Encounter[0] = data;
-                break;
-            case DATA_ANZUEVENT:
-                if (Encounter[1] != DONE)
-                    Encounter[1] = data;
-                break;
-            case DATA_IKISSEVENT:
-                if (data == DONE)
+            switch (pGo->GetEntry())
+            {
+                case IKISS_DOOR: IkissDoorGUID = pGo->GetGUID(); break;
+            }
+        }
+
+        Player* GetPlayerInMap()
+        {
+            Map::PlayerList const& players = instance->GetPlayers();
+
+            if (!players.isEmpty())
+            {
+                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                 {
-                    HandleGameObject(IkissDoorGUID, true);
+                    if (Player* plr = itr->getSource())
+                        return plr;
                 }
-                if (Encounter[2] != DONE)
-                    Encounter[2] = data;
-                break;
+            }
+
+            sLog->outDebug("TSCR: Instance Sethekk Halls: GetPlayerInMap, but PlayerList is empty!");
+            return NULL;
         }
 
-        if (data == DONE)
+        void SetData(uint32 type, uint32 data)
         {
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
-    }
+            switch (type)
+            {
+                case DATA_SYTHEVENT:
+                    if (Encounter[0] != DONE)
+                        Encounter[0] = data;
+                    break;
+                case DATA_ANZUEVENT:
+                    if (Encounter[1] != DONE)
+                        Encounter[1] = data;
+                    break;
+                case DATA_IKISSEVENT:
+                    if (data == DONE)
+                    {
+                        HandleGameObject(IkissDoorGUID, true);
+                    }
+                    if (Encounter[2] != DONE)
+                        Encounter[2] = data;
+                    break;
+            }
 
-    uint32 GetData(uint32 type)
-    {
-        switch (type)
+            if (data == DONE)
+            {
+                SaveToDB();
+                OUT_SAVE_INST_DATA_COMPLETE;
+            }
+        }
+
+        uint32 GetData(uint32 type)
         {
-            case DATA_SYTHEVENT: return Encounter[0];
-            case DATA_ANZUEVENT: return Encounter[1];
-            case DATA_IKISSEVENT: return Encounter[2];
+            switch (type)
+            {
+                case DATA_SYTHEVENT: return Encounter[0];
+                case DATA_ANZUEVENT: return Encounter[1];
+                case DATA_IKISSEVENT: return Encounter[2];
+            }
+            return false;
         }
-        return false;
-    }
 
-    std::string GetSaveData()
-    {
-        OUT_SAVE_INST_DATA;
-        std::ostringstream saveStream;
-
-        saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2];
-
-        char* out = new char[saveStream.str().length() + 1];
-        strcpy(out, saveStream.str().c_str());
-        if (out)
+        std::string GetSaveData()
         {
-            OUT_SAVE_INST_DATA_COMPLETE;
-            return out;
+            OUT_SAVE_INST_DATA;
+            std::ostringstream saveStream;
+
+            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2];
+
+            char* out = new char[saveStream.str().length() + 1];
+            strcpy(out, saveStream.str().c_str());
+            if (out)
+            {
+                OUT_SAVE_INST_DATA_COMPLETE;
+                return out;
+            }
+
+            return str_data.c_str();
         }
 
-        return str_data.c_str();
-    }
-
-    void Load(const char* in)
-    {
-        if (!in)
+        void Load(const char* in)
         {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
+            if (!in)
+            {
+                OUT_LOAD_INST_DATA_FAIL;
+                return;
+            }
+
+            OUT_LOAD_INST_DATA(in);
+
+            std::istringstream loadStream(in);
+            loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2];
+
+            for (uint8 i = 0; i < ENCOUNTERS; ++i)
+                if (Encounter[i] == IN_PROGRESS)
+                    Encounter[i] = NOT_STARTED;
+
+            OUT_LOAD_INST_DATA_COMPLETE;
         }
-
-        OUT_LOAD_INST_DATA(in);
-
-        std::istringstream loadStream(in);
-        loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2];
-
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounter[i] == IN_PROGRESS)
-                Encounter[i] = NOT_STARTED;
-
-        OUT_LOAD_INST_DATA_COMPLETE;
-    }
+    };
 };
-
-InstanceScript* GetInstanceData_instance_sethekk_halls(Map* map)
-{
-    return new instance_sethekk_halls(map);
-}
 
 /*#####
 ## npc_lakka
 #####*/
 
-// this is not escort quest !
-struct npc_lakkaAI : public npc_escortAI
+// this is not escort quest !class npc_lakka : public CreatureScript
 {
-    npc_lakkaAI(Creature* creature) : npc_escortAI(creature) {}
+public:
+    npc_lakka() : CreatureScript("npc_lakka") { }
 
-    void Reset() { }
-
-    void WaypointReached(uint32 uiPointId)
+    CreatureAI* GetAI(Creature* creature)
     {
-        switch (uiPointId)
-        {
-            case 0:
-                me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                SetRun(false);
-                break;
-            case 8:
-                me->ForcedDespawn();
-        }
+        return new npc_lakkaAI(creature);
     }
-};
 
-CreatureAI* GetAI_npc_lakka(Creature* creature)
-{
-    return new npc_lakkaAI(creature);
-}
+    struct npc_lakkaAI : public npc_escortAI
+    {
+        npc_lakkaAI(Creature* creature) : npc_escortAI(creature) {}
+
+        void Reset() { }
+
+        void WaypointReached(uint32 uiPointId)
+        {
+            switch (uiPointId)
+            {
+                case 0:
+                    me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                    SetRun(false);
+                    break;
+                case 8:
+                    me->ForcedDespawn();
+            }
+        }
+    };
+};
 
 /*#####
 ## go_lakka_cage
 #####*/
-
-bool GOHello_go_lakka_cage(Player* player, GameObject* pGo)
+class go_lakka_cage : public GameObjectScript
 {
-    if (player->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE)
-    {
-        if (Creature* pLakka = pGo->FindNearestCreature( NPC_LAKKA, 5, true))
-        {
-            ((npc_lakkaAI*)pLakka->AI())->Start(false, false, player->GetGUID());
-        }
-    }
+public:
+    go_lakka_cage() : GameObjectScript("go_lakka_cage") { }
 
-    return false;
+    bool GOHello(Player* player, GameObject* pGo)
+    {
+        if (player->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE)
+        {
+            if (Creature* pLakka = pGo->FindNearestCreature( NPC_LAKKA, 5, true))
+            {
+                ((npc_lakkaAI*)pLakka->AI())->Start(false, false, player->GetGUID());
+            }
+        }
+
+        return false;
+    };
 };
 
 void AddSC_instance_sethekk_halls()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_sethekk_halls";
-    newscript->GetInstanceScript = &GetInstanceData_instance_sethekk_halls;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_lakka_cage";
-    newscript->pGOHello =  &GOHello_go_lakka_cage;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_lakka";
-    newscript->GetAI = &GetAI_npc_lakka;
-    newscript->RegisterSelf();
+    new instance_sethekk_halls();
+    new go_lakka_cage();
+    new npc_lakka();
 }
-

@@ -29,67 +29,67 @@ EndScriptData */
 #include "mechanar.h"
 
 #define ENCOUNTERS      1
-
-struct instance_mechanar : public ScriptedInstance
+class instance_mechanar : public InstanceMapScript
 {
-    instance_mechanar(Map *map) : ScriptedInstance(map) {Initialize();};
+public:
+    instance_mechanar() : InstanceMapScript("instance_mechanar") { }
 
-    uint32 Encounters[ENCOUNTERS];
-
-    void OnCreatureCreate (Creature* creature, uint32 creature_entry)
+    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
     {
+        return new instance_mechanar_InstanceMapScript(map);
     }
 
-    void Initialize()
+    struct instance_mechanar_InstanceMapScript : public ScriptedInstance
     {
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            Encounters[i] = NOT_STARTED;
-    }
+        instance_mechanar_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
 
-    bool IsEncounterInProgress() const
-    {
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounters[i] == IN_PROGRESS)
-                return true;
+        uint32 Encounters[ENCOUNTERS];
 
-        return false;
-    }
-
-    uint32 GetData(uint32 type)
-    {
-        switch (type)
+        void OnCreatureCreate (Creature* creature, uint32 creature_entry)
         {
-        case DATA_NETHERMANCER_EVENT:   return Encounters[0];
         }
 
-        return false;
-    }
-
-    uint64 GetData64 (uint32 identifier)
-    {
-        return 0;
-    }
-
-    void SetData(uint32 type, uint32 data)
-    {
-        switch (type)
+        void Initialize()
         {
-        case DATA_NETHERMANCER_EVENT:   Encounters[0] = data;   break;
+            for (uint8 i = 0; i < ENCOUNTERS; ++i)
+                Encounters[i] = NOT_STARTED;
         }
-    }
+
+        bool IsEncounterInProgress() const
+        {
+            for (uint8 i = 0; i < ENCOUNTERS; ++i)
+                if (Encounters[i] == IN_PROGRESS)
+                    return true;
+
+            return false;
+        }
+
+        uint32 GetData(uint32 type)
+        {
+            switch (type)
+            {
+            case DATA_NETHERMANCER_EVENT:   return Encounters[0];
+            }
+
+            return false;
+        }
+
+        uint64 GetData64 (uint32 identifier)
+        {
+            return 0;
+        }
+
+        void SetData(uint32 type, uint32 data)
+        {
+            switch (type)
+            {
+            case DATA_NETHERMANCER_EVENT:   Encounters[0] = data;   break;
+            }
+        }
+    };
 };
-
-InstanceScript* GetInstanceData_instance_mechanar(Map* map)
-{
-    return new instance_mechanar(map);
-}
 
 void AddSC_instance_mechanar()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_mechanar";
-    newscript->GetInstanceScript = &GetInstanceData_instance_mechanar;
-    newscript->RegisterSelf();
+    new instance_mechanar();
 }
-

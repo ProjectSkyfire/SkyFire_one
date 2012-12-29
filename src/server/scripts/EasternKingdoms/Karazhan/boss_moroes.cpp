@@ -61,260 +61,270 @@ const uint32 Adds[6]=
     19875,
     19876,
 };
-
-struct boss_moroesAI : public ScriptedAI
+class boss_moroes : public CreatureScript
 {
-    boss_moroesAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_moroes() : CreatureScript("boss_moroes") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        for (uint8 i = 0; i < 4; ++i)
-        {
-            AddId[i] = 0;
-        }
-        instance = c->GetInstanceScript();
+        return new boss_moroesAI (creature);
     }
 
-    ScriptedInstance *instance;
-
-    uint64 AddGUID[4];
-
-    uint32 Vanish_Timer;
-    uint32 Blind_Timer;
-    uint32 Gouge_Timer;
-    uint32 Wait_Timer;
-    uint32 CheckAdds_Timer;
-    uint32 AddId[4];
-
-    bool InVanish;
-    bool Enrage;
-
-    void Reset()
+    struct boss_moroesAI : public ScriptedAI
     {
-        Vanish_Timer = 35000;
-        Blind_Timer = 40000;
-        Gouge_Timer = 35000;
-        Wait_Timer = 0;
-        CheckAdds_Timer = 5000;
-
-        Enrage = false;
-        InVanish = false;
-        if (me->GetHealth() > 0)
-        {
-            DeSpawnAdds();
-            SpawnAdds();
-        }
-
-        if (instance)
-            instance->SetData(TYPE_MOROES, NOT_STARTED);
-    }
-
-    void StartEvent()
-    {
-        if (instance)
-            instance->SetData(TYPE_MOROES, IN_PROGRESS);
-
-        DoZoneInCombat();
-    }
-
-    void EnterCombat(Unit* /*who*/)
-    {
-        StartEvent();
-
-        DoScriptText(SAY_AGGRO, me);
-        AddsAttack();
-        DoZoneInCombat();
-    }
-
-    void KilledUnit(Unit* /*victim*/)
-    {
-        DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
-    }
-
-    void JustDied(Unit* /*victim*/)
-    {
-        DoScriptText(SAY_DEATH, me);
-
-        if (instance)
-            instance->SetData(TYPE_MOROES, DONE);
-
-        DeSpawnAdds();
-
-        //remove aura from spell Garrote when Moroes dies
-        Map *map = me->GetMap();
-        if (map->IsDungeon())
-        {
-            Map::PlayerList const &PlayerList = map->GetPlayers();
-
-            if (PlayerList.isEmpty())
-                return;
-
-            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-            {
-                if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE, 0))
-                    i->getSource()->RemoveAurasDueToSpell(SPELL_GARROTE);
-            }
-        }
-    }
-
-    void SpawnAdds()
-    {
-        DeSpawnAdds();
-        if (isAddlistEmpty())
-        {
-            Creature* creature = NULL;
-            std::vector<uint32> AddList;
-
-            for (uint8 i = 0; i < 6; ++i)
-                AddList.push_back(Adds[i]);
-
-            while (AddList.size() > 4)
-                AddList.erase((AddList.begin())+(rand()%AddList.size()));
-
-            uint8 i = 0;
-            for (std::vector<uint32>::const_iterator itr = AddList.begin(); itr != AddList.end(); ++itr)
-            {
-                uint32 entry = *itr;
-
-                creature = me->SummonCreature(entry, Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-                if (creature)
-                {
-                    AddGUID[i] = creature->GetGUID();
-                    AddId[i] = entry;
-                }
-                ++i;
-            }
-        } else
+        boss_moroesAI(Creature *c) : ScriptedAI(c)
         {
             for (uint8 i = 0; i < 4; ++i)
             {
-                Creature* creature = me->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-                if (creature)
+                AddId[i] = 0;
+            }
+            instance = c->GetInstanceScript();
+        }
+
+        ScriptedInstance *instance;
+
+        uint64 AddGUID[4];
+
+        uint32 Vanish_Timer;
+        uint32 Blind_Timer;
+        uint32 Gouge_Timer;
+        uint32 Wait_Timer;
+        uint32 CheckAdds_Timer;
+        uint32 AddId[4];
+
+        bool InVanish;
+        bool Enrage;
+
+        void Reset()
+        {
+            Vanish_Timer = 35000;
+            Blind_Timer = 40000;
+            Gouge_Timer = 35000;
+            Wait_Timer = 0;
+            CheckAdds_Timer = 5000;
+
+            Enrage = false;
+            InVanish = false;
+            if (me->GetHealth() > 0)
+            {
+                DeSpawnAdds();
+                SpawnAdds();
+            }
+
+            if (instance)
+                instance->SetData(TYPE_MOROES, NOT_STARTED);
+        }
+
+        void StartEvent()
+        {
+            if (instance)
+                instance->SetData(TYPE_MOROES, IN_PROGRESS);
+
+            DoZoneInCombat();
+        }
+
+        void EnterCombat(Unit* /*who*/)
+        {
+            StartEvent();
+
+            DoScriptText(SAY_AGGRO, me);
+            AddsAttack();
+            DoZoneInCombat();
+        }
+
+        void KilledUnit(Unit* /*victim*/)
+        {
+            DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2, SAY_KILL_3), me);
+        }
+
+        void JustDied(Unit* /*victim*/)
+        {
+            DoScriptText(SAY_DEATH, me);
+
+            if (instance)
+                instance->SetData(TYPE_MOROES, DONE);
+
+            DeSpawnAdds();
+
+            //remove aura from spell Garrote when Moroes dies
+            Map *map = me->GetMap();
+            if (map->IsDungeon())
+            {
+                Map::PlayerList const &PlayerList = map->GetPlayers();
+
+                if (PlayerList.isEmpty())
+                    return;
+
+                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                 {
-                    AddGUID[i] = creature->GetGUID();
+                    if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_GARROTE, 0))
+                        i->getSource()->RemoveAurasDueToSpell(SPELL_GARROTE);
                 }
             }
         }
-    }
 
-    bool isAddlistEmpty()
-    {
-        for (uint8 i = 0; i < 4; ++i)
+        void SpawnAdds()
         {
-            if (AddId[i] == 0)
-                return true;
-        }
-        return false;
-    }
-
-    void DeSpawnAdds()
-    {
-        for (uint8 i = 0; i < 4 ; ++i)
-        {
-            Creature* Temp = NULL;
-            if (AddGUID[i])
+            DeSpawnAdds();
+            if (isAddlistEmpty())
             {
-                Temp = Creature::GetCreature((*me),AddGUID[i]);
-                if (Temp && Temp->isAlive())
-                    Temp->DisappearAndDie();
-            }
-        }
-    }
+                Creature* creature = NULL;
+                std::vector<uint32> AddList;
 
-    void AddsAttack()
-    {
-        for (uint8 i = 0; i < 4; ++i)
-        {
-            Creature* Temp = NULL;
-            if (AddGUID[i])
-            {
-                Temp = Creature::GetCreature((*me),AddGUID[i]);
-                if (Temp && Temp->isAlive())
+                for (uint8 i = 0; i < 6; ++i)
+                    AddList.push_back(Adds[i]);
+
+                while (AddList.size() > 4)
+                    AddList.erase((AddList.begin())+(rand()%AddList.size()));
+
+                uint8 i = 0;
+                for (std::vector<uint32>::const_iterator itr = AddList.begin(); itr != AddList.end(); ++itr)
                 {
-                    Temp->AI()->AttackStart(me->getVictim());
-                    DoZoneInCombat(Temp);
-                } else
-                    EnterEvadeMode();
+                    uint32 entry = *itr;
+
+                    creature = me->SummonCreature(entry, Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                    if (creature)
+                    {
+                        AddGUID[i] = creature->GetGUID();
+                        AddId[i] = entry;
+                    }
+                    ++i;
+                }
+            } else
+            {
+                for (uint8 i = 0; i < 4; ++i)
+                {
+                    Creature* creature = me->SummonCreature(AddId[i], Locations[i][0], Locations[i][1], POS_Z, Locations[i][2], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                    if (creature)
+                    {
+                        AddGUID[i] = creature->GetGUID();
+                    }
+                }
             }
         }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (instance && !instance->GetData(TYPE_MOROES))
+        bool isAddlistEmpty()
         {
-            EnterEvadeMode();
-            return;
+            for (uint8 i = 0; i < 4; ++i)
+            {
+                if (AddId[i] == 0)
+                    return true;
+            }
+            return false;
         }
 
-        if (!Enrage && me->GetHealth()*100 / me->GetMaxHealth() < 30)
+        void DeSpawnAdds()
         {
-            DoCast(me, SPELL_FRENZY);
-            Enrage = true;
+            for (uint8 i = 0; i < 4 ; ++i)
+            {
+                Creature* Temp = NULL;
+                if (AddGUID[i])
+                {
+                    Temp = Creature::GetCreature((*me),AddGUID[i]);
+                    if (Temp && Temp->isAlive())
+                        Temp->DisappearAndDie();
+                }
+            }
         }
 
-        if (CheckAdds_Timer <= diff)
+        void AddsAttack()
         {
             for (uint8 i = 0; i < 4; ++i)
             {
                 Creature* Temp = NULL;
                 if (AddGUID[i])
                 {
-                    Temp = Unit::GetCreature((*me),AddGUID[i]);
+                    Temp = Creature::GetCreature((*me),AddGUID[i]);
                     if (Temp && Temp->isAlive())
-                        if (!Temp->getVictim())
-                            Temp->AI()->AttackStart(me->getVictim());
+                    {
+                        Temp->AI()->AttackStart(me->getVictim());
+                        DoZoneInCombat(Temp);
+                    } else
+                        EnterEvadeMode();
                 }
             }
-            CheckAdds_Timer = 5000;
-        } else CheckAdds_Timer -= diff;
+        }
 
-        if (!Enrage)
+        void UpdateAI(const uint32 diff)
         {
-            //Cast Vanish, then Garrote random victim
-            if (Vanish_Timer <= diff)
-            {
-                DoCast(me, SPELL_VANISH);
-                InVanish = true;
-                Vanish_Timer = 35000;
-                Wait_Timer = 12000;
+            if (!UpdateVictim())
                 return;
-            } else Vanish_Timer -= diff;
 
-            //Blind highest aggro, and attack second highest
-            if (Gouge_Timer <= diff)
+            if (instance && !instance->GetData(TYPE_MOROES))
             {
-                DoCast(me->getVictim(), SPELL_GOUGE);
-                Gouge_Timer = 40000;
-            } else Gouge_Timer -= diff;
+                EnterEvadeMode();
+                return;
+            }
 
-            if (Blind_Timer <= diff)
+            if (!Enrage && me->GetHealth()*100 / me->GetMaxHealth() < 30)
             {
-                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 25, true);
-                if (pTarget && me->IsWithinMeleeRange(pTarget))
-                    DoCast(pTarget, SPELL_BLIND);
+                DoCast(me, SPELL_FRENZY);
+                Enrage = true;
+            }
 
-                Blind_Timer = 40000;
-            } else Blind_Timer -= diff;
+            if (CheckAdds_Timer <= diff)
+            {
+                for (uint8 i = 0; i < 4; ++i)
+                {
+                    Creature* Temp = NULL;
+                    if (AddGUID[i])
+                    {
+                        Temp = Unit::GetCreature((*me),AddGUID[i]);
+                        if (Temp && Temp->isAlive())
+                            if (!Temp->getVictim())
+                                Temp->AI()->AttackStart(me->getVictim());
+                    }
+                }
+                CheckAdds_Timer = 5000;
+            } else CheckAdds_Timer -= diff;
+
+            if (!Enrage)
+            {
+                //Cast Vanish, then Garrote random victim
+                if (Vanish_Timer <= diff)
+                {
+                    DoCast(me, SPELL_VANISH);
+                    InVanish = true;
+                    Vanish_Timer = 35000;
+                    Wait_Timer = 12000;
+                    return;
+                } else Vanish_Timer -= diff;
+
+                //Blind highest aggro, and attack second highest
+                if (Gouge_Timer <= diff)
+                {
+                    DoCast(me->getVictim(), SPELL_GOUGE);
+                    Gouge_Timer = 40000;
+                } else Gouge_Timer -= diff;
+
+                if (Blind_Timer <= diff)
+                {
+                    Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 25, true);
+                    if (pTarget && me->IsWithinMeleeRange(pTarget))
+                        DoCast(pTarget, SPELL_BLIND);
+
+                    Blind_Timer = 40000;
+                } else Blind_Timer -= diff;
+            }
+
+            if (InVanish)
+            {
+                if (Wait_Timer <= diff)
+                {
+                    DoScriptText(RAND(SAY_SPECIAL_1, SAY_SPECIAL_2), me);
+
+                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                        pTarget->CastSpell(pTarget, SPELL_GARROTE, true);
+
+                    InVanish = false;
+                } else Wait_Timer -= diff;
+            }
+
+            if (!InVanish)
+                DoMeleeAttackIfReady();
         }
-
-        if (InVanish)
-        {
-            if (Wait_Timer <= diff)
-            {
-                DoScriptText(RAND(SAY_SPECIAL_1, SAY_SPECIAL_2), me);
-
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                    pTarget->CastSpell(pTarget, SPELL_GARROTE, true);
-
-                InVanish = false;
-            } else Wait_Timer -= diff;
-        }
-
-        if (!InVanish)
-            DoMeleeAttackIfReady();
-    }
+    };
 };
 
 struct boss_moroes_guestAI : public ScriptedAI
@@ -723,78 +733,74 @@ struct boss_lord_crispin_ferenceAI : public boss_moroes_guestAI
     }
 };
 
-CreatureAI* GetAI_boss_moroes(Creature* creature)
+class boss_baroness_dorothea_millstipe : public CreatureScript
 {
-    return new boss_moroesAI (creature);
-}
+public:
+    boss_baroness_dorothea_millstipe() : CreatureScript("boss_baroness_dorothea_millstipe") { }
 
-CreatureAI* GetAI_baroness_dorothea_millstipe(Creature* creature)
+    CreatureAI* GetAI_baroness_dorothea_millstipe(Creature* creature)
+    {
+        return new boss_baroness_dorothea_millstipeAI (creature);
+    }
+};
+class boss_baron_rafe_dreuger : public CreatureScript
 {
-    return new boss_baroness_dorothea_millstipeAI (creature);
-}
+public:
+    boss_baron_rafe_dreuger() : CreatureScript("boss_baron_rafe_dreuger") { }
 
-CreatureAI* GetAI_baron_rafe_dreuger(Creature* creature)
+    CreatureAI* GetAI_baron_rafe_dreuger(Creature* creature)
+    {
+        return new boss_baron_rafe_dreugerAI (creature);
+    }
+};
+class boss_lady_catriona_von_indi : public CreatureScript
 {
-    return new boss_baron_rafe_dreugerAI (creature);
-}
+public:
+    boss_lady_catriona_von_indi() : CreatureScript("boss_lady_catriona_von_indi") { }
 
-CreatureAI* GetAI_lady_catriona_von_indi(Creature* creature)
+    CreatureAI* GetAI_lady_catriona_von_indi(Creature* creature)
+    {
+        return new boss_lady_catriona_von_indiAI (creature);
+    }
+};
+class boss_lady_keira_berrybuck : public CreatureScript
 {
-    return new boss_lady_catriona_von_indiAI (creature);
-}
+public:
+    boss_lady_keira_berrybuck() : CreatureScript("boss_lady_keira_berrybuck") { }
 
-CreatureAI* GetAI_lady_keira_berrybuck(Creature* creature)
+    CreatureAI* GetAI_lady_keira_berrybuck(Creature* creature)
+    {
+        return new boss_lady_keira_berrybuckAI (creature);
+    }
+};
+class boss_lord_robin_daris : public CreatureScript
 {
-    return new boss_lady_keira_berrybuckAI (creature);
-}
+public:
+    boss_lord_robin_daris() : CreatureScript("boss_lord_robin_daris") { }
 
-CreatureAI* GetAI_lord_robin_daris(Creature* creature)
+    CreatureAI* GetAI_lord_robin_daris(Creature* creature)
+    {
+        return new boss_lord_robin_darisAI (creature);
+    }
+};
+class boss_lord_crispin_ference : public CreatureScript
 {
-    return new boss_lord_robin_darisAI (creature);
-}
+public:
+    boss_lord_crispin_ference() : CreatureScript("boss_lord_crispin_ference") { }
 
-CreatureAI* GetAI_lord_crispin_ference(Creature* creature)
-{
-    return new boss_lord_crispin_ferenceAI (creature);
-}
+    CreatureAI* GetAI_lord_crispin_ference(Creature* creature)
+    {
+        return new boss_lord_crispin_ferenceAI (creature);
+    }
+};
 
 void AddSC_boss_moroes()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_moroes";
-    newscript->GetAI = &GetAI_boss_moroes;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_baroness_dorothea_millstipe";
-    newscript->GetAI = &GetAI_baroness_dorothea_millstipe;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_baron_rafe_dreuger";
-    newscript->GetAI = &GetAI_baron_rafe_dreuger;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_lady_catriona_von_indi";
-    newscript->GetAI = &GetAI_lady_catriona_von_indi;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_lady_keira_berrybuck";
-    newscript->GetAI = &GetAI_lady_keira_berrybuck;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_lord_robin_daris";
-    newscript->GetAI = &GetAI_lord_robin_daris;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_lord_crispin_ference";
-    newscript->GetAI = &GetAI_lord_crispin_ference;
-    newscript->RegisterSelf();
+    new boss_moroes();
+    new boss_baroness_dorothea_millstipe();
+    new boss_baron_rafe_dreuger();
+    new boss_lady_catriona_von_indi();
+    new boss_lady_keira_berrybuck();
+    new boss_lord_robin_daris();
+    new boss_lord_crispin_ference();
 }
-

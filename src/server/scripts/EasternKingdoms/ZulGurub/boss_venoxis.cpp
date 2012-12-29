@@ -46,177 +46,177 @@ enum Spells
     SPELL_BERSERK      = 23537,
     SPELL_DISPELL      = 23859
 };
-
-struct boss_venoxisAI : public ScriptedAI
+class boss_venoxis : public CreatureScript
 {
-    boss_venoxisAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_venoxis() : CreatureScript("boss_venoxis") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
+        return new boss_venoxisAI (creature);
     }
 
-    ScriptedInstance *instance;
-
-    uint32 HolyFire_Timer;
-    uint32 HolyWrath_Timer;
-    uint32 VenomSpit_Timer;
-    uint32 Renew_Timer;
-    uint32 PoisonCloud_Timer;
-    uint32 HolyNova_Timer;
-    uint32 Dispell_Timer;
-    uint32 TargetInRange;
-
-    bool PhaseTwo;
-    bool InBerserk;
-
-    void Reset()
+    struct boss_venoxisAI : public ScriptedAI
     {
-        HolyFire_Timer = 10000;
-        HolyWrath_Timer = 60500;
-        VenomSpit_Timer = 5500;
-        Renew_Timer = 30500;
-        PoisonCloud_Timer = 2000;
-        HolyNova_Timer = 5000;
-        Dispell_Timer = 35000;
-        TargetInRange = 0;
+        boss_venoxisAI(Creature *c) : ScriptedAI(c)
+        {
+            instance = c->GetInstanceScript();
+        }
 
-        PhaseTwo = false;
-        InBerserk= false;
-    }
+        ScriptedInstance *instance;
 
-    void EnterCombat(Unit * /*who*/)
-    {
-    }
+        uint32 HolyFire_Timer;
+        uint32 HolyWrath_Timer;
+        uint32 VenomSpit_Timer;
+        uint32 Renew_Timer;
+        uint32 PoisonCloud_Timer;
+        uint32 HolyNova_Timer;
+        uint32 Dispell_Timer;
+        uint32 TargetInRange;
 
-    void JustDied(Unit* /*Killer*/)
-    {
-        DoScriptText(SAY_DEATH, me);
-        if (instance)
-            instance->SetData(TYPE_VENOXIS, DONE);
-    }
+        bool PhaseTwo;
+        bool InBerserk;
 
-    void UpdateAI(const uint32 diff)
-    {
-          if (!UpdateVictim())
-            return;
+        void Reset()
+        {
+            HolyFire_Timer = 10000;
+            HolyWrath_Timer = 60500;
+            VenomSpit_Timer = 5500;
+            Renew_Timer = 30500;
+            PoisonCloud_Timer = 2000;
+            HolyNova_Timer = 5000;
+            Dispell_Timer = 35000;
+            TargetInRange = 0;
 
-            if ((me->GetHealth() * 100 / me->GetMaxHealth() > 50))
-            {
-                if (Dispell_Timer <= diff)
+            PhaseTwo = false;
+            InBerserk= false;
+        }
+
+        void EnterCombat(Unit * /*who*/)
+        {
+        }
+
+        void JustDied(Unit* /*Killer*/)
+        {
+            DoScriptText(SAY_DEATH, me);
+            if (instance)
+                instance->SetData(TYPE_VENOXIS, DONE);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+              if (!UpdateVictim())
+                return;
+
+                if ((me->GetHealth() * 100 / me->GetMaxHealth() > 50))
                 {
-                    DoCast(me, SPELL_DISPELL);
-                    Dispell_Timer = 15000 + rand()%15000;
-                }
-                else
-                    Dispell_Timer -= diff;
-
-                if (Renew_Timer <= diff)
-                {
-                    DoCast(me, SPELL_RENEW);
-                    Renew_Timer = 20000 + rand()%10000;
-                }
-                else
-                    Renew_Timer -= diff;
-
-                if (HolyWrath_Timer <= diff)
-                {
-                    DoCast(me->getVictim(), SPELL_HOLY_WRATH);
-                    HolyWrath_Timer = 15000 + rand()%10000;
-                }
-                else
-                    HolyWrath_Timer -= diff;
-
-                if (HolyNova_Timer <= diff)
-                {
-                    TargetInRange = 0;
-                    for (uint8 i = 0; i < 10; ++i)
+                    if (Dispell_Timer <= diff)
                     {
-                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, i))
-                            if (me->IsWithinMeleeRange(pTarget))
-                                ++TargetInRange;
-                    }
-
-                    if (TargetInRange > 1)
-                    {
-                        DoCast(me->getVictim(), SPELL_HOLY_NOVA);
-                        HolyNova_Timer = 1000;
+                        DoCast(me, SPELL_DISPELL);
+                        Dispell_Timer = 15000 + rand()%15000;
                     }
                     else
+                        Dispell_Timer -= diff;
+
+                    if (Renew_Timer <= diff)
                     {
-                        HolyNova_Timer = 2000;
+                        DoCast(me, SPELL_RENEW);
+                        Renew_Timer = 20000 + rand()%10000;
                     }
-                }
-                else
-                    HolyNova_Timer -= diff;
+                    else
+                        Renew_Timer -= diff;
 
-                if (HolyFire_Timer <= diff && TargetInRange < 3)
-                {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pTarget, SPELL_HOLY_FIRE);
-
-                    HolyFire_Timer = 8000;
-                }
-                else
-                    HolyFire_Timer -= diff;
-            }
-            else
-            {
-                if (!PhaseTwo)
-                {
-                    DoScriptText(SAY_TRANSFORM, me);
-                    me->InterruptNonMeleeSpells(false);
-                    DoCast(me, SPELL_SNAKE_FORM);
-                    me->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.0f);
-                    const CreatureTemplate *cinfo = me->GetCreatureTemplate();
-                    me->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg + ((cinfo->mindmg / 100) * 25)));
-                    me->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg + ((cinfo->maxdmg / 100) * 25)));
-                    me->UpdateDamagePhysical(BASE_ATTACK);
-                    DoResetThreat();
-                    PhaseTwo = true;
-                }
-
-                if (PhaseTwo && PoisonCloud_Timer <= diff)
-                {
-                    DoCast(me->getVictim(), SPELL_POISON_CLOUD);
-                    PoisonCloud_Timer = 15000;
-                }
-
-                PoisonCloud_Timer -=diff;
-
-                if (PhaseTwo && VenomSpit_Timer <= diff)
-                {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pTarget, SPELL_VENOMSPIT);
-
-                    VenomSpit_Timer = 15000 + rand()%5000;
-                }
-                else
-                    VenomSpit_Timer -= diff;
-
-                if (PhaseTwo && (me->GetHealth() * 100 / me->GetMaxHealth() < 11))
-                {
-                    if (!InBerserk)
+                    if (HolyWrath_Timer <= diff)
                     {
+                        DoCast(me->getVictim(), SPELL_HOLY_WRATH);
+                        HolyWrath_Timer = 15000 + rand()%10000;
+                    }
+                    else
+                        HolyWrath_Timer -= diff;
+
+                    if (HolyNova_Timer <= diff)
+                    {
+                        TargetInRange = 0;
+                        for (uint8 i = 0; i < 10; ++i)
+                        {
+                            if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, i))
+                                if (me->IsWithinMeleeRange(pTarget))
+                                    ++TargetInRange;
+                        }
+
+                        if (TargetInRange > 1)
+                        {
+                            DoCast(me->getVictim(), SPELL_HOLY_NOVA);
+                            HolyNova_Timer = 1000;
+                        }
+                        else
+                        {
+                            HolyNova_Timer = 2000;
+                        }
+                    }
+                    else
+                        HolyNova_Timer -= diff;
+
+                    if (HolyFire_Timer <= diff && TargetInRange < 3)
+                    {
+                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            DoCast(pTarget, SPELL_HOLY_FIRE);
+
+                        HolyFire_Timer = 8000;
+                    }
+                    else
+                        HolyFire_Timer -= diff;
+                }
+                else
+                {
+                    if (!PhaseTwo)
+                    {
+                        DoScriptText(SAY_TRANSFORM, me);
                         me->InterruptNonMeleeSpells(false);
-                        DoCast(me, SPELL_BERSERK);
-                        InBerserk = true;
+                        DoCast(me, SPELL_SNAKE_FORM);
+                        me->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.0f);
+                        const CreatureTemplate *cinfo = me->GetCreatureTemplate();
+                        me->SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, (cinfo->mindmg + ((cinfo->mindmg / 100) * 25)));
+                        me->SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, (cinfo->maxdmg + ((cinfo->maxdmg / 100) * 25)));
+                        me->UpdateDamagePhysical(BASE_ATTACK);
+                        DoResetThreat();
+                        PhaseTwo = true;
+                    }
+
+                    if (PhaseTwo && PoisonCloud_Timer <= diff)
+                    {
+                        DoCast(me->getVictim(), SPELL_POISON_CLOUD);
+                        PoisonCloud_Timer = 15000;
+                    }
+
+                    PoisonCloud_Timer -=diff;
+
+                    if (PhaseTwo && VenomSpit_Timer <= diff)
+                    {
+                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            DoCast(pTarget, SPELL_VENOMSPIT);
+
+                        VenomSpit_Timer = 15000 + rand()%5000;
+                    }
+                    else
+                        VenomSpit_Timer -= diff;
+
+                    if (PhaseTwo && (me->GetHealth() * 100 / me->GetMaxHealth() < 11))
+                    {
+                        if (!InBerserk)
+                        {
+                            me->InterruptNonMeleeSpells(false);
+                            DoCast(me, SPELL_BERSERK);
+                            InBerserk = true;
+                        }
                     }
                 }
-            }
-            DoMeleeAttackIfReady();
-    }
+                DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_boss_venoxis(Creature* creature)
-{
-    return new boss_venoxisAI (creature);
-}
 
 void AddSC_boss_venoxis()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_venoxis";
-    newscript->GetAI = &GetAI_boss_venoxis;
-    newscript->RegisterSelf();
+    new boss_venoxis();
 }
-

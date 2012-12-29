@@ -32,79 +32,79 @@ EndScriptData */
 #define SPELL_ARCINGSMASH           8374
 #define SPELL_KNOCKAWAY             10101
 #define SPELL_WSTOMP                11876
-
-struct boss_ironayaAI : public ScriptedAI
+class boss_ironaya : public CreatureScript
 {
-    boss_ironayaAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_ironaya() : CreatureScript("boss_ironaya") { }
 
-    uint32 Arcing_Timer;
-    bool hasCastedWstomp;
-    bool hasCastedKnockaway;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        Arcing_Timer = 3000;
-        hasCastedKnockaway = false;
-        hasCastedWstomp = false;
+        return new boss_ironayaAI (creature);
     }
 
-    void EnterCombat(Unit * /*who*/)
+    struct boss_ironayaAI : public ScriptedAI
     {
-        DoScriptText(SAY_AGGRO, me);
-    }
+        boss_ironayaAI(Creature *c) : ScriptedAI(c) {}
 
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
+        uint32 Arcing_Timer;
+        bool hasCastedWstomp;
+        bool hasCastedKnockaway;
 
-        //If we are <50% hp do knockaway ONCE
-        if (!hasCastedKnockaway && me->GetHealth()*2 < me->GetMaxHealth())
+        void Reset()
         {
-            DoCast(me->getVictim(), SPELL_KNOCKAWAY, true);
-
-            // current aggro target is knocked away pick new target
-            Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-
-            if (!Target || Target == me->getVictim())
-                Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
-
-            if (Target)
-                me->TauntApply(Target);
-
-            //Shouldn't cast this agian
-            hasCastedKnockaway = true;
+            Arcing_Timer = 3000;
+            hasCastedKnockaway = false;
+            hasCastedWstomp = false;
         }
 
-        //Arcing_Timer
-        if (Arcing_Timer <= diff)
+        void EnterCombat(Unit * /*who*/)
         {
-            DoCast(me, SPELL_ARCINGSMASH);
-            Arcing_Timer = 13000;
-        } else Arcing_Timer -= diff;
-
-        if (!hasCastedWstomp && me->GetHealth()*4 < me->GetMaxHealth())
-        {
-            DoCast(me, SPELL_WSTOMP);
-            hasCastedWstomp = true;
+            DoScriptText(SAY_AGGRO, me);
         }
 
-        DoMeleeAttackIfReady();
-    }
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            //If we are <50% hp do knockaway ONCE
+            if (!hasCastedKnockaway && me->GetHealth()*2 < me->GetMaxHealth())
+            {
+                DoCast(me->getVictim(), SPELL_KNOCKAWAY, true);
+
+                // current aggro target is knocked away pick new target
+                Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+
+                if (!Target || Target == me->getVictim())
+                    Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+
+                if (Target)
+                    me->TauntApply(Target);
+
+                //Shouldn't cast this agian
+                hasCastedKnockaway = true;
+            }
+
+            //Arcing_Timer
+            if (Arcing_Timer <= diff)
+            {
+                DoCast(me, SPELL_ARCINGSMASH);
+                Arcing_Timer = 13000;
+            } else Arcing_Timer -= diff;
+
+            if (!hasCastedWstomp && me->GetHealth()*4 < me->GetMaxHealth())
+            {
+                DoCast(me, SPELL_WSTOMP);
+                hasCastedWstomp = true;
+            }
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_boss_ironaya(Creature* creature)
-{
-    return new boss_ironayaAI (creature);
-}
 
 void AddSC_boss_ironaya()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_ironaya";
-    newscript->GetAI = &GetAI_boss_ironaya;
-    newscript->RegisterSelf();
+    new boss_ironaya();
 }
-

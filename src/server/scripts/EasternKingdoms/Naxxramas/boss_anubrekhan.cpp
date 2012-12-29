@@ -47,108 +47,109 @@ EndScriptData */
 
 #define SPELL_SELF_SPAWN_5  29105                           //This spawns 5 corpse scarabs ontop of us (most likely the player casts this on death)
 #define SPELL_SELF_SPAWN_10 28864                           //This is used by the crypt guards when they die
-
-struct boss_anubrekhanAI : public ScriptedAI
+class boss_anubrekhan : public CreatureScript
 {
-    boss_anubrekhanAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_anubrekhan() : CreatureScript("boss_anubrekhan") { }
 
-    uint32 Impale_Timer;
-    uint32 LocustSwarm_Timer;
-    uint32 Summon_Timer;
-    bool HasTaunted;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        Impale_Timer = 15000;                               //15 seconds
-        LocustSwarm_Timer = 80000 + (rand()%40000);         //Random time between 80 seconds and 2 minutes for initial cast
-        Summon_Timer = LocustSwarm_Timer + 45000;           //45 seconds after initial locust swarm
+        return new boss_anubrekhanAI (creature);
     }
 
-    void KilledUnit(Unit* Victim)
+    struct boss_anubrekhanAI : public ScriptedAI
     {
-        //Force the player to spawn corpse scarabs via spell
-        Victim->CastSpell(Victim, SPELL_SELF_SPAWN_5, true);
+        boss_anubrekhanAI(Creature *c) : ScriptedAI(c) {}
 
-        if (rand()%5)
-            return;
+        uint32 Impale_Timer;
+        uint32 LocustSwarm_Timer;
+        uint32 Summon_Timer;
+        bool HasTaunted;
 
-         DoScriptText(SAY_SLAY, me);
-    }
-
-    void EnterCombat(Unit *who)
-    {
-        switch (rand()%3)
+        void Reset()
         {
-        case 0: DoScriptText(SAY_AGGRO1, me); break;
-        case 1: DoScriptText(SAY_AGGRO2, me); break;
-        case 2: DoScriptText(SAY_AGGRO3, me); break;
+            Impale_Timer = 15000;                               //15 seconds
+            LocustSwarm_Timer = 80000 + (rand()%40000);         //Random time between 80 seconds and 2 minutes for initial cast
+            Summon_Timer = LocustSwarm_Timer + 45000;           //45 seconds after initial locust swarm
         }
-    }
 
-    void MoveInLineOfSight(Unit *who)
-    {
-            if (!HasTaunted && me->IsWithinDistInMap(who, 60.0f))
+        void KilledUnit(Unit* Victim)
+        {
+            //Force the player to spawn corpse scarabs via spell
+            Victim->CastSpell(Victim, SPELL_SELF_SPAWN_5, true);
+
+            if (rand()%5)
+                return;
+
+             DoScriptText(SAY_SLAY, me);
+        }
+
+        void EnterCombat(Unit *who)
+        {
+            switch (rand()%3)
             {
-                switch (rand()%5)
+            case 0: DoScriptText(SAY_AGGRO1, me); break;
+            case 1: DoScriptText(SAY_AGGRO2, me); break;
+            case 2: DoScriptText(SAY_AGGRO3, me); break;
+            }
+        }
+
+        void MoveInLineOfSight(Unit *who)
+        {
+                if (!HasTaunted && me->IsWithinDistInMap(who, 60.0f))
                 {
-                case 0: DoScriptText(SAY_GREET, me); break;
-                case 1: DoScriptText(SAY_TAUNT1, me); break;
-                case 2: DoScriptText(SAY_TAUNT2, me); break;
-                case 3: DoScriptText(SAY_TAUNT3, me); break;
-                case 4: DoScriptText(SAY_TAUNT4, me); break;
+                    switch (rand()%5)
+                    {
+                    case 0: DoScriptText(SAY_GREET, me); break;
+                    case 1: DoScriptText(SAY_TAUNT1, me); break;
+                    case 2: DoScriptText(SAY_TAUNT2, me); break;
+                    case 3: DoScriptText(SAY_TAUNT3, me); break;
+                    case 4: DoScriptText(SAY_TAUNT4, me); break;
+                    }
+                    HasTaunted = true;
                 }
-                HasTaunted = true;
-            }
-        ScriptedAI::MoveInLineOfSight(who);
-    }
+            ScriptedAI::MoveInLineOfSight(who);
+        }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        //Impale_Timer
-        if (Impale_Timer <= diff)
+        void UpdateAI(const uint32 diff)
         {
-            //Cast Impale on a random target
-            //Do NOT cast it when we are afflicted by locust swarm
-            if (!me->HasAura(SPELL_LOCUSTSWARM, 1))
+            if (!UpdateVictim())
+                return;
+
+            //Impale_Timer
+            if (Impale_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    DoCast(pTarget, SPELL_IMPALE);
-            }
+                //Cast Impale on a random target
+                //Do NOT cast it when we are afflicted by locust swarm
+                if (!me->HasAura(SPELL_LOCUSTSWARM, 1))
+                {
+                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        DoCast(pTarget, SPELL_IMPALE);
+                }
 
-            Impale_Timer = 15000;
-        } else Impale_Timer -= diff;
+                Impale_Timer = 15000;
+            } else Impale_Timer -= diff;
 
-        //LocustSwarm_Timer
-        if (LocustSwarm_Timer <= diff)
-        {
-            DoCast(me, SPELL_LOCUSTSWARM);
-            LocustSwarm_Timer = 90000;
-        } else LocustSwarm_Timer -= diff;
+            //LocustSwarm_Timer
+            if (LocustSwarm_Timer <= diff)
+            {
+                DoCast(me, SPELL_LOCUSTSWARM);
+                LocustSwarm_Timer = 90000;
+            } else LocustSwarm_Timer -= diff;
 
-        //Summon_Timer
-        if (Summon_Timer <= diff)
-        {
-            DoCast(me, SPELL_SUMMONGUARD);
-            Summon_Timer = 45000;
-        } else Summon_Timer -= diff;
+            //Summon_Timer
+            if (Summon_Timer <= diff)
+            {
+                DoCast(me, SPELL_SUMMONGUARD);
+                Summon_Timer = 45000;
+            } else Summon_Timer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_boss_anubrekhan(Creature* creature)
-{
-    return new boss_anubrekhanAI (creature);
-}
 
 void AddSC_boss_anubrekhan()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_anubrekhan";
-    newscript->GetAI = &GetAI_boss_anubrekhan;
-    newscript->RegisterSelf();
+    new boss_anubrekhan();
 }
-

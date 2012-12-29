@@ -48,84 +48,89 @@ EndScriptData */
 #define H_SPELL_SHADOW_BOLT         57464
 
 #define C_SPIRIT_OF_BLAUMEUX        16776
-
-struct boss_lady_blaumeuxAI : public ScriptedAI
+class boss_lady_blaumeux : public CreatureScript
 {
-    boss_lady_blaumeuxAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_lady_blaumeux() : CreatureScript("boss_lady_blaumeux") { }
 
-    uint32 Mark_Timer;
-    uint32 VoidZone_Timer;
-    bool ShieldWall1;
-    bool ShieldWall2;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
-        VoidZone_Timer = 12000;                             // right
-        ShieldWall1 = true;
-        ShieldWall2 = true;
+       return new boss_lady_blaumeuxAI (creature);
     }
 
-    void EnterCombat(Unit *who)
+    struct boss_lady_blaumeuxAI : public ScriptedAI
     {
-        DoScriptText(SAY_BLAU_AGGRO, me);
-    }
+        boss_lady_blaumeuxAI(Creature *c) : ScriptedAI(c) {}
 
-    void KilledUnit(Unit* Victim)
-    {
-        DoScriptText(SAY_BLAU_SLAY, me);
-    }
+        uint32 Mark_Timer;
+        uint32 VoidZone_Timer;
+        bool ShieldWall1;
+        bool ShieldWall2;
 
-    void JustDied(Unit* Killer)
-    {
-        DoScriptText(SAY_BLAU_DEATH, me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        // Mark of Blaumeux
-        if (Mark_Timer <= diff)
+        void Reset()
         {
-            DoCast(me->getVictim(),SPELL_MARK_OF_BLAUMEUX);
-            Mark_Timer = 12000;
-        } else Mark_Timer -= diff;
+            Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
+            VoidZone_Timer = 12000;                             // right
+            ShieldWall1 = true;
+            ShieldWall2 = true;
+        }
 
-        // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
-        if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
+        void EnterCombat(Unit *who)
         {
-            if (ShieldWall1)
+            DoScriptText(SAY_BLAU_AGGRO, me);
+        }
+
+        void KilledUnit(Unit* Victim)
+        {
+            DoScriptText(SAY_BLAU_SLAY, me);
+        }
+
+        void JustDied(Unit* Killer)
+        {
+            DoScriptText(SAY_BLAU_DEATH, me);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            // Mark of Blaumeux
+            if (Mark_Timer <= diff)
             {
-                DoCast(me, SPELL_SHIELDWALL);
-                ShieldWall1 = false;
-            }
-       }
-       if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
-       {
-           if (ShieldWall2)
-           {
-               DoCast(me, SPELL_SHIELDWALL);
-               ShieldWall2 = false;
+                DoCast(me->getVictim(),SPELL_MARK_OF_BLAUMEUX);
+                Mark_Timer = 12000;
+            } else Mark_Timer -= diff;
+
+            // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
+            if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
+            {
+                if (ShieldWall1)
+                {
+                    DoCast(me, SPELL_SHIELDWALL);
+                    ShieldWall1 = false;
+                }
            }
+           if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
+           {
+               if (ShieldWall2)
+               {
+                   DoCast(me, SPELL_SHIELDWALL);
+                   ShieldWall2 = false;
+               }
+           }
+
+           // Void Zone
+           if (VoidZone_Timer <= diff)
+           {
+               DoCast(me->getVictim(),SPELL_VOIDZONE);
+               VoidZone_Timer = 12000;
+           } else VoidZone_Timer -= diff;
+
+           DoMeleeAttackIfReady();
        }
-
-       // Void Zone
-       if (VoidZone_Timer <= diff)
-       {
-           DoCast(me->getVictim(),SPELL_VOIDZONE);
-           VoidZone_Timer = 12000;
-       } else VoidZone_Timer -= diff;
-
-       DoMeleeAttackIfReady();
-   }
+    };
 };
-
-CreatureAI* GetAI_boss_lady_blaumeux(Creature* creature)
-{
-   return new boss_lady_blaumeuxAI (creature);
-}
 
 //baron rivendare
 #define SAY_RIVE_AGGRO1             -1533065
@@ -144,52 +149,57 @@ CreatureAI* GetAI_boss_lady_blaumeux(Creature* creature)
 #define H_SPELL_UNHOLY_SHADOW       57369
 
 #define C_SPIRIT_OF_RIVENDARE       0                       //creature entry not known yet
-
-struct boss_rivendare_naxxAI : public ScriptedAI
+class boss_rivendare_naxx : public CreatureScript
 {
-   boss_rivendare_naxxAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_rivendare_naxx() : CreatureScript("boss_rivendare_naxx") { }
 
-   void Reset()
-   {
-   }
+    CreatureAI* GetAI(Creature* creature)
+    {
+       return new boss_rivendare_naxxAI (creature);
+    }
 
-   void EnterCombat(Unit *who)
-   {
-       switch (rand()%3)
+    struct boss_rivendare_naxxAI : public ScriptedAI
+    {
+       boss_rivendare_naxxAI(Creature *c) : ScriptedAI(c) {}
+
+       void Reset()
        {
-           case 0: DoScriptText(SAY_RIVE_AGGRO1, me); break;
-           case 1: DoScriptText(SAY_RIVE_AGGRO2, me); break;
-           case 2: DoScriptText(SAY_RIVE_AGGRO3, me); break;
        }
-   }
 
-   void KilledUnit(Unit* Victim)
-   {
-       switch (rand()%2)
+       void EnterCombat(Unit *who)
        {
-           case 0: DoScriptText(SAY_RIVE_SLAY1, me); break;
-           case 1: DoScriptText(SAY_RIVE_SLAY2, me); break;
+           switch (rand()%3)
+           {
+               case 0: DoScriptText(SAY_RIVE_AGGRO1, me); break;
+               case 1: DoScriptText(SAY_RIVE_AGGRO2, me); break;
+               case 2: DoScriptText(SAY_RIVE_AGGRO3, me); break;
+           }
        }
-   }
 
-   void JustDied(Unit* Killer)
-   {
-       DoScriptText(SAY_RIVE_DEATH, me);
-   }
+       void KilledUnit(Unit* Victim)
+       {
+           switch (rand()%2)
+           {
+               case 0: DoScriptText(SAY_RIVE_SLAY1, me); break;
+               case 1: DoScriptText(SAY_RIVE_SLAY2, me); break;
+           }
+       }
 
-   void UpdateAI(const uint32 diff)
-   {
-       if (!UpdateVictim())
-           return;
+       void JustDied(Unit* Killer)
+       {
+           DoScriptText(SAY_RIVE_DEATH, me);
+       }
 
-       DoMeleeAttackIfReady();
-   }
+       void UpdateAI(const uint32 diff)
+       {
+           if (!UpdateVictim())
+               return;
+
+           DoMeleeAttackIfReady();
+       }
+    };
 };
-
-CreatureAI* GetAI_boss_rivendare_naxx(Creature* creature)
-{
-   return new boss_rivendare_naxxAI (creature);
-}
 
 //thane korthazz
 #define SAY_KORT_AGGRO              -1533051
@@ -204,84 +214,89 @@ CreatureAI* GetAI_boss_rivendare_naxx(Creature* creature)
 #define SPELL_METEOR                26558                   // me->getVictim() auto-area spell but with a core problem
 
 #define C_SPIRIT_OF_KORTHAZZ        16778
-
-struct boss_thane_korthazzAI : public ScriptedAI
+class boss_thane_korthazz : public CreatureScript
 {
-   boss_thane_korthazzAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_thane_korthazz() : CreatureScript("boss_thane_korthazz") { }
 
-   uint32 Mark_Timer;
-   uint32 Meteor_Timer;
-   bool ShieldWall1;
-   bool ShieldWall2;
+    CreatureAI* GetAI(Creature* creature)
+    {
+       return new boss_thane_korthazzAI (creature);
+    }
 
-   void Reset()
-   {
-       Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
-       Meteor_Timer = 30000;                               // wrong
-       ShieldWall1 = true;
-       ShieldWall2 = true;
-   }
+    struct boss_thane_korthazzAI : public ScriptedAI
+    {
+       boss_thane_korthazzAI(Creature *c) : ScriptedAI(c) {}
 
-   void EnterCombat(Unit *who)
-   {
-       DoScriptText(SAY_KORT_AGGRO, me);
-   }
+       uint32 Mark_Timer;
+       uint32 Meteor_Timer;
+       bool ShieldWall1;
+       bool ShieldWall2;
 
-   void KilledUnit(Unit* Victim)
-   {
-       DoScriptText(SAY_KORT_SLAY, me);
-   }
-
-   void JustDied(Unit* Killer)
-   {
-       DoScriptText(SAY_KORT_DEATH, me);
-   }
-
-   void UpdateAI(const uint32 diff)
-   {
-       if (!UpdateVictim())
-           return;
-
-       // Mark of Korthazz
-       if (Mark_Timer <= diff)
+       void Reset()
        {
-           DoCast(me->getVictim(),SPELL_MARK_OF_KORTHAZZ);
-           Mark_Timer = 12000;
-       } else Mark_Timer -= diff;
-
-       // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
-       if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
-       {
-           if (ShieldWall1)
-           {
-               DoCast(me, SPELL_SHIELDWALL);
-               ShieldWall1 = false;
-           }
-       }
-       if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
-       {
-           if (ShieldWall2)
-           {
-               DoCast(me, SPELL_SHIELDWALL);
-              ShieldWall2 = false;
-           }
+           Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
+           Meteor_Timer = 30000;                               // wrong
+           ShieldWall1 = true;
+           ShieldWall2 = true;
        }
 
-       // Meteor
-       if (Meteor_Timer <= diff)
+       void EnterCombat(Unit *who)
        {
-           DoCast(me->getVictim(),SPELL_METEOR);
-           Meteor_Timer = 20000;                           // wrong
-      } else Meteor_Timer -= diff;
+           DoScriptText(SAY_KORT_AGGRO, me);
+       }
 
-       DoMeleeAttackIfReady();
-   }
+       void KilledUnit(Unit* Victim)
+       {
+           DoScriptText(SAY_KORT_SLAY, me);
+       }
+
+       void JustDied(Unit* Killer)
+       {
+           DoScriptText(SAY_KORT_DEATH, me);
+       }
+
+       void UpdateAI(const uint32 diff)
+       {
+           if (!UpdateVictim())
+               return;
+
+           // Mark of Korthazz
+           if (Mark_Timer <= diff)
+           {
+               DoCast(me->getVictim(),SPELL_MARK_OF_KORTHAZZ);
+               Mark_Timer = 12000;
+           } else Mark_Timer -= diff;
+
+           // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
+           if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
+           {
+               if (ShieldWall1)
+               {
+                   DoCast(me, SPELL_SHIELDWALL);
+                   ShieldWall1 = false;
+               }
+           }
+           if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
+           {
+               if (ShieldWall2)
+               {
+                   DoCast(me, SPELL_SHIELDWALL);
+                  ShieldWall2 = false;
+               }
+           }
+
+           // Meteor
+           if (Meteor_Timer <= diff)
+           {
+               DoCast(me->getVictim(),SPELL_METEOR);
+               Meteor_Timer = 20000;                           // wrong
+          } else Meteor_Timer -= diff;
+
+           DoMeleeAttackIfReady();
+       }
+    };
 };
-
-CreatureAI* GetAI_boss_thane_korthazz(Creature* creature)
-{
-   return new boss_thane_korthazzAI (creature);
-}
 
 //sir zeliek
 #define SAY_ZELI_AGGRO              -1533058
@@ -299,111 +314,95 @@ CreatureAI* GetAI_boss_thane_korthazz(Creature* creature)
 #define H_SPELL_HOLY_BOLT           57465
 
 #define C_SPIRIT_OF_ZELIREK         16777
-
-struct boss_sir_zeliekAI : public ScriptedAI
+class boss_sir_zeliek : public CreatureScript
 {
-   boss_sir_zeliekAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_sir_zeliek() : CreatureScript("boss_sir_zeliek") { }
 
-   uint32 Mark_Timer;
-   uint32 HolyWrath_Timer;
-   bool ShieldWall1;
-   bool ShieldWall2;
+    CreatureAI* GetAI(Creature* creature)
+    {
+       return new boss_sir_zeliekAI (creature);
+    }
 
-   void Reset()
-   {
-       Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
-       HolyWrath_Timer = 12000;                            // right
-       ShieldWall1 = true;
-       ShieldWall2 = true;
-   }
+    struct boss_sir_zeliekAI : public ScriptedAI
+    {
+       boss_sir_zeliekAI(Creature *c) : ScriptedAI(c) {}
 
-   void EnterCombat(Unit *who)
-   {
-       DoScriptText(SAY_ZELI_AGGRO, me);
-   }
+       uint32 Mark_Timer;
+       uint32 HolyWrath_Timer;
+       bool ShieldWall1;
+       bool ShieldWall2;
 
-   void KilledUnit(Unit* Victim)
-   {
-       DoScriptText(SAY_ZELI_SLAY, me);
-   }
-
-   void JustDied(Unit* Killer)
-   {
-       DoScriptText(SAY_ZELI_DEATH, me);
-   }
-
-   void UpdateAI(const uint32 diff)
-   {
-       //Return since we have no target
-       if (!UpdateVictim())
-           return;
-
-       // Mark of Zeliek
-       if (Mark_Timer <= diff)
+       void Reset()
        {
-           DoCast(me->getVictim(),SPELL_MARK_OF_ZELIEK);
-           Mark_Timer = 12000;
-       } else Mark_Timer -= diff;
-
-       // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
-       if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
-       {
-           if (ShieldWall1)
-           {
-               DoCast(me, SPELL_SHIELDWALL);
-               ShieldWall1 = false;
-           }
-     }
-       if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
-       {
-           if (ShieldWall2)
-           {
-               DoCast(me, SPELL_SHIELDWALL);
-               ShieldWall2 = false;
-           }
+           Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
+           HolyWrath_Timer = 12000;                            // right
+           ShieldWall1 = true;
+           ShieldWall2 = true;
        }
 
-       // Holy Wrath
-       if (HolyWrath_Timer <= diff)
+       void EnterCombat(Unit *who)
        {
-           DoCast(me->getVictim(),SPELL_HOLY_WRATH);
-           HolyWrath_Timer = 12000;
-       } else HolyWrath_Timer -= diff;
+           DoScriptText(SAY_ZELI_AGGRO, me);
+       }
 
-       DoMeleeAttackIfReady();
-   }
+       void KilledUnit(Unit* Victim)
+       {
+           DoScriptText(SAY_ZELI_SLAY, me);
+       }
+
+       void JustDied(Unit* Killer)
+       {
+           DoScriptText(SAY_ZELI_DEATH, me);
+       }
+
+       void UpdateAI(const uint32 diff)
+       {
+           //Return since we have no target
+           if (!UpdateVictim())
+               return;
+
+           // Mark of Zeliek
+           if (Mark_Timer <= diff)
+           {
+               DoCast(me->getVictim(),SPELL_MARK_OF_ZELIEK);
+               Mark_Timer = 12000;
+           } else Mark_Timer -= diff;
+
+           // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
+           if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
+           {
+               if (ShieldWall1)
+               {
+                   DoCast(me, SPELL_SHIELDWALL);
+                   ShieldWall1 = false;
+               }
+         }
+           if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
+           {
+               if (ShieldWall2)
+               {
+                   DoCast(me, SPELL_SHIELDWALL);
+                   ShieldWall2 = false;
+               }
+           }
+
+           // Holy Wrath
+           if (HolyWrath_Timer <= diff)
+           {
+               DoCast(me->getVictim(),SPELL_HOLY_WRATH);
+               HolyWrath_Timer = 12000;
+           } else HolyWrath_Timer -= diff;
+
+           DoMeleeAttackIfReady();
+       }
+    };
 };
-
-CreatureAI* GetAI_boss_sir_zeliek(Creature* creature)
-{
-   return new boss_sir_zeliekAI (creature);
-}
 
 void AddSC_boss_four_horsemen()
 {
-   Script *newscript;
-
-   newscript = new Script;
-   newscript->Name = "boss_lady_blaumeux";
-   newscript->GetAI = &GetAI_boss_lady_blaumeux;
-   newscript->RegisterSelf();
-
-/*
-//Disabled to prevent "CRASH ALERT!"
-//this boss is wrong here, only for wotlk is need it.
-   newscript = new Script;
-   newscript->Name = "boss_rivendare_naxx";
-   newscript->GetAI = &GetAI_boss_rivendare_naxx;
-   newscript->RegisterSelf();
-*/
-   newscript = new Script;
-   newscript->Name = "boss_thane_korthazz";
-   newscript->GetAI = &GetAI_boss_thane_korthazz;
-   newscript->RegisterSelf();
-
-   newscript = new Script;
-   newscript->Name = "boss_sir_zeliek";
-   newscript->GetAI = &GetAI_boss_sir_zeliek;
-  newscript->RegisterSelf();
+    new boss_lady_blaumeux();
+    new boss_rivendare_naxx();
+    new boss_thane_korthazz();
+    new boss_sir_zeliek();
 }
-

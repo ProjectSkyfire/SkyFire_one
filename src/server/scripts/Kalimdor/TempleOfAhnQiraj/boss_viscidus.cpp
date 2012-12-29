@@ -79,170 +79,170 @@ enum ViscidusState
     FROZEN_STATE_3,
     SHATTRED_STATE,
 };
-
-struct boss_viscidusAI : public ScriptedAI
+class boss_viscidus : public CreatureScript
 {
-    boss_viscidusAI(Creature *creature) : ScriptedAI(creature)
+public:
+    boss_viscidus() : CreatureScript("boss_viscidus") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = ((ScriptedInstance*)creature->GetInstanceScript());
+        return new boss_viscidusAI (creature);
     }
 
-    ScriptedInstance* instance;
-    ViscidusState state;
-    uint32 HitCounter;
-
-    void Reset()
+    struct boss_viscidusAI : public ScriptedAI
     {
-        state = NORMAL_STATE_1;
-    }
-
-    void Aggro(Unit *who){}
-
-    void DamageTaken(Unit* Done_by, uint32 &Damage)
-    {
-        if (Damage > 0) Damage = Damage/2;
-    }
-
-    void NextState(ViscidusState &state)
-    {
-        switch (state)
+        boss_viscidusAI(Creature *creature) : ScriptedAI(creature)
         {
-        case NORMAL_STATE_1:
-            state = NORMAL_STATE_2;
-            break;
-        case NORMAL_STATE_2:
-            state = NORMAL_STATE_3;
-            break;
-        case NORMAL_STATE_3:
-            state = FROZEN_STATE_1;
-            break;
-        case FROZEN_STATE_2:
-            state = FROZEN_STATE_3;
-            break;
-        case FROZEN_STATE_3:
-            state = SHATTRED_STATE;
-            break;
-        case SHATTRED_STATE:
-            state = NORMAL_STATE_1;
-            break;
+            instance = ((ScriptedInstance*)creature->GetInstanceScript());
         }
-    }
 
-    void ElementalDamageTaken(Unit* Done_by, uint32 &Damage, SpellSchoolMask damageSchoolMask)
-    {
-        if (Done_by->GetTypeId() == TYPEID_PLAYER)
+        ScriptedInstance* instance;
+        ViscidusState state;
+        uint32 HitCounter;
+
+        void Reset()
+        {
+            state = NORMAL_STATE_1;
+        }
+
+        void Aggro(Unit *who){}
+
+        void DamageTaken(Unit* Done_by, uint32 &Damage)
+        {
+            if (Damage > 0) Damage = Damage/2;
+        }
+
+        void NextState(ViscidusState &state)
         {
             switch (state)
             {
             case NORMAL_STATE_1:
-            case NORMAL_STATE_2:
-            case NORMAL_STATE_3:
-                if (damageSchoolMask == SPELL_SCHOOL_MASK_FROST) //Only frost damage
-                {
-                    if (++HitCounter >= 200)
-                    {
-                        NextState(state);
-                        HitCounter = 0;
-                        ChangePhase(state);
-                    }
-                }
-                break;
-            case FROZEN_STATE_1:
-            case FROZEN_STATE_2:
-            case FROZEN_STATE_3:
-                if (damageSchoolMask == SPELL_SCHOOL_MASK_NORMAL) //Only Physical Damage
-                {
-                    if (++HitCounter >= 200)
-                    {
-                        NextState(state);
-                        HitCounter = 0;
-                        ChangePhase(state);
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-    void ChangePhase(ViscidusState NextPhase)
-    {
-        switch (NextPhase)
-        {
-            case NORMAL_STATE_1:
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_1);
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_2);
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_3);
+                state = NORMAL_STATE_2;
                 break;
             case NORMAL_STATE_2:
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_2);
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_3);
-
-                me->CastSpell(me, SPELL_VISCIDUS_FREEZE_1, true);
-                me->MonsterTextEmote(EMOTE_VISCIDUS_FREEZE_1, 0, true);
+                state = NORMAL_STATE_3;
                 break;
             case NORMAL_STATE_3:
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_1);
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_3);
-
-                me->CastSpell(me,SPELL_VISCIDUS_FREEZE_2, true);
-                me->MonsterTextEmote(EMOTE_VISCIDUS_FREEZE_2, 0, true);
-                break;
-            case FROZEN_STATE_1:
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_1);
-                me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_2);
-
-                me->CastSpell(me,SPELL_VISCIDUS_FREEZE_3, true);
-                me->MonsterTextEmote(EMOTE_VISCIDUS_FREEZE_3, 0, true);
+                state = FROZEN_STATE_1;
                 break;
             case FROZEN_STATE_2:
-                me->MonsterTextEmote(EMOTE_VISCIDUS_CRACK_1, 0, true);
+                state = FROZEN_STATE_3;
                 break;
             case FROZEN_STATE_3:
-                me->MonsterTextEmote(EMOTE_VISCIDUS_CRACK_2, 0, true);
+                state = SHATTRED_STATE;
                 break;
             case SHATTRED_STATE:
-                me->MonsterTextEmote(EMOTE_VISCIDUS_CRACK_3, 0, true);
-                DoSummonGlobs();
+                state = NORMAL_STATE_1;
                 break;
-        }
-    }
-
-    void DoSummonGlobs()
-    {
-        uint32 hpborder = 5;
-        for (int i = 0; i < 20; i++)
-        {
-            if ((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
-            {
-                me->CastSpell(me, Spell_Summon_glob[i], true);
-                hpborder += 5;
             }
-            break;
         }
-    }
 
-    void JustDied(Unit* Killer){}
+        void ElementalDamageTaken(Unit* Done_by, uint32 &Damage, SpellSchoolMask damageSchoolMask)
+        {
+            if (Done_by->GetTypeId() == TYPEID_PLAYER)
+            {
+                switch (state)
+                {
+                case NORMAL_STATE_1:
+                case NORMAL_STATE_2:
+                case NORMAL_STATE_3:
+                    if (damageSchoolMask == SPELL_SCHOOL_MASK_FROST) //Only frost damage
+                    {
+                        if (++HitCounter >= 200)
+                        {
+                            NextState(state);
+                            HitCounter = 0;
+                            ChangePhase(state);
+                        }
+                    }
+                    break;
+                case FROZEN_STATE_1:
+                case FROZEN_STATE_2:
+                case FROZEN_STATE_3:
+                    if (damageSchoolMask == SPELL_SCHOOL_MASK_NORMAL) //Only Physical Damage
+                    {
+                        if (++HitCounter >= 200)
+                        {
+                            NextState(state);
+                            HitCounter = 0;
+                            ChangePhase(state);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+        void ChangePhase(ViscidusState NextPhase)
+        {
+            switch (NextPhase)
+            {
+                case NORMAL_STATE_1:
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_1);
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_2);
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_3);
+                    break;
+                case NORMAL_STATE_2:
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_2);
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_3);
 
-        DoMeleeAttackIfReady();
-    }
+                    me->CastSpell(me, SPELL_VISCIDUS_FREEZE_1, true);
+                    me->MonsterTextEmote(EMOTE_VISCIDUS_FREEZE_1, 0, true);
+                    break;
+                case NORMAL_STATE_3:
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_1);
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_3);
+
+                    me->CastSpell(me,SPELL_VISCIDUS_FREEZE_2, true);
+                    me->MonsterTextEmote(EMOTE_VISCIDUS_FREEZE_2, 0, true);
+                    break;
+                case FROZEN_STATE_1:
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_1);
+                    me->RemoveAurasDueToSpell(SPELL_VISCIDUS_FREEZE_2);
+
+                    me->CastSpell(me,SPELL_VISCIDUS_FREEZE_3, true);
+                    me->MonsterTextEmote(EMOTE_VISCIDUS_FREEZE_3, 0, true);
+                    break;
+                case FROZEN_STATE_2:
+                    me->MonsterTextEmote(EMOTE_VISCIDUS_CRACK_1, 0, true);
+                    break;
+                case FROZEN_STATE_3:
+                    me->MonsterTextEmote(EMOTE_VISCIDUS_CRACK_2, 0, true);
+                    break;
+                case SHATTRED_STATE:
+                    me->MonsterTextEmote(EMOTE_VISCIDUS_CRACK_3, 0, true);
+                    DoSummonGlobs();
+                    break;
+            }
+        }
+
+        void DoSummonGlobs()
+        {
+            uint32 hpborder = 5;
+            for (int i = 0; i < 20; i++)
+            {
+                if ((me->GetHealth()*100) / me->GetMaxHealth() >= hpborder)
+                {
+                    me->CastSpell(me, Spell_Summon_glob[i], true);
+                    hpborder += 5;
+                }
+                break;
+            }
+        }
+
+        void JustDied(Unit* Killer){}
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_boss_viscidus(Creature* creature)
-{
-    return new boss_viscidusAI (creature);
-}
 
 void AddSC_boss_viscidus()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name="boss_viscidus";
-    newscript->GetAI = &GetAI_boss_viscidus;
-    newscript->RegisterSelf();
+    new boss_viscidus();
 }

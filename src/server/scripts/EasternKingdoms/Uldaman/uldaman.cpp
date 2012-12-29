@@ -42,55 +42,60 @@ EndContentData */
 ######*/
 
 #define SPELL_CSLUMBER        3636
-
-struct mob_jadespine_basiliskAI : public ScriptedAI
+class mob_jadespine_basilisk : public CreatureScript
 {
-    mob_jadespine_basiliskAI(Creature *c) : ScriptedAI(c) {}
+public:
+    mob_jadespine_basilisk() : CreatureScript("mob_jadespine_basilisk") { }
 
-    uint32 Cslumber_Timer;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        Cslumber_Timer = 2000;
+        return new mob_jadespine_basiliskAI (creature);
     }
 
-    void EnterCombat(Unit * /*who*/)
+    struct mob_jadespine_basiliskAI : public ScriptedAI
     {
-    }
+        mob_jadespine_basiliskAI(Creature *c) : ScriptedAI(c) {}
 
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
+        uint32 Cslumber_Timer;
 
-        //Cslumber_Timer
-        if (Cslumber_Timer <= diff)
+        void Reset()
         {
-            //Cast
-            // DoCast(me->getVictim(), SPELL_CSLUMBER);
-            DoCast(me->getVictim(), SPELL_CSLUMBER, true);
+            Cslumber_Timer = 2000;
+        }
 
-            //Stop attacking target thast asleep and pick new target
-            Cslumber_Timer = 28000;
+        void EnterCombat(Unit * /*who*/)
+        {
+        }
 
-            Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
 
-            if (!Target || Target == me->getVictim())
-                Target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+            //Cslumber_Timer
+            if (Cslumber_Timer <= diff)
+            {
+                //Cast
+                // DoCast(me->getVictim(), SPELL_CSLUMBER);
+                DoCast(me->getVictim(), SPELL_CSLUMBER, true);
 
-            if (Target)
-                me->TauntApply(Target);
-        } else Cslumber_Timer -= diff;
+                //Stop attacking target thast asleep and pick new target
+                Cslumber_Timer = 28000;
 
-        DoMeleeAttackIfReady();
-    }
+                Unit* Target = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+
+                if (!Target || Target == me->getVictim())
+                    Target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+
+                if (Target)
+                    me->TauntApply(Target);
+            } else Cslumber_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_mob_jadespine_basilisk(Creature* creature)
-{
-    return new mob_jadespine_basiliskAI (creature);
-}
 
 /*######
 ## npc_lore_keeper_of_norgannon
@@ -112,141 +117,137 @@ CreatureAI* GetAI_mob_jadespine_basilisk(Creature* creature)
 #define GOSSIP_SELECT_KEEPER13  "Who are the Creators?"
 #define GOSSIP_SELECT_KEEPER14  "This is a lot to think about."
 #define GOSSIP_SELECT_KEEPER15  "I will access the discs now."
-
-bool GossipHello_npc_lore_keeper_of_norgannon(Player* player, Creature* creature)
+class npc_lore_keeper_of_norgannon : public CreatureScript
 {
-    if (player->GetQuestStatus(2278) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_KEEPER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+public:
+    npc_lore_keeper_of_norgannon() : CreatureScript("npc_lore_keeper_of_norgannon") { }
 
-    player->SEND_GOSSIP_MENU(1079, creature->GetGUID());
-
-    return true;
-}
-
-bool GossipSelect_npc_lore_keeper_of_norgannon(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(1080, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->SEND_GOSSIP_MENU(1081, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            player->SEND_GOSSIP_MENU(1082, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(1083, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            player->SEND_GOSSIP_MENU(1084, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
-            player->SEND_GOSSIP_MENU(1085, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+7:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
-            player->SEND_GOSSIP_MENU(1086, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+8:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER8, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
-            player->SEND_GOSSIP_MENU(1087, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+9:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER9, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+10);
-            player->SEND_GOSSIP_MENU(1088, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+10:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+11);
-            player->SEND_GOSSIP_MENU(1089, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+11:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+12);
-            player->SEND_GOSSIP_MENU(1090, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+12:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER12, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+13);
-            player->SEND_GOSSIP_MENU(1091, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+13:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER13, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+14);
-            player->SEND_GOSSIP_MENU(1092, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+14:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER14, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+15);
-            player->SEND_GOSSIP_MENU(1093, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+15:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER15, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+16);
-            player->SEND_GOSSIP_MENU(1094, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+16:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(2278);
-            break;
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                player->SEND_GOSSIP_MENU(1080, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+                player->SEND_GOSSIP_MENU(1081, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+                player->SEND_GOSSIP_MENU(1082, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->SEND_GOSSIP_MENU(1083, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+                player->SEND_GOSSIP_MENU(1084, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+6:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
+                player->SEND_GOSSIP_MENU(1085, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+7:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+8);
+                player->SEND_GOSSIP_MENU(1086, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+8:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER8, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
+                player->SEND_GOSSIP_MENU(1087, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+9:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER9, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+10);
+                player->SEND_GOSSIP_MENU(1088, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+10:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+11);
+                player->SEND_GOSSIP_MENU(1089, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+11:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+12);
+                player->SEND_GOSSIP_MENU(1090, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+12:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER12, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+13);
+                player->SEND_GOSSIP_MENU(1091, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+13:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER13, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+14);
+                player->SEND_GOSSIP_MENU(1092, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+14:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER14, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+15);
+                player->SEND_GOSSIP_MENU(1093, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+15:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_KEEPER15, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+16);
+                player->SEND_GOSSIP_MENU(1094, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+16:
+                player->CLOSE_GOSSIP_MENU();
+                player->AreaExploredOrEventHappens(2278);
+                break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (player->GetQuestStatus(2278) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_KEEPER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        player->SEND_GOSSIP_MENU(1079, creature->GetGUID());
+
+        return true;
+    }
+};
 
 /*######
 ## go_keystone_chamber
 ######*/
-
-bool GOHello_go_keystone_chamber(Player* player, GameObject* go)
+class go_keystone_chamber : public GameObjectScript
 {
-    ScriptedInstance* instance = go->GetInstanceScript();
+public:
+    go_keystone_chamber() : GameObjectScript("go_keystone_chamber") { }
 
-    if (!instance)
+    bool GOHello(Player* player, GameObject* go)
+    {
+        ScriptedInstance* instance = go->GetInstanceScript();
+
+        if (!instance)
+            return false;
+
+        if (instance)
+            instance->SetData(DATA_IRONAYA_SEAL, IN_PROGRESS); //door animation and save state.
+
         return false;
-
-    if (instance)
-        instance->SetData(DATA_IRONAYA_SEAL, IN_PROGRESS); //door animation and save state.
-
-    return false;
-}
+    }
+};
 
 /*######
 ## at_map_chamber
 ######*/
-
-bool AT_map_chamber(Player* player, const AreaTriggerEntry *at)
+class at_map_chamber : public AreaTriggerScript
 {
-    if (player && player->GetQuestStatus(QUEST_HIDDEN_CHAMBER) == QUEST_STATUS_INCOMPLETE)
-        player->AreaExploredOrEventHappens(QUEST_HIDDEN_CHAMBER);
+public:
+    at_map_chamber() : AreaTriggerScript("at_map_chamber") { }
 
-    return true;
-}
+    bool AT_map_chamber(Player* player, const AreaTriggerEntry *at)
+    {
+        if (player && player->GetQuestStatus(QUEST_HIDDEN_CHAMBER) == QUEST_STATUS_INCOMPLETE)
+            player->AreaExploredOrEventHappens(QUEST_HIDDEN_CHAMBER);
+
+        return true;
+    }
+};
 
 void AddSC_uldaman()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "mob_jadespine_basilisk";
-    newscript->GetAI = &GetAI_mob_jadespine_basilisk;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_lore_keeper_of_norgannon";
-    newscript->pGossipHello = &GossipHello_npc_lore_keeper_of_norgannon;
-    newscript->pGossipSelect = &GossipSelect_npc_lore_keeper_of_norgannon;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_keystone_chamber";
-    newscript->pGOHello = &GOHello_go_keystone_chamber;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "at_map_chamber";
-    newscript->pAreaTrigger = &AT_map_chamber;
-    newscript->RegisterSelf();
+    new mob_jadespine_basilisk();
+    new npc_lore_keeper_of_norgannon();
+    new go_keystone_chamber();
+    new at_map_chamber();
 }
-

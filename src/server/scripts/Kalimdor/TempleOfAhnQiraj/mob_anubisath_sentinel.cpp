@@ -286,49 +286,18 @@ struct aqsentinelAI : public ScriptedAI
         }
         return NULL;
     }
-};
-CreatureAI* GetAI_mob_anubisath_sentinelAI(Creature* creature)
+};class mob_anubisath_sentinel : public CreatureScript
 {
-    return new aqsentinelAI (creature);
-}
+public:
+    mob_anubisath_sentinel() : CreatureScript("mob_anubisath_sentinel") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new aqsentinelAI (creature);
+    }
+};
 
 void AddSC_mob_anubisath_sentinel()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "mob_anubisath_sentinel";
-    newscript->GetAI = &GetAI_mob_anubisath_sentinelAI;
-    newscript->RegisterSelf();
+    new mob_anubisath_sentinel();
 }
-
-SentinelAbilityAura::~SentinelAbilityAura() {}
-Unit* SentinelAbilityAura::GetTriggerTarget() const
-{
-    switch (abilityId)
-    {
-        case SPELL_KNOCK_BUFF:
-        case SPELL_THUNDER_BUFF:
-        case SPELL_MSTRIKE_BUFF:
-        case SPELL_STORM_BUFF:
-            return aOwner->me->getVictim();
-
-        case SPELL_MANAB_BUFF:
-            return aOwner->GetHatedManaUser();
-
-        case SPELL_MENDING_BUFF:
-        case SPELL_REFLECTAF_BUFF:
-        case SPELL_REFLECTSFr_BUFF:
-        case SPELL_THORNS_BUFF:
-        default:
-            return aOwner->me;
-    }
-}
-
-SentinelAbilityAura::SentinelAbilityAura(aqsentinelAI *abilityOwner, SpellEntry *spell, uint32 ability, uint32 eff)
-: Aura(spell, eff, NULL, abilityOwner->me, abilityOwner->me, NULL)
-{
-    aOwner = abilityOwner;
-    abilityId = ability;
-    currentBasePoints = 0;
-}
-

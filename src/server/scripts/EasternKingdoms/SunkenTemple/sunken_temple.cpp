@@ -34,41 +34,42 @@ EndContentData */
 /*#####
 # at_malfurion_Stormrage_trigger
 #####*/
-
-bool AreaTrigger_at_malfurion_stormrage(Player* player, const AreaTriggerEntry * /*at*/)
+class at_malfurion_stormrage : public AreaTriggerScript
 {
-    if (ScriptedInstance* instance = player->GetInstanceScript())
+public:
+    at_malfurion_stormrage() : AreaTriggerScript("at_malfurion_stormrage") { }
+
+    bool AreaTrigger(Player* player, const AreaTriggerEntry * /*at*/)
     {
-        if (!player->FindNearestCreature(15362, 15))
-            player->SummonCreature(15362, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), -1.52, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
-        return false;
+        if (ScriptedInstance* instance = player->GetInstanceScript())
+        {
+            if (!player->FindNearestCreature(15362, 15))
+                player->SummonCreature(15362, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), -1.52, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
+            return false;
+        }
+    return false;
     }
-return false;
-}
+};
 /*#####
 # go_atalai_statue
 #####*/
-
-bool GOHello_go_atalai_statue(Player* player, GameObject* pGo)
+class go_atalai_statue : public GameObjectScript
 {
-    ScriptedInstance* instance = player->GetInstanceScript();
-    if (!instance)
+public:
+    go_atalai_statue() : GameObjectScript("go_atalai_statue") { }
+
+    bool GOHello(Player* player, GameObject* pGo)
+    {
+        ScriptedInstance* instance = player->GetInstanceScript();
+        if (!instance)
+            return false;
+        instance->SetData(EVENT_STATE, pGo->GetEntry());
         return false;
-    instance->SetData(EVENT_STATE, pGo->GetEntry());
-    return false;
-}
+    }
+};
 
 void AddSC_sunken_temple()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "at_malfurion_stormrage";
-    newscript->pAreaTrigger = &AreaTrigger_at_malfurion_stormrage;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_atalai_statue";
-    newscript->pGOHello = &GOHello_go_atalai_statue;
-    newscript->RegisterSelf();
+    new at_malfurion_stormrage();
+    new go_atalai_statue();
 }

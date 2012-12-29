@@ -86,19 +86,40 @@ EndContentData */
 /*******************************************************
  * guard_azuremyst start
  *******************************************************/
-
-bool GossipHello_guard_azuremyst(Player* player, Creature* creature)
+class guard_azuremyst : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN             , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->SEND_GOSSIP_MENU(10066, creature->GetGUID());
-    return true;
-}
+public:
+    guard_azuremyst() : CreatureScript("guard_azuremyst") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN             , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->SEND_GOSSIP_MENU(10066, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_azuremyst(Player* player, Creature* creature, uint32 action)
 {
@@ -246,46 +267,52 @@ void SendProfTrainerMenu_guard_azuremyst(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_azuremyst(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_azuremyst(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_azuremyst(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_azuremyst(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_azuremyst end
  *******************************************************/
 
-CreatureAI* GetAI_guard_azuremyst(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_bluffwatcher start
  *******************************************************/
-
-bool GossipHello_guard_bluffwatcher(Player* player, Creature* creature)
+class guard_bluffwatcher : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(3543, creature->GetGUID());
-    return true;
-}
+public:
+    guard_bluffwatcher() : CreatureScript("guard_bluffwatcher") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->SEND_GOSSIP_MENU(3543, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_bluffwatcher(Player* player, Creature* creature, uint32 action)
 {
@@ -456,35 +483,23 @@ void SendProfTrainerMenu_guard_bluffwatcher(Player* player, Creature* creature, 
     }
 }
 
-bool GossipSelect_guard_bluffwatcher(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_bluffwatcher(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_bluffwatcher(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_bluffwatcher(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_bluffwatcher(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_bluffwatcher end
  *******************************************************/
 
-CreatureAI* GetAI_guard_bluffwatcher(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_contested start
  *******************************************************/
-
-CreatureAI* GetAI_guard_contested(Creature* creature)
+class guard_contested : public CreatureScript
 {
-     return new guardAI (creature);
-}
+public:
+    guard_contested() : CreatureScript("guard_contested") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+         return new guardAI (creature);
+    }
+};
 /*******************************************************
  * guard_contested end
  *******************************************************/
@@ -492,23 +507,45 @@ CreatureAI* GetAI_guard_contested(Creature* creature)
 /*******************************************************
  * guard_darnassus start
  *******************************************************/
-
-bool GossipHello_guard_darnassus(Player* player, Creature* creature)
+class guard_darnassus : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(3016, creature->GetGUID());
-    return true;
-}
+public:
+    guard_darnassus() : CreatureScript("guard_darnassus") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->SEND_GOSSIP_MENU(3016, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_darnassus(Player* player, Creature* creature, uint32 action)
 {
@@ -664,44 +701,48 @@ void SendProfTrainerMenu_guard_darnassus(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_darnassus(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_darnassus(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_darnassus(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_darnassus(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_darnassus(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_darnassus end
  *******************************************************/
 
-CreatureAI* GetAI_guard_darnassus(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_dunmorogh start
  *******************************************************/
-
-bool GossipHello_guard_dunmorogh(Player* player, Creature* creature)
+class guard_dunmorogh : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK             , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN              , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->SEND_GOSSIP_MENU(4287, creature->GetGUID());
+public:
+    guard_dunmorogh() : CreatureScript("guard_dunmorogh") { }
 
-    return true;
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK             , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN              , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->SEND_GOSSIP_MENU(4287, creature->GetGUID());
+
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_dunmorogh(Player* player, Creature* creature, uint32 action)
 {
@@ -836,41 +877,46 @@ void SendProfTrainerMenu_guard_dunmorogh(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_dunmorogh(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_dunmorogh(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_dunmorogh(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_dunmorogh(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_dunmorogh end
  *******************************************************/
 
-CreatureAI* GetAI_guard_dunmorogh(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_durotar start
  *******************************************************/
-
-bool GossipHello_guard_durotar(Player* player, Creature* creature)
+class guard_durotar : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->SEND_GOSSIP_MENU(4037, creature->GetGUID());
-    return true;
-}
+public:
+    guard_durotar() : CreatureScript("guard_durotar") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->SEND_GOSSIP_MENU(4037, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_durotar(Player* player, Creature* creature, uint32 action)
 {
@@ -1003,42 +1049,47 @@ void SendProfTrainerMenu_guard_durotar(Player* player, Creature* creature, uint3
     }
 }
 
-bool GossipSelect_guard_durotar(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_durotar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_durotar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_durotar(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_durotar end
  *******************************************************/
 
-CreatureAI* GetAI_guard_durotar(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_elwynnforest start
  *******************************************************/
-
-bool GossipHello_guard_elwynnforest(Player* player, Creature* creature)
+class guard_elwynnforest : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GRYPHON       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->SEND_GOSSIP_MENU(933, creature->GetGUID());
-    return true;
-}
+public:
+    guard_elwynnforest() : CreatureScript("guard_elwynnforest") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GRYPHON       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->SEND_GOSSIP_MENU(933, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_elwynnforest(Player* player, Creature* creature, uint32 action)
 {
@@ -1179,41 +1230,46 @@ void SendProfTrainerMenu_guard_elwynnforest(Player* player, Creature* creature, 
     }
 }
 
-bool GossipSelect_guard_elwynnforest(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_elwynnforest(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_elwynnforest(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_elwynnforest(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_elwynnforest end
  *******************************************************/
 
-CreatureAI* GetAI_guard_elwynnforest(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_eversong start
  *******************************************************/
-
-bool GossipHello_guard_eversong(Player* player, Creature* creature)
+class guard_eversong : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->SEND_GOSSIP_MENU(10180, creature->GetGUID());
-    return true;
-}
+public:
+    guard_eversong() : CreatureScript("guard_eversong") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->SEND_GOSSIP_MENU(10180, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_eversong(Player* player, Creature* creature, uint32 action)
 {
@@ -1348,46 +1404,52 @@ void SendProfTrainerMenu_guard_eversong(Player* player, Creature* creature, uint
     }
 }
 
-bool GossipSelect_guard_eversong(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_eversong(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_eversong(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_eversong(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_eversong end
  *******************************************************/
 
-CreatureAI* GetAI_guard_eversong(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_exodar start
  *******************************************************/
-
-bool GossipHello_guard_exodar(Player* player, Creature* creature)
+class guard_exodar : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(9551, creature->GetGUID());
-    return true;
-}
+public:
+    guard_exodar() : CreatureScript("guard_exodar") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_HIPPOGRYPH     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->SEND_GOSSIP_MENU(9551, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_exodar(Player* player, Creature* creature, uint32 action)
 {
@@ -1583,48 +1645,53 @@ void SendProfTrainerMenu_guard_exodar(Player* player, Creature* creature, uint32
     }
 }
 
-bool GossipSelect_guard_exodar(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_exodar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_exodar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_exodar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_exodar(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_exodar end
  *******************************************************/
 
-CreatureAI* GetAI_guard_exodar(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_ironforge start
  *******************************************************/
-
-bool GossipHello_guard_ironforge(Player* player, Creature* creature)
+class guard_ironforge : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_IRONFORGE_BANK    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_DEEPRUNTRAM       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GRYPHON           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN               , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-    player->SEND_GOSSIP_MENU(2760, creature->GetGUID());
-    return true;
-}
+public:
+    guard_ironforge() : CreatureScript("guard_ironforge") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_IRONFORGE_BANK    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_DEEPRUNTRAM       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GRYPHON           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN               , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
+        player->SEND_GOSSIP_MENU(2760, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_ironforge(Player* player, Creature* creature, uint32 action)
 {
@@ -1815,42 +1882,46 @@ void SendProfTrainerMenu_guard_ironforge(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_ironforge(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_ironforge(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_ironforge(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_ironforge(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_ironforge(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_ironforge end
  *******************************************************/
 
-CreatureAI* GetAI_guard_ironforge(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_mulgore start
  *******************************************************/
-
-bool GossipHello_guard_mulgore(Player* player, Creature* creature)
+class guard_mulgore : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->SEND_GOSSIP_MENU(3543, creature->GetGUID());
-    return true;
-}
+public:
+    guard_mulgore() : CreatureScript("guard_mulgore") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->SEND_GOSSIP_MENU(3543, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_mulgore(Player* player, Creature* creature, uint32 action)
 {
@@ -1962,49 +2033,55 @@ void SendProfTrainerMenu_guard_mulgore(Player* player, Creature* creature, uint3
     }
 }
 
-bool GossipSelect_guard_mulgore(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_mulgore(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_mulgore(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_mulgore(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_mulgore end
  *******************************************************/
 
-CreatureAI* GetAI_guard_mulgore(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_orgrimmar start
  *******************************************************/
-
-bool GossipHello_guard_orgrimmar(Player* player, Creature* creature)
+class guard_orgrimmar : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ZEPPLINMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_OFFICERS      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-    player->SEND_GOSSIP_MENU(2593, creature->GetGUID());
+public:
+    guard_orgrimmar() : CreatureScript("guard_orgrimmar") { }
 
-    return true;
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI_orgrimmar (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ZEPPLINMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_OFFICERS      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
+        player->SEND_GOSSIP_MENU(2593, creature->GetGUID());
+
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_orgrimmar(Player* player, Creature* creature, uint32 action)
 {
@@ -2198,48 +2275,57 @@ void SendProfTrainerMenu_guard_orgrimmar(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_orgrimmar(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_orgrimmar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_orgrimmar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_orgrimmar(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_orgrimmar(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_orgrimmar end
  *******************************************************/
 
-CreatureAI* GetAI_guard_orgrimmar(Creature* creature)
-{
-    return new guardAI_orgrimmar (creature);
-}
-
 /*******************************************************
  * guard_shattrath start
  *******************************************************/
-
-bool GossipHello_guard_shattrath(Player* player, Creature* creature)
+class guard_shattrath : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN                          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FLIGHTMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX                      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MANALOOM                     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ALCHEMYLAB                   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GEMMERCHANT                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(10321, creature->GetGUID());
+public:
+    guard_shattrath() : CreatureScript("guard_shattrath") { }
 
-    return true;
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:              SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BANK:          SendBankMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_INN:           SendInnMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_STABLEMASTER:  SendStableMasterMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_GEMMERCHANT:   SendGemMerchantMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_MAILBOX:       SendMailboxMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:     SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:    SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN                          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FLIGHTMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX                      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MANALOOM                     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ALCHEMYLAB                   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GEMMERCHANT                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->SEND_GOSSIP_MENU(10321, creature->GetGUID());
+
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_shattrath(Player* player, Creature* creature, uint32 action)
 {
@@ -2445,30 +2531,9 @@ void SendGemMerchantMenu_guard_shattrath(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_shattrath(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:              SendDefaultMenu_guard_shattrath(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BANK:          SendBankMenu_guard_shattrath(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_INN:           SendInnMenu_guard_shattrath(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_STABLEMASTER:  SendStableMasterMenu_guard_shattrath(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_GEMMERCHANT:   SendGemMerchantMenu_guard_shattrath(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_MAILBOX:       SendMailboxMenu_guard_shattrath(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:     SendProfTrainerMenu_guard_shattrath(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:    SendBattleMasterMenu_guard_shattrath(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_shattrath end
  *******************************************************/
-
-CreatureAI* GetAI_guard_shattrath(Creature* creature)
-{
-    return new guardAI (creature);
-}
 
 /*******************************************************
  * guard_shattrath_aldor
@@ -2478,78 +2543,99 @@ CreatureAI* GetAI_guard_shattrath(Creature* creature)
 #define SPELL_BANISHED_SHATTRATH_S  36671
 #define SPELL_BANISH_TELEPORT       36643
 #define SPELL_EXILE                 39533
-
-struct guard_shattrath_aldorAI : public guardAI
+class guard_shattrath_aldor : public CreatureScript
 {
-    guard_shattrath_aldorAI(Creature *c) : guardAI(c) {}
+public:
+    guard_shattrath_aldor() : CreatureScript("guard_shattrath_aldor") { }
 
-    uint32 Exile_Timer;
-    uint32 Banish_Timer;
-    uint64 PlayerGUID;
-    bool CanTeleport;
-
-    void Reset()
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
     {
-        Banish_Timer = 5000;
-        Exile_Timer = 8500;
-        PlayerGUID = 0;
-        CanTeleport = false;
-    }
-
-    void EnterCombat(Unit * /*who*/) {}
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (CanTeleport)
+        switch (sender)
         {
-            if (Exile_Timer <= diff)
-            {
-                if (Unit* temp = Unit::GetUnit(*me, PlayerGUID))
-                {
-                    temp->CastSpell(temp, SPELL_EXILE, true);
-                    temp->CastSpell(temp, SPELL_BANISH_TELEPORT, true);
-                }
-                PlayerGUID = 0;
-                Exile_Timer = 8500;
-                CanTeleport = false;
-            } else Exile_Timer -= diff;
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_shattrath(player, creature, action); break;
         }
-        else if (Banish_Timer <= diff)
-        {
-            Unit* temp = me->getVictim();
-            if (temp && temp->GetTypeId() == TYPEID_PLAYER)
-            {
-                DoCast(temp, SPELL_BANISHED_SHATTRATH_A);
-                Banish_Timer = 9000;
-                PlayerGUID = temp->GetGUID();
-                if (PlayerGUID)
-                    CanTeleport = true;
-            }
-        } else Banish_Timer -= diff;
-
-        DoMeleeAttackIfReady();
+        return true;
     }
-};
 
-bool GossipHello_guard_shattrath_aldor(Player* player, Creature* creature)
-{
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN                          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FLIGHTMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX                      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MANALOOM                     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ALCHEMYLAB                   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GEMMERCHANT                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(10524, creature->GetGUID());
-    return true;
-}
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN                          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FLIGHTMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX                      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MANALOOM                     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ALCHEMYLAB                   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GEMMERCHANT                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->SEND_GOSSIP_MENU(10524, creature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guard_shattrath_aldorAI (creature);
+    }
+
+    struct guard_shattrath_aldorAI : public guardAI
+    {
+        guard_shattrath_aldorAI(Creature *c) : guardAI(c) {}
+
+        uint32 Exile_Timer;
+        uint32 Banish_Timer;
+        uint64 PlayerGUID;
+        bool CanTeleport;
+
+        void Reset()
+        {
+            Banish_Timer = 5000;
+            Exile_Timer = 8500;
+            PlayerGUID = 0;
+            CanTeleport = false;
+        }
+
+        void EnterCombat(Unit * /*who*/) {}
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (CanTeleport)
+            {
+                if (Exile_Timer <= diff)
+                {
+                    if (Unit* temp = Unit::GetUnit(*me, PlayerGUID))
+                    {
+                        temp->CastSpell(temp, SPELL_EXILE, true);
+                        temp->CastSpell(temp, SPELL_BANISH_TELEPORT, true);
+                    }
+                    PlayerGUID = 0;
+                    Exile_Timer = 8500;
+                    CanTeleport = false;
+                } else Exile_Timer -= diff;
+            }
+            else if (Banish_Timer <= diff)
+            {
+                Unit* temp = me->getVictim();
+                if (temp && temp->GetTypeId() == TYPEID_PLAYER)
+                {
+                    DoCast(temp, SPELL_BANISHED_SHATTRATH_A);
+                    Banish_Timer = 9000;
+                    PlayerGUID = temp->GetGUID();
+                    if (PlayerGUID)
+                        CanTeleport = true;
+                }
+            } else Banish_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
 
 void SendDefaultMenu_guard_shattrath_aldor(Player* player, Creature* creature, uint32 action)
 {
@@ -2651,101 +2737,106 @@ void SendProfTrainerMenu_guard_shattrath_aldor(Player* player, Creature* creatur
     }
 }
 
-bool GossipSelect_guard_shattrath_aldor(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_shattrath_aldor(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_shattrath_aldor(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_shattrath(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_shattrath_aldor end
  *******************************************************/
 
-CreatureAI* GetAI_guard_shattrath_aldor(Creature* creature)
-{
-    return new guard_shattrath_aldorAI (creature);
-}
-
 /*******************************************************
  * guard_shattrath_scryer
  *******************************************************/
-
-struct guard_shattrath_scryerAI : public guardAI
+class guard_shattrath_scryer : public CreatureScript
 {
-    guard_shattrath_scryerAI(Creature *c) : guardAI(c) {}
+public:
+    guard_shattrath_scryer() : CreatureScript("guard_shattrath_scryer") { }
 
-    uint32 Exile_Timer;
-    uint32 Banish_Timer;
-    uint64 PlayerGUID;
-    bool CanTeleport;
-
-    void Reset()
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
     {
-        Banish_Timer = 5000;
-        Exile_Timer = 8500;
-        PlayerGUID = 0;
-        CanTeleport = false;
-    }
-
-    void EnterCombat(Unit * /*who*/) {}
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (CanTeleport)
+        switch (sender)
         {
-            if (Exile_Timer <= diff)
-            {
-                if (Unit* temp = Unit::GetUnit(*me, PlayerGUID))
-                {
-                    temp->CastSpell(temp, SPELL_EXILE, true);
-                    temp->CastSpell(temp, SPELL_BANISH_TELEPORT, true);
-                }
-                PlayerGUID = 0;
-                Exile_Timer = 8500;
-                CanTeleport = false;
-            } else Exile_Timer -= diff;
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_shattrath(player, creature, action); break;
         }
-        else if (Banish_Timer <= diff)
-        {
-            Unit* temp = me->getVictim();
-            if (temp && temp->GetTypeId() == TYPEID_PLAYER)
-            {
-                DoCast(temp, SPELL_BANISHED_SHATTRATH_S);
-                Banish_Timer = 9000;
-                PlayerGUID = temp->GetGUID();
-                if (PlayerGUID)
-                    CanTeleport = true;
-            }
-        } else Banish_Timer -= diff;
-
-        DoMeleeAttackIfReady();
+        return true;
     }
-};
 
-bool GossipHello_guard_shattrath_scryer(Player* player, Creature* creature)
-{
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN                          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FLIGHTMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX                      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MANALOOM                     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ALCHEMYLAB                   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GEMMERCHANT                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(10430, creature->GetGUID());
-    return true;
-}
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_TAVERN                       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK                         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN                          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FLIGHTMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX                      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER                 , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MANALOOM                     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ALCHEMYLAB                   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GEMMERCHANT                  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->SEND_GOSSIP_MENU(10430, creature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guard_shattrath_scryerAI (creature);
+    }
+
+    struct guard_shattrath_scryerAI : public guardAI
+    {
+        guard_shattrath_scryerAI(Creature *c) : guardAI(c) {}
+
+        uint32 Exile_Timer;
+        uint32 Banish_Timer;
+        uint64 PlayerGUID;
+        bool CanTeleport;
+
+        void Reset()
+        {
+            Banish_Timer = 5000;
+            Exile_Timer = 8500;
+            PlayerGUID = 0;
+            CanTeleport = false;
+        }
+
+        void EnterCombat(Unit * /*who*/) {}
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (CanTeleport)
+            {
+                if (Exile_Timer <= diff)
+                {
+                    if (Unit* temp = Unit::GetUnit(*me, PlayerGUID))
+                    {
+                        temp->CastSpell(temp, SPELL_EXILE, true);
+                        temp->CastSpell(temp, SPELL_BANISH_TELEPORT, true);
+                    }
+                    PlayerGUID = 0;
+                    Exile_Timer = 8500;
+                    CanTeleport = false;
+                } else Exile_Timer -= diff;
+            }
+            else if (Banish_Timer <= diff)
+            {
+                Unit* temp = me->getVictim();
+                if (temp && temp->GetTypeId() == TYPEID_PLAYER)
+                {
+                    DoCast(temp, SPELL_BANISHED_SHATTRATH_S);
+                    Banish_Timer = 9000;
+                    PlayerGUID = temp->GetGUID();
+                    if (PlayerGUID)
+                        CanTeleport = true;
+                }
+            } else Banish_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
 
 void SendDefaultMenu_guard_shattrath_scryer(Player* player, Creature* creature, uint32 action)
 {
@@ -2846,46 +2937,54 @@ void SendProfTrainerMenu_guard_shattrath_scryer(Player* player, Creature* creatu
     }
 }
 
-bool GossipSelect_guard_shattrath_scryer(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_shattrath_scryer(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_shattrath_scryer(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_shattrath(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_shattrath_scryer end
  *******************************************************/
 
-CreatureAI* GetAI_guard_shattrath_scryer(Creature* creature)
-{
-    return new guard_shattrath_scryerAI (creature);
-}
-
 /*******************************************************
  * guard_silvermoon start
  *******************************************************/
-
-bool GossipHello_guard_silvermoon(Player* player, Creature* creature)
+class guard_silvermoon : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->SEND_GOSSIP_MENU(9316, creature->GetGUID());
-    return true;
-}
+public:
+    guard_silvermoon() : CreatureScript("guard_silvermoon") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:                SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_AUCTIONHOUSE:    SendAuctionhouseMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_INN:             SendInnMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:      SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:       SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:      SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WINDRIDER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->SEND_GOSSIP_MENU(9316, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_silvermoon(Player* player, Creature* creature, uint32 action)
 {
@@ -3111,51 +3210,54 @@ void SendProfTrainerMenu_guard_silvermoon(Player* player, Creature* creature, ui
     }
 }
 
-bool GossipSelect_guard_silvermoon(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:                SendDefaultMenu_guard_silvermoon(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_AUCTIONHOUSE:    SendAuctionhouseMenu_guard_silvermoon(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_INN:             SendInnMenu_guard_silvermoon(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:      SendClassTrainerMenu_guard_silvermoon(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:       SendProfTrainerMenu_guard_silvermoon(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:      SendBattleMasterMenu_guard_silvermoon(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_silvermoon end
  *******************************************************/
 
-CreatureAI* GetAI_guard_silvermoon(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_stormwind start
  *******************************************************/
-
-bool GossipHello_guard_stormwind(Player* player, Creature* creature)
+class guard_stormwind : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STORMWIND_BANK    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_DEEPRUNTRAM       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN               , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GRYPHON           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_OFFICERS          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-    player->SEND_GOSSIP_MENU(933, creature->GetGUID());
-    return true;
-}
+public:
+    guard_stormwind() : CreatureScript("guard_stormwind") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI_stormwind (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STORMWIND_BANK    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_DEEPRUNTRAM       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN               , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GRYPHON           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_OFFICERS          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
+        player->SEND_GOSSIP_MENU(933, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_stormwind(Player* player, Creature* creature, uint32 action)
 {
@@ -3355,43 +3457,47 @@ void SendProfTrainerMenu_guard_stormwind(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_stormwind(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_stormwind(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_stormwind(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_stormwind(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_stormwind(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_stormwind end
  *******************************************************/
 
-CreatureAI* GetAI_guard_stormwind(Creature* creature)
-{
-    return new guardAI_stormwind (creature);
-}
-
 /*******************************************************
  * guard_teldrassil start
  *******************************************************/
-
-bool GossipHello_guard_teldrassil(Player* player, Creature* creature)
+class guard_teldrassil : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FERRY        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->SEND_GOSSIP_MENU(4316, creature->GetGUID());
-    return true;
-}
+public:
+    guard_teldrassil() : CreatureScript("guard_teldrassil") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK         , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_FERRY        , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->SEND_GOSSIP_MENU(4316, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_teldrassil(Player* player, Creature* creature, uint32 action)
 {
@@ -3505,41 +3611,46 @@ void SendProfTrainerMenu_guard_teldrassil(Player* player, Creature* creature, ui
     }
 }
 
-bool GossipSelect_guard_teldrassil(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_teldrassil(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_teldrassil(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_teldrassil(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_teldrassil end
  *******************************************************/
 
-CreatureAI* GetAI_guard_teldrassil(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_tirisfal start
  *******************************************************/
-
-bool GossipHello_guard_tirisfal(Player* player, Creature* creature)
+class guard_tirisfal : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN             , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->SEND_GOSSIP_MENU(4097, creature->GetGUID());
-    return true;
-}
+public:
+    guard_tirisfal() : CreatureScript("guard_tirisfal") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK            , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER      , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN             , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER     , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->SEND_GOSSIP_MENU(4097, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_tirisfal(Player* player, Creature* creature, uint32 action)
 {
@@ -3663,47 +3774,53 @@ void SendProfTrainerMenu_guard_tirisfal(Player* player, Creature* creature, uint
     }
 }
 
-bool GossipSelect_guard_tirisfal(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_tirisfal(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_tirisfal(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_tirisfal(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_tirisfal end
  *******************************************************/
 
-CreatureAI* GetAI_guard_tirisfal(Creature* creature)
-{
-    return new guardAI (creature);
-}
-
 /*******************************************************
  * guard_undercity start
  *******************************************************/
-
-bool GossipHello_guard_undercity(Player* player, Creature* creature)
+class guard_undercity : public CreatureScript
 {
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ZEPPLINMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-    player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-    player->SEND_GOSSIP_MENU(3543, creature->GetGUID());
-    return true;
-}
+public:
+    guard_undercity() : CreatureScript("guard_undercity") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new guardAI (creature);
+    }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    {
+        switch (sender)
+        {
+            case GOSSIP_SENDER_MAIN:            SendDefaultMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu(player, creature, action); break;
+            case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu(player, creature, action); break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BANK          , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATHANDLER    , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_GUILDMASTER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_INN           , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_MAILBOX       , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_AUCTIONHOUSE  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_ZEPPLINMASTER , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_WEAPONMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_STABLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_BATTLEMASTER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_CLASSTRAINER  , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+        player->ADD_GOSSIP_ITEM(0, GOSSIP_TEXT_PROFTRAINER   , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
+        player->SEND_GOSSIP_MENU(3543, creature->GetGUID());
+        return true;
+    }
+};
 
 void SendDefaultMenu_guard_undercity(Player* player, Creature* creature, uint32 action)
 {
@@ -3878,26 +3995,9 @@ void SendProfTrainerMenu_guard_undercity(Player* player, Creature* creature, uin
     }
 }
 
-bool GossipSelect_guard_undercity(Player* player, Creature* creature, uint32 sender, uint32 action)
-{
-    switch (sender)
-    {
-        case GOSSIP_SENDER_MAIN:            SendDefaultMenu_guard_undercity(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_CLASSTRAIN:  SendClassTrainerMenu_guard_undercity(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_PROFTRAIN:   SendProfTrainerMenu_guard_undercity(player, creature, action); break;
-        case GOSSIP_SENDER_SEC_BATTLEINFO:  SendBattleMasterMenu_guard_undercity(player, creature, action); break;
-    }
-    return true;
-}
-
 /*******************************************************
  * guard_undercity end
  *******************************************************/
-
-CreatureAI* GetAI_guard_undercity(Creature* creature)
-{
-    return new guardAI (creature);
-}
 
 /*******************************************************
  * AddSC
@@ -3905,144 +4005,24 @@ CreatureAI* GetAI_guard_undercity(Creature* creature)
 
 void AddSC_guards()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "guard_azuremyst";
-    newscript->pGossipHello          = &GossipHello_guard_azuremyst;
-    newscript->pGossipSelect         = &GossipSelect_guard_azuremyst;
-    newscript->GetAI = &GetAI_guard_azuremyst;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_bluffwatcher";
-    newscript->pGossipHello          = &GossipHello_guard_bluffwatcher;
-    newscript->pGossipSelect         = &GossipSelect_guard_bluffwatcher;
-    newscript->GetAI = &GetAI_guard_bluffwatcher;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_contested";
-    newscript->GetAI = &GetAI_guard_contested;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_darnassus";
-    newscript->pGossipHello          = &GossipHello_guard_darnassus;
-    newscript->pGossipSelect         = &GossipSelect_guard_darnassus;
-    newscript->GetAI = &GetAI_guard_darnassus;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_dunmorogh";
-    newscript->pGossipHello          = &GossipHello_guard_dunmorogh;
-    newscript->pGossipSelect         = &GossipSelect_guard_dunmorogh;
-    newscript->GetAI = &GetAI_guard_dunmorogh;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_durotar";
-    newscript->pGossipHello          = &GossipHello_guard_durotar;
-    newscript->pGossipSelect         = &GossipSelect_guard_durotar;
-    newscript->GetAI = &GetAI_guard_durotar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_elwynnforest";
-    newscript->pGossipHello          = &GossipHello_guard_elwynnforest;
-    newscript->pGossipSelect         = &GossipSelect_guard_elwynnforest;
-    newscript->GetAI = &GetAI_guard_elwynnforest;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_eversong";
-    newscript->pGossipHello          = &GossipHello_guard_eversong;
-    newscript->pGossipSelect         = &GossipSelect_guard_eversong;
-    newscript->GetAI = &GetAI_guard_eversong;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_exodar";
-    newscript->pGossipHello          = &GossipHello_guard_exodar;
-    newscript->pGossipSelect         = &GossipSelect_guard_exodar;
-    newscript->GetAI = &GetAI_guard_exodar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_ironforge";
-    newscript->pGossipHello          = &GossipHello_guard_ironforge;
-    newscript->pGossipSelect         = &GossipSelect_guard_ironforge;
-    newscript->GetAI = &GetAI_guard_ironforge;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_mulgore";
-    newscript->pGossipHello          = &GossipHello_guard_mulgore;
-    newscript->pGossipSelect         = &GossipSelect_guard_mulgore;
-    newscript->GetAI = &GetAI_guard_mulgore;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_orgrimmar";
-    newscript->pGossipHello          = &GossipHello_guard_orgrimmar;
-    newscript->pGossipSelect         = &GossipSelect_guard_orgrimmar;
-    newscript->GetAI = &GetAI_guard_orgrimmar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_shattrath";
-    newscript->pGossipHello          = &GossipHello_guard_shattrath;
-    newscript->pGossipSelect         = &GossipSelect_guard_shattrath;
-    newscript->GetAI = &GetAI_guard_shattrath;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_shattrath_aldor";
-    newscript->GetAI = &GetAI_guard_shattrath_aldor;
-    newscript->pGossipHello          = &GossipHello_guard_shattrath_aldor;
-    newscript->pGossipSelect         = &GossipSelect_guard_shattrath_aldor;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_shattrath_scryer";
-    newscript->GetAI = &GetAI_guard_shattrath_scryer;
-    newscript->pGossipHello          = &GossipHello_guard_shattrath_scryer;
-    newscript->pGossipSelect         = &GossipSelect_guard_shattrath_scryer;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_silvermoon";
-    newscript->pGossipHello          = &GossipHello_guard_silvermoon;
-    newscript->pGossipSelect         = &GossipSelect_guard_silvermoon;
-    newscript->GetAI = &GetAI_guard_silvermoon;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_stormwind";
-    newscript->pGossipHello          = &GossipHello_guard_stormwind;
-    newscript->pGossipSelect         = &GossipSelect_guard_stormwind;
-    newscript->GetAI = &GetAI_guard_stormwind;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_teldrassil";
-    newscript->pGossipHello          = &GossipHello_guard_teldrassil;
-    newscript->pGossipSelect         = &GossipSelect_guard_teldrassil;
-    newscript->GetAI = &GetAI_guard_teldrassil;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_tirisfal";
-    newscript->pGossipHello          = &GossipHello_guard_tirisfal;
-    newscript->pGossipSelect         = &GossipSelect_guard_tirisfal;
-    newscript->GetAI = &GetAI_guard_tirisfal;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "guard_undercity";
-    newscript->pGossipHello          = &GossipHello_guard_undercity;
-    newscript->pGossipSelect         = &GossipSelect_guard_undercity;
-    newscript->GetAI = &GetAI_guard_undercity;
-    newscript->RegisterSelf();
+    new guard_azuremyst();
+    new guard_bluffwatcher();
+    new guard_contested();
+    new guard_darnassus();
+    new guard_dunmorogh();
+    new guard_durotar();
+    new guard_elwynnforest();
+    new guard_eversong();
+    new guard_exodar();
+    new guard_ironforge();
+    new guard_mulgore();
+    new guard_orgrimmar();
+    new guard_shattrath();
+    new guard_shattrath_aldor();
+    new guard_shattrath_scryer();
+    new guard_silvermoon();
+    new guard_stormwind();
+    new guard_teldrassil();
+    new guard_tirisfal();
+    new guard_undercity();
 }
-

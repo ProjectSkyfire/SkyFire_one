@@ -428,18 +428,18 @@ struct boss_kelthuzadAI : public ScriptedAI
         }
     }
 };
-
-CreatureAI* GetAI_boss_kelthuzadAI(Creature* creature)
+class boss_kelthuzad : public CreatureScript
 {
-    return new boss_kelthuzadAI (creature);
-}
+public:
+    boss_kelthuzad() : CreatureScript("boss_kelthuzad") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_kelthuzadAI (creature);
+    }
+};
 
 void AddSC_boss_kelthuzad()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_kelthuzad";
-    newscript->GetAI = &GetAI_boss_kelthuzadAI;
-    newscript->RegisterSelf();
+    new boss_kelthuzad();
 }
-

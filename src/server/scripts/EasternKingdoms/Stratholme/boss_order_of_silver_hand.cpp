@@ -142,19 +142,18 @@ struct boss_silver_hand_bossesAI : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
-};
-CreatureAI* GetAI_boss_silver_hand_bossesAI(Creature* creature)
+};class boss_silver_hand_bosses : public CreatureScript
 {
-    return new boss_silver_hand_bossesAI (creature);
-}
+public:
+    boss_silver_hand_bosses() : CreatureScript("boss_silver_hand_bosses") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_silver_hand_bossesAI (creature);
+    }
+};
 
 void AddSC_boss_order_of_silver_hand()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_silver_hand_bosses";
-    newscript->GetAI = &GetAI_boss_silver_hand_bossesAI;
-    newscript->RegisterSelf();
+    new boss_silver_hand_bosses();
 }
-

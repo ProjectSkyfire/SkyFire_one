@@ -50,208 +50,208 @@ EndScriptData */
 #define LOC_X3    3497.067f
 #define LOC_Y3    -3843.384f
 #define LOC_Z3    302.384f
-
-struct mob_webwrapAI : public ScriptedAI
+class mob_webwrap : public CreatureScript
 {
-    mob_webwrapAI(Creature *c) : ScriptedAI(c) {}
+public:
+    mob_webwrap() : CreatureScript("mob_webwrap") { }
 
-    uint64 victimGUID;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        victimGUID = 0;
+        return new mob_webwrapAI (creature);
     }
 
-    void SetVictim(Unit* victim)
+    struct mob_webwrapAI : public ScriptedAI
     {
-        if (victim)
+        mob_webwrapAI(Creature *c) : ScriptedAI(c) {}
+
+        uint64 victimGUID;
+
+        void Reset()
         {
-            victimGUID = victim->GetGUID();
-            victim->CastSpell(victim, SPELL_WEBTRAP, true);
+            victimGUID = 0;
         }
-    }
 
-    void DamageTaken(Unit *done_by, uint32 &damage)
-    {
-        if (damage > me->GetHealth())
+        void SetVictim(Unit* victim)
         {
-            if (victimGUID)
+            if (victim)
             {
-                Unit* victim = NULL;
-                victim = Unit::GetUnit((*me), victimGUID);
-                if (victim)
-                    victim->RemoveAurasDueToSpell(SPELL_WEBTRAP);
+                victimGUID = victim->GetGUID();
+                victim->CastSpell(victim, SPELL_WEBTRAP, true);
             }
         }
-    }
 
-    void EnterCombat(Unit *who)
-    {
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-    }
-};
-
-struct boss_maexxnaAI : public ScriptedAI
-{
-    boss_maexxnaAI(Creature *c) : ScriptedAI(c) {}
-
-    uint32 WebTrap_Timer;
-    uint32 WebSpray_Timer;
-    uint32 PoisonShock_Timer;
-    uint32 NecroticPoison_Timer;
-    uint32 SummonSpiderling_Timer;
-    bool Enraged;
-
-    void Reset()
-    {
-        WebTrap_Timer = 20000;                              //20 sec init, 40 sec normal
-        WebSpray_Timer = 40000;                             //40 seconds
-        PoisonShock_Timer = 20000;                          //20 seconds
-        NecroticPoison_Timer = 30000;                       //30 seconds
-        SummonSpiderling_Timer = 30000;                     //30 sec init, 40 sec normal
-        Enraged = false;
-    }
-
-    void EnterCombat(Unit *who)
-    {
-    }
-
-    void DoCastWebWrap()
-    {
-        std::list<HostileReference *> t_list = me->getThreatManager().getThreatList();
-        std::vector<Unit *> targets;
-
-        //This spell doesn't work if we only have 1 player on threat list
-        if (t_list.size() < 2)
-            return;
-
-        //begin + 1 , so we don't target the one with the highest threat
-        std::list<HostileReference *>::iterator itr = t_list.begin();
-        std::advance(itr, 1);
-        for (; itr != t_list.end(); ++itr)                   //store the threat list in a different container
+        void DamageTaken(Unit *done_by, uint32 &damage)
         {
-            Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
-                                                            //only on alive players
-            if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
-                targets.push_back(pTarget);
-        }
-
-        while (targets.size() > 3)
-                                                            //cut down to size if we have more than 3 targets
-            targets.erase(targets.begin()+rand()%targets.size());
-
-        int i = 0;
-        for (std::vector<Unit *>::iterator itr = targets.begin(); itr != targets.end(); ++itr, ++i)
-        {
-            // Teleport the 3 targets to a location on the wall and summon a Web Wrap on them
-            Unit *pTarget = *itr;
-            Creature* Wrap = NULL;
-            if (pTarget)
+            if (damage > me->GetHealth())
             {
-                switch (i)
+                if (victimGUID)
                 {
-                    case 0:
-                        DoTeleportPlayer(pTarget, LOC_X1, LOC_Y1, LOC_Z1, pTarget->GetOrientation());
-                        Wrap = me->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                        break;
-                    case 1:
-                        DoTeleportPlayer(pTarget, LOC_X2, LOC_Y2, LOC_Z2, pTarget->GetOrientation());
-                        Wrap = me->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                        break;
-                    case 2:
-                        DoTeleportPlayer(pTarget, LOC_X3, LOC_Y3, LOC_Z3, pTarget->GetOrientation());
-                        Wrap = me->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
-                        break;
-                }
-                if (Wrap)
-                {
-                    Wrap->setFaction(me->getFaction());
-                    ((mob_webwrapAI*)Wrap->AI())->SetVictim(pTarget);
+                    Unit* victim = NULL;
+                    victim = Unit::GetUnit((*me), victimGUID);
+                    if (victim)
+                        victim->RemoveAurasDueToSpell(SPELL_WEBTRAP);
                 }
             }
         }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        //WebTrap_Timer
-        if (WebTrap_Timer <= diff)
+        void EnterCombat(Unit *who)
         {
-            DoCastWebWrap();
-            WebTrap_Timer = 40000;
-        } else WebTrap_Timer -= diff;
-
-        //WebSpray_Timer
-        if (WebSpray_Timer <= diff)
-        {
-            DoCast(me->getVictim(), SPELL_WEBSPRAY);
-            WebSpray_Timer = 40000;
-        } else WebSpray_Timer -= diff;
-
-        //PoisonShock_Timer
-        if (PoisonShock_Timer <= diff)
-        {
-            DoCast(me->getVictim(), SPELL_POISONSHOCK);
-            PoisonShock_Timer = 20000;
-        } else PoisonShock_Timer -= diff;
-
-        //NecroticPoison_Timer
-        if (NecroticPoison_Timer <= diff)
-        {
-            DoCast(me->getVictim(), SPELL_NECROTICPOISON);
-            NecroticPoison_Timer = 30000;
-        } else NecroticPoison_Timer -= diff;
-
-        //SummonSpiderling_Timer
-        if (SummonSpiderling_Timer <= diff)
-        {
-            DoCast(me, SPELL_SUMMON_SPIDERLING);
-            SummonSpiderling_Timer = 40000;
-        } else SummonSpiderling_Timer -= diff;
-
-        //Enrage if not already enraged and below 30%
-        if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 30)
-        {
-            DoCast(me, SPELL_FRENZY);
-            Enraged = true;
         }
 
-        DoMeleeAttackIfReady();
-    }
+        void MoveInLineOfSight(Unit *who)
+        {
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+        }
+    };
 };
-
-CreatureAI* GetAI_mob_webwrap(Creature* creature)
+class boss_maexxna : public CreatureScript
 {
-    return new mob_webwrapAI (creature);
-}
+public:
+    boss_maexxna() : CreatureScript("boss_maexxna") { }
 
-CreatureAI* GetAI_boss_maexxna(Creature* creature)
-{
-    return new boss_maexxnaAI (creature);
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_maexxnaAI (creature);
+    }
+
+    struct boss_maexxnaAI : public ScriptedAI
+    {
+        boss_maexxnaAI(Creature *c) : ScriptedAI(c) {}
+
+        uint32 WebTrap_Timer;
+        uint32 WebSpray_Timer;
+        uint32 PoisonShock_Timer;
+        uint32 NecroticPoison_Timer;
+        uint32 SummonSpiderling_Timer;
+        bool Enraged;
+
+        void Reset()
+        {
+            WebTrap_Timer = 20000;                              //20 sec init, 40 sec normal
+            WebSpray_Timer = 40000;                             //40 seconds
+            PoisonShock_Timer = 20000;                          //20 seconds
+            NecroticPoison_Timer = 30000;                       //30 seconds
+            SummonSpiderling_Timer = 30000;                     //30 sec init, 40 sec normal
+            Enraged = false;
+        }
+
+        void EnterCombat(Unit *who)
+        {
+        }
+
+        void DoCastWebWrap()
+        {
+            std::list<HostileReference *> t_list = me->getThreatManager().getThreatList();
+            std::vector<Unit *> targets;
+
+            //This spell doesn't work if we only have 1 player on threat list
+            if (t_list.size() < 2)
+                return;
+
+            //begin + 1 , so we don't target the one with the highest threat
+            std::list<HostileReference *>::iterator itr = t_list.begin();
+            std::advance(itr, 1);
+            for (; itr != t_list.end(); ++itr)                   //store the threat list in a different container
+            {
+                Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
+                                                                //only on alive players
+                if (pTarget && pTarget->isAlive() && pTarget->GetTypeId() == TYPEID_PLAYER)
+                    targets.push_back(pTarget);
+            }
+
+            while (targets.size() > 3)
+                                                                //cut down to size if we have more than 3 targets
+                targets.erase(targets.begin()+rand()%targets.size());
+
+            int i = 0;
+            for (std::vector<Unit *>::iterator itr = targets.begin(); itr != targets.end(); ++itr, ++i)
+            {
+                // Teleport the 3 targets to a location on the wall and summon a Web Wrap on them
+                Unit *pTarget = *itr;
+                Creature* Wrap = NULL;
+                if (pTarget)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            DoTeleportPlayer(pTarget, LOC_X1, LOC_Y1, LOC_Z1, pTarget->GetOrientation());
+                            Wrap = me->SummonCreature(16486, LOC_X1, LOC_Y1, LOC_Z1, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+                            break;
+                        case 1:
+                            DoTeleportPlayer(pTarget, LOC_X2, LOC_Y2, LOC_Z2, pTarget->GetOrientation());
+                            Wrap = me->SummonCreature(16486, LOC_X2, LOC_Y2, LOC_Z2, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+                            break;
+                        case 2:
+                            DoTeleportPlayer(pTarget, LOC_X3, LOC_Y3, LOC_Z3, pTarget->GetOrientation());
+                            Wrap = me->SummonCreature(16486, LOC_X3, LOC_Y3, LOC_Z3, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000);
+                            break;
+                    }
+                    if (Wrap)
+                    {
+                        Wrap->setFaction(me->getFaction());
+                        ((mob_webwrapAI*)Wrap->AI())->SetVictim(pTarget);
+                    }
+                }
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            //WebTrap_Timer
+            if (WebTrap_Timer <= diff)
+            {
+                DoCastWebWrap();
+                WebTrap_Timer = 40000;
+            } else WebTrap_Timer -= diff;
+
+            //WebSpray_Timer
+            if (WebSpray_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_WEBSPRAY);
+                WebSpray_Timer = 40000;
+            } else WebSpray_Timer -= diff;
+
+            //PoisonShock_Timer
+            if (PoisonShock_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_POISONSHOCK);
+                PoisonShock_Timer = 20000;
+            } else PoisonShock_Timer -= diff;
+
+            //NecroticPoison_Timer
+            if (NecroticPoison_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_NECROTICPOISON);
+                NecroticPoison_Timer = 30000;
+            } else NecroticPoison_Timer -= diff;
+
+            //SummonSpiderling_Timer
+            if (SummonSpiderling_Timer <= diff)
+            {
+                DoCast(me, SPELL_SUMMON_SPIDERLING);
+                SummonSpiderling_Timer = 40000;
+            } else SummonSpiderling_Timer -= diff;
+
+            //Enrage if not already enraged and below 30%
+            if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 30)
+            {
+                DoCast(me, SPELL_FRENZY);
+                Enraged = true;
+            }
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
 
 void AddSC_boss_maexxna()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_maexxna";
-    newscript->GetAI = &GetAI_boss_maexxna;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_webwrap";
-    newscript->GetAI = &GetAI_mob_webwrap;
-    newscript->RegisterSelf();
+    new boss_maexxna();
+    new mob_webwrap();
 }
-

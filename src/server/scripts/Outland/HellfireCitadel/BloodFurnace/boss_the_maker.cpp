@@ -116,18 +116,18 @@ struct boss_the_makerAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
-CreatureAI* GetAI_boss_the_makerAI(Creature* creature)
+class boss_the_maker : public CreatureScript
 {
-    return new boss_the_makerAI (creature);
-}
+public:
+    boss_the_maker() : CreatureScript("boss_the_maker") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_the_makerAI (creature);
+    }
+};
 
 void AddSC_boss_the_maker()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_the_maker";
-    newscript->GetAI = &GetAI_boss_the_makerAI;
-    newscript->RegisterSelf();
+    new boss_the_maker();
 }
-

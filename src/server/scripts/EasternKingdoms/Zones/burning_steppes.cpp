@@ -47,111 +47,109 @@ EndContentData */
 #define GOSSIP_SELECT9  "300? So the Dark Irons killed him and dragged him into the Depths?"
 #define GOSSIP_SELECT10 "Ahh... Ironfoe"
 #define GOSSIP_SELECT11 "Thanks, Ragged John. Your story was very uplifting and informative"
-
-struct npc_ragged_johnAI : public ScriptedAI
+class npc_ragged_john : public CreatureScript
 {
-    npc_ragged_johnAI(Creature *c) : ScriptedAI(c) {}
+public:
+    npc_ragged_john() : CreatureScript("npc_ragged_john") { }
 
-    void Reset() {}
-
-    void MoveInLineOfSight(Unit *who)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        if (who->HasAura(16468, 0))
+        switch (uiAction)
         {
-            if (who->GetTypeId() == TYPEID_PLAYER && me->IsWithinDistInMap(who, 15) && who->isInAccessiblePlaceFor(me))
+            case GOSSIP_ACTION_INFO_DEF:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                player->SEND_GOSSIP_MENU(2714, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+1:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                player->SEND_GOSSIP_MENU(2715, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                player->SEND_GOSSIP_MENU(2716, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                player->SEND_GOSSIP_MENU(2717, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                player->SEND_GOSSIP_MENU(2718, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+                player->SEND_GOSSIP_MENU(2719, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+6:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+                player->SEND_GOSSIP_MENU(2720, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+7:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT8, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+                player->SEND_GOSSIP_MENU(2721, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+8:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT9, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+                player->SEND_GOSSIP_MENU(2722, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+9:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
+                player->SEND_GOSSIP_MENU(2723, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+10:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+                player->SEND_GOSSIP_MENU(2725, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+11:
+                player->CLOSE_GOSSIP_MENU();
+                player->AreaExploredOrEventHappens(4224);
+                break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (player->GetQuestStatus(4224) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+        player->SEND_GOSSIP_MENU(2713, creature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new npc_ragged_johnAI (creature);
+    }
+
+    struct npc_ragged_johnAI : public ScriptedAI
+    {
+        npc_ragged_johnAI(Creature *c) : ScriptedAI(c) {}
+
+        void Reset() {}
+
+        void MoveInLineOfSight(Unit *who)
+        {
+            if (who->HasAura(16468, 0))
             {
-                DoCast(who, 16472);
-                CAST_PLR(who)->AreaExploredOrEventHappens(4866);
+                if (who->GetTypeId() == TYPEID_PLAYER && me->IsWithinDistInMap(who, 15) && who->isInAccessiblePlaceFor(me))
+                {
+                    DoCast(who, 16472);
+                    CAST_PLR(who)->AreaExploredOrEventHappens(4866);
+                }
             }
+
+            ScriptedAI::MoveInLineOfSight(who);
         }
 
-        ScriptedAI::MoveInLineOfSight(who);
-    }
-
-    void EnterCombat(Unit * /*who*/) {}
+        void EnterCombat(Unit * /*who*/) {}
+    };
 };
-
-CreatureAI* GetAI_npc_ragged_john(Creature* creature)
-{
-    return new npc_ragged_johnAI (creature);
-}
-
-bool GossipHello_npc_ragged_john(Player* player, Creature* creature)
-{
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
-
-    if (player->GetQuestStatus(4224) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    player->SEND_GOSSIP_MENU(2713, creature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_ragged_john(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
-    {
-        case GOSSIP_ACTION_INFO_DEF:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(2714, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(2715, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(2716, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(2717, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            player->SEND_GOSSIP_MENU(2718, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            player->SEND_GOSSIP_MENU(2719, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            player->SEND_GOSSIP_MENU(2720, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+7:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT8, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
-            player->SEND_GOSSIP_MENU(2721, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+8:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT9, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
-            player->SEND_GOSSIP_MENU(2722, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+9:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT10, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10);
-            player->SEND_GOSSIP_MENU(2723, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+10:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(2725, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+11:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(4224);
-            break;
-    }
-    return true;
-}
 
 void AddSC_burning_steppes()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_ragged_john";
-    newscript->GetAI = &GetAI_npc_ragged_john;
-    newscript->pGossipHello =  &GossipHello_npc_ragged_john;
-    newscript->pGossipSelect = &GossipSelect_npc_ragged_john;
-    newscript->RegisterSelf();
+    new npc_ragged_john();
 }

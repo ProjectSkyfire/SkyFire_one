@@ -46,57 +46,62 @@ EndContentData */
 #define GOSSIP_HDA4 "What does the Gahrron's Withering Cauldron need?"
 
 #define GOSSIP_SDA1 "Thanks, i need a Vitreous Focuser"
-
-bool GossipHello_npcs_dithers_and_arbington(Player* player, Creature* creature)
+class npcs_dithers_and_arbington : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
-    if (creature->isVendor())
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+public:
+    npcs_dithers_and_arbington() : CreatureScript("npcs_dithers_and_arbington") { }
 
-    if (player->GetQuestRewardStatus(5237) || player->GetQuestRewardStatus(5238))
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-        player->SEND_GOSSIP_MENU(3985, creature->GetGUID());
-    }else
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-
-    return true;
-}
-
-bool GossipSelect_npcs_dithers_and_arbington(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
-    {
-        case GOSSIP_ACTION_TRADE:
-            player->SEND_VENDORLIST(creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(3980, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(3981, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(3982, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(3983, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            player->CLOSE_GOSSIP_MENU();
-            creature->CastSpell(player, 17529, false);
-            break;
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_TRADE:
+                player->SEND_VENDORLIST(creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+1:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->SEND_GOSSIP_MENU(3980, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->SEND_GOSSIP_MENU(3981, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->SEND_GOSSIP_MENU(3982, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->SEND_GOSSIP_MENU(3983, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                player->CLOSE_GOSSIP_MENU();
+                creature->CastSpell(player, 17529, false);
+                break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+        if (creature->isVendor())
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+        if (player->GetQuestRewardStatus(5237) || player->GetQuestRewardStatus(5238))
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HDA4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->SEND_GOSSIP_MENU(3985, creature->GetGUID());
+        }else
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+        return true;
+    }
+};
 
 /*######
 ## npc_myranda_the_hag
@@ -110,106 +115,117 @@ enum eMyranda
 };
 
 #define GOSSIP_ITEM_ILLUSION    "I am ready for the illusion, Myranda."
-
-bool GossipHello_npc_myranda_the_hag(Player* player, Creature* creature)
+class npc_myranda_the_hag : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_myranda_the_hag() : CreatureScript("npc_myranda_the_hag") { }
 
-    if (player->GetQuestStatus(QUEST_SUBTERFUGE) == QUEST_STATUS_COMPLETE &&
-        !player->GetQuestRewardStatus(QUEST_IN_DREAMS) && !player->HasAura(SPELL_SCARLET_ILLUSION, 0))
+    bool GossipSelect(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ILLUSION, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(4773, creature->GetGUID());
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            player->CastSpell(player, SPELL_SCARLET_ILLUSION, false);
+        }
         return true;
     }
-    else
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
 
-    return true;
-}
-
-bool GossipSelect_npc_myranda_the_hag(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+    bool GossipHello(Player* player, Creature* creature)
     {
-        player->CLOSE_GOSSIP_MENU();
-        player->CastSpell(player, SPELL_SCARLET_ILLUSION, false);
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (player->GetQuestStatus(QUEST_SUBTERFUGE) == QUEST_STATUS_COMPLETE &&
+            !player->GetQuestRewardStatus(QUEST_IN_DREAMS) && !player->HasAura(SPELL_SCARLET_ILLUSION, 0))
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ILLUSION, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            player->SEND_GOSSIP_MENU(4773, creature->GetGUID());
+            return true;
+        }
+        else
+            player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+        return true;
     }
-    return true;
-}
+};
 
 /*######
 ## npc_the_scourge_cauldron
 ######*/
-
-struct npc_the_scourge_cauldronAI : public ScriptedAI
+class npc_the_scourge_cauldron : public CreatureScript
 {
-    npc_the_scourge_cauldronAI(Creature *c) : ScriptedAI(c) {}
+public:
+    npc_the_scourge_cauldron() : CreatureScript("npc_the_scourge_cauldron") { }
 
-    void Reset() {}
-
-    void EnterCombat(Unit* /*who*/) {}
-
-    void DoDie()
+    CreatureAI* GetAI(Creature* creature)
     {
-        //summoner dies here
-        me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-        //override any database `spawntimesecs` to prevent duplicated summons
-        uint32 rTime = me->GetRespawnDelay();
-        if (rTime<600)
-            me->SetRespawnDelay(600);
+        return new npc_the_scourge_cauldronAI (creature);
     }
 
-    void MoveInLineOfSight(Unit *who)
+    struct npc_the_scourge_cauldronAI : public ScriptedAI
     {
-        if (!who || who->GetTypeId() != TYPEID_PLAYER)
-            return;
+        npc_the_scourge_cauldronAI(Creature *c) : ScriptedAI(c) {}
 
-        if (who->GetTypeId() == TYPEID_PLAYER)
+        void Reset() {}
+
+        void EnterCombat(Unit* /*who*/) {}
+
+        void DoDie()
         {
-            switch (me->GetAreaId())
+            //summoner dies here
+            me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+            //override any database `spawntimesecs` to prevent duplicated summons
+            uint32 rTime = me->GetRespawnDelay();
+            if (rTime<600)
+                me->SetRespawnDelay(600);
+        }
+
+        void MoveInLineOfSight(Unit *who)
+        {
+            if (!who || who->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            if (who->GetTypeId() == TYPEID_PLAYER)
             {
-                case 199:                                   //felstone
-                    if (CAST_PLR(who)->GetQuestStatus(5216) == QUEST_STATUS_INCOMPLETE ||
-                        CAST_PLR(who)->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE)
-                    {
-                        me->SummonCreature(11075, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        DoDie();
-                    }
-                    break;
-                case 200:                                   //dalson
-                    if (CAST_PLR(who)->GetQuestStatus(5219) == QUEST_STATUS_INCOMPLETE ||
-                        CAST_PLR(who)->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE)
-                    {
-                        me->SummonCreature(11077, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        DoDie();
-                    }
-                    break;
-                case 201:                                   //gahrron
-                    if (CAST_PLR(who)->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE ||
-                        CAST_PLR(who)->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE)
-                    {
-                        me->SummonCreature(11078, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        DoDie();
-                    }
-                    break;
-                case 202:                                   //writhing
-                    if (CAST_PLR(who)->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE ||
-                        CAST_PLR(who)->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE)
-                    {
-                        me->SummonCreature(11076, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                        DoDie();
-                    }
-                    break;
+                switch (me->GetAreaId())
+                {
+                    case 199:                                   //felstone
+                        if (CAST_PLR(who)->GetQuestStatus(5216) == QUEST_STATUS_INCOMPLETE ||
+                            CAST_PLR(who)->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE)
+                        {
+                            me->SummonCreature(11075, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                            DoDie();
+                        }
+                        break;
+                    case 200:                                   //dalson
+                        if (CAST_PLR(who)->GetQuestStatus(5219) == QUEST_STATUS_INCOMPLETE ||
+                            CAST_PLR(who)->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE)
+                        {
+                            me->SummonCreature(11077, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                            DoDie();
+                        }
+                        break;
+                    case 201:                                   //gahrron
+                        if (CAST_PLR(who)->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE ||
+                            CAST_PLR(who)->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE)
+                        {
+                            me->SummonCreature(11078, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                            DoDie();
+                        }
+                        break;
+                    case 202:                                   //writhing
+                        if (CAST_PLR(who)->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE ||
+                            CAST_PLR(who)->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE)
+                        {
+                            me->SummonCreature(11076, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                            DoDie();
+                        }
+                        break;
+                }
             }
         }
-    }
+    };
 };
-CreatureAI* GetAI_npc_the_scourge_cauldron(Creature* creature)
-{
-    return new npc_the_scourge_cauldronAI (creature);
-}
 
 /*######
 ##    npcs_andorhal_tower
@@ -219,25 +235,30 @@ enum eAndorhalTower
 {
     GO_BEACON_TORCH                             = 176093
 };
-
-struct npc_andorhal_towerAI : public Scripted_NoMovementAI
+class npc_andorhal_tower : public CreatureScript
 {
-    npc_andorhal_towerAI(Creature *c) : Scripted_NoMovementAI(c) {}
+public:
+    npc_andorhal_tower() : CreatureScript("npc_andorhal_tower") { }
 
-    void MoveInLineOfSight(Unit* pWho)
+    CreatureAI* GetAI(Creature* creature)
     {
-        if (!pWho || pWho->GetTypeId() != TYPEID_PLAYER)
-            return;
-
-        if (me->FindNearestGameObject(GO_BEACON_TORCH, 10.0f))
-            CAST_PLR(pWho)->KilledMonsterCredit(me->GetEntry(), me->GetGUID());
+        return new npc_andorhal_towerAI (creature);
     }
-};
 
-CreatureAI* GetAI_npc_andorhal_tower(Creature* creature)
-{
-    return new npc_andorhal_towerAI (creature);
-}
+    struct npc_andorhal_towerAI : public Scripted_NoMovementAI
+    {
+        npc_andorhal_towerAI(Creature *c) : Scripted_NoMovementAI(c) {}
+
+        void MoveInLineOfSight(Unit* pWho)
+        {
+            if (!pWho || pWho->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            if (me->FindNearestGameObject(GO_BEACON_TORCH, 10.0f))
+                CAST_PLR(pWho)->KilledMonsterCredit(me->GetEntry(), me->GetGUID());
+        }
+    };
+};
 
 /*######
 ##  npc_anchorite_truuen
@@ -259,159 +280,140 @@ enum eTruuen
 
     QUEST_TOMB_LIGHTBRINGER     = 9446
 };
-
-struct npc_anchorite_truuenAI : public npc_escortAI
+class npc_anchorite_truuen : public CreatureScript
 {
-    npc_anchorite_truuenAI(Creature* creature) : npc_escortAI(creature) { }
+public:
+    npc_anchorite_truuen() : CreatureScript("npc_anchorite_truuen") { }
 
-    uint32 EventTimer;
-    uint64 UterGUID;
-    uint32 uiPhase;
-
-    void Reset()
+    bool QuestAccept(Player* player, Creature* creature, const Quest* pQuest)
     {
-        EventTimer = 5000;
-        UterGUID = 0;
-        uiPhase = 0;
-    }
-
-    void WaypointReached(uint32 uiPointId)
-    {
-        Player* player = GetPlayerForEscort();
-
-        if (!player)
-            return;
-
-        switch (uiPointId)
+        if (pQuest->GetQuestId() == QUEST_TOMB_LIGHTBRINGER)
         {
-        case 8:
-            DoScriptText(SAY_WP_0, me);
-            for (int i = 0; i < 2; i++)
-                me->SummonCreature(NPC_GHOUL, 1035.43,-1572.97, 61.5412, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 90000);
-            break;
-        case 9:
-            DoScriptText(SAY_WP_1, me);
-            break;
-        case 14:
-            for (int i = 0; i < 4; i++)
-                me->SummonCreature(NPC_GHOUL, 1159.77,-1762.64, 60.5699, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-            break;
-        case 15:
-            DoScriptText(SAY_WP_2, me);
-            SetRun(false);
-            break;
-        case 22:
-            if (Creature* pTheldanis = me->FindNearestCreature(NPC_THEL_DANIS, 50))
-                DoScriptText(SAY_WP_3, pTheldanis);
-            break;
-        case 23:
-            if (Creature* pUter = me->SummonCreature(NPC_GHOST_UTHER, 971.86,-1825.42 , 81.99 , 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 10000))
+            if (npc_anchorite_truuenAI* pEscortAI = CAST_AI(npc_anchorite_truuenAI, creature->AI()))
             {
-                pUter->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
-                DoScriptText(SAY_WP_4, pUter, me);
-                UterGUID = pUter->GetGUID();
-                uiPhase = 1;
-                me->SetStandState(UNIT_STAND_STATE_KNEEL);
-                SetEscortPaused(true);
+                pEscortAI->Start(true, true, player->GetGUID(), pQuest);
+                pEscortAI->SetDespawnAtEnd(false);
+                return true;
             }
-            break;
         }
+        return false;
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    CreatureAI* GetAI(Creature* creature)
     {
-        npc_escortAI::UpdateAI(uiDiff);
+        return new npc_anchorite_truuenAI(creature);
+    }
 
-        if (!UpdateVictim())
+    struct npc_anchorite_truuenAI : public npc_escortAI
+    {
+        npc_anchorite_truuenAI(Creature* creature) : npc_escortAI(creature) { }
+
+        uint32 EventTimer;
+        uint64 UterGUID;
+        uint32 uiPhase;
+
+        void Reset()
         {
-            if (HasEscortState(STATE_ESCORT_PAUSED) && uiPhase)
-            {
-                if (EventTimer <= uiDiff)
-                {
-                    EventTimer = 5000;
+            EventTimer = 5000;
+            UterGUID = 0;
+            uiPhase = 0;
+        }
 
-                    if (Creature* pUter = Unit::GetCreature(*me, UterGUID))
+        void WaypointReached(uint32 uiPointId)
+        {
+            Player* player = GetPlayerForEscort();
+
+            if (!player)
+                return;
+
+            switch (uiPointId)
+            {
+            case 8:
+                DoScriptText(SAY_WP_0, me);
+                for (int i = 0; i < 2; i++)
+                    me->SummonCreature(NPC_GHOUL, 1035.43,-1572.97, 61.5412, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 90000);
+                break;
+            case 9:
+                DoScriptText(SAY_WP_1, me);
+                break;
+            case 14:
+                for (int i = 0; i < 4; i++)
+                    me->SummonCreature(NPC_GHOUL, 1159.77,-1762.64, 60.5699, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                break;
+            case 15:
+                DoScriptText(SAY_WP_2, me);
+                SetRun(false);
+                break;
+            case 22:
+                if (Creature* pTheldanis = me->FindNearestCreature(NPC_THEL_DANIS, 50))
+                    DoScriptText(SAY_WP_3, pTheldanis);
+                break;
+            case 23:
+                if (Creature* pUter = me->SummonCreature(NPC_GHOST_UTHER, 971.86,-1825.42 , 81.99 , 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 10000))
+                {
+                    pUter->AddUnitMovementFlag(MOVEFLAG_LEVITATING);
+                    DoScriptText(SAY_WP_4, pUter, me);
+                    UterGUID = pUter->GetGUID();
+                    uiPhase = 1;
+                    me->SetStandState(UNIT_STAND_STATE_KNEEL);
+                    SetEscortPaused(true);
+                }
+                break;
+            }
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            npc_escortAI::UpdateAI(uiDiff);
+
+            if (!UpdateVictim())
+            {
+                if (HasEscortState(STATE_ESCORT_PAUSED) && uiPhase)
+                {
+                    if (EventTimer <= uiDiff)
                     {
-                        switch (uiPhase)
+                        EventTimer = 5000;
+
+                        if (Creature* pUter = Unit::GetCreature(*me, UterGUID))
                         {
-                        case 1:
-                            DoScriptText(SAY_WP_5, pUter, me);
-                            me->SetStandState(UNIT_STAND_STATE_STAND);
-                            ++uiPhase;
-                            break;
-                        case 2:
-                            DoScriptText(SAY_WP_6, pUter, me);
-                            me->ForcedDespawn(30000);
-                            pUter->ForcedDespawn(30000);
-                            uiPhase = 0;
-                            break;
+                            switch (uiPhase)
+                            {
+                            case 1:
+                                DoScriptText(SAY_WP_5, pUter, me);
+                                me->SetStandState(UNIT_STAND_STATE_STAND);
+                                ++uiPhase;
+                                break;
+                            case 2:
+                                DoScriptText(SAY_WP_6, pUter, me);
+                                me->ForcedDespawn(30000);
+                                pUter->ForcedDespawn(30000);
+                                uiPhase = 0;
+                                break;
+                            }
                         }
                     }
+                    else
+                        EventTimer -= uiDiff;
                 }
-                else
-                    EventTimer -= uiDiff;
+                return;
             }
-            return;
+
+            DoMeleeAttackIfReady();
         }
 
-        DoMeleeAttackIfReady();
-    }
-
-    void JustSummoned(Creature* pSummoned)
-    {
-        if (pSummoned->GetEntry() == NPC_GHOUL)
-            pSummoned->AI()->AttackStart(me);
-    }
-};
-
-CreatureAI* GetAI_npc_anchorite_truuen(Creature* creature)
-{
-    return new npc_anchorite_truuenAI(creature);
-}
-
-bool QuestAccept_npc_anchorite_truuen(Player* player, Creature* creature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_TOMB_LIGHTBRINGER)
-    {
-        if (npc_anchorite_truuenAI* pEscortAI = CAST_AI(npc_anchorite_truuenAI, creature->AI()))
+        void JustSummoned(Creature* pSummoned)
         {
-            pEscortAI->Start(true, true, player->GetGUID(), pQuest);
-            pEscortAI->SetDespawnAtEnd(false);
-            return true;
+            if (pSummoned->GetEntry() == NPC_GHOUL)
+                pSummoned->AI()->AttackStart(me);
         }
-    }
-    return false;
-}
+    };
+};
 
 void AddSC_western_plaguelands()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npcs_dithers_and_arbington";
-    newscript->pGossipHello = &GossipHello_npcs_dithers_and_arbington;
-    newscript->pGossipSelect = &GossipSelect_npcs_dithers_and_arbington;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_myranda_the_hag";
-    newscript->pGossipHello = &GossipHello_npc_myranda_the_hag;
-    newscript->pGossipSelect = &GossipSelect_npc_myranda_the_hag;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_the_scourge_cauldron";
-    newscript->GetAI = &GetAI_npc_the_scourge_cauldron;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_andorhal_tower";
-    newscript->GetAI = &GetAI_npc_andorhal_tower;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_anchorite_truuen";
-    newscript->GetAI = &GetAI_npc_anchorite_truuen;
-    newscript->pQuestAccept =  &QuestAccept_npc_anchorite_truuen;
-    newscript->RegisterSelf();
+    new npcs_dithers_and_arbington();
+    new npc_myranda_the_hag();
+    new npc_the_scourge_cauldron();
+    new npc_andorhal_tower();
+    new npc_anchorite_truuen();
 }

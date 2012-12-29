@@ -32,30 +32,31 @@ EndScriptData */
 /*#####
 # item_Defias_Gunpowder
 #####*/
-
-bool ItemUse_item_defias_gunpowder(Player* player, Item* pItem, SpellCastTargets const& targets)
+class item_defias_gunpowder : public ItemScript
 {
-    ScriptedInstance *instance = player->GetInstanceScript();
+public:
+    item_defias_gunpowder() : ItemScript("item_defias_gunpowder") { }
 
-    if (!instance)
+    bool ItemUse(Player* player, Item* pItem, SpellCastTargets const& targets)
     {
-        player->GetSession()->SendNotification("Instance script not initialized");
+        ScriptedInstance *instance = player->GetInstanceScript();
+
+        if (!instance)
+        {
+            player->GetSession()->SendNotification("Instance script not initialized");
+            return true;
+        }
+        if (instance->GetData(EVENT_CANNON) != CANNON_NOT_USED)
+            return false;
+        if (targets.getGOTarget() && targets.getGOTarget()->GetTypeId() == TYPEID_GAMEOBJECT && targets.getGOTarget()->GetEntry() == GO_DEFIAS_CANNON)
+            instance->SetData(EVENT_CANNON, CANNON_GUNPOWDER_USED);
+
+        player->DestroyItemCount(pItem->GetEntry(), 1, true);
         return true;
     }
-    if (instance->GetData(EVENT_CANNON) != CANNON_NOT_USED)
-        return false;
-    if (targets.getGOTarget() && targets.getGOTarget()->GetTypeId() == TYPEID_GAMEOBJECT && targets.getGOTarget()->GetEntry() == GO_DEFIAS_CANNON)
-        instance->SetData(EVENT_CANNON, CANNON_GUNPOWDER_USED);
-
-    player->DestroyItemCount(pItem->GetEntry(), 1, true);
-    return true;
-}
+};
 
 void AddSC_deadmines()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "item_defias_gunpowder";
-    newscript->pItemUse = &ItemUse_item_defias_gunpowder;
-    newscript->RegisterSelf();
+    new item_defias_gunpowder();
 }

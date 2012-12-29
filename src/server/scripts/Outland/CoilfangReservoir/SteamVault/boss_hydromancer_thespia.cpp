@@ -173,29 +173,29 @@ struct mob_coilfang_waterelementalAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
-CreatureAI* GetAI_boss_thespiaAI(Creature* creature)
+class boss_hydromancer_thespia : public CreatureScript
 {
-    return new boss_thespiaAI (creature);
-}
+public:
+    boss_hydromancer_thespia() : CreatureScript("boss_hydromancer_thespia") { }
 
-CreatureAI* GetAI_mob_coilfang_waterelementalAI(Creature* creature)
+    CreatureAI* GetAI_boss_thespiaAI(Creature* creature)
+    {
+        return new boss_thespiaAI (creature);
+    }
+};
+class mob_coilfang_waterelemental : public CreatureScript
 {
-    return new mob_coilfang_waterelementalAI (creature);
-}
+public:
+    mob_coilfang_waterelemental() : CreatureScript("mob_coilfang_waterelemental") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new mob_coilfang_waterelementalAI (creature);
+    }
+};
 
 void AddSC_boss_hydromancer_thespia()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_hydromancer_thespia";
-    newscript->GetAI = &GetAI_boss_thespiaAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_coilfang_waterelemental";
-    newscript->GetAI = &GetAI_mob_coilfang_waterelementalAI;
-    newscript->RegisterSelf();
+    new boss_hydromancer_thespia();
+    new mob_coilfang_waterelemental();
 }
-

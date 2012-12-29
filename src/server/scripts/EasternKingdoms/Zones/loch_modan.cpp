@@ -45,54 +45,59 @@ EndContentData */
 #define GOSSIP_MP4 "Yes..."
 #define GOSSIP_MP5 "Ok, i'll try to remember that."
 #define GOSSIP_MP6 "A key? Ok!"
-
-bool GossipHello_npc_mountaineer_pebblebitty(Player* player, Creature* creature)
+class npc_mountaineer_pebblebitty : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_mountaineer_pebblebitty() : CreatureScript("npc_mountaineer_pebblebitty") { }
 
-    if (!player->GetQuestRewardStatus(3181) == 1)
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-
-    return true;
-}
-
-bool GossipSelect_npc_mountaineer_pebblebitty(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(1833, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(1834, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(1835, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            player->SEND_GOSSIP_MENU(1836, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            player->SEND_GOSSIP_MENU(1837, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
-            player->SEND_GOSSIP_MENU(1838, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+7:
-            player->CLOSE_GOSSIP_MENU();
-            break;
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                player->SEND_GOSSIP_MENU(1833, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                player->SEND_GOSSIP_MENU(1834, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                player->SEND_GOSSIP_MENU(1835, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                player->SEND_GOSSIP_MENU(1836, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+                player->SEND_GOSSIP_MENU(1837, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+6:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+                player->SEND_GOSSIP_MENU(1838, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+7:
+                player->CLOSE_GOSSIP_MENU();
+                break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (!player->GetQuestRewardStatus(3181) == 1)
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_MP, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+        return true;
+    }
+};
 
 /*#########
 ##npc_miran
@@ -108,72 +113,67 @@ enum eMiran
     QUEST_PROTECTING_THE_SHIPMENT  = 309,
     DARK_IRON_RAIDER               = 2149
 };
-
-struct npc_miranAI : public npc_escortAI
+class npc_miran : public CreatureScript
 {
-    npc_miranAI(Creature* creature) : npc_escortAI(creature) { }
+public:
+    npc_miran() : CreatureScript("npc_miran") { }
 
-    void Reset() { }
-
-    void WaypointReached(uint32 uiPointId)
+    bool QuestAccept(Player* player, Creature* creature, const Quest* pQuest)
     {
-        Player* player = GetPlayerForEscort();
-        if (!player)
-            return;
-
-        switch (uiPointId)
+        if (pQuest->GetQuestId() == QUEST_PROTECTING_THE_SHIPMENT)
         {
-        case 8:
-            DoScriptText(MIRAN_SAY_AMBUSH_ONE, me);
-            me->SummonCreature(DARK_IRON_RAIDER, -5697.27f,-3736.36f, 318.54f, 2.02f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
-            me->SummonCreature(DARK_IRON_RAIDER, -5697.27f,-3736.36f, 318.54f, 2.07f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
-            if (Unit* scoff = me->FindNearestCreature(DARK_IRON_RAIDER, 30))
-                DoScriptText(DARK_IRON_RAIDER_SAY_AMBUSH, scoff);
-            DoScriptText(MIRAN_SAY_AMBUSH_TWO, me);
-        break;
-        case 11:
-            DoScriptText(MIRAN_SAY_QUEST_END, me);
-            if (Player* player = GetPlayerForEscort())
-                player->GroupEventHappens(QUEST_PROTECTING_THE_SHIPMENT, me);
-        break;
+            creature->setFaction(231);
+
+            if (npc_miranAI* pEscortAI = CAST_AI(npc_miranAI, creature->AI()))
+                pEscortAI->Start(false, false, player->GetGUID(), pQuest);
         }
+        return true;
     }
 
-    void JustSummoned(Creature* pSummoned)
+    CreatureAI* GetAI(Creature* creature)
     {
-        pSummoned->AI()->AttackStart(me);
+        return new npc_miranAI(creature);
     }
+
+    struct npc_miranAI : public npc_escortAI
+    {
+        npc_miranAI(Creature* creature) : npc_escortAI(creature) { }
+
+        void Reset() { }
+
+        void WaypointReached(uint32 uiPointId)
+        {
+            Player* player = GetPlayerForEscort();
+            if (!player)
+                return;
+
+            switch (uiPointId)
+            {
+            case 8:
+                DoScriptText(MIRAN_SAY_AMBUSH_ONE, me);
+                me->SummonCreature(DARK_IRON_RAIDER, -5697.27f,-3736.36f, 318.54f, 2.02f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
+                me->SummonCreature(DARK_IRON_RAIDER, -5697.27f,-3736.36f, 318.54f, 2.07f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 30000);
+                if (Unit* scoff = me->FindNearestCreature(DARK_IRON_RAIDER, 30))
+                    DoScriptText(DARK_IRON_RAIDER_SAY_AMBUSH, scoff);
+                DoScriptText(MIRAN_SAY_AMBUSH_TWO, me);
+            break;
+            case 11:
+                DoScriptText(MIRAN_SAY_QUEST_END, me);
+                if (Player* player = GetPlayerForEscort())
+                    player->GroupEventHappens(QUEST_PROTECTING_THE_SHIPMENT, me);
+            break;
+            }
+        }
+
+        void JustSummoned(Creature* pSummoned)
+        {
+            pSummoned->AI()->AttackStart(me);
+        }
+    };
 };
-
-bool QuestAccept_npc_miran(Player* player, Creature* creature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_PROTECTING_THE_SHIPMENT)
-    {
-        creature->setFaction(231);
-
-        if (npc_miranAI* pEscortAI = CAST_AI(npc_miranAI, creature->AI()))
-            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
-    }
-    return true;
-}
-CreatureAI* GetAI_npc_miran(Creature* creature)
-{
-    return new npc_miranAI(creature);
-}
 
 void AddSC_loch_modan()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_mountaineer_pebblebitty";
-    newscript->pGossipHello =  &GossipHello_npc_mountaineer_pebblebitty;
-    newscript->pGossipSelect = &GossipSelect_npc_mountaineer_pebblebitty;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_miran";
-    newscript->GetAI = &GetAI_npc_miran;
-    newscript->pQuestAccept = &QuestAccept_npc_miran;
-    newscript->RegisterSelf();
+    new npc_mountaineer_pebblebitty();
+    new npc_miran();
 }

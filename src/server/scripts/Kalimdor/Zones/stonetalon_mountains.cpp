@@ -42,42 +42,47 @@ EndContentData */
 #define GOSSIP_HBD3 "Nozdormu"
 #define GOSSIP_HBD4 "Alexstrasza"
 #define GOSSIP_HBD5 "Malygos"
-
-bool GossipHello_npc_braug_dimspirit(Player* player, Creature* creature)
+class npc_braug_dimspirit : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_braug_dimspirit() : CreatureScript("npc_braug_dimspirit") { }
 
-    if (player->GetQuestStatus(6627) == QUEST_STATUS_INCOMPLETE)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        player->SEND_GOSSIP_MENU(5820, creature->GetGUID());
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            creature->CastSpell(player, 6766, false);
+        }
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            player->AreaExploredOrEventHappens(6627);
+        }
+        return true;
     }
-    else
-        player->SEND_GOSSIP_MENU(5819, creature->GetGUID());
 
-    return true;
-}
-
-bool GossipSelect_npc_braug_dimspirit(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    bool GossipHello(Player* player, Creature* creature)
     {
-        player->CLOSE_GOSSIP_MENU();
-        creature->CastSpell(player, 6766, false);
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (player->GetQuestStatus(6627) == QUEST_STATUS_INCOMPLETE)
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBD5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+            player->SEND_GOSSIP_MENU(5820, creature->GetGUID());
+        }
+        else
+            player->SEND_GOSSIP_MENU(5819, creature->GetGUID());
+
+        return true;
     }
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        player->AreaExploredOrEventHappens(6627);
-    }
-    return true;
-}
+};
 
 /*######
 ## npc_kaya_flathoof
@@ -132,25 +137,30 @@ struct npc_kaya_flathoofAI : public npc_escortAI
 
     void Reset(){}
 };
-
-bool QuestAccept_npc_kaya_flathoof(Player* player, Creature* creature, Quest const* quest)
+class npc_kaya_flathoof : public CreatureScript
 {
-    if (quest->GetQuestId() == QUEST_PROTECT_KAYA)
+public:
+    npc_kaya_flathoof() : CreatureScript("npc_kaya_flathoof") { }
+
+    bool QuestAccept(Player* player, Creature* creature, Quest const* quest)
     {
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_kaya_flathoofAI, creature->AI()))
-            pEscortAI->Start(true, false, player->GetGUID());
+        if (quest->GetQuestId() == QUEST_PROTECT_KAYA)
+        {
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_kaya_flathoofAI, creature->AI()))
+                pEscortAI->Start(true, false, player->GetGUID());
 
-        DoScriptText(SAY_START, creature);
-        creature->setFaction(113);
-        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+            DoScriptText(SAY_START, creature);
+            creature->setFaction(113);
+            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        }
+        return true;
     }
-    return true;
-}
 
-CreatureAI* GetAI_npc_kaya_flathoofAI(Creature* creature)
-{
-    return new npc_kaya_flathoofAI(creature);
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new npc_kaya_flathoofAI(creature);
+    }
+};
 
 /*######
 ## AddSC
@@ -158,18 +168,6 @@ CreatureAI* GetAI_npc_kaya_flathoofAI(Creature* creature)
 
 void AddSC_stonetalon_mountains()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_braug_dimspirit";
-    newscript->pGossipHello = &GossipHello_npc_braug_dimspirit;
-    newscript->pGossipSelect = &GossipSelect_npc_braug_dimspirit;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_kaya_flathoof";
-    newscript->GetAI = &GetAI_npc_kaya_flathoofAI;
-    newscript->pQuestAccept = &QuestAccept_npc_kaya_flathoof;
-    newscript->RegisterSelf();
+    new npc_braug_dimspirit();
+    new npc_kaya_flathoof();
 }
-

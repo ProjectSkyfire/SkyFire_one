@@ -41,15 +41,20 @@ enum eCoilfangGOs
 {
     GO_COILFANG_WATERFALL   = 184212
 };
-
-bool AreaTrigger_at_coilfang_waterfall(Player* player, const AreaTriggerEntry * /*pAt*/)
+class at_coilfang_waterfall : public AreaTriggerScript
 {
-    if (GameObject* pGo = GetClosestGameObjectWithEntry(player, GO_COILFANG_WATERFALL, 35.0f))
-        if (pGo->getLootState() == GO_READY)
-            pGo->UseDoorOrButton();
+public:
+    at_coilfang_waterfall() : AreaTriggerScript("at_coilfang_waterfall") { }
 
-    return false;
-}
+    bool AreaTrigger(Player* player, const AreaTriggerEntry * /*pAt*/)
+    {
+        if (GameObject* pGo = GetClosestGameObjectWithEntry(player, GO_COILFANG_WATERFALL, 35.0f))
+            if (pGo->getLootState() == GO_READY)
+                pGo->UseDoorOrButton();
+
+        return false;
+    }
+};
 
 /*#####
 ## at_legion_teleporter
@@ -63,58 +68,55 @@ enum eLegionTeleporter
     SPELL_TELE_H_TO         = 37389,
     QUEST_GAINING_ACCESS_H  = 10604
 };
-
-bool AreaTrigger_at_legion_teleporter(Player* player, const AreaTriggerEntry * /*pAt*/)
+class at_legion_teleporter : public AreaTriggerScript
 {
-    if (player->isAlive() && !player->isInCombat())
+public:
+    at_legion_teleporter() : AreaTriggerScript("at_legion_teleporter") { }
+
+    bool AreaTrigger(Player* player, const AreaTriggerEntry * /*pAt*/)
     {
-        if (player->GetTeam() == ALLIANCE && player->GetQuestRewardStatus(QUEST_GAINING_ACCESS_A))
+        if (player->isAlive() && !player->isInCombat())
         {
-            player->CastSpell(player, SPELL_TELE_A_TO, false);
-            return true;
-        }
+            if (player->GetTeam() == ALLIANCE && player->GetQuestRewardStatus(QUEST_GAINING_ACCESS_A))
+            {
+                player->CastSpell(player, SPELL_TELE_A_TO, false);
+                return true;
+            }
 
-        if (player->GetTeam() == HORDE && player->GetQuestRewardStatus(QUEST_GAINING_ACCESS_H))
-        {
-            player->CastSpell(player, SPELL_TELE_H_TO, false);
-            return true;
-        }
+            if (player->GetTeam() == HORDE && player->GetQuestRewardStatus(QUEST_GAINING_ACCESS_H))
+            {
+                player->CastSpell(player, SPELL_TELE_H_TO, false);
+                return true;
+            }
 
+            return false;
+        }
         return false;
     }
-    return false;
-}
+};
 
 enum eRavenholdt
 {
     QUEST_MANOR_RAVENHOLDT  = 6681,
     NPC_RAVENHOLDT          = 13936
 };
-
-bool AreaTrigger_at_ravenholdt(Player* player, const AreaTriggerEntry* /*pAt*/)
+class at_ravenholdt : public AreaTriggerScript
 {
-    if (player->GetQuestStatus(QUEST_MANOR_RAVENHOLDT) == QUEST_STATUS_INCOMPLETE)
-        player->KilledMonsterCredit(NPC_RAVENHOLDT, 0);
+public:
+    at_ravenholdt() : AreaTriggerScript("at_ravenholdt") { }
 
-    return false;
-}
+    bool AreaTrigger(Player* player, const AreaTriggerEntry* /*pAt*/)
+    {
+        if (player->GetQuestStatus(QUEST_MANOR_RAVENHOLDT) == QUEST_STATUS_INCOMPLETE)
+            player->KilledMonsterCredit(NPC_RAVENHOLDT, 0);
+
+        return false;
+    }
+};
 
 void AddSC_areatrigger_scripts()
 {
-    Script* newscript;
-
-    newscript = new Script;
-    newscript->Name = "at_coilfang_waterfall";
-    newscript->pAreaTrigger = &AreaTrigger_at_coilfang_waterfall;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "at_legion_teleporter";
-    newscript->pAreaTrigger = &AreaTrigger_at_legion_teleporter;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "at_ravenholdt";
-    newscript->pAreaTrigger = &AreaTrigger_at_ravenholdt;
-    newscript->RegisterSelf();
+    new at_coilfang_waterfall();
+    new at_legion_teleporter();
+    new at_ravenholdt();
 }

@@ -1,22 +1,22 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+* Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
+* Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+* Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+*
+* This program is free software; you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the
+* Free Software Foundation; either version 2 of the License, or (at your
+* option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+* more details.
+*
+* You should have received a copy of the GNU General Public License along
+* with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 /* ScriptData
 SDName: Instance_Mount_Hyjal
@@ -38,69 +38,78 @@ EndScriptData */
 3 - Azgalor event
 4 - Archimonde event
 */
-
-struct instance_mount_hyjal : public ScriptedInstance
+class instance_hyjal : public InstanceMapScript
 {
-    instance_mount_hyjal(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+public:
+    instance_hyjal() : InstanceMapScript("instance_hyjal") { }
 
-    uint64 RageWinterchill;
-    uint64 Anetheron;
-    uint64 Kazrogal;
-    uint64 Azgalor;
-    uint64 Archimonde;
-    uint64 JainaProudmoore;
-    uint64 Thrall;
-    uint64 TyrandeWhisperwind;
-    uint64 HordeGate;
-    uint64 ElfGate;
-
-    uint32 Trash;
-    uint32 Encounters[ENCOUNTERS];
-
-    uint32 hordeRetreat;
-    uint32 allianceRetreat;
-    bool ArchiYell;
-
-    uint32 RaidDamage;
-
-    #define YELL_EFFORTS        "All of your efforts have been in vain, for the draining of the World Tree has already begun. Soon the heart of your world will beat no more."
-    #define YELL_EFFORTS_NAME   "Archimonde"
-
-    void Initialize()
+    InstanceScript* GetInstanceData_instance_mount_hyjal_InstanceMapScript(Map* pMap)
     {
-        RageWinterchill = 0;
-        Anetheron = 0;
-        Kazrogal = 0;
-        Azgalor = 0;
-        Archimonde = 0;
-        JainaProudmoore = 0;
-        Thrall = 0;
-        TyrandeWhisperwind = 0;
-        HordeGate = 0;
-        ElfGate = 0;
-        ArchiYell = false;
-        RaidDamage = 0;
-
-        Trash = 0;
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            Encounters[i] = NOT_STARTED;
-
-        hordeRetreat = 0;
-        allianceRetreat = 0;
+        return new instance_mount_hyjal_InstanceMapScript(pMap);
     }
 
-    bool IsEncounterInProgress() const
+    struct instance_mount_hyjal_InstanceMapScript : public ScriptedInstance
     {
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounters[i] == IN_PROGRESS) return true;
+        instance_mount_hyjal_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
-        return false;
-    }
+        uint64 RageWinterchill;
+        uint64 Anetheron;
+        uint64 Kazrogal;
+        uint64 Azgalor;
+        uint64 Archimonde;
+        uint64 JainaProudmoore;
+        uint64 Thrall;
+        uint64 TyrandeWhisperwind;
+        uint64 HordeGate;
+        uint64 ElfGate;
 
-    void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
-    {
-        switch (pGo->GetEntry())
+        uint32 Trash;
+        uint32 Encounters[ENCOUNTERS];
+
+        uint32 hordeRetreat;
+        uint32 allianceRetreat;
+        bool ArchiYell;
+
+        uint32 RaidDamage;
+
+#define YELL_EFFORTS        "All of your efforts have been in vain, for the draining of the World Tree has already begun. Soon the heart of your world will beat no more."
+#define YELL_EFFORTS_NAME   "Archimonde"
+
+        void Initialize()
         {
+            RageWinterchill = 0;
+            Anetheron = 0;
+            Kazrogal = 0;
+            Azgalor = 0;
+            Archimonde = 0;
+            JainaProudmoore = 0;
+            Thrall = 0;
+            TyrandeWhisperwind = 0;
+            HordeGate = 0;
+            ElfGate = 0;
+            ArchiYell = false;
+            RaidDamage = 0;
+
+            Trash = 0;
+            for (uint8 i = 0; i < ENCOUNTERS; ++i)
+                Encounters[i] = NOT_STARTED;
+
+            hordeRetreat = 0;
+            allianceRetreat = 0;
+        }
+
+        bool IsEncounterInProgress() const
+        {
+            for (uint8 i = 0; i < ENCOUNTERS; ++i)
+                if (Encounters[i] == IN_PROGRESS) return true;
+
+            return false;
+        }
+
+        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
+        {
+            switch (pGo->GetEntry())
+            {
             case 182060:
                 HordeGate = pGo->GetGUID();
                 if (allianceRetreat)
@@ -115,18 +124,18 @@ struct instance_mount_hyjal : public ScriptedInstance
                 else
                     pGo->SetGoState(GO_STATE_READY);
                 break;
+            }
         }
-    }
 
-    void OpenDoor(uint64 DoorGUID, bool open)
-    {
-        HandleGameObject(DoorGUID, open, NULL);
-    }
-
-    void OnCreatureCreate(Creature* creature, bool /*add*/)
-    {
-        switch (creature->GetEntry())
+        void OpenDoor(uint64 DoorGUID, bool open)
         {
+            HandleGameObject(DoorGUID, open, NULL);
+        }
+
+        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        {
+            switch (creature->GetEntry())
+            {
             case 17767: RageWinterchill = creature->GetGUID(); break;
             case 17808: Anetheron = creature->GetGUID(); break;
             case 17888: Kazrogal = creature->GetGUID();  break;
@@ -135,13 +144,13 @@ struct instance_mount_hyjal : public ScriptedInstance
             case 17772: JainaProudmoore = creature->GetGUID(); break;
             case 17852: Thrall = creature->GetGUID(); break;
             case 17948: TyrandeWhisperwind = creature->GetGUID(); break;
+            }
         }
-    }
 
-    uint64 GetData64(uint32 identifier)
-    {
-        switch (identifier)
+        uint64 GetData64(uint32 identifier)
         {
+            switch (identifier)
+            {
             case DATA_RAGEWINTERCHILL: return RageWinterchill;
             case DATA_ANETHERON: return Anetheron;
             case DATA_KAZROGAL: return Kazrogal;
@@ -150,15 +159,15 @@ struct instance_mount_hyjal : public ScriptedInstance
             case DATA_JAINAPROUDMOORE: return JainaProudmoore;
             case DATA_THRALL: return Thrall;
             case DATA_TYRANDEWHISPERWIND: return TyrandeWhisperwind;
+            }
+
+            return 0;
         }
 
-        return 0;
-    }
-
-    void SetData(uint32 type, uint32 data)
-    {
-        switch (type)
+        void SetData(uint32 type, uint32 data)
         {
+            switch (type)
+            {
             case DATA_RAGEWINTERCHILLEVENT: Encounters[0] = data; break;
             case DATA_ANETHERONEVENT:
                 Encounters[1] = data;
@@ -183,12 +192,12 @@ struct instance_mount_hyjal : public ScriptedInstance
                                 pUnit->SetVisibility(VISIBILITY_OFF);
                                 Map::PlayerList const &PlayerList = pMap->GetPlayers();
                                 if (PlayerList.isEmpty())
-                                     return;
+                                    return;
 
                                 for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                                 {
-                                     if (i->getSource())
-                                     {
+                                    if (i->getSource())
+                                    {
                                         WorldPacket data(SMSG_MESSAGECHAT, 200);
                                         pUnit->BuildMonsterChat(&data, CHAT_MSG_MONSTER_YELL, YELL_EFFORTS, 0, YELL_EFFORTS_NAME, i->getSource()->GetGUID());
                                         i->getSource()->GetSession()->SendPacket(&data);
@@ -196,7 +205,7 @@ struct instance_mount_hyjal : public ScriptedInstance
                                         WorldPacket data2(SMSG_PLAY_SOUND, 4);
                                         data2 << 10986;
                                         i->getSource()->GetSession()->SendPacket(&data2);
-                                     }
+                                    }
                                 }
                             }
                         }
@@ -229,18 +238,18 @@ struct instance_mount_hyjal : public ScriptedInstance
             case DATA_RESET_RAIDDAMAGE:
                 RaidDamage = 0;
                 break;
+            }
+
+            sLog->outDebug("TSCR: Instance Hyjal: Instance data updated for event %u (Data=%u)",type, data);
+
+            if (data == DONE)
+                SaveToDB();
         }
 
-         sLog->outDebug("TSCR: Instance Hyjal: Instance data updated for event %u (Data=%u)",type, data);
-
-        if (data == DONE)
-            SaveToDB();
-    }
-
-    uint32 GetData(uint32 type)
-    {
-        switch (type)
+        uint32 GetData(uint32 type)
         {
+            switch (type)
+            {
             case DATA_RAGEWINTERCHILLEVENT: return Encounters[0];
             case DATA_ANETHERONEVENT:      return Encounters[1];
             case DATA_KAZROGALEVENT:       return Encounters[2];
@@ -250,71 +259,62 @@ struct instance_mount_hyjal : public ScriptedInstance
             case DATA_ALLIANCE_RETREAT:    return allianceRetreat;
             case DATA_HORDE_RETREAT:       return hordeRetreat;
             case DATA_RAIDDAMAGE:          return RaidDamage;
+            }
+            return 0;
         }
-        return 0;
-    }
 
-    void UpdateWorldState(uint32 id, uint32 state)
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
+        void UpdateWorldState(uint32 id, uint32 state)
         {
+            Map::PlayerList const& players = instance->GetPlayers();
+
+            if (!players.isEmpty())
+            {
                 for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                 {
                     if (Player* player = itr->getSource())
                         player->SendUpdateWorldState(id, state);
                 }
-        } else sLog->outDebug("TSCR: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
-    }
-
-    std::string GetSaveData()
-    {
-        OUT_SAVE_INST_DATA;
-        std::ostringstream stream;
-        stream << Encounters[0] << " " << Encounters[1] << " " << Encounters[2] << " "
-            << Encounters[3] << " " << Encounters[4] << " " << allianceRetreat << " " << hordeRetreat << " " << RaidDamage;
-        char* out = new char[stream.str().length() + 1];
-        strcpy(out, stream.str().c_str());
-        if (out)
-        {
-            OUT_SAVE_INST_DATA_COMPLETE;
-            return out;
+            } else sLog->outDebug("TSCR: Instance Hyjal: UpdateWorldState, but PlayerList is empty!");
         }
 
-        return NULL;
-    }
-
-    void Load(const char* in)
-    {
-        if (!in)
+        std::string GetSaveData()
         {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
+            OUT_SAVE_INST_DATA;
+            std::ostringstream stream;
+            stream << Encounters[0] << " " << Encounters[1] << " " << Encounters[2] << " "
+                << Encounters[3] << " " << Encounters[4] << " " << allianceRetreat << " " << hordeRetreat << " " << RaidDamage;
+            char* out = new char[stream.str().length() + 1];
+            strcpy(out, stream.str().c_str());
+            if (out)
+            {
+                OUT_SAVE_INST_DATA_COMPLETE;
+                return out;
+            }
+
+            return NULL;
         }
 
-        OUT_LOAD_INST_DATA(in);
-        std::istringstream loadStream;
-        loadStream.str(in);
-        loadStream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3] >> Encounters[4] >> allianceRetreat >> hordeRetreat >> RaidDamage;
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounters[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
-                Encounters[i] = NOT_STARTED;
-        OUT_LOAD_INST_DATA_COMPLETE;
-    }
+        void Load(const char* in)
+        {
+            if (!in)
+            {
+                OUT_LOAD_INST_DATA_FAIL;
+                return;
+            }
+
+            OUT_LOAD_INST_DATA(in);
+            std::istringstream loadStream;
+            loadStream.str(in);
+            loadStream >> Encounters[0] >> Encounters[1] >> Encounters[2] >> Encounters[3] >> Encounters[4] >> allianceRetreat >> hordeRetreat >> RaidDamage;
+            for (uint8 i = 0; i < ENCOUNTERS; ++i)
+                if (Encounters[i] == IN_PROGRESS)                // Do not load an encounter as IN_PROGRESS - reset it instead.
+                    Encounters[i] = NOT_STARTED;
+            OUT_LOAD_INST_DATA_COMPLETE;
+        }
+    };
 };
-
-InstanceScript* GetInstanceData_instance_mount_hyjal(Map* pMap)
-{
-    return new instance_mount_hyjal(pMap);
-}
 
 void AddSC_instance_mount_hyjal()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_hyjal";
-    newscript->GetInstanceScript = &GetInstanceData_instance_mount_hyjal;
-    newscript->RegisterSelf();
+    new instance_hyjal();
 }
-

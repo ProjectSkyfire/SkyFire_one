@@ -40,119 +40,120 @@ EndScriptData */
 #define SPELL_ENRAGE            2813
 #define SPELL_BERSERK           26662
 #define SPELL_SLIMEBOLT         32309
-
-struct boss_patchwerkAI : public ScriptedAI
+class boss_patchwerk : public CreatureScript
 {
-    boss_patchwerkAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_patchwerk() : CreatureScript("boss_patchwerk") { }
 
-    uint32 HatefullStrike_Timer;
-    uint32 Enrage_Timer;
-    uint32 Slimebolt_Timer;
-    bool Enraged;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        HatefullStrike_Timer = 1200;                        //1.2 seconds
-        Enrage_Timer = 420000;                              //7 minutes 420, 000
-        Slimebolt_Timer = 450000;                           //7.5 minutes 450, 000
-        Enraged = false;
+        return new boss_patchwerkAI (creature);
     }
 
-    void KilledUnit(Unit* Victim)
+    struct boss_patchwerkAI : public ScriptedAI
     {
-        if (rand()%5)
-            return;
+        boss_patchwerkAI(Creature *c) : ScriptedAI(c) {}
 
-        DoScriptText(SAY_SLAY, me);
-    }
+        uint32 HatefullStrike_Timer;
+        uint32 Enrage_Timer;
+        uint32 Slimebolt_Timer;
+        bool Enraged;
 
-    void JustDied(Unit* Killer)
-    {
-        DoScriptText(SAY_DEATH, me);
-    }
-
-    void EnterCombat(Unit *who)
-    {
-        if (rand()%2)
+        void Reset()
         {
-             DoScriptText(SAY_AGGRO1, me);
+            HatefullStrike_Timer = 1200;                        //1.2 seconds
+            Enrage_Timer = 420000;                              //7 minutes 420, 000
+            Slimebolt_Timer = 450000;                           //7.5 minutes 450, 000
+            Enraged = false;
         }
-        else
+
+        void KilledUnit(Unit* Victim)
         {
-           DoScriptText(SAY_AGGRO2, me);
+            if (rand()%5)
+                return;
+
+            DoScriptText(SAY_SLAY, me);
         }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        //HatefullStrike_Timer
-        if (HatefullStrike_Timer <= diff)
+        void JustDied(Unit* Killer)
         {
-            //Cast Hateful strike on the player with the highest
-            //amount of HP within melee distance
-            uint32 MostHP = 0;
-            Unit* pMostHPTarget = NULL;
-            Unit* pTemp = NULL;
-            std::list<HostileReference*>::iterator i = me->getThreatManager().getThreatList().begin();
+            DoScriptText(SAY_DEATH, me);
+        }
 
-            for (i = me->getThreatManager().getThreatList().begin(); i != me->getThreatManager().getThreatList().end();)
+        void EnterCombat(Unit *who)
+        {
+            if (rand()%2)
             {
-                pTemp = Unit::GetUnit((*me),(*i)->getUnitGuid());
-                ++i;
-                if (pTemp && pTemp->isAlive() && pTemp->GetHealth() > MostHP && me->GetDistance2d(pTemp) < 5)
+                 DoScriptText(SAY_AGGRO1, me);
+            }
+            else
+            {
+               DoScriptText(SAY_AGGRO2, me);
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            //HatefullStrike_Timer
+            if (HatefullStrike_Timer <= diff)
+            {
+                //Cast Hateful strike on the player with the highest
+                //amount of HP within melee distance
+                uint32 MostHP = 0;
+                Unit* pMostHPTarget = NULL;
+                Unit* pTemp = NULL;
+                std::list<HostileReference*>::iterator i = me->getThreatManager().getThreatList().begin();
+
+                for (i = me->getThreatManager().getThreatList().begin(); i != me->getThreatManager().getThreatList().end();)
                 {
-                    MostHP = pTemp->GetHealth();
-                    pMostHPTarget = pTemp;
+                    pTemp = Unit::GetUnit((*me),(*i)->getUnitGuid());
+                    ++i;
+                    if (pTemp && pTemp->isAlive() && pTemp->GetHealth() > MostHP && me->GetDistance2d(pTemp) < 5)
+                    {
+                        MostHP = pTemp->GetHealth();
+                        pMostHPTarget = pTemp;
+                    }
                 }
+
+                if (pMostHPTarget)
+                    DoCast(pMostHPTarget, SPELL_HATEFULSTRIKE);
+
+                HatefullStrike_Timer = 1200;
+            } else HatefullStrike_Timer -= diff;
+
+            //Enrage_Timer
+            if (Enrage_Timer <= diff)
+            {
+                DoCast(me, SPELL_BERSERK);
+                 DoScriptText(EMOTE_BERSERK, me);
+
+                Enrage_Timer = 300000;
+            } else Enrage_Timer -= diff;
+
+            //Slimebolt_Timer
+            if (Slimebolt_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_SLIMEBOLT);
+                Slimebolt_Timer = 5000;
+            } else Slimebolt_Timer -= diff;
+
+            //Enrage if not already enraged and below 5%
+            if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 5)
+            {
+                DoCast(me, SPELL_ENRAGE);
+                DoScriptText(EMOTE_ENRAGE, NULL);
+                Enraged = true;
             }
 
-            if (pMostHPTarget)
-                DoCast(pMostHPTarget, SPELL_HATEFULSTRIKE);
-
-            HatefullStrike_Timer = 1200;
-        } else HatefullStrike_Timer -= diff;
-
-        //Enrage_Timer
-        if (Enrage_Timer <= diff)
-        {
-            DoCast(me, SPELL_BERSERK);
-             DoScriptText(EMOTE_BERSERK, me);
-
-            Enrage_Timer = 300000;
-        } else Enrage_Timer -= diff;
-
-        //Slimebolt_Timer
-        if (Slimebolt_Timer <= diff)
-        {
-            DoCast(me->getVictim(),SPELL_SLIMEBOLT);
-            Slimebolt_Timer = 5000;
-        } else Slimebolt_Timer -= diff;
-
-        //Enrage if not already enraged and below 5%
-        if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 5)
-        {
-            DoCast(me, SPELL_ENRAGE);
-            DoScriptText(EMOTE_ENRAGE, NULL);
-            Enraged = true;
+            DoMeleeAttackIfReady();
         }
-
-        DoMeleeAttackIfReady();
-    }
+    };
 };
-CreatureAI* GetAI_boss_patchwerk(Creature* creature)
-{
-    return new boss_patchwerkAI (creature);
-}
 
 void AddSC_boss_patchwerk()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_patchwerk";
-    newscript->GetAI = &GetAI_boss_patchwerk;
-    newscript->RegisterSelf();
+    new boss_patchwerk();
 }
-

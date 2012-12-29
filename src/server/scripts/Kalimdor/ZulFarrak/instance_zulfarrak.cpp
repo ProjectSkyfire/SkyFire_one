@@ -21,40 +21,41 @@
 #include "ScriptPCH.h"
 
 #define NPC_GAHZRILLA 7273
-
-struct instance_zulfarrak : public ScriptedInstance
+class instance_zulfarrak : public InstanceMapScript
 {
-    instance_zulfarrak(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
+public:
+    instance_zulfarrak() : InstanceMapScript("instance_zulfarrak") { }
 
-    uint32 GahzRillaEncounter;
-
-    void Initialize()
+    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {
-        GahzRillaEncounter = NOT_STARTED;
+        return new instance_zulfarrak_InstanceMapScript(pMap);
     }
 
-    void OnCreatureCreate(Creature* creature, bool /*add*/)
+    struct instance_zulfarrak_InstanceMapScript : public ScriptedInstance
     {
-        if (creature->GetEntry() == NPC_GAHZRILLA)
+        instance_zulfarrak_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
+
+        uint32 GahzRillaEncounter;
+
+        void Initialize()
         {
-            if (GahzRillaEncounter >= IN_PROGRESS)
-                creature->DisappearAndDie();
-            else
-                GahzRillaEncounter = IN_PROGRESS;
+            GahzRillaEncounter = NOT_STARTED;
         }
-    }
-};
 
-InstanceScript* GetInstanceData_instance_zulfarrak(Map* pMap)
-{
-    return new instance_zulfarrak(pMap);
-}
+        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        {
+            if (creature->GetEntry() == NPC_GAHZRILLA)
+            {
+                if (GahzRillaEncounter >= IN_PROGRESS)
+                    creature->DisappearAndDie();
+                else
+                    GahzRillaEncounter = IN_PROGRESS;
+            }
+        }
+    };
+};
 
 void AddSC_instance_zulfarrak()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "instance_zulfarrak";
-    newscript->GetInstanceScript = &GetInstanceData_instance_zulfarrak;
-    newscript->RegisterSelf();
+    new instance_zulfarrak();
 }

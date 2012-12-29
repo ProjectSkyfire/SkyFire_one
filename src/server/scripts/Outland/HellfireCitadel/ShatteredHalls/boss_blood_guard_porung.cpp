@@ -81,17 +81,18 @@ struct boss_blood_guard_porungAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
-CreatureAI* GetAI_boss_blood_guard_porungAI(Creature* creature)
+class boss_blood_guard_porung : public CreatureScript
 {
-    return new boss_blood_guard_porungAI (creature);
-}
+public:
+    boss_blood_guard_porung() : CreatureScript("boss_blood_guard_porung") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_blood_guard_porungAI (creature);
+    }
+};
 
 void AddSC_boss_blood_guard_porung()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_blood_guard_porung";
-    newscript->GetAI = &GetAI_boss_blood_guard_porungAI;
-    newscript->RegisterSelf();
+    new boss_blood_guard_porung();
 }

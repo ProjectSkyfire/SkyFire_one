@@ -45,170 +45,171 @@ EndScriptData */
 #define SPELL_CORROSIVE_ACID    23313
 #define SPELL_FEAR              33547
 #define SPELL_ENRAGE            0                           //need to find proper spell
-
-struct boss_ambassador_hellmawAI : public ScriptedAI
+class boss_ambassador_hellmaw : public CreatureScript
 {
-    boss_ambassador_hellmawAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_ambassador_hellmaw() : CreatureScript("boss_ambassador_hellmaw") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
-        HeroicMode = me->GetMap()->IsHeroic();
+        return new boss_ambassador_hellmawAI (creature);
     }
 
-    ScriptedInstance* instance;
-    bool HeroicMode;
-
-    uint32 EventCheck_Timer;
-    uint32 CorrosiveAcid_Timer;
-    uint32 Fear_Timer;
-    uint32 Enrage_Timer;
-    bool Intro;
-    bool IsBanished;
-
-    void Reset()
+    struct boss_ambassador_hellmawAI : public ScriptedAI
     {
-        EventCheck_Timer = 5000;
-        CorrosiveAcid_Timer = 25000;
-        Fear_Timer = 40000;
-        Enrage_Timer = 180000;
-        Intro = false;
-        IsBanished = false;
-
-        if (instance)
+        boss_ambassador_hellmawAI(Creature *c) : ScriptedAI(c)
         {
-            if (instance->GetData(TYPE_HELLMAW) == NOT_STARTED)
-            {
-                DoCast(me, SPELL_BANISH);
-                IsBanished = true;
-            }
-            else instance->SetData(TYPE_HELLMAW, FAIL);
-            if (instance->GetData(TYPE_OVERSEER) == DONE)
-            {
-                if (me->HasAura(SPELL_BANISH, 0))
-                    me->RemoveAurasDueToSpell(SPELL_BANISH);
-                Intro = true;
-            }
-        }
-    }
-
-    void MoveInLineOfSight(Unit *who)
-    {
-        if (me->HasAura(SPELL_BANISH, 0))
-            return;
-
-        ScriptedAI::MoveInLineOfSight(who);
-    }
-
-    void MovementInform(uint32 type, uint32 id)
-    {
-        if (type != POINT_MOTION_TYPE)
-            return;
-    }
-
-    void DoIntro()
-    {
-        DoScriptText(SAY_INTRO, me);
-
-        if (me->HasAura(SPELL_BANISH, 0))
-            me->RemoveAurasDueToSpell(SPELL_BANISH);
-
-        IsBanished = false;
-        Intro = true;
-
-        if (instance)
-            instance->SetData(TYPE_HELLMAW, IN_PROGRESS);
-    }
-
-    void EnterCombat(Unit *who)
-    {
-        switch (rand()%3)
-        {
-            case 0: DoScriptText(SAY_AGGRO1, me); break;
-            case 1: DoScriptText(SAY_AGGRO2, me); break;
-            case 2: DoScriptText(SAY_AGGRO3, me); break;
-        }
-    }
-
-    void KilledUnit(Unit *victim)
-    {
-        switch (rand()%2)
-        {
-            case 0: DoScriptText(SAY_SLAY1, me); break;
-            case 1: DoScriptText(SAY_SLAY2, me); break;
-        }
-    }
-
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_DEATH, me);
-
-        if (instance)
-            instance->SetData(TYPE_HELLMAW, DONE);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!Intro)
-        {
-            if (EventCheck_Timer <= diff)
-            {
-                if (instance)
-                {
-                    if (instance->GetData(TYPE_OVERSEER) == DONE)
-                        DoIntro();
-                }
-                EventCheck_Timer = 5000;
-            } else EventCheck_Timer -= diff;
+            instance = c->GetInstanceScript();
+            HeroicMode = me->GetMap()->IsHeroic();
         }
 
-        if (!me->isInCombat() && !IsBanished)
-        {
-            //this is where we add MovePoint()
-            //DoWhine("I haz no mount!", LANG_UNIVERSAL, NULL);
-        }
+        ScriptedInstance* instance;
+        bool HeroicMode;
 
-        if (!UpdateVictim())
-            return;
+        uint32 EventCheck_Timer;
+        uint32 CorrosiveAcid_Timer;
+        uint32 Fear_Timer;
+        uint32 Enrage_Timer;
+        bool Intro;
+        bool IsBanished;
 
-        if (me->HasAura(SPELL_BANISH, 0))
+        void Reset()
         {
-            EnterEvadeMode();
-            return;
-        }
-
-        if (CorrosiveAcid_Timer <= diff)
-        {
-            DoCast(me, SPELL_CORROSIVE_ACID);
+            EventCheck_Timer = 5000;
             CorrosiveAcid_Timer = 25000;
-        } else CorrosiveAcid_Timer -= diff;
+            Fear_Timer = 40000;
+            Enrage_Timer = 180000;
+            Intro = false;
+            IsBanished = false;
 
-        if (Fear_Timer <= diff)
-        {
-            DoCast(me, SPELL_FEAR);
-            Fear_Timer = 35000;
-        } else Fear_Timer -= diff;
-
-        /*if (HeroicMode)
-        {
-            if (Enrage_Timer <= diff)
+            if (instance)
             {
-                DoCast(me, SPELL_ENRAGE);
-            } else Enrage_Timer -= diff;
-        }*/
+                if (instance->GetData(TYPE_HELLMAW) == NOT_STARTED)
+                {
+                    DoCast(me, SPELL_BANISH);
+                    IsBanished = true;
+                }
+                else instance->SetData(TYPE_HELLMAW, FAIL);
+                if (instance->GetData(TYPE_OVERSEER) == DONE)
+                {
+                    if (me->HasAura(SPELL_BANISH, 0))
+                        me->RemoveAurasDueToSpell(SPELL_BANISH);
+                    Intro = true;
+                }
+            }
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        void MoveInLineOfSight(Unit *who)
+        {
+            if (me->HasAura(SPELL_BANISH, 0))
+                return;
+
+            ScriptedAI::MoveInLineOfSight(who);
+        }
+
+        void MovementInform(uint32 type, uint32 id)
+        {
+            if (type != POINT_MOTION_TYPE)
+                return;
+        }
+
+        void DoIntro()
+        {
+            DoScriptText(SAY_INTRO, me);
+
+            if (me->HasAura(SPELL_BANISH, 0))
+                me->RemoveAurasDueToSpell(SPELL_BANISH);
+
+            IsBanished = false;
+            Intro = true;
+
+            if (instance)
+                instance->SetData(TYPE_HELLMAW, IN_PROGRESS);
+        }
+
+        void EnterCombat(Unit *who)
+        {
+            switch (rand()%3)
+            {
+                case 0: DoScriptText(SAY_AGGRO1, me); break;
+                case 1: DoScriptText(SAY_AGGRO2, me); break;
+                case 2: DoScriptText(SAY_AGGRO3, me); break;
+            }
+        }
+
+        void KilledUnit(Unit *victim)
+        {
+            switch (rand()%2)
+            {
+                case 0: DoScriptText(SAY_SLAY1, me); break;
+                case 1: DoScriptText(SAY_SLAY2, me); break;
+            }
+        }
+
+        void JustDied(Unit *victim)
+        {
+            DoScriptText(SAY_DEATH, me);
+
+            if (instance)
+                instance->SetData(TYPE_HELLMAW, DONE);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!Intro)
+            {
+                if (EventCheck_Timer <= diff)
+                {
+                    if (instance)
+                    {
+                        if (instance->GetData(TYPE_OVERSEER) == DONE)
+                            DoIntro();
+                    }
+                    EventCheck_Timer = 5000;
+                } else EventCheck_Timer -= diff;
+            }
+
+            if (!me->isInCombat() && !IsBanished)
+            {
+                //this is where we add MovePoint()
+                //DoWhine("I haz no mount!", LANG_UNIVERSAL, NULL);
+            }
+
+            if (!UpdateVictim())
+                return;
+
+            if (me->HasAura(SPELL_BANISH, 0))
+            {
+                EnterEvadeMode();
+                return;
+            }
+
+            if (CorrosiveAcid_Timer <= diff)
+            {
+                DoCast(me, SPELL_CORROSIVE_ACID);
+                CorrosiveAcid_Timer = 25000;
+            } else CorrosiveAcid_Timer -= diff;
+
+            if (Fear_Timer <= diff)
+            {
+                DoCast(me, SPELL_FEAR);
+                Fear_Timer = 35000;
+            } else Fear_Timer -= diff;
+
+            /*if (HeroicMode)
+            {
+                if (Enrage_Timer <= diff)
+                {
+                    DoCast(me, SPELL_ENRAGE);
+                } else Enrage_Timer -= diff;
+            }*/
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_boss_ambassador_hellmaw(Creature* creature)
-{
-    return new boss_ambassador_hellmawAI (creature);
-}
 
 void AddSC_boss_ambassador_hellmaw()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_ambassador_hellmaw";
-    newscript->GetAI = &GetAI_boss_ambassador_hellmaw;
-    newscript->RegisterSelf();
+    new boss_ambassador_hellmaw();
 }
-

@@ -47,59 +47,64 @@ EndContentData */
 #define GOSSIP_DEMITRIAN5 "<Nod>"
 #define GOSSIP_DEMITRIAN6 "Caught unaware? How?"
 #define GOSSIP_DEMITRIAN7 "So what did Ragnaros do next?"
-
-bool GossipHello_npc_highlord_demitrian(Player* player, Creature* creature)
+class npc_highlord_demitrian : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_highlord_demitrian() : CreatureScript("npc_highlord_demitrian") { }
 
-    if (player->GetQuestStatus(7785) == QUEST_STATUS_NONE &&
-        (player->HasItemCount(18563, 1, false) || player->HasItemCount(18564, 1, false)))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    player->SEND_GOSSIP_MENU(6812, creature->GetGUID());
-        return true;
-}
-
-bool GossipSelect_npc_highlord_demitrian(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-    case GOSSIP_ACTION_INFO_DEF:
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(6842, creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+1:
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        player->SEND_GOSSIP_MENU(6843, creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+2:
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-        player->SEND_GOSSIP_MENU(6844, creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+3:
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-        player->SEND_GOSSIP_MENU(6867, creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+4:
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-        player->SEND_GOSSIP_MENU(6868, creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+5:
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-        player->SEND_GOSSIP_MENU(6869, creature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+6:
-        player->SEND_GOSSIP_MENU(6870, creature->GetGUID());
+        switch (uiAction)
+        {
+        case GOSSIP_ACTION_INFO_DEF:
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->SEND_GOSSIP_MENU(6842, creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            player->SEND_GOSSIP_MENU(6843, creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            player->SEND_GOSSIP_MENU(6844, creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+            player->SEND_GOSSIP_MENU(6867, creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+            player->SEND_GOSSIP_MENU(6868, creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+            player->SEND_GOSSIP_MENU(6869, creature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+6:
+            player->SEND_GOSSIP_MENU(6870, creature->GetGUID());
 
-        ItemPosCountVec dest;
-        uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 19016, 1);
-        if (msg == EQUIP_ERR_OK)
-            player->StoreNewItem(dest, 19016, true);
-        break;
+            ItemPosCountVec dest;
+            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 19016, 1);
+            if (msg == EQUIP_ERR_OK)
+                player->StoreNewItem(dest, 19016, true);
+            break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (player->GetQuestStatus(7785) == QUEST_STATUS_NONE &&
+            (player->HasItemCount(18563, 1, false) || player->HasItemCount(18564, 1, false)))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_DEMITRIAN1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+        player->SEND_GOSSIP_MENU(6812, creature->GetGUID());
+            return true;
+    }
+};
 
 /*###
 ## npcs_rutgar_and_frankal
@@ -124,89 +129,94 @@ bool GossipSelect_npc_highlord_demitrian(Player* player, Creature* creature, uin
 //trigger creatures to kill
 #define TRIGGER_RUTGAR 15222
 #define TRIGGER_FRANKAL 15221
-
-bool GossipHello_npcs_rutgar_and_frankal(Player* player, Creature* creature)
+class npcs_rutgar_and_frankal : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npcs_rutgar_and_frankal() : CreatureScript("npcs_rutgar_and_frankal") { }
 
-    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE &&
-        creature->GetEntry() == 15170 &&
-        !player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE &&
-        creature->GetEntry() == 15171 &&
-        player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
-
-    player->SEND_GOSSIP_MENU(7754, creature->GetGUID());
-
-    return true;
-}
-
-bool GossipSelect_npcs_rutgar_and_frankal(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        case GOSSIP_ACTION_INFO_DEF:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            player->SEND_GOSSIP_MENU(7755, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(7756, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(7757, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(7758, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 4:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            player->SEND_GOSSIP_MENU(7759, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 5:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
-            player->SEND_GOSSIP_MENU(7760, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 6:
-            player->SEND_GOSSIP_MENU(7761, creature->GetGUID());
-                                                            //'kill' our trigger to update quest status
-            player->KilledMonsterCredit(TRIGGER_RUTGAR, creature->GetGUID());
-            break;
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                player->SEND_GOSSIP_MENU(7755, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 1:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                player->SEND_GOSSIP_MENU(7756, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 2:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                player->SEND_GOSSIP_MENU(7757, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 3:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                player->SEND_GOSSIP_MENU(7758, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 4:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM6, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                player->SEND_GOSSIP_MENU(7759, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 5:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM7, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+                player->SEND_GOSSIP_MENU(7760, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 6:
+                player->SEND_GOSSIP_MENU(7761, creature->GetGUID());
+                                                                //'kill' our trigger to update quest status
+                player->KilledMonsterCredit(TRIGGER_RUTGAR, creature->GetGUID());
+                break;
 
-        case GOSSIP_ACTION_INFO_DEF + 9:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(7762, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 10:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM12, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-            player->SEND_GOSSIP_MENU(7763, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 11:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM13, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
-            player->SEND_GOSSIP_MENU(7764, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 12:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM14, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
-            player->SEND_GOSSIP_MENU(7765, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 13:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM15, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
-            player->SEND_GOSSIP_MENU(7766, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 14:
-            player->SEND_GOSSIP_MENU(7767, creature->GetGUID());
-                                                            //'kill' our trigger to update quest status
-            player->KilledMonsterCredit(TRIGGER_FRANKAL, creature->GetGUID());
-            break;
+            case GOSSIP_ACTION_INFO_DEF + 9:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM11, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+                player->SEND_GOSSIP_MENU(7762, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 10:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM12, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+                player->SEND_GOSSIP_MENU(7763, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 11:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM13, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
+                player->SEND_GOSSIP_MENU(7764, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 12:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM14, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 13);
+                player->SEND_GOSSIP_MENU(7765, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 13:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM15, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 14);
+                player->SEND_GOSSIP_MENU(7766, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 14:
+                player->SEND_GOSSIP_MENU(7767, creature->GetGUID());
+                                                                //'kill' our trigger to update quest status
+                player->KilledMonsterCredit(TRIGGER_FRANKAL, creature->GetGUID());
+                break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE &&
+            creature->GetEntry() == 15170 &&
+            !player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+        if (player->GetQuestStatus(8304) == QUEST_STATUS_INCOMPLETE &&
+            creature->GetEntry() == 15171 &&
+            player->GetReqKillOrCastCurrentCount(8304, TRIGGER_RUTGAR))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+9);
+
+        player->SEND_GOSSIP_MENU(7754, creature->GetGUID());
+
+        return true;
+    }
+};
 
 /*#####
 # Quest: A Pawn on the Eternal Board
@@ -1057,119 +1067,111 @@ void mob_qiraj_war_spawnAI::JustDied(Unit* /*slayer*/)
 /*#####
 # go_crystalline_tear
 ######*/
-
-       bool Hello_go_crystalline_tear(Player* player, GameObject* pGO)
-       {
-           if (pGO->GetGoType() == 2)
-           {
-               player->PrepareQuestMenu(pGO->GetGUID());
-               player->SendPreparedQuest(pGO->GetGUID());
-           }
-
-           if (player->GetQuestStatus(LONG_FORGOTTEN_MEMORIES) != QUEST_STATUS_COMPLETE)
-               player->AreaExploredOrEventHappens(LONG_FORGOTTEN_MEMORIES);
-           return true;
-       }
-
-bool OnQuestAccept(Player* plr, GameObject* go, Quest const* quest)
+class go_crystalline_tear : public GameObjectScript
 {
-    if (quest->GetQuestId() == QUEST_A_PAWN_ON_THE_ETERNAL_BOARD)
+public:
+    go_crystalline_tear() : GameObjectScript("go_crystalline_tear") { }
+
+    bool OnQuestAccept(Player* plr, GameObject* go, Quest const* quest)
     {
-        if (Unit* Anachronos_Quest_Trigger = go->FindNearestCreature(15454, 100, plr))
+        if (quest->GetQuestId() == QUEST_A_PAWN_ON_THE_ETERNAL_BOARD)
         {
-            Unit *Merithra = Anachronos_Quest_Trigger->SummonCreature(15378,-8034.535f, 1535.14f, 2.61f, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
-            Unit *Caelestrasz = Anachronos_Quest_Trigger->SummonCreature(15379,-8032.767f, 1533.148f, 2.61f, 1.5f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
-            Unit *Arygos = Anachronos_Quest_Trigger->SummonCreature(15380,-8034.52f, 1537.843f, 2.61f, 5.7f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
-            /* Unit *Fandral = */ Anachronos_Quest_Trigger->SummonCreature(15382,-8028.462f, 1535.843f, 2.61f, 3.141592f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
-            Creature *Anachronos = Anachronos_Quest_Trigger->SummonCreature(15381,-8028.75f, 1538.795f, 2.61f, 4, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
-
-            if (Merithra)
+            if (Unit* Anachronos_Quest_Trigger = go->FindNearestCreature(15454, 100, plr))
             {
-                Merithra->SetUInt32Value(UNIT_NPC_FLAGS, 0);
-                Merithra->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                Merithra->SetDisplayId(15420);
-                Merithra->setFaction(35);
-            }
+                Unit *Merithra = Anachronos_Quest_Trigger->SummonCreature(15378,-8034.535f, 1535.14f, 2.61f, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
+                Unit *Caelestrasz = Anachronos_Quest_Trigger->SummonCreature(15379,-8032.767f, 1533.148f, 2.61f, 1.5f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
+                Unit *Arygos = Anachronos_Quest_Trigger->SummonCreature(15380,-8034.52f, 1537.843f, 2.61f, 5.7f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
+                /* Unit *Fandral = */ Anachronos_Quest_Trigger->SummonCreature(15382,-8028.462f, 1535.843f, 2.61f, 3.141592f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
+                Creature *Anachronos = Anachronos_Quest_Trigger->SummonCreature(15381,-8028.75f, 1538.795f, 2.61f, 4, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 220000);
 
-            if (Caelestrasz)
-            {
-                Caelestrasz->SetUInt32Value(UNIT_NPC_FLAGS, 0);
-                Caelestrasz->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                Caelestrasz->SetDisplayId(15419);
-                Caelestrasz->setFaction(35);
-            }
+                if (Merithra)
+                {
+                    Merithra->SetUInt32Value(UNIT_NPC_FLAGS, 0);
+                    Merithra->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                    Merithra->SetDisplayId(15420);
+                    Merithra->setFaction(35);
+                }
 
-            if (Arygos)
-            {
-                Arygos->SetUInt32Value(UNIT_NPC_FLAGS, 0);
-                Arygos->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-                Arygos->SetDisplayId(15418);
-                Arygos->setFaction(35);
-            }
+                if (Caelestrasz)
+                {
+                    Caelestrasz->SetUInt32Value(UNIT_NPC_FLAGS, 0);
+                    Caelestrasz->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                    Caelestrasz->SetDisplayId(15419);
+                    Caelestrasz->setFaction(35);
+                }
 
-            if (Anachronos)
-            {
-                CAST_AI(/*npc_anachronos_the_ancient::*/npc_anachronos_the_ancientAI, Anachronos->AI())->PlayerGUID = plr->GetGUID();
-                CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->Failed=false;
-                CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->PlayerGUID = plr->GetGUID();
-                CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->EventStarted=true;
-                CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->Announced=true;
+                if (Arygos)
+                {
+                    Arygos->SetUInt32Value(UNIT_NPC_FLAGS, 0);
+                    Arygos->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                    Arygos->SetDisplayId(15418);
+                    Arygos->setFaction(35);
+                }
+
+                if (Anachronos)
+                {
+                    CAST_AI(/*npc_anachronos_the_ancient::*/npc_anachronos_the_ancientAI, Anachronos->AI())->PlayerGUID = plr->GetGUID();
+                    CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->Failed=false;
+                    CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->PlayerGUID = plr->GetGUID();
+                    CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->EventStarted=true;
+                    CAST_AI(/*npc_anachronos_quest_trigger::*/npc_anachronos_quest_triggerAI, CAST_CRE(Anachronos_Quest_Trigger)->AI())->Announced=true;
+                }
             }
         }
+        return true;
     }
-    return true;
-}
 
-CreatureAI* Getmob_qiraj_war_spawnAI(Creature* creature)
-{
-    return new mob_qiraj_war_spawnAI (creature);
-}
+           bool Hello(Player* player, GameObject* pGO)
+           {
+               if (pGO->GetGoType() == 2)
+               {
+                   player->PrepareQuestMenu(pGO->GetGUID());
+                   player->SendPreparedQuest(pGO->GetGUID());
+               }
 
-CreatureAI* Getnpc_anachronos_quest_triggerAI(Creature* creature)
-{
-    return new npc_anachronos_quest_triggerAI (creature);
-}
+               if (player->GetQuestStatus(LONG_FORGOTTEN_MEMORIES) != QUEST_STATUS_COMPLETE)
+                   player->AreaExploredOrEventHappens(LONG_FORGOTTEN_MEMORIES);
+               return true;
+           }
 
-CreatureAI* Getnpc_anachronos_the_ancientAI(Creature* creature)
+    class mob_qiraj_war_spawn : public CreatureScript
+    {
+    public:
+        mob_qiraj_war_spawn() : CreatureScript("mob_qiraj_war_spawn") { }
+
+        CreatureAI* Getmob_qiraj_war_spawnAI(Creature* creature)
+        {
+            return new mob_qiraj_war_spawnAI (creature);
+        }
+    };
+};
+class npc_anachronos_quest_trigger : public CreatureScript
 {
-    return new npc_anachronos_the_ancientAI (creature);
-}
+public:
+    npc_anachronos_quest_trigger() : CreatureScript("npc_anachronos_quest_trigger") { }
+
+    CreatureAI* Getnpc_anachronos_quest_triggerAI(Creature* creature)
+    {
+        return new npc_anachronos_quest_triggerAI (creature);
+    }
+};
+class npc_anachronos_the_ancient : public CreatureScript
+{
+public:
+    npc_anachronos_the_ancient() : CreatureScript("npc_anachronos_the_ancient") { }
+
+    CreatureAI* Getnpc_anachronos_the_ancientAI(Creature* creature)
+    {
+        return new npc_anachronos_the_ancientAI (creature);
+    }
+};
 
 void AddSC_silithus()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_highlord_demitrian";
-    newscript->pGossipHello =  &GossipHello_npc_highlord_demitrian;
-    newscript->pGossipSelect = &GossipSelect_npc_highlord_demitrian;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npcs_rutgar_and_frankal";
-    newscript->pGossipHello =   &GossipHello_npcs_rutgar_and_frankal;
-    newscript->pGossipSelect =  &GossipSelect_npcs_rutgar_and_frankal;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_crystalline_tear";
-    newscript->pGOHello = &Hello_go_crystalline_tear;
-    newscript->pGOQuestAccept = &OnQuestAccept;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_qiraj_war_spawn";
-    newscript->GetAI = Getmob_qiraj_war_spawnAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_anachronos_quest_trigger";
-    newscript->GetAI = Getnpc_anachronos_quest_triggerAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_anachronos_the_ancient";
-    newscript->GetAI = Getnpc_anachronos_the_ancientAI;
-    newscript->RegisterSelf();
+    new npc_highlord_demitrian();
+    new npcs_rutgar_and_frankal();
+    new go_crystalline_tear();
+    new mob_qiraj_war_spawn();
+    new npc_anachronos_quest_trigger();
+    new npc_anachronos_the_ancient();
 }
-

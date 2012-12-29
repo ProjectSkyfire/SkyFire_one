@@ -39,229 +39,229 @@ EndScriptData */
 2 - Mekgineer Steamrigger Event
 3 - Warlord Kalithresh Event
 */
-
-bool GOHello_go_main_chambers_access_panel(Player* player, GameObject* _GO)
+class go_main_chambers_access_panel : public GameObjectScript
 {
-    ScriptedInstance* instance = _GO->GetInstanceScript();
+public:
+    go_main_chambers_access_panel() : GameObjectScript("go_main_chambers_access_panel") { }
 
-    if (!instance)
-        return false;
-
-    if (_GO->GetEntry() == ACCESS_PANEL_HYDRO && (instance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE || instance->GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL))
-        instance->SetData(TYPE_HYDROMANCER_THESPIA, SPECIAL);
-
-    if (_GO->GetEntry() == ACCESS_PANEL_MEK && (instance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE || instance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL))
-        instance->SetData(TYPE_MEKGINEER_STEAMRIGGER, SPECIAL);
-
-    return true;
-}
-
-struct instance_steam_vault : public ScriptedInstance
-{
-    instance_steam_vault(Map *map) : ScriptedInstance(map) {Initialize();};
-
-    uint32 Encounter[ENCOUNTERS];
-
-    uint64 ThespiaGUID;
-    uint64 MekgineerGUID;
-    uint64 KalithreshGUID;
-
-    uint64 MainChambersDoor;
-    uint64 AccessPanelHydro;
-    uint64 AccessPanelMek;
-
-    void Initialize()
+    bool GOHello(Player* player, GameObject* _GO)
     {
-        ThespiaGUID = 0;
-        MekgineerGUID = 0;
-        KalithreshGUID = 0;
-        MainChambersDoor = 0;
-        AccessPanelHydro = 0;
-        AccessPanelMek = 0;
+        ScriptedInstance* instance = _GO->GetInstanceScript();
 
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        if (!instance)
+            return false;
+
+        if (_GO->GetEntry() == ACCESS_PANEL_HYDRO && (instance->GetData(TYPE_HYDROMANCER_THESPIA) == DONE || instance->GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL))
+            instance->SetData(TYPE_HYDROMANCER_THESPIA, SPECIAL);
+
+        if (_GO->GetEntry() == ACCESS_PANEL_MEK && (instance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == DONE || instance->GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL))
+            instance->SetData(TYPE_MEKGINEER_STEAMRIGGER, SPECIAL);
+
+        return true;
+    }
+};
+class instance_steam_vault : public InstanceMapScript
+{
+public:
+    instance_steam_vault() : InstanceMapScript("instance_steam_vault") { }
+
+    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
+    {
+        return new instance_steam_vault_InstanceMapScript(map);
     }
 
-    bool IsEncounterInProgress() const
+    struct instance_steam_vault_InstanceMapScript : public ScriptedInstance
     {
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
-             if (Encounter[i] == IN_PROGRESS)
-                 return true;
+        instance_steam_vault_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
 
-        return false;
-    }
+        uint32 Encounter[ENCOUNTERS];
 
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
+        uint64 ThespiaGUID;
+        uint64 MekgineerGUID;
+        uint64 KalithreshGUID;
 
-        if (!players.isEmpty())
+        uint64 MainChambersDoor;
+        uint64 AccessPanelHydro;
+        uint64 AccessPanelMek;
+
+        void Initialize()
         {
-            for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+            ThespiaGUID = 0;
+            MekgineerGUID = 0;
+            KalithreshGUID = 0;
+            MainChambersDoor = 0;
+            AccessPanelHydro = 0;
+            AccessPanelMek = 0;
+
+            for (uint8 i = 0; i < ENCOUNTERS; i++)
+                Encounter[i] = NOT_STARTED;
+        }
+
+        bool IsEncounterInProgress() const
+        {
+            for (uint8 i = 0; i < ENCOUNTERS; i++)
+                 if (Encounter[i] == IN_PROGRESS)
+                     return true;
+
+            return false;
+        }
+
+        Player* GetPlayerInMap()
+        {
+            Map::PlayerList const& players = instance->GetPlayers();
+
+            if (!players.isEmpty())
             {
-                if (Player* plr = itr->getSource())
-                    return plr;
+                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                {
+                    if (Player* plr = itr->getSource())
+                        return plr;
+                }
+            }
+
+            sLog->outDebug("TSCR: Instance Steamvault: GetPlayerInMap, but PlayerList is empty!");
+            return NULL;
+        }
+
+        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        {
+            switch (creature->GetEntry())
+            {
+                case 17797: ThespiaGUID = creature->GetGUID(); break;
+                case 17796: MekgineerGUID = creature->GetGUID(); break;
+                case 17798: KalithreshGUID = creature->GetGUID(); break;
             }
         }
 
-        sLog->outDebug("TSCR: Instance Steamvault: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
-
-    void OnCreatureCreate(Creature* creature, bool /*add*/)
-    {
-        switch (creature->GetEntry())
+        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            case 17797: ThespiaGUID = creature->GetGUID(); break;
-            case 17796: MekgineerGUID = creature->GetGUID(); break;
-            case 17798: KalithreshGUID = creature->GetGUID(); break;
-        }
-    }
-
-    void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
-    {
-        switch (pGo->GetEntry())
-        {
-            case MAIN_CHAMBERS_DOOR: MainChambersDoor = pGo->GetGUID(); break;
-            case ACCESS_PANEL_HYDRO: AccessPanelHydro = pGo->GetGUID(); break;
-            case ACCESS_PANEL_MEK:   AccessPanelMek = pGo->GetGUID(); break;
-        }
-    }
-
-    void SetData(uint32 type, uint32 data)
-    {
-        Player* player = GetPlayerInMap();
-
-        if (!player)
-        {
-            sLog->outDebug("TSCR: Instance Steamvault: SetData (Type: %u Data %u) cannot find any player.", type, data);
-            return;
+            switch (pGo->GetEntry())
+            {
+                case MAIN_CHAMBERS_DOOR: MainChambersDoor = pGo->GetGUID(); break;
+                case ACCESS_PANEL_HYDRO: AccessPanelHydro = pGo->GetGUID(); break;
+                case ACCESS_PANEL_MEK:   AccessPanelMek = pGo->GetGUID(); break;
+            }
         }
 
-        switch (type)
+        void SetData(uint32 type, uint32 data)
         {
-            case TYPE_HYDROMANCER_THESPIA:
-                if (data == SPECIAL)
-                {
-                    if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelHydro))
-                        _go->SetGoState(GO_STATE_ACTIVE);
+            Player* player = GetPlayerInMap();
 
-                    if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
+            if (!player)
+            {
+                sLog->outDebug("TSCR: Instance Steamvault: SetData (Type: %u Data %u) cannot find any player.", type, data);
+                return;
+            }
+
+            switch (type)
+            {
+                case TYPE_HYDROMANCER_THESPIA:
+                    if (data == SPECIAL)
                     {
-                        if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
+                        if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelHydro))
                             _go->SetGoState(GO_STATE_ACTIVE);
-                    }
-                    sLog->outDebug("TSCR: Instance Steamvault: Access panel used.");
-                }
-                Encounter[0] = data;
-                break;
-            case TYPE_MEKGINEER_STEAMRIGGER:
-                if (data == SPECIAL)
-                {
-                    if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelMek))
-                        _go->SetGoState(GO_STATE_ACTIVE);
 
-                    if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
+                        if (GetData(TYPE_MEKGINEER_STEAMRIGGER) == SPECIAL)
+                        {
+                            if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
+                                _go->SetGoState(GO_STATE_ACTIVE);
+                        }
+                        sLog->outDebug("TSCR: Instance Steamvault: Access panel used.");
+                    }
+                    Encounter[0] = data;
+                    break;
+                case TYPE_MEKGINEER_STEAMRIGGER:
+                    if (data == SPECIAL)
                     {
-                     if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
-                      _go->SetGoState(GO_STATE_ACTIVE);
+                        if (GameObject *_go = GameObject::GetGameObject(*player, AccessPanelMek))
+                            _go->SetGoState(GO_STATE_ACTIVE);
+
+                        if (GetData(TYPE_HYDROMANCER_THESPIA) == SPECIAL)
+                        {
+                         if (GameObject *_go = GameObject::GetGameObject(*player, MainChambersDoor))
+                          _go->SetGoState(GO_STATE_ACTIVE);
+                        }
+                        sLog->outDebug("TSCR: Instance Steamvault: Access panel used.");
                     }
-                    sLog->outDebug("TSCR: Instance Steamvault: Access panel used.");
-                }
-                Encounter[1] = data;
-                break;
-            case TYPE_WARLORD_KALITHRESH:
-                Encounter[2] = data;
-                break;
-            case TYPE_DISTILLER:
-                Encounter[3] = data;
-                break;
+                    Encounter[1] = data;
+                    break;
+                case TYPE_WARLORD_KALITHRESH:
+                    Encounter[2] = data;
+                    break;
+                case TYPE_DISTILLER:
+                    Encounter[3] = data;
+                    break;
+            }
+
+            if (data == DONE || data == SPECIAL)
+                SaveToDB();
         }
 
-        if (data == DONE || data == SPECIAL)
-            SaveToDB();
-    }
-
-    uint32 GetData(uint32 type)
-    {
-        switch (type)
+        uint32 GetData(uint32 type)
         {
-            case TYPE_HYDROMANCER_THESPIA:
-                return Encounter[0];
-            case TYPE_MEKGINEER_STEAMRIGGER:
-                return Encounter[1];
-            case TYPE_WARLORD_KALITHRESH:
-                return Encounter[2];
-            case TYPE_DISTILLER:
-                return Encounter[3];
+            switch (type)
+            {
+                case TYPE_HYDROMANCER_THESPIA:
+                    return Encounter[0];
+                case TYPE_MEKGINEER_STEAMRIGGER:
+                    return Encounter[1];
+                case TYPE_WARLORD_KALITHRESH:
+                    return Encounter[2];
+                case TYPE_DISTILLER:
+                    return Encounter[3];
+            }
+            return 0;
         }
-        return 0;
-    }
 
-    uint64 GetData64(uint32 data)
-    {
-        switch (data)
+        uint64 GetData64(uint32 data)
         {
-            case DATA_THESPIA:
-                return ThespiaGUID;
-            case DATA_MEKGINEERSTEAMRIGGER:
-                return MekgineerGUID;
-            case DATA_KALITRESH:
-                return KalithreshGUID;
+            switch (data)
+            {
+                case DATA_THESPIA:
+                    return ThespiaGUID;
+                case DATA_MEKGINEERSTEAMRIGGER:
+                    return MekgineerGUID;
+                case DATA_KALITRESH:
+                    return KalithreshGUID;
+            }
+            return 0;
         }
-        return 0;
-    }
 
-    std::string GetSaveData()
-    {
-        OUT_SAVE_INST_DATA;
-        std::ostringstream stream;
-        stream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " " << Encounter[3];
-        char* out = new char[stream.str().length() + 1];
-        strcpy(out, stream.str().c_str());
-        if (out)
+        std::string GetSaveData()
         {
-            OUT_SAVE_INST_DATA_COMPLETE;
-            return out;
+            OUT_SAVE_INST_DATA;
+            std::ostringstream stream;
+            stream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " " << Encounter[3];
+            char* out = new char[stream.str().length() + 1];
+            strcpy(out, stream.str().c_str());
+            if (out)
+            {
+                OUT_SAVE_INST_DATA_COMPLETE;
+                return out;
+            }
+            return NULL;
         }
-        return NULL;
-    }
 
-    void Load(const char* in)
-    {
-        if (!in)
+        void Load(const char* in)
         {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
+            if (!in)
+            {
+                OUT_LOAD_INST_DATA_FAIL;
+                return;
+            }
+            OUT_LOAD_INST_DATA(in);
+            std::istringstream stream(in);
+            stream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3];
+            for (uint8 i = 0; i < ENCOUNTERS; ++i)
+                if (Encounter[i] == IN_PROGRESS)
+                    Encounter[i] = NOT_STARTED;
+            OUT_LOAD_INST_DATA_COMPLETE;
         }
-        OUT_LOAD_INST_DATA(in);
-        std::istringstream stream(in);
-        stream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3];
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounter[i] == IN_PROGRESS)
-                Encounter[i] = NOT_STARTED;
-        OUT_LOAD_INST_DATA_COMPLETE;
-    }
+    };
 };
-
-InstanceScript* GetInstanceData_instance_steam_vault(Map* map)
-{
-    return new instance_steam_vault(map);
-}
 
 void AddSC_instance_steam_vault()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "go_main_chambers_access_panel";
-    newscript->pGOHello = &GOHello_go_main_chambers_access_panel;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "instance_steam_vault";
-    newscript->GetInstanceScript = &GetInstanceData_instance_steam_vault;
-    newscript->RegisterSelf();
+    new go_main_chambers_access_panel();
+    new instance_steam_vault();
 }
-

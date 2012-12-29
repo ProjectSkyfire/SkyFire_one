@@ -34,121 +34,122 @@ EndScriptData */
 #define SPELL_THRASH            3391
 #define SPELL_SUMMON            26446
 #define SPELL_SLASH             25814
-
-struct boss_kurinnaxxAI : public ScriptedAI
+class boss_kurinnaxx : public CreatureScript
 {
-    boss_kurinnaxxAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_kurinnaxx() : CreatureScript("boss_kurinnaxx") { }
 
-    uint32 MORTALWOUND_Timer;
-    uint32 SANDTRAP_Timer;
-    uint32 THRASH_Timer;
-    uint32 SUMMON_Timer;
-    uint32 SLASH_Timer;
-
-    bool enraged;
-    bool sandtrap;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        MORTALWOUND_Timer = 5000;
-        SANDTRAP_Timer = 10000;
-        THRASH_Timer = 7000;
-        SLASH_Timer = 8500;
-        SUMMON_Timer = 12000;
-
-        sandtrap = false;
-        enraged = false;
+        return new boss_kurinnaxxAI (creature);
     }
 
-    void UpdateAI(const uint32 diff)
+    struct boss_kurinnaxxAI : public ScriptedAI
     {
-        if (!UpdateVictim())
-            return;
+        boss_kurinnaxxAI(Creature *c) : ScriptedAI(c) {}
 
-        //If we are <30% cast enrage
-        if (!enraged && me->GetHealth()*100 / me->GetMaxHealth() <= 30 && !me->IsNonMeleeSpellCasted(false))
+        uint32 MORTALWOUND_Timer;
+        uint32 SANDTRAP_Timer;
+        uint32 THRASH_Timer;
+        uint32 SUMMON_Timer;
+        uint32 SLASH_Timer;
+
+        bool enraged;
+        bool sandtrap;
+
+        void Reset()
         {
-            enraged = true;
-            DoCast(me, SPELL_ENRAGE, true);
-        } else if (enraged && !me->HasAura(SPELL_ENRAGE, 0))
-        {
-            DoCast(me, SPELL_ENRAGE, true);
+            MORTALWOUND_Timer = 5000;
+            SANDTRAP_Timer = 10000;
+            THRASH_Timer = 7000;
+            SLASH_Timer = 8500;
+            SUMMON_Timer = 12000;
+
+            sandtrap = false;
+            enraged = false;
         }
 
-        //MORTALWOUND_Timer
-        if (MORTALWOUND_Timer <= diff)
+        void UpdateAI(const uint32 diff)
         {
-            DoCast(me->getVictim(),SPELL_MORTALWOUND);
-            MORTALWOUND_Timer = 6000 + rand()%2000;
-        } else MORTALWOUND_Timer -= diff;
+            if (!UpdateVictim())
+                return;
 
-        if (THRASH_Timer <= diff)
-        {
-            DoCast(me, SPELL_THRASH);
-            THRASH_Timer = 3000+ rand()%5000;
-        } else THRASH_Timer -= diff;
-
-        if (SLASH_Timer <= diff)
-        {
-            DoCast(me->getVictim(),SPELL_SLASH);
-            SLASH_Timer = 5000 + rand()%5000;
-        } else SLASH_Timer -= diff;
-
-        if (SUMMON_Timer <= diff)
-        {
-            Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 70, true);
-            if (pTarget)
+            //If we are <30% cast enrage
+            if (!enraged && me->GetHealth()*100 / me->GetMaxHealth() <= 30 && !me->IsNonMeleeSpellCasted(false))
             {
-                DoCast(pTarget, SPELL_SUMMON);
+                enraged = true;
+                DoCast(me, SPELL_ENRAGE, true);
+            } else if (enraged && !me->HasAura(SPELL_ENRAGE, 0))
+            {
+                DoCast(me, SPELL_ENRAGE, true);
             }
-            SUMMON_Timer = 8000 + rand()%2000;
-        } else SUMMON_Timer -= diff;
 
-        //SANDTRAP_Timer
-        if (SANDTRAP_Timer <= diff)
-        {
-            if (!sandtrap)
+            //MORTALWOUND_Timer
+            if (MORTALWOUND_Timer <= diff)
             {
-                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 50, true);
+                DoCast(me->getVictim(),SPELL_MORTALWOUND);
+                MORTALWOUND_Timer = 6000 + rand()%2000;
+            } else MORTALWOUND_Timer -= diff;
 
+            if (THRASH_Timer <= diff)
+            {
+                DoCast(me, SPELL_THRASH);
+                THRASH_Timer = 3000+ rand()%5000;
+            } else THRASH_Timer -= diff;
+
+            if (SLASH_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_SLASH);
+                SLASH_Timer = 5000 + rand()%5000;
+            } else SLASH_Timer -= diff;
+
+            if (SUMMON_Timer <= diff)
+            {
+                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 70, true);
                 if (pTarget)
                 {
-                    pTarget->CastSpell(pTarget, SPELL_SANDTRAP, true, 0, 0, me->GetGUID());
-                    sandtrap = true;
+                    DoCast(pTarget, SPELL_SUMMON);
                 }
-                SANDTRAP_Timer = 5000;
-            } else
+                SUMMON_Timer = 8000 + rand()%2000;
+            } else SUMMON_Timer -= diff;
+
+            //SANDTRAP_Timer
+            if (SANDTRAP_Timer <= diff)
             {
-                if (GameObject* trap = me->FindNearestGameObject(180647, 100))
+                if (!sandtrap)
                 {
-                    float x, y, z;
-                    trap->GetPosition(x, y, z);
+                    Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 50, true);
 
-                    //trap->CastSpell((Unit*)trap, 25656);
-                    Creature* trigger = me->SummonCreature(15426, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN, 2000);
+                    if (pTarget)
+                    {
+                        pTarget->CastSpell(pTarget, SPELL_SANDTRAP, true, 0, 0, me->GetGUID());
+                        sandtrap = true;
+                    }
+                    SANDTRAP_Timer = 5000;
+                } else
+                {
+                    if (GameObject* trap = me->FindNearestGameObject(180647, 100))
+                    {
+                        float x, y, z;
+                        trap->GetPosition(x, y, z);
 
-                    trigger->CastSpell(trigger, 25656, false);
-                    trap->Delete();
+                        //trap->CastSpell((Unit*)trap, 25656);
+                        Creature* trigger = me->SummonCreature(15426, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN, 2000);
+
+                        trigger->CastSpell(trigger, 25656, false);
+                        trap->Delete();
+                    }
+                    SANDTRAP_Timer = 5000;
+                    sandtrap = false;
                 }
-                SANDTRAP_Timer = 5000;
-                sandtrap = false;
-            }
-        } else SANDTRAP_Timer -= diff;
+            } else SANDTRAP_Timer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_boss_kurinnaxx(Creature* creature)
-{
-    return new boss_kurinnaxxAI (creature);
-}
 
 void AddSC_boss_kurinnaxx()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_kurinnaxx";
-    newscript->GetAI = &GetAI_boss_kurinnaxx;
-    newscript->RegisterSelf();
+    new boss_kurinnaxx();
 }
-

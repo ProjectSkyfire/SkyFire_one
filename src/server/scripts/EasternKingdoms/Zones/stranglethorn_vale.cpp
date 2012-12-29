@@ -34,82 +34,88 @@ EndContentData */
 /*######
 ## mob_yenniku
 ######*/
-
-struct mob_yennikuAI : public ScriptedAI
+class mob_yenniku : public CreatureScript
 {
-    mob_yennikuAI(Creature *c) : ScriptedAI(c)
+public:
+    mob_yenniku() : CreatureScript("mob_yenniku") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        bReset = false;
+        return new mob_yennikuAI (creature);
     }
 
-    uint32 Reset_Timer;
-    bool bReset;
-
-    void Reset()
+    struct mob_yennikuAI : public ScriptedAI
     {
-        Reset_Timer = 0;
-        me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-    }
-
-    void SpellHit(Unit *caster, const SpellEntry *spell)
-    {
-        if (caster->GetTypeId() == TYPEID_PLAYER)
+        mob_yennikuAI(Creature *c) : ScriptedAI(c)
         {
-                                                            //Yenniku's Release
-            if (!bReset && CAST_PLR(caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)
-            {
-                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
-                me->CombatStop();                   //stop combat
-                me->DeleteThreatList();             //unsure of this
-                me->setFaction(83);                 //horde generic
-
-                bReset = true;
-                Reset_Timer = 60000;
-            }
+            bReset = false;
         }
-        return;
-    }
 
-    void EnterCombat(Unit * /*who*/) {}
+        uint32 Reset_Timer;
+        bool bReset;
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (bReset)
+        void Reset()
         {
-            if (Reset_Timer <= diff)
-            {
-                EnterEvadeMode();
-                bReset = false;
-                me->setFaction(28);                     //troll, bloodscalp
-                return;
-            }
-            else Reset_Timer -= diff;
+            Reset_Timer = 0;
+            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
+        }
 
-            if (me->isInCombat() && me->getVictim())
+        void SpellHit(Unit *caster, const SpellEntry *spell)
+        {
+            if (caster->GetTypeId() == TYPEID_PLAYER)
             {
-                if (me->getVictim()->GetTypeId() == TYPEID_PLAYER)
+                                                                //Yenniku's Release
+                if (!bReset && CAST_PLR(caster)->GetQuestStatus(592) == QUEST_STATUS_INCOMPLETE && spell->Id == 3607)
                 {
-                    Unit *victim = me->getVictim();
-                    if (CAST_PLR(victim)->GetTeam() == HORDE)
-                    {
-                        me->CombatStop();
-                        me->DeleteThreatList();
-                    }
+                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_STUN);
+                    me->CombatStop();                   //stop combat
+                    me->DeleteThreatList();             //unsure of this
+                    me->setFaction(83);                 //horde generic
+
+                    bReset = true;
+                    Reset_Timer = 60000;
                 }
             }
-         }
-
-        //Return since we have no target
-        if (!UpdateVictim())
             return;
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        void EnterCombat(Unit * /*who*/) {}
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (bReset)
+            {
+                if (Reset_Timer <= diff)
+                {
+                    EnterEvadeMode();
+                    bReset = false;
+                    me->setFaction(28);                     //troll, bloodscalp
+                    return;
+                }
+                else Reset_Timer -= diff;
+
+                if (me->isInCombat() && me->getVictim())
+                {
+                    if (me->getVictim()->GetTypeId() == TYPEID_PLAYER)
+                    {
+                        Unit *victim = me->getVictim();
+                        if (CAST_PLR(victim)->GetTeam() == HORDE)
+                        {
+                            me->CombatStop();
+                            me->DeleteThreatList();
+                        }
+                    }
+                }
+             }
+
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_mob_yenniku(Creature* creature)
-{
-    return new mob_yennikuAI (creature);
-}
 
 /*######
 ##
@@ -117,10 +123,5 @@ CreatureAI* GetAI_mob_yenniku(Creature* creature)
 
 void AddSC_stranglethorn_vale()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "mob_yenniku";
-    newscript->GetAI = &GetAI_mob_yenniku;
-    newscript->RegisterSelf();
+    new mob_yenniku();
 }

@@ -65,157 +65,158 @@ EndScriptData */
 #define ADD_3X 2861.102f
 #define ADD_3Y -3997.901f
 #define ADD_3Z 274.280f
-
-struct boss_loathebAI : public ScriptedAI
+class boss_loatheb : public CreatureScript
 {
-    boss_loathebAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_loatheb() : CreatureScript("boss_loatheb") { }
 
-    uint32 CorruptedMind_Timer;
-    uint32 PoisonAura_Timer;
-    uint32 InevitableDoom_Timer;
-    uint32 InevitableDoom5mins_Timer;
-    uint32 RemoveCurse_Timer;
-    uint32 Summon_Timer;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        CorruptedMind_Timer = 4000;
-        PoisonAura_Timer = 2500;
-        InevitableDoom_Timer = 120000;
-        InevitableDoom5mins_Timer = 300000;
-        RemoveCurse_Timer = 30000;
-        Summon_Timer = 8000;
+        return new boss_loathebAI (creature);
     }
 
-    void EnterCombat(Unit *who)
+    struct boss_loathebAI : public ScriptedAI
     {
-        switch (rand()%3)
+        boss_loathebAI(Creature *c) : ScriptedAI(c) {}
+
+        uint32 CorruptedMind_Timer;
+        uint32 PoisonAura_Timer;
+        uint32 InevitableDoom_Timer;
+        uint32 InevitableDoom5mins_Timer;
+        uint32 RemoveCurse_Timer;
+        uint32 Summon_Timer;
+
+        void Reset()
         {
-            case 0:
-                me->MonsterYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_AGGRO1);
-                break;
-            case 1:
-                me->MonsterYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_AGGRO2);
-                break;
-            case 2:
-                me->MonsterYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_AGGRO3);
-                break;
-        }
-    }
-
-    void KilledUnit(Unit* victim)
-    {
-        switch (rand()%6)
-        {
-            case 0:
-                me->MonsterYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_SLAY1);
-                break;
-            case 1:
-                me->MonsterYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_SLAY2);
-                break;
-            case 2:
-                me->MonsterYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_SLAY3);
-                break;
-            case 3:
-                me->MonsterYell(SAY_SLAY4, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_SLAY4);
-                break;
-            case 4:
-                me->MonsterYell(SAY_SLAY5, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_SLAY5);
-                break;
-            case 5:
-                me->MonsterYell(SAY_SLAY6, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_SLAY6);
-                break;
-        }
-    }
-
-    void JustDied(Unit* Killer)
-    {
-        me->MonsterYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
-        DoPlaySoundToSet(me, SOUND_DEATH);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        //CorruptedMind_Timer
-        if (CorruptedMind_Timer <= diff)
-        {
-            DoCast(me->getVictim(),SPELL_CORRUPTED_MIND);
-            CorruptedMind_Timer = 62000;
-        } else CorruptedMind_Timer -= diff;
-
-        //PoisonAura_Timer
-        if (PoisonAura_Timer <= diff)
-        {
-            DoCast(me->getVictim(),SPELL_POISON_AURA);
-            PoisonAura_Timer = 60000;
-        } else PoisonAura_Timer -= diff;
-
-        //InevitableDoom_Timer
-        if (InevitableDoom_Timer <= diff)
-        {
-            DoCast(me->getVictim(),SPELL_INEVITABLE_DOOM);
+            CorruptedMind_Timer = 4000;
+            PoisonAura_Timer = 2500;
             InevitableDoom_Timer = 120000;
-        } else InevitableDoom_Timer -= diff;
-
-        //InevitableDoom5mins_Timer
-        if (InevitableDoom5mins_Timer <= diff)
-        {
-            DoCast(me->getVictim(),SPELL_INEVITABLE_DOOM);
-            InevitableDoom5mins_Timer = 15000;
-        } else InevitableDoom5mins_Timer -= diff;
-
-        //RemoveCurse_Timer
-        if (RemoveCurse_Timer <= diff)
-        {
-            DoCast(me, SPELL_REMOVE_CURSE);
+            InevitableDoom5mins_Timer = 300000;
             RemoveCurse_Timer = 30000;
-        } else RemoveCurse_Timer -= diff;
+            Summon_Timer = 8000;
+        }
 
-        //Summon_Timer
-        if (Summon_Timer <= diff)
+        void EnterCombat(Unit *who)
         {
-            Unit *pTarget = NULL;
-            Unit* SummonedSpores = NULL;
-
-            SummonedSpores = me->SummonCreature(16286, ADD_1X, ADD_1Y, ADD_1Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-            SummonedSpores = me->SummonCreature(16286, ADD_2X, ADD_2Y, ADD_2Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-            SummonedSpores = me->SummonCreature(16286, ADD_3X, ADD_3Y, ADD_3Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-            if (SummonedSpores)
+            switch (rand()%3)
             {
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if (pTarget)
-                    SummonedSpores->AddThreat(pTarget, 1.0f);
+                case 0:
+                    me->MonsterYell(SAY_AGGRO1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_AGGRO1);
+                    break;
+                case 1:
+                    me->MonsterYell(SAY_AGGRO2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_AGGRO2);
+                    break;
+                case 2:
+                    me->MonsterYell(SAY_AGGRO3, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_AGGRO3);
+                    break;
             }
+        }
 
-            Summon_Timer = 28000;
-        } else Summon_Timer -= diff;
+        void KilledUnit(Unit* victim)
+        {
+            switch (rand()%6)
+            {
+                case 0:
+                    me->MonsterYell(SAY_SLAY1, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_SLAY1);
+                    break;
+                case 1:
+                    me->MonsterYell(SAY_SLAY2, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_SLAY2);
+                    break;
+                case 2:
+                    me->MonsterYell(SAY_SLAY3, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_SLAY3);
+                    break;
+                case 3:
+                    me->MonsterYell(SAY_SLAY4, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_SLAY4);
+                    break;
+                case 4:
+                    me->MonsterYell(SAY_SLAY5, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_SLAY5);
+                    break;
+                case 5:
+                    me->MonsterYell(SAY_SLAY6, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_SLAY6);
+                    break;
+            }
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        void JustDied(Unit* Killer)
+        {
+            me->MonsterYell(SAY_DEATH, LANG_UNIVERSAL, NULL);
+            DoPlaySoundToSet(me, SOUND_DEATH);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            //CorruptedMind_Timer
+            if (CorruptedMind_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_CORRUPTED_MIND);
+                CorruptedMind_Timer = 62000;
+            } else CorruptedMind_Timer -= diff;
+
+            //PoisonAura_Timer
+            if (PoisonAura_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_POISON_AURA);
+                PoisonAura_Timer = 60000;
+            } else PoisonAura_Timer -= diff;
+
+            //InevitableDoom_Timer
+            if (InevitableDoom_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_INEVITABLE_DOOM);
+                InevitableDoom_Timer = 120000;
+            } else InevitableDoom_Timer -= diff;
+
+            //InevitableDoom5mins_Timer
+            if (InevitableDoom5mins_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_INEVITABLE_DOOM);
+                InevitableDoom5mins_Timer = 15000;
+            } else InevitableDoom5mins_Timer -= diff;
+
+            //RemoveCurse_Timer
+            if (RemoveCurse_Timer <= diff)
+            {
+                DoCast(me, SPELL_REMOVE_CURSE);
+                RemoveCurse_Timer = 30000;
+            } else RemoveCurse_Timer -= diff;
+
+            //Summon_Timer
+            if (Summon_Timer <= diff)
+            {
+                Unit *pTarget = NULL;
+                Unit* SummonedSpores = NULL;
+
+                SummonedSpores = me->SummonCreature(16286, ADD_1X, ADD_1Y, ADD_1Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+                SummonedSpores = me->SummonCreature(16286, ADD_2X, ADD_2Y, ADD_2Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+                SummonedSpores = me->SummonCreature(16286, ADD_3X, ADD_3Y, ADD_3Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
+                if (SummonedSpores)
+                {
+                    pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    if (pTarget)
+                        SummonedSpores->AddThreat(pTarget, 1.0f);
+                }
+
+                Summon_Timer = 28000;
+            } else Summon_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_boss_loatheb(Creature* creature)
-{
-    return new boss_loathebAI (creature);
-}
 
 void AddSC_boss_loatheb()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_loatheb";
-    newscript->GetAI = &GetAI_boss_loatheb;
-    newscript->RegisterSelf();
+    new boss_loatheb();
 }
-

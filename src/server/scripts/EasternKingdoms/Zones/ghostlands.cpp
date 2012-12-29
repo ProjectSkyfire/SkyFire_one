@@ -40,99 +40,119 @@ EndContentData */
 ######*/
 
 #define GOSSIP_H_BKD "Take Blood Knight Insignia"
-
-bool GossipHello_npc_blood_knight_dawnstar(Player* player, Creature* creature)
+class npc_blood_knight_dawnstar : public CreatureScript
 {
-    if (player->GetQuestStatus(9692) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(24226, 1, true))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_H_BKD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+public:
+    npc_blood_knight_dawnstar() : CreatureScript("npc_blood_knight_dawnstar") { }
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-
-    return true;
-}
-
-bool GossipSelect_npc_blood_knight_dawnstar(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    bool GossipSelect(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
-        ItemPosCountVec dest;
-        uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 24226, 1, false);
-        if (msg == EQUIP_ERR_OK)
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
-            player->StoreNewItem(dest, 24226, 1, true);
-            player->PlayerTalkClass->ClearMenus();
+            ItemPosCountVec dest;
+            uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 24226, 1, false);
+            if (msg == EQUIP_ERR_OK)
+            {
+                player->StoreNewItem(dest, 24226, 1, true);
+                player->PlayerTalkClass->ClearMenus();
+            }
         }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (player->GetQuestStatus(9692) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(24226, 1, true))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_H_BKD, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+        return true;
+    }
+};
 
 /*######
 ## npc_budd_nedreck
 ######*/
 
 #define GOSSIP_HBN "You gave the crew disguises?"
-
-bool GossipHello_npc_budd_nedreck(Player* player, Creature* creature)
+class npc_budd_nedreck : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_budd_nedreck() : CreatureScript("npc_budd_nedreck") { }
 
-    if (player->GetQuestStatus(11166) == QUEST_STATUS_INCOMPLETE)
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_budd_nedreck(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        player->CLOSE_GOSSIP_MENU();
-        creature->CastSpell(player, 42540, false);
+        if (uiAction == GOSSIP_ACTION_INFO_DEF)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            creature->CastSpell(player, 42540, false);
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (player->GetQuestStatus(11166) == QUEST_STATUS_INCOMPLETE)
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HBN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        return true;
+    }
+};
 
 /*######
 ## npc_rathis_tomber
 ######*/
-
-bool GossipHello_npc_rathis_tomber(Player* player, Creature* creature)
+class npc_rathis_tomber : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_rathis_tomber() : CreatureScript("npc_rathis_tomber") { }
 
-    if (creature->isVendor() && player->GetQuestRewardStatus(9152))
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        player->SEND_GOSSIP_MENU(8432, creature->GetGUID());
-    }else
-    player->SEND_GOSSIP_MENU(8431, creature->GetGUID());
+        if (uiAction == GOSSIP_ACTION_TRADE)
+            player->SEND_VENDORLIST(creature->GetGUID());
+        return true;
+    }
 
-    return true;
-}
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
 
-bool GossipSelect_npc_rathis_tomber(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        player->SEND_VENDORLIST(creature->GetGUID());
-    return true;
-}
+        if (creature->isVendor() && player->GetQuestRewardStatus(9152))
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+            player->SEND_GOSSIP_MENU(8432, creature->GetGUID());
+        }else
+        player->SEND_GOSSIP_MENU(8431, creature->GetGUID());
+
+        return true;
+    }
+};
 
 /*#####
 ## go_gilded_brazier (Paladin First Trail quest (9678))
 #####*/
-
-bool GOHello_gilded_brazier(Player* player, GameObject* _GO)
+class go_gilded_brazier : public GameObjectScript
 {
-    if (player->GetQuestStatus(9678) == QUEST_STATUS_INCOMPLETE)
+public:
+    go_gilded_brazier() : GameObjectScript("go_gilded_brazier") { }
+
+    bool GOHello_gilded_brazier(Player* player, GameObject* _GO)
     {
-        Creature *Stillblade = player->SummonCreature(17716, 8106.11f, -7542.06f, 151.775f, 3.02598f, TEMPSUMMON_DEAD_DESPAWN, 60000);
-        if (Stillblade)
-            ((CreatureAI*)Stillblade->AI())->AttackStart(player);
-    }
-    return true;
+        if (player->GetQuestStatus(9678) == QUEST_STATUS_INCOMPLETE)
+        {
+            Creature *Stillblade = player->SummonCreature(17716, 8106.11f, -7542.06f, 151.775f, 3.02598f, TEMPSUMMON_DEAD_DESPAWN, 60000);
+            if (Stillblade)
+                ((CreatureAI*)Stillblade->AI())->AttackStart(player);
+        }
+        return true;
+    };
 };
 
 /*######
@@ -221,54 +241,34 @@ struct npc_ranger_lilathaAI : public npc_escortAI
             Cage->SetGoState(GO_STATE_READY);
     }
 };
-
-bool QuestAccept_npc_ranger_lilatha(Player* player, Creature* creature, Quest const* quest)
+class npc_ranger_lilatha : public CreatureScript
 {
-    if (quest->GetQuestId() == QUEST_ESCAPE_FROM_THE_CATACOMBS)
+public:
+    npc_ranger_lilatha() : CreatureScript("npc_ranger_lilatha") { }
+
+    bool QuestAccept(Player* player, Creature* creature, Quest const* quest)
     {
-        creature->setFaction(113);
+        if (quest->GetQuestId() == QUEST_ESCAPE_FROM_THE_CATACOMBS)
+        {
+            creature->setFaction(113);
 
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_ranger_lilathaAI, creature->AI()))
-            pEscortAI->Start(true, false, player->GetGUID());
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_ranger_lilathaAI, creature->AI()))
+                pEscortAI->Start(true, false, player->GetGUID());
+        }
+        return true;
     }
-    return true;
-}
 
-CreatureAI* GetAI_npc_ranger_lilathaAI(Creature* creature)
-{
-    return  new npc_ranger_lilathaAI(creature);
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return  new npc_ranger_lilathaAI(creature);
+    }
+};
 
 void AddSC_ghostlands()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_blood_knight_dawnstar";
-    newscript->pGossipHello = &GossipHello_npc_blood_knight_dawnstar;
-    newscript->pGossipSelect = &GossipSelect_npc_blood_knight_dawnstar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_budd_nedreck";
-    newscript->pGossipHello = &GossipHello_npc_budd_nedreck;
-    newscript->pGossipSelect = &GossipSelect_npc_budd_nedreck;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_rathis_tomber";
-    newscript->pGossipHello = &GossipHello_npc_rathis_tomber;
-    newscript->pGossipSelect = &GossipSelect_npc_rathis_tomber;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_gilded_brazier";
-    newscript->pGOHello = &GOHello_gilded_brazier;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_ranger_lilatha";
-    newscript->GetAI = &GetAI_npc_ranger_lilathaAI;
-    newscript->pQuestAccept = &QuestAccept_npc_ranger_lilatha;
-    newscript->RegisterSelf();
+    new npc_blood_knight_dawnstar();
+    new npc_budd_nedreck();
+    new npc_rathis_tomber();
+    new go_gilded_brazier();
+    new npc_ranger_lilatha();
 }

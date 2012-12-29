@@ -38,44 +38,50 @@ EndContentData */
 
 //possible creatures to be spawned
 const uint32 possibleSpawns[32] = {17322, 17661, 17496, 17522, 17340, 17352, 17333, 17524, 17654, 17348, 17339, 17345, 17359, 17353, 17336, 17550, 17330, 17701, 17321, 17680, 17325, 17320, 17683, 17342, 17715, 17334, 17341, 17338, 17337, 17346, 17344, 17327};
-
-struct mob_webbed_creatureAI : public ScriptedAI
+class mob_webbed_creature : public CreatureScript
 {
-    mob_webbed_creatureAI(Creature *c) : ScriptedAI(c) {}
+public:
+    mob_webbed_creature() : CreatureScript("mob_webbed_creature") { }
 
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
+        return new mob_webbed_creatureAI (creature);
     }
 
-    void EnterCombat(Unit* /*who*/)
+    struct mob_webbed_creatureAI : public ScriptedAI
     {
-    }
+        mob_webbed_creatureAI(Creature *c) : ScriptedAI(c) {}
 
-    void JustDied(Unit* Killer)
-    {
-        uint32 spawnCreatureID = 0;
-
-        switch (urand(0, 2))
+        void Reset()
         {
-            case 0:
-                spawnCreatureID = 17681;
-                if (Killer->GetTypeId() == TYPEID_PLAYER)
-                    CAST_PLR(Killer)->KilledMonsterCredit(spawnCreatureID, me->GetGUID());
-                break;
-            case 1:
-            case 2:
-                spawnCreatureID = possibleSpawns[urand(0, 30)];
-                break;
         }
 
-        if (spawnCreatureID)
-            DoSpawnCreature(spawnCreatureID, 0, 0, 0, me->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-    }
+        void EnterCombat(Unit* /*who*/)
+        {
+        }
+
+        void JustDied(Unit* Killer)
+        {
+            uint32 spawnCreatureID = 0;
+
+            switch (urand(0, 2))
+            {
+                case 0:
+                    spawnCreatureID = 17681;
+                    if (Killer->GetTypeId() == TYPEID_PLAYER)
+                        CAST_PLR(Killer)->KilledMonsterCredit(spawnCreatureID, me->GetGUID());
+                    break;
+                case 1:
+                case 2:
+                    spawnCreatureID = possibleSpawns[urand(0, 30)];
+                    break;
+            }
+
+            if (spawnCreatureID)
+                DoSpawnCreature(spawnCreatureID, 0, 0, 0, me->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+        }
+    };
 };
-CreatureAI* GetAI_mob_webbed_creature(Creature* creature)
-{
-    return new mob_webbed_creatureAI (creature);
-}
 
 /*######
 ## npc_captured_sunhawk_agent
@@ -89,65 +95,59 @@ CreatureAI* GetAI_mob_webbed_creature(Creature* creature)
 #define GOSSIP_SELECT_CSA3   "[PH] "
 #define GOSSIP_SELECT_CSA4   "[PH] "
 #define GOSSIP_SELECT_CSA5   "[PH] "
-
-bool GossipHello_npc_captured_sunhawk_agent(Player* player, Creature* creature)
+class npc_captured_sunhawk_agent : public CreatureScript
 {
-    if (player->HasAura(31609, 1) && player->GetQuestStatus(9756) == QUEST_STATUS_INCOMPLETE)
-    {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_CSA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(9136, creature->GetGUID());
-    }
-    else
-        player->SEND_GOSSIP_MENU(9134, creature->GetGUID());
+public:
+    npc_captured_sunhawk_agent() : CreatureScript("npc_captured_sunhawk_agent") { }
 
-    return true;
-}
-
-bool GossipSelect_npc_captured_sunhawk_agent(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            player->SEND_GOSSIP_MENU(9137, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            player->SEND_GOSSIP_MENU(9138, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            player->SEND_GOSSIP_MENU(9139, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-            player->SEND_GOSSIP_MENU(9140, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-            player->SEND_GOSSIP_MENU(9141, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+6:
-            player->CLOSE_GOSSIP_MENU();
-            player->TalkedToCreature(C_SUNHAWK_TRIGGER, creature->GetGUID());
-            break;
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                player->SEND_GOSSIP_MENU(9137, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+                player->SEND_GOSSIP_MENU(9138, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+                player->SEND_GOSSIP_MENU(9139, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                player->SEND_GOSSIP_MENU(9140, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_CSA5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+                player->SEND_GOSSIP_MENU(9141, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+6:
+                player->CLOSE_GOSSIP_MENU();
+                player->TalkedToCreature(C_SUNHAWK_TRIGGER, creature->GetGUID());
+                break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (player->HasAura(31609, 1) && player->GetQuestStatus(9756) == QUEST_STATUS_INCOMPLETE)
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_CSA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->SEND_GOSSIP_MENU(9136, creature->GetGUID());
+        }
+        else
+            player->SEND_GOSSIP_MENU(9134, creature->GetGUID());
+
+        return true;
+    }
+};
 
 void AddSC_bloodmyst_isle()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "mob_webbed_creature";
-    newscript->GetAI = &GetAI_mob_webbed_creature;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_captured_sunhawk_agent";
-    newscript->pGossipHello =  &GossipHello_npc_captured_sunhawk_agent;
-    newscript->pGossipSelect = &GossipSelect_npc_captured_sunhawk_agent;
-    newscript->RegisterSelf();
+    new mob_webbed_creature();
+    new npc_captured_sunhawk_agent();
 }
-

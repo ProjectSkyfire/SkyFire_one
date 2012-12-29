@@ -42,100 +42,100 @@ EndScriptData */
 #define H_SPELL_VOID_BLAST              38760
 #define SPELL_DARK_SHELL                32358
 #define H_SPELL_DARK_SHELL              38759
-
-struct boss_pandemoniusAI : public ScriptedAI
+class boss_pandemonius : public CreatureScript
 {
-    boss_pandemoniusAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_pandemonius() : CreatureScript("boss_pandemonius") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        HeroicMode = me->GetMap()->IsHeroic();
+        return new boss_pandemoniusAI (creature);
     }
 
-    bool HeroicMode;
-    uint32 VoidBlast_Timer;
-    uint32 DarkShell_Timer;
-    uint32 VoidBlast_Counter;
-
-    void Reset()
+    struct boss_pandemoniusAI : public ScriptedAI
     {
-        VoidBlast_Timer = 30000;
-        DarkShell_Timer = 20000;
-        VoidBlast_Counter = 0;
-    }
-
-    void JustDied(Unit* Killer)
-    {
-        DoScriptText(SAY_DEATH, me);
-    }
-
-    void KilledUnit(Unit* victim)
-    {
-        switch (rand()%2)
+        boss_pandemoniusAI(Creature *c) : ScriptedAI(c)
         {
-            case 0: DoScriptText(SAY_KILL_1, me); break;
-            case 1: DoScriptText(SAY_KILL_2, me); break;
+            HeroicMode = me->GetMap()->IsHeroic();
         }
-    }
 
-    void EnterCombat(Unit *who)
-    {
-        switch (rand()%3)
+        bool HeroicMode;
+        uint32 VoidBlast_Timer;
+        uint32 DarkShell_Timer;
+        uint32 VoidBlast_Counter;
+
+        void Reset()
         {
-            case 0: DoScriptText(SAY_AGGRO_1, me); break;
-            case 1: DoScriptText(SAY_AGGRO_2, me); break;
-            case 2: DoScriptText(SAY_AGGRO_3, me); break;
+            VoidBlast_Timer = 30000;
+            DarkShell_Timer = 20000;
+            VoidBlast_Counter = 0;
         }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (VoidBlast_Timer <= diff)
+        void JustDied(Unit* Killer)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+            DoScriptText(SAY_DEATH, me);
+        }
+
+        void KilledUnit(Unit* victim)
+        {
+            switch (rand()%2)
             {
-                DoCast(pTarget, HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
-                VoidBlast_Timer = 500;
-                ++VoidBlast_Counter;
+                case 0: DoScriptText(SAY_KILL_1, me); break;
+                case 1: DoScriptText(SAY_KILL_2, me); break;
+            }
+        }
+
+        void EnterCombat(Unit *who)
+        {
+            switch (rand()%3)
+            {
+                case 0: DoScriptText(SAY_AGGRO_1, me); break;
+                case 1: DoScriptText(SAY_AGGRO_2, me); break;
+                case 2: DoScriptText(SAY_AGGRO_3, me); break;
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (VoidBlast_Timer <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                {
+                    DoCast(pTarget, HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
+                    VoidBlast_Timer = 500;
+                    ++VoidBlast_Counter;
+                }
+
+                if (VoidBlast_Counter == 5)
+                {
+                    VoidBlast_Timer = 25000+rand()%10000;
+                    VoidBlast_Counter = 0;
+                }
+            } else VoidBlast_Timer -= diff;
+
+            if (!VoidBlast_Counter)
+            {
+                if (DarkShell_Timer <= diff)
+                {
+                    if (me->IsNonMeleeSpellCasted(false))
+                        me->InterruptNonMeleeSpells(true);
+
+                    DoScriptText(EMOTE_DARK_SHELL, me);
+
+                    DoCast(me, HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
+                    DarkShell_Timer = 20000;
+                } else DarkShell_Timer -= diff;
             }
 
-            if (VoidBlast_Counter == 5)
-            {
-                VoidBlast_Timer = 25000+rand()%10000;
-                VoidBlast_Counter = 0;
-            }
-        } else VoidBlast_Timer -= diff;
-
-        if (!VoidBlast_Counter)
-        {
-            if (DarkShell_Timer <= diff)
-            {
-                if (me->IsNonMeleeSpellCasted(false))
-                    me->InterruptNonMeleeSpells(true);
-
-                DoScriptText(EMOTE_DARK_SHELL, me);
-
-                DoCast(me, HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
-                DarkShell_Timer = 20000;
-            } else DarkShell_Timer -= diff;
+            DoMeleeAttackIfReady();
         }
-
-        DoMeleeAttackIfReady();
-    }
+    };
 };
-
-CreatureAI* GetAI_boss_pandemonius(Creature* creature)
-{
-    return new boss_pandemoniusAI (creature);
-}
 
 void AddSC_boss_pandemonius()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_pandemonius";
-    newscript->GetAI = &GetAI_boss_pandemonius;
-    newscript->RegisterSelf();
+    new boss_pandemonius();
 }
-

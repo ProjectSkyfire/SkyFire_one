@@ -295,18 +295,18 @@ struct boss_onyxiaAI : public ScriptedAI
         }
     }
 };
-
-CreatureAI* GetAI_boss_onyxiaAI(Creature* creature)
+class boss_onyxia : public CreatureScript
 {
-    return new boss_onyxiaAI (creature);
-}
+public:
+    boss_onyxia() : CreatureScript("boss_onyxia") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_onyxiaAI (creature);
+    }
+};
 
 void AddSC_boss_onyxia()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_onyxia";
-    newscript->GetAI = &GetAI_boss_onyxiaAI;
-    newscript->RegisterSelf();
+    new boss_onyxia();
 }
-

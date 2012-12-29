@@ -54,170 +54,180 @@ enum eDyingKodo
     SPELL_KODO_KOMBO_DESPAWN_BUFF   = 18377,
     SPELL_KODO_KOMBO_GOSSIP         = 18362
 };
-
-struct npc_aged_dying_ancient_kodoAI : public ScriptedAI
+class npc_aged_dying_ancient_kodo : public CreatureScript
 {
-    npc_aged_dying_ancient_kodoAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
+public:
+    npc_aged_dying_ancient_kodo() : CreatureScript("npc_aged_dying_ancient_kodo") { }
 
-    uint32 m_uiDespawnTimer;
-
-    void Reset()
+    bool GossipHello(Player* player, Creature* creature)
     {
-        m_uiDespawnTimer = 0;
-    }
-
-    void MoveInLineOfSight(Unit* pWho)
-    {
-        if (pWho->GetEntry() == NPC_SMEED)
+        if (player->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) && creature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
         {
-            if (me->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP))
-                return;
+            player->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_PLAYER_BUFF);
+            player->CastSpell(creature, SPELL_KODO_KOMBO_GOSSIP, true);
 
-            if (me->GetEntry() == NPC_TAMED_KODO && me->IsWithinDistInMap(pWho, 10.0f))
-            {
-                DoScriptText(RAND(SAY_SMEED_HOME_1, SAY_SMEED_HOME_2, SAY_SMEED_HOME_3), pWho);
-                me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                m_uiDespawnTimer = 60000;
-            }
-        }
-    }
+            creature->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_DESPAWN_BUFF);
+            creature->GetMotionMaster()->MoveIdle();
 
-    void UpdateAI(const uint32 diff)
-    {
-        //timer should always be == 0 unless we already updated entry of creature. Then not expect this updated to ever be in combat.
-        if (m_uiDespawnTimer && m_uiDespawnTimer <= diff)
-        {
-            if (!me->getVictim() && me->isAlive())
-            {
-                Reset();
-                me->setDeathState(JUST_DIED);
-                me->Respawn();
-                return;
-            }
-        } else m_uiDespawnTimer -= diff;
+            player->SEND_GOSSIP_MENU(GOSSIP_MENU_KODO_HOME, creature->GetGUID());
 
-        if (!UpdateVictim())
-            return;
-    }
-};
-
-bool EffectDummyCreature_npc_aged_dying_ancient_kodo(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
-{
-    //always check spellid and effectindex
-    if (spellId == SPELL_KODO_KOMBO_ITEM && effIndex == 0)
-    {
-        //no effect if player/creature already have aura from spells
-        if (pCaster->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) || pCreatureTarget->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
             return true;
-
-        if (pCreatureTarget->GetEntry() == NPC_AGED_KODO ||
-            pCreatureTarget->GetEntry() == NPC_DYING_KODO ||
-            pCreatureTarget->GetEntry() == NPC_ANCIENT_KODO)
-        {
-            pCaster->CastSpell(pCaster, SPELL_KODO_KOMBO_PLAYER_BUFF, true);
-
-            pCreatureTarget->UpdateEntry(NPC_TAMED_KODO);
-            pCreatureTarget->CastSpell(pCreatureTarget, SPELL_KODO_KOMBO_DESPAWN_BUFF, false);
-
-            if (pCreatureTarget->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
-                pCreatureTarget->GetMotionMaster()->MoveIdle();
-
-            pCreatureTarget->GetMotionMaster()->MoveFollow(pCaster, PET_FOLLOW_DIST,  pCreatureTarget->GetFollowAngle());
         }
 
-        //always return true when we are handling this spell and effect
-        return true;
+        return false;
     }
 
-    return false;
-}
-
-bool GossipHello_npc_aged_dying_ancient_kodo(Player* player, Creature* creature)
-{
-    if (player->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) && creature->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
+    bool EffectDummyCreature(Unit *pCaster, uint32 spellId, uint32 effIndex, Creature *pCreatureTarget)
     {
-        player->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_PLAYER_BUFF);
-        player->CastSpell(creature, SPELL_KODO_KOMBO_GOSSIP, true);
+        //always check spellid and effectindex
+        if (spellId == SPELL_KODO_KOMBO_ITEM && effIndex == 0)
+        {
+            //no effect if player/creature already have aura from spells
+            if (pCaster->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF, 0) || pCreatureTarget->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF, 0))
+                return true;
 
-        creature->RemoveAurasDueToSpell(SPELL_KODO_KOMBO_DESPAWN_BUFF);
-        creature->GetMotionMaster()->MoveIdle();
+            if (pCreatureTarget->GetEntry() == NPC_AGED_KODO ||
+                pCreatureTarget->GetEntry() == NPC_DYING_KODO ||
+                pCreatureTarget->GetEntry() == NPC_ANCIENT_KODO)
+            {
+                pCaster->CastSpell(pCaster, SPELL_KODO_KOMBO_PLAYER_BUFF, true);
 
-        player->SEND_GOSSIP_MENU(GOSSIP_MENU_KODO_HOME, creature->GetGUID());
+                pCreatureTarget->UpdateEntry(NPC_TAMED_KODO);
+                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_KODO_KOMBO_DESPAWN_BUFF, false);
 
-        return true;
+                if (pCreatureTarget->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
+                    pCreatureTarget->GetMotionMaster()->MoveIdle();
+
+                pCreatureTarget->GetMotionMaster()->MoveFollow(pCaster, PET_FOLLOW_DIST,  pCreatureTarget->GetFollowAngle());
+            }
+
+            //always return true when we are handling this spell and effect
+            return true;
+        }
+
+        return false;
     }
 
-    return false;
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new npc_aged_dying_ancient_kodoAI(creature);
+    }
 
-CreatureAI* GetAI_npc_aged_dying_ancient_kodo(Creature* creature)
-{
-    return new npc_aged_dying_ancient_kodoAI(creature);
-}
+    struct npc_aged_dying_ancient_kodoAI : public ScriptedAI
+    {
+        npc_aged_dying_ancient_kodoAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
+
+        uint32 m_uiDespawnTimer;
+
+        void Reset()
+        {
+            m_uiDespawnTimer = 0;
+        }
+
+        void MoveInLineOfSight(Unit* pWho)
+        {
+            if (pWho->GetEntry() == NPC_SMEED)
+            {
+                if (me->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP))
+                    return;
+
+                if (me->GetEntry() == NPC_TAMED_KODO && me->IsWithinDistInMap(pWho, 10.0f))
+                {
+                    DoScriptText(RAND(SAY_SMEED_HOME_1, SAY_SMEED_HOME_2, SAY_SMEED_HOME_3), pWho);
+                    me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                    m_uiDespawnTimer = 60000;
+                }
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //timer should always be == 0 unless we already updated entry of creature. Then not expect this updated to ever be in combat.
+            if (m_uiDespawnTimer && m_uiDespawnTimer <= diff)
+            {
+                if (!me->getVictim() && me->isAlive())
+                {
+                    Reset();
+                    me->setDeathState(JUST_DIED);
+                    me->Respawn();
+                    return;
+                }
+            } else m_uiDespawnTimer -= diff;
+
+            if (!UpdateVictim())
+                return;
+        }
+    };
+};
 
 /*######
 ## npc_dalinda_malem. Quest 1440
 ######*/
 
 #define QUEST_RETURN_TO_VAHLARRIEL     1440
-
-struct npc_dalindaAI : public npc_escortAI
+class npc_dalinda : public CreatureScript
 {
-    npc_dalindaAI(Creature* creature) : npc_escortAI(creature) { }
+public:
+    npc_dalinda() : CreatureScript("npc_dalinda") { }
 
-    void WaypointReached(uint32 i)
+    bool QuestAccept(Player* player, Creature* creature, Quest const* quest)
     {
-        Player* player = GetPlayerForEscort();
-        switch (i)
-        {
-            case 1:
-                me->IsStandState();
-                break;
-            case 15:
-                if (player)
-                player->GroupEventHappens(QUEST_RETURN_TO_VAHLARRIEL, me);
-                break;
+        if (quest->GetQuestId() == QUEST_RETURN_TO_VAHLARRIEL)
+       {
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_dalindaAI, creature->AI()))
+            {
+                pEscortAI->Start(true, false, player->GetGUID());
+                creature->setFaction(113);
+            }
         }
+        return true;
     }
 
-    void EnterCombat(Unit* /*pWho*/) { }
-
-    void Reset() {}
-
-    void JustDied(Unit* /*pKiller*/)
+    CreatureAI* GetAI(Creature* creature)
     {
-        Player* player = GetPlayerForEscort();
-        if (player)
-            player->FailQuest(QUEST_RETURN_TO_VAHLARRIEL);
-        return;
+        return new npc_dalindaAI(creature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    struct npc_dalindaAI : public npc_escortAI
     {
-        npc_escortAI::UpdateAI(uiDiff);
-        if (!UpdateVictim())
+        npc_dalindaAI(Creature* creature) : npc_escortAI(creature) { }
+
+        void WaypointReached(uint32 i)
+        {
+            Player* player = GetPlayerForEscort();
+            switch (i)
+            {
+                case 1:
+                    me->IsStandState();
+                    break;
+                case 15:
+                    if (player)
+                    player->GroupEventHappens(QUEST_RETURN_TO_VAHLARRIEL, me);
+                    break;
+            }
+        }
+
+        void EnterCombat(Unit* /*pWho*/) { }
+
+        void Reset() {}
+
+        void JustDied(Unit* /*pKiller*/)
+        {
+            Player* player = GetPlayerForEscort();
+            if (player)
+                player->FailQuest(QUEST_RETURN_TO_VAHLARRIEL);
             return;
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_npc_dalinda(Creature* creature)
-{
-    return new npc_dalindaAI(creature);
-}
-
-bool QuestAccept_npc_dalinda(Player* player, Creature* creature, Quest const* quest)
-{
-    if (quest->GetQuestId() == QUEST_RETURN_TO_VAHLARRIEL)
-   {
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_dalindaAI, creature->AI()))
-        {
-            pEscortAI->Start(true, false, player->GetGUID());
-            creature->setFaction(113);
         }
-    }
-    return true;
-}
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            npc_escortAI::UpdateAI(uiDiff);
+            if (!UpdateVictim())
+                return;
+            DoMeleeAttackIfReady();
+        }
+    };
+};
 
 /*#######
 ## npc_melizza_brimbuzzle
@@ -245,135 +255,123 @@ static float m_afAmbushSpawn[4][3]=
     {-1386.95f, 2429.76f, 88.8444f},
     {-1389.99f, 2429.93f, 88.7692f}
 };
-
-struct npc_melizza_brimbuzzleAI : public npc_escortAI
+class npc_melizza_brimbuzzle : public CreatureScript
 {
-    npc_melizza_brimbuzzleAI(Creature* creature) : npc_escortAI(creature) { }
+public:
+    npc_melizza_brimbuzzle() : CreatureScript("npc_melizza_brimbuzzle") { }
 
-    uint32 m_uiPostEventCount;
-    uint64 m_uiPostEventTimer;
-
-    void Reset()
+    bool QuestAccept(Player* player, Creature* creature, Quest const* pQuest)
     {
-        m_uiPostEventCount = 0;
-        m_uiPostEventTimer = 0;
+        if (pQuest->GetQuestId() == QUEST_GET_ME_OUT_OF_HERE)
+        {
+            if (GameObject* pGo = creature->FindNearestGameObject(GO_MELIZZAS_CAGE, INTERACTION_DISTANCE))
+                pGo->UseDoorOrButton();
+
+            if (npc_melizza_brimbuzzleAI* pEscortAI = CAST_AI(npc_melizza_brimbuzzleAI, creature->AI()))
+                pEscortAI->Start(false, false, player->GetGUID(), pQuest);
+        }
+        return true;
     }
 
-    void WaypointReached(uint32 uiPointId)
+    CreatureAI* GetAI(Creature* creature)
     {
-        if (Player* player = GetPlayerForEscort())
+        return new npc_melizza_brimbuzzleAI(creature);
+    }
+
+    struct npc_melizza_brimbuzzleAI : public npc_escortAI
+    {
+        npc_melizza_brimbuzzleAI(Creature* creature) : npc_escortAI(creature) { }
+
+        uint32 m_uiPostEventCount;
+        uint64 m_uiPostEventTimer;
+
+        void Reset()
         {
-            switch (uiPointId)
+            m_uiPostEventCount = 0;
+            m_uiPostEventTimer = 0;
+        }
+
+        void WaypointReached(uint32 uiPointId)
+        {
+            if (Player* player = GetPlayerForEscort())
             {
-            case 1:
-                me->setFaction(113);
-                DoScriptText(SAY_START, me, player);
-                break;
-            case 7:
-                 me->SummonCreature(NPC_MARAUDINE_SCOUT, m_afAmbushSpawn[0][0], m_afAmbushSpawn[0][1], m_afAmbushSpawn[0][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                 me->SummonCreature(NPC_MARAUDINE_SCOUT, m_afAmbushSpawn[1][0], m_afAmbushSpawn[1][1], m_afAmbushSpawn[1][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                 me->SummonCreature(NPC_MARAUDINE_SCOUT, m_afAmbushSpawn[2][0], m_afAmbushSpawn[2][1], m_afAmbushSpawn[2][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                 me->SummonCreature(NPC_MARAUDINE_BONEPAW, m_afAmbushSpawn[3][0], m_afAmbushSpawn[3][1], m_afAmbushSpawn[3][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
-                 break;
-            case 10:
-                DoScriptText(SAY_COMPLETE, me);
-                me->RestoreFaction();
-                SetRun();
-                player->GroupEventHappens(QUEST_GET_ME_OUT_OF_HERE, me);
-                break;
-            case 15:
-                m_uiPostEventCount = 1;
-                break;
+                switch (uiPointId)
+                {
+                case 1:
+                    me->setFaction(113);
+                    DoScriptText(SAY_START, me, player);
+                    break;
+                case 7:
+                     me->SummonCreature(NPC_MARAUDINE_SCOUT, m_afAmbushSpawn[0][0], m_afAmbushSpawn[0][1], m_afAmbushSpawn[0][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                     me->SummonCreature(NPC_MARAUDINE_SCOUT, m_afAmbushSpawn[1][0], m_afAmbushSpawn[1][1], m_afAmbushSpawn[1][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                     me->SummonCreature(NPC_MARAUDINE_SCOUT, m_afAmbushSpawn[2][0], m_afAmbushSpawn[2][1], m_afAmbushSpawn[2][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                     me->SummonCreature(NPC_MARAUDINE_BONEPAW, m_afAmbushSpawn[3][0], m_afAmbushSpawn[3][1], m_afAmbushSpawn[3][2], 1.6f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                     break;
+                case 10:
+                    DoScriptText(SAY_COMPLETE, me);
+                    me->RestoreFaction();
+                    SetRun();
+                    player->GroupEventHappens(QUEST_GET_ME_OUT_OF_HERE, me);
+                    break;
+                case 15:
+                    m_uiPostEventCount = 1;
+                    break;
+                }
             }
         }
-    }
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        npc_escortAI::UpdateAI(uiDiff);
-
-        if (!UpdateVictim())
+        void UpdateAI(const uint32 uiDiff)
         {
-            if (m_uiPostEventCount && HasEscortState(STATE_ESCORT_ESCORTING))
-            {
-                if (m_uiPostEventTimer <= uiDiff)
-                {
-                    m_uiPostEventTimer = 3000;
+            npc_escortAI::UpdateAI(uiDiff);
 
-                    if (Unit* player = GetPlayerForEscort())
+            if (!UpdateVictim())
+            {
+                if (m_uiPostEventCount && HasEscortState(STATE_ESCORT_ESCORTING))
+                {
+                    if (m_uiPostEventTimer <= uiDiff)
                     {
-                        switch (m_uiPostEventCount)
+                        m_uiPostEventTimer = 3000;
+
+                        if (Unit* player = GetPlayerForEscort())
                         {
-                            case 1:
-                                DoScriptText(SAY_POST_EVENT_1, me);
-                                ++m_uiPostEventCount;
-                                break;
-                            case 2:
-                                DoScriptText(SAY_POST_EVENT_2, me);
-                                ++m_uiPostEventCount;
-                                break;
-                            case 3:
-                                DoScriptText(SAY_POST_EVENT_3, me);
-                                m_uiPostEventCount = 0;
-                                me->ForcedDespawn(60000);
-                                break;
+                            switch (m_uiPostEventCount)
+                            {
+                                case 1:
+                                    DoScriptText(SAY_POST_EVENT_1, me);
+                                    ++m_uiPostEventCount;
+                                    break;
+                                case 2:
+                                    DoScriptText(SAY_POST_EVENT_2, me);
+                                    ++m_uiPostEventCount;
+                                    break;
+                                case 3:
+                                    DoScriptText(SAY_POST_EVENT_3, me);
+                                    m_uiPostEventCount = 0;
+                                    me->ForcedDespawn(60000);
+                                    break;
+                            }
                         }
                     }
+                    else
+                        m_uiPostEventTimer -= uiDiff;
                 }
-                else
-                    m_uiPostEventTimer -= uiDiff;
+
+                return;
             }
 
-            return;
+            DoMeleeAttackIfReady();
         }
 
-        DoMeleeAttackIfReady();
-    }
-
-    void JustSummoned(Creature* pSummoned)
-    {
-        pSummoned->AI()->AttackStart(me);
-    }
+        void JustSummoned(Creature* pSummoned)
+        {
+            pSummoned->AI()->AttackStart(me);
+        }
+    };
 };
-
-CreatureAI* GetAI_npc_melizza_brimbuzzle(Creature* creature)
-{
-    return new npc_melizza_brimbuzzleAI(creature);
-}
-
-bool QuestAccept_npc_melizza_brimbuzzle(Player* player, Creature* creature, Quest const* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_GET_ME_OUT_OF_HERE)
-    {
-        if (GameObject* pGo = creature->FindNearestGameObject(GO_MELIZZAS_CAGE, INTERACTION_DISTANCE))
-            pGo->UseDoorOrButton();
-
-        if (npc_melizza_brimbuzzleAI* pEscortAI = CAST_AI(npc_melizza_brimbuzzleAI, creature->AI()))
-            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
-    }
-    return true;
-}
 
 void AddSC_desolace()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_aged_dying_ancient_kodo";
-    newscript->GetAI = &GetAI_npc_aged_dying_ancient_kodo;
-    newscript->pEffectDummyCreature = &EffectDummyCreature_npc_aged_dying_ancient_kodo;
-    newscript->pGossipHello = &GossipHello_npc_aged_dying_ancient_kodo;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_dalinda";
-    newscript->GetAI = &GetAI_npc_dalinda;
-    newscript->pQuestAccept = &QuestAccept_npc_dalinda;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_melizza_brimbuzzle";
-    newscript->GetAI = &GetAI_npc_melizza_brimbuzzle;
-    newscript->pQuestAccept = &QuestAccept_npc_melizza_brimbuzzle;
-    newscript->RegisterSelf();
+    new npc_aged_dying_ancient_kodo();
+    new npc_dalinda();
+    new npc_melizza_brimbuzzle();
 }

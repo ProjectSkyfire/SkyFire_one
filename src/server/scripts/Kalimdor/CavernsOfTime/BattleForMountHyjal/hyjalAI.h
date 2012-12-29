@@ -1,22 +1,22 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+* Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
+* Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
+* Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+* Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+*
+* This program is free software; you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by the
+* Free Software Foundation; either version 2 of the License, or (at your
+* option) any later version.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT
+* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+* more details.
+*
+* You should have received a copy of the GNU General Public License along
+* with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #ifndef SC_HYJALAI_H
 #define SC_HYJALAI_H
@@ -202,7 +202,7 @@ struct hyjalAI : public npc_escortAI
 
     void SummonCreature(uint32 entry, float Base[4][3]);    // Summons a creature for that wave in that base
 
-                                                            // Summons the next wave, calls SummonCreature
+    // Summons the next wave, calls SummonCreature
     void SummonNextWave(Wave wave[18], uint32 Count, float Base[4][3]);
 
     void StartEvent(Player* player);                        // Begins the event by gossip click
@@ -212,54 +212,53 @@ struct hyjalAI : public npc_escortAI
     void Talk(uint32 id);                                   // Searches for the appropriate yell and sound and uses it to inform the raid of various things
 
     void UpdateWorldState(uint32 field, uint32 value);      // NYI: Requires core support. Updates the world state counter at the top of the UI.
-    public:
-        ScriptedInstance* instance;
+public:
+    ScriptedInstance* instance;
 
-        uint64 PlayerGUID;
-        uint64 BossGUID[2];
-        uint64 VeinGUID[14];
+    uint64 PlayerGUID;
+    uint64 BossGUID[2];
+    uint64 VeinGUID[14];
 
-        uint32 NextWaveTimer;
-        uint32 WaveCount;
-        uint32 CheckTimer;
-        uint32 Faction;
-        uint32 EnemyCount;
-        uint32 RetreatTimer;
+    uint32 NextWaveTimer;
+    uint32 WaveCount;
+    uint32 CheckTimer;
+    uint32 Faction;
+    uint32 EnemyCount;
+    uint32 RetreatTimer;
 
-        bool EventBegun;
-        bool FirstBossDead;
-        bool SecondBossDead;
-        bool Summon;
-        bool bRetreat;
-        bool Debug;
-        bool VeinsSpawned[2];
-        uint8 InfernalCount;
-        SummonList Summons;
-        bool Overrun;
-        bool Teleported;
-        bool WaitForTeleport;
-        uint32 TeleportTimer;
-        uint32 OverrunCounter;
-        uint32 OverrunCounter2;
-        uint32 InfernalPoint;
-        uint32 RespawnTimer;
-        bool DoRespawn;
-        bool DoHide;
-        bool IsDummy;
-        uint32 MassTeleportTimer;
-        bool DoMassTeleport;
-        uint64 DummyGuid;
+    bool EventBegun;
+    bool FirstBossDead;
+    bool SecondBossDead;
+    bool Summon;
+    bool bRetreat;
+    bool Debug;
+    bool VeinsSpawned[2];
+    uint8 InfernalCount;
+    SummonList Summons;
+    bool Overrun;
+    bool Teleported;
+    bool WaitForTeleport;
+    uint32 TeleportTimer;
+    uint32 OverrunCounter;
+    uint32 OverrunCounter2;
+    uint32 InfernalPoint;
+    uint32 RespawnTimer;
+    bool DoRespawn;
+    bool DoHide;
+    bool IsDummy;
+    uint32 MassTeleportTimer;
+    bool DoMassTeleport;
+    uint64 DummyGuid;
 
-        struct Spell
-        {
-            uint32 SpellId;
-            uint32 Cooldown;
-            uint32 TargetType;
-        }Spell[3];
+    struct Spell
+    {
+        uint32 SpellId;
+        uint32 Cooldown;
+        uint32 TargetType;
+    }Spell[3];
 
-    private:
-        uint32 SpellTimer[3];
-        //std::list<uint64> CreatureList;
+private:
+    uint32 SpellTimer[3];
+    //std::list<uint64> CreatureList;
 };
 #endif
-

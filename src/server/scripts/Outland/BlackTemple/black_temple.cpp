@@ -38,36 +38,34 @@ EndContentData */
 
 #define SPELL_TELEPORT      41566                           // s41566 - Teleport to Ashtongue NPC's
 #define GOSSIP_OLUM1        "Teleport me to the other Ashtongue Deathsworn"
-
-bool GossipHello_npc_spirit_of_olum(Player* player, Creature* creature)
+class npc_spirit_of_olum : public CreatureScript
 {
-    ScriptedInstance* instance = creature->GetInstanceScript();
+public:
+    npc_spirit_of_olum() : CreatureScript("npc_spirit_of_olum") { }
 
-    if (instance && (instance->GetData(DATA_SUPREMUSEVENT) >= DONE) && (instance->GetData(DATA_HIGHWARLORDNAJENTUSEVENT) >= DONE))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_OLUM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+    bool GossipSelect(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+            player->CLOSE_GOSSIP_MENU();
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-    return true;
-}
+        player->InterruptNonMeleeSpells(false);
+        player->CastSpell(player, SPELL_TELEPORT, false);
+        return true;
+    }
 
-bool GossipSelect_npc_spirit_of_olum(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-        player->CLOSE_GOSSIP_MENU();
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        ScriptedInstance* instance = creature->GetInstanceScript();
 
-    player->InterruptNonMeleeSpells(false);
-    player->CastSpell(player, SPELL_TELEPORT, false);
-    return true;
-}
+        if (instance && (instance->GetData(DATA_SUPREMUSEVENT) >= DONE) && (instance->GetData(DATA_HIGHWARLORDNAJENTUSEVENT) >= DONE))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_OLUM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        return true;
+    }
+};
 
 void AddSC_black_temple()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_spirit_of_olum";
-    newscript->pGossipHello = &GossipHello_npc_spirit_of_olum;
-    newscript->pGossipSelect = &GossipSelect_npc_spirit_of_olum;
-    newscript->RegisterSelf();
+    new npc_spirit_of_olum();
 }
-

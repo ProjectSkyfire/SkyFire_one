@@ -56,272 +56,272 @@ class ov_mycoordinates
             x = cx; y = cy; z = cz; r = cr;
         }
 };
-
-struct boss_skeramAI : public ScriptedAI
+class boss_skeram : public CreatureScript
 {
-    boss_skeramAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_skeram() : CreatureScript("boss_skeram") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
-        IsImage = false;
+        return new boss_skeramAI (creature);
     }
 
-    ScriptedInstance *instance;
-
-    uint32 ArcaneExplosion_Timer;
-    uint32 EarthShock_Timer;
-    uint32 FullFillment_Timer;
-    uint32 Blink_Timer;
-    uint32 Invisible_Timer;
-
-    Creature *Image1, *Image2;
-
-    bool Images75;
-    bool Images50;
-    bool Images25;
-    bool IsImage;
-    bool Invisible;
-
-    void Reset()
+    struct boss_skeramAI : public ScriptedAI
     {
-        ArcaneExplosion_Timer = 6000 + rand()%6000;
-        EarthShock_Timer = 2000;
-        FullFillment_Timer = 15000;
-        Blink_Timer = 8000 + rand()%12000;
-        Invisible_Timer = 500;
-
-        Images75 = false;
-        Images50 = false;
-        Images25 = false;
-        Invisible = false;
-
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        me->SetVisibility(VISIBILITY_ON);
-
-        if (IsImage)
-            me->setDeathState(JUST_DIED);
-    }
-
-    void KilledUnit(Unit* victim)
-    {
-        switch (rand()%3)
+        boss_skeramAI(Creature *c) : ScriptedAI(c)
         {
-        case 0: DoScriptText(SAY_SLAY1, me); break;
-        case 1: DoScriptText(SAY_SLAY2, me); break;
-        case 2: DoScriptText(SAY_SLAY3, me); break;
+            instance = c->GetInstanceScript();
+            IsImage = false;
         }
-    }
 
-    void JustDied(Unit* Killer)
-    {
-        if (!IsImage)
-            DoScriptText(SAY_DEATH, me);
-    }
+        ScriptedInstance *instance;
 
-    void EnterCombat(Unit *who)
-    {
-        if (IsImage || Images75)
-            return;
-        switch (rand()%3)
+        uint32 ArcaneExplosion_Timer;
+        uint32 EarthShock_Timer;
+        uint32 FullFillment_Timer;
+        uint32 Blink_Timer;
+        uint32 Invisible_Timer;
+
+        Creature *Image1, *Image2;
+
+        bool Images75;
+        bool Images50;
+        bool Images25;
+        bool IsImage;
+        bool Invisible;
+
+        void Reset()
         {
-        case 0: DoScriptText(SAY_AGGRO1, me); break;
-        case 1: DoScriptText(SAY_AGGRO2, me); break;
-        case 2: DoScriptText(SAY_AGGRO3, me); break;
+            ArcaneExplosion_Timer = 6000 + rand()%6000;
+            EarthShock_Timer = 2000;
+            FullFillment_Timer = 15000;
+            Blink_Timer = 8000 + rand()%12000;
+            Invisible_Timer = 500;
+
+            Images75 = false;
+            Images50 = false;
+            Images25 = false;
+            Invisible = false;
+
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->SetVisibility(VISIBILITY_ON);
+
+            if (IsImage)
+                me->setDeathState(JUST_DIED);
         }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        //ArcaneExplosion_Timer
-        if (ArcaneExplosion_Timer <= diff)
+        void KilledUnit(Unit* victim)
         {
-            DoCast(me->getVictim(), SPELL_ARCANE_EXPLOSION);
-            ArcaneExplosion_Timer = 8000 + rand()%10000;
-        } else ArcaneExplosion_Timer -= diff;
-
-        //If we are within range melee the target
-        if (me->IsWithinMeleeRange(me->getVictim()))
-        {
-            //Make sure our attack is ready and we arn't currently casting
-            if (me->isAttackReady() && !me->IsNonMeleeSpellCasted(false))
+            switch (rand()%3)
             {
-                me->AttackerStateUpdate(me->getVictim());
-                me->resetAttackTimer();
+            case 0: DoScriptText(SAY_SLAY1, me); break;
+            case 1: DoScriptText(SAY_SLAY2, me); break;
+            case 2: DoScriptText(SAY_SLAY3, me); break;
             }
-        } else
-        {
-            //EarthShock_Timer
-            if (EarthShock_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_EARTH_SHOCK);
-                EarthShock_Timer = 1000;
-            } else EarthShock_Timer -= diff;
         }
 
-        //Blink_Timer
-        if (Blink_Timer <= diff)
+        void JustDied(Unit* Killer)
         {
-            //DoCast(me, SPELL_BLINK);
+            if (!IsImage)
+                DoScriptText(SAY_DEATH, me);
+        }
+
+        void EnterCombat(Unit *who)
+        {
+            if (IsImage || Images75)
+                return;
+            switch (rand()%3)
+            {
+            case 0: DoScriptText(SAY_AGGRO1, me); break;
+            case 1: DoScriptText(SAY_AGGRO2, me); break;
+            case 2: DoScriptText(SAY_AGGRO3, me); break;
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            //ArcaneExplosion_Timer
+            if (ArcaneExplosion_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_ARCANE_EXPLOSION);
+                ArcaneExplosion_Timer = 8000 + rand()%10000;
+            } else ArcaneExplosion_Timer -= diff;
+
+            //If we are within range melee the target
+            if (me->IsWithinMeleeRange(me->getVictim()))
+            {
+                //Make sure our attack is ready and we arn't currently casting
+                if (me->isAttackReady() && !me->IsNonMeleeSpellCasted(false))
+                {
+                    me->AttackerStateUpdate(me->getVictim());
+                    me->resetAttackTimer();
+                }
+            } else
+            {
+                //EarthShock_Timer
+                if (EarthShock_Timer <= diff)
+                {
+                    DoCast(me->getVictim(),SPELL_EARTH_SHOCK);
+                    EarthShock_Timer = 1000;
+                } else EarthShock_Timer -= diff;
+            }
+
+            //Blink_Timer
+            if (Blink_Timer <= diff)
+            {
+                //DoCast(me, SPELL_BLINK);
+                switch (rand()%3)
+                {
+                    case 0:
+                        me->GetMap()->CreatureRelocation(me, -8340.782227f, 2083.814453f, 125.648788f, 0.0f);
+                        DoResetThreat();
+                        break;
+                    case 1:
+                        me->GetMap()->CreatureRelocation(me, -8341.546875f, 2118.504639f, 133.058151f, 0.0f);
+                        DoResetThreat();
+                        break;
+                    case 2:
+                        me->GetMap()->CreatureRelocation(me, -8318.822266f, 2058.231201f, 133.058151f, 0.0f);
+                        DoResetThreat();
+                        break;
+                }
+                DoStopAttack();
+
+                Blink_Timer= 20000 + rand()%20000;
+            } else Blink_Timer -= diff;
+
+            int procent = (int) (me->GetHealth()*100 / me->GetMaxHealth() +0.5f);
+
+            //Summoning 2 Images and teleporting to a random position on 75% health
+            if ((!Images75 && !IsImage) && (procent <= 75 && procent > 70))
+                DoSplit(75);
+
+            //Summoning 2 Images and teleporting to a random position on 50% health
+            if ((!Images50 && !IsImage) &&
+                (procent <= 50 && procent > 45))
+                DoSplit(50);
+
+            //Summoning 2 Images and teleporting to a random position on 25% health
+            if ((!Images25 && !IsImage) && (procent <= 25 && procent > 20))
+                DoSplit(25);
+
+            //Invisible_Timer
+            if (Invisible)
+            {
+                if (Invisible_Timer <= diff)
+                {
+                    //Making Skeram visible after telporting
+                    me->SetVisibility(VISIBILITY_ON);
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                    Invisible_Timer = 2500;
+                    Invisible = false;
+                } else Invisible_Timer -= diff;
+            }
+
+            DoMeleeAttackIfReady();
+        }
+
+        void DoSplit(int atPercent /* 75 50 25 */)
+        {
+            DoScriptText(SAY_SPLIT, me);
+
+            ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227f, 2083.814453f, 125.648788f, 0);
+            ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875f, 2118.504639f, 133.058151f, 0);
+            ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266f, 2058.231201f, 133.058151f, 0);
+
+            ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
+
             switch (rand()%3)
             {
                 case 0:
-                    me->GetMap()->CreatureRelocation(me, -8340.782227f, 2083.814453f, 125.648788f, 0.0f);
-                    DoResetThreat();
+                    bossc=place1;
+                    i1=place2;
+                    i2=place3;
                     break;
                 case 1:
-                    me->GetMap()->CreatureRelocation(me, -8341.546875f, 2118.504639f, 133.058151f, 0.0f);
-                    DoResetThreat();
+                    bossc=place2;
+                    i1=place1;
+                    i2=place3;
                     break;
                 case 2:
-                    me->GetMap()->CreatureRelocation(me, -8318.822266f, 2058.231201f, 133.058151f, 0.0f);
-                    DoResetThreat();
+                    bossc=place3;
+                    i1=place1;
+                    i2=place2;
                     break;
             }
+
+            for (int tryi = 0; tryi < 41; tryi ++)
+            {
+                Unit *targetpl = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                if (targetpl->GetTypeId() == TYPEID_PLAYER)
+                {
+                    Group *grp = ((Player *)targetpl)->GetGroup();
+                    if (grp)
+                    {
+                        for (int ici = 0; ici < TARGETICONCOUNT; ici++)
+                        {
+                            //if (grp ->m_targetIcons[ici] == me->GetGUID()) -- private member:(
+                            grp->SetTargetIcon(ici, 0);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            me->RemoveAllAuras();
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->SetVisibility(VISIBILITY_OFF);
+            me->GetMap()->CreatureRelocation(me, bossc->x, bossc->y, bossc->z, bossc->r);
+            Invisible = true;
+            DoResetThreat();
             DoStopAttack();
 
-            Blink_Timer= 20000 + rand()%20000;
-        } else Blink_Timer -= diff;
-
-        int procent = (int) (me->GetHealth()*100 / me->GetMaxHealth() +0.5f);
-
-        //Summoning 2 Images and teleporting to a random position on 75% health
-        if ((!Images75 && !IsImage) && (procent <= 75 && procent > 70))
-            DoSplit(75);
-
-        //Summoning 2 Images and teleporting to a random position on 50% health
-        if ((!Images50 && !IsImage) &&
-            (procent <= 50 && procent > 45))
-            DoSplit(50);
-
-        //Summoning 2 Images and teleporting to a random position on 25% health
-        if ((!Images25 && !IsImage) && (procent <= 25 && procent > 20))
-            DoSplit(25);
-
-        //Invisible_Timer
-        if (Invisible)
-        {
-            if (Invisible_Timer <= diff)
+            switch (atPercent)
             {
-                //Making Skeram visible after telporting
-                me->SetVisibility(VISIBILITY_ON);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                Invisible_Timer = 2500;
-                Invisible = false;
-            } else Invisible_Timer -= diff;
-        }
-
-        DoMeleeAttackIfReady();
-    }
-
-    void DoSplit(int atPercent /* 75 50 25 */)
-    {
-        DoScriptText(SAY_SPLIT, me);
-
-        ov_mycoordinates *place1 = new ov_mycoordinates(-8340.782227f, 2083.814453f, 125.648788f, 0);
-        ov_mycoordinates *place2 = new ov_mycoordinates(-8341.546875f, 2118.504639f, 133.058151f, 0);
-        ov_mycoordinates *place3 = new ov_mycoordinates(-8318.822266f, 2058.231201f, 133.058151f, 0);
-
-        ov_mycoordinates *bossc=place1, *i1=place2, *i2=place3;
-
-        switch (rand()%3)
-        {
-            case 0:
-                bossc=place1;
-                i1=place2;
-                i2=place3;
-                break;
-            case 1:
-                bossc=place2;
-                i1=place1;
-                i2=place3;
-                break;
-            case 2:
-                bossc=place3;
-                i1=place1;
-                i2=place2;
-                break;
-        }
-
-        for (int tryi = 0; tryi < 41; tryi ++)
-        {
-            Unit *targetpl = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if (targetpl->GetTypeId() == TYPEID_PLAYER)
-            {
-                Group *grp = ((Player *)targetpl)->GetGroup();
-                if (grp)
-                {
-                    for (int ici = 0; ici < TARGETICONCOUNT; ici++)
-                    {
-                        //if (grp ->m_targetIcons[ici] == me->GetGUID()) -- private member:(
-                        grp->SetTargetIcon(ici, 0);
-                    }
-                }
-                break;
+                case 75: Images75 = true; break;
+                case 50: Images50 = true; break;
+                case 25: Images25 = true; break;
             }
+
+            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+
+            Image1 = me->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
+            if (!Image1)
+            {
+              PLACES_CLEANUP
+              return;
+            }
+            Image1->SetMaxHealth(me->GetMaxHealth() / 5);
+            Image1->SetHealth(me->GetHealth() / 5);
+            if (pTarget)
+                Image1->AI()->AttackStart(pTarget);
+
+            Image2 = me->SummonCreature(15263, i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
+            if (!Image2)
+            {
+              PLACES_CLEANUP
+              return;
+            }
+            Image2->SetMaxHealth(me->GetMaxHealth() / 5);
+            Image2->SetHealth(me->GetHealth() / 5);
+            if (pTarget)
+                Image2->AI()->AttackStart(pTarget);
+
+            ((boss_skeramAI*)Image1->AI())->IsImage = true;
+            ((boss_skeramAI*)Image2->AI())->IsImage = true;
+
+            Invisible = true;
+        PLACES_CLEANUP
         }
-
-        me->RemoveAllAuras();
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        me->SetVisibility(VISIBILITY_OFF);
-        me->GetMap()->CreatureRelocation(me, bossc->x, bossc->y, bossc->z, bossc->r);
-        Invisible = true;
-        DoResetThreat();
-        DoStopAttack();
-
-        switch (atPercent)
-        {
-            case 75: Images75 = true; break;
-            case 50: Images50 = true; break;
-            case 25: Images25 = true; break;
-        }
-
-        Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-
-        Image1 = me->SummonCreature(15263, i1->x, i1->y, i1->z, i1->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
-        if (!Image1)
-        {
-          PLACES_CLEANUP
-          return;
-        }
-        Image1->SetMaxHealth(me->GetMaxHealth() / 5);
-        Image1->SetHealth(me->GetHealth() / 5);
-        if (pTarget)
-            Image1->AI()->AttackStart(pTarget);
-
-        Image2 = me->SummonCreature(15263, i2->x, i2->y, i2->z, i2->r, TEMPSUMMON_CORPSE_DESPAWN, 30000);
-        if (!Image2)
-        {
-          PLACES_CLEANUP
-          return;
-        }
-        Image2->SetMaxHealth(me->GetMaxHealth() / 5);
-        Image2->SetHealth(me->GetHealth() / 5);
-        if (pTarget)
-            Image2->AI()->AttackStart(pTarget);
-
-        ((boss_skeramAI*)Image1->AI())->IsImage = true;
-        ((boss_skeramAI*)Image2->AI())->IsImage = true;
-
-        Invisible = true;
-    PLACES_CLEANUP
-    }
+    };
 };
-
-CreatureAI* GetAI_boss_skeram(Creature* creature)
-{
-    return new boss_skeramAI (creature);
-}
 
 void AddSC_boss_skeram()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_skeram";
-    newscript->GetAI = &GetAI_boss_skeram;
-    newscript->RegisterSelf();
+    new boss_skeram();
 }
-

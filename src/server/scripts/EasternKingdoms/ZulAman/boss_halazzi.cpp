@@ -390,28 +390,29 @@ struct boss_spiritlynxAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
-CreatureAI* GetAI_boss_halazziAI(Creature* creature)
+class boss_halazzi : public CreatureScript
 {
-    return new boss_halazziAI (creature);
-}
+public:
+    boss_halazzi() : CreatureScript("boss_halazzi") { }
 
-CreatureAI* GetAI_boss_spiritlynxAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_halazziAI (creature);
+    }
+};
+class mob_halazzi_lynx : public CreatureScript
 {
-    return new boss_spiritlynxAI (creature);
-}
+public:
+    mob_halazzi_lynx() : CreatureScript("mob_halazzi_lynx") { }
+
+    CreatureAI* GetAI_boss_spiritlynxAI(Creature* creature)
+    {
+        return new boss_spiritlynxAI (creature);
+    }
+};
 
 void AddSC_boss_halazzi()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_halazzi";
-    newscript->GetAI = &GetAI_boss_halazziAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_halazzi_lynx";
-    newscript->GetAI = &GetAI_boss_spiritlynxAI;
-    newscript->RegisterSelf();
+    new boss_halazzi();
+    new mob_halazzi_lynx();
 }
-

@@ -46,141 +46,141 @@ enum eDoomwalker
     SPELL_ENRAGE                = 33653,
     SPELL_MARK_DEATH            = 37128
 };
-
-struct boss_doomwalkerAI : public ScriptedAI
+class boss_doomwalker : public CreatureScript
 {
-    boss_doomwalkerAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_doomwalker() : CreatureScript("boss_doomwalker") { }
 
-    uint32 Chain_Timer;
-    uint32 Enrage_Timer;
-    uint32 Overrun_Timer;
-    uint32 Quake_Timer;
-    uint32 Armor_Timer;
-
-    bool InEnrage;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        Enrage_Timer    = 0;
-        Armor_Timer     = 5000 + rand()%8000;
-        Chain_Timer     = 10000 + rand()%20000;
-        Quake_Timer     = 25000 + rand()%10000;
-        Overrun_Timer   = 30000 + rand()%15000;
-
-        InEnrage = false;
+        return new boss_doomwalkerAI (creature);
     }
 
-    void KilledUnit(Unit* Victim)
+    struct boss_doomwalkerAI : public ScriptedAI
     {
-        if (rand()%5)
-            return;
+        boss_doomwalkerAI(Creature *c) : ScriptedAI(c) {}
 
-        switch (rand()%3)
+        uint32 Chain_Timer;
+        uint32 Enrage_Timer;
+        uint32 Overrun_Timer;
+        uint32 Quake_Timer;
+        uint32 Armor_Timer;
+
+        bool InEnrage;
+
+        void Reset()
         {
-            case 0: DoScriptText(SAY_SLAY_1, me); break;
-            case 1: DoScriptText(SAY_SLAY_2, me); break;
-            case 2: DoScriptText(SAY_SLAY_3, me); break;
+            Enrage_Timer    = 0;
+            Armor_Timer     = 5000 + rand()%8000;
+            Chain_Timer     = 10000 + rand()%20000;
+            Quake_Timer     = 25000 + rand()%10000;
+            Overrun_Timer   = 30000 + rand()%15000;
+
+            InEnrage = false;
         }
 
-        DoCast(me->getVictim(), SPELL_MARK_DEATH);
-    }
-
-    void JustDied(Unit* Killer)
-    {
-        DoScriptText(SAY_DEATH, me);
-    }
-
-    void EnterCombat(Unit *who)
-    {
-        DoScriptText(SAY_AGGRO, me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        //Spell Enrage, when hp <= 20% gain enrage
-        if (((me->GetHealth()*100)/ me->GetMaxHealth()) <= 20)
+        void KilledUnit(Unit* Victim)
         {
-            if (Enrage_Timer <= diff)
-            {
-                DoCast(me, SPELL_ENRAGE);
-                Enrage_Timer = 6000;
-                InEnrage = true;
-            } else Enrage_Timer -= diff;
-        }
-
-        //Spell Overrun
-        if (Overrun_Timer <= diff)
-        {
-            switch (rand()%2)
-            {
-                case 0: DoScriptText(SAY_OVERRUN_1, me); break;
-                case 1: DoScriptText(SAY_OVERRUN_2, me); break;
-            }
-
-            DoCast(me->getVictim(),SPELL_OVERRUN);
-            Overrun_Timer = 25000 + rand()%15000;
-        } else Overrun_Timer -= diff;
-
-        //Spell Earthquake
-        if (Quake_Timer <= diff)
-        {
-            if (rand()%2)
+            if (rand()%5)
                 return;
 
-            switch (rand()%2)
+            switch (rand()%3)
             {
-                case 0: DoScriptText(SAY_EARTHQUAKE_1, me); break;
-                case 1: DoScriptText(SAY_EARTHQUAKE_2, me); break;
+                case 0: DoScriptText(SAY_SLAY_1, me); break;
+                case 1: DoScriptText(SAY_SLAY_2, me); break;
+                case 2: DoScriptText(SAY_SLAY_3, me); break;
             }
 
-            //remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
-            if (InEnrage)
-                me->RemoveAura(SPELL_ENRAGE, 0);
+            DoCast(me->getVictim(), SPELL_MARK_DEATH);
+        }
 
-            DoCast(me, SPELL_EARTHQUAKE);
-            Quake_Timer = 30000 + rand()%25000;
-        } else Quake_Timer -= diff;
-
-        //Spell Chain Lightning
-        if (Chain_Timer <= diff)
+        void JustDied(Unit* Killer)
         {
-            Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            DoScriptText(SAY_DEATH, me);
+        }
 
-            if (!pTarget)
-                pTarget = me->getVictim();
-
-            if (pTarget)
-                DoCast(pTarget, SPELL_CHAIN_LIGHTNING);
-
-            Chain_Timer = 10000 + rand()%25000;
-        } else Chain_Timer -= diff;
-
-        //Spell Sunder Armor
-        if (Armor_Timer <= diff)
+        void EnterCombat(Unit *who)
         {
-            DoCast(me->getVictim(),SPELL_SUNDER_ARMOR);
-            Armor_Timer = 10000 + rand()%15000;
-        } else Armor_Timer -= diff;
+            DoScriptText(SAY_AGGRO, me);
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            //Spell Enrage, when hp <= 20% gain enrage
+            if (((me->GetHealth()*100)/ me->GetMaxHealth()) <= 20)
+            {
+                if (Enrage_Timer <= diff)
+                {
+                    DoCast(me, SPELL_ENRAGE);
+                    Enrage_Timer = 6000;
+                    InEnrage = true;
+                } else Enrage_Timer -= diff;
+            }
+
+            //Spell Overrun
+            if (Overrun_Timer <= diff)
+            {
+                switch (rand()%2)
+                {
+                    case 0: DoScriptText(SAY_OVERRUN_1, me); break;
+                    case 1: DoScriptText(SAY_OVERRUN_2, me); break;
+                }
+
+                DoCast(me->getVictim(),SPELL_OVERRUN);
+                Overrun_Timer = 25000 + rand()%15000;
+            } else Overrun_Timer -= diff;
+
+            //Spell Earthquake
+            if (Quake_Timer <= diff)
+            {
+                if (rand()%2)
+                    return;
+
+                switch (rand()%2)
+                {
+                    case 0: DoScriptText(SAY_EARTHQUAKE_1, me); break;
+                    case 1: DoScriptText(SAY_EARTHQUAKE_2, me); break;
+                }
+
+                //remove enrage before casting earthquake because enrage + earthquake = 16000dmg over 8sec and all dead
+                if (InEnrage)
+                    me->RemoveAura(SPELL_ENRAGE, 0);
+
+                DoCast(me, SPELL_EARTHQUAKE);
+                Quake_Timer = 30000 + rand()%25000;
+            } else Quake_Timer -= diff;
+
+            //Spell Chain Lightning
+            if (Chain_Timer <= diff)
+            {
+                Unit *pTarget = NULL;
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+
+                if (!pTarget)
+                    pTarget = me->getVictim();
+
+                if (pTarget)
+                    DoCast(pTarget, SPELL_CHAIN_LIGHTNING);
+
+                Chain_Timer = 10000 + rand()%25000;
+            } else Chain_Timer -= diff;
+
+            //Spell Sunder Armor
+            if (Armor_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_SUNDER_ARMOR);
+                Armor_Timer = 10000 + rand()%15000;
+            } else Armor_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_boss_doomwalker(Creature* creature)
-{
-    return new boss_doomwalkerAI (creature);
-}
 
 void AddSC_boss_doomwalker()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_doomwalker";
-    newscript->GetAI = &GetAI_boss_doomwalker;
-    newscript->RegisterSelf();
+    new boss_doomwalker();
 }
-

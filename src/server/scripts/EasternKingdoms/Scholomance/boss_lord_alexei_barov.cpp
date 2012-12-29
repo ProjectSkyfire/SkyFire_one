@@ -30,74 +30,75 @@ EndScriptData */
 
 #define SPELL_IMMOLATE             20294                    // Old ID  was 15570
 #define SPELL_VEILOFSHADOW         17820
-
-struct boss_lordalexeibarovAI : public ScriptedAI
+class boss_lord_alexei_barov : public CreatureScript
 {
-    boss_lordalexeibarovAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_lord_alexei_barov() : CreatureScript("boss_lord_alexei_barov") { }
 
-    uint32 Immolate_Timer;
-    uint32 VeilofShadow_Timer;
-
-    void Reset()
+    CreatureAI* GetAI_boss_lordalexeibarov(Creature* creature)
     {
-        Immolate_Timer = 7000;
-        VeilofShadow_Timer = 15000;
-
-        me->LoadCreaturesAddon();
+        return new boss_lordalexeibarovAI (creature);
     }
 
-    void JustDied(Unit * /*killer*/)
+    struct boss_lordalexeibarovAI : public ScriptedAI
     {
-        ScriptedInstance *instance = me->GetInstanceScript();
-        if (instance)
-        {
-            instance->SetData(DATA_LORDALEXEIBAROV_DEATH, 0);
+        boss_lordalexeibarovAI(Creature *c) : ScriptedAI(c) {}
 
-            if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
-                me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
+        uint32 Immolate_Timer;
+        uint32 VeilofShadow_Timer;
+
+        void Reset()
+        {
+            Immolate_Timer = 7000;
+            VeilofShadow_Timer = 15000;
+
+            me->LoadCreaturesAddon();
         }
-    }
 
-    void EnterCombat(Unit * /*who*/)
-    {
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        //Immolate_Timer
-        if (Immolate_Timer <= diff)
+        void JustDied(Unit * /*killer*/)
         {
-            Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-            if (pTarget) DoCast(pTarget, SPELL_IMMOLATE);
+            ScriptedInstance *instance = me->GetInstanceScript();
+            if (instance)
+            {
+                instance->SetData(DATA_LORDALEXEIBAROV_DEATH, 0);
 
-            Immolate_Timer = 12000;
-        } else Immolate_Timer -= diff;
+                if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
+                    me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+        }
 
-        //VeilofShadow_Timer
-        if (VeilofShadow_Timer <= diff)
+        void EnterCombat(Unit * /*who*/)
         {
-            DoCast(me->getVictim(), SPELL_VEILOFSHADOW);
-            VeilofShadow_Timer = 20000;
-        } else VeilofShadow_Timer -= diff;
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            //Immolate_Timer
+            if (Immolate_Timer <= diff)
+            {
+                Unit *pTarget = NULL;
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                if (pTarget) DoCast(pTarget, SPELL_IMMOLATE);
+
+                Immolate_Timer = 12000;
+            } else Immolate_Timer -= diff;
+
+            //VeilofShadow_Timer
+            if (VeilofShadow_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_VEILOFSHADOW);
+                VeilofShadow_Timer = 20000;
+            } else VeilofShadow_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_boss_lordalexeibarov(Creature* creature)
-{
-    return new boss_lordalexeibarovAI (creature);
-}
 
 void AddSC_boss_lordalexeibarov()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_lord_alexei_barov";
-    newscript->GetAI = &GetAI_boss_lordalexeibarov;
-    newscript->RegisterSelf();
+    new boss_lord_alexei_barov();
 }
-

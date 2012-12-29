@@ -43,112 +43,112 @@ EndScriptData */
 #define SPELL_IMPENDING_DEATH       31916
 #define SPELL_MAGIC_DISRUPTION_AURA 33834
 #define SPELL_WING_BUFFET           31475
-
-struct boss_epoch_hunterAI : public ScriptedAI
+class boss_epoch_hunter : public CreatureScript
 {
-    boss_epoch_hunterAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_epoch_hunter() : CreatureScript("boss_epoch_hunter") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
+        return new boss_epoch_hunterAI (creature);
     }
 
-    ScriptedInstance *instance;
-
-    uint32 SandBreath_Timer;
-    uint32 ImpendingDeath_Timer;
-    uint32 WingBuffet_Timer;
-    uint32 Mda_Timer;
-
-    void Reset()
+    struct boss_epoch_hunterAI : public ScriptedAI
     {
-        SandBreath_Timer = 25000;
-        ImpendingDeath_Timer = 30000;
-        WingBuffet_Timer = 35000;
-        Mda_Timer = 40000;
-    }
-
-    void EnterCombat(Unit *who)
-    {
-        switch (rand()%2)
+        boss_epoch_hunterAI(Creature *c) : ScriptedAI(c)
         {
-            case 0: DoScriptText(SAY_AGGRO1, me); break;
-            case 1: DoScriptText(SAY_AGGRO2, me); break;
+            instance = c->GetInstanceScript();
         }
-    }
 
-    void KilledUnit(Unit *victim)
-    {
-        switch (rand()%2)
+        ScriptedInstance *instance;
+
+        uint32 SandBreath_Timer;
+        uint32 ImpendingDeath_Timer;
+        uint32 WingBuffet_Timer;
+        uint32 Mda_Timer;
+
+        void Reset()
         {
-            case 0: DoScriptText(SAY_SLAY1, me); break;
-            case 1: DoScriptText(SAY_SLAY2, me); break;
+            SandBreath_Timer = 25000;
+            ImpendingDeath_Timer = 30000;
+            WingBuffet_Timer = 35000;
+            Mda_Timer = 40000;
         }
-    }
 
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_DEATH, me);
-
-        if (instance && instance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
-            instance->SetData(TYPE_THRALL_PART4, DONE);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        //Sand Breath
-        if (SandBreath_Timer <= diff)
+        void EnterCombat(Unit *who)
         {
-            if (me->IsNonMeleeSpellCasted(false))
-                me->InterruptNonMeleeSpells(false);
-
-            DoCast(me->getVictim(),SPELL_SAND_BREATH);
-
             switch (rand()%2)
             {
-                case 0: DoScriptText(SAY_BREATH1, me); break;
-                case 1: DoScriptText(SAY_BREATH2, me); break;
+                case 0: DoScriptText(SAY_AGGRO1, me); break;
+                case 1: DoScriptText(SAY_AGGRO2, me); break;
             }
+        }
 
-            SandBreath_Timer = 25000+rand()%5000;
-        } else SandBreath_Timer -= diff;
-
-        if (ImpendingDeath_Timer <= diff)
+        void KilledUnit(Unit *victim)
         {
-            DoCast(me->getVictim(),SPELL_IMPENDING_DEATH);
-            ImpendingDeath_Timer = 30000+rand()%5000;
-        } else ImpendingDeath_Timer -= diff;
+            switch (rand()%2)
+            {
+                case 0: DoScriptText(SAY_SLAY1, me); break;
+                case 1: DoScriptText(SAY_SLAY2, me); break;
+            }
+        }
 
-        if (WingBuffet_Timer <= diff)
+        void JustDied(Unit *victim)
         {
-            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                DoCast(pTarget, SPELL_WING_BUFFET);
-            WingBuffet_Timer = 25000+rand()%10000;
-        } else WingBuffet_Timer -= diff;
+            DoScriptText(SAY_DEATH, me);
 
-        if (Mda_Timer <= diff)
+            if (instance && instance->GetData(TYPE_THRALL_EVENT) == IN_PROGRESS)
+                instance->SetData(TYPE_THRALL_PART4, DONE);
+        }
+
+        void UpdateAI(const uint32 diff)
         {
-            DoCast(me, SPELL_MAGIC_DISRUPTION_AURA);
-            Mda_Timer = 15000;
-        } else Mda_Timer -= diff;
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
 
-        DoMeleeAttackIfReady();
-    }
+            //Sand Breath
+            if (SandBreath_Timer <= diff)
+            {
+                if (me->IsNonMeleeSpellCasted(false))
+                    me->InterruptNonMeleeSpells(false);
+
+                DoCast(me->getVictim(),SPELL_SAND_BREATH);
+
+                switch (rand()%2)
+                {
+                    case 0: DoScriptText(SAY_BREATH1, me); break;
+                    case 1: DoScriptText(SAY_BREATH2, me); break;
+                }
+
+                SandBreath_Timer = 25000+rand()%5000;
+            } else SandBreath_Timer -= diff;
+
+            if (ImpendingDeath_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_IMPENDING_DEATH);
+                ImpendingDeath_Timer = 30000+rand()%5000;
+            } else ImpendingDeath_Timer -= diff;
+
+            if (WingBuffet_Timer <= diff)
+            {
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    DoCast(pTarget, SPELL_WING_BUFFET);
+                WingBuffet_Timer = 25000+rand()%10000;
+            } else WingBuffet_Timer -= diff;
+
+            if (Mda_Timer <= diff)
+            {
+                DoCast(me, SPELL_MAGIC_DISRUPTION_AURA);
+                Mda_Timer = 15000;
+            } else Mda_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_boss_epoch_hunter(Creature* creature)
-{
-    return new boss_epoch_hunterAI (creature);
-}
 
 void AddSC_boss_epoch_hunter()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_epoch_hunter";
-    newscript->GetAI = &GetAI_boss_epoch_hunter;
-    newscript->RegisterSelf();
+    new boss_epoch_hunter();
 }
-

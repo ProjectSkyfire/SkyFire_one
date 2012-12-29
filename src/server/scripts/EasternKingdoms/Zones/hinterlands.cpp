@@ -50,74 +50,79 @@ enum eOOX
     NPC_MARAUDING_OWL       = 7808,
     NPC_VILE_AMBUSHER       = 7809,
 };
-
-struct npc_00x09hlAI : public npc_escortAI
+class npc_00x09hl : public CreatureScript
 {
-    npc_00x09hlAI(Creature* creature) : npc_escortAI(creature) { }
+public:
+    npc_00x09hl() : CreatureScript("npc_00x09hl") { }
 
-    void Reset() { }
-
-    void WaypointReached(uint32 uiPointId)
+    bool QuestAccept(Player* player, Creature* creature, const Quest* pQuest)
     {
-        Player* player = GetPlayerForEscort();
-        if (!player)
-            return;
-
-        switch (uiPointId)
+        if (pQuest->GetQuestId() == QUEST_RESQUE_OOX_09)
         {
-            case 26:
-                DoScriptText(SAY_OOX_AMBUSH, me);
-                for (uint8 i = 0; i < 3; ++i)
-                    me->SummonCreature(NPC_MARAUDING_OWL, 178.111f, -3801.58f, 128.37f, 0.0f,    TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                break;
-            case 43:
-                DoScriptText(SAY_OOX_AMBUSH, me);
-                for (uint8 i = 0; i < 3; ++i)
-                    me->SummonCreature(NPC_VILE_AMBUSHER, -116.258f, -4211.96f, 121.878f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
-                break;
-            case 64:
-                DoScriptText(SAY_OOX_END, me);
-                if (Player* player = GetPlayerForEscort())
-                    player->GroupEventHappens(QUEST_RESQUE_OOX_09, me);
-                break;
+            creature->SetStandState(UNIT_STAND_STATE_STAND);
+            creature->setFaction(113);
+            creature->SetHealth(creature->GetMaxHealth());
+            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+
+            DoScriptText(SAY_OOX_START, creature);
+
+            if (npc_00x09hlAI* pEscortAI = CAST_AI(npc_00x09hlAI, creature->AI()))
+                pEscortAI->Start(false, true, player->GetGUID(), pQuest);
         }
+        return true;
     }
 
-    void EnterCombat(Unit* pWho)
+    CreatureAI* GetAI(Creature* creature)
     {
-        if (pWho->GetEntry() == NPC_MARAUDING_OWL || pWho->GetEntry() == NPC_VILE_AMBUSHER)
-            return;
-
-        DoScriptText(RAND(SAY_OOX_AGGRO1, SAY_OOX_AGGRO2), me);
+        return new npc_00x09hlAI(creature);
     }
 
-    void JustSummoned(Creature* pSummoned)
+    struct npc_00x09hlAI : public npc_escortAI
     {
-        pSummoned->AI()->AttackStart(me);
-    }
+        npc_00x09hlAI(Creature* creature) : npc_escortAI(creature) { }
+
+        void Reset() { }
+
+        void WaypointReached(uint32 uiPointId)
+        {
+            Player* player = GetPlayerForEscort();
+            if (!player)
+                return;
+
+            switch (uiPointId)
+            {
+                case 26:
+                    DoScriptText(SAY_OOX_AMBUSH, me);
+                    for (uint8 i = 0; i < 3; ++i)
+                        me->SummonCreature(NPC_MARAUDING_OWL, 178.111f, -3801.58f, 128.37f, 0.0f,    TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                    break;
+                case 43:
+                    DoScriptText(SAY_OOX_AMBUSH, me);
+                    for (uint8 i = 0; i < 3; ++i)
+                        me->SummonCreature(NPC_VILE_AMBUSHER, -116.258f, -4211.96f, 121.878f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
+                    break;
+                case 64:
+                    DoScriptText(SAY_OOX_END, me);
+                    if (Player* player = GetPlayerForEscort())
+                        player->GroupEventHappens(QUEST_RESQUE_OOX_09, me);
+                    break;
+            }
+        }
+
+        void EnterCombat(Unit* pWho)
+        {
+            if (pWho->GetEntry() == NPC_MARAUDING_OWL || pWho->GetEntry() == NPC_VILE_AMBUSHER)
+                return;
+
+            DoScriptText(RAND(SAY_OOX_AGGRO1, SAY_OOX_AGGRO2), me);
+        }
+
+        void JustSummoned(Creature* pSummoned)
+        {
+            pSummoned->AI()->AttackStart(me);
+        }
+    };
 };
-
-bool QuestAccept_npc_00x09hl(Player* player, Creature* creature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_RESQUE_OOX_09)
-    {
-        creature->SetStandState(UNIT_STAND_STATE_STAND);
-        creature->setFaction(113);
-        creature->SetHealth(creature->GetMaxHealth());
-        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-
-        DoScriptText(SAY_OOX_START, creature);
-
-        if (npc_00x09hlAI* pEscortAI = CAST_AI(npc_00x09hlAI, creature->AI()))
-            pEscortAI->Start(false, true, player->GetGUID(), pQuest);
-    }
-    return true;
-}
-
-CreatureAI* GetAI_npc_00x09hl(Creature* creature)
-{
-    return new npc_00x09hlAI(creature);
-}
 
 /*######
 ## npc_rinji
@@ -155,175 +160,169 @@ Location m_afAmbushMoveTo[] =
     {166.630386f, -2824.780273f, 108.153f},
     {70.886589f,  -2874.335449f, 116.675f}
 };
-
-struct npc_rinjiAI : public npc_escortAI
+class npc_rinji : public CreatureScript
 {
-    npc_rinjiAI(Creature* creature) : npc_escortAI(creature)
+public:
+    npc_rinji() : CreatureScript("npc_rinji") { }
+
+    bool QuestAccept(Player* player, Creature* creature, const Quest* pQuest)
     {
-        m_bIsByOutrunner = false;
-        m_iSpawnId = 0;
-    }
-
-    bool m_bIsByOutrunner;
-    uint32 m_uiPostEventCount;
-    uint32 m_uiPostEventTimer;
-    int m_iSpawnId;
-
-    void Reset()
-    {
-        m_uiPostEventCount = 0;
-        m_uiPostEventTimer = 3000;
-    }
-
-    void JustRespawned()
-    {
-        m_bIsByOutrunner = false;
-        m_iSpawnId = 0;
-
-        npc_escortAI::JustRespawned();
-    }
-
-    void EnterCombat(Unit* pWho)
-    {
-        if (HasEscortState(STATE_ESCORT_ESCORTING))
+        if (pQuest->GetQuestId() == QUEST_RINJI_TRAPPED)
         {
-            if (pWho->GetEntry() == NPC_OUTRUNNER && !m_bIsByOutrunner)
-            {
-                DoScriptText(SAY_RIN_BY_OUTRUNNER, pWho);
-                m_bIsByOutrunner = true;
-            }
+            if (GameObject* pGo = creature->FindNearestGameObject(GO_RINJI_CAGE, INTERACTION_DISTANCE))
+                pGo->UseDoorOrButton();
 
-            if (rand()%4)
-                return;
-
-            //only if attacked and escorter is not in combat?
-            DoScriptText(RAND(SAY_RIN_HELP_1, SAY_RIN_HELP_2), me);
+            if (npc_rinjiAI* pEscortAI = CAST_AI(npc_rinjiAI, creature->AI()))
+                pEscortAI->Start(false, false, player->GetGUID(), pQuest);
         }
+        return true;
     }
 
-    void DoSpawnAmbush(bool bFirst)
+    CreatureAI* GetAI(Creature* creature)
     {
-        if (!bFirst)
-            m_iSpawnId = 1;
+        return new npc_rinjiAI(creature);
+    }
 
-        me->SummonCreature(NPC_RANGER,
-            m_afAmbushSpawn[m_iSpawnId].m_fX, m_afAmbushSpawn[m_iSpawnId].m_fY, m_afAmbushSpawn[m_iSpawnId].m_fZ, 0.0f,
-            TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-
-        for (int i = 0; i < 2; ++i)
+    struct npc_rinjiAI : public npc_escortAI
+    {
+        npc_rinjiAI(Creature* creature) : npc_escortAI(creature)
         {
-            me->SummonCreature(NPC_OUTRUNNER,
+            m_bIsByOutrunner = false;
+            m_iSpawnId = 0;
+        }
+
+        bool m_bIsByOutrunner;
+        uint32 m_uiPostEventCount;
+        uint32 m_uiPostEventTimer;
+        int m_iSpawnId;
+
+        void Reset()
+        {
+            m_uiPostEventCount = 0;
+            m_uiPostEventTimer = 3000;
+        }
+
+        void JustRespawned()
+        {
+            m_bIsByOutrunner = false;
+            m_iSpawnId = 0;
+
+            npc_escortAI::JustRespawned();
+        }
+
+        void EnterCombat(Unit* pWho)
+        {
+            if (HasEscortState(STATE_ESCORT_ESCORTING))
+            {
+                if (pWho->GetEntry() == NPC_OUTRUNNER && !m_bIsByOutrunner)
+                {
+                    DoScriptText(SAY_RIN_BY_OUTRUNNER, pWho);
+                    m_bIsByOutrunner = true;
+                }
+
+                if (rand()%4)
+                    return;
+
+                //only if attacked and escorter is not in combat?
+                DoScriptText(RAND(SAY_RIN_HELP_1, SAY_RIN_HELP_2), me);
+            }
+        }
+
+        void DoSpawnAmbush(bool bFirst)
+        {
+            if (!bFirst)
+                m_iSpawnId = 1;
+
+            me->SummonCreature(NPC_RANGER,
                 m_afAmbushSpawn[m_iSpawnId].m_fX, m_afAmbushSpawn[m_iSpawnId].m_fY, m_afAmbushSpawn[m_iSpawnId].m_fZ, 0.0f,
                 TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
-        }
-    }
 
-    void JustSummoned(Creature* pSummoned)
-    {
-        pSummoned->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
-        pSummoned->GetMotionMaster()->MovePoint(0, m_afAmbushMoveTo[m_iSpawnId].m_fX, m_afAmbushMoveTo[m_iSpawnId].m_fY, m_afAmbushMoveTo[m_iSpawnId].m_fZ);
-    }
-
-    void WaypointReached(uint32 uiPointId)
-    {
-        Player* player = GetPlayerForEscort();
-
-        if (!player)
-            return;
-
-        switch (uiPointId)
-        {
-            case 1:
-                DoScriptText(SAY_RIN_FREE, me, player);
-                break;
-            case 7:
-                DoSpawnAmbush(true);
-                break;
-            case 13:
-                DoSpawnAmbush(false);
-                break;
-            case 17:
-                DoScriptText(SAY_RIN_COMPLETE, me, player);
-                player->GroupEventHappens(QUEST_RINJI_TRAPPED, me);
-                SetRun();
-                m_uiPostEventCount = 1;
-                break;
-        }
-    }
-
-    void UpdateEscortAI(const uint32 uiDiff)
-    {
-        //Check if we have a current target
-        if (!UpdateVictim())
-        {
-            if (HasEscortState(STATE_ESCORT_ESCORTING) && m_uiPostEventCount)
+            for (int i = 0; i < 2; ++i)
             {
-                if (m_uiPostEventTimer <= uiDiff)
-                {
-                    m_uiPostEventTimer = 3000;
+                me->SummonCreature(NPC_OUTRUNNER,
+                    m_afAmbushSpawn[m_iSpawnId].m_fX, m_afAmbushSpawn[m_iSpawnId].m_fY, m_afAmbushSpawn[m_iSpawnId].m_fZ, 0.0f,
+                    TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
+            }
+        }
 
-                    if (Unit* player = GetPlayerForEscort())
+        void JustSummoned(Creature* pSummoned)
+        {
+            pSummoned->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
+            pSummoned->GetMotionMaster()->MovePoint(0, m_afAmbushMoveTo[m_iSpawnId].m_fX, m_afAmbushMoveTo[m_iSpawnId].m_fY, m_afAmbushMoveTo[m_iSpawnId].m_fZ);
+        }
+
+        void WaypointReached(uint32 uiPointId)
+        {
+            Player* player = GetPlayerForEscort();
+
+            if (!player)
+                return;
+
+            switch (uiPointId)
+            {
+                case 1:
+                    DoScriptText(SAY_RIN_FREE, me, player);
+                    break;
+                case 7:
+                    DoSpawnAmbush(true);
+                    break;
+                case 13:
+                    DoSpawnAmbush(false);
+                    break;
+                case 17:
+                    DoScriptText(SAY_RIN_COMPLETE, me, player);
+                    player->GroupEventHappens(QUEST_RINJI_TRAPPED, me);
+                    SetRun();
+                    m_uiPostEventCount = 1;
+                    break;
+            }
+        }
+
+        void UpdateEscortAI(const uint32 uiDiff)
+        {
+            //Check if we have a current target
+            if (!UpdateVictim())
+            {
+                if (HasEscortState(STATE_ESCORT_ESCORTING) && m_uiPostEventCount)
+                {
+                    if (m_uiPostEventTimer <= uiDiff)
                     {
-                        switch (m_uiPostEventCount)
+                        m_uiPostEventTimer = 3000;
+
+                        if (Unit* player = GetPlayerForEscort())
                         {
-                            case 1:
-                                DoScriptText(SAY_RIN_PROGRESS_1, me, player);
-                                ++m_uiPostEventCount;
-                                break;
-                            case 2:
-                                DoScriptText(SAY_RIN_PROGRESS_2, me, player);
-                                m_uiPostEventCount = 0;
-                                break;
+                            switch (m_uiPostEventCount)
+                            {
+                                case 1:
+                                    DoScriptText(SAY_RIN_PROGRESS_1, me, player);
+                                    ++m_uiPostEventCount;
+                                    break;
+                                case 2:
+                                    DoScriptText(SAY_RIN_PROGRESS_2, me, player);
+                                    m_uiPostEventCount = 0;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            me->ForcedDespawn();
+                            return;
                         }
                     }
                     else
-                    {
-                        me->ForcedDespawn();
-                        return;
-                    }
+                        m_uiPostEventTimer -= uiDiff;
                 }
-                else
-                    m_uiPostEventTimer -= uiDiff;
+
+                return;
             }
 
-            return;
+            DoMeleeAttackIfReady();
         }
-
-        DoMeleeAttackIfReady();
-    }
+    };
 };
-
-bool QuestAccept_npc_rinji(Player* player, Creature* creature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_RINJI_TRAPPED)
-    {
-        if (GameObject* pGo = creature->FindNearestGameObject(GO_RINJI_CAGE, INTERACTION_DISTANCE))
-            pGo->UseDoorOrButton();
-
-        if (npc_rinjiAI* pEscortAI = CAST_AI(npc_rinjiAI, creature->AI()))
-            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
-    }
-    return true;
-}
-
-CreatureAI* GetAI_npc_rinji(Creature* creature)
-{
-    return new npc_rinjiAI(creature);
-}
 
 void AddSC_hinterlands()
 {
-    Script* newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_00x09hl";
-    newscript->GetAI = &GetAI_npc_00x09hl;
-    newscript->pQuestAccept = &QuestAccept_npc_00x09hl;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_rinji";
-    newscript->GetAI = &GetAI_npc_rinji;
-    newscript->pQuestAccept = &QuestAccept_npc_rinji;
-    newscript->RegisterSelf();
+    new npc_00x09hl();
+    new npc_rinji();
 }

@@ -43,92 +43,98 @@ EndContentData */
 #define SPELL_REVENGE               12170
 
 #define GOSSIP_BLY                  "[PH] In that case, I will take my reward!"
-
-struct npc_sergeant_blyAI : public ScriptedAI
+class npc_sergeant_bly : public CreatureScript
 {
-    npc_sergeant_blyAI(Creature *c) : ScriptedAI(c)
+public:
+    npc_sergeant_bly() : CreatureScript("npc_sergeant_bly") { }
+
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        //instance = c->GetInstanceScript();
-    }
-
-    //ScriptedInstance* instance;
-
-    uint32 ShieldBash_Timer;
-    uint32 Revenge_Timer;                                   //this is wrong, spell should never be used unless me->getVictim() dodge, parry or block attack. Skyfire support required.
-
-    void Reset()
-    {
-        ShieldBash_Timer = 5000;
-        Revenge_Timer = 8000;
-
-        me->setFaction(FACTION_FRIENDLY);
-
-        /*if (instance)
-            instance->SetData(0, NOT_STARTED);*/
-    }
-
-    void EnterCombat(Unit * /*who*/)
-    {
-        /*if (instance)
-            instance->SetData(0, IN_PROGRESS);*/
-    }
-
-    void JustDied(Unit * /*victim*/)
-    {
-        /*if (instance)
-            instance->SetData(0, DONE);*/
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (ShieldBash_Timer <= diff)
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
-            DoCast(me->getVictim(), SPELL_SHIELD_BASH);
-            ShieldBash_Timer = 15000;
-        } else ShieldBash_Timer -= diff;
-
-        if (Revenge_Timer <= diff)
-        {
-            DoCast(me->getVictim(), SPELL_REVENGE);
-            Revenge_Timer = 10000;
-        } else Revenge_Timer -= diff;
-
-        DoMeleeAttackIfReady();
+            player->CLOSE_GOSSIP_MENU();
+            creature->setFaction(FACTION_HOSTILE);
+            CAST_AI(npc_sergeant_blyAI, creature->AI())->AttackStart(player);
+        }
+        return true;
     }
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        /*if (instance->GetData(0) == DONE)
+        {*/
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->SEND_GOSSIP_MENU(1517, creature->GetGUID());
+        /*}
+        else if (instance->GetData(0) == IN_PROGRESS)
+            player->SEND_GOSSIP_MENU(1516, creature->GetGUID());
+        else
+            player->SEND_GOSSIP_MENU(1515, creature->GetGUID());*/
+
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new npc_sergeant_blyAI (creature);
+    }
+
+    struct npc_sergeant_blyAI : public ScriptedAI
+    {
+        npc_sergeant_blyAI(Creature *c) : ScriptedAI(c)
+        {
+            //instance = c->GetInstanceScript();
+        }
+
+        //ScriptedInstance* instance;
+
+        uint32 ShieldBash_Timer;
+        uint32 Revenge_Timer;                                   //this is wrong, spell should never be used unless me->getVictim() dodge, parry or block attack. Skyfire support required.
+
+        void Reset()
+        {
+            ShieldBash_Timer = 5000;
+            Revenge_Timer = 8000;
+
+            me->setFaction(FACTION_FRIENDLY);
+
+            /*if (instance)
+                instance->SetData(0, NOT_STARTED);*/
+        }
+
+        void EnterCombat(Unit * /*who*/)
+        {
+            /*if (instance)
+                instance->SetData(0, IN_PROGRESS);*/
+        }
+
+        void JustDied(Unit * /*victim*/)
+        {
+            /*if (instance)
+                instance->SetData(0, DONE);*/
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (ShieldBash_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_SHIELD_BASH);
+                ShieldBash_Timer = 15000;
+            } else ShieldBash_Timer -= diff;
+
+            if (Revenge_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_REVENGE);
+                Revenge_Timer = 10000;
+            } else Revenge_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_npc_sergeant_bly(Creature* creature)
-{
-    return new npc_sergeant_blyAI (creature);
-}
-
-bool GossipHello_npc_sergeant_bly(Player* player, Creature* creature)
-{
-    /*if (instance->GetData(0) == DONE)
-    {*/
-    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    player->SEND_GOSSIP_MENU(1517, creature->GetGUID());
-    /*}
-    else if (instance->GetData(0) == IN_PROGRESS)
-        player->SEND_GOSSIP_MENU(1516, creature->GetGUID());
-    else
-        player->SEND_GOSSIP_MENU(1515, creature->GetGUID());*/
-
-    return true;
-}
-
-bool GossipSelect_npc_sergeant_bly(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        creature->setFaction(FACTION_HOSTILE);
-        CAST_AI(npc_sergeant_blyAI, creature->AI())->AttackStart(player);
-    }
-    return true;
-}
 
 /*######
 ## npc_weegli_blastfuse
@@ -140,71 +146,77 @@ bool GossipSelect_npc_sergeant_bly(Player* player, Creature* creature, uint32 /*
 #define SPELL_WEEGLIS_BARREL        10772
 
 #define GOSSIP_WEEGLI               "[PH] Please blow up the door."
-
-struct npc_weegli_blastfuseAI : public ScriptedAI
+class npc_weegli_blastfuse : public CreatureScript
 {
-    npc_weegli_blastfuseAI(Creature *c) : ScriptedAI(c)
+public:
+    npc_weegli_blastfuse() : CreatureScript("npc_weegli_blastfuse") { }
+
+    bool GossipSelect(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
-        //instance = c->GetInstanceScript();
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            //here we make him run to door, set the charge and run away off to nowhere
+        }
+        return true;
     }
 
-    //ScriptedInstance* instance;
-
-    void Reset()
+    bool GossipHello(Player* player, Creature* creature)
     {
-        /*if (instance)
-            instance->SetData(0, NOT_STARTED);*/
+        //event not implemented yet, this is only placeholder for future developement
+        /*if (instance->GetData(0) == DONE)
+        {
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->SEND_GOSSIP_MENU(1514, creature->GetGUID());//if event can proceed to end
+        }
+        else if (instance->GetData(0) == IN_PROGRESS)
+            player->SEND_GOSSIP_MENU(1513, creature->GetGUID());//if event are in progress
+        else*/
+        player->SEND_GOSSIP_MENU(1511, creature->GetGUID());   //if event not started
+        return true;
     }
 
-    void EnterCombat(Unit * /*who*/)
+    CreatureAI* GetAI(Creature* creature)
     {
-        /*if (instance)
-            instance->SetData(0, IN_PROGRESS);*/
+        return new npc_weegli_blastfuseAI (creature);
     }
 
-    void JustDied(Unit * /*victim*/)
+    struct npc_weegli_blastfuseAI : public ScriptedAI
     {
-        /*if (instance)
-            instance->SetData(0, DONE);*/
-    }
+        npc_weegli_blastfuseAI(Creature *c) : ScriptedAI(c)
+        {
+            //instance = c->GetInstanceScript();
+        }
 
-    void UpdateAI(const uint32 /*diff*/)
-    {
-        if (!UpdateVictim())
-            return;
+        //ScriptedInstance* instance;
 
-        DoMeleeAttackIfReady();
-    }
+        void Reset()
+        {
+            /*if (instance)
+                instance->SetData(0, NOT_STARTED);*/
+        }
+
+        void EnterCombat(Unit * /*who*/)
+        {
+            /*if (instance)
+                instance->SetData(0, IN_PROGRESS);*/
+        }
+
+        void JustDied(Unit * /*victim*/)
+        {
+            /*if (instance)
+                instance->SetData(0, DONE);*/
+        }
+
+        void UpdateAI(const uint32 /*diff*/)
+        {
+            if (!UpdateVictim())
+                return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_npc_weegli_blastfuse(Creature* creature)
-{
-    return new npc_weegli_blastfuseAI (creature);
-}
-
-bool GossipHello_npc_weegli_blastfuse(Player* player, Creature* creature)
-{
-    //event not implemented yet, this is only placeholder for future developement
-    /*if (instance->GetData(0) == DONE)
-    {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        player->SEND_GOSSIP_MENU(1514, creature->GetGUID());//if event can proceed to end
-    }
-    else if (instance->GetData(0) == IN_PROGRESS)
-        player->SEND_GOSSIP_MENU(1513, creature->GetGUID());//if event are in progress
-    else*/
-    player->SEND_GOSSIP_MENU(1511, creature->GetGUID());   //if event not started
-    return true;
-}
-
-bool GossipSelect_npc_weegli_blastfuse(Player* player, Creature* /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        player->CLOSE_GOSSIP_MENU();
-        //here we make him run to door, set the charge and run away off to nowhere
-    }
-    return true;
-}
 
 /*######
 ## go_shallow_grave
@@ -216,21 +228,26 @@ enum {
     ZOMBIE_CHANCE = 65,
     DEAD_HERO_CHANCE = 10
 };
-
-bool GOHello_go_shallow_grave(Player* /*player*/, GameObject* pGo)
+class go_shallow_grave : public GameObjectScript
 {
-    // randomly summon a zombie or dead hero the first time a grave is used
-    if (pGo->GetUseCount() == 0)
+public:
+    go_shallow_grave() : GameObjectScript("go_shallow_grave") { }
+
+    bool GOHello(Player* /*player*/, GameObject* pGo)
     {
-        uint32 randomchance = urand(0, 100);
-        if (randomchance < ZOMBIE_CHANCE)
-            pGo->SummonCreature(ZOMBIE, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
-        else if ((randomchance-ZOMBIE_CHANCE) < DEAD_HERO_CHANCE)
-            pGo->SummonCreature(DEAD_HERO, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+        // randomly summon a zombie or dead hero the first time a grave is used
+        if (pGo->GetUseCount() == 0)
+        {
+            uint32 randomchance = urand(0, 100);
+            if (randomchance < ZOMBIE_CHANCE)
+                pGo->SummonCreature(ZOMBIE, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+            else if ((randomchance-ZOMBIE_CHANCE) < DEAD_HERO_CHANCE)
+                pGo->SummonCreature(DEAD_HERO, pGo->GetPositionX(), pGo->GetPositionY(), pGo->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+        }
+        pGo->AddUse();
+        return false;
     }
-    pGo->AddUse();
-    return false;
-}
+};
 
 /*######
 ## at_zumrah
@@ -240,44 +257,28 @@ enum {
     ZUMRAH_ID = 7271,
     ZUMRAH_HOSTILE_FACTION = 37
 };
-
-bool AreaTrigger_at_zumrah(Player* player, const AreaTriggerEntry * /*at*/)
+class at_zumrah : public AreaTriggerScript
 {
-    Creature* Zumrah = player->FindNearestCreature(ZUMRAH_ID, 30.0f);
+public:
+    at_zumrah() : AreaTriggerScript("at_zumrah") { }
 
-    if (!Zumrah)
-        return false;
+    bool AreaTrigger(Player* player, const AreaTriggerEntry * /*at*/)
+    {
+        Creature* Zumrah = player->FindNearestCreature(ZUMRAH_ID, 30.0f);
 
-    Zumrah->setFaction(ZUMRAH_HOSTILE_FACTION);
-    Zumrah->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-    return true;
-}
+        if (!Zumrah)
+            return false;
+
+        Zumrah->setFaction(ZUMRAH_HOSTILE_FACTION);
+        Zumrah->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+        return true;
+    }
+};
 
 void AddSC_zulfarrak()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_sergeant_bly";
-    newscript->GetAI = &GetAI_npc_sergeant_bly;
-    newscript->pGossipHello =  &GossipHello_npc_sergeant_bly;
-    newscript->pGossipSelect = &GossipSelect_npc_sergeant_bly;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_weegli_blastfuse";
-    newscript->GetAI = &GetAI_npc_weegli_blastfuse;
-    newscript->pGossipHello =  &GossipHello_npc_weegli_blastfuse;
-    newscript->pGossipSelect = &GossipSelect_npc_weegli_blastfuse;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "go_shallow_grave";
-    newscript->pGOHello = &GOHello_go_shallow_grave;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "at_zumrah";
-    newscript->pAreaTrigger = &AreaTrigger_at_zumrah;
-    newscript->RegisterSelf();
+    new npc_sergeant_bly();
+    new npc_weegli_blastfuse();
+    new go_shallow_grave();
+    new at_zumrah();
 }

@@ -57,114 +57,144 @@ EndScriptData */
 #define CREATURE_FIENDISHIMP    17267
 #define CREATURE_PORTAL         17265
 #define CREATURE_KILREK         17229
-
-struct mob_kilrekAI : public ScriptedAI
+class mob_kilrek : public CreatureScript
 {
-    mob_kilrekAI(Creature *c) : ScriptedAI(c)
+public:
+    mob_kilrek() : CreatureScript("mob_kilrek") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
+        return new mob_kilrekAI (creature);
     }
 
-    ScriptedInstance* instance;
-
-    uint64 TerestianGUID;
-
-    uint32 AmplifyTimer;
-
-    void Reset()
+    struct mob_kilrekAI : public ScriptedAI
     {
-        TerestianGUID = 0;
-        AmplifyTimer = 2000;
-    }
-
-    void EnterCombat(Unit * /*who*/)
-    {
-        if (!instance)
+        mob_kilrekAI(Creature *c) : ScriptedAI(c)
         {
-            ERROR_INST_DATA(me);
-            return;
+            instance = c->GetInstanceScript();
         }
-    }
 
-    void JustDied(Unit* /*Killer*/)
-    {
-        if (instance)
+        ScriptedInstance* instance;
+
+        uint64 TerestianGUID;
+
+        uint32 AmplifyTimer;
+
+        void Reset()
         {
-            uint64 TerestianGUID = instance->GetData64(DATA_TERESTIAN);
-            if (TerestianGUID)
+            TerestianGUID = 0;
+            AmplifyTimer = 2000;
+        }
+
+        void EnterCombat(Unit * /*who*/)
+        {
+            if (!instance)
             {
-                Unit* Terestian = Unit::GetUnit((*me), TerestianGUID);
-                if (Terestian && Terestian->isAlive())
-                    DoCast(Terestian, SPELL_BROKEN_PACT, true);
+                ERROR_INST_DATA(me);
+                return;
             }
-        } else ERROR_INST_DATA(me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        if (AmplifyTimer <= diff)
-        {
-            me->InterruptNonMeleeSpells(false);
-            DoCast(me->getVictim(), SPELL_AMPLIFY_FLAMES);
-
-            AmplifyTimer = urand(10000, 20000);
-        } else AmplifyTimer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-struct mob_demon_chainAI : public ScriptedAI
-{
-    mob_demon_chainAI(Creature *c) : ScriptedAI(c) {}
-
-    uint64 SacrificeGUID;
-
-    void Reset()
-    {
-        SacrificeGUID = 0;
-    }
-
-    void EnterCombat(Unit* /*who*/) {}
-    void AttackStart(Unit* /*who*/) {}
-    void MoveInLineOfSight(Unit* /*who*/) {}
-
-    void JustDied(Unit * /*killer*/)
-    {
-        if (SacrificeGUID)
-        {
-            Unit* Sacrifice = Unit::GetUnit((*me),SacrificeGUID);
-            if (Sacrifice)
-                Sacrifice->RemoveAurasDueToSpell(SPELL_SACRIFICE);
         }
-    }
+
+        void JustDied(Unit* /*Killer*/)
+        {
+            if (instance)
+            {
+                uint64 TerestianGUID = instance->GetData64(DATA_TERESTIAN);
+                if (TerestianGUID)
+                {
+                    Unit* Terestian = Unit::GetUnit((*me), TerestianGUID);
+                    if (Terestian && Terestian->isAlive())
+                        DoCast(Terestian, SPELL_BROKEN_PACT, true);
+                }
+            } else ERROR_INST_DATA(me);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            if (AmplifyTimer <= diff)
+            {
+                me->InterruptNonMeleeSpells(false);
+                DoCast(me->getVictim(), SPELL_AMPLIFY_FLAMES);
+
+                AmplifyTimer = urand(10000, 20000);
+            } else AmplifyTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-struct mob_fiendish_portalAI : public PassiveAI
+class mob_demon_chain : public CreatureScript
 {
-    mob_fiendish_portalAI(Creature *c) : PassiveAI(c),summons(me){}
+public:
+    mob_demon_chain() : CreatureScript("mob_demon_chain") { }
 
-    SummonList summons;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        summons.DespawnAll();
+        return new mob_demon_chainAI(creature);
     }
 
-    void JustSummoned(Creature* summon)
+    struct mob_demon_chainAI : public ScriptedAI
     {
-        summons.Summon(summon);
-        DoZoneInCombat(summon);
+        mob_demon_chainAI(Creature *c) : ScriptedAI(c) {}
+
+        uint64 SacrificeGUID;
+
+        void Reset()
+        {
+            SacrificeGUID = 0;
+        }
+
+        void EnterCombat(Unit* /*who*/) {}
+        void AttackStart(Unit* /*who*/) {}
+        void MoveInLineOfSight(Unit* /*who*/) {}
+
+        void JustDied(Unit * /*killer*/)
+        {
+            if (SacrificeGUID)
+            {
+                Unit* Sacrifice = Unit::GetUnit((*me),SacrificeGUID);
+                if (Sacrifice)
+                    Sacrifice->RemoveAurasDueToSpell(SPELL_SACRIFICE);
+            }
+        }
+    };
+};
+class mob_fiendish_portal : public CreatureScript
+{
+public:
+    mob_fiendish_portal() : CreatureScript("mob_fiendish_portal") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new mob_fiendish_portalAI (creature);
     }
 
-    void DespawnAllImp()
+    struct mob_fiendish_portalAI : public PassiveAI
     {
-        summons.DespawnAll();
-    }
+        mob_fiendish_portalAI(Creature *c) : PassiveAI(c),summons(me){}
+
+        SummonList summons;
+
+        void Reset()
+        {
+            summons.DespawnAll();
+        }
+
+        void JustSummoned(Creature* summon)
+        {
+            summons.Summon(summon);
+            DoZoneInCombat(summon);
+        }
+
+        void DespawnAllImp()
+        {
+            summons.DespawnAll();
+        }
+    };
 };
 
 struct boss_terestianAI : public ScriptedAI
@@ -333,89 +363,64 @@ struct boss_terestianAI : public ScriptedAI
 };
 
 #define SPELL_FIREBOLT  30050   // Blasts a target for 181-209 Fire damage.
-
-struct mob_fiendish_impAI : public ScriptedAI
+class mob_fiendish_imp : public CreatureScript
 {
-    mob_fiendish_impAI(Creature *c) : ScriptedAI(c) {}
+public:
+    mob_fiendish_imp() : CreatureScript("mob_fiendish_imp") { }
 
-    uint32 FireboltTimer;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        FireboltTimer = 2000;
-
-        me->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
+        return new mob_fiendish_impAI (creature);
     }
 
-    void EnterCombat(Unit * /*who*/) {}
-
-    void UpdateAI(const uint32 diff)
+    struct mob_fiendish_impAI : public ScriptedAI
     {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
+        mob_fiendish_impAI(Creature *c) : ScriptedAI(c) {}
 
-        if (FireboltTimer <= diff)
+        uint32 FireboltTimer;
+
+        void Reset()
         {
-            DoCast(me->getVictim(), SPELL_FIREBOLT);
-            FireboltTimer = 2200;
-        } else FireboltTimer -= diff;
+            FireboltTimer = 2000;
 
-        DoMeleeAttackIfReady();
+            me->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FIRE, true);
+        }
+
+        void EnterCombat(Unit * /*who*/) {}
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            if (FireboltTimer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_FIREBOLT);
+                FireboltTimer = 2200;
+            } else FireboltTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+};
+
+class boss_terestian_illhoof : public CreatureScript
+{
+public:
+    boss_terestian_illhoof() : CreatureScript("boss_terestian_illhoof") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_terestianAI (creature);
     }
 };
 
-CreatureAI* GetAI_mob_kilrek(Creature* creature)
-{
-    return new mob_kilrekAI (creature);
-}
-
-CreatureAI* GetAI_mob_fiendish_imp(Creature* creature)
-{
-    return new mob_fiendish_impAI (creature);
-}
-
-CreatureAI* GetAI_mob_fiendish_portal(Creature* creature)
-{
-    return new mob_fiendish_portalAI (creature);
-}
-
-CreatureAI* GetAI_boss_terestian_illhoof(Creature* creature)
-{
-    return new boss_terestianAI (creature);
-}
-
-CreatureAI* GetAI_mob_demon_chain(Creature* creature)
-{
-    return new mob_demon_chainAI(creature);
-}
-
 void AddSC_boss_terestian_illhoof()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_terestian_illhoof";
-    newscript->GetAI = &GetAI_boss_terestian_illhoof;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_fiendish_imp";
-    newscript->GetAI = &GetAI_mob_fiendish_imp;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name= "mob_fiendish_portal";
-    newscript->GetAI = &GetAI_mob_fiendish_portal;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_kilrek";
-    newscript->GetAI = &GetAI_mob_kilrek;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_demon_chain";
-    newscript->GetAI = &GetAI_mob_demon_chain;
-    newscript->RegisterSelf();
+    new boss_terestian_illhoof();
+    new mob_fiendish_imp();
+    new mob_fiendish_portal();
+    new mob_kilrek();
+    new mob_demon_chain();
 }
-

@@ -46,111 +46,121 @@ enum eTapokeSlim
     NPC_SLIMS_FRIEND            = 4971,
     NPC_TAPOKE_SLIM_JAHN        = 4962
 };
-
-struct npc_tapoke_slim_jahnAI : public npc_escortAI
+class npc_tapoke_slim_jahn : public CreatureScript
 {
-    npc_tapoke_slim_jahnAI(Creature* creature) : npc_escortAI(creature) { }
+public:
+    npc_tapoke_slim_jahn() : CreatureScript("npc_tapoke_slim_jahn") { }
 
-    bool m_bFriendSummoned;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        if (!HasEscortState(STATE_ESCORT_ESCORTING))
-            m_bFriendSummoned = false;
+        return new npc_tapoke_slim_jahnAI(creature);
     }
 
-    void WaypointReached(uint32 uiPointId)
+    struct npc_tapoke_slim_jahnAI : public npc_escortAI
     {
-        switch (uiPointId)
-        {
-            case 2:
-                if (me->HasStealthAura())
-                    me->RemoveAurasDueToSpell(SPELL_AURA_MOD_STEALTH);
+        npc_tapoke_slim_jahnAI(Creature* creature) : npc_escortAI(creature) { }
 
-                SetRun();
-                me->setFaction(FACTION_ENEMY);
-                break;
+        bool m_bFriendSummoned;
+
+        void Reset()
+        {
+            if (!HasEscortState(STATE_ESCORT_ESCORTING))
+                m_bFriendSummoned = false;
         }
-    }
 
-    void EnterCombat(Unit* /*pWho*/)
-    {
-        Player* player = GetPlayerForEscort();
-
-        if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_bFriendSummoned && player)
+        void WaypointReached(uint32 uiPointId)
         {
-            for (uint8 i = 0; i < 3; ++i)
-                DoCast(me, SPELL_CALL_FRIENDS, true);
-
-            m_bFriendSummoned = true;
-        }
-    }
-
-    void JustSummoned(Creature* pSummoned)
-    {
-        if (Player* player = GetPlayerForEscort())
-            pSummoned->AI()->AttackStart(player);
-    }
-
-    void AttackedBy(Unit* pAttacker)
-    {
-        if (me->getVictim())
-            return;
-
-        if (me->IsFriendlyTo(pAttacker))
-            return;
-
-        AttackStart(pAttacker);
-    }
-
-    void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage)
-    {
-        if (me->GetHealth()*100 < me->GetMaxHealth()*20)
-        {
-            if (Player* player = GetPlayerForEscort())
+            switch (uiPointId)
             {
-                if (player->GetTypeId() == TYPEID_PLAYER)
-                    CAST_PLR(player)->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, me);
+                case 2:
+                    if (me->HasStealthAura())
+                        me->RemoveAurasDueToSpell(SPELL_AURA_MOD_STEALTH);
 
-                uiDamage = 0;
-
-                me->RestoreFaction();
-                me->RemoveAllAuras();
-                me->DeleteThreatList();
-                me->CombatStop(true);
-
-                SetRun(false);
+                    SetRun();
+                    me->setFaction(FACTION_ENEMY);
+                    break;
             }
         }
-    }
-};
 
-CreatureAI* GetAI_npc_tapoke_slim_jahn(Creature* creature)
-{
-    return new npc_tapoke_slim_jahnAI(creature);
-}
+        void EnterCombat(Unit* /*pWho*/)
+        {
+            Player* player = GetPlayerForEscort();
+
+            if (HasEscortState(STATE_ESCORT_ESCORTING) && !m_bFriendSummoned && player)
+            {
+                for (uint8 i = 0; i < 3; ++i)
+                    DoCast(me, SPELL_CALL_FRIENDS, true);
+
+                m_bFriendSummoned = true;
+            }
+        }
+
+        void JustSummoned(Creature* pSummoned)
+        {
+            if (Player* player = GetPlayerForEscort())
+                pSummoned->AI()->AttackStart(player);
+        }
+
+        void AttackedBy(Unit* pAttacker)
+        {
+            if (me->getVictim())
+                return;
+
+            if (me->IsFriendlyTo(pAttacker))
+                return;
+
+            AttackStart(pAttacker);
+        }
+
+        void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage)
+        {
+            if (me->GetHealth()*100 < me->GetMaxHealth()*20)
+            {
+                if (Player* player = GetPlayerForEscort())
+                {
+                    if (player->GetTypeId() == TYPEID_PLAYER)
+                        CAST_PLR(player)->GroupEventHappens(QUEST_MISSING_DIPLO_PT11, me);
+
+                    uiDamage = 0;
+
+                    me->RestoreFaction();
+                    me->RemoveAllAuras();
+                    me->DeleteThreatList();
+                    me->CombatStop(true);
+
+                    SetRun(false);
+                }
+            }
+        }
+    };
+};
 
 /*######
 ## npc_mikhail
 ######*/
-
-bool QuestAccept_npc_mikhail(Player* player, Creature* creature, const Quest* pQuest)
+class npc_mikhail : public CreatureScript
 {
-    if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT11)
+public:
+    npc_mikhail() : CreatureScript("npc_mikhail") { }
+
+    bool QuestAccept(Player* player, Creature* creature, const Quest* pQuest)
     {
-        Creature* pSlim = creature->FindNearestCreature(NPC_TAPOKE_SLIM_JAHN, 25.0f);
+        if (pQuest->GetQuestId() == QUEST_MISSING_DIPLO_PT11)
+        {
+            Creature* pSlim = creature->FindNearestCreature(NPC_TAPOKE_SLIM_JAHN, 25.0f);
 
-        if (!pSlim)
-            return false;
+            if (!pSlim)
+                return false;
 
-        if (!pSlim->HasStealthAura())
-            pSlim->CastSpell(pSlim, SPELL_STEALTH, true);
+            if (!pSlim->HasStealthAura())
+                pSlim->CastSpell(pSlim, SPELL_STEALTH, true);
 
-        if (npc_tapoke_slim_jahnAI* pEscortAI = CAST_AI(npc_tapoke_slim_jahnAI, pSlim->AI()))
-            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
+            if (npc_tapoke_slim_jahnAI* pEscortAI = CAST_AI(npc_tapoke_slim_jahnAI, pSlim->AI()))
+                pEscortAI->Start(false, false, player->GetGUID(), pQuest);
+        }
+        return false;
     }
-    return false;
-}
+};
 
 /*######
 ## AddSC
@@ -158,15 +168,6 @@ bool QuestAccept_npc_mikhail(Player* player, Creature* creature, const Quest* pQ
 
 void AddSC_wetlands()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_tapoke_slim_jahn";
-    newscript->GetAI = &GetAI_npc_tapoke_slim_jahn;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_mikhail";
-    newscript->pQuestAccept = &QuestAccept_npc_mikhail;
-    newscript->RegisterSelf();
+    new npc_tapoke_slim_jahn();
+    new npc_mikhail();
 }

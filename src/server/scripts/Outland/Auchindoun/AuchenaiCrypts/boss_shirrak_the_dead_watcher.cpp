@@ -41,177 +41,179 @@ EndScriptData */
 #define SPELL_FOCUS_FIRE_VISUAL     42075 //need to find better visual
 
 #define EMOTE_FOCUSES_ON            "focuses on "
-
-struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
+class boss_shirrak_the_dead_watcher : public CreatureScript
 {
-    boss_shirrak_the_dead_watcherAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_shirrak_the_dead_watcher() : CreatureScript("boss_shirrak_the_dead_watcher") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        HeroicMode = me->GetMap()->IsHeroic();
+        return new boss_shirrak_the_dead_watcherAI (creature);
     }
 
-    uint32 Inhibitmagic_Timer;
-    uint32 Attractmagic_Timer;
-    uint32 Carnivorousbite_Timer;
-    uint32 FocusFire_Timer;
-    bool HeroicMode;
-    Unit *focusedTarget;
-
-    void Reset()
+    struct boss_shirrak_the_dead_watcherAI : public ScriptedAI
     {
-        Inhibitmagic_Timer = 0;
-        Attractmagic_Timer = 28000;
-        Carnivorousbite_Timer = 10000;
-        FocusFire_Timer = 17000;
-        focusedTarget = NULL;
-    }
-
-    void EnterCombat(Unit *who)
-    { }
-
-    void JustSummoned(Creature *summoned)
-    {
-        if (summoned && summoned->GetEntry() == ENTRY_FOCUS_FIRE)
+        boss_shirrak_the_dead_watcherAI(Creature *c) : ScriptedAI(c)
         {
-            summoned->CastSpell(summoned, SPELL_FOCUS_FIRE_VISUAL, false);
-            summoned->setFaction(me->getFaction());
-            summoned->SetLevel(me->getLevel());
-            summoned->addUnitState(UNIT_STAT_ROOT);
-
-            if (focusedTarget)
-                summoned->AI()->AttackStart(focusedTarget);
+            HeroicMode = me->GetMap()->IsHeroic();
         }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        //Inhibitmagic_Timer
-        if (Inhibitmagic_Timer <= diff)
+        uint32 Inhibitmagic_Timer;
+        uint32 Attractmagic_Timer;
+        uint32 Carnivorousbite_Timer;
+        uint32 FocusFire_Timer;
+        bool HeroicMode;
+        Unit *focusedTarget;
+
+        void Reset()
         {
-            float dist;
-            Map *map = me->GetMap();
-            Map::PlayerList const &PlayerList = map->GetPlayers();
-            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                if (Player* i_pl = i->getSource())
-                    if (i_pl->isAlive() && (dist = i_pl->GetDistance(me)) < 45)
-                    {
-                        i_pl->RemoveAurasDueToSpell(SPELL_INHIBITMAGIC);
-                        me->AddAura(SPELL_INHIBITMAGIC, i_pl);
-                        if (dist < 35)
-                            me->AddAura(SPELL_INHIBITMAGIC, i_pl);
-                        if (dist < 25)
-                            me->AddAura(SPELL_INHIBITMAGIC, i_pl);
-                        if (dist < 15)
-                            me->AddAura(SPELL_INHIBITMAGIC, i_pl);
-                    }
-            Inhibitmagic_Timer = 3000+(rand()%1000);
-        } else Inhibitmagic_Timer -= diff;
-
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        //Attractmagic_Timer
-        if (Attractmagic_Timer <= diff)
-        {
-            DoCast(me, SPELL_ATTRACTMAGIC);
-            Attractmagic_Timer = 30000;
-            Carnivorousbite_Timer = 1500;
-        } else Attractmagic_Timer -= diff;
-
-        //Carnivorousbite_Timer
-        if (Carnivorousbite_Timer <= diff)
-        {
-            DoCast(me, SPELL_CARNIVOROUSBITE);
+            Inhibitmagic_Timer = 0;
+            Attractmagic_Timer = 28000;
             Carnivorousbite_Timer = 10000;
-        } else Carnivorousbite_Timer -= diff;
+            FocusFire_Timer = 17000;
+            focusedTarget = NULL;
+        }
 
-        //FocusFire_Timer
-        if (FocusFire_Timer <= diff)
+        void EnterCombat(Unit *who)
+        { }
+
+        void JustSummoned(Creature *summoned)
         {
-            // Summon Focus Fire & Emote
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-            if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
+            if (summoned && summoned->GetEntry() == ENTRY_FOCUS_FIRE)
             {
-                focusedTarget = pTarget;
-                me->SummonCreature(ENTRY_FOCUS_FIRE, pTarget->GetPositionX(),pTarget->GetPositionY(),pTarget->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN, 5500);
+                summoned->CastSpell(summoned, SPELL_FOCUS_FIRE_VISUAL, false);
+                summoned->setFaction(me->getFaction());
+                summoned->SetLevel(me->getLevel());
+                summoned->addUnitState(UNIT_STAT_ROOT);
 
-                // Emote
-                std::string *emote = new std::string(EMOTE_FOCUSES_ON);
-                emote->append(pTarget->GetName());
-                emote->append("!");
-                const char* text = emote->c_str();
-                me->MonsterTextEmote(text, 0, true);
-                delete emote;
+                if (focusedTarget)
+                    summoned->AI()->AttackStart(focusedTarget);
             }
-            FocusFire_Timer = 15000+(rand()%5000);
-        } else FocusFire_Timer -= diff;
+        }
 
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_boss_shirrak_the_dead_watcher(Creature* creature)
-{
-    return new boss_shirrak_the_dead_watcherAI (creature);
-}
-
-struct mob_focus_fireAI : public ScriptedAI
-{
-    mob_focus_fireAI(Creature *c) : ScriptedAI(c)
-    {
-        HeroicMode = me->GetMap()->IsHeroic();
-    }
-
-    bool HeroicMode;
-    uint32 FieryBlast_Timer;
-    bool fiery1, fiery2;
-
-    void Reset()
-    {
-        FieryBlast_Timer = 3000+(rand()%1000);
-        fiery1 = fiery2 = true;
-    }
-
-    void EnterCombat(Unit *who)
-    { }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        //FieryBlast_Timer
-        if (fiery2 && FieryBlast_Timer <= diff)
+        void UpdateAI(const uint32 diff)
         {
-            DoCast(me, SPELL_FIERY_BLAST);
+            //Inhibitmagic_Timer
+            if (Inhibitmagic_Timer <= diff)
+            {
+                float dist;
+                Map *map = me->GetMap();
+                Map::PlayerList const &PlayerList = map->GetPlayers();
+                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                    if (Player* i_pl = i->getSource())
+                        if (i_pl->isAlive() && (dist = i_pl->GetDistance(me)) < 45)
+                        {
+                            i_pl->RemoveAurasDueToSpell(SPELL_INHIBITMAGIC);
+                            me->AddAura(SPELL_INHIBITMAGIC, i_pl);
+                            if (dist < 35)
+                                me->AddAura(SPELL_INHIBITMAGIC, i_pl);
+                            if (dist < 25)
+                                me->AddAura(SPELL_INHIBITMAGIC, i_pl);
+                            if (dist < 15)
+                                me->AddAura(SPELL_INHIBITMAGIC, i_pl);
+                        }
+                Inhibitmagic_Timer = 3000+(rand()%1000);
+            } else Inhibitmagic_Timer -= diff;
 
-            if (fiery1) fiery1 = false;
-            else if (fiery2) fiery2 = false;
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
 
-            FieryBlast_Timer = 1000;
-        } else FieryBlast_Timer -= diff;
+            //Attractmagic_Timer
+            if (Attractmagic_Timer <= diff)
+            {
+                DoCast(me, SPELL_ATTRACTMAGIC);
+                Attractmagic_Timer = 30000;
+                Carnivorousbite_Timer = 1500;
+            } else Attractmagic_Timer -= diff;
 
-        //DoMeleeAttackIfReady();
-    }
+            //Carnivorousbite_Timer
+            if (Carnivorousbite_Timer <= diff)
+            {
+                DoCast(me, SPELL_CARNIVOROUSBITE);
+                Carnivorousbite_Timer = 10000;
+            } else Carnivorousbite_Timer -= diff;
+
+            //FocusFire_Timer
+            if (FocusFire_Timer <= diff)
+            {
+                // Summon Focus Fire & Emote
+                Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
+                {
+                    focusedTarget = pTarget;
+                    me->SummonCreature(ENTRY_FOCUS_FIRE, pTarget->GetPositionX(),pTarget->GetPositionY(),pTarget->GetPositionZ(),0, TEMPSUMMON_TIMED_DESPAWN, 5500);
+
+                    // Emote
+                    std::string *emote = new std::string(EMOTE_FOCUSES_ON);
+                    emote->append(pTarget->GetName());
+                    emote->append("!");
+                    const char* text = emote->c_str();
+                    me->MonsterTextEmote(text, 0, true);
+                    delete emote;
+                }
+                FocusFire_Timer = 15000+(rand()%5000);
+            } else FocusFire_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
 
-CreatureAI* GetAI_mob_focus_fire(Creature* creature)
+class mob_focus_fire : public CreatureScript
 {
-    return new mob_focus_fireAI (creature);
-}
+public:
+    mob_focus_fire() : CreatureScript("mob_focus_fire") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new mob_focus_fireAI (creature);
+    }
+
+    struct mob_focus_fireAI : public ScriptedAI
+    {
+        mob_focus_fireAI(Creature *c) : ScriptedAI(c)
+        {
+            HeroicMode = me->GetMap()->IsHeroic();
+        }
+
+        bool HeroicMode;
+        uint32 FieryBlast_Timer;
+        bool fiery1, fiery2;
+
+        void Reset()
+        {
+            FieryBlast_Timer = 3000+(rand()%1000);
+            fiery1 = fiery2 = true;
+        }
+
+        void EnterCombat(Unit *who)
+        { }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            //FieryBlast_Timer
+            if (fiery2 && FieryBlast_Timer <= diff)
+            {
+                DoCast(me, SPELL_FIERY_BLAST);
+
+                if (fiery1) fiery1 = false;
+                else if (fiery2) fiery2 = false;
+
+                FieryBlast_Timer = 1000;
+            } else FieryBlast_Timer -= diff;
+
+            //DoMeleeAttackIfReady();
+        }
+    };
+};
 
 void AddSC_boss_shirrak_the_dead_watcher()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_shirrak_the_dead_watcher";
-    newscript->GetAI = &GetAI_boss_shirrak_the_dead_watcher;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_focus_fire";
-    newscript->GetAI = &GetAI_mob_focus_fire;
-    newscript->RegisterSelf();
+    new boss_shirrak_the_dead_watcher();
+    new mob_focus_fire();
 }
-

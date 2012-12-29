@@ -37,80 +37,96 @@ EndContentData */
 //id8530 - cannibal ghoul
 //id8531 - gibbering ghoul
 //id8532 - diseased flayer
-
-struct mobs_ghoul_flayerAI : public ScriptedAI
+class mobs_ghoul_flayer : public CreatureScript
 {
-    mobs_ghoul_flayerAI(Creature *c) : ScriptedAI(c) {}
+public:
+    mobs_ghoul_flayer() : CreatureScript("mobs_ghoul_flayer") { }
 
-    void Reset() {}
-
-    void EnterCombat(Unit* /*who*/) {}
-
-    void JustDied(Unit* Killer)
+    CreatureAI* GetAI(Creature* creature)
     {
-        if (Killer->GetTypeId() == TYPEID_PLAYER)
-            me->SummonCreature(11064, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 60000);
+        return new mobs_ghoul_flayerAI (creature);
     }
-};
 
-CreatureAI* GetAI_mobs_ghoul_flayer(Creature* creature)
-{
-    return new mobs_ghoul_flayerAI (creature);
-}
+    struct mobs_ghoul_flayerAI : public ScriptedAI
+    {
+        mobs_ghoul_flayerAI(Creature *c) : ScriptedAI(c) {}
+
+        void Reset() {}
+
+        void EnterCombat(Unit* /*who*/) {}
+
+        void JustDied(Unit* Killer)
+        {
+            if (Killer->GetTypeId() == TYPEID_PLAYER)
+                me->SummonCreature(11064, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 60000);
+        }
+    };
+};
 
 /*######
 ## npc_augustus_the_touched
 ######*/
-
-bool GossipHello_npc_augustus_the_touched(Player* player, Creature* creature)
+class npc_augustus_the_touched : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_augustus_the_touched() : CreatureScript("npc_augustus_the_touched") { }
 
-    if (creature->isVendor() && player->GetQuestRewardStatus(6164))
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_TRADE)
+            player->SEND_VENDORLIST(creature->GetGUID());
+        return true;
+    }
 
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-    return true;
-}
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
 
-bool GossipSelect_npc_augustus_the_touched(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_TRADE)
-        player->SEND_VENDORLIST(creature->GetGUID());
-    return true;
-}
+        if (creature->isVendor() && player->GetQuestRewardStatus(6164))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        return true;
+    }
+};
 
 /*######
 ## npc_darrowshire_spirit
 ######*/
 
 #define SPELL_SPIRIT_SPAWNIN    17321
-
-struct npc_darrowshire_spiritAI : public ScriptedAI
+class npc_darrowshire_spirit : public CreatureScript
 {
-    npc_darrowshire_spiritAI(Creature *c) : ScriptedAI(c) {}
+public:
+    npc_darrowshire_spirit() : CreatureScript("npc_darrowshire_spirit") { }
 
-    void Reset()
+    bool GossipHello(Player* player, Creature* creature)
     {
-        DoCast(me, SPELL_SPIRIT_SPAWNIN);
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        player->SEND_GOSSIP_MENU(3873, creature->GetGUID());
+        player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
+        creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        return true;
     }
 
-    void EnterCombat(Unit * /*who*/) {}
-};
-CreatureAI* GetAI_npc_darrowshire_spirit(Creature* creature)
-{
-    return new npc_darrowshire_spiritAI (creature);
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new npc_darrowshire_spiritAI (creature);
+    }
 
-bool GossipHello_npc_darrowshire_spirit(Player* player, Creature* creature)
-{
-    player->SEND_GOSSIP_MENU(3873, creature->GetGUID());
-    player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
-    creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    return true;
-}
+    struct npc_darrowshire_spiritAI : public ScriptedAI
+    {
+        npc_darrowshire_spiritAI(Creature *c) : ScriptedAI(c) {}
+
+        void Reset()
+        {
+            DoCast(me, SPELL_SPIRIT_SPAWNIN);
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        }
+
+        void EnterCombat(Unit * /*who*/) {}
+    };
+};
 
 /*######
 ## npc_tirion_fordring
@@ -120,69 +136,53 @@ bool GossipHello_npc_darrowshire_spirit(Player* player, Creature* creature)
 #define GOSSIP_SELECT1  "Thank you, Tirion.  What of your identity?"
 #define GOSSIP_SELECT2  "That is terrible."
 #define GOSSIP_SELECT3  "I will, Tirion."
-
-bool GossipHello_npc_tirion_fordring(Player* player, Creature* creature)
+class npc_tirion_fordring : public CreatureScript
 {
-    if (creature->isQuestGiver())
-        player->PrepareQuestMenu(creature->GetGUID());
+public:
+    npc_tirion_fordring() : CreatureScript("npc_tirion_fordring") { }
 
-    if (player->GetQuestStatus(5742) == QUEST_STATUS_INCOMPLETE && player->getStandState() == UNIT_STAND_STATE_SIT)
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
-
-    return true;
-}
-
-bool GossipSelect_npc_tirion_fordring(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            player->SEND_GOSSIP_MENU(4493, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            player->SEND_GOSSIP_MENU(4494, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-            player->SEND_GOSSIP_MENU(4495, creature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            player->CLOSE_GOSSIP_MENU();
-            player->AreaExploredOrEventHappens(5742);
-            break;
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                player->SEND_GOSSIP_MENU(4493, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                player->SEND_GOSSIP_MENU(4494, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                player->SEND_GOSSIP_MENU(4495, creature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                player->CLOSE_GOSSIP_MENU();
+                player->AreaExploredOrEventHappens(5742);
+                break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* player, Creature* creature)
+    {
+        if (creature->isQuestGiver())
+            player->PrepareQuestMenu(creature->GetGUID());
+
+        if (player->GetQuestStatus(5742) == QUEST_STATUS_INCOMPLETE && player->getStandState() == UNIT_STAND_STATE_SIT)
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+
+        return true;
+    }
+};
 
 void AddSC_eastern_plaguelands()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "mobs_ghoul_flayer";
-    newscript->GetAI = &GetAI_mobs_ghoul_flayer;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_augustus_the_touched";
-    newscript->pGossipHello = &GossipHello_npc_augustus_the_touched;
-    newscript->pGossipSelect = &GossipSelect_npc_augustus_the_touched;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_darrowshire_spirit";
-    newscript->GetAI = &GetAI_npc_darrowshire_spirit;
-    newscript->pGossipHello = &GossipHello_npc_darrowshire_spirit;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_tirion_fordring";
-    newscript->pGossipHello =  &GossipHello_npc_tirion_fordring;
-    newscript->pGossipSelect = &GossipSelect_npc_tirion_fordring;
-    newscript->RegisterSelf();
+    new mobs_ghoul_flayer();
+    new npc_augustus_the_touched();
+    new npc_darrowshire_spirit();
+    new npc_tirion_fordring();
 }
-

@@ -61,324 +61,323 @@ static Wave RiftWaves[]=
     {RIFT_BOSS, 120000},
     {C_AEONUS, 0}
 };
-
-struct instance_dark_portal : public ScriptedInstance
+class instance_dark_portal : public InstanceMapScript
 {
-    instance_dark_portal(Map *map) : ScriptedInstance(map) {Initialize();};
+public:
+    instance_dark_portal() : InstanceMapScript("instance_dark_portal") { }
 
-    uint32 Encounter[ENCOUNTERS];
-
-    uint32 mRiftPortalCount;
-    uint32 mShieldPercent;
-    uint8 mRiftWaveCount;
-    uint8 mRiftWaveId;
-
-    uint32 NextPortal_Timer;
-
-    uint64 MedivhGUID;
-    uint8 CurrentRiftId;
-
-    void Initialize()
+    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
     {
-        MedivhGUID          = 0;
-        Clear();
+        return new instance_dark_portal_InstanceMapScript(map);
     }
 
-    void Clear()
+    struct instance_dark_portal_InstanceMapScript : public ScriptedInstance
     {
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
+        instance_dark_portal_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
 
-        mRiftPortalCount    = 0;
-        mShieldPercent      = 100;
-        mRiftWaveCount      = 0;
-        mRiftWaveId         = 0;
+        uint32 Encounter[ENCOUNTERS];
 
-        CurrentRiftId = 0;
+        uint32 mRiftPortalCount;
+        uint32 mShieldPercent;
+        uint8 mRiftWaveCount;
+        uint8 mRiftWaveId;
 
-        NextPortal_Timer    = 0;
-    }
+        uint32 NextPortal_Timer;
 
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
+        uint64 MedivhGUID;
+        uint8 CurrentRiftId;
 
-        if (!players.isEmpty())
+        void Initialize()
         {
-            for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* plr = itr->getSource())
-                    return plr;
-            }
-        }
-
-        sLog->outDebug("TSCR: Instance Black Portal: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
-
-    void UpdateBMWorldState(uint32 id, uint32 state)
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
-        {
-            for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-            {
-                if (Player* player = itr->getSource())
-                    player->SendUpdateWorldState(id, state);
-            }
-        } else sLog->outDebug("TSCR: Instance Black Portal: UpdateBMWorldState, but PlayerList is empty!");
-    }
-
-    void InitWorldState(bool Enable = true)
-    {
-        UpdateBMWorldState(WORLD_STATE_BM, Enable ? 1 : 0);
-        UpdateBMWorldState(WORLD_STATE_BM_SHIELD, 100);
-        UpdateBMWorldState(WORLD_STATE_BM_RIFT, 0);
-    }
-
-    bool IsEncounterInProgress()
-    {
-        if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
-            return true;
-
-        return false;
-    }
-
-    void OnPlayerEnter(Player* player)
-    {
-        if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
-            return;
-
-        player->SendUpdateWorldState(WORLD_STATE_BM, 0);
-    }
-
-    void OnCreatureCreate(Creature* creature, bool /*add*/)
-    {
-        if (creature->GetEntry() == C_MEDIVH)
-            MedivhGUID = creature->GetGUID();
-    }
-
-    //what other conditions to check?
-    bool CanProgressEvent()
-    {
-        if (!GetPlayerInMap())
-            return false;
-
-        return true;
-    }
-
-    uint8 GetRiftWaveId()
-    {
-        switch (mRiftPortalCount)
-        {
-        case 6:
-            mRiftWaveId = 2;
-            return 1;
-        case 12:
-            mRiftWaveId = 4;
-            return 3;
-        case 18:
-            return 5;
-        default:
-            return mRiftWaveId;
-        }
-    }
-
-    void SetData(uint32 type, uint32 data)
-    {
-        Player* player = GetPlayerInMap();
-
-        if (!player)
-        {
-            sLog->outDebug("TSCR: Instance Black Portal: SetData (Type: %u Data %u) cannot find any player.", type, data);
-            return;
-        }
-
-        switch (type)
-        {
-        case TYPE_MEDIVH:
-            if (data == SPECIAL && Encounter[0] == IN_PROGRESS)
-            {
-                --mShieldPercent;
-                UpdateBMWorldState(WORLD_STATE_BM_SHIELD, mShieldPercent);
-
-                if (!mShieldPercent)
-                {
-                    if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
-                    {
-                        if (medivh->isAlive())
-                        {
-                            medivh->DealDamage(medivh, medivh->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                            Encounter[0] = FAIL;
-                            Encounter[1] = NOT_STARTED;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (data == IN_PROGRESS)
-                {
-                    sLog->outDebug("TSCR: Instance Dark Portal: Starting event.");
-                    InitWorldState();
-                    Encounter[1] = IN_PROGRESS;
-                    NextPortal_Timer = 15000;
-                }
-
-                if (data == DONE)
-                {
-                    //this may be completed further out in the post-event
-                    if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
-                    {
-                        player->GroupEventHappens(QUEST_OPENING_PORTAL, medivh);
-                        player->GroupEventHappens(QUEST_MASTER_TOUCH, medivh);
-                    }
-                }
-
-                Encounter[0] = data;
-            }
-            break;
-        case TYPE_RIFT:
-            if (data == SPECIAL)
-            {
-                if (mRiftPortalCount < 7)
-                    NextPortal_Timer = 5000;
-            }
-            else
-                Encounter[1] = data;
-            break;
-        }
-    }
-
-    uint32 GetData(uint32 type)
-    {
-        switch (type)
-        {
-        case TYPE_MEDIVH:
-            return Encounter[0];
-        case TYPE_RIFT:
-            return Encounter[1];
-        case DATA_PORTAL_COUNT:
-            return mRiftPortalCount;
-        case DATA_SHIELD:
-            return mShieldPercent;
-        }
-        return 0;
-    }
-
-    uint64 GetData64(uint32 data)
-    {
-        if (data == DATA_MEDIVH)
-            return MedivhGUID;
-
-        return 0;
-    }
-
-    Unit* SummonedPortalBoss(Unit* source)
-    {
-        uint32 entry = RiftWaves[GetRiftWaveId()].PortalBoss;
-
-        if (entry == RIFT_BOSS)
-            entry = RandRiftBoss();
-
-        sLog->outDebug("TSCR: Instance Dark Portal: Summoning rift boss entry %u.",entry);
-
-        Position pos;
-        source->GetRandomNearPosition(pos, 10.0f);
-
-        //normalize Z-level if we can, if rift is not at ground level.
-        pos.m_positionZ = std::max(source->GetMap()->GetHeight(pos.m_positionX, pos.m_positionY, MAX_HEIGHT), source->GetMap()->GetWaterLevel(pos.m_positionX, pos.m_positionY));
-
-        if (Unit *summon = source->SummonCreature(entry, pos, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))
-            return summon;
-
-        sLog->outDebug("TSCR: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
-        return NULL;
-    }
-
-    void DoSpawnPortal()
-    {
-        Player* player = GetPlayerInMap();
-        if (!player)
-            return;
-
-        if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
-        {
-            for (uint8 i = 0; i < 4; i++)
-            {
-                int tmp = rand()%4;
-                if (tmp != CurrentRiftId)
-                {
-                    sLog->outDebug("TSCR: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp, CurrentRiftId);
-
-                    CurrentRiftId = tmp;
-
-                    Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
-                        PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
-                        TEMPSUMMON_CORPSE_DESPAWN, 0);
-                    if (temp)
-                    {
-                        temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-
-                        if (Unit* boss = SummonedPortalBoss(temp))
-                        {
-                            if (boss->GetEntry() == C_AEONUS)
-                            {
-                                boss->AddThreat(medivh, 0.0f);
-                            }
-                            else
-                            {
-                                boss->AddThreat(temp, 0.0f);
-                                temp->CastSpell(boss, SPELL_RIFT_CHANNEL, false);
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    void Update(uint32 diff)
-    {
-        if (Encounter[1] != IN_PROGRESS)
-            return;
-
-        //add delay timer?
-        if (!CanProgressEvent())
-        {
+            MedivhGUID          = 0;
             Clear();
-            return;
         }
 
-        if (NextPortal_Timer)
+        void Clear()
         {
-            if (NextPortal_Timer <= diff)
-            {
-                ++mRiftPortalCount;
-                UpdateBMWorldState(WORLD_STATE_BM_RIFT, mRiftPortalCount);
+            for (uint8 i = 0; i < ENCOUNTERS; i++)
+                Encounter[i] = NOT_STARTED;
 
-                DoSpawnPortal();
-                NextPortal_Timer = RiftWaves[GetRiftWaveId()].NextPortalTime;
-            } else NextPortal_Timer -= diff;
+            mRiftPortalCount    = 0;
+            mShieldPercent      = 100;
+            mRiftWaveCount      = 0;
+            mRiftWaveId         = 0;
+
+            CurrentRiftId = 0;
+
+            NextPortal_Timer    = 0;
         }
-    }
-};
 
-InstanceScript* GetInstanceData_instance_dark_portal(Map* map)
-{
-    return new instance_dark_portal(map);
-}
+        Player* GetPlayerInMap()
+        {
+            Map::PlayerList const& players = instance->GetPlayers();
+
+            if (!players.isEmpty())
+            {
+                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                {
+                    if (Player* plr = itr->getSource())
+                        return plr;
+                }
+            }
+
+            sLog->outDebug("TSCR: Instance Black Portal: GetPlayerInMap, but PlayerList is empty!");
+            return NULL;
+        }
+
+        void UpdateBMWorldState(uint32 id, uint32 state)
+        {
+            Map::PlayerList const& players = instance->GetPlayers();
+
+            if (!players.isEmpty())
+            {
+                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                {
+                    if (Player* player = itr->getSource())
+                        player->SendUpdateWorldState(id, state);
+                }
+            } else sLog->outDebug("TSCR: Instance Black Portal: UpdateBMWorldState, but PlayerList is empty!");
+        }
+
+        void InitWorldState(bool Enable = true)
+        {
+            UpdateBMWorldState(WORLD_STATE_BM, Enable ? 1 : 0);
+            UpdateBMWorldState(WORLD_STATE_BM_SHIELD, 100);
+            UpdateBMWorldState(WORLD_STATE_BM_RIFT, 0);
+        }
+
+        bool IsEncounterInProgress()
+        {
+            if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
+                return true;
+
+            return false;
+        }
+
+        void OnPlayerEnter(Player* player)
+        {
+            if (GetData(TYPE_MEDIVH) == IN_PROGRESS)
+                return;
+
+            player->SendUpdateWorldState(WORLD_STATE_BM, 0);
+        }
+
+        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        {
+            if (creature->GetEntry() == C_MEDIVH)
+                MedivhGUID = creature->GetGUID();
+        }
+
+        //what other conditions to check?
+        bool CanProgressEvent()
+        {
+            if (!GetPlayerInMap())
+                return false;
+
+            return true;
+        }
+
+        uint8 GetRiftWaveId()
+        {
+            switch (mRiftPortalCount)
+            {
+            case 6:
+                mRiftWaveId = 2;
+                return 1;
+            case 12:
+                mRiftWaveId = 4;
+                return 3;
+            case 18:
+                return 5;
+            default:
+                return mRiftWaveId;
+            }
+        }
+
+        void SetData(uint32 type, uint32 data)
+        {
+            Player* player = GetPlayerInMap();
+
+            if (!player)
+            {
+                sLog->outDebug("TSCR: Instance Black Portal: SetData (Type: %u Data %u) cannot find any player.", type, data);
+                return;
+            }
+
+            switch (type)
+            {
+            case TYPE_MEDIVH:
+                if (data == SPECIAL && Encounter[0] == IN_PROGRESS)
+                {
+                    --mShieldPercent;
+                    UpdateBMWorldState(WORLD_STATE_BM_SHIELD, mShieldPercent);
+
+                    if (!mShieldPercent)
+                    {
+                        if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
+                        {
+                            if (medivh->isAlive())
+                            {
+                                medivh->DealDamage(medivh, medivh->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                                Encounter[0] = FAIL;
+                                Encounter[1] = NOT_STARTED;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (data == IN_PROGRESS)
+                    {
+                        sLog->outDebug("TSCR: Instance Dark Portal: Starting event.");
+                        InitWorldState();
+                        Encounter[1] = IN_PROGRESS;
+                        NextPortal_Timer = 15000;
+                    }
+
+                    if (data == DONE)
+                    {
+                        //this may be completed further out in the post-event
+                        if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
+                        {
+                            player->GroupEventHappens(QUEST_OPENING_PORTAL, medivh);
+                            player->GroupEventHappens(QUEST_MASTER_TOUCH, medivh);
+                        }
+                    }
+
+                    Encounter[0] = data;
+                }
+                break;
+            case TYPE_RIFT:
+                if (data == SPECIAL)
+                {
+                    if (mRiftPortalCount < 7)
+                        NextPortal_Timer = 5000;
+                }
+                else
+                    Encounter[1] = data;
+                break;
+            }
+        }
+
+        uint32 GetData(uint32 type)
+        {
+            switch (type)
+            {
+            case TYPE_MEDIVH:
+                return Encounter[0];
+            case TYPE_RIFT:
+                return Encounter[1];
+            case DATA_PORTAL_COUNT:
+                return mRiftPortalCount;
+            case DATA_SHIELD:
+                return mShieldPercent;
+            }
+            return 0;
+        }
+
+        uint64 GetData64(uint32 data)
+        {
+            if (data == DATA_MEDIVH)
+                return MedivhGUID;
+
+            return 0;
+        }
+
+        Unit* SummonedPortalBoss(Unit* source)
+        {
+            uint32 entry = RiftWaves[GetRiftWaveId()].PortalBoss;
+
+            if (entry == RIFT_BOSS)
+                entry = RandRiftBoss();
+
+            sLog->outDebug("TSCR: Instance Dark Portal: Summoning rift boss entry %u.",entry);
+
+            Position pos;
+            source->GetRandomNearPosition(pos, 10.0f);
+
+            //normalize Z-level if we can, if rift is not at ground level.
+            pos.m_positionZ = std::max(source->GetMap()->GetHeight(pos.m_positionX, pos.m_positionY, MAX_HEIGHT), source->GetMap()->GetWaterLevel(pos.m_positionX, pos.m_positionY));
+
+            if (Unit *summon = source->SummonCreature(entry, pos, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000))
+                return summon;
+
+            sLog->outDebug("TSCR: Instance Dark Portal: what just happened there? No boss, no loot, no fun...");
+            return NULL;
+        }
+
+        void DoSpawnPortal()
+        {
+            Player* player = GetPlayerInMap();
+            if (!player)
+                return;
+
+            if (Unit *medivh = Unit::GetUnit(*player, MedivhGUID))
+            {
+                for (uint8 i = 0; i < 4; i++)
+                {
+                    int tmp = rand()%4;
+                    if (tmp != CurrentRiftId)
+                    {
+                        sLog->outDebug("TSCR: Instance Dark Portal: Creating Time Rift at locationId %i (old locationId was %u).",tmp, CurrentRiftId);
+
+                        CurrentRiftId = tmp;
+
+                        Unit *temp = medivh->SummonCreature(C_TIME_RIFT,
+                            PortalLocation[tmp][0],PortalLocation[tmp][1],PortalLocation[tmp][2],PortalLocation[tmp][3],
+                            TEMPSUMMON_CORPSE_DESPAWN, 0);
+                        if (temp)
+                        {
+                            temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                            temp->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
+                            if (Unit* boss = SummonedPortalBoss(temp))
+                            {
+                                if (boss->GetEntry() == C_AEONUS)
+                                {
+                                    boss->AddThreat(medivh, 0.0f);
+                                }
+                                else
+                                {
+                                    boss->AddThreat(temp, 0.0f);
+                                    temp->CastSpell(boss, SPELL_RIFT_CHANNEL, false);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        void Update(uint32 diff)
+        {
+            if (Encounter[1] != IN_PROGRESS)
+                return;
+
+            //add delay timer?
+            if (!CanProgressEvent())
+            {
+                Clear();
+                return;
+            }
+
+            if (NextPortal_Timer)
+            {
+                if (NextPortal_Timer <= diff)
+                {
+                    ++mRiftPortalCount;
+                    UpdateBMWorldState(WORLD_STATE_BM_RIFT, mRiftPortalCount);
+
+                    DoSpawnPortal();
+                    NextPortal_Timer = RiftWaves[GetRiftWaveId()].NextPortalTime;
+                } else NextPortal_Timer -= diff;
+            }
+        }
+    };
+};
 
 void AddSC_instance_dark_portal()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "instance_dark_portal";
-    newscript->GetInstanceScript = &GetInstanceData_instance_dark_portal;
-    newscript->RegisterSelf();
+    new instance_dark_portal();
 }
-

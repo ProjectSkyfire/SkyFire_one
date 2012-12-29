@@ -167,18 +167,18 @@ struct boss_watchkeeper_gargolmarAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
-CreatureAI* GetAI_boss_watchkeeper_gargolmarAI(Creature* creature)
+class boss_watchkeeper_gargolmar : public CreatureScript
 {
-    return new boss_watchkeeper_gargolmarAI (creature);
-}
+public:
+    boss_watchkeeper_gargolmar() : CreatureScript("boss_watchkeeper_gargolmar") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_watchkeeper_gargolmarAI (creature);
+    }
+};
 
 void AddSC_boss_watchkeeper_gargolmar()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_watchkeeper_gargolmar";
-    newscript->GetAI = &GetAI_boss_watchkeeper_gargolmarAI;
-    newscript->RegisterSelf();
+    new boss_watchkeeper_gargolmar();
 }
-

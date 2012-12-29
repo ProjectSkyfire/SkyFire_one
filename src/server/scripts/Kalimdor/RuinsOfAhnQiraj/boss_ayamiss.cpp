@@ -36,77 +36,78 @@ make him fly from 70-100%
 #define SPELL_POISONSTINGER 25748                           //only used in phase1
 #define SPELL_SUMMONSWARMER 25844                           //might be 25708
 // #define SPELL_PARALYZE 23414 doesnt work correct (core)
-
-struct boss_ayamissAI : public ScriptedAI
+class boss_ayamiss : public CreatureScript
 {
-    boss_ayamissAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_ayamiss() : CreatureScript("boss_ayamiss") { }
 
-    Unit *pTarget;
-    uint32 STINGERSPRAY_Timer;
-    uint32 POISONSTINGER_Timer;
-    uint32 SUMMONSWARMER_Timer;
-    uint32 phase;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        pTarget = NULL;
-        STINGERSPRAY_Timer = 30000;
-        POISONSTINGER_Timer = 30000;
-        SUMMONSWARMER_Timer = 60000;
-        phase=1;
+        return new boss_ayamissAI (creature);
     }
 
-    void EnterCombat(Unit *who)
+    struct boss_ayamissAI : public ScriptedAI
     {
-        pTarget = who;
-    }
+        boss_ayamissAI(Creature *c) : ScriptedAI(c) {}
 
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+        Unit *pTarget;
+        uint32 STINGERSPRAY_Timer;
+        uint32 POISONSTINGER_Timer;
+        uint32 SUMMONSWARMER_Timer;
+        uint32 phase;
 
-        //If he is 70% start phase 2
-        if (phase == 1 && me->GetHealth()*100 / me->GetMaxHealth() <= 70 && !me->IsNonMeleeSpellCasted(false))
+        void Reset()
         {
-            phase=2;
+            pTarget = NULL;
+            STINGERSPRAY_Timer = 30000;
+            POISONSTINGER_Timer = 30000;
+            SUMMONSWARMER_Timer = 60000;
+            phase=1;
         }
 
-        //STINGERSPRAY_Timer (only in phase2)
-        if (phase == 2 && STINGERSPRAY_Timer <= diff)
+        void EnterCombat(Unit *who)
         {
-            DoCast(me->getVictim(),SPELL_STINGERSPRAY);
-            STINGERSPRAY_Timer = 30000;
-        } else STINGERSPRAY_Timer -= diff;
+            pTarget = who;
+        }
 
-        //POISONSTINGER_Timer (only in phase1)
-        if (phase == 1 && POISONSTINGER_Timer <= diff)
+        void UpdateAI(const uint32 diff)
         {
-            DoCast(me->getVictim(),SPELL_POISONSTINGER);
-            POISONSTINGER_Timer = 30000;
-        } else POISONSTINGER_Timer -= diff;
+            if (!UpdateVictim())
+                return;
 
-        //SUMMONSWARMER_Timer (only in phase1)
-        if (SUMMONSWARMER_Timer <= diff)
-        {
-            DoCast(me->getVictim(),SPELL_SUMMONSWARMER);
-            SUMMONSWARMER_Timer = 60000;
-        } else SUMMONSWARMER_Timer -= diff;
+            //If he is 70% start phase 2
+            if (phase == 1 && me->GetHealth()*100 / me->GetMaxHealth() <= 70 && !me->IsNonMeleeSpellCasted(false))
+            {
+                phase=2;
+            }
 
-        DoMeleeAttackIfReady();
-    }
+            //STINGERSPRAY_Timer (only in phase2)
+            if (phase == 2 && STINGERSPRAY_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_STINGERSPRAY);
+                STINGERSPRAY_Timer = 30000;
+            } else STINGERSPRAY_Timer -= diff;
+
+            //POISONSTINGER_Timer (only in phase1)
+            if (phase == 1 && POISONSTINGER_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_POISONSTINGER);
+                POISONSTINGER_Timer = 30000;
+            } else POISONSTINGER_Timer -= diff;
+
+            //SUMMONSWARMER_Timer (only in phase1)
+            if (SUMMONSWARMER_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_SUMMONSWARMER);
+                SUMMONSWARMER_Timer = 60000;
+            } else SUMMONSWARMER_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-CreatureAI* GetAI_boss_ayamiss(Creature* creature)
-{
-    return new boss_ayamissAI (creature);
-}
 
 void AddSC_boss_ayamiss()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_ayamiss";
-    newscript->GetAI = &GetAI_boss_ayamiss;
-    newscript->RegisterSelf();
+    new boss_ayamiss();
 }
-

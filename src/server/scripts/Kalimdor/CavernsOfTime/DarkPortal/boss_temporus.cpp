@@ -40,100 +40,100 @@ EndScriptData */
 #define SPELL_WING_BUFFET       31475
 #define H_SPELL_WING_BUFFET     38593
 #define SPELL_REFLECT           38592                       //Not Implemented (Heroic mod)
-
-struct boss_temporusAI : public ScriptedAI
+class boss_temporus : public CreatureScript
 {
-    boss_temporusAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_temporus() : CreatureScript("boss_temporus") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
-        HeroicMode = me->GetMap()->IsHeroic();
+        return new boss_temporusAI (creature);
     }
 
-    ScriptedInstance *instance;
-    bool HeroicMode;
-
-    uint32 Haste_Timer;
-    uint32 SpellReflection_Timer;
-
-    void Reset()
+    struct boss_temporusAI : public ScriptedAI
     {
-        Haste_Timer = 20000;
-        SpellReflection_Timer = 40000;
-    }
-
-    void EnterCombat(Unit *who)
-    {
-        DoScriptText(SAY_AGGRO, me);
-    }
-
-    void KilledUnit(Unit *victim)
-    {
-        switch (rand()%2)
+        boss_temporusAI(Creature *c) : ScriptedAI(c)
         {
-            case 0: DoScriptText(SAY_SLAY1, me); break;
-            case 1: DoScriptText(SAY_SLAY2, me); break;
+            instance = c->GetInstanceScript();
+            HeroicMode = me->GetMap()->IsHeroic();
         }
-    }
 
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_DEATH, me);
+        ScriptedInstance *instance;
+        bool HeroicMode;
 
-        if (instance)
-            instance->SetData(TYPE_RIFT, SPECIAL);
-    }
+        uint32 Haste_Timer;
+        uint32 SpellReflection_Timer;
 
-    void MoveInLineOfSight(Unit *who)
-    {
-        //Despawn Time Keeper
-        if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
+        void Reset()
         {
-            if (me->IsWithinDistInMap(who, 20.0f))
-            {
-                DoScriptText(SAY_BANISH, me);
+            Haste_Timer = 20000;
+            SpellReflection_Timer = 40000;
+        }
 
-                me->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+        void EnterCombat(Unit *who)
+        {
+            DoScriptText(SAY_AGGRO, me);
+        }
+
+        void KilledUnit(Unit *victim)
+        {
+            switch (rand()%2)
+            {
+                case 0: DoScriptText(SAY_SLAY1, me); break;
+                case 1: DoScriptText(SAY_SLAY2, me); break;
             }
         }
 
-        ScriptedAI::MoveInLineOfSight(who);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        //Attack Haste
-        if (Haste_Timer <= diff)
+        void JustDied(Unit *victim)
         {
-            DoCast(me, SPELL_HASTE);
-            Haste_Timer = 20000+rand()%5000;
-        } else Haste_Timer -= diff;
+            DoScriptText(SAY_DEATH, me);
 
-        //Spell Reflection
-        if (SpellReflection_Timer <= diff)
+            if (instance)
+                instance->SetData(TYPE_RIFT, SPECIAL);
+        }
+
+        void MoveInLineOfSight(Unit *who)
         {
-            DoCast(me, SPELL_REFLECT);
-            SpellReflection_Timer = 40000+rand()%10000;
-        } else SpellReflection_Timer -= diff;
+            //Despawn Time Keeper
+            if (who->GetTypeId() == TYPEID_UNIT && who->GetEntry() == C_TIME_KEEPER)
+            {
+                if (me->IsWithinDistInMap(who, 20.0f))
+                {
+                    DoScriptText(SAY_BANISH, me);
 
-        DoMeleeAttackIfReady();
-    }
+                    me->DealDamage(who, who->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                }
+            }
+
+            ScriptedAI::MoveInLineOfSight(who);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            //Attack Haste
+            if (Haste_Timer <= diff)
+            {
+                DoCast(me, SPELL_HASTE);
+                Haste_Timer = 20000+rand()%5000;
+            } else Haste_Timer -= diff;
+
+            //Spell Reflection
+            if (SpellReflection_Timer <= diff)
+            {
+                DoCast(me, SPELL_REFLECT);
+                SpellReflection_Timer = 40000+rand()%10000;
+            } else SpellReflection_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_boss_temporus(Creature* creature)
-{
-    return new boss_temporusAI (creature);
-}
 
 void AddSC_boss_temporus()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_temporus";
-    newscript->GetAI = &GetAI_boss_temporus;
-    newscript->RegisterSelf();
+    new boss_temporus();
 }
-

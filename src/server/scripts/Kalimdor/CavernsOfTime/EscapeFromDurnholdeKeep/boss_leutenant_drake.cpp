@@ -32,21 +32,26 @@ EndScriptData */
 /*######
 ## go_barrel_old_hillsbrad
 ######*/
-
-bool GOHello_go_barrel_old_hillsbrad(Player* player, GameObject* _GO)
+class go_barrel_old_hillsbrad : public GameObjectScript
 {
-    ScriptedInstance* instance = _GO->GetInstanceScript();
+public:
+    go_barrel_old_hillsbrad() : GameObjectScript("go_barrel_old_hillsbrad") { }
 
-    if (!instance)
+    bool GOHello(Player* player, GameObject* _GO)
+    {
+        ScriptedInstance* instance = _GO->GetInstanceScript();
+
+        if (!instance)
+            return false;
+
+        if (instance->GetData(TYPE_BARREL_DIVERSION) == DONE)
+            return false;
+
+        instance->SetData(TYPE_BARREL_DIVERSION, IN_PROGRESS);
+
         return false;
-
-    if (instance->GetData(TYPE_BARREL_DIVERSION) == DONE)
-        return false;
-
-    instance->SetData(TYPE_BARREL_DIVERSION, IN_PROGRESS);
-
-    return false;
-}
+    }
+};
 
 /*######
 ## boss_lieutenant_drake
@@ -95,106 +100,101 @@ static Location DrakeWP[]=
     {17, 2125.50f, 88.9481f, 54.7953f},
     {18, 2128.20f, 70.9763f, 64.4221f}
 };
-
-struct boss_lieutenant_drakeAI : public ScriptedAI
+class boss_lieutenant_drake : public CreatureScript
 {
-    boss_lieutenant_drakeAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_lieutenant_drake() : CreatureScript("boss_lieutenant_drake") { }
 
-    bool CanPatrol;
-    uint32 wpId;
-
-    uint32 Whirlwind_Timer;
-    uint32 Fear_Timer;
-    uint32 MortalStrike_Timer;
-    uint32 ExplodingShout_Timer;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* creature)
     {
-        CanPatrol = true;
-        wpId = 0;
-
-        Whirlwind_Timer = 20000;
-        Fear_Timer = 30000;
-        MortalStrike_Timer = 45000;
-        ExplodingShout_Timer = 25000;
+        return new boss_lieutenant_drakeAI (creature);
     }
 
-    void EnterCombat(Unit *who)
+    struct boss_lieutenant_drakeAI : public ScriptedAI
     {
-        DoScriptText(SAY_AGGRO, me);
-    }
+        boss_lieutenant_drakeAI(Creature *c) : ScriptedAI(c) {}
 
-    void KilledUnit(Unit *victim)
-    {
-        switch (rand()%2)
+        bool CanPatrol;
+        uint32 wpId;
+
+        uint32 Whirlwind_Timer;
+        uint32 Fear_Timer;
+        uint32 MortalStrike_Timer;
+        uint32 ExplodingShout_Timer;
+
+        void Reset()
         {
-            case 0: DoScriptText(SAY_SLAY1, me); break;
-            case 1: DoScriptText(SAY_SLAY2, me); break;
-        }
-    }
+            CanPatrol = true;
+            wpId = 0;
 
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_DEATH, me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //TODO: make this work
-        if (CanPatrol && wpId == 0)
-        {
-            me->GetMotionMaster()->MovePoint(DrakeWP[0].wpId, DrakeWP[0].x, DrakeWP[0].y, DrakeWP[0].z);
-            wpId++;
+            Whirlwind_Timer = 20000;
+            Fear_Timer = 30000;
+            MortalStrike_Timer = 45000;
+            ExplodingShout_Timer = 25000;
         }
 
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        //Whirlwind
-        if (Whirlwind_Timer <= diff)
+        void EnterCombat(Unit *who)
         {
-            DoCast(me->getVictim(), SPELL_WHIRLWIND);
-            Whirlwind_Timer = 20000+rand()%5000;
-        } else Whirlwind_Timer -= diff;
+            DoScriptText(SAY_AGGRO, me);
+        }
 
-        //Fear
-        if (Fear_Timer <= diff)
+        void KilledUnit(Unit *victim)
         {
-            DoScriptText(SAY_SHOUT, me);
-            DoCast(me->getVictim(), SPELL_FRIGHTENING_SHOUT);
-            Fear_Timer = 30000+rand()%10000;
-        } else Fear_Timer -= diff;
+            switch (rand()%2)
+            {
+                case 0: DoScriptText(SAY_SLAY1, me); break;
+                case 1: DoScriptText(SAY_SLAY2, me); break;
+            }
+        }
 
-        //Mortal Strike
-        if (MortalStrike_Timer <= diff)
+        void JustDied(Unit *victim)
         {
-            DoScriptText(SAY_MORTAL, me);
-            DoCast(me->getVictim(), SPELL_MORTAL_STRIKE);
-            MortalStrike_Timer = 45000+rand()%5000;
-        } else MortalStrike_Timer -= diff;
+            DoScriptText(SAY_DEATH, me);
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        void UpdateAI(const uint32 diff)
+        {
+            //TODO: make this work
+            if (CanPatrol && wpId == 0)
+            {
+                me->GetMotionMaster()->MovePoint(DrakeWP[0].wpId, DrakeWP[0].x, DrakeWP[0].y, DrakeWP[0].z);
+                wpId++;
+            }
+
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            //Whirlwind
+            if (Whirlwind_Timer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_WHIRLWIND);
+                Whirlwind_Timer = 20000+rand()%5000;
+            } else Whirlwind_Timer -= diff;
+
+            //Fear
+            if (Fear_Timer <= diff)
+            {
+                DoScriptText(SAY_SHOUT, me);
+                DoCast(me->getVictim(), SPELL_FRIGHTENING_SHOUT);
+                Fear_Timer = 30000+rand()%10000;
+            } else Fear_Timer -= diff;
+
+            //Mortal Strike
+            if (MortalStrike_Timer <= diff)
+            {
+                DoScriptText(SAY_MORTAL, me);
+                DoCast(me->getVictim(), SPELL_MORTAL_STRIKE);
+                MortalStrike_Timer = 45000+rand()%5000;
+            } else MortalStrike_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_boss_lieutenant_drake(Creature* creature)
-{
-    return new boss_lieutenant_drakeAI (creature);
-}
 
 void AddSC_boss_lieutenant_drake()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "go_barrel_old_hillsbrad";
-    newscript->pGOHello = &GOHello_go_barrel_old_hillsbrad;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_lieutenant_drake";
-    newscript->GetAI = &GetAI_boss_lieutenant_drake;
-    newscript->RegisterSelf();
+    new go_barrel_old_hillsbrad();
+    new boss_lieutenant_drake();
 }
-

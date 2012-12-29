@@ -441,11 +441,16 @@ struct boss_janalaiAI : public ScriptedAI
         } else FireBreathTimer -= diff;
     }
 };
-
-CreatureAI* GetAI_boss_janalaiAI(Creature* creature)
+class boss_janalai : public CreatureScript
 {
-    return new boss_janalaiAI(creature);
-}
+public:
+    boss_janalai() : CreatureScript("boss_janalai") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_janalaiAI(creature);
+    }
+};
 
 struct mob_janalai_firebombAI : public ScriptedAI
 {
@@ -467,11 +472,16 @@ struct mob_janalai_firebombAI : public ScriptedAI
 
     void UpdateAI(const uint32 /*diff*/) {}
 };
-
-CreatureAI* GetAI_mob_janalai_firebombAI(Creature* creature)
+class mob_janalai_firebomb : public CreatureScript
 {
-    return new mob_janalai_firebombAI(creature);
-}
+public:
+    mob_janalai_firebomb() : CreatureScript("mob_janalai_firebomb") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new mob_janalai_firebombAI(creature);
+    }
+};
 
 struct mob_amanishi_hatcherAI : public ScriptedAI
 {
@@ -586,11 +596,16 @@ struct mob_amanishi_hatcherAI : public ScriptedAI
         }
     }
 };
-
-CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* creature)
+class mob_janalai_hatcher : public CreatureScript
 {
-    return new mob_amanishi_hatcherAI(creature);
-}
+public:
+    mob_janalai_hatcher() : CreatureScript("mob_janalai_hatcher") { }
+
+    CreatureAI* GetAI_mob_amanishi_hatcherAI(Creature* creature)
+    {
+        return new mob_amanishi_hatcherAI(creature);
+    }
+};
 
 struct mob_hatchlingAI : public ScriptedAI
 {
@@ -635,11 +650,16 @@ struct mob_hatchlingAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
-CreatureAI* GetAI_mob_hatchlingAI(Creature* creature)
+class mob_janalai_hatchling : public CreatureScript
 {
-    return new mob_hatchlingAI(creature);
-}
+public:
+    mob_janalai_hatchling() : CreatureScript("mob_janalai_hatchling") { }
+
+    CreatureAI* GetAI_mob_hatchlingAI(Creature* creature)
+    {
+        return new mob_hatchlingAI(creature);
+    }
+};
 
 struct mob_eggAI : public ScriptedAI
 {
@@ -659,38 +679,22 @@ struct mob_eggAI : public ScriptedAI
         }
     }
 };
-
-CreatureAI* GetAI_mob_eggAI(Creature* creature)
+class mob_janalai_egg : public CreatureScript
 {
-    return new mob_eggAI(creature);
-}
+public:
+    mob_janalai_egg() : CreatureScript("mob_janalai_egg") { }
+
+    CreatureAI* GetAI_mob_eggAI(Creature* creature)
+    {
+        return new mob_eggAI(creature);
+    }
+};
 
 void AddSC_boss_janalai()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_janalai";
-    newscript->GetAI = &GetAI_boss_janalaiAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_janalai_firebomb";
-    newscript->GetAI = &GetAI_mob_janalai_firebombAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_janalai_hatcher";
-    newscript->GetAI = &GetAI_mob_amanishi_hatcherAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_janalai_hatchling";
-    newscript->GetAI = &GetAI_mob_hatchlingAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_janalai_egg";
-    newscript->GetAI = &GetAI_mob_eggAI;
-    newscript->RegisterSelf();
+    new boss_janalai();
+    new mob_janalai_firebomb();
+    new mob_janalai_hatcher();
+    new mob_janalai_hatchling();
+    new mob_janalai_egg();
 }
-

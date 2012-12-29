@@ -132,11 +132,16 @@ struct boss_broggokAI : public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-
-CreatureAI* GetAI_boss_broggokAI(Creature* creature)
+class boss_broggok : public CreatureScript
 {
-    return new boss_broggokAI (creature);
-}
+public:
+    boss_broggok() : CreatureScript("boss_broggok") { }
+
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new boss_broggokAI (creature);
+    }
+};
 
 /*######
 ## mob_nascent_orc
@@ -144,75 +149,80 @@ CreatureAI* GetAI_boss_broggokAI(Creature* creature)
 
 #define SPELL_BLOW     22427
 #define SPELL_STOMP    31900
-
-struct mob_nascent_orcAI : public ScriptedAI
+class mob_nascent_orc : public CreatureScript
 {
-    mob_nascent_orcAI(Creature *c) : ScriptedAI(c)
+public:
+    mob_nascent_orc() : CreatureScript("mob_nascent_orc") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
-        HeroicMode = me->GetMap()->IsHeroic();
+        return new mob_nascent_orcAI (creature);
     }
 
-    ScriptedInstance* instance;
-
-    uint32 Blow_Timer;
-    uint32 Stomp_Timer;
-
-    void Reset()
+    struct mob_nascent_orcAI : public ScriptedAI
     {
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        me->SetUnitMovementFlags(MOVEFLAG_NONE);
-        Blow_Timer = 4000+rand()%4000;
-        Stomp_Timer = 5000+rand()%4000;
-    }
-
-    void MovementInform(uint32 uiMotionType, uint32 uiPointId)
-    {
-        if (uiMotionType == POINT_MOTION_TYPE)
+        mob_nascent_orcAI(Creature *c) : ScriptedAI(c)
         {
-            if (Unit *pTarget = me->SelectNearestTarget(99.0f))
+            instance = c->GetInstanceScript();
+            HeroicMode = me->GetMap()->IsHeroic();
+        }
+
+        ScriptedInstance* instance;
+
+        uint32 Blow_Timer;
+        uint32 Stomp_Timer;
+
+        void Reset()
+        {
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            me->SetUnitMovementFlags(MOVEFLAG_NONE);
+            Blow_Timer = 4000+rand()%4000;
+            Stomp_Timer = 5000+rand()%4000;
+        }
+
+        void MovementInform(uint32 uiMotionType, uint32 uiPointId)
+        {
+            if (uiMotionType == POINT_MOTION_TYPE)
             {
-                me->AI()->AttackStart(pTarget);
-            }
-       }
-    }
+                if (Unit *pTarget = me->SelectNearestTarget(99.0f))
+                {
+                    me->AI()->AttackStart(pTarget);
+                }
+           }
+        }
 
-    void EnterEvadeMode()
-    {
-        if (instance)
-            instance->SetData(DATA_BROGGOKEVENT, FAIL);
-
-        me->DeleteThreatList();
-        me->CombatStop(true);
-        me->GetMotionMaster()->MoveTargetedHome();
-        Reset();
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (Blow_Timer <= diff)
+        void EnterEvadeMode()
         {
-            DoCast(me->getVictim(),SPELL_BLOW);
-            Blow_Timer = 10000+rand()%4000;
-        } else Blow_Timer -=diff;
+            if (instance)
+                instance->SetData(DATA_BROGGOKEVENT, FAIL);
 
-        if (Stomp_Timer <= diff)
+            me->DeleteThreatList();
+            me->CombatStop(true);
+            me->GetMotionMaster()->MoveTargetedHome();
+            Reset();
+        }
+
+        void UpdateAI(const uint32 diff)
         {
-            DoCast(me->getVictim(),SPELL_STOMP);
-            Stomp_Timer = 15000+rand()%4000;
-        } else Stomp_Timer -=diff;
+            if (!UpdateVictim())
+                return;
 
-        DoMeleeAttackIfReady();
-    }
+            if (Blow_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_BLOW);
+                Blow_Timer = 10000+rand()%4000;
+            } else Blow_Timer -=diff;
+
+            if (Stomp_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_STOMP);
+                Stomp_Timer = 15000+rand()%4000;
+            } else Stomp_Timer -=diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
 };
-
-CreatureAI* GetAI_mob_nascent_orc(Creature* creature)
-{
-    return new mob_nascent_orcAI (creature);
-}
 
 /*######
 ## mob_broggok_poisoncloud
@@ -220,47 +230,39 @@ CreatureAI* GetAI_mob_nascent_orc(Creature* creature)
 
 #define SPELL_POISON      30914
 #define SPELL_POISON_H    38462
-
-struct mob_broggok_poisoncloudAI : public ScriptedAI
+class mob_broggok_poisoncloud : public CreatureScript
 {
-    mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c)
+public:
+    mob_broggok_poisoncloud() : CreatureScript("mob_broggok_poisoncloud") { }
+
+    CreatureAI* GetAI(Creature* creature)
     {
-        instance = c->GetInstanceScript();
-        HeroicMode = me->GetMap()->IsHeroic();
+        return new mob_broggok_poisoncloudAI (creature);
     }
 
-    ScriptedInstance* instance;
-
-    void Reset()
+    struct mob_broggok_poisoncloudAI : public ScriptedAI
     {
-        DoCast(me, HeroicMode ? SPELL_POISON_H : SPELL_POISON);
-    }
+        mob_broggok_poisoncloudAI(Creature *c) : ScriptedAI(c)
+        {
+            instance = c->GetInstanceScript();
+            HeroicMode = me->GetMap()->IsHeroic();
+        }
 
-    void AttackedBy(Unit* who) {}
-    void AttackStart(Unit *who) {}
+        ScriptedInstance* instance;
+
+        void Reset()
+        {
+            DoCast(me, HeroicMode ? SPELL_POISON_H : SPELL_POISON);
+        }
+
+        void AttackedBy(Unit* who) {}
+        void AttackStart(Unit *who) {}
+    };
 };
-
-CreatureAI* GetAI_mob_broggok_poisoncloud(Creature* creature)
-{
-    return new mob_broggok_poisoncloudAI (creature);
-}
 
 void AddSC_boss_broggok()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_broggok";
-    newscript->GetAI = &GetAI_boss_broggokAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_nascent_orc";
-    newscript->GetAI = &GetAI_mob_nascent_orc;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_broggok_poisoncloud";
-    newscript->GetAI = &GetAI_mob_broggok_poisoncloud;
-    newscript->RegisterSelf();
+    new boss_broggok();
+    new mob_nascent_orc();
+    new mob_broggok_poisoncloud();
 }
-

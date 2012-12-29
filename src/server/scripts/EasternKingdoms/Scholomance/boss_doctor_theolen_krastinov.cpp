@@ -36,86 +36,86 @@ enum eEnums
     SPELL_BACKHAND              = 18103,
     SPELL_FRENZY                = 8269
 };
-
-struct boss_theolenkrastinovAI : public ScriptedAI
+class boss_doctor_theolen_krastinov : public CreatureScript
 {
-    boss_theolenkrastinovAI(Creature *c) : ScriptedAI(c) {}
+public:
+    boss_doctor_theolen_krastinov() : CreatureScript("boss_doctor_theolen_krastinov") { }
 
-    uint32 m_uiRend_Timer;
-    uint32 m_uiBackhand_Timer;
-    uint32 m_uiFrenzy_Timer;
-
-    void Reset()
+    CreatureAI* GetAI_boss_theolenkrastinov(Creature* creature)
     {
-        m_uiRend_Timer = 8000;
-        m_uiBackhand_Timer = 9000;
-        m_uiFrenzy_Timer = 1000;
+        return new boss_theolenkrastinovAI (creature);
     }
 
-    void JustDied(Unit* /*pKiller*/)
+    struct boss_theolenkrastinovAI : public ScriptedAI
     {
-        ScriptedInstance* instance = me->GetInstanceScript();
-        if (instance)
-        {
-            instance->SetData(DATA_DOCTORTHEOLENKRASTINOV_DEATH, 0);
+        boss_theolenkrastinovAI(Creature *c) : ScriptedAI(c) {}
 
-            if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
-                me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
+        uint32 m_uiRend_Timer;
+        uint32 m_uiBackhand_Timer;
+        uint32 m_uiFrenzy_Timer;
+
+        void Reset()
+        {
+            m_uiRend_Timer = 8000;
+            m_uiBackhand_Timer = 9000;
+            m_uiFrenzy_Timer = 1000;
         }
-    }
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        //Rend_Timer
-        if (m_uiRend_Timer <= uiDiff)
+        void JustDied(Unit* /*pKiller*/)
         {
-            DoCast(me->getVictim(), SPELL_REND);
-            m_uiRend_Timer = 10000;
-        }
-        else
-            m_uiRend_Timer -= uiDiff;
-
-        //Backhand_Timer
-        if (m_uiBackhand_Timer <= uiDiff)
-        {
-            DoCast(me->getVictim(), SPELL_BACKHAND);
-            m_uiBackhand_Timer = 10000;
-        }
-        else
-            m_uiBackhand_Timer -= uiDiff;
-
-        //Frenzy_Timer
-        if (me->GetHealth()*100 / me->GetMaxHealth() < 26)
-        {
-            if (m_uiFrenzy_Timer <= uiDiff)
+            ScriptedInstance* instance = me->GetInstanceScript();
+            if (instance)
             {
-                DoCast(me, SPELL_FRENZY);
-                DoScriptText(EMOTE_GENERIC_FRENZY_KILL, me);
+                instance->SetData(DATA_DOCTORTHEOLENKRASTINOV_DEATH, 0);
 
-                m_uiFrenzy_Timer = 120000;
+                if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
+                    me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
+            }
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            //Rend_Timer
+            if (m_uiRend_Timer <= uiDiff)
+            {
+                DoCast(me->getVictim(), SPELL_REND);
+                m_uiRend_Timer = 10000;
             }
             else
-                m_uiFrenzy_Timer -= uiDiff;
+                m_uiRend_Timer -= uiDiff;
+
+            //Backhand_Timer
+            if (m_uiBackhand_Timer <= uiDiff)
+            {
+                DoCast(me->getVictim(), SPELL_BACKHAND);
+                m_uiBackhand_Timer = 10000;
+            }
+            else
+                m_uiBackhand_Timer -= uiDiff;
+
+            //Frenzy_Timer
+            if (me->GetHealth()*100 / me->GetMaxHealth() < 26)
+            {
+                if (m_uiFrenzy_Timer <= uiDiff)
+                {
+                    DoCast(me, SPELL_FRENZY);
+                    DoScriptText(EMOTE_GENERIC_FRENZY_KILL, me);
+
+                    m_uiFrenzy_Timer = 120000;
+                }
+                else
+                    m_uiFrenzy_Timer -= uiDiff;
+            }
+
+            DoMeleeAttackIfReady();
         }
-
-        DoMeleeAttackIfReady();
-    }
+    };
 };
-
-CreatureAI* GetAI_boss_theolenkrastinov(Creature* creature)
-{
-    return new boss_theolenkrastinovAI (creature);
-}
 
 void AddSC_boss_theolenkrastinov()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_doctor_theolen_krastinov";
-    newscript->GetAI = &GetAI_boss_theolenkrastinov;
-    newscript->RegisterSelf();
+    new boss_doctor_theolen_krastinov();
 }
-

@@ -155,68 +155,67 @@ struct npc_testAI : public npc_escortAI
         }
 };
 
-CreatureAI* GetAI_test(Creature* creature)
+class test : public CreatureScript
 {
-    npc_testAI* testAI = new npc_testAI(creature);
+public:
+    test() : CreatureScript("test") { }
 
-    testAI->AddWaypoint(0, 1231, -4419, 23);
-    testAI->AddWaypoint(1, 1198, -4440, 23, 0);
-    testAI->AddWaypoint(2, 1208, -4392, 23);
-    testAI->AddWaypoint(3, 1231, -4419, 23, 5000);
-    testAI->AddWaypoint(4, 1208, -4392, 23, 5000);
-
-    return (CreatureAI*)testAI;
-}
-
-bool GossipHello_npc_test(Player* player, Creature* creature)
-{
-    player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
-    player->PrepareGossipMenu(creature, 0);
-
-    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-
-    player->SendPreparedGossip(creature);
-    return true;
-}
-
-bool GossipSelect_npc_test(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    bool GossipSelect_npc(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
     {
-        player->CLOSE_GOSSIP_MENU();
-        ((npc_escortAI*)(creature->AI()))->Start(true, true, player->GetGUID());
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            ((npc_escortAI*)(creature->AI()))->Start(true, true, player->GetGUID());
 
-        return true;                                        // prevent SKYFIRE core handling
+            return true;                                        // prevent SKYFIRE core handling
+        }
+
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            ((npc_escortAI*)(creature->AI()))->Start(false, false, player->GetGUID());
+
+            return true;                                        // prevent SKYFIRE core handling
+        }
+
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+3)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            ((npc_escortAI*)(creature->AI()))->Start(false, false, player->GetGUID());
+
+            return true;                                        // prevent SKYFIRE core handling
+        }
+        return false;
     }
 
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+    bool GossipHello_npc(Player* player, Creature* creature)
     {
-        player->CLOSE_GOSSIP_MENU();
-        ((npc_escortAI*)(creature->AI()))->Start(false, false, player->GetGUID());
+        player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
+        player->PrepareGossipMenu(creature, 0);
 
-        return true;                                        // prevent SKYFIRE core handling
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_TEXT3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+
+        player->SendPreparedGossip(creature);
+        return true;
     }
 
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+3)
+    CreatureAI* GetAI(Creature* creature)
     {
-        player->CLOSE_GOSSIP_MENU();
-        ((npc_escortAI*)(creature->AI()))->Start(false, false, player->GetGUID());
+        npcAI* testAI = new npcAI(creature);
 
-        return true;                                        // prevent SKYFIRE core handling
+        testAI->AddWaypoint(0, 1231, -4419, 23);
+        testAI->AddWaypoint(1, 1198, -4440, 23, 0);
+        testAI->AddWaypoint(2, 1208, -4392, 23);
+        testAI->AddWaypoint(3, 1231, -4419, 23, 5000);
+        testAI->AddWaypoint(4, 1208, -4392, 23, 5000);
+
+        return (CreatureAI*)testAI;
     }
-    return false;
-}
+};
 
 void AddSC_test()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "test";
-    newscript->GetAI = &GetAI_test;
-    newscript->pGossipHello          = &GossipHello_npc_test;
-    newscript->pGossipSelect         = &GossipSelect_npc_test;
-    newscript->RegisterSelf();
+    new test();
 }
-

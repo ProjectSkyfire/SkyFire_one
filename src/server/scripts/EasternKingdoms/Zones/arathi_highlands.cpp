@@ -105,32 +105,31 @@ struct npc_professor_phizzlethorpeAI : public npc_escortAI
         npc_escortAI::UpdateAI(diff);
     }
 };
-
-bool QuestAccept_npc_professor_phizzlethorpe(Player* player, Creature* creature, Quest const* pQuest)
+class npc_professor_phizzlethorpe : public CreatureScript
 {
-    if (pQuest->GetQuestId() == QUEST_SUNKEN_TREASURE)
+public:
+    npc_professor_phizzlethorpe() : CreatureScript("npc_professor_phizzlethorpe") { }
+
+    bool QuestAccept(Player* player, Creature* creature, Quest const* pQuest)
     {
-        DoScriptText(SAY_PROGRESS_1, creature, player);
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_professor_phizzlethorpeAI, (creature->AI())))
-            pEscortAI->Start(false, false, player->GetGUID(), pQuest);
+        if (pQuest->GetQuestId() == QUEST_SUNKEN_TREASURE)
+        {
+            DoScriptText(SAY_PROGRESS_1, creature, player);
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_professor_phizzlethorpeAI, (creature->AI())))
+                pEscortAI->Start(false, false, player->GetGUID(), pQuest);
 
-        creature->setFaction(113);
+            creature->setFaction(113);
+        }
+        return true;
     }
-    return true;
-}
 
-CreatureAI* GetAI_npc_professor_phizzlethorpeAI(Creature* creature)
-{
-    return new npc_professor_phizzlethorpeAI(creature);
-}
+    CreatureAI* GetAI(Creature* creature)
+    {
+        return new npc_professor_phizzlethorpeAI(creature);
+    }
+};
 
 void AddSC_arathi_highlands()
 {
-    Script * newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_professor_phizzlethorpe";
-    newscript->GetAI = &GetAI_npc_professor_phizzlethorpeAI;
-    newscript->pQuestAccept = &QuestAccept_npc_professor_phizzlethorpe;
-    newscript->RegisterSelf();
+    new npc_professor_phizzlethorpe();
 }
