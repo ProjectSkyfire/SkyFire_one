@@ -1104,7 +1104,7 @@ void LoadLootTemplates_Gameobject()
     // remove real entries and check existence loot
     for (uint32 i = 1; i < sGOStorage.MaxEntry; ++i)
     {
-        if (GameObjectInfo const* gInfo = sGOStorage.LookupEntry<GameObjectInfo>(i))
+        if (GameObjectTemplate const* gInfo = sGOStorage.LookupEntry<GameObjectTemplate>(i))
         {
             if (uint32 lootid = GameObject::GetLootId(gInfo))
             {

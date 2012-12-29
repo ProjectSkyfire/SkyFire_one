@@ -2014,7 +2014,7 @@ void SpellMgr::LoadSpellScriptTarget()
                 if (targetEntry == 0)
                     break;
 
-                if (!sGOStorage.LookupEntry<GameObjectInfo>(targetEntry))
+                if (!sGOStorage.LookupEntry<GameObjectTemplate>(targetEntry))
                 {
                     sLog->outErrorDb("Table spell_script_target: gameobject template entry %u does not exist.", targetEntry);
                     continue;

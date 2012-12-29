@@ -1862,7 +1862,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
     }
 
     if (unitTarget && unitTarget->GetTypeId() == TYPEID_UNIT)
-        sScriptMgr->EffectDummyCreature(m_caster, m_spellInfo->Id, effIndex, unitTarget->ToCreature());
+        sScriptMgr->OnDummyEffect(m_caster, m_spellInfo->Id, effIndex, unitTarget->ToCreature());
 }
 
 void Spell::EffectTriggerSpellWithValue(SpellEffIndex effIndex)
@@ -2905,7 +2905,7 @@ void Spell::SendLoot(uint64 guid, LootType loottype)
 
     if (gameObjTarget)
     {
-        if (sScriptMgr->GOHello(player, gameObjTarget))
+        if (sScriptMgr->OnGossipHello(player, gameObjTarget))
             return;
 
         switch (gameObjTarget->GetGoType())
@@ -2942,7 +2942,7 @@ void Spell::SendLoot(uint64 guid, LootType loottype)
                     if (player->GetQuestStatus(gameObjTarget->GetGOInfo()->goober.questId) != QUEST_STATUS_INCOMPLETE)
                         return;
 
-                sScriptMgr->GOHello(player, gameObjTarget);
+                sScriptMgr->OnGossipHello(player, gameObjTarget);
                 player->GetMap()->ScriptsStart(sGameObjectScripts, gameObjTarget->GetDBTableGUIDLow(), player, gameObjTarget);
 
                 gameObjTarget->AddUniqueUse(player);
@@ -2999,7 +2999,7 @@ void Spell::EffectOpenLock(SpellEffIndex effIndex)
     // Get lockId
     if (gameObjTarget)
     {
-        GameObjectInfo const* goInfo = gameObjTarget->GetGOInfo();
+        GameObjectTemplate const* goInfo = gameObjTarget->GetGOInfo();
         // Arathi Basin banner opening !
         if (goInfo->type == GAMEOBJECT_TYPE_BUTTON && goInfo->button.noDamageImmune ||
             goInfo->type == GAMEOBJECT_TYPE_GOOBER && goInfo->goober.losOK)
@@ -6031,7 +6031,7 @@ void Spell::EffectTransmitted(SpellEffIndex effIndex)
 {
     uint32 name_id = m_spellInfo->EffectMiscValue[effIndex];
 
-    GameObjectInfo const* goinfo = sObjectMgr->GetGameObjectInfo(name_id);
+    GameObjectTemplate const* goinfo = sObjectMgr->GetGameObjectInfo(name_id);
 
     if (!goinfo)
     {

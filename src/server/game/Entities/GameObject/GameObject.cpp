@@ -41,6 +41,8 @@
 #include "Util.h"
 #include "OutdoorPvPMgr.h"
 #include "BattlegroundAV.h"
+#include "ScriptMgr.h"
+#include "GameObjectAI.h"
 
 GameObject::GameObject() : WorldObject()
 {
@@ -66,6 +68,11 @@ GameObject::GameObject() : WorldObject()
 
 GameObject::~GameObject()
 {
+}
+
+std::string GameObject::GetAIName() const
+{
+    return sObjectMgr->GetGameObjectTemplate(GetEntry())->AIName;
 }
 
 void GameObject::CleanupsBeforeDelete()
@@ -143,7 +150,7 @@ bool GameObject::Create(uint32 guidlow, uint32 name_id, Map *map, float x, float
         return false;
     }
 
-    GameObjectInfo const* goinfo = sObjectMgr->GetGameObjectInfo(name_id);
+    GameObjectTemplate const* goinfo = sObjectMgr->GetGameObjectInfo(name_id);
     if (!goinfo)
     {
         sLog->outErrorDb("Gameobject (GUID: %u Entry: %u) not created: Invalid entry in gameobject_template. Map: %u  (X: %f Y: %f Z: %f) ang: %f rotation0: %f rotation1: %f rotation2: %f rotation3: %f", guidlow, name_id, map->GetId(), x, y, z, ang, rotation0, rotation1, rotation2, rotation3);
@@ -297,7 +304,7 @@ void GameObject::Update(uint32 diff)
             if (isSpawned())
             {
                 // traps can have time and can not have
-                GameObjectInfo const* goInfo = GetGOInfo();
+                GameObjectTemplate const* goInfo = GetGOInfo();
                 if (goInfo->type == GAMEOBJECT_TYPE_TRAP)
                 {
                     if (m_cooldownTime >= time(NULL))
@@ -480,6 +487,8 @@ void GameObject::Update(uint32 diff)
             break;
         }
     }
+
+    sScriptMgr->OnGameObjectUpdate(this, diff);
 }
 
 void GameObject::Refresh()
@@ -544,7 +553,7 @@ void GameObject::SaveToDB()
 
 void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask)
 {
-    const GameObjectInfo *goI = GetGOInfo();
+    const GameObjectTemplate *goI = GetGOInfo();
 
     if (!goI)
         return;
@@ -676,7 +685,7 @@ GameObject* GameObject::GetGameObject(WorldObject& object, uint64 guid)
     return object.GetMap()->GetGameObject(guid);
 }
 
-uint32 GameObject::GetLootId(GameObjectInfo const* ginfo)
+uint32 GameObject::GetLootId(GameObjectTemplate const* ginfo)
 {
     if (!ginfo)
         return 0;
@@ -722,7 +731,7 @@ bool GameObject::hasInvolvedQuest(uint32 quest_id) const
 bool GameObject::IsTransport() const
 {
     // If something is marked as a transport, don't transmit an out of range packet for it.
-    GameObjectInfo const * gInfo = GetGOInfo();
+    GameObjectTemplate const * gInfo = GetGOInfo();
     if (!gInfo) return false;
     return gInfo->type == GAMEOBJECT_TYPE_TRANSPORT || gInfo->type == GAMEOBJECT_TYPE_MO_TRANSPORT;
 }
@@ -840,7 +849,7 @@ bool GameObject::ActivateToQuest(Player *pTarget) const
 
 void GameObject::TriggeringLinkedGameObject(uint32 trapEntry, Unit* target)
 {
-    GameObjectInfo const* trapInfo = sGOStorage.LookupEntry<GameObjectInfo>(trapEntry);
+    GameObjectTemplate const* trapInfo = sGOStorage.LookupEntry<GameObjectTemplate>(trapEntry);
     if (!trapInfo || trapInfo->type != GAMEOBJECT_TYPE_TRAP)
         return;
 
@@ -964,7 +973,7 @@ void GameObject::Use(Unit* user)
         //Sitting: Wooden bench, chairs enzz
         case GAMEOBJECT_TYPE_CHAIR:                         //7
         {
-            GameObjectInfo const* info = GetGOInfo();
+            GameObjectTemplate const* info = GetGOInfo();
             if (!info)
                 return;
 
@@ -1025,7 +1034,7 @@ void GameObject::Use(Unit* user)
         //big gun, its a spell/aura
         case GAMEOBJECT_TYPE_GOOBER:                        //10
         {
-            GameObjectInfo const* info = GetGOInfo();
+            GameObjectTemplate const* info = GetGOInfo();
 
             if (user->GetTypeId() == TYPEID_PLAYER)
             {
@@ -1057,7 +1066,7 @@ void GameObject::Use(Unit* user)
         }
         case GAMEOBJECT_TYPE_CAMERA:                        //13
         {
-            GameObjectInfo const* info = GetGOInfo();
+            GameObjectTemplate const* info = GetGOInfo();
             if (!info)
                 return;
 
@@ -1165,7 +1174,7 @@ void GameObject::Use(Unit* user)
 
             Unit* owner = GetOwner();
 
-            GameObjectInfo const* info = GetGOInfo();
+            GameObjectTemplate const* info = GetGOInfo();
 
             // ritual owner is set for GO's without owner (not summoned)
             if (!m_ritualOwner && !owner)
@@ -1237,7 +1246,7 @@ void GameObject::Use(Unit* user)
         {
             SetUInt32Value(GAMEOBJECT_FLAGS, 2);
 
-            GameObjectInfo const* info = GetGOInfo();
+            GameObjectTemplate const* info = GetGOInfo();
             if (!info)
                 return;
 
@@ -1258,7 +1267,7 @@ void GameObject::Use(Unit* user)
         }
         case GAMEOBJECT_TYPE_MEETINGSTONE:                  //23
         {
-            GameObjectInfo const* info = GetGOInfo();
+            GameObjectTemplate const* info = GetGOInfo();
 
             if (user->GetTypeId() != TYPEID_PLAYER)
                 return;
@@ -1328,7 +1337,7 @@ void GameObject::Use(Unit* user)
                 // 179786 - Warsong Flag
                 // EotS:
                 // 184142 - Netherstorm Flag
-                GameObjectInfo const* info = GetGOInfo();
+                GameObjectTemplate const* info = GetGOInfo();
                 if (info)
                 {
                     switch (info->id)

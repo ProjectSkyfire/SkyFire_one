@@ -89,7 +89,7 @@ class MapSessionFilter : public PacketFilter
 
         virtual bool Process(WorldPacket * packet);
         // in Map::Update() we do not process player logout!
-        virtual bool ProcessLogout()const { return false; }
+        virtual bool ProcessLogout() const { return false; }
 };
 
 // class used to filer only thread-unsafe packets from queue
@@ -141,7 +141,7 @@ class WorldSession
         void SetInQueue(bool state) { m_inQueue = state; }
 
         // Is the user engaged in a log out process?
-        bool isLogingOut() const { return _logoutTime || m_playerLogout; }
+        bool isLoggingOut() const { return _logoutTime || m_playerLogout; }
 
         // Engage the logout process for the user
         void LogoutRequest(time_t requestTime)

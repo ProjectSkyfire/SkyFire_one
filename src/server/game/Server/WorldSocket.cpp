@@ -18,20 +18,9 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ace/Message_Block.h>
-#include <ace/OS_NS_string.h>
-#include <ace/OS_NS_unistd.h>
-#include <ace/os_include/arpa/os_inet.h>
-#include <ace/os_include/netinet/os_tcp.h>
-#include <ace/os_include/sys/os_types.h>
-#include <ace/os_include/sys/os_socket.h>
-#include <ace/OS_NS_string.h>
-#include <ace/Reactor.h>
-#include <ace/Auto_Ptr.h>
-
 #include "WorldSocket.h"
 #include "Common.h"
-
+#include "ScriptMgr.h"
 #include "Util.h"
 #include "World.h"
 #include "WorldPacket.h"
@@ -46,6 +35,17 @@
 #include "Log.h"
 #include "DBCStores.h"
 #include "WorldLog.h"
+
+#include <ace/Message_Block.h>
+#include <ace/OS_NS_string.h>
+#include <ace/OS_NS_unistd.h>
+#include <ace/os_include/arpa/os_inet.h>
+#include <ace/os_include/netinet/os_tcp.h>
+#include <ace/os_include/sys/os_types.h>
+#include <ace/os_include/sys/os_socket.h>
+#include <ace/OS_NS_string.h>
+#include <ace/Reactor.h>
+#include <ace/Auto_Ptr.h>
 
 #if defined(__GNUC__)
 #pragma pack(1)
@@ -645,11 +645,12 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
                     sLog->outError("WorldSocket::ProcessIncoming: Player send CMSG_AUTH_SESSION again");
                     return -1;
                 }
-
+                
+                sScriptMgr->OnPacketReceive(this, WorldPacket(*new_pct));
                 return HandleAuthSession(*new_pct);
             case CMSG_KEEP_ALIVE:
                 sLog->outDebug("CMSG_KEEP_ALIVE , size: %d", new_pct->size());
-
+                sScriptMgr->OnPacketReceive(this, WorldPacket(*new_pct));
                 return 0;
             default:
             {
@@ -676,7 +677,7 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
             }
         }
     }
-    catch(ByteBufferException &)
+    catch (ByteBufferException &)
     {
         sLog->outError("WorldSocket::ProcessIncoming ByteBufferException occured while parsing an instant handled packet (opcode: %u) from client %s, accountid=%i. Disconnected client.",
                 opcode, GetRemoteAddress().c_str(), m_Session?m_Session->GetAccountId():-1);
@@ -992,6 +993,9 @@ int WorldSocket::HandlePing(WorldPacket& recvPacket)
 
 int WorldSocket::iSendPacket (const WorldPacket& pct)
 {
+    // Create a copy of the original packet; this is to avoid issues if a hook modifies it.
+    sScriptMgr->OnPacketSend(this, WorldPacket(pct));
+
     ServerPktHeader header(pct.size()+2, pct.GetOpcode());
     if (m_OutBuffer->space() < pct.size() + header.getHeaderLength())
     {

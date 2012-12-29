@@ -39,6 +39,7 @@
 #include "ObjectAccessor.h"
 #include "ObjectGuid.h"
 #include "SQLStorage.h"
+#include "Weather.h"
 
 #include <ace/Singleton.h>
 #include <string>
@@ -430,19 +431,6 @@ struct PetCreateSpellEntry
     uint32 spellid[4];
 };
 
-#define WEATHER_SEASONS 4
-struct WeatherSeasonChances
-{
-    uint32 rainChance;
-    uint32 snowChance;
-    uint32 stormChance;
-};
-
-struct WeatherZoneChances
-{
-    WeatherSeasonChances data[WEATHER_SEASONS];
-};
-
 struct GraveYardData
 {
     uint32 safeLocId;
@@ -548,7 +536,7 @@ class ObjectMgr
 
         typedef UNORDERED_MAP<uint32, ReputationOnKillEntry> RepOnKillMap;
 
-        typedef UNORDERED_MAP<uint32, WeatherZoneChances> WeatherZoneMap;
+        typedef UNORDERED_MAP<uint32, WeatherData> WeatherZoneMap;
 
         typedef UNORDERED_MAP<uint32, PetCreateSpellEntry> PetCreateSpellMap;
 
@@ -556,10 +544,10 @@ class ObjectMgr
 
         UNORDERED_MAP<uint32, uint32> TransportEventMap;
 
-        static GameObjectInfo const *GetGameObjectInfo(uint32 id) { return sGOStorage.LookupEntry<GameObjectInfo>(id); }
+        static GameObjectTemplate const *GetGameObjectInfo(uint32 id) { return sGOStorage.LookupEntry<GameObjectTemplate>(id); }
 
-        void LoadGameobjectInfo();
-        void AddGameobjectInfo(GameObjectInfo *goinfo);
+        void LoadGameObjectTemplate();
+        void AddGameobjectInfo(GameObjectTemplate* goinfo);   
 
         Group * GetGroupByLeader(const uint64 &guid) const;
         void AddGroup(Group* group) { mGroupSet.insert(group); }
@@ -795,7 +783,8 @@ class ObjectMgr
         void LoadTrainerSpell();
 
         std::string GeneratePetName(uint32 entry);
-        uint32 GetBaseXP(uint32 level);
+        uint32 GetBaseXP(uint8 level);
+        uint32 GetXPForLevel(uint8 level) const;
 
         int32 GetFishingBaseSkillLevel(uint32 entry) const
         {
@@ -827,7 +816,7 @@ class ObjectMgr
         typedef std::multimap<int32, uint32> ExclusiveQuestGroups;
         ExclusiveQuestGroups mExclusiveQuestGroups;
 
-        WeatherZoneChances const* GetWeatherChances(uint32 zone_id) const
+        WeatherData const* GetWeatherChances(uint32 zone_id) const
         {
             WeatherZoneMap::const_iterator itr = mWeatherZoneMap.find(zone_id);
             if (itr != mWeatherZoneMap.end())
@@ -913,6 +902,11 @@ class ObjectMgr
             if (itr == mSkyFireStringLocaleMap.end()) return NULL;
             return &itr->second;
         }
+
+        GameObjectTemplate const* GetGameObjectTemplate(uint32 entry);
+        GameObjectTemplateContainer const* GetGameObjectTemplate() const { return &_gameObjectTemplateStore; }
+        int LoadReferenceVendor(int32 vendor, int32 item_id, std::set<uint32> *skip_vendors);
+     
         const char *GetSkyFireString(int32 entry, int locale_idx) const;
         const char *GetSkyFireStringForDBCLocale(int32 entry) const { return GetSkyFireString(entry, DBCLocaleIndex); }
         int32 GetDBCLocaleIndex() const { return DBCLocaleIndex; }
@@ -1051,7 +1045,8 @@ class ObjectMgr
         typedef UNORDERED_MAP<uint32, std::string> ItemTextMap;
         typedef std::set<uint32> TavernAreaTriggerSet;
         typedef std::set<uint32> GameObjectForQuestSet;
-
+        
+        GameObjectTemplateContainer _gameObjectTemplateStore;
         GroupSet            mGroupSet;
         GuildMap            mGuildMap;
         ArenaTeamMap        mArenaTeamMap;
@@ -1113,8 +1108,12 @@ class ObjectMgr
         void BuildPlayerLevelInfo(uint8 race, uint8 class_, uint8 level, PlayerLevelInfo* plinfo) const;
         PlayerInfo playerInfo[MAX_RACES][MAX_CLASSES];
 
-        typedef std::map<uint32, uint32> BaseXPMap;          // [area level][base xp]
-        BaseXPMap mBaseXPTable;
+
+        typedef std::vector<uint32> PlayerXPperLevel;       // [level]
+        PlayerXPperLevel _playerXPperLevel;
+
+        typedef std::map<uint32, uint32> BaseXPContainer;          // [area level][base xp]
+        BaseXPContainer _baseXPTable;
 
         typedef std::map<uint32, int32> FishingBaseSkillMap; // [areaId][base skill level]
         FishingBaseSkillMap mFishingBaseForArea;
@@ -1157,7 +1156,7 @@ bool LoadSkyFireStrings(DatabaseType& db, char const* table, int32 start_value =
 uint32 GetAreaTriggerScriptId(uint32 trigger_id);
 uint32 GetScriptId(const char *name);
 ObjectMgr::ScriptNameMap& GetScriptNames();
-GameObjectInfo const *GetGameObjectInfo(uint32 id);
+GameObjectTemplate const *GetGameObjectTemplate(uint32 id);
 CreatureTemplate const* GetCreatureTemplate(uint32 id);
 CreatureTemplate const* GetCreatureTemplateStore(uint32 entry);
 Quest const* GetQuestTemplateStore(uint32 entry);

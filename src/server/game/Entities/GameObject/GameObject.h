@@ -27,6 +27,8 @@
 #include "LootMgr.h"
 #include "DatabaseEnv.h"
 
+class GameObjectAI;
+
 // GCC have alternative #pragma pack(N) syntax and old gcc version not support pack(push, N), also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack(1)
@@ -35,7 +37,7 @@
 #endif
 
 // from `gameobject_template`
-struct GameObjectInfo
+struct GameObjectTemplate
 {
     uint32  id;
     uint32  type;
@@ -364,6 +366,8 @@ struct GameObjectInfo
             uint32 data[24];
         } raw;
     };
+
+    std::string AIName;
     uint32 ScriptId;
 
     uint32 GetCharges() const                               // despawn at uses amount
@@ -387,6 +391,9 @@ struct GameObjectInfo
         }
     }
 };
+
+// Benchmarked: Faster than std::map (insert/find)
+typedef UNORDERED_MAP<uint32, GameObjectTemplate> GameObjectTemplateContainer;
 
 // GCC have alternative #pragma pack() syntax and old gcc version not support pack(pop), also any gcc version not support it at some platform
 #if defined( __GNUC__ )
@@ -463,7 +470,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         bool Create(uint32 guidlow, uint32 name_id, Map *map, float x, float y, float z, float ang, float rotation0, float rotation1, float rotation2, float rotation3, uint32 animprogress, GOState go_state, uint32 ArtKit = 0);
         void Update(uint32 diff);
         static GameObject* GetGameObject(WorldObject& object, uint64 guid);
-        GameObjectInfo const* GetGOInfo() const { return m_goInfo; }
+        GameObjectTemplate const* GetGOInfo() const { return m_goInfo; }
         GameObjectData const* GetGOData() const { return m_goData; }
 
         bool IsTransport() const;
@@ -471,7 +478,10 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         uint32 GetDBTableGUIDLow() const { return m_DBTableGuid; }
 
         void UpdateRotationFields(float rotation2 = 0.0f, float rotation3 = 0.0f);
+        virtual uint32 GetScriptId() const { return GetGOInfo()->ScriptId; }
+        GameObjectAI* AI() const { return m_AI; }
 
+        std::string GetAIName() const;
         void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text, language, TargetGuid); }
         void Yell(const char* text, uint32 language, uint64 TargetGuid) { MonsterYell(text, language, TargetGuid); }
         void TextEmote(const char* text, uint64 TargetGuid) { MonsterTextEmote(text, TargetGuid); }
@@ -509,7 +519,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         }
         uint32 GetSpellId() const { return m_spellId;}
 
-        static uint32 GetLootId(GameObjectInfo const* info);
+        static uint32 GetLootId(GameObjectTemplate const* info);
         uint32 GetLootId() const { return GetLootId(GetGOInfo()); }
         uint32 GetLockId() const
         {
@@ -572,6 +582,7 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         void Refresh();
         void Delete();
         void getFishLoot(Loot *loot);
+        
         GameobjectTypes GetGoType() const { return GameobjectTypes(GetUInt32Value(GAMEOBJECT_TYPE_ID)); }
         void SetGoType(GameobjectTypes type) { SetUInt32Value(GAMEOBJECT_TYPE_ID, type); }
         GOState GetGoState() const { return GOState(GetUInt32Value(GAMEOBJECT_STATE)); }
@@ -663,10 +674,11 @@ class GameObject : public WorldObject, public GridObject<GameObject>
         uint32 m_usetimes;
 
         uint32 m_DBTableGuid;                               // For new or temporary gameobjects is 0 for saved it is lowguid
-        GameObjectInfo const* m_goInfo;
+        GameObjectTemplate const* m_goInfo;
         GameObjectData const* m_goData;
     private:
         void SwitchDoorOrButton(bool activate, bool alternative = false);
+        GameObjectAI* m_AI;
 };
 #endif
 

@@ -454,6 +454,12 @@ class World
         Weather* AddWeather(uint32 zone_id);
         void RemoveWeather(uint32 zone_id);
 
+        // Deny clients?
+        bool IsClosed() const;
+
+        // Close world
+        void SetClosed(bool val);
+
         // Get the active session server limit (or security level limitations)
         AccountTypes GetPlayerSecurityLimit() const { return m_allowedSecurityLevel < 0 ? SEC_PLAYER : m_allowedSecurityLevel; }
         void SetPlayerSecurityLimit(AccountTypes sec) { m_allowedSecurityLevel = (sec < SEC_PLAYER ? SEC_PLAYER : sec); }
@@ -477,9 +483,9 @@ class World
         void SetAllowMovement(bool allow) { m_allowMovement = allow; }
 
         // Set a new Message of the Day
-        void SetMotd(std::string motd) { m_motd = motd; }
-        // Get the current Message of the Day
-        const char* GetMotd() const { return m_motd.c_str(); }
+        void SetMotd(const std::string& motd);
+        /// Get the current Message of the Day
+        const char* GetMotd() const;
 
         // Set the string for new characters (first login)
         void SetNewCharString(std::string str) { m_newCharString = str; }
@@ -616,13 +622,14 @@ class World
         void InitDailyQuestResetTime();
         void ResetDailyQuests();
     private:
+        //atomic op counter for active scripts amount
+        ACE_Atomic_Op<ACE_Thread_Mutex, long> m_scheduledScripts;        
         static volatile bool m_stopEvent;
         static uint8 m_ExitCode;
         uint32 m_ShutdownTimer;
         uint32 m_ShutdownMask;
 
-        //atomic op counter for active scripts amount
-        ACE_Atomic_Op<ACE_Thread_Mutex, long> m_scheduledScripts;
+        bool m_isClosed;
 
         time_t m_startTime;
         time_t m_gameTime;

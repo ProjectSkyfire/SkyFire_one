@@ -31,6 +31,7 @@
 #include "ObjectAccessor.h"
 #include "MapManager.h"
 #include "ObjectMgr.h"
+#include "ScriptMgr.h"
 
 #define DEFAULT_GRID_EXPIRY     300
 #define MAX_GRID_LOAD_TIME      50
@@ -40,6 +41,9 @@ GridState* si_GridStates[MAX_GRID_STATE];
 
 Map::~Map()
 {
+    if (!Instanceable())
+        sScriptMgr->OnDestroyMap(this);
+
     UnloadAll();
 
     while (!i_worldObjects.empty())
@@ -144,6 +148,8 @@ void Map::LoadMap(int gx, int gy, bool reload)
         sLog->outDetail("Unloading previously loaded map %u before reloading.", GetId());
         delete (GridMaps[gx][gy]);
         GridMaps[gx][gy]=NULL;
+
+        sScriptMgr->OnUnloadGridMap(this, gx, gy);
     }
 
     // map file name
@@ -159,6 +165,8 @@ void Map::LoadMap(int gx, int gy, bool reload)
         sLog->outError("Error loading map file: \n %s\n", tmp);
     }
     delete [] tmp;
+
+    sScriptMgr->OnLoadGridMap(this, gx, gy);
 }
 
 void Map::LoadMapAndVMap(int gx, int gy)
@@ -205,6 +213,9 @@ i_scriptLock(false)
 
     //lets initialize visibility distance for map
     Map::InitVisibilityDistance();
+
+    if (!Instanceable())
+        sScriptMgr->OnCreateMap(this);
 }
 
 void Map::InitVisibilityDistance()
@@ -403,6 +414,7 @@ bool Map::Add(Player* player)
     player->m_clientGUIDs.clear();
     player->UpdateObjectVisibility(true);
 
+    sScriptMgr->OnPlayerEnter(this, player);
     return true;
 }
 
@@ -443,96 +455,6 @@ Map::Add(T *obj)
     //trigger needs to cast spell, if not update, cannot see visual
     obj->UpdateObjectVisibility(true);
 }
-
-/*
-void Map::MessageBroadcast(Player* player, WorldPacket *msg, bool to_self)
-{
-    CellPair p = Skyfire::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
-
-    if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
-    {
-        sLog->outError("Map::MessageBroadcast: Player (GUID: %u) has invalid coordinates X:%f Y:%f grid cell [%u:%u]", player->GetGUIDLow(), player->GetPositionX(), player->GetPositionY(), p.x_coord, p.y_coord);
-        return;
-    }
-
-    Cell cell(p);
-    cell.data.Part.reserved = ALL_DISTRICT;
-
-    if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
-        return;
-
-    Skyfire::MessageDeliverer post_man(*player, msg, to_self);
-    TypeContainerVisitor<Skyfire::MessageDeliverer, WorldTypeMapContainer > message(post_man);
-    cell.Visit(p, message, *this, *player, GetVisibilityDistance());
-}
-
-void Map::MessageBroadcast(WorldObject *obj, WorldPacket *msg)
-{
-    CellPair p = Skyfire::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
-
-    if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
-    {
-        sLog->outError("Map::MessageBroadcast: Object " UI64FMTD " has invalid coordinates X:%f Y:%f grid cell [%u:%u]", obj->GetGUID(), obj->GetPositionX(), obj->GetPositionY(), p.x_coord, p.y_coord);
-        return;
-    }
-
-    Cell cell(p);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
-
-    if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
-        return;
-
-    //TODO: currently on continents when Visibility.Distance.InFlight > Visibility.Distance.Continents
-    //we have alot of blinking mobs because monster move packet send is broken...
-    Skyfire::ObjectMessageDeliverer post_man(*obj, msg);
-    TypeContainerVisitor<Skyfire::ObjectMessageDeliverer, WorldTypeMapContainer > message(post_man);
-    cell.Visit(p, message, *this, *obj, GetVisibilityDistance());
-}
-
-void Map::MessageDistBroadcast(Player* player, WorldPacket *msg, float dist, bool to_self, bool own_team_only)
-{
-    CellPair p = Skyfire::ComputeCellPair(player->GetPositionX(), player->GetPositionY());
-
-    if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
-    {
-        sLog->outError("Map::MessageBroadcast: Player (GUID: %u) has invalid coordinates X:%f Y:%f grid cell [%u:%u]", player->GetGUIDLow(), player->GetPositionX(), player->GetPositionY(), p.x_coord, p.y_coord);
-        return;
-    }
-
-    Cell cell(p);
-    cell.data.Part.reserved = ALL_DISTRICT;
-
-    if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
-        return;
-
-    Skyfire::MessageDistDeliverer post_man(*player, msg, dist, to_self, own_team_only);
-    TypeContainerVisitor<Skyfire::MessageDistDeliverer , WorldTypeMapContainer > message(post_man);
-    cell.Visit(p, message, *this, *player, dist);
-}
-
-void Map::MessageDistBroadcast(WorldObject *obj, WorldPacket *msg, float dist)
-{
-    CellPair p = Skyfire::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
-
-    if (p.x_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP || p.y_coord >= TOTAL_NUMBER_OF_CELLS_PER_MAP)
-    {
-        sLog->outError("Map::MessageBroadcast: Object " UI64FMTD " has invalid coordinates X:%f Y:%f grid cell [%u:%u]", obj->GetGUID(), obj->GetPositionX(), obj->GetPositionY(), p.x_coord, p.y_coord);
-        return;
-    }
-
-    Cell cell(p);
-    cell.data.Part.reserved = ALL_DISTRICT;
-    cell.SetNoCreate();
-
-    if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
-        return;
-
-    Skyfire::ObjectMessageDistDeliverer post_man(*obj, msg, dist);
-    TypeContainerVisitor<Skyfire::ObjectMessageDistDeliverer, WorldTypeMapContainer > message(post_man);
-    cell.Visit(p, message, *this, *obj, dist);
-}
-*/
 
 bool Map::loaded(const GridPair &p) const
 {
@@ -675,6 +597,8 @@ void Map::Update(const uint32 &t_diff)
 
     if (!m_mapRefManager.isEmpty() || !m_activeNonPlayers.empty())
         ProcessRelocationNotifies(t_diff);
+
+    sScriptMgr->OnMapUpdate(this, t_diff);
 }
 
 struct ResetNotifier
@@ -792,6 +716,8 @@ void Map::Remove(Player* player, bool remove)
 
     if (remove)
         DeleteFromWorld(player);
+
+    sScriptMgr->OnPlayerLeave(this, player);
 }
 
 template<class T>

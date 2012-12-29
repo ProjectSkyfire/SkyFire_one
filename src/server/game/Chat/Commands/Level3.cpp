@@ -2429,7 +2429,7 @@ bool ChatHandler::HandleListObjectCommand(const char *args)
         return false;
     }
 
-    GameObjectInfo const * gInfo = sObjectMgr->GetGameObjectInfo(go_id);
+    GameObjectTemplate const * gInfo = sObjectMgr->GetGameObjectInfo(go_id);
     if (!gInfo)
     {
         PSendSysMessage(LANG_COMMAND_LISTOBJINVALIDID, go_id);
@@ -2505,7 +2505,7 @@ bool ChatHandler::HandleNearObjectCommand(const char *args)
             float z = fields[4].GetFloat();
             int mapid = fields[5].GetUInt16();
 
-            GameObjectInfo const * gInfo = sObjectMgr->GetGameObjectInfo(entry);
+            GameObjectTemplate const * gInfo = sObjectMgr->GetGameObjectInfo(entry);
 
             if (!gInfo)
                 continue;
@@ -3124,7 +3124,7 @@ bool ChatHandler::HandleLookupObjectCommand(const char *args)
 
     for (uint32 id = 0; id< sGOStorage.MaxEntry; id++)
     {
-        GameObjectInfo const* gInfo = sGOStorage.LookupEntry<GameObjectInfo>(id);
+        GameObjectTemplate const* gInfo = sGOStorage.LookupEntry<GameObjectTemplate>(id);
         if (!gInfo)
             continue;
 
@@ -6675,7 +6675,7 @@ bool ChatHandler::HandleSendMessageCommand(const char *args)
         return false;
     }
 
-    if (rPlayer->GetSession()->isLogingOut())
+    if (rPlayer->GetSession()->isLoggingOut())
     {
         SendSysMessage(LANG_PLAYER_NOT_FOUND);
         SetSentErrorMessage(true);

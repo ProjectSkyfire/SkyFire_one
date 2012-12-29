@@ -361,6 +361,15 @@ void ObjectMgr::RemoveArenaTeam(uint32 Id)
     mArenaTeamMap.erase(Id);
 }
 
+GameObjectTemplate const* ObjectMgr::GetGameObjectTemplate(uint32 entry)
+{
+    GameObjectTemplateContainer::const_iterator itr = _gameObjectTemplateStore.find(entry);
+    if (itr != _gameObjectTemplateStore.end())
+        return &(itr->second);
+
+    return NULL;
+}
+
 CreatureTemplate const* ObjectMgr::GetCreatureTemplate(uint32 id)
 {
     return sCreatureStorage.LookupEntry<CreatureTemplate>(id);
@@ -1141,7 +1150,7 @@ void ObjectMgr::RemoveCreatureFromGrid(uint32 guid, CreatureData const* data)
 
 uint32 ObjectMgr::AddGOData(uint32 entry, uint32 artKit, uint32 mapId, float x, float y, float z, float o, uint32 spawntimedelay, float rotation0, float rotation1, float rotation2, float rotation3)
 {
-    GameObjectInfo const* goinfo = GetGameObjectInfo(entry);
+    GameObjectTemplate const* goinfo = GetGameObjectInfo(entry);
     if (!goinfo)
         return 0;
 
@@ -1252,7 +1261,7 @@ void ObjectMgr::LoadGameobjects()
         sLog->outErrorDb(">> Loaded 0 gameobjects. DB table gameobject is empty.");
         return;
     }
-
+    
     do
     {
         Field *fields = result->Fetch();
@@ -1260,7 +1269,7 @@ void ObjectMgr::LoadGameobjects()
         uint32 guid         = fields[ 0].GetUInt32();
         uint32 entry        = fields[ 1].GetUInt32();
 
-        GameObjectInfo const* gInfo = GetGameObjectInfo(entry);
+        GameObjectTemplate const* gInfo = GetGameObjectInfo(entry);
         if (!gInfo)
         {
             sLog->outErrorDb("Table `gameobject` has gameobject (GUID: %u) with invalid gameobject entry %u, skipped.", guid, entry);
@@ -3175,7 +3184,7 @@ void ObjectMgr::LoadQuests()
         for (int j = 0; j < QUEST_OBJECTIVES_COUNT; ++j)
         {
             int32 id = qinfo->ReqCreatureOrGOId[j];
-            if (id < 0 && !sGOStorage.LookupEntry<GameObjectInfo>(-id))
+            if (id < 0 && !sGOStorage.LookupEntry<GameObjectTemplate>(-id))
             {
                 sLog->outErrorDb("Quest %u has ReqCreatureOrGOId%d = %i but gameobject %u does not exist, quest cannot be completed.",
                     qinfo->GetQuestId(), j+1, id, uint32(-id));
@@ -3753,7 +3762,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                     continue;
                 }
 
-                GameObjectInfo const* info = GetGameObjectInfo(data->id);
+                GameObjectTemplate const* info = GetGameObjectInfo(data->id);
                 if (!info)
                 {
                     sLog->outErrorDb("Table `%s` has gameobject with invalid entry (GUID: %u Entry: %u) in SCRIPT_COMMAND_RESPAWN_GAMEOBJECT for script id %u",
@@ -3803,7 +3812,7 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                     continue;
                 }
 
-                GameObjectInfo const* info = GetGameObjectInfo(data->id);
+                GameObjectTemplate const* info = GetGameObjectInfo(data->id);
                 if (!info)
                 {
                     sLog->outErrorDb("Table `%s` has gameobject with invalid entry (GUID: %u Entry: %u) in %s for script id %u",
@@ -3980,7 +3989,7 @@ void ObjectMgr::LoadEventScripts()
     // Load all possible script entries from gameobjects
     for (uint32 i = 1; i < sGOStorage.MaxEntry; ++i)
     {
-        GameObjectInfo const * goInfo = sGOStorage.LookupEntry<GameObjectInfo>(i);
+        GameObjectTemplate const * goInfo = sGOStorage.LookupEntry<GameObjectTemplate>(i);
         if (goInfo)
         {
             switch (goInfo->type)
@@ -5384,7 +5393,7 @@ struct SQLGameObjectLoader : public SQLStorageLoaderBase<SQLGameObjectLoader>
     }
 };
 
-void ObjectMgr::LoadGameobjectInfo()
+void ObjectMgr::LoadGameObjectTemplate()
 {
     SQLGameObjectLoader loader;
     loader.Load(sGOStorage);
@@ -5392,7 +5401,7 @@ void ObjectMgr::LoadGameobjectInfo()
     // some checks
     for (uint32 id = 1; id < sGOStorage.MaxEntry; id++)
     {
-        GameObjectInfo const* goInfo = sGOStorage.LookupEntry<GameObjectInfo>(id);
+        GameObjectTemplate const* goInfo = sGOStorage.LookupEntry<GameObjectTemplate>(id);
         if (!goInfo)
             continue;
 
@@ -5428,7 +5437,7 @@ void ObjectMgr::LoadGameobjectInfo()
                 }
                 if (goInfo->chest.linkedTrapId)              // linked trap
                 {
-                    if (GameObjectInfo const* trapInfo = sGOStorage.LookupEntry<GameObjectInfo>(goInfo->chest.linkedTrapId))
+                    if (GameObjectTemplate const* trapInfo = sGOStorage.LookupEntry<GameObjectTemplate>(goInfo->chest.linkedTrapId))
                     {
                         if (trapInfo->type != GAMEOBJECT_TYPE_TRAP)
                             sLog->outErrorDb("Gameobject (Entry: %u GoType: %u) has data7=%u but GO (Entry %u) does not have GAMEOBJECT_TYPE_TRAP (%u) type.",
@@ -5461,7 +5470,7 @@ void ObjectMgr::LoadGameobjectInfo()
                         id, goInfo->type, goInfo->chair.height);
 
                     // prevent client and server unexpected work
-                    const_cast<GameObjectInfo*>(goInfo)->chair.height = 0;
+                    const_cast<GameObjectTemplate*>(goInfo)->chair.height = 0;
                 }
                 break;
             case GAMEOBJECT_TYPE_SPELL_FOCUS:               //8
@@ -5475,7 +5484,7 @@ void ObjectMgr::LoadGameobjectInfo()
 
                 if (goInfo->spellFocus.linkedTrapId)         // linked trap
                 {
-                    if (GameObjectInfo const* trapInfo = sGOStorage.LookupEntry<GameObjectInfo>(goInfo->spellFocus.linkedTrapId))
+                    if (GameObjectTemplate const* trapInfo = sGOStorage.LookupEntry<GameObjectTemplate>(goInfo->spellFocus.linkedTrapId))
                     {
                         if (trapInfo->type != GAMEOBJECT_TYPE_TRAP)
                             sLog->outErrorDb("Gameobject (Entry: %u GoType: %u) has data2=%u but GO (Entry %u) does not have GAMEOBJECT_TYPE_TRAP (%u) type.",
@@ -5507,7 +5516,7 @@ void ObjectMgr::LoadGameobjectInfo()
                 */
                 if (goInfo->goober.linkedTrapId)             // linked trap
                 {
-                    if (GameObjectInfo const* trapInfo = sGOStorage.LookupEntry<GameObjectInfo>(goInfo->goober.linkedTrapId))
+                    if (GameObjectTemplate const* trapInfo = sGOStorage.LookupEntry<GameObjectTemplate>(goInfo->goober.linkedTrapId))
                     {
                         if (trapInfo->type != GAMEOBJECT_TYPE_TRAP)
                             sLog->outErrorDb("Gameobject (Entry: %u GoType: %u) has data12=%u but GO (Entry %u) does not have GAMEOBJECT_TYPE_TRAP (%u) type.",
@@ -5577,7 +5586,7 @@ void ObjectMgr::LoadExplorationBaseXP()
         Field *fields = result->Fetch();
         uint32 level  = fields[0].GetUInt32();
         uint32 basexp = fields[1].GetUInt32();
-        mBaseXPTable[level] = basexp;
+        _baseXPTable[level] = basexp;
         ++count;
     }
     while (result->NextRow());
@@ -5586,9 +5595,16 @@ void ObjectMgr::LoadExplorationBaseXP()
     sLog->outString(">> Loaded %u BaseXP definitions", count);
 }
 
-uint32 ObjectMgr::GetBaseXP(uint32 level)
+uint32 ObjectMgr::GetBaseXP(uint8 level)
 {
-    return mBaseXPTable[level] ? mBaseXPTable[level] : 0;
+    return _baseXPTable[level] ? _baseXPTable[level] : 0;
+}
+
+uint32 ObjectMgr::GetXPForLevel(uint8 level) const
+{
+    if (level < _playerXPperLevel.size())
+        return _playerXPperLevel[level];
+    return 0;
 }
 
 void ObjectMgr::LoadPetNames()
@@ -5781,7 +5797,7 @@ void ObjectMgr::LoadWeatherZoneChances()
 
         uint32 zone_id = fields[0].GetUInt32();
 
-        WeatherZoneChances& wzc = mWeatherZoneMap[zone_id];
+        WeatherData& wzc = mWeatherZoneMap[zone_id];
 
         for (int season = 0; season < WEATHER_SEASONS; ++season)
         {
@@ -5934,7 +5950,7 @@ void ObjectMgr::LoadGameobjectQuestRelations()
 
     for (QuestRelations::iterator itr = mGOQuestRelations.begin(); itr != mGOQuestRelations.end(); ++itr)
     {
-        GameObjectInfo const* goInfo = GetGameObjectInfo(itr->first);
+        GameObjectTemplate const* goInfo = GetGameObjectInfo(itr->first);
         if (!goInfo)
             sLog->outErrorDb("Table gameobject_questrelation has data for invalid gameobject entry (%u) and valid quest %u", itr->first, itr->second);
         else if (goInfo->type != GAMEOBJECT_TYPE_QUESTGIVER)
@@ -5948,7 +5964,7 @@ void ObjectMgr::LoadGameobjectInvolvedRelations()
 
     for (QuestRelations::iterator itr = mGOQuestInvolvedRelations.begin(); itr != mGOQuestInvolvedRelations.end(); ++itr)
     {
-        GameObjectInfo const* goInfo = GetGameObjectInfo(itr->first);
+        GameObjectTemplate const* goInfo = GetGameObjectInfo(itr->first);
         if (!goInfo)
             sLog->outErrorDb("Table gameobject_involvedrelation has data for invalid gameobject entry (%u) and valid quest %u", itr->first, itr->second);
         else if (goInfo->type != GAMEOBJECT_TYPE_QUESTGIVER)
@@ -6203,7 +6219,7 @@ void ObjectMgr::LoadGameObjectForQuests()
     // collect GO entries for GO that must activated
     for (uint32 go_entry = 1; go_entry < sGOStorage.MaxEntry; ++go_entry)
     {
-        GameObjectInfo const* goInfo = sGOStorage.LookupEntry<GameObjectInfo>(go_entry);
+        GameObjectTemplate const* goInfo = sGOStorage.LookupEntry<GameObjectTemplate>(go_entry);
         if (!goInfo)
             continue;
 
@@ -7407,7 +7423,7 @@ ObjectMgr::ScriptNameMap & GetScriptNames()
     return sObjectMgr->GetScriptNames();
 }
 
-GameObjectInfo const *GetGameObjectInfo(uint32 id)
+GameObjectTemplate const *GetGameObjectInfo(uint32 id)
 {
     return sObjectMgr->GetGameObjectInfo(id);
 }

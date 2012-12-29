@@ -26,6 +26,7 @@
 #include "TemporarySummon.h"
 #include "CreatureAIFactory.h"
 #include "ScriptMgr.h"
+#include "GameObjectAI.h"
 
 namespace FactorySelector
 {
@@ -39,7 +40,7 @@ namespace FactorySelector
 
         //scriptname in db
         if (!ai_factory)
-            if (CreatureAI* scriptedAI = sScriptMgr->GetAI(creature))
+            if (CreatureAI* scriptedAI = sScriptMgr->GetCreatureAI(creature))
                 return scriptedAI;
 
         // AIname in db
@@ -125,5 +126,28 @@ namespace FactorySelector
 
         return (mv_factory == NULL ? NULL : mv_factory->Create(creature));
     }
-}
 
+    GameObjectAI* SelectGameObjectAI(GameObject* go)
+    {
+        const GameObjectAICreator* ai_factory = NULL;
+        GameObjectAIRegistry& ai_registry(*GameObjectAIRepository::instance());
+
+        if (GameObjectAI* scriptedAI = sScriptMgr->GetGameObjectAI(go))
+            return scriptedAI;
+
+        ai_factory = ai_registry.GetRegistryItem(go->GetAIName());
+
+        // scriptname in db
+        if (!ai_factory)
+            if (GameObjectAI* scriptedAI = sScriptMgr->GetGameObjectAI(go))
+                return scriptedAI;
+
+        //future goAI types go here
+
+        std::string ainame = (ai_factory == NULL || go->GetScriptId()) ? "NullGameObjectAI" : ai_factory->key();
+
+        sLog->outDebug("GameObject %u used AI is %s.", go->GetGUIDLow(), ainame.c_str());
+
+        return (ai_factory == NULL ? new NullGameObjectAI(go) : ai_factory->Create(go));
+    }
+}

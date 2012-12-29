@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,32 +17,14 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ScriptPCH.h"
-#include <cstring>
+#include "GameObjectAI.h"
 
-//This function is called when the player logs in (every login)
-void OnLogin(Player* player)
+//GameObjectAI::GameObjectAI(GameObject* g) : go(g) {}
+int GameObjectAI::Permissible(const GameObject* go)
 {
+    if (go->GetAIName() == "GameObjectAI")
+        return PERMIT_BASE_SPECIAL;
+    return PERMIT_BASE_NO;
 }
 
-//This function is called when the player logs out
-void OnLogout(Player* player)
-{
-}
-
-//This function is called when the player kills another player
-void OnPVPKill(Player* killer, Player *killed)
-{
-}
-
- void AddSC_onevents()
-{
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "scripted_on_events";
-    newscript->pOnLogin = &OnLogin;
-    newscript->pOnLogout = &OnLogout;
-    newscript->pOnPVPKill = &OnPVPKill;
-
-    newscript->RegisterSelf();
-}
+NullGameObjectAI::NullGameObjectAI(GameObject* g) : GameObjectAI(g) {}

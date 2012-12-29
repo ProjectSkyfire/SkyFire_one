@@ -524,8 +524,8 @@ class Creature : public Unit, public GridObject<Creature>
         CreatureDataAddon const* GetCreatureAddon() const;
 
         std::string GetAIName() const;
-        std::string GetScriptName();
-        uint32 GetScriptId();
+        std::string GetScriptName() const;
+        uint32 GetScriptId() const;
 
         void setEmoteState(uint8 emote) { m_emoteState = emote; };
         void Say(const char* text, uint32 language, uint64 TargetGuid) { MonsterSay(text, language, TargetGuid); }

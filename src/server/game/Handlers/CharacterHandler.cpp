@@ -750,9 +750,6 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder * holder)
 
     m_playerLoading = false;
 
-    //Hook for OnLogin Event
-    sScriptMgr->OnLogin(pCurrChar);
-
     delete holder;
 }
 

@@ -578,7 +578,7 @@ bool ChatHandler::HandleTargetObjectCommand(const char* args)
         return false;
     }
 
-    GameObjectInfo const* goI = sObjectMgr->GetGameObjectInfo(id);
+    GameObjectTemplate const* goI = sObjectMgr->GetGameObjectInfo(id);
 
     if (!goI)
     {
@@ -792,7 +792,7 @@ bool ChatHandler::HandleGameObjectCommand(const char* args)
 
     char* spawntimeSecs = strtok(NULL, " ");
 
-    const GameObjectInfo *gInfo = sObjectMgr->GetGameObjectInfo(id);
+    const GameObjectTemplate *gInfo = sObjectMgr->GetGameObjectInfo(id);
 
     if (!gInfo)
     {

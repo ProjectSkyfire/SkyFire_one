@@ -232,7 +232,12 @@ bool WorldSession::Update(PacketFilter& updater)
                             LogUnexpectedOpcode(packet, "the player has not logged in yet");
                     }
                     else if (_player->IsInWorld())
-                        ExecuteOpcode(opHandle, packet);
+                    {
+                        sScriptMgr->OnPacketReceive(m_Socket, WorldPacket(*packet));
+                        (this->*opHandle.handler)(*packet);
+                        if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
+                            LogUnprocessedTail(packet);
+                    }
 
                     // lag can cause STATUS_LOGGEDIN opcodes to arrive after the player started a transfer
                     break;
@@ -242,8 +247,13 @@ bool WorldSession::Update(PacketFilter& updater)
                         LogUnexpectedOpcode(packet, "the player has not logged in yet and not recently logout");
                     }
                     else
+                    {
                         // not expected _player or must checked in packet hanlder
-                        ExecuteOpcode(opHandle, packet);
+                        sScriptMgr->OnPacketReceive(m_Socket, WorldPacket(*packet));
+                        (this->*opHandle.handler)(*packet);
+                        if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
+                            LogUnprocessedTail(packet);
+                    }
                     break;
                 case STATUS_TRANSFER_PENDING:
                     if (!_player)
@@ -251,7 +261,12 @@ bool WorldSession::Update(PacketFilter& updater)
                     else if (_player->IsInWorld())
                         LogUnexpectedOpcode(packet, "the player is still in world");
                     else
-                        ExecuteOpcode(opHandle, packet);
+                    {
+                        sScriptMgr->OnPacketReceive(m_Socket, WorldPacket(*packet));
+                        (this->*opHandle.handler)(*packet);
+                        if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
+                            LogUnprocessedTail(packet);
+                    }
                     break;
                 case STATUS_AUTHED:
                     // prevent cheating with skip queue wait
@@ -265,8 +280,11 @@ bool WorldSession::Update(PacketFilter& updater)
                     // and before other STATUS_LOGGEDIN_OR_RECENTLY_LOGGOUT opcodes.
                     if (packet->GetOpcode() != CMSG_SET_ACTIVE_VOICE_CHANNEL)
                         m_playerRecentlyLogout = false;
-
-                    ExecuteOpcode(opHandle, packet);
+                
+                    sScriptMgr->OnPacketReceive(m_Socket, WorldPacket(*packet));
+                    (this->*opHandle.handler)(*packet);
+                    if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
+                        LogUnprocessedTail(packet);
                     break;
                 case STATUS_NEVER:
                     sLog->outDebug( "SESSION: received not allowed opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
@@ -476,9 +494,6 @@ void WorldSession::LogoutPlayer(bool Save)
             GetAccountId());
         sLog->outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
     }
-
-    //Hook for OnLogout Event
-    sScriptMgr->OnLogout(_player);
 
     m_playerLogout = false;
     m_playerSave = false;

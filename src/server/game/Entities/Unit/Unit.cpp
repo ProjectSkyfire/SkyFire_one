@@ -894,7 +894,6 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
         {
             Player* killer = ToPlayer();
             Player *killed = pVictim->ToPlayer();
-            sScriptMgr->OnPVPKill(killer, killed);
         }
     }
     else                                                    // if (health <= damage)

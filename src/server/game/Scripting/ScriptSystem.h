@@ -65,11 +65,10 @@ struct StringTextData
     uint32 uiEmote;
 };
 
-#define pSystemMgr SystemMgr::Instance()
-
 class SystemMgr
 {
     public:
+
         SystemMgr();
         ~SystemMgr() {}
 
@@ -80,11 +79,12 @@ class SystemMgr
         typedef UNORDERED_MAP<uint32, std::vector<ScriptPointMove> > PointMoveMap;
 
         //Database
+        void LoadVersion();
         void LoadScriptTexts();
         void LoadScriptTextsCustom();
         void LoadScriptWaypoints();
 
-        //Retrieve from storage
+        //Retrive from storage
         StringTextData const* GetTextData(int32 uiTextId) const
         {
             TextDataMap::const_iterator itr = m_mTextDataMap.find(uiTextId);
@@ -108,9 +108,11 @@ class SystemMgr
         }
 
     protected:
+
         TextDataMap     m_mTextDataMap;                     //additional data for text strings
         PointMoveMap    m_mPointMoveMap;                    //coordinates for waypoints
 };
 
-#endif
+#define sScriptSystemMgr SystemMgr::Instance()
 
+#endif

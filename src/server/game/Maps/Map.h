@@ -246,8 +246,7 @@ typedef UNORDERED_MAP<Creature*, CreatureMover> CreatureMoveList;
 #define DEFAULT_HEIGHT_SEARCH     10.0f                     // default search distance to find height at nearby locations
 #define MIN_UNLOAD_DELAY      1                             // immediate unload
 
-typedef std::map<uint32/*leaderDBGUID*/, CreatureFormation*>        CreatureFormationHolderType;
-typedef std::map<uint32/*groupId*/, CreatureGroup*>            CreatureGroupHolderType;
+typedef std::map<uint32/*leaderDBGUID*/, CreatureGroup*>        CreatureGroupHolderType;
 
 class Map : public GridRefManager<NGridType>
 {
@@ -255,6 +254,8 @@ class Map : public GridRefManager<NGridType>
     public:
         Map(uint32 id, time_t, uint32 InstanceId, uint8 SpawnMode, Map* _parent = NULL);
         virtual ~Map();
+
+        MapEntry const* GetEntry() const { return i_mapEntry; }
 
         // currently unused for normal maps
         bool CanUnload(uint32 diff)
@@ -271,13 +272,6 @@ class Map : public GridRefManager<NGridType>
         template<class T> void Remove(T *, bool);
 
         virtual void Update(const uint32&);
-
-        /*
-        void MessageBroadcast(Player *, WorldPacket *, bool to_self);
-        void MessageBroadcast(WorldObject *, WorldPacket *);
-        void MessageDistBroadcast(Player *, WorldPacket *, float dist, bool to_self, bool own_team_only = false);
-        void MessageDistBroadcast(WorldObject *, WorldPacket *, float dist);
-        */
 
         float GetVisibilityDistance() const { return m_VisibleDistance; }
         //function for setting up visibility distance for maps on per-type/per-Id basis
@@ -366,7 +360,6 @@ class Map : public GridRefManager<NGridType>
         const char* GetMapName() const;
 
         bool Instanceable() const { return i_mapEntry && i_mapEntry->Instanceable(); }
-        // NOTE: this duplicate of Instanceable(), but Instanceable() can be changed when BG also will be instanceable
         bool IsDungeon() const { return i_mapEntry && i_mapEntry->IsDungeon(); }
         bool IsRaid() const { return i_mapEntry && i_mapEntry->IsRaid(); }
         bool IsHeroic() const { return i_spawnMode == DIFFICULTY_HEROIC; }
@@ -417,7 +410,6 @@ class Map : public GridRefManager<NGridType>
         template<class NOTIFIER> void VisitAll(const float &x, const float &y, float radius, NOTIFIER &notifier);
         template<class NOTIFIER> void VisitWorld(const float &x, const float &y, float radius, NOTIFIER &notifier);
         template<class NOTIFIER> void VisitGrid(const float &x, const float &y, float radius, NOTIFIER &notifier);
-        CreatureFormationHolderType CreatureFormationHolder;
         CreatureGroupHolderType CreatureGroupHolder;
 
         void UpdateIteratorBack(Player* player);

@@ -605,6 +605,8 @@ void Creature::Update(uint32 diff)
         default:
             break;
     }
+
+    sScriptMgr->OnCreatureUpdate(this, diff);
 }
 
 void Creature::RegenerateMana()
@@ -2104,14 +2106,14 @@ std::string Creature::GetAIName() const
     return ObjectMgr::GetCreatureTemplate(GetEntry())->AIName;
 }
 
-std::string Creature::GetScriptName()
+std::string Creature::GetScriptName() const
 {
     return sObjectMgr->GetScriptName(GetScriptId());
 }
 
-uint32 Creature::GetScriptId()
+uint32 Creature::GetScriptId() const
 {
-    return ObjectMgr::GetCreatureTemplate(GetEntry())->ScriptID;
+    return sObjectMgr->GetCreatureTemplate(GetEntry())->ScriptID;
 }
 
 VendorItemData const* Creature::GetVendorItems() const

@@ -2164,6 +2164,15 @@ enum EventId
     EVENT_CHARGE            = 1003,
 };
 
+enum XPColorChar
+{
+    XP_RED,
+    XP_ORANGE,
+    XP_YELLOW,
+    XP_GREEN,
+    XP_GRAY
+};
+
 enum ResponseCodes
 {
     RESPONSE_SUCCESS                                       = 0x00,

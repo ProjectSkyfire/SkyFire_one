@@ -99,6 +99,8 @@ World::World()
 
     m_updateTimeSum = 0;
     m_updateTimeCount = 0;
+
+    m_isClosed = false;
 }
 
 // World destructor
@@ -148,6 +150,31 @@ Player* World::FindPlayerInZone(uint32 zone)
         }
     }
     return NULL;
+}
+
+bool World::IsClosed() const
+{
+    return m_isClosed;
+}
+
+void World::SetClosed(bool val)
+{
+    m_isClosed = val;
+
+    // Invert the value, for simplicity for scripters.
+    sScriptMgr->OnOpenStateChange(!val);
+}
+
+void World::SetMotd(const std::string& motd)
+{
+    m_motd = motd;
+
+    sScriptMgr->OnMotdChange(m_motd);
+}
+
+const char* World::GetMotd() const
+{
+    return m_motd.c_str();
 }
 
 // Find a session by its id
@@ -383,7 +410,7 @@ void World::RemoveWeather(uint32 id)
 // Add a Weather object to the list
 Weather* World::AddWeather(uint32 zone_id)
 {
-    WeatherZoneChances const* weatherChances = sObjectMgr->GetWeatherChances(zone_id);
+    WeatherData const* weatherChances = sObjectMgr->GetWeatherChances(zone_id);
 
     // zone not have weather, ignore
     if (!weatherChances)
@@ -1097,6 +1124,9 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_WARDEN_NUM_CHECKS] = ConfigMgr::GetIntDefault("Warden.NumChecks", 3);
     m_configs[CONFIG_WARDEN_CLIENT_CHECK_HOLDOFF] = ConfigMgr::GetIntDefault("Warden.ClientCheckHoldOff", 30);
     m_configs[CONFIG_WARDEN_CLIENT_RESPONSE_DELAY] = ConfigMgr::GetIntDefault("Warden.ClientResponseDelay", 15);
+
+
+    sScriptMgr->OnConfigLoad(reload);
 }
 
 // Initialize the World
@@ -1179,7 +1209,7 @@ void World::SetInitialWorldSettings()
     sObjectMgr->LoadPageTexts();
 
     sLog->outString("Loading Game Object Templates...");     // must be after LoadPageTexts
-    sObjectMgr->LoadGameobjectInfo();
+    sObjectMgr->LoadGameObjectTemplate();
 
     sLog->outString("Loading Spell Ranks Data...");
     sSpellMgr->LoadSpellRanks();
@@ -1426,7 +1456,7 @@ void World::SetInitialWorldSettings()
     CreatureEAI_Mgr->LoadCreatureEventAI_Scripts();
 
     sLog->outString("Initializing Scripts...");
-    sScriptMgr->ScriptsInit();
+    sScriptMgr->Initialize();
 
     // Initialize game time and timers
     sLog->outDebug("DEBUG:: Initialize game time and timers");
@@ -1629,7 +1659,7 @@ void World::LoadAutobroadcasts()
 // Update the World !
 void World::Update(time_t diff)
 {
-    m_updateTime = uint32(diff);
+    m_updateTime = diff;
     if (m_configs[CONFIG_INTERVAL_LOG_UPDATE])
     {
         if (m_updateTimeSum > m_configs[CONFIG_INTERVAL_LOG_UPDATE] && uint32(diff) >= m_configs[CONFIG_MIN_LOG_UPDATE])
@@ -1791,6 +1821,8 @@ void World::Update(time_t diff)
 
     // And last, but not least handle the issued cli commands
     ProcessCliCommands();
+
+    sScriptMgr->OnWorldUpdate(diff);
 }
 
 void World::ForceGameEventUpdate()
@@ -2171,6 +2203,8 @@ void World::ShutdownServ(uint32 time, uint32 options, uint8 exitcode)
         m_ShutdownTimer = time;
         ShutdownMsg(true);
     }
+
+    sScriptMgr->OnShutdown(ShutdownExitCode(exitcode), ShutdownMask(options));
 }
 
 /// Display a shutdown message to the user(s)
@@ -2212,6 +2246,8 @@ void World::ShutdownCancel()
     SendServerMessage(msgid);
 
     sLog->outDebug("Server %s canceled.", (m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shutdown"));
+
+    sScriptMgr->OnShutdownCancel();
 }
 
 // Send a server message to the user(s)

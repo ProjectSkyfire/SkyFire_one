@@ -27,7 +27,7 @@
 #include "DatabaseEnv.h"
 #include "SQLStorage.h"
 #include "DBCStores.h"
-
+#include "ScriptMgr.h"
 #include "AccountMgr.h"
 #include "AuctionHouseMgr.h"
 #include "Item.h"
@@ -250,7 +250,8 @@ void AuctionHouseMgr::SendAuctionSuccessfulMail(AuctionEntry * auction)
 
 // does not clear ram
 void AuctionHouseMgr::SendAuctionExpiredMail(AuctionEntry * auction)
-{ // return an item in auction to its owner by mail
+{
+    //return an item in auction to its owner by mail
     Item *pItem = GetAItem(auction->item_guidlow);
     if (!pItem)
         return;
@@ -474,20 +475,24 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(uint32 factionTem
 
     return sAuctionHouseStore.LookupEntry(houseid);
 }
-    void AuctionHouseObject::AddAuction(AuctionEntry *ah)
-    {
-        ASSERT(ah);
-        AuctionsMap[ah->Id] = ah;
-    }
 
-    bool AuctionHouseObject::RemoveAuction(AuctionEntry *auction, uint32 item_template)
-    {
-        bool wasInMap = AuctionsMap.erase(auction->Id) ? true : false;
+void AuctionHouseObject::AddAuction(AuctionEntry *ah)
+{
+    ASSERT(ah);
+    
+    AuctionsMap[ah->Id] = ah;
+}
 
-        // we need to delete the entry, it is not referenced any more
-        delete auction;
-        return wasInMap;
-    }
+bool AuctionHouseObject::RemoveAuction(AuctionEntry *auction, uint32 item_template)
+{
+    bool wasInMap = AuctionsMap.erase(auction->Id) ? true : false;
+
+    sScriptMgr->OnRemoveAuction(this, auction);
+
+    // we need to delete the entry, it is not referenced any more
+    delete auction;
+    return wasInMap;
+}
 
 void AuctionHouseObject::Update()
 {
@@ -512,7 +517,8 @@ void AuctionHouseObject::Update()
     {
         uint32 tmpdata = result->Fetch()->GetUInt32();
         expiredAuctions.push_back(tmpdata);
-    } while (result->NextRow());
+    } 
+    while (result->NextRow());
 
     while (!expiredAuctions.empty())
     {
@@ -529,7 +535,10 @@ void AuctionHouseObject::Update()
 
         ///- Either cancel the auction if there was no bidder
         if (auction->bidder == 0)
+        {
             sAuctionMgr->SendAuctionExpiredMail(auction);
+            sScriptMgr->OnAuctionExpire(this, auction);
+        }
         ///- Or perform the transaction
         else
         {
@@ -538,6 +547,7 @@ void AuctionHouseObject::Update()
             //we send the money to the seller
             sAuctionMgr->SendAuctionSuccessfulMail(auction);
             sAuctionMgr->SendAuctionWonMail(auction);
+            sScriptMgr->OnAuctionSuccessful(this, auction);
         }
 
         ///- In any case clear the auction

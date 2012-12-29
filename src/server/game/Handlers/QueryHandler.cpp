@@ -208,7 +208,7 @@ void WorldSession::HandleGameObjectQueryOpcode(WorldPacket& recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    const GameObjectInfo *info = sObjectMgr->GetGameObjectInfo(entryID);
+    const GameObjectTemplate *info = sObjectMgr->GetGameObjectInfo(entryID);
     if (info)
     {
         std::string Name;
