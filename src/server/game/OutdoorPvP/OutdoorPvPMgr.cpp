@@ -39,21 +39,25 @@ void OutdoorPvPMgr::Die()
 }
 
 void OutdoorPvPMgr::InitOutdoorPvP()
+{
     uint32 oldMSTime = getMSTime();
+
     //                                                       0       1
     QueryResult_AutoPtr result = WorldDatabase.Query("SELECT TypeId, ScriptName FROM outdoorpvp_template");
 
     if (!result)
+    {
         sLog->outErrorDb(">> Loaded 0 outdoor PvP definitions. DB table `outdoorpvp_template` is empty.");
         sLog->outString();
         return;
+    }
 
     uint32 count = 0;
     uint32 typeId = 0;
 
     do
-{
-        Field* fields = result.Fetch();
+    {
+        Field* fields = result->Fetch();
 
         typeId = fields[0].GetUInt32();
 
@@ -66,12 +70,12 @@ void OutdoorPvPMgr::InitOutdoorPvP()
         OutdoorPvPData* data = new OutdoorPvPData();
         OutdoorPvPTypes realTypeId = OutdoorPvPTypes(typeId);
         data->TypeId = realTypeId;
-        data->ScriptId = sObjectMgr->GetScriptId(fields[1].GetCString());
+        data->ScriptId = sObjectMgr->GetScriptId(fields[1].GetString());
         m_OutdoorPvPDatas[realTypeId] = data;
 
         ++count;
     }
-    while (result.NextRow());
+    while (result->NextRow());
 
     OutdoorPvP* pvp;
     for (uint8 i = 1; i < MAX_OUTDOORPVP_TYPES; ++i)
@@ -224,3 +228,4 @@ void OutdoorPvPMgr::HandlePlayerResurrects(Player* player, uint32 zoneid)
     if (itr->second->HasPlayer(player))
         itr->second->HandlePlayerResurrects(player, zoneid);
 }
+

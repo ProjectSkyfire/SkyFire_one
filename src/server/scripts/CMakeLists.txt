@@ -20,6 +20,7 @@ endif()
 
 # ------ Pooling ------
 file(GLOB_RECURSE scripts_custom Custom/*.cpp Custom/*.h)
+file(GLOB_RECURSE sources_OutdoorPvP OutdoorPvP/*.cpp OutdoorPvP/*.h)
 file(GLOB_RECURSE sources_PrecompiledHeaders PrecompiledHeaders/*.cpp PrecompiledHeaders/*.h)
   # Eastern Kingdoms
 file(GLOB scripts_easternkingdoms EasternKingdoms/*.cpp EasternKingdoms/*.h)
@@ -80,12 +81,12 @@ file(GLOB_RECURSE scripts_O_Mechanar Outland/TempestKeep/Mechanar/*.cpp Outland/
 file(GLOB_RECURSE scripts_O_Zones Outland/Zones/*.cpp Outland/Zones/*.h)
 file(GLOB_RECURSE scripts_world World/*.cpp World/*.h)
 file(GLOB_RECURSE scripts_examples Examples/*.cpp Examples/*.h)
-file(GLOB_RECURSE sources_OutdoorPvP OutdoorPvP/*.cpp OutdoorPvP/*.h)
 
 # ------- Filters ---------
 source_group(CMake FILES CMakeLists.txt)
 source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
 source_group(Custom FILES ${scripts_custom})
+source_group(OutdoorPvP FILES ${sources_OutdoorPvP})
   # Eastern Kingdoms
 source_group("Eastern Kingdoms"                       FILES ${scripts_easternkingdoms})
 source_group("Eastern Kingdoms\\Alterac Valley"       FILES ${scripts_EK_AlteracValley})
@@ -145,7 +146,6 @@ source_group("Outland\\TempestKeep\\Mechanar"                         FILES ${sc
 source_group("Outland\\Zones"                                         FILES ${scripts_O_Zones})
 source_group(World FILES ${scripts_world})
 source_group(Examples FILES ${scripts_examples})
-source_group(OutdoorPvP FILES ${sources_OutdoorPvP})
 
  if( USE_SCRIPTPCH AND MSVC )
   file(GLOB_RECURSE sources_PreHeaders PrecompiledHeaders/ScriptPCH.cpp PrecompiledHeaders/ScriptPCH.h)
@@ -155,7 +155,7 @@ source_group(OutdoorPvP FILES ${sources_OutdoorPvP})
   )
  endif()
 
-file(GLOB_RECURSE sources_ScriptedAI 
+file(GLOB_RECURSE sources_ScriptedAI
   ../game/AI/ScriptedAI/ScriptedEscortAI.cpp
   ../game/AI/ScriptedAI/ScriptedGuardAI.cpp
   ../game/AI/ScriptedAI/ScriptedCreature.cpp
@@ -164,7 +164,7 @@ file(GLOB_RECURSE sources_ScriptedAI
   )
 
 source_group(ScriptedAI FILES ${sources_ScriptedAI})
-  
+
  set(scripts_STAT_SRCS
   ${scripts_STAT_SRCS}
   ${sources_ScriptedAI}
@@ -174,6 +174,7 @@ if (SCRIPTS)
   set(scripts_STAT_SRCS
     ${scripts_STAT_SRCS}
     ${scripts_custom}
+    ${scripts_OutdoorPvP}
     # Eastern Kingdoms
     ${scripts_easternkingdoms}
     ${scripts_EK_AlteracValley}
@@ -234,7 +235,6 @@ if (SCRIPTS)
     # World
     ${scripts_world}
     ${scripts_examples}
-    ${scripts_OutdoorPvP}
   )
 endif()
 
@@ -250,7 +250,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Database
   ${CMAKE_SOURCE_DIR}/src/server/shared/DataStores
   ${CMAKE_SOURCE_DIR}/src/server/shared/Debugging
-  ${CMAKE_SOURCE_DIR}/src/server/shared/Dynamic  
+  ${CMAKE_SOURCE_DIR}/src/server/shared/Dynamic
   ${CMAKE_SOURCE_DIR}/src/server/shared/Packets
   ${CMAKE_SOURCE_DIR}/src/server/shared/Logging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
@@ -301,7 +301,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/OutdoorPvP
   ${CMAKE_SOURCE_DIR}/src/server/game/PrecompiledHeaders
   ${CMAKE_SOURCE_DIR}/src/server/game/Quests
-  ${CMAKE_SOURCE_DIR}/src/server/game/Reputation 
+  ${CMAKE_SOURCE_DIR}/src/server/game/Reputation
   ${CMAKE_SOURCE_DIR}/src/server/game/Scripting
   ${CMAKE_SOURCE_DIR}/src/server/game/Server
   ${CMAKE_SOURCE_DIR}/src/server/game/Server/Packets
@@ -311,15 +311,14 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Spells/Auras
   ${CMAKE_SOURCE_DIR}/src/server/game/Tickets
   ${CMAKE_SOURCE_DIR}/src/server/game/Tools
-  ${CMAKE_SOURCE_DIR}/src/server/game/Warden 
-  ${CMAKE_SOURCE_DIR}/src/server/game/Warden/Modules   
+  ${CMAKE_SOURCE_DIR}/src/server/game/Warden
+  ${CMAKE_SOURCE_DIR}/src/server/game/Warden/Modules
   ${CMAKE_SOURCE_DIR}/src/server/game/Weather
   ${CMAKE_SOURCE_DIR}/src/server/game/World
-  ${CMAKE_SOURCE_DIR}/src/server/scripts/OutdoorPvP    
   ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
-  ${OPENSSL_INCLUDE_DIR} 
+  ${OPENSSL_INCLUDE_DIR}
 )
 
 add_library(scripts STATIC ${scripts_STAT_SRCS})
