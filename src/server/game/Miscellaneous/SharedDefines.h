@@ -284,7 +284,7 @@ enum SpellAttributesEx
     SPELL_ATTR_EX_MELEE_COMBAT_SPELL          = 0x00000200,       // 9 *spells with this flag can be cast only if caster is able to melee attack target
     SPELL_ATTR_EX_NO_THREAT                   = 0x00000400,       // 10 *no generates threat?
     SPELL_ATTR_EX_UNK11                       = 0x00000800,       // 11 *aura?
-    SPELL_ATTR_EX_PICKPOKET                   = 0x00001000,       // 12 *pickpoket
+    SPELL_ATTR_EX_PICKPOCKET                  = 0x00001000,       // 12 *pickpocket
     SPELL_ATTR_EX_FARSIGHT                    = 0x00002000,       // 13 *Client removes farsight on aura loss
     SPELL_ATTR_EX_CHANNEL_TRACK_TARGET        = 0x00004000,       // 14 *Client automatically forces player to face target when channeling
     SPELL_ATTR_EX_DISPEL_AURAS_ON_IMMUNITY    = 0x00008000,       // 15 remove auras on immunity
