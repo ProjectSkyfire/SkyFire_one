@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -31,14 +29,15 @@ enum Spells
 {
     SPELL_FIREBLAST                                        = 15573
 };
-class boss_ambassador_flamelash : public CreatureScript
+
+class boss_ambassador_flamelash : public CreatureScript
 {
 public:
     boss_ambassador_flamelash() : CreatureScript("boss_ambassador_flamelash") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_ambassador_flamelashAI (creature);
+        return new boss_ambassador_flamelashAI (pCreature);
     }
 
     struct boss_ambassador_flamelashAI : public ScriptedAI
@@ -58,7 +57,7 @@ public:
 
         void SummonSpirits(Unit* victim)
         {
-            if (Creature *Spirit = DoSpawnCreature(9178, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
+            if (Creature *Spirit = DoSpawnCreature(9178, float(irand(-9,9)), float(irand(-9,9)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
                 Spirit->AI()->AttackStart(victim);
         }
 
@@ -89,6 +88,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_ambassador_flamelash()

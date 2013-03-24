@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,9 +17,9 @@
  */
 
 /* ScriptData
-SDName: boss_darhrohan_balnazzar
-SD%Complete: 100
-SDComment: CHECK SQL
+SDName: Boss_Dathrohan_Balnazzar
+SD%Complete: 95
+SDComment: Possibly need to fix/improve summons after death
 SDCategory: Stratholme
 EndScriptData */
 
@@ -56,24 +54,25 @@ struct SummonDef
 
 SummonDef m_aSummonPoint[]=
 {
-    {3444.156, -3090.626, 135.002, 2.240},                 //G1 front, left
-    {3449.123, -3087.009, 135.002, 2.240},                 //G1 front, right
-    {3446.246, -3093.466, 135.002, 2.240},                 //G1 back left
-    {3451.160, -3089.904, 135.002, 2.240},                 //G1 back, right
+    {3444.156f, -3090.626f, 135.002f, 2.240f},                  //G1 front, left
+    {3449.123f, -3087.009f, 135.002f, 2.240f},                  //G1 front, right
+    {3446.246f, -3093.466f, 135.002f, 2.240f},                  //G1 back left
+    {3451.160f, -3089.904f, 135.002f, 2.240f},                  //G1 back, right
 
-    {3457.995, -3080.916, 135.002, 3.784},                 //G2 front, left
-    {3454.302, -3076.330, 135.002, 3.784},                 //G2 front, right
-    {3460.975, -3078.901, 135.002, 3.784},                 //G2 back left
-    {3457.338, -3073.979, 135.002, 3.784}                   //G2 back, right
+    {3457.995f, -3080.916f, 135.002f, 3.784f},                  //G2 front, left
+    {3454.302f, -3076.330f, 135.002f, 3.784f},                  //G2 front, right
+    {3460.975f, -3078.901f, 135.002f, 3.784f},                  //G2 back left
+    {3457.338f, -3073.979f, 135.002f, 3.784f}                   //G2 back, right
 };
-class boss_dathrohan_balnazzar : public CreatureScript
+
+class boss_dathrohan_balnazzar : public CreatureScript
 {
 public:
     boss_dathrohan_balnazzar() : CreatureScript("boss_dathrohan_balnazzar") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_dathrohan_balnazzarAI (creature);
+        return new boss_dathrohan_balnazzarAI (pCreature);
     }
 
     struct boss_dathrohan_balnazzarAI : public ScriptedAI
@@ -110,7 +109,7 @@ public:
         {
             static uint32 uiCount = sizeof(m_aSummonPoint)/sizeof(SummonDef);
 
-            for (uint8 i = 0; i < uiCount; ++i)
+            for (uint8 i=0; i<uiCount; ++i)
                 me->SummonCreature(NPC_ZOMBIE,
                 m_aSummonPoint[i].m_fX, m_aSummonPoint[i].m_fY, m_aSummonPoint[i].m_fZ, m_aSummonPoint[i].m_fOrient,
                 TEMPSUMMON_TIMED_DESPAWN, HOUR*IN_MILLISECONDS);
@@ -157,7 +156,7 @@ public:
                 } else m_uiHolyStrike_Timer -= uiDiff;
 
                 //BalnazzarTransform
-                if (me->GetHealth()*100 / me->GetMaxHealth() < 40)
+                if (HealthBelowPct(40))
                 {
                     if (me->IsNonMeleeSpellCasted(false))
                         me->InterruptNonMeleeSpells(false);
@@ -187,7 +186,7 @@ public:
                 //PsychicScream
                 if (m_uiPsychicScream_Timer <= uiDiff)
                 {
-                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                         DoCast(pTarget, SPELL_PSYCHICSCREAM);
 
                     m_uiPsychicScream_Timer = 20000;
@@ -196,7 +195,7 @@ public:
                 //DeepSleep
                 if (m_uiDeepSleep_Timer <= uiDiff)
                 {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                         DoCast(pTarget, SPELL_SLEEP);
 
                     m_uiDeepSleep_Timer = 15000;
@@ -213,7 +212,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_dathrohan_balnazzar()
 {

@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Ysondre
@@ -29,8 +27,8 @@ EndScriptData */
 
 enum eEnums
 {
-    SAY_AGGRO               = -1000360,
-    SAY_SUMMONDRUIDS        = -1000361,
+    SAY_AGGRO               = -1000360, //signed for 17969
+    SAY_SUMMONDRUIDS        = -1000361, //signed for 17969
 
     SPELL_SLEEP             = 24777,
     SPELL_NOXIOUSBREATH     = 24818,
@@ -39,28 +37,25 @@ enum eEnums
     SPELL_LIGHTNINGWAVE     = 24819,
     SPELL_SUMMONDRUIDS      = 24795,
 
+    SPELL_SUMMON_PLAYER     = 24776,
+
     //druid spells
     SPELL_MOONFIRE          = 21669
 };
 
-// Ysondre scriptclass boss_ysondre : public CreatureScript
+// Ysondre script
+class boss_ysondre : public CreatureScript
 {
 public:
     boss_ysondre() : CreatureScript("boss_ysondre") { }
 
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new boss_ysondreAI (creature);
-    }
-
     struct boss_ysondreAI : public ScriptedAI
     {
-        boss_ysondreAI(Creature* creature) : ScriptedAI(creature) {}
+        boss_ysondreAI(Creature* pCreature) : ScriptedAI(pCreature) {}
 
         uint32 m_uiSleep_Timer;
         uint32 m_uiNoxiousBreath_Timer;
         uint32 m_uiTailSweep_Timer;
-        //uint32 m_uiMarkOfNature_Timer;
         uint32 m_uiLightningWave_Timer;
         uint32 m_uiSummonDruidModifier;
 
@@ -69,7 +64,6 @@ public:
             m_uiSleep_Timer = 15000 + rand()%5000;
             m_uiNoxiousBreath_Timer = 8000;
             m_uiTailSweep_Timer = 4000;
-            //m_uiMarkOfNature_Timer = 45000;
             m_uiLightningWave_Timer = 12000;
             m_uiSummonDruidModifier = 0;
         }
@@ -121,15 +115,6 @@ public:
             else
                 m_uiTailSweep_Timer -= uiDiff;
 
-            //MarkOfNature_Timer
-            //if (m_uiMarkOfNature_Timer <= uiDiff)
-            //{
-            //    DoCast(me->getVictim(), SPELL_MARKOFNATURE);
-            //    m_uiMarkOfNature_Timer = 45000;
-            //}
-            //else
-            //    m_uiMarkOfNature_Timer -= uiDiff;
-
             //LightningWave_Timer
             if (m_uiLightningWave_Timer <= uiDiff)
             {
@@ -143,7 +128,7 @@ public:
                 m_uiLightningWave_Timer -= uiDiff;
 
             //Summon Druids
-            if ((me->GetHealth()*100 / me->GetMaxHealth()) <= (100-(25*m_uiSummonDruidModifier)))
+            if (!HealthAbovePct(100 - 25 * m_uiSummonDruidModifier))
             {
                 DoScriptText(SAY_SUMMONDRUIDS, me);
 
@@ -156,17 +141,18 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new boss_ysondreAI(creature);
+    }
 };
 
-// Summoned druid scriptclass mob_dementeddruids : public CreatureScript
+// Summoned druid script
+class mob_dementeddruids : public CreatureScript
 {
 public:
     mob_dementeddruids() : CreatureScript("mob_dementeddruids") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new mob_dementeddruidsAI (creature);
-    }
 
     struct mob_dementeddruidsAI : public ScriptedAI
     {
@@ -196,10 +182,16 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new mob_dementeddruidsAI(creature);
+    }
 };
 
 void AddSC_boss_ysondre()
 {
-    new boss_ysondre();
-    new mob_dementeddruids();
+    new boss_ysondre;
+    new mob_dementeddruids;
 }
+

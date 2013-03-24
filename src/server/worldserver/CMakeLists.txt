@@ -19,12 +19,11 @@ if( USE_COREPCH )
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
-if ( USE_COREPCH AND MSVC )
-  set(worldserver_SRCS
-    PrecompiledHeaders/worldPCH.cpp
-    PrecompiledHeaders/worldPCH.h
-  )
+if (USE_COREPCH)
+  set(worldserver_PCH_HDR PrecompiledHeaders/worldPCH.h)
+  set(worldserver_PCH_SRC PrecompiledHeaders/worldPCH.cpp)
 endif()
+
 
 set(worldserver_SRCS
   ${worldserver_SRCS}
@@ -141,22 +140,21 @@ include_directories(
   ${OPENSSL_INCLUDE_DIR}
 )
 
-set(worldserver_LINK_FLAGS "")
-
-add_executable(worldserver ${worldserver_SRCS})
+add_executable(worldserver
+  ${worldserver_SRCS}
+  ${worldserver_PCH_SRC}
+)
 
 if( NOT WIN32 )
-  add_definitions(-D_SKYFIRE_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"')
+  set_target_properties(worldserver PROPERTIES
+    COMPILE_DEFINITIONS _TRINITY_CORE_CONFIG="${CONF_DIR}/worldserver.conf"
+  )
 endif()
 
 add_dependencies(worldserver revision.h)
 
-if( UNIX )
+if( UNIX AND NOT NOJEM )
   set(worldserver_LINK_FLAGS "-pthread -lncurses ${worldserver_LINK_FLAGS}")
-endif()
-
-if(APPLE)
-  set(worldserver_LINK_FLAGS "-framework Carbon ${worldserver_LINK_FLAGS}")
 endif()
 
 set_target_properties(worldserver PROPERTIES LINK_FLAGS "${worldserver_LINK_FLAGS}")
@@ -168,15 +166,14 @@ target_link_libraries(worldserver
   collision
   g3dlib
   gsoap
+  Detour
   ${JEMALLOC_LIBRARY}
   ${READLINE_LIBRARY}
   ${TERMCAP_LIBRARY}
   ${ACE_LIBRARY}
   ${MYSQL_LIBRARY}
   ${OPENSSL_LIBRARIES}
-  ${OPENSSL_EXTRA_LIBRARIES}
   ${ZLIB_LIBRARIES}
-  ${OSX_LIBS}
 )
 
 if( WIN32 )
@@ -196,9 +193,5 @@ endif()
 
 # Generate precompiled header
 if( USE_COREPCH )
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    add_precompiled_header(worldserver ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH.h)
-  elseif(MSVC)
-    add_native_precompiled_header(worldserver ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/worldPCH)
-  endif()
+  add_cxx_pch(worldserver ${worldserver_PCH_HDR} ${worldserver_PCH_SRC})
 endif()

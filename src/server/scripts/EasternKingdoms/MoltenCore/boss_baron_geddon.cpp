@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -33,14 +31,15 @@ EndScriptData */
 #define SPELL_IGNITEMANA            19659
 #define SPELL_LIVINGBOMB            20475
 #define SPELL_ARMAGEDDOM            20479
-class boss_baron_geddon : public CreatureScript
+
+class boss_baron_geddon : public CreatureScript
 {
 public:
     boss_baron_geddon() : CreatureScript("boss_baron_geddon") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_baron_geddonAI (creature);
+        return new boss_baron_geddonAI (pCreature);
     }
 
     struct boss_baron_geddonAI : public ScriptedAI
@@ -68,7 +67,7 @@ public:
                 return;
 
             //If we are <2% hp cast Armageddom
-            if (me->GetHealth()*100 / me->GetMaxHealth() <= 2)
+            if (!HealthAbovePct(2))
             {
                 me->InterruptNonMeleeSpells(true);
                 DoCast(me, SPELL_ARMAGEDDOM);
@@ -86,7 +85,7 @@ public:
             //IgniteMana_Timer
             if (IgniteMana_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_IGNITEMANA);
 
                 IgniteMana_Timer = 30000;
@@ -95,7 +94,7 @@ public:
             //LivingBomb_Timer
             if (LivingBomb_Timer <= diff)
             {
-               if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+               if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                    DoCast(pTarget, SPELL_LIVINGBOMB);
 
                 LivingBomb_Timer = 35000;
@@ -104,6 +103,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_baron_geddon()

@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -33,14 +31,15 @@ enum Spells
     SPELL_HAMSTRING                                        = 9080,
     SPELL_CLEAVE                                           = 20691
 };
-class boss_general_angerforge : public CreatureScript
+
+class boss_general_angerforge : public CreatureScript
 {
 public:
     boss_general_angerforge() : CreatureScript("boss_general_angerforge") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_general_angerforgeAI (creature);
+        return new boss_general_angerforgeAI (pCreature);
     }
 
     struct boss_general_angerforgeAI : public ScriptedAI
@@ -68,13 +67,13 @@ public:
 
         void SummonAdds(Unit* victim)
         {
-            if (Creature *SummonedAdd = DoSpawnCreature(8901, irand(-14, 14), irand(-14, 14), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+            if (Creature *SummonedAdd = DoSpawnCreature(8901, float(irand(-14,14)), float(irand(-14,14)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
                 SummonedAdd->AI()->AttackStart(victim);
         }
 
         void SummonMedics(Unit* victim)
         {
-            if (Creature *SummonedMedic = DoSpawnCreature(8894, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+            if (Creature *SummonedMedic = DoSpawnCreature(8894, float(irand(-9,9)), float(irand(-9,9)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
                 SummonedMedic->AI()->AttackStart(victim);
         }
 
@@ -106,7 +105,7 @@ public:
             } else Cleave_Timer -= diff;
 
             //Adds_Timer
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 21)
+            if (HealthBelowPct(21))
             {
                 if (Adds_Timer <= diff)
                 {
@@ -120,7 +119,7 @@ public:
             }
 
             //Summon Medics
-            if (!Medics && me->GetHealth()*100 / me->GetMaxHealth() < 21)
+            if (!Medics && HealthBelowPct(21))
             {
                 SummonMedics(me->getVictim());
                 SummonMedics(me->getVictim());
@@ -130,6 +129,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_general_angerforge()

@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -29,14 +27,15 @@ EndScriptData */
 
 #define SPELL_SHADOWBOLTVOLLEY      20741
 #define SPELL_BONESHIELD            27688
-class boss_kormok : public CreatureScript
+
+class boss_kormok : public CreatureScript
 {
 public:
     boss_kormok() : CreatureScript("boss_kormok") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_kormokAI (creature);
+        return new boss_kormokAI (pCreature);
     }
 
     struct boss_kormokAI : public ScriptedAI
@@ -64,13 +63,13 @@ public:
 
         void SummonMinions(Unit* victim)
         {
-            if (Creature *SummonedMinion = DoSpawnCreature(16119, irand(-7, 7), irand(-7, 7), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+            if (Creature *SummonedMinion = DoSpawnCreature(16119, float(irand(-7,7)), float(irand(-7,7)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
                 SummonedMinion->AI()->AttackStart(victim);
         }
 
         void SummonMages(Unit* victim)
         {
-            if (Creature *SummonedMage = DoSpawnCreature(16120, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+            if (Creature *SummonedMage = DoSpawnCreature(16120, float(irand(-9,9)), float(irand(-9,9)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
                 SummonedMage->AI()->AttackStart(victim);
         }
 
@@ -106,7 +105,7 @@ public:
             } else Minion_Timer -= diff;
 
             //Summon 2 Bone Mages
-            if (!Mages && me->GetHealth()*100 / me->GetMaxHealth() < 26)
+            if (!Mages && HealthBelowPct(26))
             {
                 //Cast
                 SummonMages(me->getVictim());
@@ -117,6 +116,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_kormok()

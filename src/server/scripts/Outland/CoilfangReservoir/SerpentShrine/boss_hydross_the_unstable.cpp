@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Hydross_The_Unstable
@@ -77,24 +75,25 @@ EndScriptData */
 #define SPAWN_Y_DIFF3               -4.72702f
 #define SPAWN_X_DIFF4               12.577011f
 #define SPAWN_Y_DIFF4               4.72702f
-class boss_hydross_the_unstable : public CreatureScript
+
+class boss_hydross_the_unstable : public CreatureScript
 {
 public:
     boss_hydross_the_unstable() : CreatureScript("boss_hydross_the_unstable") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_hydross_the_unstableAI (creature);
+        return new boss_hydross_the_unstableAI (pCreature);
     }
 
     struct boss_hydross_the_unstableAI : public ScriptedAI
     {
         boss_hydross_the_unstableAI(Creature *c) : ScriptedAI(c), Summons(me)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint64 beams[2];
         uint32 PosCheck_Timer;
@@ -130,36 +129,36 @@ public:
 
             me->SetDisplayId(MODEL_CLEAN);
 
-            if (instance)
-                instance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, NOT_STARTED);
+            if (pInstance)
+                pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, NOT_STARTED);
             beam = false;
             Summons.DespawnAll();
         }
 
         void SummonBeams()
         {
-            Creature* beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-258.333f,-356.34f, 22.0499f, 5.90835f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+            Creature* beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-258.333f,-356.34f,22.0499f,5.90835f,TEMPSUMMON_CORPSE_DESPAWN,0);
             if (beamer)
             {
-                beamer->CastSpell(me, SPELL_BLUE_BEAM, true);
-                beamer->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
+                beamer->CastSpell(me,SPELL_BLUE_BEAM,true);
+                beamer->SetDisplayId(11686);  //invisible
                 beamer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 beams[0]=beamer->GetGUID();
             }
-            beamer = beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-219.918f,-371.308f, 22.0042f, 2.73072f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+            beamer = me->SummonCreature(ENTRY_BEAM_DUMMY,-219.918f,-371.308f,22.0042f,2.73072f,TEMPSUMMON_CORPSE_DESPAWN,0);
             if (beamer)
             {
-                beamer->CastSpell(me, SPELL_BLUE_BEAM, true);
-                beamer->SetUInt32Value(UNIT_FIELD_DISPLAYID , 11686);  //invisible
+                beamer->CastSpell(me,SPELL_BLUE_BEAM,true);
+                beamer->SetDisplayId(11686);  //invisible
                 beamer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 beams[1]=beamer->GetGUID();
             }
         }
         void DeSummonBeams()
         {
-            for (uint8 i = 0; i < 2; ++i)
+            for (uint8 i=0; i<2; ++i)
             {
-                Creature* mob = Unit::GetCreature(*me, beams[i]);
+                Creature* mob = Unit::GetCreature(*me,beams[i]);
                 if (mob)
                 {
                     mob->setDeathState(DEAD);
@@ -171,27 +170,19 @@ public:
         {
             DoScriptText(SAY_AGGRO, me);
 
-            if (instance)
-                instance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, IN_PROGRESS);
         }
 
         void KilledUnit(Unit * /*victim*/)
         {
             if (CorruptedForm)
             {
-                switch (rand()%2)
-                {
-                    case 0: DoScriptText(SAY_CORRUPT_SLAY1, me); break;
-                    case 1: DoScriptText(SAY_CORRUPT_SLAY2, me); break;
-                }
+                DoScriptText(RAND(SAY_CORRUPT_SLAY1,SAY_CORRUPT_SLAY2), me);
             }
             else
             {
-                switch (rand()%2)
-                {
-                    case 0: DoScriptText(SAY_CLEAN_SLAY1, me); break;
-                    case 1: DoScriptText(SAY_CLEAN_SLAY2, me); break;
-                }
+                DoScriptText(RAND(SAY_CLEAN_SLAY1,SAY_CLEAN_SLAY2), me);
             }
         }
 
@@ -200,13 +191,13 @@ public:
             if (summoned->GetEntry() == ENTRY_PURE_SPAWN)
             {
                 summoned->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_FROST, true);
-                summoned->CastSpell(summoned, SPELL_ELEMENTAL_SPAWNIN, true);
+                summoned->CastSpell(summoned,SPELL_ELEMENTAL_SPAWNIN,true);
                 Summons.Summon(summoned);
             }
             if (summoned->GetEntry() == ENTRY_TAINTED_SPAWN)
             {
                 summoned->ApplySpellImmune(0, IMMUNITY_SCHOOL, SPELL_SCHOOL_MASK_NATURE, true);
-                summoned->CastSpell(summoned, SPELL_ELEMENTAL_SPAWNIN, true);
+                summoned->CastSpell(summoned,SPELL_ELEMENTAL_SPAWNIN,true);
                 Summons.Summon(summoned);
             }
         }
@@ -223,8 +214,8 @@ public:
             else
                 DoScriptText(SAY_CLEAN_DEATH, me);
 
-            if (instance)
-                instance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, DONE);
+            if (pInstance)
+                pInstance->SetData(DATA_HYDROSSTHEUNSTABLEEVENT, DONE);
             Summons.DespawnAll();
         }
 
@@ -281,7 +272,7 @@ public:
                 //PosCheck_Timer
                 if (PosCheck_Timer <= diff)
                 {
-                    if (me->GetDistance2d(HYDROSS_X, HYDROSS_Y) < SWITCH_RADIUS)
+                    if (me->IsWithinDist2d(HYDROSS_X, HYDROSS_Y, SWITCH_RADIUS))
                     {
                         // switch to clean form
                         me->SetDisplayId(MODEL_CLEAN);
@@ -316,7 +307,7 @@ public:
                     {
                         uint32 mark_spell = NULL;
 
-                        switch (MarkOfHydross_Count)
+                        switch(MarkOfHydross_Count)
                         {
                             case 0:  mark_spell = SPELL_MARK_OF_HYDROSS1; break;
                             case 1:  mark_spell = SPELL_MARK_OF_HYDROSS2; break;
@@ -348,7 +339,7 @@ public:
                 //PosCheck_Timer
                 if (PosCheck_Timer <= diff)
                 {
-                    if (me->GetDistance2d(HYDROSS_X, HYDROSS_Y) >= SWITCH_RADIUS)
+                    if (!me->IsWithinDist2d(HYDROSS_X, HYDROSS_Y, SWITCH_RADIUS))
                     {
                         // switch to corrupted form
                         me->SetDisplayId(MODEL_CORRUPT);
@@ -384,6 +375,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_hydross_the_unstable()

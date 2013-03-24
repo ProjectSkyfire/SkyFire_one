@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -34,19 +32,20 @@ EndScriptData */
 #define ENTRY_PUMPKIN           23694
 
 #define MAX_ENCOUNTER 2
-class instance_scarlet_monastery : public InstanceMapScript
+
+class instance_scarlet_monastery : public InstanceMapScript
 {
 public:
-    instance_scarlet_monastery() : InstanceMapScript("instance_scarlet_monastery") { }
+    instance_scarlet_monastery() : InstanceMapScript("instance_scarlet_monastery", 189) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_scarlet_monastery_InstanceMapScript(pMap);
     }
 
-    struct instance_scarlet_monastery_InstanceMapScript : public ScriptedInstance
+    struct instance_scarlet_monastery_InstanceMapScript : public InstanceScript
     {
-        instance_scarlet_monastery_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_scarlet_monastery_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint64 PumpkinShrineGUID;
         uint64 HorsemanGUID;
@@ -77,29 +76,29 @@ public:
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
             case ENTRY_PUMPKIN_SHRINE: PumpkinShrineGUID = pGo->GetGUID();break;
             case 104600: DoorHighInquisitorGUID = pGo->GetGUID(); break;
             }
         }
 
-        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
-            switch (creature->GetEntry())
+            switch(pCreature->GetEntry())
             {
-                case ENTRY_HORSEMAN:    HorsemanGUID = creature->GetGUID(); break;
-                case ENTRY_HEAD:        HeadGUID = creature->GetGUID(); break;
-                case ENTRY_PUMPKIN:     HorsemanAdds.insert(creature->GetGUID());break;
-                case 3976: MograineGUID = creature->GetGUID(); break;
-                case 3977: WhitemaneGUID = creature->GetGUID(); break;
-                case 3981: VorrelGUID = creature->GetGUID(); break;
+                case ENTRY_HORSEMAN:    HorsemanGUID = pCreature->GetGUID(); break;
+                case ENTRY_HEAD:        HeadGUID = pCreature->GetGUID(); break;
+                case ENTRY_PUMPKIN:     HorsemanAdds.insert(pCreature->GetGUID());break;
+                case 3976: MograineGUID = pCreature->GetGUID(); break;
+                case 3977: WhitemaneGUID = pCreature->GetGUID(); break;
+                case 3981: VorrelGUID = pCreature->GetGUID(); break;
             }
         }
 
         void SetData(uint32 type, uint32 data)
         {
-            switch (type)
+            switch(type)
             {
             case TYPE_MOGRAINE_AND_WHITE_EVENT:
                 if (data == IN_PROGRESS)
@@ -131,7 +130,7 @@ public:
 
         uint64 GetData64(uint32 type)
         {
-            switch (type)
+            switch(type)
             {
                 //case GAMEOBJECT_PUMPKIN_SHRINE:   return PumpkinShrineGUID;
                 //case DATA_HORSEMAN:               return HorsemanGUID;
@@ -153,7 +152,9 @@ public:
             return 0;
         }
     };
+
 };
+
 
 void AddSC_instance_scarlet_monastery()
 {

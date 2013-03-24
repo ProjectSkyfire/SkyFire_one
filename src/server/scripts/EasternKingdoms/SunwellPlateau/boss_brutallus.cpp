@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Brutallus
@@ -67,25 +65,26 @@ enum Spells
 };
 
 #define FELMYST 25038
-class boss_brutallus : public CreatureScript
+
+class boss_brutallus : public CreatureScript
 {
 public:
     boss_brutallus() : CreatureScript("boss_brutallus") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_brutallusAI (creature);
+        return new boss_brutallusAI (pCreature);
     }
 
     struct boss_brutallusAI : public ScriptedAI
     {
         boss_brutallusAI(Creature *c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
             Intro = true;
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 SlashTimer;
         uint32 BurnTimer;
@@ -116,33 +115,33 @@ public:
 
             DoCast(me, SPELL_DUAL_WIELD, true);
 
-            if (instance)
-                instance->SetData(DATA_BRUTALLUS_EVENT, NOT_STARTED);
+            if (pInstance)
+                pInstance->SetData(DATA_BRUTALLUS_EVENT, NOT_STARTED);
         }
 
         void EnterCombat(Unit * /*who*/)
         {
             DoScriptText(YELL_AGGRO, me);
 
-            if (instance)
-                instance->SetData(DATA_BRUTALLUS_EVENT, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(DATA_BRUTALLUS_EVENT, IN_PROGRESS);
         }
 
         void KilledUnit(Unit* /*victim*/)
         {
-            DoScriptText(RAND(YELL_KILL1, YELL_KILL2, YELL_KILL3), me);
+            DoScriptText(RAND(YELL_KILL1,YELL_KILL2,YELL_KILL3), me);
         }
 
         void JustDied(Unit* /*Killer*/)
         {
             DoScriptText(YELL_DEATH, me);
 
-            if (instance)
+            if (pInstance)
             {
-                instance->SetData(DATA_BRUTALLUS_EVENT, DONE);
-                float x, y, z;
-                me->GetPosition(x, y, z);
-                me->SummonCreature(FELMYST, x, y, z+30, me->GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN, 0);
+                pInstance->SetData(DATA_BRUTALLUS_EVENT, DONE);
+                float x,y,z;
+                me->GetPosition(x,y,z);
+                me->SummonCreature(FELMYST, x,y, z+30, me->GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN, 0);
             }
         }
 
@@ -156,8 +155,8 @@ public:
         {
             if (!Intro || IsIntro)
                 return;
-            sLog->outError("Start Intro");
-            Creature *Madrigosa = Unit::GetCreature(*me, instance ? instance->GetData64(DATA_MADRIGOSA) : 0);
+            sLog.outError("Start Intro");
+            Creature *Madrigosa = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_MADRIGOSA) : 0);
             if (Madrigosa)
             {
                 Madrigosa->Respawn();
@@ -171,7 +170,7 @@ public:
             }else
             {
                 //Madrigosa not found, end intro
-                sLog->outError("Madrigosa was not found");
+                sLog.outError("Madrigosa was not found");
                 EndIntro();
             }
         }
@@ -181,7 +180,7 @@ public:
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             Intro = false;
             IsIntro = false;
-            sLog->outError("End Intro");
+            sLog.outError("End Intro");
         }
 
         void AttackStart(Unit* pWho)
@@ -193,7 +192,7 @@ public:
 
         void DoIntro()
         {
-            Creature *Madrigosa = Unit::GetCreature(*me, instance ? instance->GetData64(DATA_MADRIGOSA) : 0);
+            Creature *Madrigosa = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_MADRIGOSA) : 0);
             if (!Madrigosa)
                 return;
 
@@ -218,7 +217,7 @@ public:
                     break;
                 case 3:
                     DoCast(me, SPELL_INTRO_FROST_BLAST);
-                    Madrigosa->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT | MOVEFLAG_LEVITATING);
+                    Madrigosa->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                     me->AttackStop();
                     Madrigosa->AttackStop();
                     IntroFrostBoltTimer = 3000;
@@ -245,7 +244,7 @@ public:
                 case 7:
                     me->Kill(Madrigosa);
                     DoScriptText(YELL_MADR_DEATH, Madrigosa);
-                    me->SetHealth(me->GetMaxHealth());
+                    me->SetFullHealth();
                     me->AttackStop();
                     IntroPhaseTimer = 4000;
                     ++IntroPhase;
@@ -273,8 +272,8 @@ public:
         {
             if (!who->isTargetableForAttack() || !me->IsHostileTo(who))
                 return;
-            if (instance && Intro)
-                instance->SetData(DATA_BRUTALLUS_EVENT, SPECIAL);
+            if (pInstance && Intro)
+                pInstance->SetData(DATA_BRUTALLUS_EVENT, SPECIAL);
 
             if (Intro && !IsIntro)
                 StartIntro();
@@ -294,7 +293,7 @@ public:
                 {
                     if (IntroFrostBoltTimer <= diff)
                     {
-                        if (Creature *Madrigosa = Unit::GetCreature(*me, instance ? instance->GetData64(DATA_MADRIGOSA) : 0))
+                        if (Creature *Madrigosa = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_MADRIGOSA) : 0))
                         {
                             Madrigosa->CastSpell(me, SPELL_INTRO_FROSTBOLT, true);
                             IntroFrostBoltTimer = 2000;
@@ -317,7 +316,7 @@ public:
 
             if (StompTimer <= diff)
             {
-                DoScriptText(RAND(YELL_LOVE1, YELL_LOVE2, YELL_LOVE3), me);
+                DoScriptText(RAND(YELL_LOVE1,YELL_LOVE2,YELL_LOVE3), me);
                 DoCast(me->getVictim(), SPELL_STOMP);
                 StompTimer = 30000;
             } else StompTimer -= diff;
@@ -327,15 +326,15 @@ public:
                 std::list<Unit*> pTargets;
                 SelectTargetList(pTargets, 10, SELECT_TARGET_RANDOM, 100, true);
                 for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
-                    if (!(*i)->HasAura(SPELL_BURN, 0))
+                    if (!(*i)->HasAura(SPELL_BURN))
                     {
                         (*i)->CastSpell((*i), SPELL_BURN, true);
                         break;
                     }
-                BurnTimer = urand(60000, 180000);
+                BurnTimer = urand(60000,180000);
             } else BurnTimer -= diff;
 
-            if (BerserkTimer <= diff && !Enraged)
+            if (BerserkTimer < diff && !Enraged)
             {
                 DoScriptText(YELL_BERSERK, me);
                 DoCast(me, SPELL_BERSERK);
@@ -345,7 +344,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_brutallus()
 {

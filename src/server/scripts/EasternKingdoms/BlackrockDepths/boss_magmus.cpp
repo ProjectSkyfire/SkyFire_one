@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -37,14 +35,15 @@ enum eEnums
 {
     DATA_THRONE_DOOR                              = 24 // not id or guid of doors but number of enum in blackrock_depths.h
 };
-class boss_magmus : public CreatureScript
+
+class boss_magmus : public CreatureScript
 {
 public:
     boss_magmus() : CreatureScript("boss_magmus") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_magmusAI (creature);
+        return new boss_magmusAI (pCreature);
     }
 
     struct boss_magmusAI : public ScriptedAI
@@ -78,7 +77,7 @@ public:
             } else FieryBurst_Timer -= diff;
 
             //WarStomp_Timer
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 51)
+            if (HealthBelowPct(51))
             {
                 if (WarStomp_Timer <= diff)
                 {
@@ -92,10 +91,11 @@ public:
         // When he die open door to last chamber
         void JustDied(Unit *who)
         {
-            if (ScriptedInstance* instance = who->GetInstanceScript())
-                instance->HandleGameObject(instance->GetData64(DATA_THRONE_DOOR), true);
+            if (InstanceScript* pInstance = who->GetInstanceScript())
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_THRONE_DOOR), true);
         }
     };
+
 };
 
 void AddSC_boss_magmus()

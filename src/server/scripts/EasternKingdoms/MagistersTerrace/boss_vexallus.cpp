@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -60,32 +58,31 @@ enum eEnums
     INTERVAL_MODIFIER               = 15,
     INTERVAL_SWITCH                 = 6
 };
-class boss_vexallus : public CreatureScript
+
+class boss_vexallus : public CreatureScript
 {
 public:
     boss_vexallus() : CreatureScript("boss_vexallus") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_vexallusAI (creature);
+        return new boss_vexallusAI (pCreature);
     };
 
     struct boss_vexallusAI : public ScriptedAI
     {
         boss_vexallusAI(Creature *c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
-            Heroic = c->GetMap()->IsHeroic();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 ChainLightningTimer;
         uint32 ArcaneShockTimer;
         uint32 OverloadTimer;
         uint32 IntervalHealthAmount;
         bool Enraged;
-        bool Heroic;
 
         void Reset()
         {
@@ -95,8 +92,8 @@ public:
             IntervalHealthAmount = 1;
             Enraged = false;
 
-            if (instance)
-                instance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
+            if (pInstance)
+                pInstance->SetData(DATA_VEXALLUS_EVENT, NOT_STARTED);
         }
 
         void KilledUnit(Unit * /*victim*/)
@@ -106,25 +103,25 @@ public:
 
         void JustDied(Unit * /*victim*/)
         {
-            if (instance)
-                instance->SetData(DATA_VEXALLUS_EVENT, DONE);
+            if (pInstance)
+                pInstance->SetData(DATA_VEXALLUS_EVENT, DONE);
         }
 
         void EnterCombat(Unit * /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
-            if (instance)
-                instance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(DATA_VEXALLUS_EVENT, IN_PROGRESS);
         }
 
         void JustSummoned(Creature *summoned)
         {
             if (Unit *temp = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                summoned->GetMotionMaster()->MoveFollow(temp, 0, 0);
+                summoned->GetMotionMaster()->MoveFollow(temp,0,0);
 
             //spells are SUMMON_TYPE_GUARDIAN, so using setOwner should be ok
-            summoned->CastSpell(summoned, SPELL_ENERGY_BOLT, false, 0, 0, me->GetGUID());
+            summoned->CastSpell(summoned,SPELL_ENERGY_BOLT,false,0,0,me->GetGUID());
         }
 
         void UpdateAI(const uint32 diff)
@@ -135,7 +132,7 @@ public:
             if (!Enraged)
             {
                 //used for check, when Vexallus cast adds 85%, 70%, 55%, 40%, 25%
-                if ((me->GetHealth()*100 / me->GetMaxHealth()) <= (100-(INTERVAL_MODIFIER*IntervalHealthAmount)))
+                if (!HealthAbovePct(100 - INTERVAL_MODIFIER * IntervalHealthAmount))
                 {
                     //increase amount, unless we're at 10%, then we switch and return
                     if (IntervalHealthAmount == INTERVAL_SWITCH)
@@ -149,7 +146,7 @@ public:
                     DoScriptText(SAY_ENERGY, me);
                     DoScriptText(EMOTE_DISCHARGE_ENERGY, me);
 
-                    if (Heroic)
+                    if (IsHeroic())
                     {
                         DoCast(me, H_SPELL_SUMMON_PURE_ENERGY1, false);
                         DoCast(me, H_SPELL_SUMMON_PURE_ENERGY2, false);
@@ -160,7 +157,7 @@ public:
                     //below are workaround summons, remove when summoning spells w/implicitTarget 73 implemented in the core
                     me->SummonCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
-                    if (Heroic)
+                    if (IsHeroic())
                         me->SummonCreature(NPC_PURE_ENERGY, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
                 }
 
@@ -194,16 +191,18 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 class mob_pure_energy : public CreatureScript
 {
 public:
     mob_pure_energy() : CreatureScript("mob_pure_energy") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_pure_energyAI (creature);
+        return new mob_pure_energyAI (pCreature);
     };
 
     struct mob_pure_energyAI : public ScriptedAI
@@ -225,7 +224,9 @@ public:
         void MoveInLineOfSight(Unit * /*who*/) {}
         void AttackStart(Unit * /*who*/) {}
     };
+
 };
+
 
 void AddSC_boss_vexallus()
 {

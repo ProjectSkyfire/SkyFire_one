@@ -23,8 +23,9 @@
 
 #include "Common.h"
 #include "QueryResult.h"
-#include "World.h"
 #include "WardenBase.h"
+#include "World.h"
+
 
 struct ItemPrototype;
 struct AuctionEntry;

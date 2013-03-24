@@ -80,7 +80,7 @@ int RealmSocket::open(void * arg)
     return 0;
 }
 
-int RealmSocket::close(int)
+int RealmSocket::close(u_long)
 {
     shutdown();
 
@@ -90,6 +90,7 @@ int RealmSocket::close(int)
 
     return 0;
 }
+
 
 const std::string& RealmSocket::getRemoteAddress(void) const
 {

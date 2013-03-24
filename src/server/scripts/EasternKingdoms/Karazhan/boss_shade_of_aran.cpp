@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -82,24 +80,25 @@ enum SuperSpell
     SUPER_BLIZZARD,
     SUPER_AE,
 };
-class boss_shade_of_aran : public CreatureScript
+
+class boss_shade_of_aran : public CreatureScript
 {
 public:
     boss_shade_of_aran() : CreatureScript("boss_shade_of_aran") { }
 
-    CreatureAI* GetAI_boss_aran(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_aranAI (creature);
+        return new boss_aranAI (pCreature);
     }
 
     struct boss_aranAI : public ScriptedAI
     {
         boss_aranAI(Creature *c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 SecondarySpellTimer;
         uint32 NormalCastTimer;
@@ -120,7 +119,7 @@ public:
         uint32 FireCooldown;
         uint32 FrostCooldown;
 
-        uint32 DrinkInturruptTimer;
+        uint32 DrinkInterruptTimer;
 
         bool ElementalsSpawned;
         bool Drinking;
@@ -144,44 +143,44 @@ public:
             FireCooldown = 0;
             FrostCooldown = 0;
 
-            DrinkInturruptTimer = 10000;
+            DrinkInterruptTimer = 10000;
 
             ElementalsSpawned = false;
             Drinking = false;
             DrinkInturrupted = false;
 
-            if (instance)
+            if (pInstance)
             {
                 // Not in progress
-                instance->SetData(TYPE_ARAN, NOT_STARTED);
-                instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), true);
+                pInstance->SetData(TYPE_ARAN, NOT_STARTED);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), true);
             }
         }
 
         void KilledUnit(Unit * /*victim*/)
         {
-            DoScriptText(RAND(SAY_KILL1, SAY_KILL2), me);
+            DoScriptText(RAND(SAY_KILL1,SAY_KILL2), me);
         }
 
         void JustDied(Unit * /*victim*/)
         {
             DoScriptText(SAY_DEATH, me);
 
-            if (instance)
+            if (pInstance)
             {
-                instance->SetData(TYPE_ARAN, DONE);
-                instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), true);
+                pInstance->SetData(TYPE_ARAN, DONE);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), true);
             }
         }
 
         void EnterCombat(Unit * /*who*/)
         {
-            DoScriptText(RAND(SAY_AGGRO1, SAY_AGGRO2, SAY_AGGRO3), me);
+            DoScriptText(RAND(SAY_AGGRO1,SAY_AGGRO2,SAY_AGGRO3), me);
 
-            if (instance)
+            if (pInstance)
             {
-                instance->SetData(TYPE_ARAN, IN_PROGRESS);
-                instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), false);
+                pInstance->SetData(TYPE_ARAN, IN_PROGRESS);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), false);
             }
         }
 
@@ -229,9 +228,9 @@ public:
             {
                 if (CloseDoorTimer <= diff)
                 {
-                    if (instance)
+                    if (pInstance)
                     {
-                        instance->HandleGameObject(instance->GetData64(DATA_GO_LIBRARY_DOOR), false);
+                        pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_LIBRARY_DOOR), false);
                         CloseDoorTimer = 0;
                     }
                 } else CloseDoorTimer -= diff;
@@ -272,11 +271,11 @@ public:
                     DoCast(me, SPELL_CONJURE, false);
                     DoCast(me, SPELL_DRINK, false);
                     me->SetStandState(UNIT_STAND_STATE_SIT);
-                    DrinkInturruptTimer = 10000;
+                    DrinkInterruptTimer = 10000;
                 }
             }
 
-            //Drink Inturrupt
+            //Drink Interrupt
             if (Drinking && DrinkInturrupted)
             {
                 Drinking = false;
@@ -286,17 +285,19 @@ public:
                 DoCast(me, SPELL_POTION, false);
             }
 
-            //Drink Inturrupt Timer
+            //Drink Interrupt Timer
             if (Drinking && !DrinkInturrupted)
-                if (DrinkInturruptTimer >= diff)
-                    DrinkInturruptTimer -= diff;
-            else
             {
-                me->SetStandState(UNIT_STAND_STATE_STAND);
-                DoCast(me, SPELL_POTION, true);
-                DoCast(me, SPELL_AOE_PYROBLAST, false);
-                DrinkInturrupted = true;
-                Drinking = false;
+                if (DrinkInterruptTimer >= diff)
+                    DrinkInterruptTimer -= diff;
+                else
+                {
+                    me->SetStandState(UNIT_STAND_STATE_STAND);
+                    DoCast(me, SPELL_POTION, true);
+                    DoCast(me, SPELL_AOE_PYROBLAST, false);
+                    DrinkInturrupted = true;
+                    Drinking = false;
+                }
             }
 
             //Don't execute any more code if we are drinking
@@ -344,7 +345,7 @@ public:
 
             if (SecondarySpellTimer <= diff)
             {
-                switch (urand(0, 1))
+                switch (urand(0,1))
                 {
                     case 0:
                         DoCast(me, SPELL_AOE_CS);
@@ -354,7 +355,7 @@ public:
                             DoCast(pTarget, SPELL_CHAINSOFICE);
                         break;
                 }
-                SecondarySpellTimer = urand(5000, 20000);
+                SecondarySpellTimer = urand(5000,20000);
             } else SecondarySpellTimer -= diff;
 
             if (SuperCastTimer <= diff)
@@ -377,12 +378,12 @@ public:
                         break;
                 }
 
-                LastSuperSpell = Available[urand(0, 1)];
+                LastSuperSpell = Available[urand(0,1)];
 
                 switch (LastSuperSpell)
                 {
                     case SUPER_AE:
-                        DoScriptText(RAND(SAY_EXPLOSION1, SAY_EXPLOSION2), me);
+                        DoScriptText(RAND(SAY_EXPLOSION1,SAY_EXPLOSION2), me);
 
                         DoCast(me, SPELL_BLINK_CENTER, true);
                         DoCast(me, SPELL_PLAYERPULL, true);
@@ -391,7 +392,7 @@ public:
                         break;
 
                     case SUPER_FLAME:
-                        DoScriptText(RAND(SAY_FLAMEWREATH1, SAY_FLAMEWREATH2), me);
+                        DoScriptText(RAND(SAY_FLAMEWREATH1,SAY_FLAMEWREATH2), me);
 
                         FlameWreathTimer = 20000;
                         FlameWreathCheckTime = 500;
@@ -404,7 +405,7 @@ public:
                         break;
 
                     case SUPER_BLIZZARD:
-                        DoScriptText(RAND(SAY_BLIZZARD1, SAY_BLIZZARD2), me);
+                        DoScriptText(RAND(SAY_BLIZZARD1,SAY_BLIZZARD2), me);
 
                         if (Creature* pSpawn = me->SummonCreature(CREATURE_ARAN_BLIZZARD, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 25000))
                         {
@@ -414,10 +415,10 @@ public:
                         break;
                 }
 
-                SuperCastTimer = urand(35000, 40000);
+                SuperCastTimer = urand(35000,40000);
             } else SuperCastTimer -= diff;
 
-            if (!ElementalsSpawned && me->GetHealth()*100 / me->GetMaxHealth() < 40)
+            if (!ElementalsSpawned && HealthBelowPct(40))
             {
                 ElementalsSpawned = true;
 
@@ -487,13 +488,13 @@ public:
 
         void SpellHit(Unit* /*pAttacker*/, const SpellEntry* Spell)
         {
-            //We only care about inturrupt effects and only if they are durring a spell currently being casted
+            //We only care about interrupt effects and only if they are durring a spell currently being casted
             if ((Spell->Effect[0] != SPELL_EFFECT_INTERRUPT_CAST &&
                 Spell->Effect[1] != SPELL_EFFECT_INTERRUPT_CAST &&
                 Spell->Effect[2] != SPELL_EFFECT_INTERRUPT_CAST) || !me->IsNonMeleeSpellCasted(false))
                 return;
 
-            //Inturrupt effect
+            //Interrupt effect
             me->InterruptNonMeleeSpells(false);
 
             //Normally we would set the cooldown equal to the spell duration
@@ -507,15 +508,17 @@ public:
             }
         }
     };
+
 };
-class mob_aran_elemental : public CreatureScript
+
+class mob_aran_elemental : public CreatureScript
 {
 public:
     mob_aran_elemental() : CreatureScript("mob_aran_elemental") { }
 
-    CreatureAI* GetAI_water_elemental(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new water_elementalAI (creature);
+        return new water_elementalAI (pCreature);
     }
 
     struct water_elementalAI : public ScriptedAI
@@ -539,21 +542,23 @@ public:
             if (CastTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_WATERBOLT);
-                CastTimer = urand(2000, 5000);
+                CastTimer = urand(2000,5000);
             } else CastTimer -= diff;
         }
     };
+
 };
 
-// CONVERT TO ACIDclass mob_shadow_of_aran : public CreatureScript
+// CONVERT TO ACID
+class mob_shadow_of_aran : public CreatureScript
 {
 public:
     mob_shadow_of_aran() : CreatureScript("mob_shadow_of_aran") { }
 
-    CreatureAI* GetAI_shadow_of_aran(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        sLog->outString("TSCR: Convert simpleAI script for Creature Entry %u to ACID", creature->GetEntry());
-        SimpleAI* ai = new SimpleAI (creature);
+        sLog.outString("TSCR: Convert simpleAI script for Creature Entry %u to ACID", pCreature->GetEntry());
+        SimpleAI* ai = new SimpleAI (pCreature);
 
         ai->Spell[0].Enabled = true;
         ai->Spell[0].Spell_Id = SPELL_SHADOW_PYRO;
@@ -565,6 +570,7 @@ public:
 
         return ai;
     }
+
 };
 
 void AddSC_boss_shade_of_aran()

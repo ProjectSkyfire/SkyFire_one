@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -35,14 +33,15 @@ EndScriptData */
 //Add spells
 #define SPELL_ERUPTION              19497
 #define SPELL_IMMOLATE              20294
-class boss_garr : public CreatureScript
+
+class boss_garr : public CreatureScript
 {
 public:
     boss_garr() : CreatureScript("boss_garr") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_garrAI (creature);
+        return new boss_garrAI (pCreature);
     }
 
     struct boss_garrAI : public ScriptedAI
@@ -88,15 +87,17 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
-class mob_firesworn : public CreatureScript
+
+class mob_firesworn : public CreatureScript
 {
 public:
     mob_firesworn() : CreatureScript("mob_firesworn") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_fireswornAI (creature);
+        return new mob_fireswornAI (pCreature);
     }
 
     struct mob_fireswornAI : public ScriptedAI
@@ -122,14 +123,14 @@ public:
             //Immolate_Timer
             if (Immolate_Timer <= diff)
             {
-                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_IMMOLATE);
 
-                Immolate_Timer = urand(5000, 10000);
+                Immolate_Timer = urand(5000,10000);
             } else Immolate_Timer -= diff;
 
             //Cast Erruption and let them die
-            if (me->GetHealth() <= me->GetMaxHealth() * 0.10f)
+            if (!HealthAbovePct(10))
             {
                 DoCast(me->getVictim(), SPELL_ERUPTION);
                 me->setDeathState(JUST_DIED);
@@ -139,7 +140,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_garr()
 {

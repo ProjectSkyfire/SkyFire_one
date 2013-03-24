@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -40,14 +38,15 @@ EndScriptData */
 #define SPELL_HOLYWRATH         32445
 #define SPELL_HOLYGROUND        29512
 #define SPELL_BERSERK           26662
-class boss_maiden_of_virtue : public CreatureScript
+
+class boss_maiden_of_virtue : public CreatureScript
 {
 public:
     boss_maiden_of_virtue() : CreatureScript("boss_maiden_of_virtue") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_maiden_of_virtueAI (creature);
+        return new boss_maiden_of_virtueAI (pCreature);
     }
 
     struct boss_maiden_of_virtueAI : public ScriptedAI
@@ -64,9 +63,9 @@ public:
 
         void Reset()
         {
-            Repentance_Timer    = 30000+(rand()%15000);
+            Repentance_Timer    = 25000+(rand()%15000);
             Holyfire_Timer      = 8000+(rand()%17000);
-            Holywrath_Timer     = 20000+(rand()%10000);
+            Holywrath_Timer     = 15000+(rand()%10000);
             Holyground_Timer    = 3000;
             Enrage_Timer        = 600000;
 
@@ -75,8 +74,8 @@ public:
 
         void KilledUnit(Unit* /*Victim*/)
         {
-            if (urand(0, 1) == 0)
-                DoScriptText(RAND(SAY_SLAY1, SAY_SLAY2, SAY_SLAY3), me);
+            if (urand(0,1) == 0)
+                DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2,SAY_SLAY3), me);
         }
 
         void JustDied(Unit* /*Killer*/)
@@ -94,7 +93,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (Enrage_Timer <= diff && !Enraged)
+            if (Enrage_Timer < diff && !Enraged)
             {
                 DoCast(me, SPELL_BERSERK, true);
                 Enraged = true;
@@ -109,9 +108,9 @@ public:
             if (Repentance_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_REPENTANCE);
-                DoScriptText(RAND(SAY_REPENTANCE1, SAY_REPENTANCE2), me);
+                DoScriptText(RAND(SAY_REPENTANCE1,SAY_REPENTANCE2), me);
 
-                Repentance_Timer = urand(30000, 45000);        //A little randomness on that spell
+                Repentance_Timer = urand(25000,35000);        //A little randomness on that spell
             } else Repentance_Timer -= diff;
 
             if (Holyfire_Timer <= diff)
@@ -119,7 +118,7 @@ public:
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                     DoCast(pTarget, SPELL_HOLYFIRE);
 
-                    Holyfire_Timer = urand(8000, 25000);      //Anywhere from 8 to 25 seconds, good luck having several of those in a row!
+                    Holyfire_Timer = urand(8000,23000);      //Anywhere from 8 to 23 seconds, good luck having several of those in a row!
             } else Holyfire_Timer -= diff;
 
             if (Holywrath_Timer <= diff)
@@ -127,13 +126,16 @@ public:
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
                     DoCast(pTarget, SPELL_HOLYWRATH);
 
-                Holywrath_Timer = urand(20000, 30000);        //20-30 secs sounds nice
+                Holywrath_Timer = urand(20000,25000);        //20-30 secs sounds nice
             } else Holywrath_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
+
     };
+
 };
+
 
 void AddSC_boss_maiden_of_virtue()
 {

@@ -1,265 +1,96 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance - Sethekk Halls
-SD%Complete: 95
+SD%Complete: 50
 SDComment: Instance Data for Sethekk Halls instance
 SDCategory: Auchindoun, Sethekk Halls
 EndScriptData */
 
 #include "ScriptPCH.h"
 #include "sethekk_halls.h"
-#include "ScriptedEscortAI.h"
 
-#define IKISS_DOOR       177203
-
-#define NPC_LAKKA        18956
-
-#define QUEST_BROTHER    10097
-
-#define ENCOUNTERS       3
-
-struct Location
+enum eEnums
 {
-    float fLocX;
-    float fLocY;
-    float fLocZ;
-    float fOrient;
+    NPC_ANZU   = 23035,
+    IKISS_DOOR = 177203,
 };
 
-static Location SpawnLocation[]=
-{
-    {-158.226898f, 158.690933f, 0.009380f, 1.212f}
-};
-class instance_sethekk_halls : public InstanceMapScript
+class instance_sethekk_halls : public InstanceMapScript
 {
 public:
-    instance_sethekk_halls() : InstanceMapScript("instance_sethekk_halls") { }
+    instance_sethekk_halls() : InstanceMapScript("instance_sethekk_halls", 556) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
-        return new instance_sethekk_halls_InstanceMapScript(map);
+        return new instance_sethekk_halls_InstanceMapScript(pMap);
     }
 
-    struct instance_sethekk_halls_InstanceMapScript : public ScriptedInstance
+    struct instance_sethekk_halls_InstanceMapScript : public InstanceScript
     {
-        instance_sethekk_halls_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
+        instance_sethekk_halls_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
-        uint64 IkissDoorGUID;
-        uint32 Encounter[ENCOUNTERS];
-        std::string str_data;
-
-        bool SummonLakka;
+        uint32 AnzuEncounter;
+        uint64 m_uiIkissDoorGUID;
 
         void Initialize()
         {
-            IkissDoorGUID = NULL;
-            SummonLakka = false;
-
-            for (uint8 i = 0; i < ENCOUNTERS; i++)
-                Encounter[i] = NOT_STARTED;
+            AnzuEncounter = NOT_STARTED;
+            m_uiIkissDoorGUID = 0;
         }
 
-        bool IsEncounterInProgress() const
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
-            for (uint8 i = 0; i < ENCOUNTERS; i++)
-                if (Encounter[i] == IN_PROGRESS) return true;
-
-            return false;
-        }
-
-        void OnPlayerEnter(Player* player)
-        {
-            if ((CAST_PLR(player)->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE) && !SummonLakka)
+            if (pCreature->GetEntry() == NPC_ANZU)
             {
-                player->SummonCreature(NPC_LAKKA, SpawnLocation[0].fLocX, SpawnLocation[0].fLocY, SpawnLocation[0].fLocZ, SpawnLocation[0].fOrient, TEMPSUMMON_DEAD_DESPAWN, 0);
-                SummonLakka = true;
+                if (AnzuEncounter >= IN_PROGRESS)
+                    pCreature->DisappearAndDie();
+                else
+                    AnzuEncounter = IN_PROGRESS;
             }
         }
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
-            {
-                case IKISS_DOOR: IkissDoorGUID = pGo->GetGUID(); break;
-            }
-        }
-
-        Player* GetPlayerInMap()
-        {
-            Map::PlayerList const& players = instance->GetPlayers();
-
-            if (!players.isEmpty())
-            {
-                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                {
-                    if (Player* plr = itr->getSource())
-                        return plr;
-                }
-            }
-
-            sLog->outDebug("TSCR: Instance Sethekk Halls: GetPlayerInMap, but PlayerList is empty!");
-            return NULL;
+             if (pGo->GetEntry() == IKISS_DOOR)
+                m_uiIkissDoorGUID = pGo->GetGUID();
         }
 
         void SetData(uint32 type, uint32 data)
         {
-            switch (type)
+            switch(type)
             {
-                case DATA_SYTHEVENT:
-                    if (Encounter[0] != DONE)
-                        Encounter[0] = data;
-                    break;
-                case DATA_ANZUEVENT:
-                    if (Encounter[1] != DONE)
-                        Encounter[1] = data;
-                    break;
-                case DATA_IKISSEVENT:
+                case DATA_IKISSDOOREVENT:
                     if (data == DONE)
-                    {
-                        HandleGameObject(IkissDoorGUID, true);
-                    }
-                    if (Encounter[2] != DONE)
-                        Encounter[2] = data;
+                        DoUseDoorOrButton(m_uiIkissDoorGUID,DAY*IN_MILLISECONDS);
+                    break;
+                case TYPE_ANZU_ENCOUNTER:
+                    AnzuEncounter = data;
                     break;
             }
-
-            if (data == DONE)
-            {
-                SaveToDB();
-                OUT_SAVE_INST_DATA_COMPLETE;
-            }
-        }
-
-        uint32 GetData(uint32 type)
-        {
-            switch (type)
-            {
-                case DATA_SYTHEVENT: return Encounter[0];
-                case DATA_ANZUEVENT: return Encounter[1];
-                case DATA_IKISSEVENT: return Encounter[2];
-            }
-            return false;
-        }
-
-        std::string GetSaveData()
-        {
-            OUT_SAVE_INST_DATA;
-            std::ostringstream saveStream;
-
-            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2];
-
-            char* out = new char[saveStream.str().length() + 1];
-            strcpy(out, saveStream.str().c_str());
-            if (out)
-            {
-                OUT_SAVE_INST_DATA_COMPLETE;
-                return out;
-            }
-
-            return str_data.c_str();
-        }
-
-        void Load(const char* in)
-        {
-            if (!in)
-            {
-                OUT_LOAD_INST_DATA_FAIL;
-                return;
-            }
-
-            OUT_LOAD_INST_DATA(in);
-
-            std::istringstream loadStream(in);
-            loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2];
-
-            for (uint8 i = 0; i < ENCOUNTERS; ++i)
-                if (Encounter[i] == IN_PROGRESS)
-                    Encounter[i] = NOT_STARTED;
-
-            OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
 };
 
-/*#####
-## npc_lakka
-#####*/
-
-// this is not escort quest !class npc_lakka : public CreatureScript
-{
-public:
-    npc_lakka() : CreatureScript("npc_lakka") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new npc_lakkaAI(creature);
-    }
-
-    struct npc_lakkaAI : public npc_escortAI
-    {
-        npc_lakkaAI(Creature* creature) : npc_escortAI(creature) {}
-
-        void Reset() { }
-
-        void WaypointReached(uint32 uiPointId)
-        {
-            switch (uiPointId)
-            {
-                case 0:
-                    me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                    SetRun(false);
-                    break;
-                case 8:
-                    me->ForcedDespawn();
-            }
-        }
-    };
-};
-
-/*#####
-## go_lakka_cage
-#####*/
-class go_lakka_cage : public GameObjectScript
-{
-public:
-    go_lakka_cage() : GameObjectScript("go_lakka_cage") { }
-
-    bool GOHello(Player* player, GameObject* pGo)
-    {
-        if (player->GetQuestStatus(QUEST_BROTHER) == QUEST_STATUS_INCOMPLETE)
-        {
-            if (Creature* pLakka = pGo->FindNearestCreature( NPC_LAKKA, 5, true))
-            {
-                ((npc_lakkaAI*)pLakka->AI())->Start(false, false, player->GetGUID());
-            }
-        }
-
-        return false;
-    };
-};
 
 void AddSC_instance_sethekk_halls()
 {
     new instance_sethekk_halls();
-    new go_lakka_cage();
-    new npc_lakka();
 }

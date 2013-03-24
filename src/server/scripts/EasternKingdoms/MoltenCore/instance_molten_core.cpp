@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -41,22 +39,23 @@ EndScriptData */
 #define ID_DOMO         12018
 #define ID_RAGNAROS     11502
 #define ID_FLAMEWAKERPRIEST     11662
-class instance_molten_core : public InstanceMapScript
+
+class instance_molten_core : public InstanceMapScript
 {
 public:
-    instance_molten_core() : InstanceMapScript("instance_molten_core") { }
+    instance_molten_core() : InstanceMapScript("instance_molten_core", 409) { }
 
-    InstanceScript* GetInstance_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_molten_core_InstanceMapScript (pMap);
     }
 
-    struct instance_molten_core_InstanceMapScript : public ScriptedInstance
+    struct instance_molten_core_InstanceMapScript : public InstanceScript
     {
-        instance_molten_core_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_molten_core_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint64 Lucifron, Magmadar, Gehennas, Garr, Geddon, Shazzrah, Sulfuron, Golemagg, Domo, Ragnaros, FlamewakerPriest;
-        uint64 RuneKoro, RuneZeth, RuneMazj, RuneTheri, RuneBlaz, RuneKress, RuneMohn;
+        uint64 RuneKoro, RuneZeth, RuneMazj, RuneTheri, RuneBlaz, RuneKress, RuneMohn, m_uiFirelordCacheGUID;
 
         //If all Bosses are dead.
         bool IsBossDied[9];
@@ -87,6 +86,8 @@ public:
             RuneKress = 0;
             RuneMohn = 0;
 
+            m_uiFirelordCacheGUID = 0;
+
             IsBossDied[0] = false;
             IsBossDied[1] = false;
             IsBossDied[2] = false;
@@ -106,7 +107,7 @@ public:
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
             case 176951:                                    //Sulfuron
                 RuneKoro = pGo->GetGUID();
@@ -129,62 +130,65 @@ public:
             case 176957:                                    //Gehennas
                 RuneMohn = pGo->GetGUID();
                 break;
+            case 179703:
+                m_uiFirelordCacheGUID = pGo->GetGUID();      //when majordomo event == DONE DoRespawnGameObject(m_uiFirelordCacheGUID,);
+                break;
             }
         }
 
-        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
-            switch (creature->GetEntry())
+            switch (pCreature->GetEntry())
             {
                 case ID_LUCIFRON:
-                    Lucifron = creature->GetGUID();
+                    Lucifron = pCreature->GetGUID();
                     break;
 
                 case ID_MAGMADAR:
-                    Magmadar = creature->GetGUID();
+                    Magmadar = pCreature->GetGUID();
                     break;
 
                 case ID_GEHENNAS:
-                    Gehennas = creature->GetGUID();
+                    Gehennas = pCreature->GetGUID();
                     break;
 
                 case ID_GARR:
-                    Garr = creature->GetGUID();
+                    Garr = pCreature->GetGUID();
                     break;
 
                 case ID_GEDDON:
-                    Geddon = creature->GetGUID();
+                    Geddon = pCreature->GetGUID();
                     break;
 
                 case ID_SHAZZRAH:
-                    Shazzrah = creature->GetGUID();
+                    Shazzrah = pCreature->GetGUID();
                     break;
 
                 case ID_SULFURON:
-                    Sulfuron = creature->GetGUID();
+                    Sulfuron = pCreature->GetGUID();
                     break;
 
                 case ID_GOLEMAGG:
-                    Golemagg = creature->GetGUID();
+                    Golemagg = pCreature->GetGUID();
                     break;
 
                 case ID_DOMO:
-                    Domo = creature->GetGUID();
+                    Domo = pCreature->GetGUID();
                     break;
 
                 case ID_RAGNAROS:
-                    Ragnaros = creature->GetGUID();
+                    Ragnaros = pCreature->GetGUID();
                     break;
 
                 case ID_FLAMEWAKERPRIEST:
-                    FlamewakerPriest = creature->GetGUID();
+                    FlamewakerPriest = pCreature->GetGUID();
                     break;
             }
         }
 
         uint64 GetData64 (uint32 identifier)
         {
-            switch (identifier)
+            switch(identifier)
             {
                 case DATA_SULFURON:
                     return Sulfuron;
@@ -200,7 +204,7 @@ public:
 
         uint32 GetData(uint32 type)
         {
-            switch (type)
+            switch(type)
             {
                 case DATA_LUCIFRONISDEAD:
                     if (IsBossDied[0])
@@ -257,7 +261,9 @@ public:
                 IsBossDied[7] = true;
         }
     };
+
 };
+
 
 void AddSC_instance_molten_core()
 {

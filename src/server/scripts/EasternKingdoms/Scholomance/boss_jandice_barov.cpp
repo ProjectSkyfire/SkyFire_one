@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,14 +30,15 @@ EndScriptData */
 
 //Spells of Illusion of Jandice Barov
 #define SPELL_CLEAVE                15584
-class boss_jandice_barov : public CreatureScript
+
+class boss_jandice_barov : public CreatureScript
 {
 public:
     boss_jandice_barov() : CreatureScript("boss_jandice_barov") { }
 
-    CreatureAI* GetAI_boss_jandicebarov(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_jandicebarovAI (creature);
+        return new boss_jandicebarovAI (pCreature);
     }
 
     struct boss_jandicebarovAI : public ScriptedAI
@@ -66,7 +65,7 @@ public:
 
         void SummonIllusions(Unit* victim)
         {
-            if (Creature *Illusion = DoSpawnCreature(11439, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
+            if (Creature *Illusion = DoSpawnCreature(11439, float(irand(-9,9)), float(irand(-9,9)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000))
                 Illusion->AI()->AttackStart(victim);
         }
 
@@ -103,7 +102,8 @@ public:
             //Illusion_Timer
             if (!Invisible && Illusion_Timer <= diff)
             {
-                //Inturrupt any spell casting
+
+                //Interrupt any spell casting
                 me->InterruptNonMeleeSpells(false);
                 me->setFaction(35);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -114,7 +114,7 @@ public:
                 Unit *pTarget = NULL;
                 for (uint8 i = 0; i < 10; ++i)
                 {
-                    pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                     if (pTarget)
                         SummonIllusions(pTarget);
                 }
@@ -148,17 +148,19 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 // Illusion of Jandice Barov Script
-class mob_illusionofjandicebarov : public CreatureScript
+
+class mob_illusionofjandicebarov : public CreatureScript
 {
 public:
     mob_illusionofjandicebarov() : CreatureScript("mob_illusionofjandicebarov") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_illusionofjandicebarovAI (creature);
+        return new mob_illusionofjandicebarovAI (pCreature);
     }
 
     struct mob_illusionofjandicebarovAI : public ScriptedAI
@@ -196,7 +198,10 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
+
 
 void AddSC_boss_jandicebarov()
 {

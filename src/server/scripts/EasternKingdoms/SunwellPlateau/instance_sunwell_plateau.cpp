@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance_Sunwell_Plateau
@@ -38,19 +36,20 @@ EndScriptData */
 4 - M'uru
 5 - Kil'Jaeden
 */
-class instance_sunwell_plateau : public InstanceMapScript
+
+class instance_sunwell_plateau : public InstanceMapScript
 {
 public:
-    instance_sunwell_plateau() : InstanceMapScript("instance_sunwell_plateau") { }
+    instance_sunwell_plateau() : InstanceMapScript("instance_sunwell_plateau", 580) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_sunwell_plateau_InstanceMapScript(pMap);
     }
 
-    struct instance_sunwell_plateau_InstanceMapScript : public ScriptedInstance
+    struct instance_sunwell_plateau_InstanceMapScript : public InstanceScript
     {
-        instance_sunwell_plateau_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_sunwell_plateau_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -130,38 +129,38 @@ public:
                 for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                 {
                     Player* plr = itr->getSource();
-                    if (plr && !plr->HasAura(45839, 0))
+                    if (plr && !plr->HasAura(45839,0))
                             return plr;
                 }
             }
 
-            sLog->outDebug("TSCR: Instance Sunwell Plateau: GetPlayerInMap, but PlayerList is empty!");
+            sLog.outDebug("TSCR: Instance Sunwell Plateau: GetPlayerInMap, but PlayerList is empty!");
             return NULL;
         }
 
-        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
-            switch (creature->GetEntry())
+            switch(pCreature->GetEntry())
             {
-                case 24850: Kalecgos_Dragon     = creature->GetGUID(); break;
-                case 24891: Kalecgos_Human      = creature->GetGUID(); break;
-                case 24892: Sathrovarr          = creature->GetGUID(); break;
-                case 24882: Brutallus           = creature->GetGUID(); break;
-                case 24895: Madrigosa           = creature->GetGUID(); break;
-                case 25038: Felmyst             = creature->GetGUID(); break;
-                case 25166: Alythess            = creature->GetGUID(); break;
-                case 25165: Sacrolash           = creature->GetGUID(); break;
-                case 25741: Muru                = creature->GetGUID(); break;
-                case 25315: KilJaeden           = creature->GetGUID(); break;
-                case 25608: KilJaedenController = creature->GetGUID(); break;
-                case 26046: Anveena             = creature->GetGUID(); break;
-                case 25319: KalecgosKJ          = creature->GetGUID(); break;
+                case 24850: Kalecgos_Dragon     = pCreature->GetGUID(); break;
+                case 24891: Kalecgos_Human      = pCreature->GetGUID(); break;
+                case 24892: Sathrovarr          = pCreature->GetGUID(); break;
+                case 24882: Brutallus           = pCreature->GetGUID(); break;
+                case 24895: Madrigosa           = pCreature->GetGUID(); break;
+                case 25038: Felmyst             = pCreature->GetGUID(); break;
+                case 25166: Alythess            = pCreature->GetGUID(); break;
+                case 25165: Sacrolash           = pCreature->GetGUID(); break;
+                case 25741: Muru                = pCreature->GetGUID(); break;
+                case 25315: KilJaeden           = pCreature->GetGUID(); break;
+                case 25608: KilJaedenController = pCreature->GetGUID(); break;
+                case 26046: Anveena             = pCreature->GetGUID(); break;
+                case 25319: KalecgosKJ          = pCreature->GetGUID(); break;
             }
         }
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
                 case 188421: ForceField     = pGo->GetGUID(); break;
                 case 188523: KalecgosWall[0] = pGo->GetGUID(); break;
@@ -182,7 +181,7 @@ public:
 
         uint32 GetData(uint32 id)
         {
-            switch (id)
+            switch(id)
             {
                 case DATA_KALECGOS_EVENT:     return m_auiEncounter[0];
                 case DATA_BRUTALLUS_EVENT:    return m_auiEncounter[1];
@@ -196,7 +195,7 @@ public:
 
         uint64 GetData64(uint32 id)
         {
-            switch (id)
+            switch(id)
             {
                 case DATA_KALECGOS_DRAGON:      return Kalecgos_Dragon;
                 case DATA_KALECGOS_HUMAN:       return Kalecgos_Human;
@@ -221,19 +220,19 @@ public:
 
         void SetData(uint32 id, uint32 data)
         {
-            switch (id)
+            switch(id)
             {
                 case DATA_KALECGOS_EVENT:
                     {
                         if (data == NOT_STARTED || data == DONE)
                         {
-                            HandleGameObject(ForceField, true);
+                            HandleGameObject(ForceField,true);
                             HandleGameObject(KalecgosWall[0],true);
                             HandleGameObject(KalecgosWall[1],true);
                         }
                         else if (data == IN_PROGRESS)
                         {
-                            HandleGameObject(ForceField, false);
+                            HandleGameObject(ForceField,false);
                             HandleGameObject(KalecgosWall[0],false);
                             HandleGameObject(KalecgosWall[1],false);
                         }
@@ -247,7 +246,7 @@ public:
                     m_auiEncounter[2] = data; break;
                 case DATA_EREDAR_TWINS_EVENT:  m_auiEncounter[3] = data; break;
                 case DATA_MURU_EVENT:
-                    switch (data)
+                    switch(data)
                     {
                         case DONE:
                             HandleGameObject(MurusGate[0], true);
@@ -304,7 +303,9 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
 };
+
 
 void AddSC_instance_sunwell_plateau()
 {

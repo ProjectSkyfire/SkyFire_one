@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Murmur
@@ -26,31 +24,33 @@ SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "ScriptPCH.h"
+#include "shadow_labyrinth.h"
 
 #define EMOTE_SONIC_BOOM            -1555036
 
-#define SPELL_SONIC_BOOM_CAST       (HeroicMode?38796:33923)
-#define SPELL_SONIC_BOOM_EFFECT     (HeroicMode?38795:33666)
+#define SPELL_SONIC_BOOM_CAST       DUNGEON_MODE(33923, 38796)
+#define SPELL_SONIC_BOOM_EFFECT     DUNGEON_MODE(33666, 38795)
 #define SPELL_RESONANCE             33657
-#define SPELL_MURMURS_TOUCH         (HeroicMode?38794:33711)
+#define SPELL_MURMURS_TOUCH         DUNGEON_MODE(33711, 38794)
 #define SPELL_MAGNETIC_PULL         33689
 #define SPELL_SONIC_SHOCK           38797
 #define SPELL_THUNDERING_STORM      39365
-class boss_murmur : public CreatureScript
+
+class boss_murmur : public CreatureScript
 {
 public:
     boss_murmur() : CreatureScript("boss_murmur") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_murmurAI (creature);
+        return new boss_murmurAI (pCreature);
     }
 
-    struct boss_murmurAI : public Scripted_NoMovementAI
+    struct boss_murmurAI : public ScriptedAI
     {
-        boss_murmurAI(Creature *c) : Scripted_NoMovementAI(c)
+        boss_murmurAI(Creature *c) : ScriptedAI(c)
         {
-            HeroicMode = me->GetMap()->IsHeroic();
+            SetCombatMovement(false);
         }
 
         uint32 SonicBoom_Timer;
@@ -59,32 +59,49 @@ public:
         uint32 MagneticPull_Timer;
         uint32 SonicShock_Timer;
         uint32 ThunderingStorm_Timer;
-        bool HeroicMode;
         bool SonicBoom;
 
         void Reset()
         {
             SonicBoom_Timer = 30000;
-            MurmursTouch_Timer = 20000;
-            Resonance_Timer = 10000;
-            MagneticPull_Timer = 20000;
+            MurmursTouch_Timer = 8000 + rand()%12000;
+            Resonance_Timer = 5000;
+            MagneticPull_Timer = 15000 + rand()%15000;
             ThunderingStorm_Timer = 15000;
             SonicShock_Timer = 10000;
             SonicBoom = false;
 
             //database should have `RegenHealth`=0 to prevent regen
-            uint32 hp = (me->GetMaxHealth()*40)/100;
+            uint32 hp = me->CountPctFromMaxHealth(40);
             if (hp) me->SetHealth(hp);
             me->ResetPlayerDamageReq();
         }
 
-        void EnterCombat(Unit *who) { }
+        void SonicBoomEffect()
+        {
+            std::list<HostileReference *> t_list = me->getThreatManager().getThreatList();
+            for (std::list<HostileReference *>::const_iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
+            {
+               Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
+               if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
+               {
+                   //Not do anything without aura, spell can be resisted!
+                   if (pTarget->HasAura(SPELL_SONIC_BOOM_CAST) && me->IsWithinDistInMap(pTarget, 34.0f))
+                   {
+                       //This will be wrong calculation. Also, comments suggest it must deal damage
+                       pTarget->SetHealth(pTarget->CountPctFromMaxHealth(20));
+                   }
+               }
+            }
+        }
+
+        void EnterCombat(Unit * /*who*/) { }
 
         // Sonic Boom instant damage (needs core fix instead of this)
         void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
         {
-            if (pTarget && pTarget->isAlive() && spell && spell->Id == SPELL_SONIC_BOOM_EFFECT)
-                me->DealDamage(pTarget,(pTarget->GetHealth()*90)/100, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NATURE, spell);
+            if (pTarget && pTarget->isAlive() && spell && spell->Id == uint32(SPELL_SONIC_BOOM_EFFECT))
+                me->DealDamage(pTarget,(pTarget->GetHealth()*90)/100,NULL,SPELL_DIRECT_DAMAGE,SPELL_SCHOOL_MASK_NATURE,spell);
         }
 
         void UpdateAI(const uint32 diff)
@@ -97,6 +114,8 @@ public:
             if (SonicBoom)
             {
                 DoCast(me, SPELL_SONIC_BOOM_EFFECT, true);
+                SonicBoomEffect();
+
                 SonicBoom = false;
                 Resonance_Timer = 1500;
             }
@@ -112,41 +131,43 @@ public:
             // Murmur's Touch
             if (MurmursTouch_Timer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 80, true))
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0,80,true))
                     DoCast(pTarget, SPELL_MURMURS_TOUCH);
-                MurmursTouch_Timer = 30000;
+                MurmursTouch_Timer = 25000 + rand()%10000;
             } else MurmursTouch_Timer -= diff;
 
             // Resonance
-            if (Resonance_Timer <= diff)
+            if (!SonicBoom && !(me->IsWithinMeleeRange(me->getVictim())))
             {
-                if (!me->IsWithinMeleeRange(SelectTarget(SELECT_TARGET_NEAREST, 0, 20, true)))
+                if (Resonance_Timer <= diff)
+                {
                     DoCast(me, SPELL_RESONANCE);
-                Resonance_Timer = 5000;
-            } else Resonance_Timer -= diff;
+                    Resonance_Timer = 5000;
+                } else Resonance_Timer -= diff;
+            }
 
             // Magnetic Pull
             if (MagneticPull_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     if (pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->isAlive())
                     {
                         DoCast(pTarget, SPELL_MAGNETIC_PULL);
-                        MagneticPull_Timer = 20000+rand()%15000;
+                        MagneticPull_Timer = 15000+rand()%15000;
                         return;
                     }
                 MagneticPull_Timer = 500;
             } else MagneticPull_Timer -= diff;
 
-            if (HeroicMode)
+            if (IsHeroic())
             {
                 // Thundering Storm
                 if (ThunderingStorm_Timer <= diff)
                 {
                     std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
-                    for (std::list<HostileReference*>::iterator i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
+                    for (std::list<HostileReference*>::const_iterator i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
                         if (Unit *pTarget = Unit::GetUnit((*me),(*i)->getUnitGuid()))
-                            if (pTarget->isAlive() && me->GetDistance2d(pTarget) > 35)
+                            if (pTarget->isAlive() && !me->IsWithinDist(pTarget, 35, false))
                                 DoCast(pTarget, SPELL_THUNDERING_STORM, true);
                     ThunderingStorm_Timer = 15000;
                 } else ThunderingStorm_Timer -= diff;
@@ -154,7 +175,7 @@ public:
                 // Sonic Shock
                 if (SonicShock_Timer <= diff)
                 {
-                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 20, false))
+                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0,20,false))
                         if (pTarget->isAlive())
                             DoCast(pTarget, SPELL_SONIC_SHOCK);
                     SonicShock_Timer = 10000+rand()%10000;
@@ -167,7 +188,7 @@ public:
             if (!me->IsWithinMeleeRange(me->getVictim()))
             {
                 std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
-                for (std::list<HostileReference*>::iterator i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
+                for (std::list<HostileReference*>::const_iterator i = m_threatlist.begin(); i != m_threatlist.end(); ++i)
                     if (Unit *pTarget = Unit::GetUnit((*me),(*i)->getUnitGuid()))
                         if (pTarget->isAlive() && me->IsWithinMeleeRange(pTarget))
                         {
@@ -179,7 +200,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_murmur()
 {

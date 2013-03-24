@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -36,14 +34,15 @@ enum eEnums
     SPELL_FIRESHIELD             = 19626,
     SPELL_FRENZY                 = 8269 //28371,
 };
-class boss_vectus : public CreatureScript
+
+class boss_vectus : public CreatureScript
 {
 public:
     boss_vectus() : CreatureScript("boss_vectus") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_vectusAI (creature);
+        return new boss_vectusAI (pCreature);
     }
 
     struct boss_vectusAI : public ScriptedAI
@@ -85,7 +84,7 @@ public:
                 m_uiBlastWave_Timer -= uiDiff;
 
             //Frenzy_Timer
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 25)
+            if (HealthBelowPct(25))
             {
                 if (m_uiFrenzy_Timer <= uiDiff)
                 {
@@ -101,7 +100,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_vectus()
 {

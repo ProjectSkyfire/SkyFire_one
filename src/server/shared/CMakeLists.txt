@@ -1,7 +1,5 @@
-# Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-# Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-# Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-# Copyright (C) 2005-2012 MaNGOS <http://www.getmangos.com/>
+# Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -11,7 +9,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-if (USE_COREPCH)
+if( USE_COREPCH )
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -31,11 +29,9 @@ file(GLOB sources_localdir *.cpp *.h)
 # Build shared sourcelist
 #
 
-if (USE_COREPCH AND MSVC)
-  set(shared_STAT_SRCS
-    PrecompiledHeaders/SharedPCH.cpp
-    PrecompiledHeaders/SharedPCH.h
-  )
+if (USE_COREPCH)
+  set(shared_STAT_PCH_HDR PrecompiledHeaders/sharedPCH.h)
+  set(shared_STAT_PCH_SRC PrecompiledHeaders/sharedPCH.cpp)
 endif()
 
 set(shared_STAT_SRCS
@@ -55,17 +51,12 @@ set(shared_STAT_SRCS
 
 include_directories(
   ${CMAKE_BINARY_DIR}
+#  ${CMAKE_SOURCE_DIR}/dep/recastnavigation/Detour
   ${CMAKE_SOURCE_DIR}/dep/SFMT
   ${CMAKE_SOURCE_DIR}/dep/mersennetwister
   ${CMAKE_SOURCE_DIR}/dep/sockets/include
   ${CMAKE_SOURCE_DIR}/dep/utf8cpp
   ${CMAKE_SOURCE_DIR}/src/server
-  #${CMAKE_SOURCE_DIR}/src/server/game/World  
-  #${CMAKE_SOURCE_DIR}/src/server/game/Addons    
-  #${CMAKE_SOURCE_DIR}/src/server/game/Server 
-  #${CMAKE_SOURCE_DIR}/src/server/game/Server/Protocol 
-  #${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous
-  #${CMAKE_SOURCE_DIR}/src/server/game/Warden  
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Configuration
   ${CMAKE_CURRENT_SOURCE_DIR}/Cryptography
@@ -83,7 +74,10 @@ include_directories(
   ${OPENSSL_INCLUDE_DIR}
 )
 
-add_library(shared STATIC ${shared_STAT_SRCS})
+add_library(shared STATIC
+  ${shared_STAT_SRCS}
+  ${shared_STAT_PCH_SRC}
+)
 
 target_link_libraries(shared
   ${ACE_LIBRARY}
@@ -91,9 +85,5 @@ target_link_libraries(shared
 
 # Generate precompiled header
 if (USE_COREPCH)
-  if (CMAKE_COMPILER_IS_GNUCXX)
-    add_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH.h)
-  elseif(MSVC)
-    add_native_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH)
-  endif()
-endif()
+  add_cxx_pch(shared ${shared_STAT_PCH_HDR} ${shared_STAT_PCH_SRC})
+endif ()

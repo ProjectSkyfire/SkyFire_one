@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Celebras_the_Cursed
@@ -25,39 +23,44 @@ SDComment:
 SDCategory: Maraudon
 EndScriptData */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
 
-#define SPELL_WRATH                 21807
-#define SPELL_ENTANGLINGROOTS       12747
-#define SPELL_CORRUPT_FORCES        21968
-class celebras_the_cursed : public CreatureScript
+enum Spells
+{
+    SPELL_WRATH                 = 21807,
+    SPELL_ENTANGLINGROOTS       = 12747,
+    SPELL_CORRUPT_FORCES        = 21968
+};
+
+class celebras_the_cursed : public CreatureScript
 {
 public:
     celebras_the_cursed() : CreatureScript("celebras_the_cursed") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new celebras_the_cursedAI (creature);
     }
 
     struct celebras_the_cursedAI : public ScriptedAI
     {
-        celebras_the_cursedAI(Creature *c) : ScriptedAI(c) {}
+        celebras_the_cursedAI(Creature* creature) : ScriptedAI(creature) {}
 
-        uint32 Wrath_Timer;
-        uint32 EntanglingRoots_Timer;
-        uint32 CorruptForces_Timer;
+        uint32 WrathTimer;
+        uint32 EntanglingRootsTimer;
+        uint32 CorruptForcesTimer;
 
         void Reset()
         {
-            Wrath_Timer = 8000;
-            EntanglingRoots_Timer = 2000;
-            CorruptForces_Timer = 30000;
+            WrathTimer = 8000;
+            EntanglingRootsTimer = 2000;
+            CorruptForcesTimer = 30000;
         }
 
-        void EnterCombat(Unit * /*who*/) { }
+        void EnterCombat(Unit* /*who*/) { }
 
-        void JustDied(Unit* /*Killer*/)
+        void JustDied(Unit* /*killer*/)
         {
             me->SummonCreature(13716, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 600000);
         }
@@ -68,29 +71,30 @@ public:
                 return;
 
             //Wrath
-            if (Wrath_Timer <= diff)
+            if (WrathTimer <= diff)
             {
-                Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if (pTarget)
-                    DoCast(pTarget, SPELL_WRATH);
-                Wrath_Timer = 8000;
-            } else Wrath_Timer -= diff;
+                if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                    DoCast(target, SPELL_WRATH);
+                WrathTimer = 8000;
+            }
+            else WrathTimer -= diff;
 
             //EntanglingRoots
-            if (EntanglingRoots_Timer <= diff)
+            if (EntanglingRootsTimer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_ENTANGLINGROOTS);
-                EntanglingRoots_Timer = 20000;
-            } else EntanglingRoots_Timer -= diff;
+                DoCastVictim(SPELL_ENTANGLINGROOTS);
+                EntanglingRootsTimer = 20000;
+            }
+            else EntanglingRootsTimer -= diff;
 
             //CorruptForces
-            if (CorruptForces_Timer <= diff)
+            if (CorruptForcesTimer <= diff)
             {
                 me->InterruptNonMeleeSpells(false);
                 DoCast(me, SPELL_CORRUPT_FORCES);
-                CorruptForces_Timer = 20000;
-            } else CorruptForces_Timer -= diff;
+                CorruptForcesTimer = 20000;
+            }
+            else CorruptForcesTimer -= diff;
 
             DoMeleeAttackIfReady();
         }

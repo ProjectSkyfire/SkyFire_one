@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,14 +15,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ScriptData
-SDName: Boss_Razuvious
-SD%Complete: 50
-SDComment: Missing adds and event is impossible without Mind Control
-SDCategory: Naxxramas
-EndScriptData */
-
 #include "ScriptPCH.h"
+#include "naxxramas.h"
 
 //Razuvious - NO TEXT sound only
 //8852 aggro01 - Hah hah, I'm just getting warmed up!
@@ -41,81 +32,85 @@ EndScriptData */
 //8860 death - An honorable... death...
 //8947 - Aggro Mixed? - ?
 
-#define SOUND_AGGRO1    8852
-#define SOUND_AGGRO2    8853
-#define SOUND_AGGRO3    8854
-#define SOUND_SLAY1     8861
-#define SOUND_SLAY2     8863
-#define SOUND_COMMND1   8855
-#define SOUND_COMMND2   8856
-#define SOUND_COMMND3   8858
-#define SOUND_COMMND4   8859
-#define SOUND_COMMND5   8861
+#define SOUND_AGGRO     RAND(8852,8853,8854)
+#define SOUND_SLAY      RAND(8861,8863)
+#define SOUND_COMMND    RAND(8855,8856,8858,8859,8861)
 #define SOUND_DEATH     8860
 #define SOUND_AGGROMIX  8847
 
-#define SPELL_UNBALANCINGSTRIKE     26613
-#define SPELL_DISRUPTINGSHOUT       29107
-class boss_razuvious : public CreatureScript
+#define SPELL_UNBALANCING_STRIKE    26613
+#define SPELL_DISRUPTING_SHOUT      RAID_MODE(29107,55543)
+#define SPELL_JAGGED_KNIFE          55550
+#define SPELL_HOPELESS              29125
+
+enum Events
+{
+    EVENT_NONE,
+    EVENT_STRIKE,
+    EVENT_SHOUT,
+    EVENT_KNIFE,
+    EVENT_COMMAND,
+};
+
+class boss_razuvious : public CreatureScript
 {
 public:
     boss_razuvious() : CreatureScript("boss_razuvious") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_razuviousAI (creature);
+        return new boss_razuviousAI (pCreature);
     }
 
-    struct boss_razuviousAI : public ScriptedAI
+    struct boss_razuviousAI : public BossAI
     {
-        boss_razuviousAI(Creature *c) : ScriptedAI(c) {}
-
-        uint32 UnbalancingStrike_Timer;
-        uint32 DisruptingShout_Timer;
-        uint32 CommandSound_Timer;
+        boss_razuviousAI(Creature *c) : BossAI(c, BOSS_RAZUVIOUS) {}
 
         void Reset()
         {
-            UnbalancingStrike_Timer = 30000;                    //30 seconds
-            DisruptingShout_Timer = 25000;                      //25 seconds
-            CommandSound_Timer = 40000;                         //40 seconds
+            _Reset();
+            SetImmuneToDeathGrip();
         }
 
-        void KilledUnit(Unit* Victim)
+        void KilledUnit(Unit* /*victim*/)
         {
-            if (rand()%3)
+            if (!(rand()%3))
+                DoPlaySoundToSet(me, SOUND_SLAY);
+        }
+
+        void DamageTaken(Unit* pDone_by, uint32& uiDamage)
+        {
+            // Damage done by the controlled Death Knight understudies should also count toward damage done by players
+            if (pDone_by->GetTypeId() == TYPEID_UNIT && (pDone_by->GetEntry() == 16803 || pDone_by->GetEntry() == 29941))
+            {
+                me->LowerPlayerDamageReq(uiDamage);
+            }
+        }
+
+        void JustDied(Unit* /*killer*/)
+        {
+            _JustDied();
+            DoPlaySoundToSet(me, SOUND_DEATH);
+            me->CastSpell(me, SPELL_HOPELESS, true); // TODO: this may affect other creatures
+
+            std::list<Creature*> lList;
+            me->GetCreatureListWithEntryInGrid(lList , 29912, 200);
+
+            if (!lList.size())
                 return;
 
-            switch (rand()%2)
-            {
-                case 0:
-                    DoPlaySoundToSet(me, SOUND_SLAY1);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(me, SOUND_SLAY2);
-                    break;
-            }
+            for (std::list<Creature*>::const_iterator i = lList.begin(); i != lList.end(); ++i)
+                (*i)->DealDamage((*i),(*i)->GetHealth());
         }
 
-        void JustDied(Unit* Killer)
+        void EnterCombat(Unit * /*who*/)
         {
-            DoPlaySoundToSet(me, SOUND_DEATH);
-        }
-
-        void EnterCombat(Unit *who)
-        {
-            switch (rand()%3)
-            {
-                case 0:
-                    DoPlaySoundToSet(me, SOUND_AGGRO1);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(me, SOUND_AGGRO2);
-                    break;
-                case 2:
-                    DoPlaySoundToSet(me, SOUND_AGGRO3);
-                    break;
-            }
+            _EnterCombat();
+            DoPlaySoundToSet(me, SOUND_AGGRO);
+            events.ScheduleEvent(EVENT_STRIKE, 30000);
+            events.ScheduleEvent(EVENT_SHOUT, 25000);
+            events.ScheduleEvent(EVENT_COMMAND, 40000);
+            events.ScheduleEvent(EVENT_KNIFE, 10000);
         }
 
         void UpdateAI(const uint32 diff)
@@ -123,49 +118,38 @@ public:
             if (!UpdateVictim())
                 return;
 
-            //UnbalancingStrike_Timer
-            if (UnbalancingStrike_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_UNBALANCINGSTRIKE);
-                UnbalancingStrike_Timer = 30000;
-            } else UnbalancingStrike_Timer -= diff;
+            events.Update(diff);
 
-            //DisruptingShout_Timer
-            if (DisruptingShout_Timer <= diff)
+            while (uint32 eventId = events.ExecuteEvent())
             {
-                DoCast(me->getVictim(), SPELL_DISRUPTINGSHOUT);
-                DisruptingShout_Timer = 25000;
-            } else DisruptingShout_Timer -= diff;
-
-            //CommandSound_Timer
-            if (CommandSound_Timer <= diff)
-            {
-                switch (rand()%5)
+                switch(eventId)
                 {
-                    case 0:
-                        DoPlaySoundToSet(me, SOUND_COMMND1);
-                        break;
-                    case 1:
-                        DoPlaySoundToSet(me, SOUND_COMMND2);
-                        break;
-                    case 2:
-                        DoPlaySoundToSet(me, SOUND_COMMND3);
-                        break;
-                    case 3:
-                        DoPlaySoundToSet(me, SOUND_COMMND4);
-                        break;
-                    case 4:
-                        DoPlaySoundToSet(me, SOUND_COMMND5);
-                        break;
+                    case EVENT_STRIKE:
+                        DoCast(me->getVictim(), SPELL_UNBALANCING_STRIKE);
+                        events.ScheduleEvent(EVENT_STRIKE, 30000);
+                        return;
+                    case EVENT_SHOUT:
+                        DoCastAOE(SPELL_DISRUPTING_SHOUT);
+                        events.ScheduleEvent(EVENT_SHOUT, 25000);
+                        return;
+                    case EVENT_KNIFE:
+                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 45.0f))
+                            DoCast(pTarget, SPELL_JAGGED_KNIFE);
+                        events.ScheduleEvent(EVENT_KNIFE, 10000);
+                        return;
+                    case EVENT_COMMAND:
+                        DoPlaySoundToSet(me, SOUND_COMMND);
+                        events.ScheduleEvent(EVENT_COMMAND, 40000);
+                        return;
                 }
-
-                CommandSound_Timer = 40000;
-            } else CommandSound_Timer -= diff;
+            }
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_razuvious()
 {

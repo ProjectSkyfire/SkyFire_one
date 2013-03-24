@@ -1,420 +1,124 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance_Shattered_Halls
-SD%Complete: 95
-SDComment:
+SD%Complete: 50
+SDComment: currently missing info about door. instance not complete
 SDCategory: Hellfire Citadel, Shattered Halls
 EndScriptData */
 
 #include "ScriptPCH.h"
 #include "shattered_halls.h"
 
-#define ENCOUNTERS           4
+#define MAX_ENCOUNTER  2
 
-#define DOOR_NETHEKURSE1     182539
-#define DOOR_NETHEKURSE2     182540
+#define DOOR_NETHEKURSE     1
 
-enum
+class instance_shattered_halls : public InstanceMapScript
 {
-    NPC_EXECUTIONER                = 17301,
-
-    NPC_SOLDIER_ALLIANCE_1         = 17288,
-    NPC_SOLDIER_ALLIANCE_2         = 17289,
-    NPC_SOLDIER_ALLIANCE_3         = 17292,
-    NPC_OFFICER_ALLIANCE           = 17290,
-
-    NPC_SOLDIER_HORDE_1            = 17294,
-    NPC_SOLDIER_HORDE_2            = 17295,
-    NPC_SOLDIER_HORDE_3            = 17297,
-    NPC_OFFICER_HORDE              = 17296,
-
-    SPELL_KARGATH_EXECUTIONER_1    = 39288,
-    SPELL_KARGATH_EXECUTIONER_2    = 39289,
-    SPELL_KARGATH_EXECUTIONER_3    = 39290,
-
-    //SAY_KARGATH_EXECUTE_ALLY = ?,
-    //SAY_KARGATH_EXECUTE_HORDE = ?
-};
-
-struct SpawnLocation
-{
-    uint32 uiAllianceEntry, uiHordeEntry;
-    float m_fX, m_fY, m_fZ, m_fO;
-};
-
-const float afExecutionerLoc[4] = {151.443f, -84.439f, 1.938f, 6.283f};
-
-static SpawnLocation aSoldiersLocs[]=
-{
-    {0, NPC_SOLDIER_HORDE_1, 119.609f, 256.127f, -45.254f, 5.133f},
-    {NPC_SOLDIER_ALLIANCE_1, 0, 131.106f, 254.520f, -45.236f, 3.951f},
-    {NPC_SOLDIER_ALLIANCE_3, NPC_SOLDIER_HORDE_3, 151.040f, -91.558f, 1.936f, 1.559f},
-    {NPC_SOLDIER_ALLIANCE_2, NPC_SOLDIER_HORDE_2, 150.669f, -77.015f, 1.933f, 4.705f},
-    {NPC_OFFICER_ALLIANCE, NPC_OFFICER_HORDE, 138.241f, -84.198f, 1.907f, 0.055f}
-};
-class instance_shattered_halls : public InstanceMapScript
-{
-public:
-    instance_shattered_halls() : InstanceMapScript("instance_shattered_halls") { }
-
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
-    {
-        return new instance_shattered_halls_InstanceMapScript(map);
-    }
-
-    struct instance_shattered_halls_InstanceMapScript : public ScriptedInstance
-    {
-        instance_shattered_halls_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
-
-        uint32 Encounter[ENCOUNTERS];
-        std::string str_data;
-
-        uint64 nethekurseDoor1GUID;
-        uint64 nethekurseDoor2GUID;
-        uint64 nethekurseGUID;
-        uint64 warbringerGUID;
-        uint64 kargathGUID;
-        uint64 executionerGUID;
-        uint64 officeraGUID;
-        uint64 officerhGUID;
-        uint64 soldiera2GUID;
-        uint64 soldiera3GUID;
-        uint64 soldierh2GUID;
-        uint64 soldierh3GUID;
-
-        uint32 uiExecutionTimer;
-        uint32 uiTeam;
-        uint8 uiExecutionStage;
-
-        void Initialize()
+    public:
+        instance_shattered_halls()
+            : InstanceMapScript("instance_shattered_halls", 540)
         {
-            nethekurseDoor1GUID = 0;
-            nethekurseDoor2GUID = 0;
-            nethekurseGUID = 0;
-            warbringerGUID = 0;
-            kargathGUID = 0;
-            executionerGUID = 0;
-            officeraGUID = 0;
-            officerhGUID = 0;
-            soldiera2GUID = 0;
-            soldiera3GUID = 0;
-            soldierh2GUID = 0;
-            soldierh3GUID = 0;
-
-            uiTeam = 0;
-            uiExecutionStage =0;
-            uiExecutionTimer = 55*MINUTE*IN_MILLISECONDS;
-
-            for (uint8 i = 0; i < ENCOUNTERS; i++)
-                Encounter[i] = NOT_STARTED;
         }
-
-        bool IsEncounterInProgress() const
+        struct instance_shattered_halls_InstanceMapScript : public InstanceScript
         {
-            for (uint8 i = 0; i < ENCOUNTERS; i++)
-                if (Encounter[i] == IN_PROGRESS) return true;
+            instance_shattered_halls_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
-            return false;
-        }
+            uint32 m_auiEncounter[MAX_ENCOUNTER];
+            uint64 nethekurseGUID;
+            uint64 nethekurseDoorGUID;
 
-        void OnPlayerEnter(Player* player)
-        {
-            if (!instance->IsHeroic() || uiTeam)
-                return;
-
-            uiTeam = player->GetTeam();
-
-            if (uiTeam == ALLIANCE)
-                player->SummonCreature(aSoldiersLocs[1].uiAllianceEntry, aSoldiersLocs[1].m_fX, aSoldiersLocs[1].m_fY, aSoldiersLocs[1].m_fZ, aSoldiersLocs[1].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-            else
-                player->SummonCreature(aSoldiersLocs[0].uiHordeEntry, aSoldiersLocs[0].m_fX, aSoldiersLocs[0].m_fY, aSoldiersLocs[0].m_fZ, aSoldiersLocs[0].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-        }
-
-        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
-        {
-            switch (pGo->GetEntry())
+            void Initialize()
             {
-                case DOOR_NETHEKURSE1: nethekurseDoor1GUID = pGo->GetGUID(); break;
-                case DOOR_NETHEKURSE2: nethekurseDoor2GUID = pGo->GetGUID(); break;
+                memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
+                nethekurseGUID = 0;
+                nethekurseDoorGUID = 0;
             }
-        }
 
-        void OnCreatureCreate(Creature* creature, bool /*add*/)
-        {
-            switch (creature->GetEntry())
+            void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
             {
-                case 16807: nethekurseGUID = creature->GetGUID(); break;
-                case 16809: warbringerGUID = creature->GetGUID(); break;
-                case 16808: kargathGUID = creature->GetGUID(); break;
-                case NPC_EXECUTIONER: executionerGUID = creature->GetGUID(); break;
-                case NPC_SOLDIER_ALLIANCE_2: soldiera2GUID = creature->GetGUID(); break;
-                case NPC_SOLDIER_ALLIANCE_3: soldiera3GUID = creature->GetGUID(); break;
-                case NPC_OFFICER_ALLIANCE: officeraGUID = creature->GetGUID(); break;
-                case NPC_SOLDIER_HORDE_2: soldierh2GUID = creature->GetGUID(); break;
-                case NPC_SOLDIER_HORDE_3: soldierh3GUID = creature->GetGUID(); break;
-                case NPC_OFFICER_HORDE: officerhGUID = creature->GetGUID(); break;
-            }
-        }
-
-        Player* GetPlayerInMap()
-        {
-            Map::PlayerList const& players = instance->GetPlayers();
-
-            if (!players.isEmpty())
-            {
-                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                switch(pGo->GetEntry())
                 {
-                    if (Player* plr = itr->getSource())
-                        return plr;
+                    case DOOR_NETHEKURSE:
+                        nethekurseDoorGUID = pGo->GetGUID();
+                        break;
                 }
             }
 
-            sLog->outDebug("TSCR: Instance Shattered Halls: GetPlayerInMap, but PlayerList is empty!");
-            return NULL;
-        }
-
-        void SetData(uint32 type, uint32 data)
-        {
-            switch (type)
+            void OnCreatureCreate(Creature* pCreature, bool /*add*/)
             {
-                case TYPE_NETHEKURSE:
-                    if (data == FAIL)
-                    {
-                        HandleGameObject(nethekurseDoor1GUID, true);
-                    }
-                    if (data == IN_PROGRESS)
-                    {
-                        HandleGameObject(nethekurseDoor1GUID, false);
-                        HandleGameObject(nethekurseDoor2GUID, false);
-                    }
-                    if (data == DONE)
-                    {
-                        HandleGameObject(nethekurseDoor1GUID, true);
-                        HandleGameObject(nethekurseDoor2GUID, true);
-                    }
-                    if (Encounter[0] != DONE)
-                        Encounter[0] = data;
-                    break;
-                case DATA_PORUNG:
-                    if (Encounter[1] != DONE)
-                        Encounter[1] = data;
-                    break;
-                case TYPE_WARBRINGER:
-                    if (Encounter[2] != DONE)
-                        Encounter[2] = data;
-                    break;
-                case DATA_KARGATH:
-                    if (data == DONE)
-                    {
-                        if (Creature* pExecutioner = instance->GetCreature(executionerGUID))
-                            pExecutioner->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-                    }
-                    if (Encounter[3] != DONE)
-                        Encounter[3] = data;
-                    break;
-                case TYPE_EXECUTION:
-                    if (data == IN_PROGRESS && !instance->GetCreature(executionerGUID))
-                    {
-                        if (Player* player = GetPlayerInMap())
-                        {
-                            for (uint8 i = 2; i < 5; ++i)
-                                Creature* pVictim = player->SummonCreature(uiTeam == ALLIANCE ? aSoldiersLocs[i].uiAllianceEntry : aSoldiersLocs[i].uiHordeEntry, aSoldiersLocs[i].m_fX, aSoldiersLocs[i].m_fY, aSoldiersLocs[i].m_fZ, aSoldiersLocs[i].m_fO, TEMPSUMMON_DEAD_DESPAWN, 0);
-
-                            if (Creature* pExecutioner = player->SummonCreature(NPC_EXECUTIONER, afExecutionerLoc[0], afExecutionerLoc[1], afExecutionerLoc[2], afExecutionerLoc[3], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80*MINUTE*IN_MILLISECONDS))
-                                pExecutioner->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
-
-                            DoCastGroupDebuff(SPELL_KARGATH_EXECUTIONER_1);
-                            uiExecutionTimer = 55*MINUTE*IN_MILLISECONDS;
-                        }
-                   }
-                   if (data == DONE)
-                   {
-                       if (Creature* pOfficer = instance->GetCreature(uiTeam == ALLIANCE ? officeraGUID : officerhGUID))
-                           pOfficer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
-                   }
-                   break;
-            }
-
-            if (data == DONE)
-            {
-                SaveToDB();
-                OUT_SAVE_INST_DATA_COMPLETE;
-            }
-        }
-
-        uint32 GetData(uint32 type)
-        {
-            switch (type)
-            {
-                case TYPE_NETHEKURSE:
-                    return Encounter[0];
-                case DATA_PORUNG:
-                    return Encounter[1];
-                case TYPE_WARBRINGER:
-                    return Encounter[2];
-                case DATA_KARGATH:
-                    return Encounter[3];
-            }
-            return false;
-        }
-
-        uint64 GetData64(uint32 data)
-        {
-            switch (data)
-            {
-                case DATA_NETHEKURSE:
-                    return nethekurseGUID;
-                case DATA_WARBRINGER:
-                    return warbringerGUID;
-            }
-            return 0;
-        }
-
-        std::string GetSaveData()
-        {
-            OUT_SAVE_INST_DATA;
-            std::ostringstream saveStream;
-
-            saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2] << " " << Encounter[3];
-
-            char* out = new char[saveStream.str().length() + 1];
-            strcpy(out, saveStream.str().c_str());
-            if (out)
-            {
-                OUT_SAVE_INST_DATA_COMPLETE;
-                return out;
-            }
-
-            return str_data.c_str();
-        }
-
-        void Load(const char* in)
-        {
-            if (!in)
-            {
-                OUT_LOAD_INST_DATA_FAIL;
-                return;
-            }
-
-            OUT_LOAD_INST_DATA(in);
-
-            std::istringstream loadStream(in);
-            loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2] >> Encounter[3];
-
-            for (uint8 i = 0; i < ENCOUNTERS; ++i)
-                if (Encounter[i] == IN_PROGRESS)
-                    Encounter[i] = NOT_STARTED;
-
-            OUT_LOAD_INST_DATA_COMPLETE;
-        }
-
-        void OnCreatureDeath(Creature* creature)
-        {
-            if (creature->GetEntry() == NPC_EXECUTIONER)
-                SetData(TYPE_EXECUTION, DONE);
-        }
-
-        void Update(uint32 diff)
-        {
-            if (uiExecutionTimer)
-            {
-                if (uiExecutionTimer <= diff)
+                switch(pCreature->GetEntry())
                 {
-                    switch (uiExecutionStage)
-                    {
-                        case 0:
-                            if (Creature* pSoldier = instance->GetCreature(uiTeam == ALLIANCE ? officeraGUID : officerhGUID))
-                                pSoldier->DealDamage(pSoldier, pSoldier->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-
-                            //DoScriptText(uiTeam == ALLIANCE ? SAY_KARGATH_EXECUTE_ALLY : SAY_KARGATH_EXECUTE_HORDE, instance->GetCreature(kargathGUID));
-
-                            DoCastGroupDebuff(SPELL_KARGATH_EXECUTIONER_2);
-                            uiExecutionTimer = 10*MINUTE*IN_MILLISECONDS;
-                            break;
-                        case 1:
-                            if (Creature* pSoldier = instance->GetCreature(uiTeam == ALLIANCE ? soldiera2GUID : soldierh2GUID))
-                                pSoldier->DealDamage(pSoldier, pSoldier->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-
-                            DoCastGroupDebuff(SPELL_KARGATH_EXECUTIONER_3);
-                            uiExecutionTimer = 15*MINUTE*IN_MILLISECONDS;
-                            break;
-                         case 2:
-                             if (Creature* pSoldier = instance->GetCreature(uiTeam == ALLIANCE ? soldiera3GUID : soldierh3GUID))
-                                 pSoldier->DealDamage(pSoldier, pSoldier->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-
-                             SetData(TYPE_EXECUTION, FAIL);
-                             uiExecutionTimer = 0;
-                             break;
-                    }
-                    ++uiExecutionStage;
+                    case 16807:
+                        nethekurseGUID = pCreature->GetGUID();
+                        break;
                 }
-                else uiExecutionTimer -= diff;
             }
-        }
 
-        void DoCastGroupDebuff(uint32 uiSpellId)
-        {
-            Map::PlayerList const& lPlayers = instance->GetPlayers();
-
-            for (Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
+            void SetData(uint32 type, uint32 data)
             {
-                Player* player = itr->getSource();
-                if (player && !player->HasAura(uiSpellId, 0))
-                    player->CastSpell(player, uiSpellId, true);
+                switch(type)
+                {
+                    case TYPE_NETHEKURSE:
+                        m_auiEncounter[0] = data;
+                        break;
+                    case TYPE_OMROGG:
+                        m_auiEncounter[1] = data;
+                        break;
+                }
             }
+
+            uint32 GetData(uint32 type)
+            {
+                switch(type)
+                {
+                    case TYPE_NETHEKURSE:
+                        return m_auiEncounter[0];
+                    case TYPE_OMROGG:
+                        return m_auiEncounter[1];
+                }
+                return 0;
+            }
+
+            uint64 GetData64(uint32 data)
+            {
+                switch(data)
+                {
+                    case DATA_NETHEKURSE:
+                        return nethekurseGUID;
+                    case DATA_NETHEKURSE_DOOR:
+                        return nethekurseDoorGUID;
+                }
+                return 0;
+            }
+        };
+
+        InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+        {
+            return new instance_shattered_halls_InstanceMapScript(pMap);
         }
-    };
-};
-
-class at_shattered_halls : public AreaTriggerScript
-{
-public:
-    at_shattered_halls() : AreaTriggerScript("at_shattered_halls") { }
-
-    bool AreaTrigger(Player* player, AreaTriggerEntry const* pAt)
-    {
-        if (player->isGameMaster() || player->isDead())
-            return false;
-
-        instance_shattered_halls* instance = (instance_shattered_halls*)player->GetInstanceScript();
-
-        if (!instance)
-            return false;
-
-        if (!instance->instance->IsHeroic())
-            return false;
-
-        if (instance->GetData(DATA_KARGATH) == DONE || instance->GetData(TYPE_WARBRINGER) == DONE)
-            return false;
-
-        if (instance->GetData(TYPE_EXECUTION) == NOT_STARTED)
-            instance->SetData(TYPE_EXECUTION, IN_PROGRESS);
-
-        return true;
-    }
 };
 
 void AddSC_instance_shattered_halls()
 {
     new instance_shattered_halls();
-    new at_shattered_halls();
 }
+

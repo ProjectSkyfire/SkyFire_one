@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Taerar
@@ -29,14 +27,13 @@ EndScriptData */
 
 enum eEnums
 {
-    SAY_AGGRO               = -1000399,
-    SAY_SUMMONSHADE         = -1000400,
+    SAY_AGGRO               = -1000399, //signed for 20021
+    SAY_SUMMONSHADE         = -1000400, //signed for 20021
 
     //Spells of Taerar
     SPELL_SLEEP             = 24777,
     SPELL_NOXIOUSBREATH     = 24818,
     SPELL_TAILSWEEP         = 15847,
-    // SPELL_MARKOFNATURE   = 25040,                        // Not working
     SPELL_ARCANEBLAST       = 24857,
     SPELL_BELLOWINGROAR     = 22686,
 
@@ -49,19 +46,15 @@ enum eEnums
     SPELL_POSIONBREATH      = 20667
 };
 
-uint32 m_auiSpellSummonShade[]=
+uint32 m_auiSpellSummonShade[] =
 {
     SPELL_SUMMONSHADE_1, SPELL_SUMMONSHADE_2, SPELL_SUMMONSHADE_3
 };
-class boss_taerar : public CreatureScript
+
+class boss_taerar : public CreatureScript
 {
 public:
     boss_taerar() : CreatureScript("boss_taerar") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new boss_taerarAI (creature);
-    }
 
     struct boss_taerarAI : public ScriptedAI
     {
@@ -70,7 +63,6 @@ public:
         uint32 m_uiSleep_Timer;
         uint32 m_uiNoxiousBreath_Timer;
         uint32 m_uiTailSweep_Timer;
-        //uint32 m_uiMarkOfNature_Timer;
         uint32 m_uiArcaneBlast_Timer;
         uint32 m_uiBellowingRoar_Timer;
         uint32 m_uiShades_Timer;
@@ -83,7 +75,6 @@ public:
             m_uiSleep_Timer = 15000 + rand()%5000;
             m_uiNoxiousBreath_Timer = 8000;
             m_uiTailSweep_Timer = 4000;
-            //m_uiMarkOfNature_Timer = 45000;
             m_uiArcaneBlast_Timer = 12000;
             m_uiBellowingRoar_Timer = 30000;
             m_uiShades_Timer = 60000;                               //The time that Taerar is banished
@@ -152,15 +143,6 @@ public:
             else
                 m_uiTailSweep_Timer -= uiDiff;
 
-            //MarkOfNature_Timer
-            //if (m_uiMarkOfNature_Timer <= uiDiff)
-            //{
-            //    DoCast(me->getVictim(), SPELL_MARKOFNATURE);
-            //    m_uiMarkOfNature_Timer = 45000;
-            //}
-            //else
-            //    m_uiMarkOfNature_Timer -= uiDiff;
-
             //ArcaneBlast_Timer
             if (m_uiArcaneBlast_Timer <= uiDiff)
             {
@@ -180,11 +162,11 @@ public:
                 m_uiBellowingRoar_Timer -= uiDiff;
 
             //Summon 3 Shades at 75%, 50% and 25% (if bShades is true we already left in line 117, no need to check here again)
-            if (!m_bShades && (me->GetHealth()*100 / me->GetMaxHealth()) <= (100-(25*m_uiShadesSummoned)))
+            if (!m_bShades && !HealthAbovePct(100 - 25 * m_uiShadesSummoned))
             {
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
-                    //Inturrupt any spell casting
+                    //Interrupt any spell casting
                     me->InterruptNonMeleeSpells(false);
 
                     //horrible workaround, need to fix
@@ -207,17 +189,17 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new boss_taerarAI(creature);
+    }
 };
 
-// Shades of Taerar Scriptclass boss_shade_of_taerar : public CreatureScript
+class boss_shadeoftaerar : public CreatureScript
 {
 public:
-    boss_shade_of_taerar() : CreatureScript("boss_shade_of_taerar") { }
-
-    CreatureAI* GetAI_boss_shadeoftaerar(Creature* creature)
-    {
-        return new boss_shadeoftaerarAI (creature);
-    }
+    boss_shadeoftaerar() : CreatureScript("boss_shade_of_taerar") { }
 
     struct boss_shadeoftaerarAI : public ScriptedAI
     {
@@ -258,10 +240,16 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new boss_shadeoftaerarAI(creature);
+    }
 };
 
 void AddSC_boss_taerar()
 {
-    new boss_taerar();
-    new boss_shade_of_taerar();
+    new boss_taerar;
+    new boss_shadeoftaerar;
 }
+

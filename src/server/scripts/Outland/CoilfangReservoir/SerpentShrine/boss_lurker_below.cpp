@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: boss_the_lurker_below
@@ -57,31 +55,32 @@ EndScriptData */
 
 float AddPos[9][3] =
 {
-    {2.8553810f, -459.823914f, -19.182686f},  //MOVE_AMBUSHER_1 X, Y, Z
-    {12.400000f, -466.042267f, -19.182686f},  //MOVE_AMBUSHER_2 X, Y, Z
-    {51.366653f, -460.836060f, -19.182686f},  //MOVE_AMBUSHER_3 X, Y, Z
-    {62.597980f, -457.433044f, -19.182686f},  //MOVE_AMBUSHER_4 X, Y, Z
-    {77.607452f, -384.302765f, -19.182686f},  //MOVE_AMBUSHER_5 X, Y, Z
-    {63.897900f, -378.984924f, -19.182686f},  //MOVE_AMBUSHER_6 X, Y, Z
-    {34.447250f, -387.333618f, -19.182686f},  //MOVE_GUARDIAN_1 X, Y, Z
-    {14.388216f, -423.468018f, -19.625271f},  //MOVE_GUARDIAN_2 X, Y, Z
+    {2.8553810f, -459.823914f, -19.182686f},   //MOVE_AMBUSHER_1 X, Y, Z
+    {12.400000f, -466.042267f, -19.182686f},   //MOVE_AMBUSHER_2 X, Y, Z
+    {51.366653f, -460.836060f, -19.182686f},   //MOVE_AMBUSHER_3 X, Y, Z
+    {62.597980f, -457.433044f, -19.182686f},   //MOVE_AMBUSHER_4 X, Y, Z
+    {77.607452f, -384.302765f, -19.182686f},   //MOVE_AMBUSHER_5 X, Y, Z
+    {63.897900f, -378.984924f, -19.182686f},   //MOVE_AMBUSHER_6 X, Y, Z
+    {34.447250f, -387.333618f, -19.182686f},   //MOVE_GUARDIAN_1 X, Y, Z
+    {14.388216f, -423.468018f, -19.625271f},   //MOVE_GUARDIAN_2 X, Y, Z
     {42.471519f, -445.115295f, -19.769423f}    //MOVE_GUARDIAN_3 X, Y, Z
 };
-class boss_the_lurker_below : public CreatureScript
+
+class boss_the_lurker_below : public CreatureScript
 {
 public:
     boss_the_lurker_below() : CreatureScript("boss_the_lurker_below") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_the_lurker_belowAI (creature);
+        return new boss_the_lurker_belowAI (pCreature);
     }
 
     struct boss_the_lurker_belowAI : public Scripted_NoMovementAI
     {
         boss_the_lurker_belowAI(Creature *c) : Scripted_NoMovementAI(c), Summons(me)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
             SpellEntry *TempSpell = GET_SPELL(SPELL_SPOUT_ANIM);
             if (TempSpell)
             {
@@ -91,7 +90,7 @@ public:
             }
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
         SummonList Summons;
 
         bool Spawned;
@@ -111,13 +110,13 @@ public:
 
         bool CheckCanStart()//check if players fished
         {
-            if (instance && instance->GetData(DATA_STRANGE_POOL) == NOT_STARTED)
+            if (pInstance && pInstance->GetData(DATA_STRANGE_POOL) == NOT_STARTED)
                 return false;
             return true;
         }
         void Reset()
         {
-            me->AddUnitMovementFlag(MOVEFLAG_SWIMMING | MOVEFLAG_LEVITATING);
+            me->AddUnitMovementFlag(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_LEVITATING);
             SpoutAnimTimer = 1000;
             RotTimer = 0;
             WaterboltTimer = 15000;//give time to get in range when fight starts
@@ -136,10 +135,10 @@ public:
 
             Summons.DespawnAll();
 
-            if (instance)
+            if (pInstance)
             {
-                instance->SetData(DATA_THELURKERBELOWEVENT, NOT_STARTED);
-                instance->SetData(DATA_STRANGE_POOL, NOT_STARTED);
+                pInstance->SetData(DATA_THELURKERBELOWEVENT, NOT_STARTED);
+                pInstance->SetData(DATA_STRANGE_POOL, NOT_STARTED);
             }
             DoCast(me, SPELL_SUBMERGE);//submerge anim
             me->SetVisibility(VISIBILITY_OFF);//we start invis under water, submerged
@@ -149,16 +148,16 @@ public:
 
         void JustDied(Unit* /*Killer*/)
         {
-            if (instance)
-                instance->SetData(DATA_THELURKERBELOWEVENT, DONE);
+            if (pInstance)
+                pInstance->SetData(DATA_THELURKERBELOWEVENT, DONE);
 
             Summons.DespawnAll();
         }
 
         void EnterCombat(Unit * who)
         {
-            if (instance)
-                instance->SetData(DATA_THELURKERBELOWEVENT, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(DATA_THELURKERBELOWEVENT, IN_PROGRESS);
             Scripted_NoMovementAI::EnterCombat(who);
         }
 
@@ -197,7 +196,7 @@ public:
                     if (!Submerged && WaitTimer2 <= diff)//wait 500ms before emerge anim
                     {
                         me->RemoveAllAuras();
-                        me->RemoveFlag(UNIT_NPC_EMOTESTATE, EMOTE_STATE_SUBMERGED);
+                        me->RemoveFlag(UNIT_NPC_EMOTESTATE,EMOTE_STATE_SUBMERGED);
                         DoCast(me, SPELL_EMERGE, false);
                         WaitTimer2 = 60000;//never reached
                         WaitTimer = 3000;
@@ -232,7 +231,7 @@ public:
 
                 if (SpoutTimer <= diff)
                 {
-                    me->MonsterTextEmote(EMOTE_SPOUT, 0, true);
+                    me->MonsterTextEmote(EMOTE_SPOUT,0,true);
                     me->SetReactState(REACT_PASSIVE);
                     me->GetMotionMaster()->MoveRotate(20000, rand()%2 ? ROTATE_DIRECTION_LEFT : ROTATE_DIRECTION_RIGHT);
                     SpoutTimer = 45000;
@@ -272,7 +271,7 @@ public:
                         Map::PlayerList const &PlayerList = pMap->GetPlayers();
                         for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                         {
-                            if (i->getSource() && i->getSource()->isAlive() && me->HasInArc((double)diff/20000*(double)M_PI*2, i->getSource()) && me->IsWithinDist(i->getSource(), SPOUT_DIST) && !i->getSource()->IsInWater())
+                            if (i->getSource() && i->getSource()->isAlive() && me->HasInArc(float(diff/20000*M_PI*2),i->getSource()) && me->IsWithinDist(i->getSource(), SPOUT_DIST) && !i->getSource()->IsInWater())
                                 DoCast(i->getSource(), SPELL_SPOUT, true);//only knock back palyers in arc, in 100yards, not in water
                         }
                     }
@@ -292,7 +291,7 @@ public:
 
                 if (GeyserTimer <= diff)
                 {
-                    Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
                     if (!pTarget && me->getVictim())
                         pTarget = me->getVictim();
                     if (pTarget)
@@ -304,7 +303,7 @@ public:
                 {
                     if (WaterboltTimer <= diff)
                     {
-                        Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                        Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                         if (!pTarget && me->getVictim())
                             pTarget = me->getVictim();
                         if (pTarget)
@@ -317,6 +316,7 @@ public:
                     return;
 
                 DoMeleeAttackIfReady();
+
             }else//submerged
             {
                 if (PhaseTimer <= diff)
@@ -325,7 +325,7 @@ public:
                     me->InterruptNonMeleeSpells(false);//shouldn't be any
                     me->RemoveAllAuras();
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-                    me->RemoveFlag(UNIT_NPC_EMOTESTATE, EMOTE_STATE_SUBMERGED);
+                    me->RemoveFlag(UNIT_NPC_EMOTESTATE,EMOTE_STATE_SUBMERGED);
                     DoCast(me, SPELL_EMERGE, true);
                     Spawned = false;
                     SpoutTimer = 3000; // directly cast Spout after emerging!
@@ -349,8 +349,8 @@ public:
                     {
                         Creature* Summoned;
                         if (i < 6)
-                            Summoned = me->SummonCreature(MOB_COILFANG_AMBUSHER, AddPos[i][0],AddPos[i][1],AddPos[i][2], 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                        else Summoned = me->SummonCreature(MOB_COILFANG_GUARDIAN, AddPos[i][0],AddPos[i][1],AddPos[i][2], 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                            Summoned = me->SummonCreature(MOB_COILFANG_AMBUSHER,AddPos[i][0],AddPos[i][1],AddPos[i][2], 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                        else Summoned = me->SummonCreature(MOB_COILFANG_GUARDIAN,AddPos[i][0],AddPos[i][1],AddPos[i][2], 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
 
                         if (Summoned)
                             Summons.Summon(Summoned);
@@ -360,39 +360,42 @@ public:
             }
         }
      };
-    class mob_coilfang_guardian : public CreatureScript
-    {
-    public:
-        mob_coilfang_guardian() : CreatureScript("mob_coilfang_guardian") { }
-
-        CreatureAI* GetAI(Creature* creature)
-        {
-            SimpleAI* ai = new SimpleAI (creature);
-
-            ai->Spell[0].Enabled = true;
-            ai->Spell[0].Spell_Id = SPELL_ARCINGSMASH;
-            ai->Spell[0].Cooldown = 15000;
-            ai->Spell[0].First_Cast = 5000;
-            ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-            ai->Spell[1].Enabled = true;
-            ai->Spell[1].Spell_Id = SPELL_HAMSTRING;
-            ai->Spell[1].Cooldown = 10000;
-            ai->Spell[1].First_Cast = 2000;
-            ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
-
-            return ai;
-        }
-    };
 };
-class mob_coilfang_ambusher : public CreatureScript
+
+class mob_coilfang_guardian : public CreatureScript
+{
+public:
+    mob_coilfang_guardian() : CreatureScript("mob_coilfang_guardian") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        SimpleAI* ai = new SimpleAI (pCreature);
+
+        ai->Spell[0].Enabled = true;
+        ai->Spell[0].Spell_Id = SPELL_ARCINGSMASH;
+        ai->Spell[0].Cooldown = 15000;
+        ai->Spell[0].First_Cast = 5000;
+        ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
+
+        ai->Spell[1].Enabled = true;
+        ai->Spell[1].Spell_Id = SPELL_HAMSTRING;
+        ai->Spell[1].Cooldown = 10000;
+        ai->Spell[1].First_Cast = 2000;
+        ai->Spell[1].Cast_Target_Type = CAST_HOSTILE_TARGET;
+
+        return ai;
+    }
+
+};
+
+class mob_coilfang_ambusher : public CreatureScript
 {
 public:
     mob_coilfang_ambusher() : CreatureScript("mob_coilfang_ambusher") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_coilfang_ambusherAI (creature);
+        return new mob_coilfang_ambusherAI (pCreature);
     }
 
     struct mob_coilfang_ambusherAI : public Scripted_NoMovementAI
@@ -411,10 +414,12 @@ public:
         {
             MultiShotTimer = 10000;
             ShootBowTimer = 4000;
+
         }
 
         void EnterCombat(Unit * /*who*/)
         {
+
         }
 
         void MoveInLineOfSight(Unit *who)
@@ -444,12 +449,13 @@ public:
                 pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                 int bp0 = 1100;
                 if (pTarget)
-                    me->CastCustomSpell(pTarget, SPELL_SHOOT,&bp0, NULL, NULL, true);
+                    me->CastCustomSpell(pTarget,SPELL_SHOOT,&bp0,NULL,NULL,true);
                 ShootBowTimer = 4000+rand()%5000;
                 MultiShotTimer += 1500;//add global cooldown
             } else ShootBowTimer -= diff;
         }
     };
+
 };
 
 void AddSC_boss_the_lurker_below()

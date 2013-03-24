@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Noxxion
@@ -25,52 +23,55 @@ SDComment:
 SDCategory: Maraudon
 EndScriptData */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
 
-#define SPELL_TOXICVOLLEY           21687
-#define SPELL_UPPERCUT              22916
-class boss_noxxion : public CreatureScript
+enum Spells
+{
+    SPELL_TOXICVOLLEY           = 21687,
+    SPELL_UPPERCUT              = 22916
+};
+
+class boss_noxxion : public CreatureScript
 {
 public:
     boss_noxxion() : CreatureScript("boss_noxxion") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new boss_noxxionAI (creature);
     }
 
     struct boss_noxxionAI : public ScriptedAI
     {
-        boss_noxxionAI(Creature *c) : ScriptedAI(c) {}
+        boss_noxxionAI(Creature* creature) : ScriptedAI(creature) {}
 
-        uint32 ToxicVolley_Timer;
-        uint32 Uppercut_Timer;
-        uint32 Adds_Timer;
-        uint32 Invisible_Timer;
+        uint32 ToxicVolleyTimer;
+        uint32 UppercutTimer;
+        uint32 AddsTimer;
+        uint32 InvisibleTimer;
         bool Invisible;
 
         void Reset()
         {
-            ToxicVolley_Timer = 7000;
-            Uppercut_Timer = 16000;
-            Adds_Timer = 19000;
-            Invisible_Timer = 15000;                            //Too much too low?
+            ToxicVolleyTimer = 7000;
+            UppercutTimer = 16000;
+            AddsTimer = 19000;
+            InvisibleTimer = 15000;                            //Too much too low?
             Invisible = false;
         }
 
-        void EnterCombat(Unit * /*who*/)
-        {
-        }
+        void EnterCombat(Unit* /*who*/) {}
 
-        void SummonAdds(Unit* pVictim)
+        void SummonAdds(Unit* victim)
         {
-            if (Creature *Add = DoSpawnCreature(13456, irand(-7, 7), irand(-7, 7), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000))
-                Add->AI()->AttackStart(pVictim);
+            if (Creature* Add = DoSpawnCreature(13456, float(irand(-7, 7)), float(irand(-7, 7)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 90000))
+                Add->AI()->AttackStart(victim);
         }
 
         void UpdateAI(const uint32 diff)
         {
-            if (Invisible && Invisible_Timer <= diff)
+            if (Invisible && InvisibleTimer <= diff)
             {
                 //Become visible again
                 me->setFaction(14);
@@ -79,9 +80,10 @@ public:
                 me->SetDisplayId(11172);
                 Invisible = false;
                 //me->m_canMove = true;
-            } else if (Invisible)
+            }
+            else if (Invisible)
             {
-                Invisible_Timer -= diff;
+                InvisibleTimer -= diff;
                 //Do nothing while invisible
                 return;
             }
@@ -90,24 +92,26 @@ public:
             if (!UpdateVictim())
                 return;
 
-            //ToxicVolley_Timer
-            if (ToxicVolley_Timer <= diff)
+            //ToxicVolleyTimer
+            if (ToxicVolleyTimer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_TOXICVOLLEY);
-                ToxicVolley_Timer = 9000;
-            } else ToxicVolley_Timer -= diff;
+                DoCastVictim(SPELL_TOXICVOLLEY);
+                ToxicVolleyTimer = 9000;
+            }
+            else ToxicVolleyTimer -= diff;
 
-            //Uppercut_Timer
-            if (Uppercut_Timer <= diff)
+            //UppercutTimer
+            if (UppercutTimer <= diff)
             {
-                DoCast(me->getVictim(), SPELL_UPPERCUT);
-                Uppercut_Timer = 12000;
-            } else Uppercut_Timer -= diff;
+                DoCastVictim(SPELL_UPPERCUT);
+                UppercutTimer = 12000;
+            }
+            else UppercutTimer -= diff;
 
-            //Adds_Timer
-            if (!Invisible && Adds_Timer <= diff)
+            //AddsTimer
+            if (!Invisible && AddsTimer <= diff)
             {
-                //Inturrupt any spell casting
+                //Interrupt any spell casting
                 //me->m_canMove = true;
                 me->InterruptNonMeleeSpells(false);
                 me->setFaction(35);
@@ -120,10 +124,11 @@ public:
                 SummonAdds(me->getVictim());
                 SummonAdds(me->getVictim());
                 Invisible = true;
-                Invisible_Timer = 15000;
+                InvisibleTimer = 15000;
 
-                Adds_Timer = 40000;
-            } else Adds_Timer -= diff;
+                AddsTimer = 40000;
+            }
+            else AddsTimer -= diff;
 
             DoMeleeAttackIfReady();
         }

@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -30,14 +28,15 @@ EndScriptData */
 #define SAY_SPAWN   "TIMMY!"
 
 #define SPELL_RAVENOUSCLAW    17470
-class boss_timmy_the_cruel : public CreatureScript
+
+class boss_timmy_the_cruel : public CreatureScript
 {
 public:
     boss_timmy_the_cruel() : CreatureScript("boss_timmy_the_cruel") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_timmy_the_cruelAI (creature);
+        return new boss_timmy_the_cruelAI (pCreature);
     }
 
     struct boss_timmy_the_cruelAI : public ScriptedAI
@@ -57,7 +56,7 @@ public:
         {
             if (!HasYelled)
             {
-                me->MonsterYell(SAY_SPAWN, LANG_UNIVERSAL, NULL);
+                me->MonsterYell(SAY_SPAWN,LANG_UNIVERSAL,NULL);
                 HasYelled = true;
             }
         }
@@ -80,6 +79,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_timmy_the_cruel()

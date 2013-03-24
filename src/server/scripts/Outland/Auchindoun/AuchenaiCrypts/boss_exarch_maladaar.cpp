@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Exarch_Maladaar
@@ -42,14 +40,15 @@ EndContentData */
 #define SPELL_MORTAL_STRIKE     37335
 #define SPELL_FREEZING_TRAP     37368
 #define SPELL_HAMMER_OF_JUSTICE 37369
-class mob_stolen_soul : public CreatureScript
+
+class mob_stolen_soul : public CreatureScript
 {
 public:
     mob_stolen_soul() : CreatureScript("mob_stolen_soul") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_stolen_soulAI (creature);
+        return new mob_stolen_soulAI (pCreature);
     }
 
     struct mob_stolen_soulAI : public ScriptedAI
@@ -64,7 +63,7 @@ public:
             Class_Timer = 1000;
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit * /*who*/)
         { }
 
         void SetMyClass(uint8 myclass)
@@ -123,7 +122,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 #define SAY_INTRO                   -1558000
 #define SAY_SUMMON                  -1558001
@@ -149,14 +150,15 @@ public:
 #define SPELL_SUMMON_AVATAR         32424
 
 #define ENTRY_STOLEN_SOUL           18441
-class boss_exarch_maladaar : public CreatureScript
+
+class boss_exarch_maladaar : public CreatureScript
 {
 public:
     boss_exarch_maladaar() : CreatureScript("boss_exarch_maladaar") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_exarch_maladaarAI (creature);
+        return new boss_exarch_maladaarAI (pCreature);
     }
 
     struct boss_exarch_maladaarAI : public ScriptedAI
@@ -192,7 +194,7 @@ public:
 
         void MoveInLineOfSight(Unit *who)
         {
-            if (!HasTaunted && me->IsWithinDistInMap(who, 150.0f))
+            if (!HasTaunted && me->IsWithinDistInMap(who, 150.0))
             {
                 DoScriptText(SAY_INTRO, me);
                 HasTaunted = true;
@@ -201,50 +203,42 @@ public:
             ScriptedAI::MoveInLineOfSight(who);
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit * /*who*/)
         {
-            switch (rand()%3)
-            {
-                case 0: DoScriptText(SAY_AGGRO_1, me); break;
-                case 1: DoScriptText(SAY_AGGRO_2, me); break;
-                case 2: DoScriptText(SAY_AGGRO_3, me); break;
-            }
+            DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2,SAY_AGGRO_3), me);
         }
 
         void JustSummoned(Creature *summoned)
         {
             if (summoned->GetEntry() == ENTRY_STOLEN_SOUL)
             {
-                //SPELL_STOLEN_SOUL_VISUAL has shapeshift effect, but not implemented feature in SKYFIRE for this spell.
-                summoned->CastSpell(summoned, SPELL_STOLEN_SOUL_VISUAL, false);
+                //SPELL_STOLEN_SOUL_VISUAL has shapeshift effect, but not implemented feature in Trinity for this spell.
+                summoned->CastSpell(summoned,SPELL_STOLEN_SOUL_VISUAL,false);
                 summoned->SetDisplayId(soulmodel);
                 summoned->setFaction(me->getFaction());
 
-                if (Unit *pTarget = Unit::GetUnit(*me, soulholder))
+                if (Unit *pTarget = Unit::GetUnit(*me,soulholder))
                 {
-                ((mob_stolen_soulAI*)summoned->AI())->SetMyClass(soulclass);
+
+                CAST_AI(mob_stolen_soul::mob_stolen_soulAI, summoned->AI())->SetMyClass(soulclass);
                  summoned->AI()->AttackStart(pTarget);
                 }
             }
         }
 
-        void KilledUnit(Unit* victim)
+        void KilledUnit(Unit* /*victim*/)
         {
             if (rand()%2)
                 return;
 
-            switch (rand()%2)
-            {
-                case 0: DoScriptText(SAY_SLAY_1, me); break;
-                case 1: DoScriptText(SAY_SLAY_2, me); break;
-            }
+            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
         }
 
-        void JustDied(Unit* Killer)
+        void JustDied(Unit* /*Killer*/)
         {
             DoScriptText(SAY_DEATH, me);
             //When Exarch Maladar is defeated D'ore appear.
-            DoSpawnCreature(19412, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 600000);
+            me->SummonCreature(19412, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 600000);
         }
 
         void UpdateAI(const uint32 diff)
@@ -252,7 +246,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (!Avatar_summoned && ((me->GetHealth()*100) / me->GetMaxHealth() < 25))
+            if (!Avatar_summoned && HealthBelowPct(25))
             {
                 if (me->IsNonMeleeSpellCasted(false))
                     me->InterruptNonMeleeSpells(true);
@@ -266,14 +260,14 @@ public:
 
             if (StolenSoul_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                 {
                     if (pTarget->GetTypeId() == TYPEID_PLAYER)
                     {
                         if (me->IsNonMeleeSpellCasted(false))
                             me->InterruptNonMeleeSpells(true);
 
-                        uint32 i = urand(1, 2);
+                        uint32 i = urand(1,2);
                         if (i == 1)
                             DoScriptText(SAY_ROAR, me);
                         else
@@ -284,7 +278,7 @@ public:
                         soulclass = pTarget->getClass();
 
                         DoCast(pTarget, SPELL_STOLEN_SOUL);
-                        DoSpawnCreature(ENTRY_STOLEN_SOUL, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                        me->SummonCreature(ENTRY_STOLEN_SOUL, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
 
                         StolenSoul_Timer = 20000 + rand()% 10000;
                     } else StolenSoul_Timer = 1000;
@@ -293,7 +287,7 @@ public:
 
             if (Ribbon_of_Souls_timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_RIBBON_OF_SOULS);
 
                 Ribbon_of_Souls_timer = 5000 + (rand()%20 * 1000);
@@ -308,18 +302,21 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
+
 #define SPELL_AV_MORTAL_STRIKE          16856
-#define SPELL_AV_MORTAL_STRIKE          16856
-class mob_avatar_of_martyred : public CreatureScript
+#define SPELL_AV_SUNDER_ARMOR           16145
+
+class mob_avatar_of_martyred : public CreatureScript
 {
 public:
     mob_avatar_of_martyred() : CreatureScript("mob_avatar_of_martyred") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_avatar_of_martyredAI (creature);
+        return new mob_avatar_of_martyredAI (pCreature);
     }
 
     struct mob_avatar_of_martyredAI : public ScriptedAI
@@ -333,7 +330,7 @@ public:
             Mortal_Strike_timer = 10000;
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit * /*who*/)
         {
         }
 
@@ -351,7 +348,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_exarch_maladaar()
 {

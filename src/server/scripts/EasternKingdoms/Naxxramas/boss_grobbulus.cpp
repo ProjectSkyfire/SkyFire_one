@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,18 +15,187 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ScriptData
-SDName: Boss_Grobbulus
-SD%Complete: 0
-SDComment: Place holder
-SDCategory: Naxxramas
-EndScriptData */
-
-/*Poison Cloud 26590
-Slime Spray 28157
-Fallout slime 28218
-Mutating Injection 28169
-Enrages 26527*/
-
 #include "ScriptPCH.h"
+#include "naxxramas.h"
 
+#define SPELL_BOMBARD_SLIME         28280
+
+#define SPELL_POISON_CLOUD          28240
+#define SPELL_MUTATING_INJECTION    28169
+#define SPELL_SLIME_SPRAY           RAID_MODE(28157,54364)
+#define SPELL_BERSERK               26662
+#define SPELL_POISON_CLOUD_ADD      28158  // not correct spell, correct spells: 28158, 54362 have no visuals
+#define SPELL_SLIME_STREAM          28137
+
+#define EVENT_BERSERK   1
+#define EVENT_CLOUD     2
+#define EVENT_INJECT    3
+#define EVENT_SPRAY     4
+
+#define MOB_FALLOUT_SLIME   16290
+
+class boss_grobbulus : public CreatureScript
+{
+public:
+    boss_grobbulus() : CreatureScript("boss_grobbulus") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_grobbulusAI (pCreature);
+    }
+
+    struct boss_grobbulusAI : public BossAI
+    {
+        boss_grobbulusAI(Creature *c) : BossAI(c, BOSS_GROBBULUS)
+        {
+            me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_POISON_CLOUD_ADD, true);
+        }
+
+        uint32 uiSlimeStreamTimer;
+
+        void Reset()
+        {
+            _Reset();
+            uiSlimeStreamTimer = 3*IN_MILLISECONDS;
+            SetImmuneToDeathGrip();
+        }
+
+        void EnterCombat(Unit *who)
+        {
+            _EnterCombat();
+            events.ScheduleEvent(EVENT_CLOUD, 15000);
+            events.ScheduleEvent(EVENT_INJECT, 20000);
+            events.ScheduleEvent(EVENT_SPRAY, 15000+rand()%15000); //not sure
+            events.ScheduleEvent(EVENT_BERSERK, RAID_MODE(12*60000,9*60000));
+        }
+
+        void EnterEvadeMode()
+        {
+            _EnterEvadeMode();
+            Reset();
+        }
+
+        void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
+        {
+            if (spell->Id == uint32(SPELL_SLIME_SPRAY))
+            {
+                if (TempSummon *slime = me->SummonCreature(MOB_FALLOUT_SLIME, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 0))
+                    DoZoneInCombat(slime);
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            events.Update(diff);
+
+            if (!me->IsWithinMeleeRange(me->getVictim()))
+            {
+                if (uiSlimeStreamTimer <= diff)
+                {
+                    DoCast(SPELL_SLIME_STREAM);
+                    uiSlimeStreamTimer = 3*IN_MILLISECONDS;
+                }
+                else uiSlimeStreamTimer -= diff;
+            }
+            else uiSlimeStreamTimer = 3*IN_MILLISECONDS;
+
+            while (uint32 eventId = events.ExecuteEvent())
+            {
+                switch(eventId)
+                {
+                    case EVENT_CLOUD:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        DoCastAOE(SPELL_POISON_CLOUD);
+                        events.ScheduleEvent(EVENT_CLOUD, 15000);
+                        }
+                        return;
+                    case EVENT_BERSERK:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        DoCastAOE(SPELL_BERSERK);
+                        return;
+                    case EVENT_SPRAY:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        DoCastAOE(SPELL_SLIME_SPRAY);
+                        events.ScheduleEvent(EVENT_SPRAY, 15000+rand()%15000);
+                        }
+                        return;
+                    case EVENT_INJECT:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 200, true))
+                            if (!pTarget->HasAura(SPELL_MUTATING_INJECTION))
+                                {
+                                DoCast(pTarget, SPELL_MUTATING_INJECTION);
+                        events.ScheduleEvent(EVENT_INJECT, 8000 + uint32(120 * me->GetHealthPct()));
+                                }
+                        }
+                        return;
+                }
+            }
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+};
+
+class npc_grobbulus_poison_cloud : public CreatureScript
+{
+public:
+    npc_grobbulus_poison_cloud() : CreatureScript("npc_grobbulus_poison_cloud") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_grobbulus_poison_cloudAI(pCreature);
+    }
+
+    struct npc_grobbulus_poison_cloudAI : public Scripted_NoMovementAI
+    {
+        npc_grobbulus_poison_cloudAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            Reset();
+        }
+
+        uint32 Cloud_Timer;
+        bool cloud_casted;
+
+        void Reset()
+        {
+            Cloud_Timer = 1000;
+            cloud_casted = false;
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            me->setFaction(14);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (Cloud_Timer <= diff)
+            {
+                if(!me->HasAura(SPELL_POISON_CLOUD_ADD))
+                    if(!cloud_casted)
+                    {
+                DoCast(me, SPELL_POISON_CLOUD_ADD);
+                        cloud_casted = true;
+                    }
+                    else
+                        me->DealDamage(me,me->GetHealth());
+
+                Cloud_Timer = 10000;
+            } else Cloud_Timer -= diff;
+        }
+    };
+
+};
+
+
+
+void AddSC_boss_grobbulus()
+{
+    new boss_grobbulus();
+    new npc_grobbulus_poison_cloud();
+}

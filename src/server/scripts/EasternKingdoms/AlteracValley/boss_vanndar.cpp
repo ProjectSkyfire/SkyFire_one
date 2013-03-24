@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,12 +14,6 @@
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
-/* ScriptData
-SDName: Boss_Vanndar
-SD%Complete:
-SDComment:
-EndScriptData */
 
 #include "ScriptPCH.h"
 
@@ -47,15 +38,11 @@ enum Spells
     SPELL_THUNDERCLAP                             = 15588,
     SPELL_STORMBOLT                               = 20685 // not sure
 };
-class boss_vanndar : public CreatureScript
+
+class boss_vanndar : public CreatureScript
 {
 public:
     boss_vanndar() : CreatureScript("boss_vanndar") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new boss_vanndarAI (creature);
-    }
 
     struct boss_vanndarAI : public ScriptedAI
     {
@@ -73,7 +60,7 @@ public:
             uiThunderclapTimer = 4*IN_MILLISECONDS;
             uiStormboltTimer = 6*IN_MILLISECONDS;
             uiResetTimer = 5*IN_MILLISECONDS;
-            uiYellTimer = urand(20*IN_MILLISECONDS, 30*IN_MILLISECONDS);
+            uiYellTimer = urand(20*IN_MILLISECONDS,30*IN_MILLISECONDS);
         }
 
         void EnterCombat(Unit * /*who*/)
@@ -84,7 +71,7 @@ public:
         void JustRespawned()
         {
             Reset();
-            DoScriptText(RAND(YELL_RESPAWN1, YELL_RESPAWN2), me);
+            DoScriptText(RAND(YELL_RESPAWN1,YELL_RESPAWN2), me);
         }
 
         void UpdateAI(const uint32 diff)
@@ -95,25 +82,25 @@ public:
             if (uiAvatarTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_AVATAR);
-                uiAvatarTimer =  urand(15*IN_MILLISECONDS, 20*IN_MILLISECONDS);
+                uiAvatarTimer =  urand(15*IN_MILLISECONDS,20*IN_MILLISECONDS);
             } else uiAvatarTimer -= diff;
 
             if (uiThunderclapTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_THUNDERCLAP);
-                uiThunderclapTimer = urand(5*IN_MILLISECONDS, 15*IN_MILLISECONDS);
+                uiThunderclapTimer = urand(5*IN_MILLISECONDS,15*IN_MILLISECONDS);
             } else uiThunderclapTimer -= diff;
 
             if (uiStormboltTimer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_STORMBOLT);
-                uiStormboltTimer = urand(10*IN_MILLISECONDS, 25*IN_MILLISECONDS);
+                uiStormboltTimer = urand(10*IN_MILLISECONDS,25*IN_MILLISECONDS);
             } else uiStormboltTimer -= diff;
 
             if (uiYellTimer <= diff)
             {
-                DoScriptText(RAND(YELL_RANDOM1, YELL_RANDOM2, YELL_RANDOM3, YELL_RANDOM4, YELL_RANDOM5, YELL_RANDOM6, YELL_RANDOM7), me);
-                uiYellTimer = urand(20*IN_MILLISECONDS, 30*IN_MILLISECONDS); //20 to 30 seconds
+                DoScriptText(RAND(YELL_RANDOM1,YELL_RANDOM2,YELL_RANDOM3,YELL_RANDOM4,YELL_RANDOM5,YELL_RANDOM6,YELL_RANDOM7), me);
+                uiYellTimer = urand(20*IN_MILLISECONDS,30*IN_MILLISECONDS); //20 to 30 seconds
             } else uiYellTimer -= diff;
 
             // check if creature is not outside of building
@@ -130,9 +117,14 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new boss_vanndarAI(creature);
+    }
 };
 
 void AddSC_boss_vanndar()
 {
-    new boss_vanndar();
+    new boss_vanndar;
 }

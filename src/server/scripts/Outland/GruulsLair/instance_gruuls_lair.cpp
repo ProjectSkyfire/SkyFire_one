@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance_Gruuls_Lair
@@ -28,27 +26,28 @@ EndScriptData */
 #include "ScriptPCH.h"
 #include "gruuls_lair.h"
 
-#define ENCOUNTERS 2
+#define MAX_ENCOUNTER 2
 
 /* Gruuls Lair encounters:
 1 - High King Maulgar event
 2 - Gruul event
 */
-class instance_gruuls_lair : public InstanceMapScript
+
+class instance_gruuls_lair : public InstanceMapScript
 {
 public:
-    instance_gruuls_lair() : InstanceMapScript("instance_gruuls_lair") { }
+    instance_gruuls_lair() : InstanceMapScript("instance_gruuls_lair", 565) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
-        return new instance_gruuls_lair_InstanceMapScript(map);
+        return new instance_gruuls_lair_InstanceMapScript(pMap);
     }
 
-    struct instance_gruuls_lair_InstanceMapScript : public ScriptedInstance
+    struct instance_gruuls_lair_InstanceMapScript : public InstanceScript
     {
-        instance_gruuls_lair_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
+        instance_gruuls_lair_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
-        uint32 Encounters[ENCOUNTERS];
+        uint32 m_auiEncounter[MAX_ENCOUNTER];
 
         uint64 MaulgarEvent_Tank;
         uint64 KigglerTheCrazed;
@@ -62,6 +61,8 @@ public:
 
         void Initialize()
         {
+            memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
             MaulgarEvent_Tank = 0;
             KigglerTheCrazed = 0;
             BlindeyeTheSeer = 0;
@@ -71,38 +72,35 @@ public:
 
             MaulgarDoor = 0;
             GruulDoor = 0;
-
-            for (uint8 i = 0; i < ENCOUNTERS; i++)
-                Encounters[i] = NOT_STARTED;
         }
 
         bool IsEncounterInProgress() const
         {
-            for (uint8 i = 0; i < ENCOUNTERS; i++)
-                if (Encounters[i] == IN_PROGRESS) return true;
+            for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+                if (m_auiEncounter[i] == IN_PROGRESS) return true;
 
             return false;
         }
 
-        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
-            switch (creature->GetEntry())
+            switch(pCreature->GetEntry())
             {
-                case 18835: KigglerTheCrazed = creature->GetGUID(); break;
-                case 18836: BlindeyeTheSeer = creature->GetGUID();  break;
-                case 18834: OlmTheSummoner = creature->GetGUID();   break;
-                case 18832: KroshFirehand = creature->GetGUID();    break;
-                case 18831: Maulgar = creature->GetGUID();          break;
+                case 18835: KigglerTheCrazed = pCreature->GetGUID(); break;
+                case 18836: BlindeyeTheSeer = pCreature->GetGUID();  break;
+                case 18834: OlmTheSummoner = pCreature->GetGUID();   break;
+                case 18832: KroshFirehand = pCreature->GetGUID();    break;
+                case 18831: Maulgar = pCreature->GetGUID();          break;
             }
         }
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
                 case 184468:
                     MaulgarDoor = pGo->GetGUID();
-                    if (Encounters[0] == DONE) HandleGameObject(NULL, true, pGo);
+                    if (m_auiEncounter[0] == DONE) HandleGameObject(NULL, true, pGo);
                     break;
                 case 184662: GruulDoor = pGo->GetGUID(); break;
             }
@@ -116,7 +114,7 @@ public:
 
         uint64 GetData64(uint32 identifier)
         {
-            switch (identifier)
+            switch(identifier)
             {
                 case DATA_MAULGAREVENT_TANK:    return MaulgarEvent_Tank;
                 case DATA_KIGGLERTHECRAZED:     return KigglerTheCrazed;
@@ -132,22 +130,15 @@ public:
 
         void SetData(uint32 type, uint32 data)
         {
-            switch (type)
+            switch(type)
             {
                 case DATA_MAULGAREVENT:
-                    if (data == DONE)
-                        HandleGameObject(MaulgarDoor, true);
-                    if (Encounters[0] != DONE)
-                        Encounters[0] = data;
-                    break;
+                    if (data == DONE) HandleGameObject(MaulgarDoor, true);
+                    m_auiEncounter[0] = data; break;
                 case DATA_GRUULEVENT:
-                    if (data == IN_PROGRESS)
-                        HandleGameObject(GruulDoor, false);
-                    else
-                        HandleGameObject(GruulDoor, true);
-                    if (Encounters[1] != DONE)
-                    Encounters[1] = data;
-                    break;
+                    if (data == IN_PROGRESS) HandleGameObject(GruulDoor, false);
+                    else HandleGameObject(GruulDoor, true);
+                    m_auiEncounter[1] = data; break;
             }
 
             if (data == DONE)
@@ -156,10 +147,10 @@ public:
 
         uint32 GetData(uint32 type)
         {
-            switch (type)
+            switch(type)
             {
-                case DATA_MAULGAREVENT: return Encounters[0];
-                case DATA_GRUULEVENT:   return Encounters[1];
+                case DATA_MAULGAREVENT: return m_auiEncounter[0];
+                case DATA_GRUULEVENT:   return m_auiEncounter[1];
             }
             return 0;
         }
@@ -168,7 +159,7 @@ public:
         {
             OUT_SAVE_INST_DATA;
             std::ostringstream stream;
-            stream << Encounters[0] << " " << Encounters[1];
+            stream << m_auiEncounter[0] << " " << m_auiEncounter[1];
             char* out = new char[stream.str().length() + 1];
             strcpy(out, stream.str().c_str());
             if (out)
@@ -190,14 +181,16 @@ public:
 
             OUT_LOAD_INST_DATA(in);
             std::istringstream stream(in);
-            stream >> Encounters[0] >> Encounters[1];
-            for (uint8 i = 0; i < ENCOUNTERS; ++i)
-                if (Encounters[i] == IN_PROGRESS)                // Do not load an encounter as "In Progress" - reset it instead.
-                    Encounters[i] = NOT_STARTED;
+            stream >> m_auiEncounter[0] >> m_auiEncounter[1];
+            for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+                if (m_auiEncounter[i] == IN_PROGRESS)                // Do not load an encounter as "In Progress" - reset it instead.
+                    m_auiEncounter[i] = NOT_STARTED;
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
 };
+
 
 void AddSC_instance_gruuls_lair()
 {

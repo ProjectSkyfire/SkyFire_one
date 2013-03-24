@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Generic_Creature
@@ -28,15 +26,11 @@ EndScriptData */
 #include "ScriptPCH.h"
 
 #define GENERIC_CREATURE_COOLDOWN   5000
-class generic_creature : public CreatureScript
+
+class generic_creature : public CreatureScript
 {
 public:
     generic_creature() : CreatureScript("generic_creature") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new generic_creatureAI (creature);
-    }
 
     struct generic_creatureAI : public ScriptedAI
     {
@@ -56,9 +50,7 @@ public:
         void EnterCombat(Unit *who)
         {
             if (!me->IsWithinMeleeRange(who))
-            {
                 IsSelfRooted = true;
-            }
         }
 
         void UpdateAI(const uint32 diff)
@@ -70,6 +62,7 @@ public:
 
             //Buff timer (only buff when we are alive and not in combat
             if (!me->isInCombat() && me->isAlive())
+            {
                 if (BuffTimer <= diff)
                 {
                     //Find a spell that targets friendly and applies an aura (these are generally buffs)
@@ -88,6 +81,7 @@ public:
                     }//Try agian in 30 seconds
                     else BuffTimer = 30000;
                 } else BuffTimer -= diff;
+            }
 
             //Return since we have no target
             if (!UpdateVictim())
@@ -103,7 +97,7 @@ public:
                     SpellEntry const *info = NULL;
 
                     //Select a healing spell if less than 30% hp
-                    if (me->GetHealth()*100 / me->GetMaxHealth() < 30)
+                    if (HealthBelowPct(30))
                         info = SelectSpell(me, 0, 0, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
                     //No healing spell available, select a hostile spell
@@ -111,7 +105,7 @@ public:
                     else info = SelectSpell(me->getVictim(), 0, 0, SELECT_TARGET_ANY_ENEMY, 0, 0, 0, 0, SELECT_EFFECT_DONTCARE);
 
                     //50% chance if elite or higher, 20% chance if not, to replace our white hit with a spell
-                    if (info && (rand() % (me->GetCreatureTemplate()->rank > 1 ? 2 : 5) == 0) && !GlobalCooldown)
+                    if (info && (rand() % (me->GetCreatureInfo()->rank > 1 ? 2 : 5) == 0) && !GlobalCooldown)
                     {
                         //Cast the spell
                         if (Healing)DoCastSpell(me, info);
@@ -134,7 +128,7 @@ public:
                     SpellEntry const *info = NULL;
 
                     //Select a healing spell if less than 30% hp ONLY 33% of the time
-                    if (me->GetHealth()*100 / me->GetMaxHealth() < 30 && rand() % 3 == 0)
+                    if (HealthBelowPct(30) && rand() % 3 == 0)
                         info = SelectSpell(me, 0, 0, SELECT_TARGET_ANY_FRIEND, 0, 0, 0, 0, SELECT_EFFECT_HEALING);
 
                     //No healing spell available, See if we can cast a ranged spell (Range must be greater than ATTACK_DISTANCE)
@@ -146,16 +140,15 @@ public:
                     {
                         //If we are currently moving stop us and set the movement generator
                         if (!IsSelfRooted)
-                        {
                             IsSelfRooted = true;
-                        }
 
                         //Cast spell
-                        if (Healing) DoCastSpell(me, info);
+                        if (Healing) DoCastSpell(me,info);
                         else DoCastSpell(me->getVictim(),info);
 
                         //Set our global cooldown
                         GlobalCooldown = GENERIC_CREATURE_COOLDOWN;
+
                     }//If no spells available and we arn't moving run to target
                     else if (IsSelfRooted)
                     {
@@ -167,9 +160,73 @@ public:
             }
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new generic_creatureAI(creature);
+    }
+};
+
+class trigger_periodic : public CreatureScript
+{
+public:
+    trigger_periodic() : CreatureScript("trigger_periodic") { }
+
+    struct trigger_periodicAI : public NullCreatureAI
+    {
+        trigger_periodicAI(Creature* c) : NullCreatureAI(c)
+        {
+            spell = me->m_spells[0] ? GetSpellStore()->LookupEntry(me->m_spells[0]) : NULL;
+            interval = me->GetAttackTime(BASE_ATTACK);
+            timer = interval;
+        }
+
+        uint32 timer, interval;
+        const SpellEntry * spell;
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (timer <= diff)
+            {
+                if (spell)
+                    me->CastSpell(me, spell, true);
+                timer = interval;
+            }
+            else
+                timer -= diff;
+        }
+    };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new trigger_periodicAI(creature);
+    }
+};
+
+class trigger_death : public CreatureScript
+{
+public:
+    trigger_death() : CreatureScript("trigger_death") { }
+
+    struct trigger_deathAI : public NullCreatureAI
+    {
+        trigger_deathAI(Creature* c) : NullCreatureAI(c) {}
+        void JustDied(Unit *killer)
+        {
+            if (me->m_spells[0])
+                me->CastSpell(killer, me->m_spells[0], true);
+        }
+    };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new trigger_deathAI(creature);
+    }
 };
 
 void AddSC_generic_creature()
 {
-    new generic_creature();
+    //new generic_creature;
+    new trigger_periodic;
+    //new trigger_death;
 }

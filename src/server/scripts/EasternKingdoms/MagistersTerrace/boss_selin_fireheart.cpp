@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -52,38 +50,38 @@ EndScriptData */
 #define DATA_CRYSTALS                   6
 
 #define CREATURE_FEL_CRYSTAL            24722
-class boss_selin_fireheart : public CreatureScript
+
+class boss_selin_fireheart : public CreatureScript
 {
 public:
     boss_selin_fireheart() : CreatureScript("boss_selin_fireheart") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_selin_fireheartAI (creature);
+        return new boss_selin_fireheartAI (pCreature);
     };
 
     struct boss_selin_fireheartAI : public ScriptedAI
     {
         boss_selin_fireheartAI(Creature* c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
 
             Crystals.clear();
-            // GUIDs per instance is static, so we only need to load them once.
-            if (instance)
+            //GUIDs per instance is static, so we only need to load them once.
+            if (pInstance)
             {
-                uint32 size = instance->GetData(DATA_FEL_CRYSTAL_SIZE);
+                uint32 size = pInstance->GetData(DATA_FEL_CRYSTAL_SIZE);
                 for (uint8 i = 0; i < size; ++i)
                 {
-                    uint64 guid = instance->GetData64(DATA_FEL_CRYSTAL);
-                    sLog->outDebug("TSCR: Selin: Adding Fel Crystal %u to list", guid);
+                    uint64 guid = pInstance->GetData64(DATA_FEL_CRYSTAL);
+                    sLog.outDebug("TSCR: Selin: Adding Fel Crystal " UI64FMTD " to list", guid);
                     Crystals.push_back(guid);
                 }
             }
-            Heroic = c->GetMap()->IsHeroic();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         std::list<uint64> Crystals;
 
@@ -95,12 +93,12 @@ public:
 
         bool IsDraining;
         bool DrainingCrystal;
-        bool Heroic;
+
         uint64 CrystalGUID;                                     // This will help us create a pointer to the crystal we are draining. We store GUIDs, never units in case unit is deleted/offline (offline if player of course).
 
         void Reset()
         {
-            if (instance)
+            if (pInstance)
             {
                 //for (uint8 i = 0; i < CRYSTALS_NUMBER; ++i)
                 for (std::list<uint64>::const_iterator itr = Crystals.begin(); itr != Crystals.end(); ++itr)
@@ -117,12 +115,12 @@ public:
                     }
                 }
 
-                instance->HandleGameObject(instance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);
                 // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
                                                                 // Small door opened after event are expected to be closed by default
                 // Set Inst data for encounter
-                instance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
-            } else sLog->outError(ERROR_INST_DATA);
+                pInstance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
+            } else sLog.outError(ERROR_INST_DATA);
 
             DrainLifeTimer = 3000 + rand()%4000;
             DrainManaTimer = DrainLifeTimer + 5000;
@@ -171,7 +169,7 @@ public:
                 float x, y, z;                                  // coords that we move to, close to the crystal.
                 CrystalChosen->GetClosePoint(x, y, z, me->GetObjectSize(), CONTACT_DISTANCE);
 
-                me->RemoveUnitMovementFlag(MOVEFLAG_WALK_MODE);
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                 me->GetMotionMaster()->MovePoint(1, x, y, z);
                 DrainingCrystal = true;
             }
@@ -196,14 +194,14 @@ public:
         {
             DoScriptText(SAY_AGGRO, me);
 
-            if (instance)
-                instance->HandleGameObject(instance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), false);
+            if (pInstance)
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), false);
                 //Close the encounter door, open it in JustDied/Reset
          }
 
         void KilledUnit(Unit* /*victim*/)
         {
-            DoScriptText(RAND(SAY_KILL_1, SAY_KILL_2), me);
+            DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
         }
 
         void MovementInform(uint32 type, uint32 id)
@@ -222,7 +220,7 @@ public:
                 else
                 {
                     // Make an error message in case something weird happened here
-                    sLog->outError("TSCR: Selin Fireheart unable to drain crystal as the crystal is either dead or despawned");
+                    sLog.outError("TSCR: Selin Fireheart unable to drain crystal as the crystal is either dead or despawned");
                     DrainingCrystal = false;
                 }
             }
@@ -232,12 +230,12 @@ public:
         {
             DoScriptText(SAY_DEATH, me);
 
-            if (!instance)
+            if (!pInstance)
                 return;
 
-            instance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
-            instance->HandleGameObject(instance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);                  // Open the encounter door
-            instance->HandleGameObject(instance->GetData64(DATA_SELIN_DOOR), true);                 // Open the door leading further in
+            pInstance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
+            pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_ENCOUNTER_DOOR), true);                  // Open the encounter door
+            pInstance->HandleGameObject(pInstance->GetData64(DATA_SELIN_DOOR), true);                 // Open the door leading further in
             ShatterRemainingCrystals();
         }
 
@@ -258,7 +256,7 @@ public:
                     } else DrainLifeTimer -= diff;
 
                     // Heroic only
-                    if (Heroic)
+                    if (IsHeroic())
                     {
                         if (DrainManaTimer <= diff)
                         {
@@ -284,13 +282,14 @@ public:
                     if (DrainCrystalTimer <= diff)
                     {
                         SelectNearestCrystal();
-                        if (Heroic)
+                        if (IsHeroic())
                             DrainCrystalTimer = 10000 + rand()%5000;
                         else
                             DrainCrystalTimer = 20000 + rand()%5000;
                     } else DrainCrystalTimer -= diff;
                 }
-            } else
+
+            }else
             {
                 if (IsDraining)
                 {
@@ -317,16 +316,18 @@ public:
             DoMeleeAttackIfReady();                             // No need to check if we are draining crystal here, as the spell has a stun.
         }
     };
+
 };
+
 
 class mob_fel_crystal : public CreatureScript
 {
 public:
     mob_fel_crystal() : CreatureScript("mob_fel_crystal") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_fel_crystalAI (creature);
+        return new mob_fel_crystalAI (pCreature);
     };
 
     struct mob_fel_crystalAI : public ScriptedAI
@@ -341,17 +342,17 @@ public:
 
         void JustDied(Unit* /*killer*/)
         {
-            if (ScriptedInstance* instance = me->GetInstanceScript())
+            if (InstanceScript* pInstance = me->GetInstanceScript())
             {
-                Creature* Selin = (Unit::GetCreature(*me, instance->GetData64(DATA_SELIN)));
+                Creature* Selin = (Unit::GetCreature(*me, pInstance->GetData64(DATA_SELIN)));
                 if (Selin && Selin->isAlive())
                 {
-                    if (CAST_AI(boss_selin_fireheartAI, Selin->AI())->CrystalGUID == me->GetGUID())
+                    if (CAST_AI(boss_selin_fireheart::boss_selin_fireheartAI, Selin->AI())->CrystalGUID == me->GetGUID())
                     {
                         // Set this to false if we are the Creature that Selin is draining so his AI flows properly
-                        CAST_AI(boss_selin_fireheartAI, Selin->AI())->DrainingCrystal = false;
-                        CAST_AI(boss_selin_fireheartAI, Selin->AI())->IsDraining = false;
-                        CAST_AI(boss_selin_fireheartAI, Selin->AI())->EmpowerTimer = 10000;
+                        CAST_AI(boss_selin_fireheart::boss_selin_fireheartAI, Selin->AI())->DrainingCrystal = false;
+                        CAST_AI(boss_selin_fireheart::boss_selin_fireheartAI, Selin->AI())->IsDraining = false;
+                        CAST_AI(boss_selin_fireheart::boss_selin_fireheartAI, Selin->AI())->EmpowerTimer = 10000;
                         if (Selin->getVictim())
                         {
                             Selin->AI()->AttackStart(Selin->getVictim());
@@ -359,10 +360,12 @@ public:
                         }
                     }
                 }
-            } else sLog->outError(ERROR_INST_DATA);
+            } else sLog.outError(ERROR_INST_DATA);
         }
     };
+
 };
+
 
 void AddSC_boss_selin_fireheart()
 {

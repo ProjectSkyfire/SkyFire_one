@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -30,14 +28,15 @@ EndScriptData */
 #define SPELL_SHADOWFLAME       22539
 #define SPELL_WINGBUFFET        23339
 #define SPELL_FLAMEBUFFET       23341
-class boss_firemaw : public CreatureScript
+
+class boss_firemaw : public CreatureScript
 {
 public:
     boss_firemaw() : CreatureScript("boss_firemaw") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_firemawAI (creature);
+        return new boss_firemawAI (pCreature);
     }
 
     struct boss_firemawAI : public ScriptedAI
@@ -69,7 +68,7 @@ public:
             if (ShadowFlame_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_SHADOWFLAME);
-                ShadowFlame_Timer = urand(15000, 18000);
+                ShadowFlame_Timer = urand(15000,18000);
             } else ShadowFlame_Timer -= diff;
 
             //WingBuffet_Timer
@@ -92,6 +91,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_firemaw()

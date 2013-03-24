@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,136 +15,185 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ScriptData
-SDName: Boss_Anubrekhan
-SD%Complete: 70
-SDComment:
-SDCategory: Naxxramas
-EndScriptData */
-
 #include "ScriptPCH.h"
+#include "naxxramas.h"
 
-#define SAY_GREET           -1533000
-#define SAY_AGGRO1          -1533001
-#define SAY_AGGRO2          -1533002
-#define SAY_AGGRO3          -1533003
-#define SAY_TAUNT1          -1533004
-#define SAY_TAUNT2          -1533005
-#define SAY_TAUNT3          -1533006
-#define SAY_TAUNT4          -1533007
+#define SAY_GREET           RAND(-1533000,-1533004,-1533005,-1533006,-1533007)
+#define SAY_AGGRO           RAND(-1533001,-1533002,-1533003)
 #define SAY_SLAY            -1533008
 
-#define SPELL_IMPALE        28783                           //May be wrong spell id. Causes more dmg than I expect
-#define H_SPELL_IMPALE      56090
-#define SPELL_LOCUSTSWARM   28785                           //This is a self buff that triggers the dmg debuff
-#define H_SPELL_LOCUSTSWARM 54021
+#define MOB_CRYPT_GUARD     16573
 
-//invalid
-#define SPELL_SUMMONGUARD   29508                           //Summons 1 crypt guard at targeted location
+const Position GuardSummonPos = {3333.72f, -3476.30f, 287.1f, 6.2801f};
 
-#define SPELL_SELF_SPAWN_5  29105                           //This spawns 5 corpse scarabs ontop of us (most likely the player casts this on death)
-#define SPELL_SELF_SPAWN_10 28864                           //This is used by the crypt guards when they die
-class boss_anubrekhan : public CreatureScript
+enum Events
+{
+    EVENT_NONE,
+    EVENT_IMPALE,
+    EVENT_LOCUST,
+    EVENT_SPAWN_GUARDIAN_NORMAL,
+    EVENT_BERSERK,
+};
+
+enum Spells
+{
+    SPELL_IMPALE_10                 = 28783,
+    SPELL_IMPALE_25                 = 56090,
+    SPELL_LOCUST_SWARM_10           = 28785,
+    SPELL_LOCUST_SWARM_25           = 54021,
+    SPELL_SUMMON_CORPSE_SCARABS_PLR = 29105,    // This spawns 5 corpse scarabs on top of player
+    SPELL_SUMMON_CORPSE_SCARABS_MOB = 28864,   // This spawns 10 corpse scarabs on top of dead guards
+    SPELL_BERSERK                   = 27680,
+};
+
+enum
+{
+    ACHIEV_TIMED_START_EVENT                      = 9891,
+};
+
+class boss_anubrekhan : public CreatureScript
 {
 public:
     boss_anubrekhan() : CreatureScript("boss_anubrekhan") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_anubrekhanAI (creature);
+        return new boss_anubrekhanAI (pCreature);
     }
 
-    struct boss_anubrekhanAI : public ScriptedAI
+    struct boss_anubrekhanAI : public BossAI
     {
-        boss_anubrekhanAI(Creature *c) : ScriptedAI(c) {}
+        boss_anubrekhanAI(Creature *c) : BossAI(c, BOSS_ANUBREKHAN) {}
 
-        uint32 Impale_Timer;
-        uint32 LocustSwarm_Timer;
-        uint32 Summon_Timer;
-        bool HasTaunted;
+        bool hasTaunted;
 
         void Reset()
         {
-            Impale_Timer = 15000;                               //15 seconds
-            LocustSwarm_Timer = 80000 + (rand()%40000);         //Random time between 80 seconds and 2 minutes for initial cast
-            Summon_Timer = LocustSwarm_Timer + 45000;           //45 seconds after initial locust swarm
-        }
+            _Reset();
+            SetImmuneToDeathGrip();
 
-        void KilledUnit(Unit* Victim)
-        {
-            //Force the player to spawn corpse scarabs via spell
-            Victim->CastSpell(Victim, SPELL_SELF_SPAWN_5, true);
+            hasTaunted = false;
 
-            if (rand()%5)
-                return;
+            //if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+            //{
+                Position pos;
 
-             DoScriptText(SAY_SLAY, me);
-        }
+                // respawn guard using home position,
+                // otherwise, after a wipe, they respawn where boss was at wipe moment.
+                pos = me->GetHomePosition();
+                pos.m_positionY -= 10.0f;
+                me->SummonCreature(MOB_CRYPT_GUARD, pos, TEMPSUMMON_CORPSE_DESPAWN);
 
-        void EnterCombat(Unit *who)
-        {
-            switch (rand()%3)
+            if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
             {
-            case 0: DoScriptText(SAY_AGGRO1, me); break;
-            case 1: DoScriptText(SAY_AGGRO2, me); break;
-            case 2: DoScriptText(SAY_AGGRO3, me); break;
+                pos = me->GetHomePosition();
+                pos.m_positionY += 10.0f;
+                me->SummonCreature(MOB_CRYPT_GUARD, pos, TEMPSUMMON_CORPSE_DESPAWN);
             }
+        }
+
+        void KilledUnit(Unit* victim)
+        {
+            //Force the player to spawn corpse scarabs via spell, TODO: Check percent chance for scarabs, 20% at the moment
+            if (!(rand()%5))
+                if (victim->GetTypeId() == TYPEID_PLAYER)
+                    victim->CastSpell(victim, SPELL_SUMMON_CORPSE_SCARABS_PLR, true, NULL, NULL, me->GetGUID());
+
+            DoScriptText(SAY_SLAY, me);
+        }
+
+        void JustDied(Unit *)
+        {
+            _JustDied();
+
+            // start achievement timer (kill Maexna within 20 min)
+            if (instance)
+                instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
+        }
+
+        void EnterCombat(Unit * /*who*/)
+        {
+            _EnterCombat();
+            DoScriptText(SAY_AGGRO, me);
+            events.ScheduleEvent(EVENT_IMPALE, 10000 + rand()%10000);
+            events.ScheduleEvent(EVENT_LOCUST, urand(80000,120000));
+            events.ScheduleEvent(EVENT_BERSERK, 600000);
+
+            //if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+                events.ScheduleEvent(EVENT_SPAWN_GUARDIAN_NORMAL, urand(15000,20000));
         }
 
         void MoveInLineOfSight(Unit *who)
         {
-                if (!HasTaunted && me->IsWithinDistInMap(who, 60.0f))
-                {
-                    switch (rand()%5)
-                    {
-                    case 0: DoScriptText(SAY_GREET, me); break;
-                    case 1: DoScriptText(SAY_TAUNT1, me); break;
-                    case 2: DoScriptText(SAY_TAUNT2, me); break;
-                    case 3: DoScriptText(SAY_TAUNT3, me); break;
-                    case 4: DoScriptText(SAY_TAUNT4, me); break;
-                    }
-                    HasTaunted = true;
-                }
+            if (!hasTaunted && me->IsWithinDistInMap(who, 60.0f) && who->GetTypeId() == TYPEID_PLAYER)
+            {
+                DoScriptText(SAY_GREET, me);
+                hasTaunted = true;
+            }
             ScriptedAI::MoveInLineOfSight(who);
         }
 
-        void UpdateAI(const uint32 diff)
+        void SummonedCreatureDespawn(Creature *summon)
         {
-            if (!UpdateVictim())
+            BossAI::SummonedCreatureDespawn(summon);
+
+            // check if it is an actual killed guard
+            if (!me->isAlive() || summon->isAlive() || summon->GetEntry() != MOB_CRYPT_GUARD)
                 return;
 
-            //Impale_Timer
-            if (Impale_Timer <= diff)
+            summon->CastSpell(summon, SPELL_SUMMON_CORPSE_SCARABS_MOB, true, NULL, NULL, me->GetGUID());
+        }
+
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim() || !CheckInRoom())
+                return;
+
+            events.Update(diff);
+
+            while (uint32 eventId = events.ExecuteEvent())
             {
-                //Cast Impale on a random target
-                //Do NOT cast it when we are afflicted by locust swarm
-                if (!me->HasAura(SPELL_LOCUSTSWARM, 1))
+                switch(eventId)
                 {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pTarget, SPELL_IMPALE);
+                    case EVENT_IMPALE:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        //Cast Impale on a random target
+                        //Do NOT cast it when we are afflicted by locust swarm
+                        if (!me->HasAura(RAID_MODE(SPELL_LOCUST_SWARM_10,SPELL_LOCUST_SWARM_25)))
+                            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                                DoCast(pTarget, RAID_MODE(SPELL_IMPALE_10,SPELL_IMPALE_25));
+                        events.ScheduleEvent(EVENT_IMPALE, urand(10000,20000));
+                        }
+                        break;
+                    case EVENT_LOCUST:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        // TODO : Add Text
+                        DoCast(me, RAID_MODE(SPELL_LOCUST_SWARM_10,SPELL_LOCUST_SWARM_25));
+                        DoSummon(MOB_CRYPT_GUARD, GuardSummonPos, 0, TEMPSUMMON_CORPSE_DESPAWN);
+                            events.ScheduleEvent(EVENT_LOCUST, urand(85000,95000));
+                        }
+                        break;
+                    case EVENT_SPAWN_GUARDIAN_NORMAL:
+                        // TODO : Add Text
+                        DoSummon(MOB_CRYPT_GUARD, GuardSummonPos, 0, TEMPSUMMON_CORPSE_DESPAWN);
+                        break;
+                    case EVENT_BERSERK:
+                        if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+                        DoCast(me, SPELL_BERSERK, true);
+                        events.ScheduleEvent(EVENT_BERSERK, 600000);
+                        break;
                 }
-
-                Impale_Timer = 15000;
-            } else Impale_Timer -= diff;
-
-            //LocustSwarm_Timer
-            if (LocustSwarm_Timer <= diff)
-            {
-                DoCast(me, SPELL_LOCUSTSWARM);
-                LocustSwarm_Timer = 90000;
-            } else LocustSwarm_Timer -= diff;
-
-            //Summon_Timer
-            if (Summon_Timer <= diff)
-            {
-                DoCast(me, SPELL_SUMMONGUARD);
-                Summon_Timer = 45000;
-            } else Summon_Timer -= diff;
+            }
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_anubrekhan()
 {

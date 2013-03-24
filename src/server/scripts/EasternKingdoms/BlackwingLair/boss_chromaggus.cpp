@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -44,10 +42,10 @@ enum Spells
     SPELL_NATURE_VULNERABILITY                             = 22280,
     SPELL_ARCANE_VULNERABILITY                             = 22281,
     //Other spells
-    SPELL_INCINERATE                                       = 23308,   //Incinerate 23308, 23309
+    SPELL_INCINERATE                                       = 23308,   //Incinerate 23308,23309
     SPELL_TIMELAPSE                                        = 23310,   //Time lapse 23310, 23311(old threat mod that was removed in 2.01)
     SPELL_CORROSIVEACID                                    = 23313,   //Corrosive Acid 23313, 23314
-    SPELL_IGNITEFLESH                                      = 23315,   //Ignite Flesh 23315, 23316
+    SPELL_IGNITEFLESH                                      = 23315,   //Ignite Flesh 23315,23316
     SPELL_FROSTBURN                                        = 23187,   //Frost burn 23187, 23189
     //Brood Affliction 23173 - Scripted Spell that cycles through all targets within 100 yards and has a chance to cast one of the afflictions on them
     //Since Scripted spells arn't coded I'll just write a function that does the same thing
@@ -60,14 +58,15 @@ enum Spells
     SPELL_FRENZY                                           = 28371,   //The frenzy spell may be wrong
     SPELL_ENRAGE                                           = 28747
 };
-class boss_chromaggus : public CreatureScript
+
+class boss_chromaggus : public CreatureScript
 {
 public:
     boss_chromaggus() : CreatureScript("boss_chromaggus") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_chromaggusAI (creature);
+        return new boss_chromaggusAI (pCreature);
     }
 
     struct boss_chromaggusAI : public ScriptedAI
@@ -78,7 +77,7 @@ public:
             //5 possiblities for the first breath, 4 for the second, 20 total possiblites
             //This way we don't end up casting 2 of the same breath
             //TL TL would be stupid
-            switch (urand(0, 19))
+            switch (urand(0,19))
             {
                 //B1 - Incin
                 case 0:
@@ -256,11 +255,11 @@ public:
                                                SPELL_BROODAF_RED, SPELL_BROODAF_BRONZE, SPELL_BROODAF_GREEN), true);
 
                             //Chromatic mutation if target is effected by all afflictions
-                            if (pUnit->HasAura(SPELL_BROODAF_BLUE, 0)
-                                && pUnit->HasAura(SPELL_BROODAF_BLACK, 0)
-                                && pUnit->HasAura(SPELL_BROODAF_RED, 0)
-                                && pUnit->HasAura(SPELL_BROODAF_BRONZE, 0)
-                                && pUnit->HasAura(SPELL_BROODAF_GREEN, 0))
+                            if (pUnit->HasAura(SPELL_BROODAF_BLUE)
+                                && pUnit->HasAura(SPELL_BROODAF_BLACK)
+                                && pUnit->HasAura(SPELL_BROODAF_RED)
+                                && pUnit->HasAura(SPELL_BROODAF_BRONZE)
+                                && pUnit->HasAura(SPELL_BROODAF_GREEN))
                             {
                                 //pTarget->RemoveAllAuras();
                                 //DoCast(pTarget, SPELL_CHROMATIC_MUT_1);
@@ -285,11 +284,11 @@ public:
             {
                 DoCast(me, SPELL_FRENZY);
                 DoScriptText(EMOTE_FRENZY, me);
-                Frenzy_Timer = urand(10000, 15000);
+                Frenzy_Timer = urand(10000,15000);
             } else Frenzy_Timer -= diff;
 
             //Enrage if not already enraged and below 20%
-            if (!Enraged && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
+            if (!Enraged && HealthBelowPct(20))
             {
                 DoCast(me, SPELL_ENRAGE);
                 Enraged = true;
@@ -298,6 +297,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_chromaggus()

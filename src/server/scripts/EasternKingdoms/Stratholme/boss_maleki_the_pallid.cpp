@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,24 +30,25 @@ EndScriptData */
 #define SPELL_DRAINLIFE    20743
 #define SPELL_DRAIN_MANA    17243
 #define SPELL_ICETOMB    16869
-class boss_maleki_the_pallid : public CreatureScript
+
+class boss_maleki_the_pallid : public CreatureScript
 {
 public:
     boss_maleki_the_pallid() : CreatureScript("boss_maleki_the_pallid") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_maleki_the_pallidAI (creature);
+        return new boss_maleki_the_pallidAI (pCreature);
     }
 
     struct boss_maleki_the_pallidAI : public ScriptedAI
     {
         boss_maleki_the_pallidAI(Creature *c) : ScriptedAI(c)
         {
-            instance = me->GetInstanceScript();
+            pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 Frostbolt_Timer;
         uint32 IceTomb_Timer;
@@ -68,8 +67,8 @@ public:
 
         void JustDied(Unit* /*Killer*/)
         {
-            if (instance)
-                instance->SetData(TYPE_PALLID, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(TYPE_PALLID,IN_PROGRESS);
         }
 
         void UpdateAI(const uint32 diff)
@@ -105,6 +104,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_maleki_the_pallid()

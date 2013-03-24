@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_the_black_stalker
@@ -36,24 +34,23 @@ EndScriptData */
 #define SPELL_SUMMON_SPORE_STRIDER 38755
 
 #define ENTRY_SPORE_STRIDER        22299
-class boss_the_black_stalker : public CreatureScript
+
+class boss_the_black_stalker : public CreatureScript
 {
 public:
     boss_the_black_stalker() : CreatureScript("boss_the_black_stalker") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_the_black_stalkerAI (creature);
+        return new boss_the_black_stalkerAI (pCreature);
     }
 
     struct boss_the_black_stalkerAI : public ScriptedAI
     {
         boss_the_black_stalkerAI(Creature *c) : ScriptedAI(c)
         {
-            HeroicMode = me->GetMap()->IsHeroic();
         }
 
-        bool HeroicMode;
         uint32 SporeStriders_Timer;
         uint32 Levitate_Timer;
         uint32 ChainLightning_Timer;
@@ -76,14 +73,14 @@ public:
             Striders.clear();
         }
 
-        void EnterCombat(Unit *who) {}
+        void EnterCombat(Unit * /*who*/) {}
 
         void JustSummoned(Creature *summon)
         {
             if (summon && summon->GetEntry() == ENTRY_SPORE_STRIDER)
             {
                 Striders.push_back(summon->GetGUID());
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
                     summon->AI()->AttackStart(pTarget);
                 else
                     if (me->getVictim())
@@ -91,15 +88,11 @@ public:
             }
         }
 
-        void JustDied(Unit *who)
+        void JustDied(Unit * /*who*/)
         {
-            for (std::list<uint64>::iterator i = Striders.begin(); i != Striders.end(); ++i)
+            for (std::list<uint64>::const_iterator i = Striders.begin(); i != Striders.end(); ++i)
                 if (Creature *strider = Unit::GetCreature(*me, *i))
-                {
-                    strider->SetLootRecipient(NULL);
-                    strider->DealDamage(strider, strider->GetMaxHealth(),NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    strider->RemoveCorpse();
-                }
+                    strider->DisappearAndDie();
         }
 
         void UpdateAI(const uint32 diff)
@@ -110,9 +103,9 @@ public:
             // Evade if too far
             if (check_Timer <= diff)
             {
-                float x, y, z, o;
-                me->GetHomePosition(x, y, z, o);
-                if (me->GetDistance(x, y, z) > 60)
+                float x,y,z,o;
+                me->GetHomePosition(x,y,z,o);
+                if (!me->IsWithinDist3d(x,y,z, 60))
                 {
                     EnterEvadeMode();
                     return;
@@ -121,7 +114,7 @@ public:
             } else check_Timer -= diff;
 
             // Spore Striders
-            if (HeroicMode && SporeStriders_Timer <= diff)
+            if (IsHeroic() && SporeStriders_Timer <= diff)
             {
                 DoCast(me, SPELL_SUMMON_SPORE_STRIDER);
                 SporeStriders_Timer = 10000+rand()%5000;
@@ -132,9 +125,9 @@ public:
             {
                 if (LevitatedTarget_Timer <= diff)
                 {
-                    if (Unit *pTarget = (Unit*)Unit::GetUnit(*me, LevitatedTarget))
+                    if (Unit *pTarget = Unit::GetUnit(*me, LevitatedTarget))
                     {
-                        if (!pTarget->HasAura(SPELL_LEVITATE, 0))
+                        if (!pTarget->HasAura(SPELL_LEVITATE))
                         {
                             LevitatedTarget = 0;
                             return;
@@ -157,7 +150,7 @@ public:
             }
             if (Levitate_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
                 {
                     DoCast(pTarget, SPELL_LEVITATE);
                     LevitatedTarget = pTarget->GetGUID();
@@ -170,7 +163,7 @@ public:
             // Chain Lightning
             if (ChainLightning_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_CHAIN_LIGHTNING);
                 ChainLightning_Timer = 7000;
             } else ChainLightning_Timer -= diff;
@@ -178,7 +171,7 @@ public:
             // Static Charge
             if (StaticCharge_Timer <= diff)
             {
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 30, true))
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0,30,true))
                     DoCast(pTarget, SPELL_STATIC_CHARGE);
                 StaticCharge_Timer = 10000;
             } else StaticCharge_Timer -= diff;
@@ -186,7 +179,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_the_black_stalker()
 {

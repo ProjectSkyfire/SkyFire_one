@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,14 +30,15 @@ enum Spells
     SPELL_WHIRLWIND                                        = 15589,
     SPELL_MORTALSTRIKE                                     = 24573
 };
-class boss_gorosh_the_dervish : public CreatureScript
+
+class boss_gorosh_the_dervish : public CreatureScript
 {
 public:
     boss_gorosh_the_dervish() : CreatureScript("boss_gorosh_the_dervish") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_gorosh_the_dervishAI (creature);
+        return new boss_gorosh_the_dervishAI (pCreature);
     }
 
     struct boss_gorosh_the_dervishAI : public ScriptedAI
@@ -82,6 +81,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_gorosh_the_dervish()

@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -34,14 +32,15 @@ EndScriptData */
 #define ADD_1Y                  -324.961395f
 #define ADD_1Z                  64.401443f
 #define ADD_1O                  3.124724f
-class boss_halycon : public CreatureScript
+
+class boss_halycon : public CreatureScript
 {
 public:
     boss_halycon() : CreatureScript("boss_halycon") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_halyconAI (creature);
+        return new boss_halyconAI (pCreature);
     }
 
     struct boss_halyconAI : public ScriptedAI
@@ -84,15 +83,16 @@ public:
             } else MightyBlow_Timer -= diff;
 
             //Summon Gizrul
-            if (!Summoned && me->GetHealth()*100 / me->GetMaxHealth() < 25)
+            if (!Summoned && HealthBelowPct(25))
             {
-                me->SummonCreature(10268, ADD_1X, ADD_1Y, ADD_1Z, ADD_1O, TEMPSUMMON_TIMED_DESPAWN, 300000);
+                me->SummonCreature(10268,ADD_1X,ADD_1Y,ADD_1Z,ADD_1O,TEMPSUMMON_TIMED_DESPAWN,300000);
                 Summoned = true;
             }
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_halycon()

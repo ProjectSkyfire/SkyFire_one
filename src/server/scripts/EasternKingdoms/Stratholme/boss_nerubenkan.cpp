@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,24 +30,25 @@ EndScriptData */
 #define SPELL_PIERCEARMOR           6016
 #define SPELL_CRYPT_SCARABS         31602
 #define SPELL_RAISEUNDEADSCARAB     17235
-class boss_nerubenkan : public CreatureScript
+
+class boss_nerubenkan : public CreatureScript
 {
 public:
     boss_nerubenkan() : CreatureScript("boss_nerubenkan") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_nerubenkanAI (creature);
+        return new boss_nerubenkanAI (pCreature);
     }
 
     struct boss_nerubenkanAI : public ScriptedAI
     {
         boss_nerubenkanAI(Creature *c) : ScriptedAI(c)
         {
-            instance = me->GetInstanceScript();
+            pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 EncasingWebs_Timer;
         uint32 PierceArmor_Timer;
@@ -70,13 +69,13 @@ public:
 
         void JustDied(Unit* /*Killer*/)
         {
-            if (instance)
-                instance->SetData(TYPE_NERUB, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(TYPE_NERUB,IN_PROGRESS);
         }
 
         void RaiseUndeadScarab(Unit* pVictim)
         {
-            if (Creature* pUndeadScarab = DoSpawnCreature(10876, irand(-9, 9), irand(-9, 9), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000))
+            if (Creature* pUndeadScarab = DoSpawnCreature(10876, float(irand(-9,9)), float(irand(-9,9)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 180000))
                 if (pUndeadScarab->AI())
                     pUndeadScarab->AI()->AttackStart(pVictim);
         }
@@ -96,7 +95,7 @@ public:
             //PierceArmor
             if (PierceArmor_Timer <= diff)
             {
-                if (urand(0, 3) < 2)
+                if (urand(0,3) < 2)
                     DoCast(me->getVictim(), SPELL_PIERCEARMOR);
                 PierceArmor_Timer = 35000;
             } else PierceArmor_Timer -= diff;
@@ -118,6 +117,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_nerubenkan()

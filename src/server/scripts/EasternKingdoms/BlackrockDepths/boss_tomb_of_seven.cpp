@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -48,51 +46,55 @@ enum Misc
 #define GOSSIP_ITEM_TEACH_2 "Continue..."
 #define GOSSIP_ITEM_TEACH_3 "[PH] Continue..."
 #define GOSSIP_ITEM_TRIBUTE "I want to pay tribute"
-class boss_gloomrel : public CreatureScript
+
+class boss_gloomrel : public CreatureScript
 {
 public:
     boss_gloomrel() : CreatureScript("boss_gloomrel") { }
 
-    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
-                player->SEND_GOSSIP_MENU(2606, creature->GetGUID());
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
+                pPlayer->SEND_GOSSIP_MENU(2606, pCreature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+11:
-                player->CLOSE_GOSSIP_MENU();
-                creature->CastSpell(player, SPELL_LEARN_SMELT, false);
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pCreature->CastSpell(pPlayer, SPELL_LEARN_SMELT, false);
                 break;
             case GOSSIP_ACTION_INFO_DEF+2:
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
-                player->SEND_GOSSIP_MENU(2604, creature->GetGUID());
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
+                pPlayer->SEND_GOSSIP_MENU(2604, pCreature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+22:
-                player->CLOSE_GOSSIP_MENU();
-                if (ScriptedInstance* instance = creature->GetInstanceScript())
+                pPlayer->CLOSE_GOSSIP_MENU();
+                if (InstanceScript* pInstance = pCreature->GetInstanceScript())
                 {
                     //are 5 minutes expected? go template may have data to despawn when used at quest
-                    instance->DoRespawnGameObject(instance->GetData64(DATA_GO_CHALICE),MINUTE*5);
+                    pInstance->DoRespawnGameObject(pInstance->GetData64(DATA_GO_CHALICE),MINUTE*5);
                 }
                 break;
         }
         return true;
     }
 
-    bool GossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        if (player->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 1 && player->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN && !player->HasSpell(SPELL_SMELT_DARK_IRON))
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        if (pPlayer->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 1 && pPlayer->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN && !pPlayer->HasSpell(SPELL_SMELT_DARK_IRON))
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEACH_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
-        if (player->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 0 && player->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN)
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TRIBUTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        if (pPlayer->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 0 && pPlayer->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TRIBUTE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
         return true;
     }
+
 };
+
 
 enum DoomrelSpells
 {
@@ -102,54 +104,59 @@ enum DoomrelSpells
     SPELL_DEMONARMOR                                       = 13787,
     SPELL_SUMMON_VOIDWALKERS                               = 15092
 };
-class boss_doomrel : public CreatureScript
+
+#define GOSSIP_ITEM_CHALLENGE   "Your bondage is at an end, Doom'rel. I challenge you!"
+#define GOSSIP_SELECT_DOOMREL   "[PH] Continue..."
+
+class boss_doomrel : public CreatureScript
 {
 public:
     boss_doomrel() : CreatureScript("boss_doomrel") { }
 
-    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
-                player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_DOOMREL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                player->SEND_GOSSIP_MENU(2605, creature->GetGUID());
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SELECT_DOOMREL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                pPlayer->SEND_GOSSIP_MENU(2605, pCreature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+2:
-                player->CLOSE_GOSSIP_MENU();
+                pPlayer->CLOSE_GOSSIP_MENU();
                 //start event here
-                creature->setFaction(FACTION_HOSTILE);
-                creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-                creature->AI()->AttackStart(player);
-                ScriptedInstance* instance = creature->GetInstanceScript();
-                if (instance)
-                    instance->SetData64(DATA_EVENSTARTER, player->GetGUID());
+                pCreature->setFaction(FACTION_HOSTILE);
+                pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                pCreature->AI()->AttackStart(pPlayer);
+                InstanceScript* pInstance = pCreature->GetInstanceScript();
+                if (pInstance)
+                    pInstance->SetData64(DATA_EVENSTARTER,pPlayer->GetGUID());
                 break;
         }
         return true;
     }
 
-    bool GossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(2601, creature->GetGUID());
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_CHALLENGE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->SEND_GOSSIP_MENU(2601, pCreature->GetGUID());
 
         return true;
     }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_doomrelAI (creature);
+        return new boss_doomrelAI (pCreature);
     }
 
     struct boss_doomrelAI : public ScriptedAI
     {
         boss_doomrelAI(Creature *c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
         uint32 ShadowVolley_Timer;
         uint32 Immolate_Timer;
         uint32 CurseOfWeakness_Timer;
@@ -169,11 +176,13 @@ public:
             // was set before event start, so set again
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
 
-            if (instance)
-                if (instance->GetData(DATA_GHOSTKILL) >= 7)
+            if (pInstance)
+            {
+                if (pInstance->GetData(DATA_GHOSTKILL) >= 7)
                     me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE);
                 else
                     me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+            }
         }
 
         void EnterCombat(Unit * /*who*/)
@@ -189,14 +198,14 @@ public:
             if (me->isAlive())
                 me->GetMotionMaster()->MoveTargetedHome();
             me->SetLootRecipient(NULL);
-            if (instance)
-                instance->SetData64(DATA_EVENSTARTER, 0);
+            if (pInstance)
+                pInstance->SetData64(DATA_EVENSTARTER, 0);
         }
 
         void JustDied(Unit * /*who*/)
         {
-            if (instance)
-                instance->SetData(DATA_GHOSTKILL, 1);
+            if (pInstance)
+                pInstance->SetData(DATA_GHOSTKILL, 1);
         }
 
         void UpdateAI(const uint32 diff)
@@ -235,7 +244,7 @@ public:
             } else DemonArmor_Timer -= diff;
 
             //Summon Voidwalkers
-            if (!Voidwalkers && me->GetHealth()*100 / me->GetMaxHealth() < 51)
+            if (!Voidwalkers && HealthBelowPct(51))
             {
                 DoCast(me->getVictim(), SPELL_SUMMON_VOIDWALKERS, true);
                 Voidwalkers = true;
@@ -244,10 +253,8 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-};
 
-#define GOSSIP_ITEM_CHALLENGE   "Your bondage is at an end, Doom'rel. I challenge you!"
-#define GOSSIP_SELECT_DOOMREL   "[PH] Continue..."
+};
 
 void AddSC_boss_tomb_of_seven()
 {

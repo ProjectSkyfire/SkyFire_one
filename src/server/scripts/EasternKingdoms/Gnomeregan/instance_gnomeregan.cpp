@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,19 +19,20 @@
 #include "gnomeregan.h"
 
 #define    MAX_ENCOUNTER  1
-class instance_gnomeregan : public InstanceMapScript
+
+class instance_gnomeregan : public InstanceMapScript
 {
 public:
-    instance_gnomeregan() : InstanceMapScript("instance_gnomeregan") { }
+    instance_gnomeregan() : InstanceMapScript("instance_gnomeregan", 90) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_gnomeregan_InstanceMapScript(pMap);
     }
 
-    struct instance_gnomeregan_InstanceMapScript : public ScriptedInstance
+    struct instance_gnomeregan_InstanceMapScript : public InstanceScript
     {
-        instance_gnomeregan_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap)
+        instance_gnomeregan_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
         {
             Initialize();
         };
@@ -78,34 +76,34 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
 
-        void OnCreatureCreate(Creature* creature, bool /*bAdd*/)
+        void OnCreatureCreate(Creature* pCreature, bool /*bAdd*/)
         {
-            switch (creature->GetEntry())
+            switch(pCreature->GetEntry())
             {
-                case NPC_BLASTMASTER_EMI_SHORTFUSE: uiBastmasterEmiShortfuseGUID = creature->GetGUID(); break;
+                case NPC_BLASTMASTER_EMI_SHORTFUSE: uiBastmasterEmiShortfuseGUID = pCreature->GetGUID(); break;
             }
         }
 
         void OnGameObjectCreate(GameObject* pGo, bool /*bAdd*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
                 case GO_CAVE_IN_LEFT:
                     uiCaveInLeftGUID = pGo->GetGUID();
                     if (m_auiEncounter[0] == DONE || m_auiEncounter[0] == NOT_STARTED)
-                        HandleGameObject(NULL, false, pGo);
+                        HandleGameObject(NULL,false,pGo);
                     break;
                 case GO_CAVE_IN_RIGHT:
                     uiCaveInRightGUID = pGo->GetGUID();
                     if (m_auiEncounter[0] == DONE || m_auiEncounter[0] == NOT_STARTED)
-                        HandleGameObject(NULL, false, pGo);
+                        HandleGameObject(NULL,false,pGo);
                     break;
             }
         }
 
         void SetData(uint32 uiType, uint32 uiData)
         {
-            switch (uiType)
+            switch(uiType)
             {
                 case TYPE_EVENT:
                     m_auiEncounter[0] = uiData;
@@ -117,7 +115,7 @@ public:
 
         uint32 GetData(uint32 uiType, uint32 /*uiData*/)
         {
-            switch (uiType)
+            switch(uiType)
             {
                 case TYPE_EVENT:    return m_auiEncounter[0];
             }
@@ -125,7 +123,7 @@ public:
 
         uint64 GetData64(uint32 uiType)
         {
-            switch (uiType)
+            switch(uiType)
             {
                 case DATA_GO_CAVE_IN_LEFT:              return uiCaveInLeftGUID;
                 case DATA_GO_CAVE_IN_RIGHT:             return uiCaveInRightGUID;
@@ -135,7 +133,9 @@ public:
             return 0;
         }
     };
+
 };
+
 
 void AddSC_instance_gnomeregan()
 {

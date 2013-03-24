@@ -543,11 +543,13 @@ class Creature : public Unit, public GridObject<Creature>
         void setDeathState(DeathState s);                   // overwrite virtual Unit::setDeathState
         bool FallGround();
 
-        bool LoadFromDB(uint32 guid, Map *map);
+        bool LoadFromDB(uint32 guid, Map* map) { return LoadCreatureFromDB(guid, map, false); }
+        bool LoadCreatureFromDB(uint32 guid, Map* map, bool addToMap = true);
         void SaveToDB();
-                                                            // overwrited in Pet
-        virtual void SaveToDB(uint32 mapid, uint8 spawnMask);
-        virtual void DeleteFromDB();                        // overwrited in Pet
+                                                            // overriden in Pet
+        virtual void SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask);
+        virtual void DeleteFromDB();                        // overriden in Pet
+
 
         Loot loot;
         bool lootForPickPocketed;
@@ -721,10 +723,10 @@ class Creature : public Unit, public GridObject<Creature>
 class AssistDelayEvent : public BasicEvent
 {
     public:
-        AssistDelayEvent(const uint64& victim, Unit& owner) : BasicEvent(), m_victim(victim), m_owner(owner) { }
+        AssistDelayEvent(uint64 victim, Unit& owner) : BasicEvent(), m_victim(victim), m_owner(owner) { }
 
         bool Execute(uint64 e_time, uint32 p_time);
-        void AddAssistant(const uint64& guid) { m_assistants.push_back(guid); }
+        void AddAssistant(uint64 guid) { m_assistants.push_back(guid); }
     private:
         AssistDelayEvent();
 
@@ -744,4 +746,3 @@ class ForcedDespawnDelayEvent : public BasicEvent
 };
 
 #endif
-

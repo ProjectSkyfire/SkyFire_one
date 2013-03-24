@@ -1,8 +1,6 @@
-/*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ /*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -54,36 +52,38 @@ enum eEnums
 };
 
 #define GOSSIP_ITEM_DOOR        "Thanks, I'll follow you to the door."
-class npc_shadowfang_prisoner : public CreatureScript
+
+class npc_shadowfang_prisoner : public CreatureScript
 {
 public:
     npc_shadowfang_prisoner() : CreatureScript("npc_shadowfang_prisoner") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new npc_shadowfang_prisonerAI(creature);
+        return new npc_shadowfang_prisonerAI(pCreature);
     }
 
-    bool GossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
+        pPlayer->PlayerTalkClass->ClearMenus();
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
-            player->CLOSE_GOSSIP_MENU();
+            pPlayer->CLOSE_GOSSIP_MENU();
 
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_shadowfang_prisonerAI, creature->AI()))
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_shadowfang_prisoner::npc_shadowfang_prisonerAI, pCreature->AI()))
                 pEscortAI->Start(false, false);
         }
         return true;
     }
 
-    bool GossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        ScriptedInstance* instance = creature->GetInstanceScript();
+        InstanceScript* pInstance = pCreature->GetInstanceScript();
 
-        if (instance && instance->GetData(TYPE_FREE_NPC) != DONE && instance->GetData(TYPE_RETHILGORE) == DONE)
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DOOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        if (pInstance && pInstance->GetData(TYPE_FREE_NPC) != DONE && pInstance->GetData(TYPE_RETHILGORE) == DONE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DOOR, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-        player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
         return true;
     }
@@ -92,16 +92,16 @@ public:
     {
         npc_shadowfang_prisonerAI(Creature *c) : npc_escortAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
             uiNpcEntry = c->GetEntry();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript *pInstance;
         uint32 uiNpcEntry;
 
         void WaypointReached(uint32 uiPoint)
         {
-            switch (uiPoint)
+            switch(uiPoint)
             {
                 case 0:
                     if (uiNpcEntry == NPC_ASH)
@@ -125,8 +125,8 @@ public:
                     else
                         DoScriptText(SAY_POST1_DOOR_AD, me);
 
-                    if (instance)
-                        instance->SetData(TYPE_FREE_NPC, DONE);
+                    if (pInstance)
+                        pInstance->SetData(TYPE_FREE_NPC, DONE);
                     break;
                 case 13:
                     if (uiNpcEntry != NPC_ASH)
@@ -138,32 +138,36 @@ public:
         void Reset() {}
         void EnterCombat(Unit* /*who*/) {}
     };
+
 };
+
+
+
 
 class npc_arugal_voidwalker : public CreatureScript
 {
 public:
     npc_arugal_voidwalker() : CreatureScript("npc_arugal_voidwalker") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new npc_arugal_voidwalkerAI(creature);
+        return new npc_arugal_voidwalkerAI(pCreature);
     }
 
     struct npc_arugal_voidwalkerAI : public ScriptedAI
     {
-        npc_arugal_voidwalkerAI(Creature* creature) : ScriptedAI(creature)
+        npc_arugal_voidwalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            instance = creature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 uiDarkOffering;
 
         void Reset()
         {
-            uiDarkOffering = urand(290, 10);
+            uiDarkOffering = urand(290,10);
         }
 
         void UpdateAI(uint32 const uiDiff)
@@ -173,14 +177,14 @@ public:
 
             if (uiDarkOffering <= uiDiff)
             {
-                if (Creature* pFriend = me->FindNearestCreature(me->GetEntry(),25.0f, true))
+                if (Creature* pFriend = me->FindNearestCreature(me->GetEntry(),25.0f,true))
                 {
                     if (pFriend)
-                        DoCast(pFriend, SPELL_DARK_OFFERING);
+                        DoCast(pFriend,SPELL_DARK_OFFERING);
                 }
                 else
-                    DoCast(me, SPELL_DARK_OFFERING);
-                uiDarkOffering = urand(4400, 12500);
+                    DoCast(me,SPELL_DARK_OFFERING);
+                uiDarkOffering = urand(4400,12500);
             } else uiDarkOffering -= uiDiff;
 
             DoMeleeAttackIfReady();
@@ -188,11 +192,13 @@ public:
 
         void JustDied(Unit* /*pKiller*/)
         {
-            if (instance)
-                instance->SetData(TYPE_FENRUS, instance->GetData(TYPE_FENRUS) + 1);
+            if (pInstance)
+                pInstance->SetData(TYPE_FENRUS, pInstance->GetData(TYPE_FENRUS) + 1);
         }
     };
+
 };
+
 
 void AddSC_shadowfang_keep()
 {

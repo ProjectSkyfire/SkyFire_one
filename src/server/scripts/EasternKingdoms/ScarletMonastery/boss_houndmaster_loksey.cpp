@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -33,14 +31,15 @@ enum eEnums
     SPELL_SUMMONSCARLETHOUND        = 17164,
     SPELL_BLOODLUST                 = 6742
 };
-class boss_houndmaster_loksey : public CreatureScript
+
+class boss_houndmaster_loksey : public CreatureScript
 {
 public:
     boss_houndmaster_loksey() : CreatureScript("boss_houndmaster_loksey") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_houndmaster_lokseyAI (creature);
+        return new boss_houndmaster_lokseyAI (pCreature);
     }
 
     struct boss_houndmaster_lokseyAI : public ScriptedAI
@@ -73,7 +72,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_houndmaster_loksey()
 {

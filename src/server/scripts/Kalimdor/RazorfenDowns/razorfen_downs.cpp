@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Razorfen_Downs
@@ -29,8 +27,11 @@ EndScriptData */
 npc_henry_stern
 EndContentData */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "ScriptedGossip.h"
 #include "razorfen_downs.h"
+#include "Player.h"
 
 /*###
 # npc_henry_stern
@@ -48,20 +49,22 @@ enum eEnums
 
 #define GOSSIP_ITEM_TEA     "Teach me the cooking recipe"
 #define GOSSIP_ITEM_POTION  "Teach me the alchemy recipe"
-class npc_henry_stern : public CreatureScript
+
+class npc_henry_stern : public CreatureScript
 {
 public:
     npc_henry_stern() : CreatureScript("npc_henry_stern") { }
 
-    bool GossipSelect (Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
-        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+        player->PlayerTalkClass->ClearMenus();
+        if (action == GOSSIP_ACTION_INFO_DEF + 1)
         {
             player->CastSpell(player, SPELL_TEACHING_GOLDTHORN_TEA, true);
             player->SEND_GOSSIP_MENU(GOSSIP_TEXT_TEA_ANSWER, creature->GetGUID());
         }
 
-        if (uiAction == GOSSIP_ACTION_INFO_DEF + 2)
+        if (action == GOSSIP_ACTION_INFO_DEF + 2)
         {
             player->CastSpell(player, SPELL_TEACHING_MIGHTY_TROLLS_BLOOD_POTION, true);
             player->SEND_GOSSIP_MENU(GOSSIP_TEXT_POTION_ANSWER, creature->GetGUID());
@@ -70,7 +73,7 @@ public:
         return true;
     }
 
-    bool GossipHello (Player* player, Creature* creature)
+    bool OnGossipHello(Player* player, Creature* creature)
     {
         if (player->GetBaseSkillValue(SKILL_COOKING) >= 175 && !player->HasSpell(SPELL_GOLDTHORN_TEA))
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TEA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
@@ -86,15 +89,16 @@ public:
 /*######
 ## go_gong
 ######*/
-class go_gong : public GameObjectScript
+
+class go_gong : public GameObjectScript
 {
 public:
     go_gong() : GameObjectScript("go_gong") { }
 
-    bool GOHello(Player* /*player*/, GameObject* pGO)
+    bool OnGossipHello(Player* /*player*/, GameObject* go)
     {
         //basic support, not blizzlike data is missing...
-        ScriptedInstance* instance = pGO->GetInstanceScript();
+        InstanceScript* instance = go->GetInstanceScript();
 
         if (instance)
         {
@@ -104,18 +108,20 @@ public:
 
         return false;
     }
+
 };
 
 enum eTombCreature
 {
     SPELL_WEB                   = 745
 };
-class npc_tomb_creature : public CreatureScript
+
+class npc_tomb_creature : public CreatureScript
 {
 public:
     npc_tomb_creature() : CreatureScript("npc_tomb_creature") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_tomb_creatureAI (creature);
     }
@@ -127,7 +133,7 @@ public:
             instance = creature->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* instance;
 
         uint32 uiWebTimer;
 
@@ -154,12 +160,13 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit* /*pKiller*/)
+        void JustDied(Unit* /*killer*/)
         {
             if (instance)
                 instance->SetData(DATA_GONG_WAVES, instance->GetData(DATA_GONG_WAVES)+1);
         }
     };
+
 };
 
 void AddSC_razorfen_downs()

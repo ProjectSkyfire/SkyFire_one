@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,391 +15,404 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ScriptData
-SDName: Boss_Four_Horsemen
-SD%Complete: 75
-SDComment: Lady Blaumeux, Thane Korthazz, Sir Zeliek, Baron Rivendare (this script maybe is not correct for TC1)
-SDCategory: Naxxramas
-EndScriptData */
-
 #include "ScriptPCH.h"
+#include "naxxramas.h"
 
-//all horsemen
-#define SPELL_SHIELDWALL            29061
-#define SPELL_BESERK                26662
+enum Horsemen
+{
+    HORSEMEN_THANE,
+    HORSEMEN_LADY,
+    HORSEMEN_BARON,
+    HORSEMEN_SIR,
+};
 
-//lady blaumeux
-#define SAY_BLAU_AGGRO              -1533044
-#define SAY_BLAU_TAUNT1             -1533045
-#define SAY_BLAU_TAUNT2             -1533046
-#define SAY_BLAU_TAUNT3             -1533047
-#define SAY_BLAU_SPECIAL            -1533048
-#define SAY_BLAU_SLAY               -1533049
-#define SAY_BLAU_DEATH              -1533050
+enum Events
+{
+    EVENT_NONE,
+    EVENT_MARK,
+    EVENT_CAST,
+    EVENT_BERSERK,
+};
 
-#define SPELL_MARK_OF_BLAUMEUX      28833
-#define SPELL_UNYILDING_PAIN        57381
-#define SPELL_VOIDZONE              28863
-#define H_SPELL_VOIDZONE            57463
-#define SPELL_SHADOW_BOLT           57374
-#define H_SPELL_SHADOW_BOLT         57464
+const Position WaypointPositions[12] =
+{
+    // Thane waypoints
+    {2542.3f, -2984.1f, 241.49f, 5.362f},
+    {2547.6f, -2999.4f, 241.34f, 5.049f},
+    {2542.9f, -3015.0f, 241.35f, 4.654f},
+    // Lady waypoints
+    {2498.3f, -2961.8f, 241.28f, 3.267f},
+    {2487.7f, -2959.2f, 241.28f, 2.890f},
+    {2469.4f, -2947.6f, 241.28f, 2.576f},
+    // Baron waypoints
+    {2553.8f, -2968.4f, 241.33f, 5.757f},
+    {2564.3f, -2972.5f, 241.33f, 5.890f},
+    {2583.9f, -2971.67f, 241.35f, 0.008f},
+    // Sir waypoints
+    {2534.5f, -2921.7f, 241.53f, 1.363f},
+    {2523.5f, -2902.8f, 241.28f, 2.095f},
+    {2517.8f, -2896.6f, 241.28f, 2.315f},
+};
 
-#define C_SPIRIT_OF_BLAUMEUX        16776
-class boss_lady_blaumeux : public CreatureScript
+const uint32 MOB_HORSEMEN[]     =   {16064, 16065, 30549, 16063};
+const uint32 SPELL_MARK[]       =   {28832, 28833, 28834, 28835};
+#define SPELL_PRIMARY(i)            RAID_MODE(SPELL_PRIMARY_N[i],SPELL_PRIMARY_H[i])
+const uint32 SPELL_PRIMARY_N[]  =   {28884, 28863, 28882, 28883};
+const uint32 SPELL_PRIMARY_H[]  =   {57467, 57463, 57369, 57466};
+#define SPELL_SECONDARY(i)          RAID_MODE(SPELL_SECONDARY_N[i],SPELL_SECONDARY_H[i])
+const uint32 SPELL_SECONDARY_N[]=   {0, 57374, 0, 57376};
+const uint32 SPELL_SECONDARY_H[]=   {0, 57464, 0, 57465};
+const uint32 SPELL_PUNISH[]     =   {0, 57381, 0, 57377};
+#define SPELL_BERSERK               26662
+
+// used by 16063,16064,16065,30549, but signed for 16063
+const int32 SAY_AGGRO[]     =   {-1533051, -1533044, -1533065, -1533058};
+const int32 SAY_TAUNT[3][4] ={  {-1533052, -1533045, -1533071, -1533059},
+                                {-1533053, -1533046, -1533072, -1533060},
+                                {-1533054, -1533047, -1533073, -1533061},};
+const int32 SAY_SPECIAL[]   =   {-1533055, -1533048, -1533070, -1533062};
+const int32 SAY_SLAY[]      =   {-1533056, -1533049, -1533068, -1533063};
+const int32 SAY_DEATH[]     =   {-1533057, -1533050, -1533074, -1533064};
+
+#define SAY_BARON_AGGRO     RAND(-1533065,-1533066,-1533067)
+#define SAY_BARON_SLAY      RAND(-1533068,-1533069)
+
+class boss_four_horsemen : public CreatureScript
 {
 public:
-    boss_lady_blaumeux() : CreatureScript("boss_lady_blaumeux") { }
+    boss_four_horsemen() : CreatureScript("boss_four_horsemen") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-       return new boss_lady_blaumeuxAI (creature);
+        return new boss_four_horsemenAI (pCreature);
     }
 
-    struct boss_lady_blaumeuxAI : public ScriptedAI
+    struct boss_four_horsemenAI : public BossAI
     {
-        boss_lady_blaumeuxAI(Creature *c) : ScriptedAI(c) {}
+        boss_four_horsemenAI(Creature *c) : BossAI(c, BOSS_HORSEMEN)
+        {
+            id = Horsemen(0);
+            for (uint8 i = 0; i < 4; ++i)
+                if (me->GetEntry() == MOB_HORSEMEN[i])
+                    id = Horsemen(i);
+            caster = (id == HORSEMEN_LADY || id == HORSEMEN_SIR);
+        }
 
-        uint32 Mark_Timer;
-        uint32 VoidZone_Timer;
-        bool ShieldWall1;
-        bool ShieldWall2;
+        Horsemen id;
+        uint64 uiEventStarterGUID;
+        uint8 nextWP;
+        uint32 punishTimer;
+        bool caster;
+        bool nextMovementStarted;
+        bool movementCompleted;
+        bool movementStarted;
+        bool encounterActionAttack;
+        bool encounterActionReset;
+        bool doDelayPunish;
 
         void Reset()
         {
-            Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
-            VoidZone_Timer = 12000;                             // right
-            ShieldWall1 = true;
-            ShieldWall2 = true;
+            if (!encounterActionReset)
+                DoEncounterAction(NULL, false, true, false);
+
+            if (instance)
+                instance->SetData(DATA_HORSEMEN0 + id, NOT_STARTED);
+
+            me->SetReactState(REACT_AGGRESSIVE);
+            uiEventStarterGUID = 0;
+            nextWP = 0;
+            punishTimer = 2000;
+            nextMovementStarted = false;
+            movementCompleted = false;
+            movementStarted = false;
+            encounterActionAttack = false;
+            encounterActionReset = false;
+            doDelayPunish = false;
+            _Reset();
+            SetImmuneToDeathGrip();
         }
 
-        void EnterCombat(Unit *who)
+        bool DoEncounterAction(Unit *who, bool attack, bool reset, bool checkAllDead)
         {
-            DoScriptText(SAY_BLAU_AGGRO, me);
+            if (!instance)
+                return false;
+
+            Creature *Thane = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_THANE)));
+            Creature *Lady = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_LADY)));
+            Creature *Baron = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_BARON)));
+            Creature *Sir = CAST_CRE(Unit::GetUnit(*me, instance->GetData64(DATA_SIR)));
+
+            if (Thane && Lady && Baron && Sir)
+            {
+                if (attack && who)
+                {
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Thane->AI())->encounterActionAttack = true;
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Lady->AI())->encounterActionAttack = true;
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Baron->AI())->encounterActionAttack = true;
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Sir->AI())->encounterActionAttack = true;
+
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Thane->AI())->AttackStart(who);
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Lady->AI())->AttackStart(who);
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Baron->AI())->AttackStart(who);
+                    CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Sir->AI())->AttackStart(who);
+                }
+
+                if (reset)
+                {
+                    if (instance->GetBossState(BOSS_HORSEMEN) != NOT_STARTED)
+                    {
+                        if (!Thane->isAlive())
+                            Thane->Respawn();
+
+                        if (!Lady->isAlive())
+                            Lady->Respawn();
+
+                        if (!Baron->isAlive())
+                            Baron->Respawn();
+
+                        if (!Sir->isAlive())
+                            Sir->Respawn();
+
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Thane->AI())->encounterActionReset = true;
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Lady->AI())->encounterActionReset = true;
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Baron->AI())->encounterActionReset = true;
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Sir->AI())->encounterActionReset = true;
+
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Thane->AI())->EnterEvadeMode();
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Lady->AI())->EnterEvadeMode();
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Baron->AI())->EnterEvadeMode();
+                        CAST_AI(boss_four_horsemen::boss_four_horsemenAI, Sir->AI())->EnterEvadeMode();
+                    }
+                }
+
+                if (checkAllDead)
+                    return !Thane->isAlive() && !Lady->isAlive() && !Baron->isAlive() && !Sir->isAlive();
+            }
+            return false;
         }
 
-        void KilledUnit(Unit* Victim)
+        void BeginFourHorsemenMovement()
         {
-            DoScriptText(SAY_BLAU_SLAY, me);
+            movementStarted = true;
+            me->SetReactState(REACT_PASSIVE);
+            me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+
+            switch(id)
+            {
+                case HORSEMEN_THANE:
+                    me->GetMotionMaster()->MovePoint(0, WaypointPositions[0]);
+                    break;
+                case HORSEMEN_LADY:
+                    me->GetMotionMaster()->MovePoint(3, WaypointPositions[3]);
+                    break;
+                case HORSEMEN_BARON:
+                    me->GetMotionMaster()->MovePoint(6, WaypointPositions[6]);
+                    break;
+                case HORSEMEN_SIR:
+                    me->GetMotionMaster()->MovePoint(9, WaypointPositions[9]);
+                    break;
+            }
         }
 
-        void JustDied(Unit* Killer)
+        void MovementInform(uint32 type, uint32 id)
         {
-            DoScriptText(SAY_BLAU_DEATH, me);
+            if (type != POINT_MOTION_TYPE)
+                return;
+
+            if (id == 2 || id == 5 || id == 8 || id == 11)
+            {
+                movementCompleted = true;
+                me->SetReactState(REACT_AGGRESSIVE);
+
+                Unit *eventStarter = Unit::GetUnit(*me, uiEventStarterGUID);
+
+                if (eventStarter && me->canAttack(eventStarter))
+                    AttackStart(eventStarter);
+                else if (!UpdateVictim())
+                {
+                    EnterEvadeMode();
+                    return;
+                }
+
+                if (caster)
+                {
+                    me->GetMotionMaster()->Clear();
+                    me->GetMotionMaster()->MoveIdle();
+                }
+
+                return;
+            }
+
+            nextMovementStarted = false;
+            nextWP = id + 1;
+        }
+
+        // switch to "who" if nearer than current target.
+        void SelectNearestTarget(Unit *who)
+        {
+            if (me->getVictim() && me->GetDistanceOrder(who, me->getVictim()) && me->canAttack(who))
+            {
+                me->getThreatManager().modifyThreatPercent(me->getVictim(), -100);
+                me->AddThreat(who, 1000000.0f);
+            }
+        }
+
+        void MoveInLineOfSight(Unit *who)
+        {
+            BossAI::MoveInLineOfSight(who);
+            if (caster)
+                SelectNearestTarget(who);
+        }
+
+        void AttackStart(Unit *who)
+        {
+            if (!movementCompleted && !movementStarted)
+            {
+                uiEventStarterGUID = who->GetGUID();
+                BeginFourHorsemenMovement();
+
+                if (!encounterActionAttack)
+                    DoEncounterAction(who, true, false, false);
+            }
+            else if (movementCompleted && movementStarted)
+            {
+                if (caster)
+                    me->Attack(who, false);
+                else
+                    BossAI::AttackStart(who);
+            }
+        }
+
+        void KilledUnit(Unit* /*victim*/)
+        {
+            if (!(rand()%5))
+            {
+                if (id == HORSEMEN_BARON)
+                    DoScriptText(SAY_BARON_SLAY, me);
+                else
+                    DoScriptText(SAY_SLAY[id], me);
+            }
+        }
+
+        void JustDied(Unit* /*killer*/)
+        {
+            events.Reset();
+            summons.DespawnAll();
+
+            if (instance)
+                instance->SetData(DATA_HORSEMEN0 + id, DONE);
+
+            if (instance && DoEncounterAction(NULL, false, false, true))
+            {
+                instance->SetBossState(BOSS_HORSEMEN, DONE);
+                instance->SaveToDB();
+
+                // Achievements related to the 4-horsemen are given through spell 59450 which does not exist.
+                // There is thus no way it can be given by casting the spell on the players.
+                instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 59450);
+            }
+
+            DoScriptText(SAY_DEATH[id], me);
+        }
+
+        void EnterCombat(Unit * /*who*/)
+        {
+            _EnterCombat();
+
+            if (id == HORSEMEN_BARON)
+                DoScriptText(SAY_BARON_AGGRO, me);
+            else
+                DoScriptText(SAY_AGGRO[id], me);
+
+            events.ScheduleEvent(EVENT_MARK, 24000);
+            events.ScheduleEvent(EVENT_CAST, 20000+rand()%5000);
+            events.ScheduleEvent(EVENT_BERSERK, 15*100*1000);
+        }
+
+        void SpellHitTarget(Unit* target, const SpellEntry *spell)
+        {
+            if(target->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            if(spell->Id == SPELL_MARK[0] || spell->Id == SPELL_MARK[1] || spell->Id == SPELL_MARK[2] || spell->Id == SPELL_MARK[3])
+                me->getThreatManager().modifyThreatPercent(target,-50);
+
         }
 
         void UpdateAI(const uint32 diff)
         {
-            if (!UpdateVictim())
+            if (nextWP && movementStarted && !movementCompleted && !nextMovementStarted)
+            {
+                nextMovementStarted = true;
+                me->GetMotionMaster()->MovePoint(nextWP, WaypointPositions[nextWP]);
+            }
+
+            if (!UpdateVictim() || !CheckInRoom() || !movementCompleted)
                 return;
 
-            // Mark of Blaumeux
-            if (Mark_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_MARK_OF_BLAUMEUX);
-                Mark_Timer = 12000;
-            } else Mark_Timer -= diff;
+            events.Update(diff);
 
-            // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
-            if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
+            if (me->hasUnitState(UNIT_STAT_CASTING))
+                return;
+
+            while (uint32 eventId = events.ExecuteEvent())
             {
-                if (ShieldWall1)
+                switch(eventId)
                 {
-                    DoCast(me, SPELL_SHIELDWALL);
-                    ShieldWall1 = false;
+                    case EVENT_MARK:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        if (!(rand()%5))
+                            DoScriptText(SAY_SPECIAL[id], me);
+                        DoCastAOE(SPELL_MARK[id]);
+                            events.ScheduleEvent(EVENT_MARK, caster ? 15000 : 12000);
+                        }
+                        break;
+                    case EVENT_CAST:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        if (!(rand()%5))
+                            DoScriptText(SAY_TAUNT[rand()%3][id], me);
+
+                        if (caster)
+                        {
+                            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 45.0f))
+                                DoCast(pTarget, SPELL_PRIMARY(id));
+                        }
+                        else
+                            DoCast(me->getVictim(), SPELL_PRIMARY(id));
+
+                        events.ScheduleEvent(EVENT_CAST, 15000);
+                        }
+                        break;
+                    case EVENT_BERSERK:
+                        DoScriptText(SAY_SPECIAL[id], me);
+                        DoCast(me, SPELL_BERSERK, true);
+                        break;
                 }
-           }
-           if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
-           {
-               if (ShieldWall2)
-               {
-                   DoCast(me, SPELL_SHIELDWALL);
-                   ShieldWall2 = false;
-               }
-           }
+            }
 
-           // Void Zone
-           if (VoidZone_Timer <= diff)
-           {
-               DoCast(me->getVictim(),SPELL_VOIDZONE);
-               VoidZone_Timer = 12000;
-           } else VoidZone_Timer -= diff;
+            if (punishTimer <= diff)
+            {
+                if (doDelayPunish)
+                {
+                    DoCastAOE(SPELL_PUNISH[id], true);
+                    doDelayPunish = false;
+                }
+                punishTimer = 2000;
+            } else punishTimer -= diff;
 
-           DoMeleeAttackIfReady();
-       }
+            if (!caster)
+                DoMeleeAttackIfReady();
+            else if ((!DoSpellAttackIfReady(SPELL_SECONDARY(id)) || !me->IsWithinLOSInMap(me->getVictim())) && movementCompleted && !doDelayPunish)
+                doDelayPunish = true;
+        }
     };
-};
 
-//baron rivendare
-#define SAY_RIVE_AGGRO1             -1533065
-#define SAY_RIVE_AGGRO2             -1533066
-#define SAY_RIVE_AGGRO3             -1533067
-#define SAY_RIVE_SLAY1              -1533068
-#define SAY_RIVE_SLAY2              -1533069
-#define SAY_RIVE_SPECIAL            -1533070
-#define SAY_RIVE_TAUNT1             -1533071
-#define SAY_RIVE_TAUNT2             -1533072
-#define SAY_RIVE_TAUNT3             -1533073
-#define SAY_RIVE_DEATH              -1533074
-
-#define SPELL_MARK_OF_RIVENDARE     28834
-#define SPELL_UNHOLY_SHADOW         28882
-#define H_SPELL_UNHOLY_SHADOW       57369
-
-#define C_SPIRIT_OF_RIVENDARE       0                       //creature entry not known yet
-class boss_rivendare_naxx : public CreatureScript
-{
-public:
-    boss_rivendare_naxx() : CreatureScript("boss_rivendare_naxx") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-       return new boss_rivendare_naxxAI (creature);
-    }
-
-    struct boss_rivendare_naxxAI : public ScriptedAI
-    {
-       boss_rivendare_naxxAI(Creature *c) : ScriptedAI(c) {}
-
-       void Reset()
-       {
-       }
-
-       void EnterCombat(Unit *who)
-       {
-           switch (rand()%3)
-           {
-               case 0: DoScriptText(SAY_RIVE_AGGRO1, me); break;
-               case 1: DoScriptText(SAY_RIVE_AGGRO2, me); break;
-               case 2: DoScriptText(SAY_RIVE_AGGRO3, me); break;
-           }
-       }
-
-       void KilledUnit(Unit* Victim)
-       {
-           switch (rand()%2)
-           {
-               case 0: DoScriptText(SAY_RIVE_SLAY1, me); break;
-               case 1: DoScriptText(SAY_RIVE_SLAY2, me); break;
-           }
-       }
-
-       void JustDied(Unit* Killer)
-       {
-           DoScriptText(SAY_RIVE_DEATH, me);
-       }
-
-       void UpdateAI(const uint32 diff)
-       {
-           if (!UpdateVictim())
-               return;
-
-           DoMeleeAttackIfReady();
-       }
-    };
-};
-
-//thane korthazz
-#define SAY_KORT_AGGRO              -1533051
-#define SAY_KORT_TAUNT1             -1533052
-#define SAY_KORT_TAUNT2             -1533053
-#define SAY_KORT_TAUNT3             -1533054
-#define SAY_KORT_SPECIAL            -1533055
-#define SAY_KORT_SLAY               -1533056
-#define SAY_KORT_DEATH              -1533057
-
-#define SPELL_MARK_OF_KORTHAZZ      28832
-#define SPELL_METEOR                26558                   // me->getVictim() auto-area spell but with a core problem
-
-#define C_SPIRIT_OF_KORTHAZZ        16778
-class boss_thane_korthazz : public CreatureScript
-{
-public:
-    boss_thane_korthazz() : CreatureScript("boss_thane_korthazz") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-       return new boss_thane_korthazzAI (creature);
-    }
-
-    struct boss_thane_korthazzAI : public ScriptedAI
-    {
-       boss_thane_korthazzAI(Creature *c) : ScriptedAI(c) {}
-
-       uint32 Mark_Timer;
-       uint32 Meteor_Timer;
-       bool ShieldWall1;
-       bool ShieldWall2;
-
-       void Reset()
-       {
-           Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
-           Meteor_Timer = 30000;                               // wrong
-           ShieldWall1 = true;
-           ShieldWall2 = true;
-       }
-
-       void EnterCombat(Unit *who)
-       {
-           DoScriptText(SAY_KORT_AGGRO, me);
-       }
-
-       void KilledUnit(Unit* Victim)
-       {
-           DoScriptText(SAY_KORT_SLAY, me);
-       }
-
-       void JustDied(Unit* Killer)
-       {
-           DoScriptText(SAY_KORT_DEATH, me);
-       }
-
-       void UpdateAI(const uint32 diff)
-       {
-           if (!UpdateVictim())
-               return;
-
-           // Mark of Korthazz
-           if (Mark_Timer <= diff)
-           {
-               DoCast(me->getVictim(),SPELL_MARK_OF_KORTHAZZ);
-               Mark_Timer = 12000;
-           } else Mark_Timer -= diff;
-
-           // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
-           if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
-           {
-               if (ShieldWall1)
-               {
-                   DoCast(me, SPELL_SHIELDWALL);
-                   ShieldWall1 = false;
-               }
-           }
-           if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
-           {
-               if (ShieldWall2)
-               {
-                   DoCast(me, SPELL_SHIELDWALL);
-                  ShieldWall2 = false;
-               }
-           }
-
-           // Meteor
-           if (Meteor_Timer <= diff)
-           {
-               DoCast(me->getVictim(),SPELL_METEOR);
-               Meteor_Timer = 20000;                           // wrong
-          } else Meteor_Timer -= diff;
-
-           DoMeleeAttackIfReady();
-       }
-    };
-};
-
-//sir zeliek
-#define SAY_ZELI_AGGRO              -1533058
-#define SAY_ZELI_TAUNT1             -1533059
-#define SAY_ZELI_TAUNT2             -1533060
-#define SAY_ZELI_TAUNT3             -1533061
-#define SAY_ZELI_SPECIAL            -1533062
-#define SAY_ZELI_SLAY               -1533063
-#define SAY_ZELI_DEATH              -1533064
-
-#define SPELL_MARK_OF_ZELIEK        28835
-#define SPELL_HOLY_WRATH            28883
-#define H_SPELL_HOLY_WRATH          57466
-#define SPELL_HOLY_BOLT             57376
-#define H_SPELL_HOLY_BOLT           57465
-
-#define C_SPIRIT_OF_ZELIREK         16777
-class boss_sir_zeliek : public CreatureScript
-{
-public:
-    boss_sir_zeliek() : CreatureScript("boss_sir_zeliek") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-       return new boss_sir_zeliekAI (creature);
-    }
-
-    struct boss_sir_zeliekAI : public ScriptedAI
-    {
-       boss_sir_zeliekAI(Creature *c) : ScriptedAI(c) {}
-
-       uint32 Mark_Timer;
-       uint32 HolyWrath_Timer;
-       bool ShieldWall1;
-       bool ShieldWall2;
-
-       void Reset()
-       {
-           Mark_Timer = 20000;                                 // First Horsemen Mark is applied at 20 sec.
-           HolyWrath_Timer = 12000;                            // right
-           ShieldWall1 = true;
-           ShieldWall2 = true;
-       }
-
-       void EnterCombat(Unit *who)
-       {
-           DoScriptText(SAY_ZELI_AGGRO, me);
-       }
-
-       void KilledUnit(Unit* Victim)
-       {
-           DoScriptText(SAY_ZELI_SLAY, me);
-       }
-
-       void JustDied(Unit* Killer)
-       {
-           DoScriptText(SAY_ZELI_DEATH, me);
-       }
-
-       void UpdateAI(const uint32 diff)
-       {
-           //Return since we have no target
-           if (!UpdateVictim())
-               return;
-
-           // Mark of Zeliek
-           if (Mark_Timer <= diff)
-           {
-               DoCast(me->getVictim(),SPELL_MARK_OF_ZELIEK);
-               Mark_Timer = 12000;
-           } else Mark_Timer -= diff;
-
-           // Shield Wall - All 4 horsemen will shield wall at 50% hp and 20% hp for 20 seconds
-           if (ShieldWall1 && (me->GetHealth()*100 / me->GetMaxHealth()) < 50)
-           {
-               if (ShieldWall1)
-               {
-                   DoCast(me, SPELL_SHIELDWALL);
-                   ShieldWall1 = false;
-               }
-         }
-           if (ShieldWall2 && (me->GetHealth()*100 / me->GetMaxHealth()) < 20)
-           {
-               if (ShieldWall2)
-               {
-                   DoCast(me, SPELL_SHIELDWALL);
-                   ShieldWall2 = false;
-               }
-           }
-
-           // Holy Wrath
-           if (HolyWrath_Timer <= diff)
-           {
-               DoCast(me->getVictim(),SPELL_HOLY_WRATH);
-               HolyWrath_Timer = 12000;
-           } else HolyWrath_Timer -= diff;
-
-           DoMeleeAttackIfReady();
-       }
-    };
 };
 
 void AddSC_boss_four_horsemen()
 {
-    new boss_lady_blaumeux();
-    new boss_rivendare_naxx();
-    new boss_thane_korthazz();
-    new boss_sir_zeliek();
+    new boss_four_horsemen();
 }

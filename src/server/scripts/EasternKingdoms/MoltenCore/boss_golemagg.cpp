@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -40,44 +38,45 @@ enum eEnums
     EMOTE_LOWHP             = -1409002,
     SPELL_MANGLE            = 19820
 };
-class boss_golemagg : public CreatureScript
+
+class boss_golemagg : public CreatureScript
 {
 public:
     boss_golemagg() : CreatureScript("boss_golemagg") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_golemaggAI (creature);
+        return new boss_golemaggAI (pCreature);
     }
 
     struct boss_golemaggAI : public ScriptedAI
     {
-        boss_golemaggAI(Creature* creature) : ScriptedAI(creature)
+        boss_golemaggAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            instance = creature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript* m_pInstance;
 
-        uint32 uiPyroblastTimer;
-        uint32 uiEarthquakeTimer;
-        uint32 uiBuffTimer;
-        bool bEnraged;
+        uint32 m_uiPyroblastTimer;
+        uint32 m_uiEarthquakeTimer;
+        uint32 m_uiBuffTimer;
+        bool m_bEnraged;
 
         void Reset()
         {
-            uiPyroblastTimer = 7*IN_MILLISECONDS;              // These timers are probably wrong
-            uiEarthquakeTimer = 3*IN_MILLISECONDS;
-            uiBuffTimer = 2500;
-            bEnraged = false;
+            m_uiPyroblastTimer = 7*IN_MILLISECONDS;              // These timers are probably wrong
+            m_uiEarthquakeTimer = 3*IN_MILLISECONDS;
+            m_uiBuffTimer = 2500;
+            m_bEnraged = false;
 
             DoCast(me, SPELL_MAGMASPLASH, true);
         }
 
         void JustDied(Unit* /*pKiller*/)
         {
-            if (instance)
-                instance->SetData(DATA_GOLEMAGG_DEATH, 0);
+            if (m_pInstance)
+                m_pInstance->SetData(DATA_GOLEMAGG_DEATH, 0);
         }
 
         void UpdateAI(const uint32 uiDiff)
@@ -86,88 +85,90 @@ public:
                 return;
 
             //Pyroblast
-            if (uiPyroblastTimer <= uiDiff)
+            if (m_uiPyroblastTimer <= uiDiff)
             {
                 if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_PYROBLAST);
 
-                uiPyroblastTimer = 7*IN_MILLISECONDS;
+                m_uiPyroblastTimer = 7*IN_MILLISECONDS;
             }
             else
-                uiPyroblastTimer -= uiDiff;
+                m_uiPyroblastTimer -= uiDiff;
 
             // Enrage
-            if (!bEnraged && me->GetHealth()*100 / me->GetMaxHealth() < 10)
+            if (!m_bEnraged && HealthBelowPct(10))
             {
                 DoCast(me, SPELL_ENRAGE);
-                bEnraged = true;
+                m_bEnraged = true;
             }
 
             // Earthquake
-            if (bEnraged)
+            if (m_bEnraged)
             {
-                if (uiEarthquakeTimer <= uiDiff)
+                if (m_uiEarthquakeTimer <= uiDiff)
                 {
                     DoCast(me->getVictim(), SPELL_EARTHQUAKE);
-                    uiEarthquakeTimer = 3*IN_MILLISECONDS;
+                    m_uiEarthquakeTimer = 3*IN_MILLISECONDS;
                 }
                 else
-                    uiEarthquakeTimer -= uiDiff;
+                    m_uiEarthquakeTimer -= uiDiff;
             }
 
             /*
             // Golemagg's Trust
-            if (uiBuffTimer <= uiDiff)
+            if (m_uiBuffTimer <= uidiff)
             {
                 DoCast(me, SPELL_GOLEMAGG_TRUST);
-                uiBuffTimer = 2500;
+                m_uiBuffTimer = 2.5*IN_MILLISECONDS;
             }
             else
-                uiBuffTimer -= uiDiff;
+                m_uiBuffTimer -= uiDiff;
             */
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
-class mob_core_rager : public CreatureScript
+
+class mob_core_rager : public CreatureScript
 {
 public:
     mob_core_rager() : CreatureScript("mob_core_rager") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_core_ragerAI (creature);
+        return new mob_core_ragerAI (pCreature);
     }
 
     struct mob_core_ragerAI : public ScriptedAI
     {
         mob_core_ragerAI(Creature *c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            m_pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript* m_pInstance;
 
-        uint32 uiMangleTimer;
+        uint32 m_uiMangleTimer;
 
         void Reset()
         {
-            uiMangleTimer = 7*IN_MILLISECONDS;                 // These times are probably wrong
+            m_uiMangleTimer = 7*IN_MILLISECONDS;                 // These times are probably wrong
         }
 
         void DamageTaken(Unit* /*pDoneBy*/, uint32& uiDamage)
         {
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 50)
+            if (HealthBelowPct(50))
             {
-                if (instance)
+                if (m_pInstance)
                 {
-                    if (Unit *pGolemagg = Unit::GetUnit(*me, instance->GetData64(DATA_GOLEMAGG)))
+                    if (Creature* pGolemagg = m_pInstance->instance->GetCreature(m_pInstance->GetData64(DATA_GOLEMAGG)))
                     {
                         if (pGolemagg->isAlive())
                         {
                             DoScriptText(EMOTE_LOWHP, me);
-                            me->SetHealth(me->GetMaxHealth());
+                            me->SetFullHealth();
                         }
                         else
                             uiDamage = me->GetHealth();
@@ -182,18 +183,21 @@ public:
                 return;
 
             // Mangle
-            if (uiMangleTimer <= uiDiff)
+            if (m_uiMangleTimer <= uiDiff)
             {
-                DoCast(me->getVictim(),SPELL_MANGLE);
-                uiMangleTimer = 10*IN_MILLISECONDS;
+                DoCast(me->getVictim(), SPELL_MANGLE);
+                m_uiMangleTimer = 10*IN_MILLISECONDS;
             }
             else
-                uiMangleTimer -= uiDiff;
+                m_uiMangleTimer -= uiDiff;
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
+
 
 void AddSC_boss_golemagg()
 {

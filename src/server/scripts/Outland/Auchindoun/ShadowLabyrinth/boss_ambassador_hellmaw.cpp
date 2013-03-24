@@ -1,70 +1,67 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Ambassador_Hellmaw
-SD%Complete: 75
-SDComment: Waypoints after Intro not implemented. Enrage spell missing/not known
+SD%Complete: 80
+SDComment: Enrage spell missing/not known
 SDCategory: Auchindoun, Shadow Labyrinth
 EndScriptData */
 
 #include "ScriptPCH.h"
+#include "ScriptedEscortAI.h"
 #include "shadow_labyrinth.h"
 
-#define SAY_INTRO       -1555000
+enum eEnums
+{
+    SAY_INTRO       = -1555000,
+    SAY_AGGRO1      = -1555001,
+    SAY_AGGRO2      = -1555002,
+    SAY_AGGRO3      = -1555003,
+    SAY_HELP        = -1555004,
+    SAY_SLAY1       = -1555005,
+    SAY_SLAY2       = -1555006,
+    SAY_DEATH       = -1555007,
 
-#define SAY_AGGRO1      -1555001
-#define SAY_AGGRO2      -1555002
-#define SAY_AGGRO3      -1555003
+    SPELL_BANISH            = 30231,
+    SPELL_CORROSIVE_ACID    = 33551,
+    SPELL_FEAR              = 33547,
+    SPELL_ENRAGE            = 34970
+};
 
-#define SAY_HELP        -1555004
-
-#define SAY_SLAY1       -1555005
-#define SAY_SLAY2       -1555006
-
-#define SAY_DEATH       -1555007
-
-#define SPELL_BANISH            30231
-#define SPELL_CORROSIVE_ACID    23313
-#define SPELL_FEAR              33547
-#define SPELL_ENRAGE            0                           //need to find proper spell
-class boss_ambassador_hellmaw : public CreatureScript
+class boss_ambassador_hellmaw : public CreatureScript
 {
 public:
     boss_ambassador_hellmaw() : CreatureScript("boss_ambassador_hellmaw") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_ambassador_hellmawAI (creature);
+        return new boss_ambassador_hellmawAI(pCreature);
     }
 
-    struct boss_ambassador_hellmawAI : public ScriptedAI
+    struct boss_ambassador_hellmawAI : public npc_escortAI
     {
-        boss_ambassador_hellmawAI(Creature *c) : ScriptedAI(c)
+        boss_ambassador_hellmawAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
-            instance = c->GetInstanceScript();
-            HeroicMode = me->GetMap()->IsHeroic();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
-        bool HeroicMode;
+        InstanceScript* m_pInstance;
 
         uint32 EventCheck_Timer;
         uint32 CorrosiveAcid_Timer;
@@ -72,108 +69,106 @@ public:
         uint32 Enrage_Timer;
         bool Intro;
         bool IsBanished;
+        bool Enraged;
 
         void Reset()
         {
             EventCheck_Timer = 5000;
-            CorrosiveAcid_Timer = 25000;
-            Fear_Timer = 40000;
+            CorrosiveAcid_Timer = 5000 + rand()%5000;
+            Fear_Timer = 25000 + rand()%5000;
             Enrage_Timer = 180000;
             Intro = false;
-            IsBanished = false;
+            IsBanished = true;
+            Enraged = false;
 
-            if (instance)
+            if (m_pInstance && me->isAlive())
             {
-                if (instance->GetData(TYPE_HELLMAW) == NOT_STARTED)
-                {
-                    DoCast(me, SPELL_BANISH);
-                    IsBanished = true;
-                }
-                else instance->SetData(TYPE_HELLMAW, FAIL);
-                if (instance->GetData(TYPE_OVERSEER) == DONE)
-                {
-                    if (me->HasAura(SPELL_BANISH, 0))
-                        me->RemoveAurasDueToSpell(SPELL_BANISH);
-                    Intro = true;
-                }
+                if (m_pInstance->GetData(TYPE_OVERSEER) != DONE)
+                    DoCast(me, SPELL_BANISH, true);
             }
         }
 
-        void MoveInLineOfSight(Unit *who)
+        void JustReachedHome()
         {
-            if (me->HasAura(SPELL_BANISH, 0))
-                return;
-
-            ScriptedAI::MoveInLineOfSight(who);
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_HELLMAW, FAIL);
         }
 
-        void MovementInform(uint32 type, uint32 id)
+        void MoveInLineOfSight(Unit* pWho)
         {
-            if (type != POINT_MOTION_TYPE)
+            if (me->HasAura(SPELL_BANISH))
                 return;
+
+            npc_escortAI::MoveInLineOfSight(pWho);
+        }
+
+        void WaypointReached(uint32 /*i*/)
+        {
         }
 
         void DoIntro()
         {
-            DoScriptText(SAY_INTRO, me);
-
-            if (me->HasAura(SPELL_BANISH, 0))
+            if (me->HasAura(SPELL_BANISH))
                 me->RemoveAurasDueToSpell(SPELL_BANISH);
 
             IsBanished = false;
             Intro = true;
 
-            if (instance)
-                instance->SetData(TYPE_HELLMAW, IN_PROGRESS);
-        }
-
-        void EnterCombat(Unit *who)
-        {
-            switch (rand()%3)
+            if (m_pInstance)
             {
-                case 0: DoScriptText(SAY_AGGRO1, me); break;
-                case 1: DoScriptText(SAY_AGGRO2, me); break;
-                case 2: DoScriptText(SAY_AGGRO3, me); break;
+                if (m_pInstance->GetData(TYPE_HELLMAW) != FAIL)
+                {
+                    DoScriptText(SAY_INTRO, me);
+                    Start(true, false, 0, NULL, false, true);
+                }
+
+                m_pInstance->SetData(TYPE_HELLMAW, IN_PROGRESS);
             }
         }
 
-        void KilledUnit(Unit *victim)
+        void EnterCombat(Unit * /*who*/)
         {
-            switch (rand()%2)
-            {
-                case 0: DoScriptText(SAY_SLAY1, me); break;
-                case 1: DoScriptText(SAY_SLAY2, me); break;
-            }
+            DoScriptText(RAND(SAY_AGGRO1,SAY_AGGRO2,SAY_AGGRO3), me);
         }
 
-        void JustDied(Unit *victim)
+        void KilledUnit(Unit * /*victim*/)
+        {
+            DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+        }
+
+        void JustDied(Unit * /*victim*/)
         {
             DoScriptText(SAY_DEATH, me);
 
-            if (instance)
-                instance->SetData(TYPE_HELLMAW, DONE);
+            if (m_pInstance)
+                m_pInstance->SetData(TYPE_HELLMAW, DONE);
         }
 
         void UpdateAI(const uint32 diff)
         {
-            if (!Intro)
+            if (!Intro && !HasEscortState(STATE_ESCORT_ESCORTING))
             {
                 if (EventCheck_Timer <= diff)
                 {
-                    if (instance)
+                    if (m_pInstance)
                     {
-                        if (instance->GetData(TYPE_OVERSEER) == DONE)
+                        if (m_pInstance->GetData(TYPE_OVERSEER) == DONE)
+                        {
                             DoIntro();
+                            return;
+                        }
                     }
                     EventCheck_Timer = 5000;
-                } else EventCheck_Timer -= diff;
+                    return;
+                }
+                else
+                {
+                    EventCheck_Timer -= diff;
+                    return;
+                }
             }
 
-            if (!me->isInCombat() && !IsBanished)
-            {
-                //this is where we add MovePoint()
-                //DoWhine("I haz no mount!", LANG_UNIVERSAL, NULL);
-            }
+            npc_escortAI::UpdateAI(diff);
 
             if (!UpdateVictim())
                 return;
@@ -186,28 +181,29 @@ public:
 
             if (CorrosiveAcid_Timer <= diff)
             {
-                DoCast(me, SPELL_CORROSIVE_ACID);
-                CorrosiveAcid_Timer = 25000;
+                DoCast(me->getVictim(), SPELL_CORROSIVE_ACID);
+                CorrosiveAcid_Timer = 15000 + rand()%10000;
             } else CorrosiveAcid_Timer -= diff;
 
             if (Fear_Timer <= diff)
             {
                 DoCast(me, SPELL_FEAR);
-                Fear_Timer = 35000;
+                Fear_Timer = 20000 + rand()%15000;
             } else Fear_Timer -= diff;
 
-            /*if (HeroicMode)
+            if (IsHeroic())
             {
-                if (Enrage_Timer <= diff)
+                if (!Enraged && Enrage_Timer <= diff)
                 {
                     DoCast(me, SPELL_ENRAGE);
+                    Enraged = true;
                 } else Enrage_Timer -= diff;
-            }*/
-
-            DoMeleeAttackIfReady();
+            }
         }
     };
+
 };
+
 
 void AddSC_boss_ambassador_hellmaw()
 {

@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Dark_Portal
@@ -31,50 +29,58 @@ npc_time_rift
 npc_saat
 EndContentData */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "ScriptedGossip.h"
 #include "dark_portal.h"
+#include "Player.h"
+#include "SpellInfo.h"
 
-#define SAY_ENTER               -1269020                    //where does this belong?
-#define SAY_INTRO               -1269021
-#define SAY_WEAK75              -1269022
-#define SAY_WEAK50              -1269023
-#define SAY_WEAK25              -1269024
-#define SAY_DEATH               -1269025
-#define SAY_WIN                 -1269026
-#define SAY_ORCS_ENTER          -1269027
-#define SAY_ORCS_ANSWER         -1269028
+enum MedivhBm
+{
+    SAY_ENTER               = 0,                    //where does this belong?
+    SAY_INTRO               = 1,
+    SAY_WEAK75              = 2,
+    SAY_WEAK50              = 3,
+    SAY_WEAK25              = 4,
+    SAY_DEATH               = 5,
+    SAY_WIN                 = 6,
+    SAY_ORCS_ENTER          = 7,
+    SAY_ORCS_ANSWER         = 8,
 
-#define SPELL_CHANNEL           31556
-#define SPELL_PORTAL_RUNE       32570                       //aura(portal on ground effect)
+    SPELL_CHANNEL           = 31556,
+    SPELL_PORTAL_RUNE       = 32570,                      //aura(portal on ground effect)
 
-#define SPELL_BLACK_CRYSTAL     32563                       //aura
-#define SPELL_PORTAL_CRYSTAL    32564                       //summon
+    SPELL_BLACK_CRYSTAL     = 32563,                      //aura
+    SPELL_PORTAL_CRYSTAL    = 32564,                      //summon
 
-#define SPELL_BANISH_PURPLE     32566                       //aura
-#define SPELL_BANISH_GREEN      32567                       //aura
+    SPELL_BANISH_PURPLE     = 32566,                      //aura
+    SPELL_BANISH_GREEN      = 32567,                      //aura
 
-#define SPELL_CORRUPT           31326
-#define SPELL_CORRUPT_AEONUS    37853
+    SPELL_CORRUPT           = 31326,
+    SPELL_CORRUPT_AEONUS    = 37853,
 
-#define C_COUNCIL_ENFORCER      17023
-class npc_medivh_bm : public CreatureScript
+    C_COUNCIL_ENFORCER      = 17023
+};
+
+class npc_medivh_bm : public CreatureScript
 {
 public:
     npc_medivh_bm() : CreatureScript("npc_medivh_bm") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_medivh_bmAI (creature);
     }
 
     struct npc_medivh_bmAI : public ScriptedAI
     {
-        npc_medivh_bmAI(Creature *c) : ScriptedAI(c)
+        npc_medivh_bmAI(Creature* creature) : ScriptedAI(creature)
         {
-            instance = c->GetInstanceScript();
+            instance = creature->GetInstanceScript();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript* instance;
 
         uint32 SpellCorrupt_Timer;
         uint32 Check_Timer;
@@ -91,28 +97,28 @@ public:
                 return;
 
             if (instance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
-                me->CastSpell(me, SPELL_CHANNEL, true);
-            else if (me->HasAura(SPELL_CHANNEL, 0))
-                me->RemoveAura(SPELL_CHANNEL, 0);
+                DoCast(me, SPELL_CHANNEL, true);
+            else if (me->HasAura(SPELL_CHANNEL))
+                me->RemoveAura(SPELL_CHANNEL);
 
-            me->CastSpell(me, SPELL_PORTAL_RUNE, true);
+            DoCast(me, SPELL_PORTAL_RUNE, true);
         }
 
-        void MoveInLineOfSight(Unit *who)
+        void MoveInLineOfSight(Unit* who)
         {
             if (!instance)
                 return;
 
             if (who->GetTypeId() == TYPEID_PLAYER && me->IsWithinDistInMap(who, 10.0f))
             {
-                if (instance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
+                if (instance->GetData(TYPE_MEDIVH) == IN_PROGRESS || instance->GetData(TYPE_MEDIVH) == DONE)
                     return;
 
-                DoScriptText(SAY_INTRO, me);
+                Talk(SAY_INTRO);
                 instance->SetData(TYPE_MEDIVH, IN_PROGRESS);
-                me->CastSpell(me, SPELL_CHANNEL, false);
+                DoCast(me, SPELL_CHANNEL, false);
                 Check_Timer = 5000;
-                     }
+            }
             else if (who->GetTypeId() == TYPEID_UNIT && me->IsWithinDistInMap(who, 15.0f))
             {
                 if (instance->GetData(TYPE_MEDIVH) != IN_PROGRESS)
@@ -132,7 +138,7 @@ public:
             }
         }
 
-        void AttackStart(Unit *who)
+        void AttackStart(Unit* /*who*/)
         {
             //if (instance && instance->GetData(TYPE_MEDIVH) == IN_PROGRESS)
             //return;
@@ -140,9 +146,9 @@ public:
             //ScriptedAI::AttackStart(who);
         }
 
-        void EnterCombat(Unit *who) {}
+        void EnterCombat(Unit* /*who*/) {}
 
-        void SpellHit(Unit* caster, const SpellEntry* spell)
+        void SpellHit(Unit* /*caster*/, const SpellInfo* spell)
         {
             if (SpellCorrupt_Timer)
                 return;
@@ -154,12 +160,12 @@ public:
                 SpellCorrupt_Timer = 3000;
         }
 
-        void JustDied(Unit* Killer)
+        void JustDied(Unit* killer)
         {
-            if (Killer->GetEntry() == me->GetEntry())
+            if (killer->GetEntry() == me->GetEntry())
                 return;
 
-            DoScriptText(SAY_DEATH, me);
+            Talk(SAY_DEATH);
         }
 
         void UpdateAI(const uint32 diff)
@@ -171,11 +177,11 @@ public:
             {
                 if (SpellCorrupt_Timer <= diff)
                 {
-                        instance->SetData(TYPE_MEDIVH, SPECIAL);
+                    instance->SetData(TYPE_MEDIVH, SPECIAL);
 
-                    if (me->HasAura(SPELL_CORRUPT_AEONUS, 0))
+                    if (me->HasAura(SPELL_CORRUPT_AEONUS))
                         SpellCorrupt_Timer = 1000;
-                    else if (me->HasAura(SPELL_CORRUPT, 0))
+                    else if (me->HasAura(SPELL_CORRUPT))
                         SpellCorrupt_Timer = 3000;
                     else
                         SpellCorrupt_Timer = 0;
@@ -192,18 +198,17 @@ public:
 
                     if (Life25 && pct <= 25)
                     {
-                        DoScriptText(SAY_WEAK25, me);
+                        Talk(SAY_WEAK25);
                         Life25 = false;
-                        Check_Timer = 0;
                     }
                     else if (Life50 && pct <= 50)
                     {
-                        DoScriptText(SAY_WEAK50, me);
+                        Talk(SAY_WEAK50);
                         Life50 = false;
                     }
                     else if (Life75 && pct <= 75)
                     {
-                        DoScriptText(SAY_WEAK75, me);
+                        Talk(SAY_WEAK75);
                         Life75 = false;
                     }
 
@@ -216,11 +221,16 @@ public:
                         return;
                     }
 
-                    if (instance->GetData(TYPE_MEDIVH) == DONE)
+                    if (instance->GetData(TYPE_RIFT) == DONE)
                     {
-                        DoScriptText(SAY_WIN, me);
+                        Talk(SAY_WIN);
                         Check_Timer = 0;
+
+                        if (me->HasAura(SPELL_CHANNEL))
+                            me->RemoveAura(SPELL_CHANNEL);
+
                         //TODO: start the post-event here
+                        instance->SetData(TYPE_MEDIVH, DONE);
                     }
                 } else Check_Timer -= diff;
             }
@@ -231,6 +241,7 @@ public:
             //DoMeleeAttackIfReady();
         }
     };
+
 };
 
 struct Wave
@@ -240,28 +251,29 @@ struct Wave
 
 static Wave PortalWaves[]=
 {
-    {C_ASSAS, C_WHELP, C_CHRON, 0},
-    {C_EXECU, C_CHRON, C_WHELP, C_ASSAS},
-    {C_EXECU, C_VANQU, C_CHRON, C_ASSAS}
+    { {C_ASSAS, C_WHELP, C_CHRON, 0} },
+    { {C_EXECU, C_CHRON, C_WHELP, C_ASSAS} },
+    { {C_EXECU, C_VANQU, C_CHRON, C_ASSAS} }
 };
-class npc_time_rift : public CreatureScript
+
+class npc_time_rift : public CreatureScript
 {
 public:
     npc_time_rift() : CreatureScript("npc_time_rift") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_time_riftAI (creature);
     }
 
     struct npc_time_riftAI : public ScriptedAI
     {
-        npc_time_riftAI(Creature *c) : ScriptedAI(c)
+        npc_time_riftAI(Creature* creature) : ScriptedAI(creature)
         {
-            instance = c->GetInstanceScript();
+            instance = creature->GetInstanceScript();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript* instance;
 
         uint32 TimeRiftWave_Timer;
         uint8 mRiftWaveCount;
@@ -270,6 +282,7 @@ public:
 
         void Reset()
         {
+
             TimeRiftWave_Timer = 15000;
             mRiftWaveCount = 0;
 
@@ -283,8 +296,9 @@ public:
             else if (mPortalCount > 12)
                 mWaveId = 2;
             else mWaveId = 1;
+
         }
-        void EnterCombat(Unit *who) {}
+        void EnterCombat(Unit* /*who*/) {}
 
         void DoSummonAtRift(uint32 creature_entry)
         {
@@ -304,26 +318,26 @@ public:
             //normalize Z-level if we can, if rift is not at ground level.
             pos.m_positionZ = std::max(me->GetMap()->GetHeight(pos.m_positionX, pos.m_positionY, MAX_HEIGHT), me->GetMap()->GetWaterLevel(pos.m_positionX, pos.m_positionY));
 
-            if (Unit *Summon = DoSummon(creature_entry, pos, 30000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT))
-                if (Unit *temp = Unit::GetUnit(*me, instance ? instance->GetData64(DATA_MEDIVH) : 0))
+            if (Unit* Summon = DoSummon(creature_entry, pos, 30000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT))
+                if (Unit* temp = Unit::GetUnit(*me, instance ? instance->GetData64(DATA_MEDIVH) : 0))
                     Summon->AddThreat(temp, 0.0f);
         }
 
         void DoSelectSummon()
         {
-            uint32 entry = 0;
-
             if ((mRiftWaveCount > 2 && mWaveId < 1) || mRiftWaveCount > 3)
                 mRiftWaveCount = 0;
 
+            uint32 entry = 0;
+
             entry = PortalWaves[mWaveId].PortalMob[mRiftWaveCount];
-            sLog->outDebug("TSCR: npc_time_rift: summoning wave creature (Wave %u, Entry %u).",mRiftWaveCount, entry);
+            sLog->outDebug(LOG_FILTER_TSCR, "npc_time_rift: summoning wave Creature (Wave %u, Entry %u).", mRiftWaveCount, entry);
 
             ++mRiftWaveCount;
 
             if (entry == C_WHELP)
             {
-                for (uint8 i = 0; i < 3; i++)
+                for (uint8 i = 0; i < 3; ++i)
                     DoSummonAtRift(entry);
             } else DoSummonAtRift(entry);
         }
@@ -342,26 +356,32 @@ public:
             if (me->IsNonMeleeSpellCasted(false))
                 return;
 
-            sLog->outDebug("TSCR: npc_time_rift: not casting anylonger, i need to die.");
+            sLog->outDebug(LOG_FILTER_TSCR, "npc_time_rift: not casting anylonger, i need to die.");
             me->setDeathState(JUST_DIED);
 
-            instance->SetData(TYPE_RIFT, SPECIAL);
+            if (instance->GetData(TYPE_RIFT) == IN_PROGRESS)
+                instance->SetData(TYPE_RIFT, SPECIAL);
         }
     };
+
 };
 
-#define SAY_SAAT_WELCOME        -1269019
+enum Saat
+{
+    SPELL_CHRONO_BEACON     = 34975,
+    ITEM_CHRONO_BEACON      = 24289
+};
 
 #define GOSSIP_ITEM_OBTAIN      "[PH] Obtain Chrono-Beacon"
-#define SPELL_CHRONO_BEACON     34975
-#define ITEM_CHRONO_BEACON      24289
-class npc_saat : public CreatureScript
+
+class npc_saat : public CreatureScript
 {
 public:
     npc_saat() : CreatureScript("npc_saat") { }
 
-    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
+        player->PlayerTalkClass->ClearMenus();
         if (action == GOSSIP_ACTION_INFO_DEF+1)
         {
             player->CLOSE_GOSSIP_MENU();
@@ -370,20 +390,20 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* player, Creature* creature)
     {
         if (creature->isQuestGiver())
             player->PrepareQuestMenu(creature->GetGUID());
 
-        if (player->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(ITEM_CHRONO_BEACON, 1))
+        if (player->GetQuestStatus(QUEST_OPENING_PORTAL) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(ITEM_CHRONO_BEACON))
         {
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             player->SEND_GOSSIP_MENU(10000, creature->GetGUID());
             return true;
         }
-        else if (player->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !player->HasItemCount(ITEM_CHRONO_BEACON, 1))
+        else if (player->GetQuestRewardStatus(QUEST_OPENING_PORTAL) && !player->HasItemCount(ITEM_CHRONO_BEACON))
         {
-            player->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_OBTAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
             player->SEND_GOSSIP_MENU(10001, creature->GetGUID());
             return true;
         }
@@ -391,6 +411,7 @@ public:
         player->SEND_GOSSIP_MENU(10002, creature->GetGUID());
         return true;
     }
+
 };
 
 void AddSC_dark_portal()

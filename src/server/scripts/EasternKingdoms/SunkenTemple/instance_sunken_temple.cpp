@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2012 kb_z
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -39,19 +38,20 @@ EndScriptData */
 #define GO_ATALAI_LIGHT2 148937
 
 #define NPC_MALFURION_STORMRAGE 15362
-class instance_sunken_temple : public InstanceMapScript
+
+class instance_sunken_temple : public InstanceMapScript
 {
 public:
-    instance_sunken_temple() : InstanceMapScript("instance_sunken_temple") { }
+    instance_sunken_temple() : InstanceMapScript("instance_sunken_temple", 109) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_sunken_temple_InstanceMapScript(pMap);
     }
 
-    struct instance_sunken_temple_InstanceMapScript : public ScriptedInstance
+    struct instance_sunken_temple_InstanceMapScript : public InstanceScript
     {
-        instance_sunken_temple_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap)
+        instance_sunken_temple_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
         {
             Initialize();
         };
@@ -95,7 +95,7 @@ public:
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
                 case GO_ATALAI_STATUE1: GOAtalaiStatue1 = pGo->GetGUID();   break;
                 case GO_ATALAI_STATUE2: GOAtalaiStatue2 = pGo->GetGUID();   break;
@@ -109,7 +109,7 @@ public:
 
          virtual void Update(uint32 /*diff*/) // correct order goes form 1-6
          {
-             switch (State)
+             switch(State)
              {
              case GO_ATALAI_STATUE1:
                 if (!s1 && !s2 && !s3 && !s4 && !s5 && !s6)
@@ -170,20 +170,20 @@ public:
 
         void UseStatue(GameObject* pGo)
         {
-            pGo->SummonGameObject(GO_ATALAI_LIGHT1, pGo->GetPositionX(),pGo->GetPositionY(),pGo->GetPositionZ(),0, 0, 0, 0, 0, 0);
+            pGo->SummonGameObject(GO_ATALAI_LIGHT1,pGo->GetPositionX(),pGo->GetPositionY(),pGo->GetPositionZ(),0,0,0,0,0,0);
             pGo->SetUInt32Value(GAMEOBJECT_FLAGS, 4);
         }
 
          /*
          void UseLastStatue(GameObject* pGo)
          {
-             AtalaiStatue1->SummonGameObject(GO_ATALAI_LIGHT2, AtalaiStatue1->GetPositionX(),AtalaiStatue1->GetPositionY(),AtalaiStatue1->GetPositionZ(),0, 0, 0, 0, 0, 100000);
-             AtalaiStatue2->SummonGameObject(GO_ATALAI_LIGHT2, AtalaiStatue2->GetPositionX(),AtalaiStatue2->GetPositionY(),AtalaiStatue2->GetPositionZ(),0, 0, 0, 0, 0, 100000);
-             AtalaiStatue3->SummonGameObject(GO_ATALAI_LIGHT2, AtalaiStatue3->GetPositionX(),AtalaiStatue3->GetPositionY(),AtalaiStatue3->GetPositionZ(),0, 0, 0, 0, 0, 100000);
-             AtalaiStatue4->SummonGameObject(GO_ATALAI_LIGHT2, AtalaiStatue4->GetPositionX(),AtalaiStatue4->GetPositionY(),AtalaiStatue4->GetPositionZ(),0, 0, 0, 0, 0, 100000);
-             AtalaiStatue5->SummonGameObject(GO_ATALAI_LIGHT2, AtalaiStatue5->GetPositionX(),AtalaiStatue5->GetPositionY(),AtalaiStatue5->GetPositionZ(),0, 0, 0, 0, 0, 100000);
-             AtalaiStatue6->SummonGameObject(GO_ATALAI_LIGHT2, AtalaiStatue6->GetPositionX(),AtalaiStatue6->GetPositionY(),AtalaiStatue6->GetPositionZ(),0, 0, 0, 0, 0, 100000);
-             pGo->SummonGameObject(148838,-488.997, 96.61,-189.019,-1.52, 0, 0, 0, 0, 100000);
+             AtalaiStatue1->SummonGameObject(GO_ATALAI_LIGHT2,AtalaiStatue1->GetPositionX(),AtalaiStatue1->GetPositionY(),AtalaiStatue1->GetPositionZ(),0,0,0,0,0,100000);
+             AtalaiStatue2->SummonGameObject(GO_ATALAI_LIGHT2,AtalaiStatue2->GetPositionX(),AtalaiStatue2->GetPositionY(),AtalaiStatue2->GetPositionZ(),0,0,0,0,0,100000);
+             AtalaiStatue3->SummonGameObject(GO_ATALAI_LIGHT2,AtalaiStatue3->GetPositionX(),AtalaiStatue3->GetPositionY(),AtalaiStatue3->GetPositionZ(),0,0,0,0,0,100000);
+             AtalaiStatue4->SummonGameObject(GO_ATALAI_LIGHT2,AtalaiStatue4->GetPositionX(),AtalaiStatue4->GetPositionY(),AtalaiStatue4->GetPositionZ(),0,0,0,0,0,100000);
+             AtalaiStatue5->SummonGameObject(GO_ATALAI_LIGHT2,AtalaiStatue5->GetPositionX(),AtalaiStatue5->GetPositionY(),AtalaiStatue5->GetPositionZ(),0,0,0,0,0,100000);
+             AtalaiStatue6->SummonGameObject(GO_ATALAI_LIGHT2,AtalaiStatue6->GetPositionX(),AtalaiStatue6->GetPositionY(),AtalaiStatue6->GetPositionZ(),0,0,0,0,0,100000);
+             pGo->SummonGameObject(148838,-488.997,96.61,-189.019,-1.52,0,0,0,0,100000);
          }
          */
 
@@ -200,7 +200,9 @@ public:
             return 0;
          }
     };
+
 };
+
 
 void AddSC_instance_sunken_temple()
 {

@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
- * option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 #ifndef OUTDOOR_PVP_ZM_
@@ -25,7 +25,7 @@
 const uint8 OutdoorPvPZMBuffZonesNum = 5;
 
 // the buff is cast in these zones
-const uint32 OutdoorPvPZMBuffZones[OutdoorPvPZMBuffZonesNum] = {3521, 3607, 3717, 3715, 3716};
+const uint32 OutdoorPvPZMBuffZones[OutdoorPvPZMBuffZonesNum] = {3521,3607,3717,3715,3716};
 
 // linked when the central tower is controlled
 const uint32 ZM_GRAVEYARD_ZONE = 3521;
@@ -48,15 +48,15 @@ enum OutdoorPvPZMSpells
 };
 
 // banners 182527, 182528, 182529, gotta check them ingame
-const go_type ZM_Banner_A = { 182527, 530, 253.54f, 7083.81f, 36.7728f, -0.017453f, 0.0f, 0.0f, 0.008727f, -0.999962f };
-const go_type ZM_Banner_H = { 182528, 530, 253.54f, 7083.81f, 36.7728f, -0.017453f, 0.0f, 0.0f, 0.008727f, -0.999962f };
-const go_type ZM_Banner_N = { 182529, 530, 253.54f, 7083.81f, 36.7728f, -0.017453f, 0.0f, 0.0f, 0.008727f, -0.999962f };
+const go_type ZM_Banner_A = { 182527,530,253.54f,7083.81f,36.7728f,-0.017453f,0.0f,0.0f,0.008727f,-0.999962f };
+const go_type ZM_Banner_H = { 182528,530,253.54f,7083.81f,36.7728f,-0.017453f,0.0f,0.0f,0.008727f,-0.999962f };
+const go_type ZM_Banner_N = { 182529,530,253.54f,7083.81f,36.7728f,-0.017453f,0.0f,0.0f,0.008727f,-0.999962f };
 
 // horde field scout spawn data
-const creature_type ZM_HordeFieldScout = {18564, 67, 530, 296.625f, 7818.4f, 42.6294f, 5.18363f};
+const creature_type ZM_HordeFieldScout = {18564,67,530,296.625f,7818.4f,42.6294f,5.18363f};
 
 // alliance field scout spawn data
-const creature_type ZM_AllianceFieldScout = {18581, 469, 530, 374.395f, 6230.08f, 22.8351f, 0.593412f};
+const creature_type ZM_AllianceFieldScout = {18581,469,530,374.395f,6230.08f,22.8351f,0.593412f};
 
 enum ZMCreatureTypes
 {
@@ -89,8 +89,8 @@ enum ZM_BeaconType
 
 const zm_beacon ZMBeaconInfo[ZM_NUM_BEACONS] =
 {
-    {2533, 2535, 2534, 2560, 2559, 2558, 2652, 2651, 2650, 11807, 11806},
-    {2527, 2529, 2528, 2557, 2556, 2555, 2646, 2645, 2644, 11805, 11804}
+    {2533,2535,2534,2560,2559,2558,2652,2651,2650,11807,11806},
+    {2527,2529,2528,2557,2556,2555,2646,2645,2644,11805,11804}
 };
 
 const uint32 ZMBeaconCaptureA[ZM_NUM_BEACONS] =
@@ -105,22 +105,22 @@ const uint32 ZMBeaconCaptureH[ZM_NUM_BEACONS] =
     LANG_OPVP_ZM_CAPTURE_WEST_H
 };
 
-const uint32 ZMBeaconLoseA[ZM_NUM_BEACONS] =
+const uint32 ZMBeaconLooseA[ZM_NUM_BEACONS] =
 {
-    LANG_OPVP_ZM_LOSE_EAST_A,
-    LANG_OPVP_ZM_LOSE_WEST_A
+    LANG_OPVP_ZM_LOOSE_EAST_A,
+    LANG_OPVP_ZM_LOOSE_WEST_A
 };
 
-const uint32 ZMBeaconLoseH[ZM_NUM_BEACONS] =
+const uint32 ZMBeaconLooseH[ZM_NUM_BEACONS] =
 {
-    LANG_OPVP_ZM_LOSE_EAST_H,
-    LANG_OPVP_ZM_LOSE_WEST_H
+    LANG_OPVP_ZM_LOOSE_EAST_H,
+    LANG_OPVP_ZM_LOOSE_WEST_H
 };
 
 const go_type ZMCapturePoints[ZM_NUM_BEACONS] =
 {
-    {182523, 530, 303.243f, 6841.36f, 40.1245f, -1.58825f, 0.0f, 0.0f, 0.71325f, -0.700909f},
-    {182522, 530, 336.466f, 7340.26f, 41.4984f, -1.58825f, 0.0f, 0.0f, 0.71325f, -0.700909f}
+    {182523,530,303.243f,6841.36f,40.1245f,-1.58825f,0.0f,0.0f,0.71325f,-0.700909f},
+    {182522,530,336.466f,7340.26f,41.4984f,-1.58825f,0.0f,0.0f,0.71325f,-0.700909f}
 };
 
 enum OutdoorPvPZMWorldStates
@@ -169,9 +169,11 @@ class OutdoorPvPZM;
 
 class OPvPCapturePointZM_Beacon : public OPvPCapturePoint
 {
+    friend class OutdoorPvPZM;
+
     public:
 
-        OPvPCapturePointZM_Beacon(OutdoorPvP* pvp, ZM_BeaconType type);
+        OPvPCapturePointZM_Beacon(OutdoorPvP * pvp, ZM_BeaconType type);
 
         void ChangeState();
 
@@ -180,8 +182,8 @@ class OPvPCapturePointZM_Beacon : public OPvPCapturePoint
         void FillInitialWorldStates(WorldPacket & data);
 
         // used when player is activated/inactivated in the area
-        bool HandlePlayerEnter(Player* player);
-        void HandlePlayerLeave(Player* player);
+        bool HandlePlayerEnter(Player * plr);
+        void HandlePlayerLeave(Player * plr);
 
         void UpdateTowerState();
 
@@ -200,9 +202,11 @@ enum ZM_GraveYardState
 
 class OPvPCapturePointZM_GraveYard : public OPvPCapturePoint
 {
+    friend class OutdoorPvPZM;
+
     public:
 
-        OPvPCapturePointZM_GraveYard(OutdoorPvP* pvp);
+        OPvPCapturePointZM_GraveYard(OutdoorPvP * pvp);
 
         bool Update(uint32 diff);
 
@@ -212,17 +216,15 @@ class OPvPCapturePointZM_GraveYard : public OPvPCapturePoint
 
         void UpdateTowerState();
 
-        int32 HandleOpenGo(Player* player, uint64 guid);
+        int32 HandleOpenGo(Player *plr, uint64 guid);
 
         void SetBeaconState(uint32 controlling_team); // not good atm
 
-        bool HandleGossipOption(Player* player, uint64 guid, uint32 gossipid);
+        bool HandleGossipOption(Player * plr, uint64 guid, uint32 gossipid);
 
-        bool HandleDropFlag(Player* player, uint32 spellId);
+        bool HandleDropFlag(Player * plr, uint32 spellId);
 
-        bool CanTalkTo(Player* player, Creature* creature, GossipMenuItems const& gso);
-
-        uint32 GetGraveYardState() const;
+        bool CanTalkTo(Player * plr, Creature * c, GossipMenuItems gso);
 
     private:
 
@@ -237,28 +239,24 @@ class OPvPCapturePointZM_GraveYard : public OPvPCapturePoint
 
 class OutdoorPvPZM : public OutdoorPvP
 {
+    friend class OPvPCapturePointZM_Beacon;
+
     public:
 
         OutdoorPvPZM();
 
         bool SetupOutdoorPvP();
 
-        void HandlePlayerEnterZone(Player* player, uint32 zone);
-        void HandlePlayerLeaveZone(Player* player, uint32 zone);
+        void HandlePlayerEnterZone(Player *plr, uint32 zone);
+        void HandlePlayerLeaveZone(Player *plr, uint32 zone);
 
         bool Update(uint32 diff);
 
         void FillInitialWorldStates(WorldPacket &data);
 
-        void SendRemoveWorldStates(Player* player);
+        void SendRemoveWorldStates(Player * plr);
 
-        void HandleKillImpl(Player* player, Unit* killed);
-
-        uint32 GetAllianceTowersControlled() const;
-        void SetAllianceTowersControlled(uint32 count);
-
-        uint32 GetHordeTowersControlled() const;
-        void SetHordeTowersControlled(uint32 count);
+        void HandleKillImpl(Player * plr, Unit * killed);
 
     private:
 

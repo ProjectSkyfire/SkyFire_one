@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,427 +17,702 @@
  */
 
 /* ScriptData
-SDName: Boss_KelThuzud
-SD%Complete: 0
+SDName: Boss_KelThuzad
+SD%Complete: 80%
 SDComment: VERIFY SCRIPT
 SDCategory: Naxxramas
 EndScriptData */
 
 #include "ScriptPCH.h"
+#include "naxxramas.h"
 
-//when shappiron dies. dialog between kel and lich king (in this order)
-#define SAY_SAPP_DIALOG1            -1533084
-#define SAY_SAPP_DIALOG2_LICH       -1533085
-#define SAY_SAPP_DIALOG3            -1533086
-#define SAY_SAPP_DIALOG4_LICH       -1533087
-#define SAY_SAPP_DIALOG5            -1533088
-
-//when cat dies
-#define SAY_CAT_DIED                -1533089
-
-//when each of the 4 wing bosses dies
-#define SAY_TAUNT1                  -1533090
-#define SAY_TAUNT2                  -1533091
-#define SAY_TAUNT3                  -1533092
-#define SAY_TAUNT4                  -1533093
-
-#define SAY_SUMMON_MINIONS          -1533105                //start of phase 1
-
-#define SAY_AGGRO1                  -1533094                //start of phase 2
-#define SAY_AGGRO2                  -1533095
-#define SAY_AGGRO3                  -1533096
-
-#define SAY_SLAY1                   -1533097
-#define SAY_SLAY2                   -1533098
-
-#define SAY_DEATH                   -1533099
-
-#define SAY_CHAIN1                  -1533100
-#define SAY_CHAIN2                  -1533101
-#define SAY_FROST_BLAST             -1533102
-
-#define SAY_REQUEST_AID             -1533103                //start of phase 3
-#define SAY_ANSWER_REQUEST          -1533104                //lich king answer
-
-#define SAY_SPECIAL1_MANA_DET       -1533106
-#define SAY_SPECIAL3_MANA_DET       -1533107
-#define SAY_SPECIAL2_DISPELL        -1533108
-
-//***THIS SCRIPTS IS UNDER DEVELOPMENT***
-/*
-DATA.
-This script has been made with info taken from wowwikki... so there are things wrong...
-like spell timers and Says. Also there's another major problem as there is no aggroed list
-I cannot make Kel'thuzad to pTarget specific party members, that is needed for spells like
-Mana Detonation... so what I'm doing untill now is just to cast everything on my main aggroed
-pTarget. Sorry for him.
-Another bug is that there are spells that are actually NOT working... I have to implement
-them first.
-Need DISPELL efect
-I also don't know the emotes
-*/
-
-//common needed defines
-#define NAXXRAMAS_MAP                533
-//Positional defines
-#define ADDX_LEFT_FAR               3783.272705f
-#define ADDY_LEFT_FAR               -5062.697266f
-#define ADDZ_LEFT_FAR               143.711203f
-#define ADDO_LEFT_FAR               3.617599f
-
-#define ADDX_LEFT_MIDDLE            3730.291260f
-#define ADDY_LEFT_MIDDLE            -5027.239258f
-#define ADDZ_LEFT_MIDDLE            143.956909f
-#define ADDO_LEFT_MIDDLE            4.461900f
-
-#define ADDX_LEFT_NEAR              3683.868652f
-#define ADDY_LEFT_NEAR              -5057.281250f
-#define ADDZ_LEFT_NEAR              143.183884f
-#define ADDO_LEFT_NEAR              5.237086f
-
-#define ADDX_RIGHT_FAR              3759.355225f
-#define ADDY_RIGHT_FAR              -5174.128418f
-#define ADDZ_RIGHT_FAR              143.802383f
-#define ADDO_RIGHT_FAR              2.170104f
-
-#define ADDX_RIGHT_MIDDLE           370.724365f
-#define ADDY_RIGHT_MIDDLE           -5185.123047f
-#define ADDZ_RIGHT_MIDDLE           143.928024f
-#define ADDO_RIGHT_MIDDLE           1.309310f
-
-#define ADDX_RIGHT_NEAR             3665.121094f
-#define ADDY_RIGHT_NEAR             -5138.679199f
-#define ADDZ_RIGHT_NEAR             143.183212f
-#define ADDO_RIGHT_NEAR             0.604023f
-
-#define WALKX_LEFT_FAR              3754.431396f
-#define WALKY_LEFT_FAR              -5080.727734f
-#define WALKZ_LEFT_FAR              142.036316f
-#define WALKO_LEFT_FAR              3.736189f
-
-#define WALKX_LEFT_MIDDLE           3724.396484f
-#define WALKY_LEFT_MIDDLE           -5061.330566f
-#define WALKZ_LEFT_MIDDLE           142.032700f
-#define WALKO_LEFT_MIDDLE           4.564785f
-
-#define WALKX_LEFT_NEAR             3687.158424f
-#define WALKY_LEFT_NEAR             -5076.834473f
-#define WALKZ_LEFT_NEAR             142.017319f
-#define WALKO_LEFT_NEAR             5.237086f
-
-#define WALKX_RIGHT_FAR             3687.571777f
-#define WALKY_RIGHT_FAR             -5126.831055f
-#define WALKZ_RIGHT_FAR             142.017807f
-#define WALKO_RIGHT_FAR             0.604023f
-
-#define WALKX_RIGHT_MIDDLE          3707.990733f
-#define WALKY_RIGHT_MIDDLE          -5151.450195f
-#define WALKZ_RIGHT_MIDDLE          142.032562f
-#define WALKO_RIGHT_MIDDLE          1.376855f
-
-#define WALKX_RIGHT_NEAR            3739.500000f
-#define WALKY_RIGHT_NEAR            -5141.883989f
-#define WALKZ_RIGHT_NEAR            142.0141130f
-#define WALKO_RIGHT_NEAR            2.121412f
-
-//spells to be casted
-#define SPELL_FROST_BOLT            28478
-#define H_SPELL_FROST_BOLT          55802
-#define SPELL_FROST_BOLT_NOVA       28479
-#define H_SPELL_FROST_BOLT_NOVA     55807
-
-#define SPELL_CHAINS_OF_KELTHUZAD   28410
-#define SPELL_MANA_DETONATION       27819
-#define SPELL_SHADOW_FISURE         27810
-#define SPELL_FROST_BLAST           27808
-
-struct boss_kelthuzadAI : public ScriptedAI
+enum Yells
 {
-    boss_kelthuzadAI(Creature* c) : ScriptedAI(c)
-    {
-        GuardiansOfIcecrown[0] = 0;
-        GuardiansOfIcecrown[1] = 0;
-        GuardiansOfIcecrown[2] = 0;
-        GuardiansOfIcecrown[3] = 0;
-        GuardiansOfIcecrown[4] = 0;
-        GuardiansOfIcecrown_Count = 0;
-    }
+    //when shappiron dies. dialog between kel and lich king (in this order)
+    SAY_SAPP_DIALOG1                                       = -1533084, //not used
+    SAY_SAPP_DIALOG2_LICH                                  = -1533085, //not used
+    SAY_SAPP_DIALOG3                                       = -1533086, //not used
+    SAY_SAPP_DIALOG4_LICH                                  = -1533087, //not used
+    SAY_SAPP_DIALOG5                                       = -1533088, //not used
+    SAY_CAT_DIED                                           = -1533089, //when cat dies, not used
+    //when each of the 4 wing bosses dies
+    SAY_TAUNT1                                             = -1533090, //not used
+    SAY_TAUNT2                                             = -1533091, //not used
+    SAY_TAUNT3                                             = -1533092, //not used
+    SAY_TAUNT4                                             = -1533093, //not used
+    SAY_SUMMON_MINIONS                                     = -1533105, //start of phase 1
+    SAY_AGGRO_1                                            = -1533094, //start of phase 2
+    SAY_AGGRO_2                                            = -1533095,
+    SAY_AGGRO_3                                            = -1533096,
+    SAY_SLAY_1                                             = -1533097,
+    SAY_SLAY_2                                             = -1533098,
+    SAY_DEATH                                              = -1533099,
+    SAY_CHAIN_1                                            = -1533100,
+    SAY_CHAIN_2                                            = -1533101,
+    SAY_FROST_BLAST                                        = -1533102,
+    SAY_SPECIAL_1                                          = -1533106,
+    SAY_SPECIAL_2                                          = -1533107,
+    SAY_SPECIAL_3                                          = -1533108,
+    SAY_REQUEST_AID                                        = -1533103, //start of phase 3
+    SAY_ANSWER_REQUEST                                     = -1533104  //lich king answer
+};
+enum Event
+{
+    EVENT_NONE,
+    EVENT_BOLT,
+    EVENT_NOVA,
+    EVENT_CHAIN,
+    EVENT_CHAINED_SPELL,
+    EVENT_DETONATE,
+    EVENT_FISSURE,
+    EVENT_BLAST,
 
-    uint64 GuardiansOfIcecrown[5];
-    uint32 GuardiansOfIcecrown_Count;
-    uint32 GuardiansOfIcecrown_Timer;
-    uint32 FrostBolt_Timer;
-    uint32 FrostBoltNova_Timer;
-    uint32 ChainsOfKelthuzad_Timer;
-    uint32 ManaDetonation_Timer;
-    uint32 ShadowFisure_Timer;
-    uint32 FrostBlast_Timer;
-    uint32 ChainsOfKelthuzad_Targets;
-    uint32 Phase1_Timer;
-    bool Phase2;
-    bool Phase3;
+    EVENT_WASTE,
+    EVENT_ABOMIN,
+    EVENT_WEAVER,
+    EVENT_ICECROWN,
+    EVENT_TRIGGER,
 
-    void Reset()
-    {
-        FrostBolt_Timer = (rand()%60)*1000;                 //It won't be more than a minute without cast it
-        FrostBoltNova_Timer = 15000;                        //Cast every 15 seconds
-        ChainsOfKelthuzad_Timer = (rand()%30+30)*1000;      //Cast no sooner than once every 30 seconds
-        ManaDetonation_Timer = 20000;                       //Seems to cast about every 20 seconds
-        ShadowFisure_Timer = 25000;                         //25 seconds
-        FrostBlast_Timer = (rand()%30+30)*1000;             //Random time between 30-60 seconds
-        GuardiansOfIcecrown_Timer = 5000;                   //5 seconds for summoning each Guardian of Icecrown in phase 3
+    EVENT_PHASE,
+};
 
-        for (int i = 0; i < 5; i++)
-        {
-            if (GuardiansOfIcecrown[i])
-        {
-            //delete creature
-            Unit* pUnit = Unit::GetUnit((*me), GuardiansOfIcecrown[i]);
-            if (pUnit && pUnit->isAlive())
-                pUnit->DealDamage(pUnit, pUnit->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-            GuardiansOfIcecrown[i] = 0;
-        }
-        }
+enum Spells
+{
+    SPELL_FROST_BOLT                                       = 28478,
+    H_SPELL_FROST_BOLT                                     = 55802,
+    SPELL_FROST_BOLT_AOE                                   = 28479,
+    H_SPELL_FROST_BOLT_AOE                                 = 55807,
+    SPELL_SHADOW_FISURE                                    = 27810,
+    SPELL_VOID_BLAST                                       = 27812,
+    SPELL_MANA_DETONATION                                  = 27819,
+    SPELL_FROST_BLAST                                      = 27808,
+    SPELL_CHAINS_OF_KELTHUZAD                              = 28410, //28408 script effect
+    SPELL_KELTHUZAD_CHANNEL                                = 29423,
+    SPELL_BERSERK                                          = 28498,
 
-        Phase1_Timer = 310000;                              //Phase 1 lasts 5 minutes and 10 seconds
-        Phase2 = false;
-        Phase3 = false;
-    }
+    //spells for chained
+    //warlock
+    SPELL_CURSE_OF_AGONY                                   = 47864,
+    SPELL_SHADOW_BOLT                                      = 47809,
+    //shaman
+    SPELL_EARTH_SHOCK                                      = 49231,
+    SPELL_HEALING_WAVE                                     = 49273,
+    //mage
+    SPELL_FROST_FIREBOLT                                   = 47610,
+    SPELL_ARCANE_MISSILES                                  = 42846,
+    //rogue
+    SPELL_HEMORRHAGE                                       = 48660,
+    SPELL_MUTILATE                                         = 48666,
+    //paladin
+    SPELL_HOLY_SHOCK                                       = 48825,
+    SPELL_HAMMER_OF_JUSTICE                                = 10308,
+    //priest
+    SPELL_VAMPIRIC_TOUCH                                   = 48160,
+    SPELL_RENEW                                            = 48068,
+    //hunter
+    SPELL_MULTI_SHOT                                       = 49048,
+    SPELL_VOLLEY                                           = 58434,
+    //warrior
+    SPELL_BLADESTORM                                       = 46924,
+    SPELL_CLEAVE                                           = 47520,
+    //druid
+    SPELL_MOONFIRE                                         = 48463,
+    SPELL_LIFEBLOOM                                        = 48451,
+    //death knight
+    SPELL_PLAGUE_STRIKE                                    = 49921,
+    SPELL_HOWLING_BLAST                                    = 51411,
+};
 
-    void KilledUnit()
-    {
-        if (rand()%2)
-            DoScriptText(SAY_SLAY1, me);
-        else
-            DoScriptText(SAY_SLAY2, me);
-    }
+enum Creatures
+{
+    NPC_WASTE                                              = 16427, // Soldiers of the Frozen Wastes
+    NPC_ABOMINATION                                        = 16428, // Unstoppable Abominations
+    NPC_WEAVER                                             = 16429, // Soul Weavers
+    NPC_ICECROWN                                           = 16441 // Guardians of Icecrown
+};
 
-    void JustDied(Unit* Killer)
-    {
-        DoScriptText(SAY_DEATH, me);
-        for (int i = 0; i < 5; i++)
-            if (GuardiansOfIcecrown[i])
-        {
-            Unit* pUnit = Unit::GetUnit((*me), GuardiansOfIcecrown[i]);
-            if (!pUnit || !pUnit->isAlive())
-                continue;
+const Position Pos[12] =
+{
+    {3783.272705f, -5062.697266f, 143.711203f, 3.617599f},     //LEFT_FAR
+    {3730.291260f, -5027.239258f, 143.956909f, 4.461900f},     //LEFT_MIDDLE
+    {3757.6f, -5172.0f, 143.7f, 1.97f},                        //WINDOW_PORTAL05
+    {3759.355225f, -5174.128418f, 143.802383f, 2.170104f},     //RIGHT_FAR
+    {3700.724365f, -5185.123047f, 143.928024f, 1.309310f},     //RIGHT_MIDDLE
+    {3700.86f, -5181.29f, 143.928024f, 1.42f},                 //WINDOW_PORTAL04
+    {3754.431396f, -5080.727734f, 142.036316f, 3.736189f},     //LEFT_FAR
+    {3724.396484f, -5061.330566f, 142.032700f, 4.564785f},     //LEFT_MIDDLE
+    {3732.02f, -5028.53f, 143.92f, 4.49f},                     //WINDOW_PORTAL02
+    {3687.571777f, -5126.831055f, 142.017807f, 0.604023f},     //RIGHT_FAR
+    {3707.990733f, -5151.450195f, 142.032562f, 1.376855f},     //RIGHT_MIDDLE
+    {3782.76f, -5062.97f, 143.79f, 3.82f},                     //WINDOW_PORTAL03
+};
 
-            pUnit->CombatStop();
-            float Walk_Pos_X;
-            float Walk_Pos_Y;
-            float Walk_Pos_Z;
-            switch (rand()%6)
-            {
-                case 0:
-                    Walk_Pos_X = ADDX_LEFT_FAR;
-                    Walk_Pos_Y = ADDY_LEFT_FAR;
-                    Walk_Pos_Z = ADDZ_LEFT_FAR;
-                    break;
-                case 1:
-                    Walk_Pos_X = ADDX_LEFT_MIDDLE;
-                    Walk_Pos_Y = ADDY_LEFT_MIDDLE;
-                    Walk_Pos_Z = ADDZ_LEFT_MIDDLE;
-                    break;
-                case 2:
-                    Walk_Pos_X = ADDX_LEFT_NEAR;
-                    Walk_Pos_Y = ADDY_LEFT_NEAR;
-                    Walk_Pos_Z = ADDZ_LEFT_NEAR;
-                    break;
-                case 3:
-                    Walk_Pos_X = ADDX_RIGHT_FAR;
-                    Walk_Pos_Y = ADDY_RIGHT_FAR;
-                    Walk_Pos_Z = ADDZ_RIGHT_FAR;
-                    break;
-                case 4:
-                    Walk_Pos_X = ADDX_RIGHT_MIDDLE;
-                    Walk_Pos_Y = ADDY_RIGHT_MIDDLE;
-                    Walk_Pos_Z = ADDZ_RIGHT_MIDDLE;
-                    break;
-                case 5:
-                    Walk_Pos_X = ADDX_RIGHT_NEAR;
-                    Walk_Pos_Y = ADDY_RIGHT_NEAR;
-                    Walk_Pos_Z = ADDZ_RIGHT_NEAR;
-                    break;
-            }
-            pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z, MOVEFLAG_WALK_MODE);
-        }
-    }
+//creatures in corners
+//Unstoppable Abominations
+#define MAX_ABOMINATIONS                        21
+const Position PosAbominations[MAX_ABOMINATIONS] =
+{
+    {3755.52f, -5155.22f, 143.480f, 2.0f},
+    {3744.35f, -5164.03f, 143.590f, 2.00f},
+    {3749.28f, -5159.04f, 143.190f, 2.0f},
+    {3774.47f, -5076.28f, 143.528f, 2.15912f},
+    {3765.94f, -5074.15f, 143.186f, 3.77233f},
+    {3763.15f, -5063.36f, 143.694f, 3.77233f},
+    {3737.81f, -5045.69f, 143.709f, 4.9033f},
+    {3728.13f, -5045.01f, 143.355f, 1.45069f},
+    {3721.56f, -5048.35f, 143.542f, 1.45069f},
+    {3689.55f, -5049.66f, 143.637f, 5.2104f},
+    {3681.71f, -5053.03f, 143.242f, 2.47957f},
+    {3677.64f, -5061.44f, 143.358f, 2.47957f},
+    {3654.2f, -5090.87f, 143.469f, 1.0313f},
+    {3650.39f, -5097.45f, 143.496f, 2.5047f},
+    {3658.7f, -5103.59f, 143.607f, 3.3278f},
+    {3659.02f, -5133.97f, 143.624f, 3.84538f},
+    {3666.33f, -5139.34f, 143.183f, 3.84538f},
+    {3669.74f, -5149.63f, 143.678f, 0.528643f},
+    {3695.53f, -5169.53f, 143.671f, 2.11908f},
+    {3701.98f, -5166.51f, 143.395f, 1.24257f},
+    {3709.62f, -5169.15f, 143.576f, 5.97695f},
+};
 
-    void EnterCombat(Unit* who)
-    {
-        switch (rand()%3)
-        {
-        case 0: DoScriptText(SAY_AGGRO1, me); break;
-        case 1: DoScriptText(SAY_AGGRO2, me); break;
-        case 2: DoScriptText(SAY_AGGRO3, me); break;
-        }
-    }
+//Soldiers of the Frozen Wastes
+#define MAX_WASTES                              49
+const Position PosWastes[MAX_WASTES] =
+{
+    {3754.41f, -5147.24f, 143.204f, 2.0f},
+    {3754.68f, -5156.17f, 143.418f, 2.0f},
+    {3757.91f, -5160.12f, 143.503f, 2.0f},
+    {3752.67f, -5164.6f, 143.395f, 2.0f},
+    {3745.42f, -5164.47f, 143.565f, 2.74587f},
+    {3741.2f, -5155.92f, 143.17f, 5.29134f},
+    {3746.57f, -5148.82f, 143.176f, 5.07772f},
+    {3778.14f, -5070.1f, 143.568f, 3.16208f},
+    {3775.09f, -5078.97f, 143.65f, 2.81022f},
+    {3773.54f, -5083.47f, 143.758f, 3.21549f},
+    {3765, -5078.29f, 143.176f, 4.36688f},
+    {3766.94f, -5072.63f, 143.184f, 5.27951f},
+    {3762.68f, -5064.94f, 143.635f, 3.95297f},
+    {3769.9f, -5059.94f, 143.74f, 3.36549f},
+    {3736.33f, -5042.18f, 143.643f, 5.9471f},
+    {3727.51f, -5040.58f, 143.502f, 0.871859f},
+    {3719.89f, -5049.64f, 143.58f, 4.75172f},
+    {3720.69f, -5044.43f, 143.662f, 1.87245f},
+    {3725.69f, -5048.99f, 143.363f, 2.48271f},
+    {3732.33f, -5054.01f, 143.44f, 3.59405f},
+    {3738.09f, -5051.06f, 143.718f, 4.70931f},
+    {3682.76f, -5063.5f, 143.175f, 0.636238f},
+    {3686.7f, -5060.58f, 143.18f, 0.636238f},
+    {3682.45f, -5057.21f, 143.184f, 5.61252f},
+    {3677.57f, -5053.34f, 143.369f, 1.52531f},
+    {3677.3f, -5062.26f, 143.369f, 2.73482f},
+    {3691.21f, -5053.02f, 143.421f, 5.93218f},
+    {3685.22f, -5053.34f, 143.314f, 4.70303f},
+    {3652.11f, -5088.47f, 143.555f, 0.793317f},
+    {3648.23f, -5093.21f, 143.311f, 1.18837f},
+    {3648.14f, -5100.11f, 143.632f, 2.12221f},
+    {3653.88f, -5099.7f, 143.558f, 3.04348f},
+    {3661.23f, -5100.33f, 143.42f, 4.08335f},
+    {3663.49f, -5092.77f, 143.346f, 4.47134f},
+    {3661.85f, -5087.99f, 143.571f, 1.0148f},
+    {3664.56f, -5149.01f, 143.532f, 0.0762528f},
+    {3665.01f, -5142.04f, 143.201f, 1.72009f},
+    {3671.15f, -5142.92f, 143.174f, 4.81535f},
+    {3670.18f, -5134.38f, 143.177f, 5.37534f},
+    {3664.33f, -5131.69f, 143.262f, 5.39576f},
+    {3658.21f, -5133.63f, 143.662f, 1.3863f},
+    {3659.7f, -5144.49f, 143.363f, 2.32328f},
+    {3705.71f, -5179.63f, 143.746f, 1.06743f},
+    {3696.77f, -5177.45f, 143.759f, 5.36748f},
+    {3700.97f, -5173.13f, 143.52f, 3.26575f},
+    {3708.53f, -5172.19f, 143.573f, 3.26575f},
+    {3712.49f, -5167.62f, 143.657f, 5.63295f},
+    {3704.89f, -5161.84f, 143.239f, 5.63295f},
+    {3695.66f, -5164.63f, 143.674f, 1.54416f},
+};
 
-    void UpdateAI(const uint32 diff)
-    {
-         if (!UpdateVictim())
-            return;
+//Soul Weavers
+#define MAX_WEAVERS                             7
+const Position PosWeavers[MAX_WEAVERS] =
+{
+    {3752.45f, -5168.35f, 143.562f, 1.6094f},
+    {3772.2f, -5070.04f, 143.329f, 1.93686f},
+    {3732.28f, -5032.88f, 143.771f, 3.08355f},
+    {3689.05f, -5055.7f, 143.172f, 6.09554f},
+    {3649.45f, -5093.17f, 143.299f, 2.51805f},
+    {3659.7f, -5144.49f, 143.363f, 4.08806f},
+    {3704.71f, -5175.96f, 143.597f, 3.36549f},
+};
 
-        if (me->getVictim() && me->isAlive())
-        {
-            //Check for Frost Bolt
-            if (FrostBolt_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_FROST_BOLT);
-                //Cast again on time
-                FrostBolt_Timer = (rand()%60)*1000;
-            } else FrostBolt_Timer -= diff;
+// predicate function to select not charmed target
+struct NotCharmedTargetSelector : public std::unary_function<Unit *, bool> {
+    NotCharmedTargetSelector() {}
 
-            //Check for Frost Bolt Nova
-            if (FrostBoltNova_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_FROST_BOLT_NOVA);
-                FrostBoltNova_Timer = 15000;
-            } else FrostBoltNova_Timer -= diff;
-
-            //Check for Chains Of Kelthuzad
-            if (ChainsOfKelthuzad_Timer <= diff)
-            {
-                //DoCast(me->getVictim(),SPELL_CHAINS_OF_KELTHUZAD);
-
-                //if (rand()%2 == 0)
-                   //DoScriptText(SAY_CHAIN1, me);
-                //else
-                    //DoScriptText(SAY_CHAIN2, me);
-                ChainsOfKelthuzad_Timer = (rand()%30+30)*1000;
-            } else ChainsOfKelthuzad_Timer -= diff;
-
-            //Check for Mana Detonation
-            if (ManaDetonation_Timer <= diff)
-            {
-                //time to cast
-                DoCast(me->getVictim(),SPELL_MANA_DETONATION);
-
-                 if (rand()%2)
-                     DoScriptText(SAY_SPECIAL1_MANA_DET, me);
-                ManaDetonation_Timer = 20000;
-            } else ManaDetonation_Timer -= diff;
-
-            //Check for Shadow Fissure
-            if (ShadowFisure_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_SHADOW_FISURE);
-
-               if (rand()%2)
-                   DoScriptText(SAY_SPECIAL3_MANA_DET, me);
-                ShadowFisure_Timer = 25000;
-            } else ShadowFisure_Timer -= diff;
-
-            //Check for Frost Blast
-            if (FrostBlast_Timer <= diff)
-            {
-                //time to cast
-                DoCast(me->getVictim(),SPELL_FROST_BLAST);
-
-                if (rand()%2 == 0)
-                    DoScriptText(SAY_FROST_BLAST, me);
-                FrostBlast_Timer = (rand()%30+30)*1000;
-            } else FrostBlast_Timer -= diff;
-
-            //start phase 3 when we are 40% health
-            if (!Phase3 && (me->GetHealth()*100 / me->GetMaxHealth()) < 40)
-            {
-                Phase3 = true;
-                    DoScriptText(SAY_REQUEST_AID, me);
-                //here Lich King should respond to KelThuzad but I don't know which creature to make talk
-                //so for now just make Kelthuzad says it.
-                DoScriptText(SAY_ANSWER_REQUEST, me);
-            }
-
-            if (Phase3 && (GuardiansOfIcecrown_Count < 5))
-                if (GuardiansOfIcecrown_Timer <= diff)
-            {
-                //Summon a Guardian of Icecrown in a random alcove (Creature # 16441)
-                //uint32 TimeToWalk;
-                Unit* pUnit = NULL;
-                float Walk_Pos_X;
-                float Walk_Pos_Y;
-                float Walk_Pos_Z;
-                switch (rand()%6)
-                {
-                    case 0:
-                        pUnit = me->SummonCreature(16441, ADDX_LEFT_FAR, ADDY_LEFT_FAR, ADDZ_LEFT_FAR, ADDO_LEFT_FAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-                        //Setting walk position
-                        Walk_Pos_X = WALKX_LEFT_FAR;
-                        Walk_Pos_Y = WALKY_LEFT_FAR;
-                        Walk_Pos_Z = WALKZ_LEFT_FAR;
-                        break;
-                    case 1:
-                        pUnit = me->SummonCreature(16441, ADDX_LEFT_MIDDLE, ADDY_LEFT_MIDDLE, ADDZ_LEFT_MIDDLE, ADDO_LEFT_MIDDLE, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-                        //Start moving guardian towards the center of the room
-                        Walk_Pos_X = WALKX_LEFT_MIDDLE;
-                        Walk_Pos_Y = WALKY_LEFT_MIDDLE;
-                        Walk_Pos_Z = WALKZ_LEFT_MIDDLE;
-                        break;
-                    case 2:
-                        pUnit = me->SummonCreature(16441, ADDX_LEFT_NEAR, ADDY_LEFT_NEAR, ADDZ_LEFT_NEAR, ADDO_LEFT_NEAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-                        //Start moving guardian towards the center of the room
-                        Walk_Pos_X = WALKX_LEFT_NEAR;
-                        Walk_Pos_Y = WALKY_LEFT_NEAR;
-                        Walk_Pos_Z = WALKZ_LEFT_NEAR;
-                        break;
-                    case 3:
-
-                        pUnit = me->SummonCreature(16441, ADDX_RIGHT_FAR, ADDY_RIGHT_FAR, ADDZ_RIGHT_FAR, ADDO_RIGHT_FAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-                        //Start moving guardian towards the center of the room
-                        Walk_Pos_X = WALKX_RIGHT_FAR;
-                        Walk_Pos_Y = WALKY_RIGHT_FAR;
-                        Walk_Pos_Z = WALKZ_RIGHT_FAR;
-                        break;
-                    case 4:
-                        pUnit = me->SummonCreature(16441, ADDX_RIGHT_MIDDLE, ADDY_RIGHT_MIDDLE, ADDZ_RIGHT_MIDDLE, ADDO_RIGHT_MIDDLE, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-                        //Start moving guardian towards the center of the room
-                        Walk_Pos_X = WALKX_RIGHT_MIDDLE;
-                        Walk_Pos_Y = WALKY_RIGHT_MIDDLE;
-                        Walk_Pos_Z = WALKZ_RIGHT_MIDDLE;
-                        break;
-                    case 5:
-                        pUnit = me->SummonCreature(16441, ADDX_RIGHT_NEAR, ADDY_RIGHT_NEAR, ADDZ_RIGHT_NEAR, ADDO_RIGHT_NEAR, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1000);
-                        //Start moving guardian towards the center of the room
-                        Walk_Pos_X = WALKX_RIGHT_NEAR;
-                        Walk_Pos_Y = WALKY_RIGHT_NEAR;
-                        Walk_Pos_Z = WALKZ_RIGHT_NEAR;
-                        break;
-                }
-
-                if (pUnit)
-                {
-                    //if we find no one to figth walk to the center
-                    if (!pUnit->isInCombat())
-                        pUnit->SendMonsterMoveWithSpeed(Walk_Pos_X, Walk_Pos_Y, Walk_Pos_Z, MOVEFLAG_WALK_MODE);
-
-                    //Safe storing of creatures
-                    GuardiansOfIcecrown[GuardiansOfIcecrown_Count] = pUnit->GetGUID();
-
-                    //Update guardian count
-                    GuardiansOfIcecrown_Count++;
-                }
-                //5 seconds until summoning next guardian
-                GuardiansOfIcecrown_Timer = 5000;
-            }
-            else GuardiansOfIcecrown_Timer -= diff;
-
-            DoMeleeAttackIfReady();
-        }
+    bool operator() (const Unit *pTarget) {
+        return (!pTarget->isCharmed());
     }
 };
-class boss_kelthuzad : public CreatureScript
+
+class boss_kelthuzad : public CreatureScript
 {
 public:
     boss_kelthuzad() : CreatureScript("boss_kelthuzad") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    struct boss_kelthuzadAI : public BossAI
     {
-        return new boss_kelthuzadAI (creature);
+        boss_kelthuzadAI(Creature* c) : BossAI(c, BOSS_KELTHUZAD), spawns(c)
+        {
+            uiFaction = me->getFaction();
+        }
+
+        uint32 Phase;
+        uint32 uiGuardiansOfIcecrownTimer;
+        uint32 uiFaction;
+
+        uint8  nGuardiansOfIcecrownCount;
+        uint8  nAbomination;
+        uint8  nWeaver;
+
+        std::map<uint64, float> chained;
+
+        uint64 PortalsGUID[4];
+        uint64 KTTriggerGUID;
+
+        SummonList spawns; // adds spawn by the trigger. kept in separated list (i.e. not in summons)
+
+        void Reset()
+        {
+            _Reset();
+
+            PortalsGUID[0] = PortalsGUID[1] = PortalsGUID[2] = PortalsGUID[3] = 0;
+            KTTriggerGUID = 0;
+
+            me->setFaction(35);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NOT_SELECTABLE);
+            std::map<uint64, float>::const_iterator itr;
+            for (itr = chained.begin(); itr != chained.end(); ++itr)
+            {
+                if (Player* charmed = Unit::GetPlayer(*me, (*itr).first))
+                    charmed->SetFloatValue(OBJECT_FIELD_SCALE_X, (*itr).second);
+            }
+
+            chained.clear();
+            spawns.DespawnAll();
+
+            FindGameObjects();
+
+            if (GameObject *pKTTrigger = me->GetMap()->GetGameObject(KTTriggerGUID))
+            {
+                pKTTrigger->ResetDoorOrButton();
+                pKTTrigger->SetPhaseMask(1, true);
+            }
+
+            for (uint8 i = 0; i <= 3; ++i)
+            {
+                if (GameObject *pPortal = me->GetMap()->GetGameObject(PortalsGUID[i]))
+                {
+                    if (!((pPortal->getLootState() == GO_READY) || (pPortal->getLootState() == GO_NOT_READY)))
+                        pPortal->ResetDoorOrButton();
+                }
+            }
+
+            nGuardiansOfIcecrownCount = 0;
+            uiGuardiansOfIcecrownTimer = 5000;                   //5 seconds for summoning each Guardian of Icecrown in phase 3
+
+            Phase = 0;
+            nAbomination = 0;
+            nWeaver = 0;
+
+            SetImmuneToDeathGrip();
+        }
+
+        void KilledUnit()
+        {
+            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
+        }
+
+        void JustDied(Unit* /*Killer*/)
+        {
+            _JustDied();
+            DoScriptText(SAY_DEATH, me);
+
+            std::map<uint64, float>::const_iterator itr;
+            for (itr = chained.begin(); itr != chained.end(); ++itr)
+            {
+                if (Player* pPlayer = Unit::GetPlayer(*me, (*itr).first))
+                    pPlayer->SetFloatValue(OBJECT_FIELD_SCALE_X, (*itr).second);
+            }
+            chained.clear();
+        }
+
+        void EnterCombat(Unit* /*who*/)
+        {
+            me->setFaction(uiFaction);
+
+            _EnterCombat();
+            FindGameObjects();
+            for (uint8 i = 0; i <= 3; ++i)
+            {
+                if (GameObject *pPortal = me->GetMap()->GetGameObject(PortalsGUID[i]))
+                    pPortal->ResetDoorOrButton();
+            }
+            DoCast(me, SPELL_KELTHUZAD_CHANNEL, false);
+            DoScriptText(SAY_SUMMON_MINIONS, me);
+            Phase = 1;
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NOT_SELECTABLE);
+            me->SetFloatValue(UNIT_FIELD_COMBATREACH, 10);
+            me->SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, 10);
+            events.ScheduleEvent(EVENT_TRIGGER, 5000);
+            events.ScheduleEvent(EVENT_WASTE, 15000);
+            events.ScheduleEvent(EVENT_ABOMIN, 30000);
+            events.ScheduleEvent(EVENT_WEAVER, 50000);
+            events.ScheduleEvent(EVENT_PHASE, 228000);
+        }
+
+        void FindGameObjects()
+        {
+            PortalsGUID[0] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL01) : 0;
+            PortalsGUID[1] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL02) : 0;
+            PortalsGUID[2] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL03) : 0;
+            PortalsGUID[3] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL04) : 0;
+            KTTriggerGUID = instance ? instance->GetData64(DATA_KELTHUZAD_TRIGGER) : 0;
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateCombatState())
+                return;
+
+            events.Update(diff);
+
+            if (Phase == 1)
+            {
+                while (uint32 eventId = events.GetEvent())
+                {
+                    switch(eventId)
+                    {
+                        case EVENT_WASTE:
+                            DoSummon(NPC_WASTE, Pos[RAND(0,3,6,9)]);
+                            events.RepeatEvent(urand(2000,5000));
+                            break;
+                        case EVENT_ABOMIN:
+                            if (nAbomination < 8)
+                            {
+                                DoSummon(NPC_ABOMINATION, Pos[RAND(1,4,7,10)]);
+                                nAbomination++;
+                                events.RepeatEvent(20000);
+                            }
+                            else
+                                events.PopEvent();
+                            break;
+                        case EVENT_WEAVER:
+                            if (nWeaver < 8)
+                            {
+                                DoSummon(NPC_WEAVER, Pos[RAND(0,3,6,9)]);
+                                nWeaver++;
+                                events.RepeatEvent(25000);
+                            }
+                            else
+                                events.PopEvent();
+                            break;
+                        case EVENT_TRIGGER:
+                            if (GameObject *pKTTrigger = me->GetMap()->GetGameObject(KTTriggerGUID))
+                                pKTTrigger->SetPhaseMask(2, true);
+                            events.PopEvent();
+                            break;
+                        case EVENT_PHASE:
+                            events.Reset();
+                            DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2,SAY_AGGRO_3), me);
+                            spawns.DespawnAll();
+                            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NOT_SELECTABLE);
+                            me->CastStop();
+
+                            DoStartMovement(me->getVictim());
+                            events.ScheduleEvent(EVENT_BOLT, urand(5000,10000));
+                            events.ScheduleEvent(EVENT_NOVA, 15000);
+                            events.ScheduleEvent(EVENT_DETONATE, urand(30000,40000));
+                            events.ScheduleEvent(EVENT_FISSURE, urand(10000,30000));
+                            events.ScheduleEvent(EVENT_BLAST, urand(60000,120000));
+                            if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+                                events.ScheduleEvent(EVENT_CHAIN, urand(30000,60000));
+                            Phase = 2;
+                            break;
+                        default:
+                            events.PopEvent();
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                //start phase 3 when we are 45% health
+                if (Phase != 3)
+                {
+                    if (HealthBelowPct(45))
+                    {
+                        Phase = 3 ;
+                        DoScriptText(SAY_REQUEST_AID, me);
+                        //here Lich King should respond to KelThuzad but I don't know which Creature to make talk
+                        //so for now just make Kelthuzad says it.
+                        DoScriptText(SAY_ANSWER_REQUEST, me);
+
+                        for (uint8 i = 0; i <= 3; ++i)
+                        {
+                            if (GameObject *pPortal = me->GetMap()->GetGameObject(PortalsGUID[i]))
+                            {
+                                if (pPortal->getLootState() == GO_READY)
+                                    pPortal->UseDoorOrButton();
+                            }
+                        }
+                    }
+                }
+                else if (nGuardiansOfIcecrownCount < RAID_MODE(2,4))
+                {
+                    if (uiGuardiansOfIcecrownTimer <= diff)
+                    {
+                        // TODO : Add missing text
+                        if (Creature* pGuardian = DoSummon(NPC_ICECROWN, Pos[RAND(2,5,8,11)]))
+                            pGuardian->SetFloatValue(UNIT_FIELD_COMBATREACH, 2);
+                        ++nGuardiansOfIcecrownCount;
+                        uiGuardiansOfIcecrownTimer = 5000;
+                    }
+                    else uiGuardiansOfIcecrownTimer -= diff;
+                }
+
+                if (me->hasUnitState(UNIT_STAT_CASTING))
+                    return;
+
+                if (uint32 eventId = events.GetEvent())
+                {
+                    switch(eventId)
+                    {
+                        case EVENT_BOLT:
+                            DoCastVictim(RAID_MODE(SPELL_FROST_BOLT,H_SPELL_FROST_BOLT));
+                            events.RepeatEvent(urand(5000,10000));
+                            break;
+                        case EVENT_NOVA:
+                            DoCastAOE(RAID_MODE(SPELL_FROST_BOLT_AOE,H_SPELL_FROST_BOLT_AOE));
+                            events.RepeatEvent(urand(15000,30000));
+                            break;
+                        case EVENT_CHAIN:
+                        {
+                            uint32 count = urand(1,3);
+                            for (uint8 i = 1; i <= count; i++)
+                            {
+                                Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 200, true);
+                                if (pTarget && !pTarget->isCharmed() && (chained.find(pTarget->GetGUID()) == chained.end()))
+                                {
+                                    DoCast(pTarget, SPELL_CHAINS_OF_KELTHUZAD);
+                                    float scale = pTarget->GetFloatValue(OBJECT_FIELD_SCALE_X);
+                                    chained.insert(std::make_pair(pTarget->GetGUID(), scale));
+                                    pTarget->SetFloatValue(OBJECT_FIELD_SCALE_X, scale * 2);
+                                    events.ScheduleEvent(EVENT_CHAINED_SPELL, 2000); //core has 2000ms to set unit flag charm
+                                }
+                            }
+                            if (!chained.empty())
+                                DoScriptText(RAND(SAY_CHAIN_1,SAY_CHAIN_2), me);
+                            events.RepeatEvent(urand(100000,180000));
+                            break;
+                        }
+                        case EVENT_CHAINED_SPELL:
+                        {
+                            std::map<uint64, float>::iterator itr;
+                            for (itr = chained.begin(); itr != chained.end();)
+                            {
+                                if (Unit* player = Unit::GetPlayer(*me, (*itr).first))
+                                {
+                                    if (!player->isCharmed())
+                                    {
+                                        player->SetFloatValue(OBJECT_FIELD_SCALE_X, (*itr).second);
+                                        std::map<uint64, float>::iterator next = itr;
+                                        ++next;
+                                        chained.erase(itr);
+                                        itr = next;
+                                        continue;
+                                    }
+
+                                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_TOPAGGRO, 0, NotCharmedTargetSelector()))
+                                    {
+                                        switch(player->getClass())
+                                        {
+                                            case CLASS_DRUID:
+                                                if (urand(0,1))
+                                                    player->CastSpell(pTarget, SPELL_MOONFIRE, false);
+                                                else
+                                                    player->CastSpell(me, SPELL_LIFEBLOOM, false);
+                                                break;
+                                            case CLASS_HUNTER:
+                                                player->CastSpell(pTarget, RAND(SPELL_MULTI_SHOT, SPELL_VOLLEY), false);
+                                                break;
+                                            case CLASS_MAGE:
+                                                player->CastSpell(pTarget, RAND(SPELL_FROST_FIREBOLT, SPELL_ARCANE_MISSILES), false);
+                                                break;
+                                            case CLASS_WARLOCK:
+                                                player->CastSpell(pTarget, RAND(SPELL_CURSE_OF_AGONY, SPELL_SHADOW_BOLT), true);
+                                                break;
+                                            case CLASS_WARRIOR:
+                                                player->CastSpell(pTarget, RAND(SPELL_BLADESTORM, SPELL_CLEAVE), false);
+                                                break;
+                                            case CLASS_PALADIN:
+                                                if (urand(0,1))
+                                                    player->CastSpell(pTarget, SPELL_HAMMER_OF_JUSTICE, false);
+                                                else
+                                                    player->CastSpell(me, SPELL_HOLY_SHOCK, false);
+                                                break;
+                                            case CLASS_PRIEST:
+                                                if (urand(0,1))
+                                                    player->CastSpell(pTarget, SPELL_VAMPIRIC_TOUCH, false);
+                                                else
+                                                    player->CastSpell(me, SPELL_RENEW, false);
+                                                break;
+                                            case CLASS_SHAMAN:
+                                                if (urand(0,1))
+                                                    player->CastSpell(pTarget, SPELL_EARTH_SHOCK, false);
+                                                else
+                                                    player->CastSpell(me, SPELL_HEALING_WAVE, false);
+                                                break;
+                                            case CLASS_ROGUE:
+                                                player->CastSpell(pTarget, RAND(SPELL_HEMORRHAGE, SPELL_MUTILATE), false);
+                                                break;
+                                            case CLASS_DEATH_KNIGHT:
+                                                if (urand(0,1))
+                                                    player->CastSpell(pTarget, SPELL_PLAGUE_STRIKE, true);
+                                                else
+                                                    player->CastSpell(pTarget, SPELL_HOWLING_BLAST, true);
+                                                break;
+                                        }
+                                    }
+                                }
+                                ++itr;
+                            }
+
+                            if (chained.empty())
+                                events.PopEvent();
+                            else
+                                events.RepeatEvent(5000);
+
+                            break;
+                        }
+                        case EVENT_DETONATE:
+                        {
+                            std::vector<Unit*> unitList;
+                            std::list<HostileReference*> *threatList = &me->getThreatManager().getThreatList();
+                            for (std::list<HostileReference*>::const_iterator itr = threatList->begin(); itr != threatList->end(); ++itr)
+                            {
+                                if ((*itr)->getTarget()->GetTypeId() == TYPEID_PLAYER
+                                    && (*itr)->getTarget()->getPowerType() == POWER_MANA
+                                    && (*itr)->getTarget()->GetPower(POWER_MANA))
+                                    unitList.push_back((*itr)->getTarget());
+                            }
+
+                            if (!unitList.empty())
+                            {
+                                std::vector<Unit*>::const_iterator itr = unitList.begin();
+                                advance(itr, rand()%unitList.size());
+                                DoCast(*itr, SPELL_MANA_DETONATION);
+                                DoScriptText(RAND(SAY_SPECIAL_1,SAY_SPECIAL_2,SAY_SPECIAL_3), me);
+                            }
+
+                            events.RepeatEvent(urand(20000,50000));
+                            break;
+                        }
+                        case EVENT_FISSURE:
+                            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                                DoCast(pTarget, SPELL_SHADOW_FISURE);
+                            events.RepeatEvent(urand(10000,45000));
+                            break;
+                        case EVENT_BLAST:
+                            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, RAID_MODE(1,0), 0, true))
+                                DoCast(pTarget, SPELL_FROST_BLAST);
+                            if (rand()%2)
+                                DoScriptText(SAY_FROST_BLAST, me);
+                            events.RepeatEvent(urand(30000,90000));
+                            break;
+                        default:
+                            events.PopEvent();
+                            break;
+                    }
+                }
+
+                DoMeleeAttackIfReady();
+            }
+        }
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_kelthuzadAI (pCreature);
     }
+
+};
+
+class at_kelthuzad_center : public AreaTriggerScript
+{
+public:
+    at_kelthuzad_center() : AreaTriggerScript("at_kelthuzad_center") { }
+
+    bool OnTrigger(Player* pPlayer, const AreaTriggerEntry * /*at*/)
+    {
+        if (pPlayer->isGameMaster())
+            return false;
+
+        InstanceScript* pInstance = pPlayer->GetInstanceScript();
+        if (!pInstance || pInstance->IsEncounterInProgress() || pInstance->GetBossState(BOSS_KELTHUZAD) == DONE)
+            return false;
+
+        Creature* pKelthuzad = CAST_CRE(Unit::GetUnit(*pPlayer, pInstance->GetData64(DATA_KELTHUZAD)));
+        if (!pKelthuzad)
+            return false;
+
+        boss_kelthuzad::boss_kelthuzadAI* pKelthuzadAI = CAST_AI(boss_kelthuzad::boss_kelthuzadAI, pKelthuzad->AI());
+        if (!pKelthuzadAI)
+            return false;
+
+        pKelthuzadAI->EnterCombat(pPlayer);
+        pKelthuzadAI->AttackStart(pPlayer);
+
+        if (GameObject* trigger = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_KELTHUZAD_TRIGGER)))
+        {
+            if (trigger->getLootState() == GO_READY)
+                trigger->UseDoorOrButton();
+
+            // Note: summon must be done by trigger and not by KT.
+            // Otherwise, they attack immediately as KT is in combat.
+            for (uint8 i = 0; i <= MAX_ABOMINATIONS; ++i)
+            {
+                if (Creature* sum = trigger->SummonCreature(NPC_ABOMINATION, PosAbominations[i]))
+                {
+                    pKelthuzadAI->spawns.Summon(sum);
+                    sum->GetMotionMaster()->MoveRandom(9.0f);
+                    sum->SetReactState(REACT_DEFENSIVE);
+                }
+            }
+            for (uint8 i = 0; i <= MAX_WASTES; ++i)
+            {
+                if (Creature* sum = trigger->SummonCreature(NPC_WASTE, PosWastes[i]))
+                {
+                    pKelthuzadAI->spawns.Summon(sum);
+                    sum->GetMotionMaster()->MoveRandom(5.0f);
+                    sum->SetReactState(REACT_DEFENSIVE);
+                }
+            }
+            for (uint8 i = 0; i <= MAX_WEAVERS; ++i)
+            {
+                if (Creature* sum = trigger->SummonCreature(NPC_WEAVER, PosWeavers[i]))
+                {
+                    pKelthuzadAI->spawns.Summon(sum);
+                    sum->GetMotionMaster()->MoveRandom(9.0f);
+                    sum->SetReactState(REACT_DEFENSIVE);
+                }
+            }
+        }
+
+        return true;
+    }
+
 };
 
 void AddSC_boss_kelthuzad()
 {
     new boss_kelthuzad();
+    new at_kelthuzad_center();
 }

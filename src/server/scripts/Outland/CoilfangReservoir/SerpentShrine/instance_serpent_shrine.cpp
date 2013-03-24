@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance_Serpent_Shrine
@@ -48,37 +46,40 @@ EndScriptData */
 4 - Morogrim Tidewalker Event
 5 - Lady Vashj Event
 */
-class go_bridge_console : public GameObjectScript
+
+class go_bridge_console : public GameObjectScript
 {
 public:
     go_bridge_console() : GameObjectScript("go_bridge_console") { }
 
-    bool GOHello(Player* /*player*/, GameObject* pGo)
+    bool OnGossipHello(Player* /*pPlayer*/, GameObject* pGo)
     {
-        ScriptedInstance* instance = pGo->GetInstanceScript();
+        InstanceScript* pInstance = pGo->GetInstanceScript();
 
-        if (!instance)
+        if (!pInstance)
             return false;
 
-        if (instance)
-            instance->SetData(DATA_CONTROL_CONSOLE, DONE);
+        if (pInstance)
+            pInstance->SetData(DATA_CONTROL_CONSOLE, DONE);
 
         return true;
     }
+
 };
-class instance_serpent_shrine : public InstanceMapScript
+
+class instance_serpent_shrine : public InstanceMapScript
 {
 public:
-    instance_serpent_shrine() : InstanceMapScript("instance_serpent_shrine") { }
+    instance_serpent_shrine() : InstanceMapScript("instance_serpent_shrine", 548) { }
 
-    InstanceScript* GetInstanceData_instance_serpentshrine_cavern_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_serpentshrine_cavern_InstanceMapScript(pMap);
     }
 
-    struct instance_serpentshrine_cavern_InstanceMapScript : public ScriptedInstance
+    struct instance_serpentshrine_cavern_InstanceMapScript : public InstanceScript
     {
-        instance_serpentshrine_cavern_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_serpentshrine_cavern_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint64 LurkerBelow;
         uint64 Sharkkis;
@@ -135,6 +136,7 @@ public:
             FrenzySpawnTimer = 2000;
             DoSpawnFrenzy = false;
             TrashCount = 0;
+
         }
 
         bool IsEncounterInProgress() const
@@ -169,33 +171,35 @@ public:
                     return;
                 for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                 {
-                    if (Player* player = i->getSource())
+                    if (Player* pPlayer = i->getSource())
                     {
-                        if (player->isAlive() && /*i->getSource()->GetPositionZ() <= -21.434931f*/player->IsInWater())
+                        if (pPlayer->isAlive() && /*i->getSource()->GetPositionZ() <= -21.434931f*/pPlayer->IsInWater())
                         {
                             if (Water == WATERSTATE_SCALDING)
                             {
-                                if (!player->HasAura(SPELL_SCALDINGWATER, 0))
+
+                                if (!pPlayer->HasAura(SPELL_SCALDINGWATER))
                                 {
-                                    player->CastSpell(player, SPELL_SCALDINGWATER, true);
+                                    pPlayer->CastSpell(pPlayer, SPELL_SCALDINGWATER,true);
                                 }
                             } else if (Water == WATERSTATE_FRENZY)
                             {
                                 //spawn frenzy
                                 if (DoSpawnFrenzy)
                                 {
-                                    if (Creature* frenzy = player->SummonCreature(MOB_COILFANG_FRENZY, player->GetPositionX(),player->GetPositionY(),player->GetPositionZ(),player->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 2000))
+                                    if (Creature* frenzy = pPlayer->SummonCreature(MOB_COILFANG_FRENZY,pPlayer->GetPositionX(),pPlayer->GetPositionY(),pPlayer->GetPositionZ(),pPlayer->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,2000))
                                     {
-                                        frenzy->Attack(player, false);
-                                        frenzy->AddUnitMovementFlag(MOVEFLAG_SWIMMING | MOVEFLAG_LEVITATING);
+                                        frenzy->Attack(pPlayer,false);
+                                        frenzy->AddUnitMovementFlag(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_LEVITATING);
                                     }
                                     DoSpawnFrenzy = false;
                                 }
                             }
                         }
-                        if (!player->IsInWater())
-                            player->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
+                        if (!pPlayer->IsInWater())
+                            pPlayer->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
                     }
+
                 }
                 WaterCheckTimer = 500;//remove stress from core
             } else WaterCheckTimer -= diff;
@@ -208,7 +212,7 @@ public:
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
                 case 184568:
                     ControlConsole = pGo->GetGUID();
@@ -239,17 +243,22 @@ public:
             }
         }
 
-        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
-            switch (creature->GetEntry())
+            switch(pCreature->GetEntry())
             {
-                case 21212: LadyVashj = creature->GetGUID();            break;
-                case 21214: Karathress = creature->GetGUID();           break;
-                case 21966: Sharkkis = creature->GetGUID();             break;
-                case 21217: LurkerBelow = creature->GetGUID();          break;
-                case 21965: Tidalvess = creature->GetGUID();            break;
-                case 21964: Caribdis = creature->GetGUID();             break;
-                case 21215: LeotherasTheBlind = creature->GetGUID();    break;
+                case 21212: LadyVashj = pCreature->GetGUID();            break;
+                case 21214: Karathress = pCreature->GetGUID();           break;
+                case 21966: Sharkkis = pCreature->GetGUID();             break;
+                case 21217: LurkerBelow = pCreature->GetGUID();          break;
+                case 21965: Tidalvess = pCreature->GetGUID();            break;
+                case 21964: Caribdis = pCreature->GetGUID();             break;
+                case 21215: LeotherasTheBlind = pCreature->GetGUID();    break;
+                /*case TRASHMOB_COILFANG_PRIESTESS:
+                case TRASHMOB_COILFANG_SHATTERER:
+                    if (pCreature->isAlive())
+                        ++TrashCount;
+                    break;*/
             }
         }
 
@@ -263,7 +272,7 @@ public:
 
         uint64 GetData64(uint32 identifier)
         {
-            switch (identifier)
+            switch(identifier)
             {
                 case DATA_THELURKERBELOW:           return LurkerBelow;
                 case DATA_SHARKKIS:                 return Sharkkis;
@@ -280,7 +289,7 @@ public:
 
         void SetData(uint32 type, uint32 data)
         {
-            switch (type)
+            switch(type)
             {
             case DATA_STRANGE_POOL:
                 {
@@ -293,8 +302,8 @@ public:
                 if (data == DONE)
                 {
                     HandleGameObject(BridgePart[0], true);
-                    HandleGameObject(BridgePart[1], true);
-                    HandleGameObject(BridgePart[2], true);
+                    HandleGameObject(BridgePart[0], true);
+                    HandleGameObject(BridgePart[0], true);
                 }
                 ControlConsole = data;break;
             case DATA_TRASH :
@@ -332,7 +341,7 @@ public:
 
         uint32 GetData(uint32 type)
         {
-            switch (type)
+            switch(type)
             {
                 case DATA_HYDROSSTHEUNSTABLEEVENT:  return m_auiEncounter[0];
                 case DATA_LEOTHERASTHEBLINDEVENT:   return m_auiEncounter[1];
@@ -385,7 +394,9 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
 };
+
 
 void AddSC_instance_serpentshrine_cavern()
 {

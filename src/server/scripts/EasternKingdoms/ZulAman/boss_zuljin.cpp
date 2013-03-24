@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_ZulJin
@@ -28,16 +26,16 @@ EndScriptData */
 #include "zulaman.h"
 
 //Speech
-#define YELL_TRANSFORM_TO_LYNX "Let me introduce to you my new bruddahs: fang and claw!"
+const char* YELL_TRANSFORM_TO_LYNX = "Let me introduce to you my new bruddahs: fang and claw!";
 #define SOUND_TRANSFORM_TO_LYNX 12094
 
-#define YELL_TRANSFORM_TO_BEAR "Got me some new tricks...like me bruddah bear!"
+const char* YELL_TRANSFORM_TO_BEAR = "Got me some new tricks...like me bruddah bear!";
 #define SOUND_TRANSFORM_TO_BEAR 12092
 
-#define YELL_TRANSFORM_TO_DRAGONHAWK "Ya don' have to look to da sky to see da dragonhawk!"
+const char* YELL_TRANSFORM_TO_DRAGONHAWK = "Ya don' have to look to da sky to see da dragonhawk!";
 #define SOUND_TRANSFORM_TO_DRAGONHAWK 12095
 
-#define YELL_TRANSFORM_TO_EAGLE "Dere be no hidin' from da eagle!"
+const char* YELL_TRANSFORM_TO_EAGLE = "Dere be no hidin' from da eagle!";
 #define SOUND_TRANSFORM_TO_EAGLE 12093
 
 #define YELL_KILL_ONE "Da Amani de chuka!"
@@ -63,13 +61,13 @@ EndScriptData */
 #define SOUND_INTRO 12090
 
 //Spells:
-// ====== Troll Form
+//====== Troll Form
 #define SPELL_WHIRLWIND             17207
 #define SPELL_GRIEVOUS_THROW        43093   // remove debuff after full healed
-// ====== Bear Form
+//====== Bear Form
 #define SPELL_CREEPING_PARALYSIS    43095   // should cast on the whole raid
 #define SPELL_OVERPOWER             43456   // use after melee attack dodged
-// ====== Eagle Form
+//====== Eagle Form
 #define SPELL_ENERGY_STORM          43983   // enemy area aura, trigger 42577
 #define SPELL_ZAP_INFORM            42577
 #define SPELL_ZAP_DAMAGE            43137   // 1250 damage
@@ -119,7 +117,7 @@ struct SpiritInfoStruct
     float x, y, z, orient;
 };
 
-static SpiritInfoStruct SpiritInfo[] =
+static SpiritInfoStruct SpiritInfo[4] =
 {
     {23878, 147.87f, 706.51f, 45.11f, 3.04f},
     {23880, 88.95f, 705.49f, 45.11f, 6.11f},
@@ -130,375 +128,422 @@ static SpiritInfoStruct SpiritInfo[] =
 struct TransformStruct
 {
     uint32 sound;
-    char* text;
+    std::string text;
     uint32 spell, unaura;
 };
 
-static TransformStruct Transform[] =
+static TransformStruct Transform[4] =
 {
     {SOUND_TRANSFORM_TO_BEAR, YELL_TRANSFORM_TO_BEAR, SPELL_SHAPE_OF_THE_BEAR, SPELL_WHIRLWIND},
     {SOUND_TRANSFORM_TO_EAGLE, YELL_TRANSFORM_TO_EAGLE, SPELL_SHAPE_OF_THE_EAGLE, SPELL_SHAPE_OF_THE_BEAR},
     {SOUND_TRANSFORM_TO_LYNX, YELL_TRANSFORM_TO_LYNX, SPELL_SHAPE_OF_THE_LYNX, SPELL_SHAPE_OF_THE_EAGLE},
     {SOUND_TRANSFORM_TO_DRAGONHAWK, YELL_TRANSFORM_TO_DRAGONHAWK, SPELL_SHAPE_OF_THE_DRAGONHAWK, SPELL_SHAPE_OF_THE_LYNX}
 };
-class boss_zuljin : public CreatureScript
+
+class boss_zuljin : public CreatureScript
 {
-public:
-    boss_zuljin() : CreatureScript("boss_zuljin") { }
+    public:
 
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new boss_zuljinAI (creature);
-    }
-
-    struct boss_zuljinAI : public ScriptedAI
-    {
-        boss_zuljinAI(Creature *c) : ScriptedAI(c), Summons(me)
+        boss_zuljin()
+            : CreatureScript("boss_zuljin")
         {
-            instance = c->GetInstanceScript();
-        }
-        ScriptedInstance *instance;
-
-        uint64 SpiritGUID[4];
-        uint64 ClawTargetGUID;
-        uint64 TankGUID;
-
-        uint32 Phase;
-        uint32 health_20;
-
-        uint32 Intro_Timer;
-        uint32 Berserk_Timer;
-
-        uint32 Whirlwind_Timer;
-        uint32 Grievous_Throw_Timer;
-
-        uint32 Creeping_Paralysis_Timer;
-        uint32 Overpower_Timer;
-
-        uint32 Claw_Rage_Timer;
-        uint32 Lynx_Rush_Timer;
-        uint32 Claw_Counter;
-        uint32 Claw_Loop_Timer;
-
-        uint32 Flame_Whirl_Timer;
-        uint32 Flame_Breath_Timer;
-        uint32 Pillar_Of_Fire_Timer;
-
-        SummonList Summons;
-
-        void Reset()
-        {
-            if (instance)
-                instance->SetData(DATA_ZULJINEVENT, NOT_STARTED);
-
-            Phase = 0;
-
-            health_20 = me->GetMaxHealth()*0.2f;
-
-            Intro_Timer = 37000;
-            Berserk_Timer = 600000;
-
-            Whirlwind_Timer = 7000;
-            Grievous_Throw_Timer = 8000;
-
-            Creeping_Paralysis_Timer = 7000;
-            Overpower_Timer = 0;
-
-            Claw_Rage_Timer = 5000;
-            Lynx_Rush_Timer = 14000;
-            Claw_Loop_Timer = 0;
-            Claw_Counter = 0;
-
-            Flame_Whirl_Timer = 5000;
-            Flame_Breath_Timer = 6000;
-            Pillar_Of_Fire_Timer = 7000;
-
-            ClawTargetGUID = 0;
-            TankGUID = 0;
-
-            Summons.DespawnAll();
-
-            me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 47174);
-            me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 218172674);
-            me->SetSheath(SHEATH_STATE_MELEE);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        struct boss_zuljinAI : public ScriptedAI
         {
-            if (instance)
-                instance->SetData(DATA_ZULJINEVENT, IN_PROGRESS);
-
-            DoZoneInCombat();
-
-            me->MonsterYell(YELL_INTRO, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(me, SOUND_INTRO);
-            SpawnAdds();
-            EnterPhase(0);
-        }
-
-        void KilledUnit(Unit* /*victim*/)
-        {
-            if (Intro_Timer)
-                return;
-
-            switch (urand(0, 1))
+            boss_zuljinAI(Creature *c) : ScriptedAI(c), Summons(me)
             {
-                case 0:
-                    me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(me, SOUND_KILL_ONE);
-                    break;
-                case 1:
-                    me->MonsterYell(YELL_KILL_TWO, LANG_UNIVERSAL, NULL);
-                    DoPlaySoundToSet(me, SOUND_KILL_TWO);
-                    break;
+                pInstance = c->GetInstanceScript();
             }
-        }
+            InstanceScript *pInstance;
 
-        void JustDied(Unit* /*Killer*/)
-        {
-            if (instance)
-                instance->SetData(DATA_ZULJINEVENT, DONE);
+            uint64 SpiritGUID[4];
+            uint64 ClawTargetGUID;
+            uint64 TankGUID;
 
-            me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
-            DoPlaySoundToSet(me, SOUND_DEATH);
-            Summons.DespawnEntry(CREATURE_COLUMN_OF_FIRE);
+            uint32 Phase;
+            uint32 health_20;
 
-            if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[3]))
-                Temp->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_DEAD);
-        }
+            uint32 Intro_Timer;
+            uint32 Berserk_Timer;
 
-        void AttackStart(Unit *who)
-        {
-            if (Phase == 2)
-                AttackStartNoMove(who);
-            else
-                ScriptedAI::AttackStart(who);
-        }
+            uint32 Whirlwind_Timer;
+            uint32 Grievous_Throw_Timer;
 
-        void DoMeleeAttackIfReady()
-        {
-            if (!me->IsNonMeleeSpellCasted(false))
+            uint32 Creeping_Paralysis_Timer;
+            uint32 Overpower_Timer;
+
+            uint32 Claw_Rage_Timer;
+            uint32 Lynx_Rush_Timer;
+            uint32 Claw_Counter;
+            uint32 Claw_Loop_Timer;
+
+            uint32 Flame_Whirl_Timer;
+            uint32 Flame_Breath_Timer;
+            uint32 Pillar_Of_Fire_Timer;
+
+            SummonList Summons;
+
+            void Reset()
             {
-                if (me->isAttackReady() && me->IsWithinMeleeRange(me->getVictim()))
-                {
-                    if (Phase == 1 && !Overpower_Timer)
-                    {
-                        uint32 health = me->getVictim()->GetHealth();
-                        me->AttackerStateUpdate(me->getVictim());
-                        if (me->getVictim() && health == me->getVictim()->GetHealth())
-                        {
-                            DoCast(me->getVictim(), SPELL_OVERPOWER, false);
-                            Overpower_Timer = 5000;
-                        }
-                    } else me->AttackerStateUpdate(me->getVictim());
-                    me->resetAttackTimer();
-                }
+                if (pInstance)
+                    pInstance->SetData(DATA_ZULJINEVENT, NOT_STARTED);
+
+                Phase = 0;
+
+                health_20 = me->CountPctFromMaxHealth(20);
+
+                Intro_Timer = 37000;
+                Berserk_Timer = 600000;
+
+                Whirlwind_Timer = 7000;
+                Grievous_Throw_Timer = 8000;
+
+                Creeping_Paralysis_Timer = 7000;
+                Overpower_Timer = 0;
+
+                Claw_Rage_Timer = 5000;
+                Lynx_Rush_Timer = 14000;
+                Claw_Loop_Timer = 0;
+                Claw_Counter = 0;
+
+                Flame_Whirl_Timer = 5000;
+                Flame_Breath_Timer = 6000;
+                Pillar_Of_Fire_Timer = 7000;
+
+                ClawTargetGUID = 0;
+                TankGUID = 0;
+
+                Summons.DespawnAll();
+
+                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, 47174);
+                //me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 218172674);
+                //me->SetByteValue(UNIT_FIELD_BYTES_2, 0, SHEATH_STATE_MELEE);
             }
-        }
 
-        void SpawnAdds()
-        {
-            Creature* creature = NULL;
-            for (uint8 i = 0; i < 4; ++i)
+            void EnterCombat(Unit * /*who*/)
             {
-                creature = me->SummonCreature(SpiritInfo[i].entry, SpiritInfo[i].x, SpiritInfo[i].y, SpiritInfo[i].z, SpiritInfo[i].orient, TEMPSUMMON_DEAD_DESPAWN, 0);
-                if (creature)
-                {
-                    creature->CastSpell(creature, SPELL_SPIRIT_AURA, true);
-                    creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                    creature->addUnitState(UNIT_STAT_STUNNED);
-                    SpiritGUID[i] = creature->GetGUID();
-                }
+                if (pInstance)
+                    pInstance->SetData(DATA_ZULJINEVENT, IN_PROGRESS);
+
+                DoZoneInCombat();
+
+                me->MonsterYell(YELL_INTRO,LANG_UNIVERSAL,NULL);
+                DoPlaySoundToSet(me, SOUND_INTRO);
+                SpawnAdds();
+                EnterPhase(0);
             }
-        }
 
-        void DespawnAdds()
-        {
-            for (uint8 i = 0; i < 4; ++i)
+            void KilledUnit(Unit* /*victim*/)
             {
-                Unit* Temp = NULL;
-                if (SpiritGUID[i])
-                {
-                    if (Temp = Unit::GetUnit(*me, SpiritGUID[i]))
-                    {
-                        Temp->SetVisibility(VISIBILITY_OFF);
-                        Temp->setDeathState(DEAD);
-                    }
-                }
-                SpiritGUID[i] = 0;
-            }
-        }
-
-        void JustSummoned(Creature *summon)
-        {
-            Summons.Summon(summon);
-        }
-
-        void SummonedCreatureDespawn(Creature *summon)
-        {
-            Summons.Despawn(summon);
-        }
-
-        void EnterPhase(uint32 NextPhase)
-        {
-            switch (NextPhase)
-            {
-            case 0:
-                break;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-                DoTeleportTo(CENTER_X, CENTER_Y, CENTER_Z, 100);
-                DoResetThreat();
-                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-                me->RemoveAurasDueToSpell(Transform[Phase].unaura);
-                DoCast(me, Transform[Phase].spell);
-                me->MonsterYell(Transform[Phase].text, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, Transform[Phase].sound);
-                if (Phase > 0)
-                {
-                    if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[Phase - 1]))
-                        Temp->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_DEAD);
-                }
-                if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[NextPhase - 1]))
-                    Temp->CastSpell(me, SPELL_SIPHON_SOUL, false); // should m cast on temp
-                if (NextPhase == 2)
-                {
-                    me->GetMotionMaster()->Clear();
-                    DoCast(me, SPELL_ENERGY_STORM, true); // enemy aura
-                    for (uint8 i = 0; i < 4; ++i)
-                    {
-                        Creature* Vortex = DoSpawnCreature(CREATURE_FEATHER_VORTEX, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                        if (Vortex)
-                        {
-                            Vortex->CastSpell(Vortex, SPELL_CYCLONE_PASSIVE, true);
-                            Vortex->CastSpell(Vortex, SPELL_CYCLONE_VISUAL, true);
-                            Vortex->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                            Vortex->SetSpeed(MOVE_RUN, 1.0f);
-                            Vortex->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
-                            DoZoneInCombat(Vortex);
-                        }
-                    }
-                }
-                else
-                    me->AI()->AttackStart(me->getVictim());
-                if (NextPhase == 3)
-                {
-                    me->RemoveAurasDueToSpell(SPELL_ENERGY_STORM);
-                    Summons.DespawnEntry(CREATURE_FEATHER_VORTEX);
-                    me->GetMotionMaster()->MoveChase(me->getVictim());
-                }
-                break;
-            default:
-                break;
-            }
-            Phase = NextPhase;
-        }
-
-        void UpdateAI(const uint32 diff)
-        {
-            if (!TankGUID)
-            {
-                if (!UpdateVictim())
+                if (Intro_Timer)
                     return;
 
-                if (me->GetHealth() < health_20 * (4 - Phase))
-                    EnterPhase(Phase + 1);
+                switch (urand(0,1))
+                {
+                    case 0:
+                        me->MonsterYell(YELL_KILL_ONE, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(me, SOUND_KILL_ONE);
+                        break;
+                    case 1:
+                        me->MonsterYell(YELL_KILL_TWO, LANG_UNIVERSAL, NULL);
+                        DoPlaySoundToSet(me, SOUND_KILL_TWO);
+                        break;
+                }
             }
 
-            if (Berserk_Timer <= diff)
+            void JustDied(Unit* /*Killer*/)
             {
-                DoCast(me, SPELL_BERSERK, true);
-                me->MonsterYell(YELL_BERSERK, LANG_UNIVERSAL, NULL);
-                DoPlaySoundToSet(me, SOUND_BERSERK);
-                Berserk_Timer = 60000;
-            } else Berserk_Timer -= diff;
+                if (pInstance)
+                    pInstance->SetData(DATA_ZULJINEVENT, DONE);
 
-            switch (Phase)
+                me->MonsterYell(YELL_DEATH, LANG_UNIVERSAL, NULL);
+                DoPlaySoundToSet(me, SOUND_DEATH);
+                Summons.DespawnEntry(CREATURE_COLUMN_OF_FIRE);
+
+                if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[3]))
+                    Temp->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);
+            }
+
+            void AttackStart(Unit *who)
             {
-            case 0:
-                if (Intro_Timer)
+                if (Phase == 2)
+                    AttackStartNoMove(who);
+                else
+                    ScriptedAI::AttackStart(who);
+            }
+
+            void DoMeleeAttackIfReady()
+            {
+                if (!me->IsNonMeleeSpellCasted(false))
                 {
-                    if (Intro_Timer <= diff)
+                    if (me->isAttackReady() && me->IsWithinMeleeRange(me->getVictim()))
                     {
-                        me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
-                        DoPlaySoundToSet(me, SOUND_AGGRO);
-                        Intro_Timer = 0;
-                    } else Intro_Timer -= diff;
-                }
-
-                if (Whirlwind_Timer <= diff)
-                {
-                    DoCast(me, SPELL_WHIRLWIND);
-                    Whirlwind_Timer = 15000 + rand()%5000;
-                } else Whirlwind_Timer -= diff;
-
-                if (Grievous_Throw_Timer <= diff)
-                {
-                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                        DoCast(pTarget, SPELL_GRIEVOUS_THROW, false);
-                    Grievous_Throw_Timer = 10000;
-                } else Grievous_Throw_Timer -= diff;
-                break;
-
-            case 1:
-                if (Creeping_Paralysis_Timer <= diff)
-                {
-                    DoCast(me, SPELL_CREEPING_PARALYSIS);
-                    Creeping_Paralysis_Timer = 20000;
-                } else Creeping_Paralysis_Timer -= diff;
-
-                if (Overpower_Timer <= diff)
-                {
-                    // implemented in DoMeleeAttackIfReady()
-                    Overpower_Timer = 0;
-                } else Overpower_Timer -= diff;
-                break;
-
-            case 2:
-                return;
-
-            case 3:
-                if (Claw_Rage_Timer <= diff)
-                {
-                    if (!TankGUID)
-                    {
-                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        if (Phase == 1 && !Overpower_Timer)
                         {
-                            TankGUID = me->getVictim()->GetGUID();
-                            me->SetSpeed(MOVE_RUN, 5.0f);
-                            AttackStart(pTarget); // change victim
-                            Claw_Rage_Timer = 0;
-                            Claw_Loop_Timer = 500;
-                            Claw_Counter = 0;
+                            uint32 health = me->getVictim()->GetHealth();
+                            me->AttackerStateUpdate(me->getVictim());
+                            if (me->getVictim() && health == me->getVictim()->GetHealth())
+                            {
+                                DoCast(me->getVictim(), SPELL_OVERPOWER, false);
+                                Overpower_Timer = 5000;
+                            }
+                        } else me->AttackerStateUpdate(me->getVictim());
+                        me->resetAttackTimer();
+                    }
+                }
+            }
+
+            void SpawnAdds()
+            {
+                Creature *pCreature = NULL;
+                for (uint8 i = 0; i < 4; ++i)
+                {
+                    pCreature = me->SummonCreature(SpiritInfo[i].entry, SpiritInfo[i].x, SpiritInfo[i].y, SpiritInfo[i].z, SpiritInfo[i].orient, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    if (pCreature)
+                    {
+                        pCreature->CastSpell(pCreature, SPELL_SPIRIT_AURA, true);
+                        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        SpiritGUID[i] = pCreature->GetGUID();
+                    }
+                }
+            }
+
+            void DespawnAdds()
+            {
+                for (uint8 i = 0; i < 4; ++i)
+                {
+                    Unit* Temp = NULL;
+                    if (SpiritGUID[i])
+                    {
+                        Temp = Unit::GetUnit(*me, SpiritGUID[i]);
+                        if (Temp)
+                        {
+                            Temp->SetVisibility(VISIBILITY_OFF);
+                            Temp->setDeathState(DEAD);
                         }
                     }
-                    else if (!Claw_Rage_Timer) // do not do this when Lynx_Rush
+                    SpiritGUID[i] = 0;
+                }
+            }
+
+            void JustSummoned(Creature *summon)
+            {
+                Summons.Summon(summon);
+            }
+
+            void SummonedCreatureDespawn(Creature *summon)
+            {
+                Summons.Despawn(summon);
+            }
+
+            void EnterPhase(uint32 NextPhase)
+            {
+                switch(NextPhase)
+                {
+                case 0:
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    DoTeleportTo(CENTER_X, CENTER_Y, CENTER_Z, 100);
+                    DoResetThreat();
+                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, 0);
+                    me->RemoveAurasDueToSpell(Transform[Phase].unaura);
+                    DoCast(me, Transform[Phase].spell);
+                    me->MonsterYell(Transform[Phase].text.c_str(), LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, Transform[Phase].sound);
+                    if (Phase > 0)
                     {
-                        if (Claw_Loop_Timer <= diff)
+                        if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[Phase - 1]))
+                            Temp->SetUInt32Value(UNIT_FIELD_BYTES_1,UNIT_STAND_STATE_DEAD);
+                    }
+                    if (Unit *Temp = Unit::GetUnit(*me, SpiritGUID[NextPhase - 1]))
+                        Temp->CastSpell(me, SPELL_SIPHON_SOUL, false); // should m cast on temp
+                    if (NextPhase == 2)
+                    {
+                        me->GetMotionMaster()->Clear();
+                        DoCast(me, SPELL_ENERGY_STORM, true); // enemy aura
+                        for (uint8 i = 0; i < 4; ++i)
+                        {
+                            Creature* Vortex = DoSpawnCreature(CREATURE_FEATHER_VORTEX, 0, 0, 0, 0, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                            if (Vortex)
+                            {
+                                Vortex->CastSpell(Vortex, SPELL_CYCLONE_PASSIVE, true);
+                                Vortex->CastSpell(Vortex, SPELL_CYCLONE_VISUAL, true);
+                                Vortex->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                                Vortex->SetSpeed(MOVE_RUN, 1.0f);
+                                Vortex->AI()->AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
+                                DoZoneInCombat(Vortex);
+                            }
+                        }
+                    }
+                    else
+                        me->AI()->AttackStart(me->getVictim());
+                    if (NextPhase == 3)
+                    {
+                        me->RemoveAurasDueToSpell(SPELL_ENERGY_STORM);
+                        Summons.DespawnEntry(CREATURE_FEATHER_VORTEX);
+                        me->GetMotionMaster()->MoveChase(me->getVictim());
+                    }
+                    break;
+                default:
+                    break;
+                }
+                Phase = NextPhase;
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                if (!TankGUID)
+                {
+                    if (!UpdateVictim())
+                        return;
+
+                    if (me->GetHealth() < health_20 * (4 - Phase))
+                        EnterPhase(Phase + 1);
+                }
+
+                if (Berserk_Timer <= diff)
+                {
+                    DoCast(me, SPELL_BERSERK, true);
+                    me->MonsterYell(YELL_BERSERK, LANG_UNIVERSAL, NULL);
+                    DoPlaySoundToSet(me, SOUND_BERSERK);
+                    Berserk_Timer = 60000;
+                } else Berserk_Timer -= diff;
+
+                switch (Phase)
+                {
+                case 0:
+                    if (Intro_Timer)
+                    {
+                        if (Intro_Timer <= diff)
+                        {
+                            me->MonsterYell(YELL_AGGRO, LANG_UNIVERSAL, NULL);
+                            DoPlaySoundToSet(me, SOUND_AGGRO);
+                            Intro_Timer = 0;
+                        } else Intro_Timer -= diff;
+                    }
+
+                    if (Whirlwind_Timer <= diff)
+                    {
+                        DoCast(me, SPELL_WHIRLWIND);
+                        Whirlwind_Timer = 15000 + rand()%5000;
+                    } else Whirlwind_Timer -= diff;
+
+                    if (Grievous_Throw_Timer <= diff)
+                    {
+                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            DoCast(pTarget, SPELL_GRIEVOUS_THROW, false);
+                        Grievous_Throw_Timer = 10000;
+                    } else Grievous_Throw_Timer -= diff;
+                    break;
+
+                case 1:
+                    if (Creeping_Paralysis_Timer <= diff)
+                    {
+                        DoCast(me, SPELL_CREEPING_PARALYSIS);
+                        Creeping_Paralysis_Timer = 20000;
+                    } else Creeping_Paralysis_Timer -= diff;
+
+                    if (Overpower_Timer <= diff)
+                    {
+                        // implemented in DoMeleeAttackIfReady()
+                        Overpower_Timer = 0;
+                    } else Overpower_Timer -= diff;
+                    break;
+
+                case 2:
+                    return;
+
+                case 3:
+                    if (Claw_Rage_Timer <= diff)
+                    {
+                        if (!TankGUID)
+                        {
+                            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            {
+                                TankGUID = me->getVictim()->GetGUID();
+                                me->SetSpeed(MOVE_RUN, 5.0f);
+                                AttackStart(pTarget); // change victim
+                                Claw_Rage_Timer = 0;
+                                Claw_Loop_Timer = 500;
+                                Claw_Counter = 0;
+                            }
+                        }
+                        else if (!Claw_Rage_Timer) // do not do this when Lynx_Rush
+                        {
+                            if (Claw_Loop_Timer <= diff)
+                            {
+                                Unit *pTarget = me->getVictim();
+                                if (!pTarget || !pTarget->isTargetableForAttack()) pTarget = Unit::GetUnit(*me, TankGUID);
+                                if (!pTarget || !pTarget->isTargetableForAttack()) pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                                if (pTarget)
+                                {
+                                    AttackStart(pTarget);
+                                    if (me->IsWithinMeleeRange(pTarget))
+                                    {
+                                        DoCast(pTarget, SPELL_CLAW_RAGE_DAMAGE, true);
+                                        ++Claw_Counter;
+                                        if (Claw_Counter == 12)
+                                        {
+                                            Claw_Rage_Timer = 15000 + rand()%5000;
+                                            me->SetSpeed(MOVE_RUN, 1.2f);
+                                            AttackStart(Unit::GetUnit(*me, TankGUID));
+                                            TankGUID = 0;
+                                            return;
+                                        }
+                                        else
+                                            Claw_Loop_Timer = 500;
+                                    }
+                                }
+                                else
+                                {
+                                    EnterEvadeMode(); // if (pTarget)
+                                    return;
+                                }
+                            } else Claw_Loop_Timer -= diff;
+                        } //if (TankGUID)
+                    } else Claw_Rage_Timer -= diff;
+
+                    if (Lynx_Rush_Timer <= diff)
+                    {
+                        if (!TankGUID)
+                        {
+                            if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            {
+                                TankGUID = me->getVictim()->GetGUID();
+                                me->SetSpeed(MOVE_RUN, 5.0f);
+                                AttackStart(pTarget); // change victim
+                                Lynx_Rush_Timer = 0;
+                                Claw_Counter = 0;
+                            }
+                        }
+                        else if (!Lynx_Rush_Timer)
                         {
                             Unit *pTarget = me->getVictim();
-                            if (!pTarget || !pTarget->isTargetableForAttack()) pTarget = Unit::GetUnit(*me, TankGUID);
-                            if (!pTarget || !pTarget->isTargetableForAttack()) pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                            if (!pTarget || !pTarget->isTargetableForAttack())
+                            {
+                                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                                AttackStart(pTarget);
+                            }
                             if (pTarget)
                             {
-                                AttackStart(pTarget);
                                 if (me->IsWithinMeleeRange(pTarget))
                                 {
-                                    DoCast(pTarget, SPELL_CLAW_RAGE_DAMAGE, true);
+                                    DoCast(pTarget, SPELL_LYNX_RUSH_DAMAGE, true);
                                     ++Claw_Counter;
-                                    if (Claw_Counter == 12)
+                                    if (Claw_Counter == 9)
                                     {
-                                        Claw_Rage_Timer = 15000 + rand()%5000;
+                                        Lynx_Rush_Timer = 15000 + rand()%5000;
                                         me->SetSpeed(MOVE_RUN, 1.2f);
                                         AttackStart(Unit::GetUnit(*me, TankGUID));
                                         TankGUID = 0;
-                                        return;
                                     }
                                     else
-                                        Claw_Loop_Timer = 500;
+                                        AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
                                 }
                             }
                             else
@@ -506,162 +551,90 @@ public:
                                 EnterEvadeMode(); // if (pTarget)
                                 return;
                             }
-                        } else Claw_Loop_Timer -= diff;
-                    } //if (TankGUID)
-                } else Claw_Rage_Timer -= diff;
+                        } //if (TankGUID)
+                    } else Lynx_Rush_Timer -= diff;
 
-                if (Lynx_Rush_Timer <= diff)
-                {
-                    if (!TankGUID)
+                    break;
+                case 4:
+                    if (Flame_Whirl_Timer <= diff)
+                    {
+                        DoCast(me, SPELL_FLAME_WHIRL);
+                        Flame_Whirl_Timer = 12000;
+                    }Flame_Whirl_Timer -= diff;
+
+                    if (Pillar_Of_Fire_Timer <= diff)
                     {
                         if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        {
-                            TankGUID = me->getVictim()->GetGUID();
-                            me->SetSpeed(MOVE_RUN, 5.0f);
-                            AttackStart(pTarget); // change victim
-                            Lynx_Rush_Timer = 0;
-                            Claw_Counter = 0;
-                        }
-                    }
-                    else if (!Lynx_Rush_Timer)
+                            DoCast(pTarget, SPELL_SUMMON_PILLAR);
+                        Pillar_Of_Fire_Timer = 10000;
+                    } else Pillar_Of_Fire_Timer -= diff;
+
+                    if (Flame_Breath_Timer <= diff)
                     {
-                        Unit *pTarget = me->getVictim();
-                        if (!pTarget || !pTarget->isTargetableForAttack())
-                        {
-                            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                            AttackStart(pTarget);
-                        }
-                        if (pTarget)
-                        {
-                            if (me->IsWithinMeleeRange(pTarget))
-                            {
-                                DoCast(pTarget, SPELL_LYNX_RUSH_DAMAGE, true);
-                                ++Claw_Counter;
-                                if (Claw_Counter == 9)
-                                {
-                                    Lynx_Rush_Timer = 15000 + rand()%5000;
-                                    me->SetSpeed(MOVE_RUN, 1.2f);
-                                    AttackStart(Unit::GetUnit(*me, TankGUID));
-                                    TankGUID = 0;
-                                }
-                                else
-                                    AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
-                            }
-                        }
-                        else
-                        {
-                            EnterEvadeMode(); // if (pTarget)
-                            return;
-                        }
-                    } //if (TankGUID)
-                } else Lynx_Rush_Timer -= diff;
+                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            me->SetInFront(pTarget);
+                        DoCast(me, SPELL_FLAME_BREATH);
+                        Flame_Breath_Timer = 10000;
+                    } else Flame_Breath_Timer -= diff;
+                    break;
 
-                break;
-            case 4:
-                if (Flame_Whirl_Timer <= diff)
-                {
-                    DoCast(me, SPELL_FLAME_WHIRL);
-                    Flame_Whirl_Timer = 12000;
-                }Flame_Whirl_Timer -= diff;
+                default:
+                    break;
+                }
 
-                if (Pillar_Of_Fire_Timer <= diff)
-                {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        DoCast(pTarget, SPELL_SUMMON_PILLAR);
-                    Pillar_Of_Fire_Timer = 10000;
-                } else Pillar_Of_Fire_Timer -= diff;
-
-                if (Flame_Breath_Timer <= diff)
-                {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        me->SetInFront(pTarget);
-                    DoCast(me, SPELL_FLAME_BREATH);
-                    Flame_Breath_Timer = 10000;
-                } else Flame_Breath_Timer -= diff;
-                break;
-
-            default:
-                break;
+                if (!TankGUID)
+                    DoMeleeAttackIfReady();
             }
+        };
 
-            if (!TankGUID)
-                DoMeleeAttackIfReady();
+
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new boss_zuljinAI(creature);
         }
-    };
 };
 
-struct feather_vortexAI : public ScriptedAI
+class mob_zuljin_vortex : public CreatureScript
 {
-    feather_vortexAI(Creature *c) : ScriptedAI(c) {}
+    public:
 
-    std::list<Player*> PlayerList;
-    uint32 ResetTimer;
-    uint32 ChangeTargetTimer;
-
-    void Reset() {}
-
-    void EnterCombat(Unit *pTarget) {}
-
-    void SpellHit(Unit *caster, const SpellEntry *spell)
-    {
-        if (caster->GetTypeId() == TYPEID_PLAYER && !PlayerIsInList(CAST_PLR(caster)))
+        mob_zuljin_vortex()
+            : CreatureScript("mob_zuljin_vortex")
         {
-            if (spell->Id == SPELL_ZAP_INFORM)
+        }
+
+        struct mob_zuljin_vortexAI : public ScriptedAI
+        {
+            mob_zuljin_vortexAI(Creature *c) : ScriptedAI(c) {}
+
+            void Reset() {}
+
+            void EnterCombat(Unit * /*pTarget*/) {}
+
+            void SpellHit(Unit *caster, const SpellEntry *spell)
             {
-                DoCast(caster, SPELL_ZAP_DAMAGE, true);
-                PlayerList.push_back(CAST_PLR(caster));
+                if (spell->Id == SPELL_ZAP_INFORM)
+                    DoCast(caster, SPELL_ZAP_DAMAGE, true);
             }
-        }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        //if the vortex reach the target, it change his target to another player
-        if (me->IsWithinMeleeRange(me->getVictim()))
-            AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
-
-        if (ResetTimer < diff)
-        {
-            PlayerList.clear();
-            ResetTimer = 500;
-        }
-        else
-            ResetTimer -= diff;
-
-        if (ChangeTargetTimer < diff)
-        {
-            AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
-            ChangeTargetTimer = urand(3000, 6000);
-        }
-        else
-            ChangeTargetTimer -= diff;
-    }
-    bool PlayerIsInList(Player* pl)
-    {
-        if (PlayerList.size())
-        {
-            for (std::list<Player*>::const_iterator plr = PlayerList.begin(); plr != PlayerList.end(); plr++)
+            void UpdateAI(const uint32 /*diff*/)
             {
-                if ((*plr) && pl && (*plr)->GetGUID() == pl->GetGUID())
-                    return true;
+                //if the vortex reach the target, it change his target to another player
+                if (me->IsWithinMeleeRange(me->getVictim()))
+                    AttackStart(SelectUnit(SELECT_TARGET_RANDOM, 0));
             }
-        }
-        return false;
-    }
-};
-class mob_zuljin_vortex : public CreatureScript
-{
-public:
-    mob_zuljin_vortex() : CreatureScript("mob_zuljin_vortex") { }
+        };
 
-    CreatureAI* GetAI_feather_vortexAI(Creature* creature)
-    {
-        return new feather_vortexAI (creature);
-    }
+        CreatureAI* GetAI(Creature* creature) const
+        {
+            return new mob_zuljin_vortexAI(creature);
+        }
 };
+
 
 void AddSC_boss_zuljin()
 {
     new boss_zuljin();
     new mob_zuljin_vortex();
 }
+

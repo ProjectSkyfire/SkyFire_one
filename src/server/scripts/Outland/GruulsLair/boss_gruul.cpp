@@ -1,126 +1,166 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Gruul
-SD%Complete: 25
-SDComment: Ground Slam seriously messed up due to core problem
+SD%Complete: 60
+SDComment: Ground Slam need further development (knock back effect and shatter effect must be added to the core)
 SDCategory: Gruul's Lair
 EndScriptData */
 
 #include "ScriptPCH.h"
 #include "gruuls_lair.h"
 
-/* Yells & Quotes */
-#define SAY_AGGRO                   -1565010
-#define SAY_SLAM1                   -1565011
-#define SAY_SLAM2                   -1565012
-#define SAY_SHATTER1                -1565013
-#define SAY_SHATTER2                -1565014
-#define SAY_SLAY1                   -1565015
-#define SAY_SLAY2                   -1565016
-#define SAY_SLAY3                   -1565017
-#define SAY_DEATH                   -1565018
-#define EMOTE_GROW                  -1565019
+enum eEnums
+{
+    SAY_AGGRO                   = -1565010,
+    SAY_SLAM1                   = -1565011,
+    SAY_SLAM2                   = -1565012,
+    SAY_SHATTER1                = -1565013,
+    SAY_SHATTER2                = -1565014,
+    SAY_SLAY1                   = -1565015,
+    SAY_SLAY2                   = -1565016,
+    SAY_SLAY3                   = -1565017,
+    SAY_DEATH                   = -1565018,
 
-/* Spells */
-#define SPELL_GROWTH              36300
-#define SPELL_CAVE_IN             36240
-#define SPELL_GROUND_SLAM         33525                     // AoE Ground Slam applying Ground Slam to everyone with a script effect (most likely the knock back, we can code it to a set knockback)
-#define SPELL_REVERBERATION       36297                     //AoE Silence
-#define SPELL_SHATTER             33654
-#define SPELL_MAGNETIC_PULL       28337
-#define SPELL_KNOCK_BACK          24199                     //Knockback spell until correct implementation is made
-#define SPELL_SHATTER_EFFECT        33671
-#define SPELL_HURTFUL_STRIKE        33813
-#define SPELL_STONED                33652                   //Spell is self cast
-#define SPELL_GRONN_LORDS_GRASP     33572                   //Triggered by Ground Slam
-class boss_gruul : public CreatureScript
+    EMOTE_GROW                  = -1565019,
+
+    SPELL_GROWTH                = 36300,
+    SPELL_CAVE_IN               = 36240,
+    SPELL_GROUND_SLAM           = 33525,                    //AoE Ground Slam applying Ground Slam to everyone with a script effect (most likely the knock back, we can code it to a set knockback)
+    SPELL_REVERBERATION         = 36297,
+    SPELL_SHATTER               = 33654,
+
+    SPELL_SHATTER_EFFECT        = 33671,
+    SPELL_HURTFUL_STRIKE        = 33813,
+    SPELL_STONED                = 33652,                    //Spell is self cast by target
+
+    SPELL_MAGNETIC_PULL         = 28337,
+    SPELL_KNOCK_BACK            = 24199,                    //Knockback spell until correct implementation is made
+};
+
+class boss_gruul : public CreatureScript
 {
 public:
     boss_gruul() : CreatureScript("boss_gruul") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_gruulAI (creature);
+        return new boss_gruulAI (pCreature);
     }
 
     struct boss_gruulAI : public ScriptedAI
     {
         boss_gruulAI(Creature *c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript *pInstance;
 
-        uint32 Growth_Timer;
-        uint32 CaveIn_Timer;
-        uint32 GroundSlamTimer;
-        uint32 GroundSlamStage;
-        uint32 PerformingGroundSlam;
-        uint32 HurtfulStrike_Timer;
-        uint32 Reverberation_Timer;
+        uint32 m_uiGrowth_Timer;
+        uint32 m_uiCaveIn_Timer;
+        uint32 m_uiCaveIn_StaticTimer;
+        uint32 m_uiGroundSlamTimer;
+        uint32 m_uiHurtfulStrike_Timer;
+        uint32 m_uiReverberation_Timer;
+
+        bool m_bPerformingGroundSlam;
 
         void Reset()
         {
-            Growth_Timer= 30000;
-            CaveIn_Timer= 40000;
-            GroundSlamTimer= 35000;
-            GroundSlamStage= 0;
-            PerformingGroundSlam= false;
-            HurtfulStrike_Timer= 8000;
-            Reverberation_Timer= 60000+45000;
+            m_uiGrowth_Timer= 30000;
+            m_uiCaveIn_Timer= 27000;
+            m_uiCaveIn_StaticTimer = 30000;
+            m_uiGroundSlamTimer= 35000;
+            m_bPerformingGroundSlam= false;
+            m_uiHurtfulStrike_Timer= 8000;
+            m_uiReverberation_Timer= 60000+45000;
 
-            if (instance)
-                instance->SetData(DATA_GRUULEVENT, NOT_STARTED);
+            if (pInstance)
+                pInstance->SetData(DATA_GRUULEVENT, NOT_STARTED);
         }
 
-        void JustDied(Unit* Killer)
-        {
-            DoScriptText(SAY_DEATH, me);
-
-            if (instance)
-                instance->SetData(DATA_GRUULEVENT, DONE);
-        }
-
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit * /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
-            DoZoneInCombat();
 
-            if (instance)
-                instance->SetData(DATA_GRUULEVENT, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(DATA_GRUULEVENT, IN_PROGRESS);
         }
 
         void KilledUnit()
         {
-            switch (rand()%3)
+            DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2,SAY_SLAY3), me);
+        }
+
+        void JustDied(Unit* /*Killer*/)
+        {
+            DoScriptText(SAY_DEATH, me);
+
+            if (pInstance)
             {
-            case 0: DoScriptText(SAY_SLAY1, me); break;
-            case 1: DoScriptText(SAY_SLAY2, me); break;
-            case 2: DoScriptText(SAY_SLAY3, me); break;
+                pInstance->SetData(DATA_GRUULEVENT, DONE);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_GRUULDOOR), true);         // Open the encounter door
             }
         }
 
-        void UpdateAI(const uint32 diff)
+        void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
+        {
+            //This to emulate effect1 (77) of SPELL_GROUND_SLAM, knock back to any direction
+            //It's initially wrong, since this will cause fall damage, which is by comments, not intended.
+            if (pSpell->Id == SPELL_GROUND_SLAM)
+            {
+                if (pTarget->GetTypeId() == TYPEID_PLAYER)
+                {
+                    switch (urand(0,1))
+                    {
+                        case 0: pTarget->CastSpell(pTarget, SPELL_MAGNETIC_PULL, true, NULL, NULL, me->GetGUID()); break;
+                        case 1: pTarget->CastSpell(pTarget, SPELL_KNOCK_BACK, true, NULL, NULL, me->GetGUID()); break;
+                    }
+                }
+            }
+
+            //this part should be in the core
+            if (pSpell->Id == SPELL_SHATTER)
+            {
+                //this spell must have custom handling in the core, dealing damage based on distance
+                pTarget->CastSpell(pTarget, SPELL_SHATTER_EFFECT, true);
+
+                if (pTarget->HasAura(SPELL_STONED))
+                    pTarget->RemoveAurasDueToSpell(SPELL_STONED);
+
+                //clear this, if we are still performing
+                if (m_bPerformingGroundSlam)
+                {
+                    m_bPerformingGroundSlam = false;
+
+                    //and correct movement, if not already
+                    if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
+                    {
+                        if (me->getVictim())
+                            me->GetMotionMaster()->MoveChase(me->getVictim());
+                    }
+                }
+            }
+        }
+
+        void UpdateAI(const uint32 uiDiff)
         {
             //Return since we have no target
             if (!UpdateVictim())
@@ -128,174 +168,91 @@ public:
 
             // Growth
             // Gruul can cast this spell up to 30 times
-            if (Growth_Timer <= diff)
+            if (m_uiGrowth_Timer <= uiDiff)
             {
-                DoCast(me, SPELL_GROWTH);
                 DoScriptText(EMOTE_GROW, me);
-                Growth_Timer = 30000;
-            } else Growth_Timer -= diff;
+                DoCast(me, SPELL_GROWTH);
+                m_uiGrowth_Timer = 30000;
+            }
+            else
+                m_uiGrowth_Timer -= uiDiff;
 
-            if (PerformingGroundSlam)
+            if (m_bPerformingGroundSlam)
             {
-                if (GroundSlamTimer <= diff)
+                if (m_uiGroundSlamTimer <= uiDiff)
                 {
-                    switch (GroundSlamStage)
-                    {
-                        case 0:
-                        {
-                            //Begin the whole ordeal
-                            std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
+                    m_uiGroundSlamTimer =120000;
+                    m_uiHurtfulStrike_Timer= 8000;
 
-                            std::vector<Unit*> knockback_targets;
+                    if (m_uiReverberation_Timer < 10000)     //Give a little time to the players to undo the damage from shatter
+                        m_uiReverberation_Timer += 10000;
 
-                            //First limit the list to only players
-                            for (std::list<HostileReference*>::iterator itr = m_threatlist.begin(); itr != m_threatlist.end(); ++itr)
-                            {
-                                Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
-
-                                if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                                    knockback_targets.push_back(pTarget);
-                            }
-
-                            //Now to totally disoriend those players
-                            for (std::vector<Unit*>::iterator itr = knockback_targets.begin(); itr != knockback_targets.end(); ++itr)
-                            {
-                                Unit *target = *itr;
-                                Unit *target2 = *(knockback_targets.begin() + rand()%knockback_targets.size());
-
-                                if (target && target2)
-                                {
-                                    switch (rand()%2)
-                                    {
-                                        case 0: target2->CastSpell(target, SPELL_MAGNETIC_PULL, true, NULL, NULL, me->GetGUID()); break;
-                                        case 1: target2->CastSpell(target, SPELL_KNOCK_BACK, true, NULL, NULL, me->GetGUID()); break;
-                                    }
-                                }
-                            }
-
-                            GroundSlamTimer = 7000;
-                         break;
-                        }
-
-                        case 1:
-                        {
-                            //Players are going to get stoned
-                            std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
-
-                            for (std::list<HostileReference*>::iterator itr = m_threatlist.begin(); itr != m_threatlist.end(); ++itr)
-                            {
-                                Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
-
-                                if (pTarget)
-                                {
-                                    pTarget->RemoveAurasDueToSpell(SPELL_GRONN_LORDS_GRASP);
-                                    pTarget->CastSpell(pTarget, SPELL_STONED, true, NULL, NULL, me->GetGUID());
-                                }
-                            }
-
-                            GroundSlamTimer = 5000;
-
-                         break;
-                        }
-
-                        case 2:
-                        {
-                            DoCast(me, SPELL_SHATTER);
-                            GroundSlamTimer = 1000;
-                         break;
-                        }
-
-                        case 3:
-                        {
-                            //Shatter takes effect
-                            // Not Needet Anymore Handled in Spell SPELL_SHATTER
-                            //std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
-                            //for (std::list<HostileReference*>::iterator itr = m_threatlist.begin(); itr != m_threatlist.end(); ++itr)
-                            //{
-                            //    Unit *target = Unit::GetUnit(*me, (*itr)->getUnitGuid());
-                            //    if (target)
-                            //    {
-                            //        target->RemoveAurasDueToSpell(SPELL_STONED);
-                            //        if (target->GetTypeId() == TYPEID_PLAYER)
-                            //            target->CastSpell(target, SPELL_SHATTER_EFFECT, false, NULL, NULL, me->GetGUID());
-                            //    }
-                            //}
-
-                            me->GetMotionMaster()->Clear();
-
-                            Unit *victim = me->getVictim();
-                            if (victim)
-                            {
-                                me->GetMotionMaster()->MoveChase(victim);
-                                me->SetUInt64Value(UNIT_FIELD_TARGET, victim->GetGUID());
-                            }
-
-                            PerformingGroundSlam = false;
-
-                            GroundSlamTimer =120000;
-                            HurtfulStrike_Timer= 8000;
-                            if (Reverberation_Timer < 10000)     //Give a little time to the players to undo the damage from shatter
-                                Reverberation_Timer += 10000;
-
-                         break;
-                        }
-                    }
-
-                    GroundSlamStage++;
+                    DoCast(me, SPELL_SHATTER);
                 }
                 else
-                    GroundSlamTimer-=diff;
+                    m_uiGroundSlamTimer -= uiDiff;
             }
             else
             {
                 // Hurtful Strike
-                if (HurtfulStrike_Timer <= diff)
+                if (m_uiHurtfulStrike_Timer <= uiDiff)
                 {
-                    Unit *pTarget = NULL;
-                    pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 1);
+                    Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO,1);
 
                     if (pTarget && me->IsWithinMeleeRange(me->getVictim()))
                         DoCast(pTarget, SPELL_HURTFUL_STRIKE);
                     else
-                        DoCast(me->getVictim(),SPELL_HURTFUL_STRIKE);
+                        DoCast(me->getVictim(), SPELL_HURTFUL_STRIKE);
 
-                    HurtfulStrike_Timer= 8000;
-                } else HurtfulStrike_Timer -= diff;
+                    m_uiHurtfulStrike_Timer= 8000;
+                }
+                else
+                    m_uiHurtfulStrike_Timer -= uiDiff;
 
                 // Reverberation
-                if (Reverberation_Timer <= diff)
+                if (m_uiReverberation_Timer <= uiDiff)
                 {
                     DoCast(me->getVictim(), SPELL_REVERBERATION, true);
-                    Reverberation_Timer = 30000;
-                } else Reverberation_Timer -= diff;
+                    m_uiReverberation_Timer = 15000 + rand()%10000;
+                }
+                else
+                    m_uiReverberation_Timer -= uiDiff;
 
                 // Cave In
-                if (CaveIn_Timer <= diff)
+                if (m_uiCaveIn_Timer <= uiDiff)
                 {
-                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                    if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                         DoCast(pTarget, SPELL_CAVE_IN);
 
-                    CaveIn_Timer = 20000;
-                } else CaveIn_Timer -= diff;
+                    if (m_uiCaveIn_StaticTimer >= 4000)
+                        m_uiCaveIn_StaticTimer -= 2000;
+
+                        m_uiCaveIn_Timer = m_uiCaveIn_StaticTimer;
+                }
+                else
+                    m_uiCaveIn_Timer -= uiDiff;
 
                 // Ground Slam, Gronn Lord's Grasp, Stoned, Shatter
-                if (GroundSlamTimer <= diff)
+                if (m_uiGroundSlamTimer <= uiDiff)
                 {
                     me->GetMotionMaster()->Clear();
                     me->GetMotionMaster()->MoveIdle();
-                    me->SetUInt64Value(UNIT_FIELD_TARGET, 0);
 
-                    PerformingGroundSlam= true;
-                    GroundSlamTimer = 0;
-                    GroundSlamStage = 0;
-                    DoCast(me->getVictim(), SPELL_GROUND_SLAM);
-                } else GroundSlamTimer -=diff;
+                    m_bPerformingGroundSlam= true;
+                    m_uiGroundSlamTimer = 10000;
+
+                    DoCast(me, SPELL_GROUND_SLAM);
+                }
+                else
+                    m_uiGroundSlamTimer -= uiDiff;
 
                 DoMeleeAttackIfReady();
             }
         }
     };
+
 };
+
 
 void AddSC_boss_gruul()
 {

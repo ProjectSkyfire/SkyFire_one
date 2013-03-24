@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -37,14 +35,15 @@ enum Spells
     SPELL_GROUNDTREMOR                                     = 6524,
     SPELL_FRENZY                                           = 28371
 };
-class boss_grizzle : public CreatureScript
+
+class boss_grizzle : public CreatureScript
 {
 public:
     boss_grizzle() : CreatureScript("boss_grizzle") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_grizzleAI (creature);
+        return new boss_grizzleAI (pCreature);
     }
 
     struct boss_grizzleAI : public ScriptedAI
@@ -78,7 +77,7 @@ public:
             } else GroundTremor_Timer -= diff;
 
             //Frenzy_Timer
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 51)
+            if (HealthBelowPct(51))
             {
                 if (Frenzy_Timer <= diff)
                 {
@@ -92,6 +91,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_grizzle()

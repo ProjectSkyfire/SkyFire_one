@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -38,14 +36,15 @@ EndScriptData */
 #define SPELL_HEAL                  19775
 #define SPELL_SHADOWWORDPAIN        19776
 #define SPELL_IMMOLATE              20294
-class boss_sulfuron : public CreatureScript
+
+class boss_sulfuron : public CreatureScript
 {
 public:
     boss_sulfuron() : CreatureScript("boss_sulfuron") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_sulfuronAI (creature);
+        return new boss_sulfuronAI (pCreature);
     }
 
     struct boss_sulfuronAI : public ScriptedAI
@@ -87,7 +86,7 @@ public:
             if (Inspire_Timer <= diff)
             {
                 Creature *pTarget = NULL;
-                std::list<Creature*> pList = DoFindFriendlyMissingBuff(45.0f, SPELL_INSPIRE);
+                std::list<Creature*> pList = DoFindFriendlyMissingBuff(45.0f,SPELL_INSPIRE);
                 if (!pList.empty())
                 {
                     std::list<Creature*>::const_iterator i = pList.begin();
@@ -114,7 +113,7 @@ public:
             if (Flamespear_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (pTarget) DoCast(pTarget, SPELL_FLAMESPEAR);
 
                 Flamespear_Timer = 12000 + rand()%4000;
@@ -130,15 +129,17 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
-class mob_flamewaker_priest : public CreatureScript
+
+class mob_flamewaker_priest : public CreatureScript
 {
 public:
     mob_flamewaker_priest() : CreatureScript("mob_flamewaker_priest") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_flamewaker_priestAI (creature);
+        return new mob_flamewaker_priestAI (pCreature);
     }
 
     struct mob_flamewaker_priestAI : public ScriptedAI
@@ -181,7 +182,7 @@ public:
             if (ShadowWordPain_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (pTarget) DoCast(pTarget, SPELL_SHADOWWORDPAIN);
 
                 ShadowWordPain_Timer = 18000+rand()%8000;
@@ -191,7 +192,7 @@ public:
             if (Immolate_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (pTarget) DoCast(pTarget, SPELL_IMMOLATE);
 
                 Immolate_Timer = 15000+rand()%10000;
@@ -200,7 +201,10 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
+
 
 void AddSC_boss_sulfuron()
 {

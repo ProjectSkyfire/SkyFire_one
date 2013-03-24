@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -31,14 +29,15 @@ EndScriptData */
 #define SPELL_WINGBUFFET            18500
 #define SPELL_SHADOWOFEBONROC       23340
 #define SPELL_HEAL                  41386                   //Thea Heal spell of his Shadow
-class boss_ebonroc : public CreatureScript
+
+class boss_ebonroc : public CreatureScript
 {
 public:
     boss_ebonroc() : CreatureScript("boss_ebonroc") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_ebonrocAI (creature);
+        return new boss_ebonrocAI (pCreature);
     }
 
     struct boss_ebonrocAI : public ScriptedAI
@@ -72,7 +71,7 @@ public:
             if (ShadowFlame_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_SHADOWFLAME);
-                ShadowFlame_Timer = urand(12000, 15000);
+                ShadowFlame_Timer = urand(12000,15000);
             } else ShadowFlame_Timer -= diff;
 
             //Wing Buffet Timer
@@ -86,21 +85,22 @@ public:
             if (ShadowOfEbonroc_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_SHADOWOFEBONROC);
-                ShadowOfEbonroc_Timer = urand(25000, 350000);
+                ShadowOfEbonroc_Timer = urand(25000,350000);
             } else ShadowOfEbonroc_Timer -= diff;
 
-            if (me->getVictim()->HasAura(SPELL_SHADOWOFEBONROC, 0))
+            if (me->getVictim()->HasAura(SPELL_SHADOWOFEBONROC))
             {
                 if (Heal_Timer <= diff)
                 {
                     DoCast(me, SPELL_HEAL);
-                    Heal_Timer = urand(1000, 3000);
+                    Heal_Timer = urand(1000,3000);
                 } else Heal_Timer -= diff;
             }
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_ebonroc()

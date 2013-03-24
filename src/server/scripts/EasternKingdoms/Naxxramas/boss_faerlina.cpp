@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,89 +15,110 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ScriptData
-SDName: Boss_Faerlina
-SD%Complete: 50
-SDComment: Without Mindcontrol boss cannot be defeated
-SDCategory: Naxxramas
-EndScriptData */
-
 #include "ScriptPCH.h"
+#include "naxxramas.h"
 
-#define SAY_GREET                   -1533009
-#define SAY_AGGRO1                  -1533010
-#define SAY_AGGRO2                  -1533011
-#define SAY_AGGRO3                  -1533012
-#define SAY_AGGRO4                  -1533013
-#define SAY_SLAY1                   -1533014
-#define SAY_SLAY2                   -1533015
-#define SAY_DEATH                   -1533016
+enum Yells
+{
+    SAY_GREET       = -1533009,
+    SAY_AGGRO_1     = -1533010,
+    SAY_AGGRO_2     = -1533011,
+    SAY_AGGRO_3     = -1533012,
+    SAY_AGGRO_4     = -1533013,
+    SAY_SLAY_1      = -1533014,
+    SAY_SLAY_2      = -1533015,
+    SAY_DEATH       = -1533016
+};
+//#define SOUND_RANDOM_AGGRO  8955                            //soundId containing the 4 aggro sounds, we not using this
 
-#define SPELL_POSIONBOLT_VOLLEY     28796
-#define H_SPELL_POSIONBOLT_VOLLEY   54098
-#define SPELL_ENRAGE                28798
-#define H_SPELL_ENRAGE              54100
-#define SPELL_RAINOFFIRE            28794                   //Not sure if targeted AoEs work if casted directly upon a player
-class boss_faerlina : public CreatureScript
+enum Spells
+{
+    SPELL_POISON_BOLT_VOLLEY    = 28796,
+    H_SPELL_POISON_BOLT_VOLLEY  = 54098,
+    SPELL_RAIN_OF_FIRE          = 28794,
+    H_SPELL_RAIN_OF_FIRE        = 54099,
+    SPELL_FRENZY                = 28798,
+    H_SPELL_FRENZY              = 54100,
+    SPELL_WIDOWS_EMBRACE        = 28732,
+    H_SPELL_WIDOWS_EMBRACE      = 54097,
+
+    SPELL_FIREBALL              = 54095,
+    H_SPELL_FIREBALL            = 54096
+};
+
+enum Events
+{
+    EVENT_NONE,
+    EVENT_POISON,
+    EVENT_FIRE,
+    EVENT_FRENZY
+};
+
+enum Achievements
+{
+    ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_10 = 1997,
+    ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_25 = 2140
+};
+
+class boss_faerlina : public CreatureScript
 {
 public:
     boss_faerlina() : CreatureScript("boss_faerlina") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_faerlinaAI (creature);
+        return new boss_faerlinaAI (pCreature);
     }
 
-    struct boss_faerlinaAI : public ScriptedAI
+    struct boss_faerlinaAI : public BossAI
     {
-        boss_faerlinaAI(Creature *c) : ScriptedAI(c) {}
+        boss_faerlinaAI(Creature *c) : BossAI(c, BOSS_FAERLINA), greet(false) {}
 
-        uint32 PoisonBoltVolley_Timer;
-        uint32 RainOfFire_Timer;
-        uint32 Enrage_Timer;
-        bool HasTaunted;
+        bool greet;
+        bool doDelayFrenzy;
+        bool bAchievement;
+
+        void EnterCombat(Unit * /*who*/)
+        {
+            _EnterCombat();
+            DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2,SAY_AGGRO_3,SAY_AGGRO_4), me);
+            events.ScheduleEvent(EVENT_POISON, urand(10000,15000));
+            events.ScheduleEvent(EVENT_FIRE, urand(6000,18000));
+            events.ScheduleEvent(EVENT_FRENZY, urand(60000,80000));
+        }
 
         void Reset()
         {
-            PoisonBoltVolley_Timer = 8000;
-            RainOfFire_Timer = 16000;
-            Enrage_Timer = 60000;
-            HasTaunted = false;
-        }
-
-        void EnterCombat(Unit *who)
-        {
-            switch (rand()%4)
-            {
-            case 0: DoScriptText(SAY_AGGRO1, me); break;
-            case 1: DoScriptText(SAY_AGGRO2, me); break;
-            case 2: DoScriptText(SAY_AGGRO3, me); break;
-            case 3: DoScriptText(SAY_AGGRO4, me); break;
-            }
+            _Reset();
+            doDelayFrenzy = false;
+            bAchievement = true;
+            SetImmuneToDeathGrip();
         }
 
         void MoveInLineOfSight(Unit *who)
         {
-             if (!HasTaunted && me->IsWithinDistInMap(who, 60.0f))
-             {
-                    DoScriptText(SAY_GREET, me);
-                    HasTaunted = true;
+            if (!greet && who->GetTypeId() == TYPEID_PLAYER)
+            {
+                DoScriptText(SAY_GREET, me);
+                greet = true;
             }
-             ScriptedAI::MoveInLineOfSight(who);
+            BossAI::MoveInLineOfSight(who);
         }
 
         void KilledUnit(Unit* victim)
         {
-            switch (rand()%2)
-            {
-                case 0: DoScriptText(SAY_SLAY1, me); break;
-                case 1: DoScriptText(SAY_SLAY2, me); break;
-            }
+            if (!victim->isPet())
+            if (!(rand()%3))
+                DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
         }
 
-        void JustDied(Unit* Killer)
+        void JustDied(Unit* /*Killer*/)
         {
+            _JustDied();
             DoScriptText(SAY_DEATH, me);
+
+            if (instance && bAchievement)
+                instance->DoCompleteAchievement(RAID_MODE(ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_10,ACHIEVEMENT_MOMMA_SAID_KNOCK_YOU_OUT_25));
         }
 
         void UpdateAI(const uint32 diff)
@@ -108,34 +126,135 @@ public:
             if (!UpdateVictim())
                 return;
 
-            //PoisonBoltVolley_Timer
-            if (PoisonBoltVolley_Timer <= diff)
+            if (doDelayFrenzy && !me->HasAura(RAID_MODE(SPELL_WIDOWS_EMBRACE, H_SPELL_WIDOWS_EMBRACE)))
             {
-                DoCast(me->getVictim(),SPELL_POSIONBOLT_VOLLEY);
-                PoisonBoltVolley_Timer = 11000;
-            } else PoisonBoltVolley_Timer -= diff;
+                doDelayFrenzy = false;
+                DoCast(me, RAID_MODE(SPELL_FRENZY, H_SPELL_FRENZY), true);
+            }
 
-            //RainOfFire_Timer
-            if (RainOfFire_Timer <= diff)
-            {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    DoCast(pTarget, SPELL_RAINOFFIRE);
-                RainOfFire_Timer = 16000;
-            } else RainOfFire_Timer -= diff;
+            events.Update(diff);
 
-            //Enrage_Timer
-            if (Enrage_Timer <= diff)
+            if (me->hasUnitState(UNIT_STAT_CASTING))
+                return;
+
+            while (uint32 eventId = events.ExecuteEvent())
             {
-                DoCast(me, SPELL_ENRAGE);
-                Enrage_Timer = 61000;
-            } else Enrage_Timer -= diff;
+                switch(eventId)
+                {
+                    case EVENT_POISON:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        if (!me->HasAura(RAID_MODE(SPELL_WIDOWS_EMBRACE,H_SPELL_WIDOWS_EMBRACE)))
+                            DoCastAOE(RAID_MODE(SPELL_POISON_BOLT_VOLLEY,H_SPELL_POISON_BOLT_VOLLEY));
+                        events.ScheduleEvent(EVENT_POISON, urand(8000,15000));
+                        }
+                        break;
+                    case EVENT_FIRE:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            DoCast(pTarget, RAID_MODE(SPELL_RAIN_OF_FIRE, H_SPELL_RAIN_OF_FIRE));
+                        events.ScheduleEvent(EVENT_FIRE, urand(6000,18000));
+                        }
+                        break;
+                    case EVENT_FRENZY:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
+                        // TODO : Add Text
+                        if (!me->HasAura(RAID_MODE(SPELL_WIDOWS_EMBRACE,H_SPELL_WIDOWS_EMBRACE)))
+                            DoCast(me, RAID_MODE(SPELL_FRENZY, H_SPELL_FRENZY));
+                        else
+                            doDelayFrenzy = true;
+
+                        events.ScheduleEvent(EVENT_FRENZY, urand(60000,80000));
+                        }
+                        break;
+                }
+            }
 
             DoMeleeAttackIfReady();
         }
+
+        void SpellHit(Unit* caster, const SpellEntry *spell)
+        {
+            if (spell->Id == SPELL_WIDOWS_EMBRACE || spell->Id == H_SPELL_WIDOWS_EMBRACE)
+            {
+                 // TODO : Add Text
+                 bAchievement = false;
+                 doDelayFrenzy = true;
+                 me->RemoveAurasDueToSpell(SPELL_FRENZY);
+                 me->RemoveAurasDueToSpell(H_SPELL_FRENZY);
+                 me->Kill(caster);
+            }
+        }
     };
+
 };
+
+
+class mob_faerlina_add : public CreatureScript
+{
+public:
+    mob_faerlina_add() : CreatureScript("mob_faerlina_add") { }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_faerlina_addAI (pCreature);
+    }
+
+    struct mob_faerlina_addAI : public ScriptedAI
+    {
+        mob_faerlina_addAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            pInstance = pCreature->GetInstanceScript();
+        }
+
+        InstanceScript *pInstance;
+        uint32 uiFireBallTimer;
+
+        void Reset()
+        {
+            if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+            {
+                me->ApplySpellImmune(0, IMMUNITY_MECHANIC, SPELL_EFFECT_BIND, true);
+                me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_CHARM, true);
+            }
+
+            uiFireBallTimer = urand(10000,15000);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if(uiFireBallTimer <= diff)
+            {
+                DoCast(me->getVictim(), DUNGEON_MODE(SPELL_FIREBALL,H_SPELL_FIREBALL));
+                uiFireBallTimer = urand(5000,10000);
+            }else uiFireBallTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+
+        void JustDied(Unit * /*killer*/)
+        {
+            if (pInstance && getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+            {
+                if (Creature *pFaerlina = pInstance->instance->GetCreature(pInstance->GetData64(DATA_FAERLINA)))
+                {
+                    me->InterruptNonMeleeSpells(false);
+                    DoCast(pFaerlina, SPELL_WIDOWS_EMBRACE);
+                }
+            }
+        }
+    };
+
+};
+
 
 void AddSC_boss_faerlina()
 {
     new boss_faerlina();
+    new mob_faerlina_add();
 }

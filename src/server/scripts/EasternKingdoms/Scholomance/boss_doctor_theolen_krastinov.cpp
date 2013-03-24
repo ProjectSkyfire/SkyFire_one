@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -36,14 +34,15 @@ enum eEnums
     SPELL_BACKHAND              = 18103,
     SPELL_FRENZY                = 8269
 };
-class boss_doctor_theolen_krastinov : public CreatureScript
+
+class boss_doctor_theolen_krastinov : public CreatureScript
 {
 public:
     boss_doctor_theolen_krastinov() : CreatureScript("boss_doctor_theolen_krastinov") { }
 
-    CreatureAI* GetAI_boss_theolenkrastinov(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_theolenkrastinovAI (creature);
+        return new boss_theolenkrastinovAI (pCreature);
     }
 
     struct boss_theolenkrastinovAI : public ScriptedAI
@@ -63,12 +62,12 @@ public:
 
         void JustDied(Unit* /*pKiller*/)
         {
-            ScriptedInstance* instance = me->GetInstanceScript();
-            if (instance)
+            InstanceScript* pInstance = me->GetInstanceScript();
+            if (pInstance)
             {
-                instance->SetData(DATA_DOCTORTHEOLENKRASTINOV_DEATH, 0);
+                pInstance->SetData(DATA_DOCTORTHEOLENKRASTINOV_DEATH, 0);
 
-                if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
+                if (pInstance->GetData(TYPE_GANDLING) == IN_PROGRESS)
                     me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
             }
         }
@@ -97,7 +96,7 @@ public:
                 m_uiBackhand_Timer -= uiDiff;
 
             //Frenzy_Timer
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 26)
+            if (HealthBelowPct(26))
             {
                 if (m_uiFrenzy_Timer <= uiDiff)
                 {
@@ -113,7 +112,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_theolenkrastinov()
 {

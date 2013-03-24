@@ -1,7 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2012 kb_z
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -34,38 +33,36 @@ EndContentData */
 /*#####
 # at_malfurion_Stormrage_trigger
 #####*/
-class at_malfurion_stormrage : public AreaTriggerScript
+
+class at_malfurion_stormrage : public AreaTriggerScript
 {
 public:
     at_malfurion_stormrage() : AreaTriggerScript("at_malfurion_stormrage") { }
 
-    bool AreaTrigger(Player* player, const AreaTriggerEntry * /*at*/)
+    bool OnTrigger(Player* pPlayer, const AreaTriggerEntry * /*at*/)
     {
-        if (ScriptedInstance* instance = player->GetInstanceScript())
-        {
-            if (!player->FindNearestCreature(15362, 15))
-                player->SummonCreature(15362, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), -1.52, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
-            return false;
-        }
-    return false;
+        if (pPlayer->GetInstanceScript() && !pPlayer->FindNearestCreature(15362, 15))
+            pPlayer->SummonCreature(15362, pPlayer->GetPositionX(), pPlayer->GetPositionY(), pPlayer->GetPositionZ(), -1.52f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
+        return false;
     }
+
 };
 /*#####
 # go_atalai_statue
 #####*/
-class go_atalai_statue : public GameObjectScript
+
+class go_atalai_statue : public GameObjectScript
 {
 public:
     go_atalai_statue() : GameObjectScript("go_atalai_statue") { }
 
-    bool GOHello(Player* player, GameObject* pGo)
+    bool OnGossipHello(Player* pPlayer, GameObject* pGo)
     {
-        ScriptedInstance* instance = player->GetInstanceScript();
-        if (!instance)
-            return false;
-        instance->SetData(EVENT_STATE, pGo->GetEntry());
+        if (InstanceScript* pInstance = pPlayer->GetInstanceScript())
+            pInstance->SetData(EVENT_STATE,pGo->GetEntry());
         return false;
     }
+
 };
 
 void AddSC_sunken_temple()

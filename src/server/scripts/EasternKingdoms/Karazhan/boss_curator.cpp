@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -44,14 +42,15 @@ EndScriptData */
 #define SPELL_EVOCATION                 30254
 #define SPELL_ENRAGE                    30403               //Arcane Infusion: Transforms Curator and adds damage.
 #define SPELL_BERSERK                   26662
-class boss_curator : public CreatureScript
+
+class boss_curator : public CreatureScript
 {
 public:
     boss_curator() : CreatureScript("boss_curator") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_curatorAI (creature);
+        return new boss_curatorAI (pCreature);
     }
 
     struct boss_curatorAI : public ScriptedAI
@@ -78,7 +77,7 @@ public:
 
         void KilledUnit(Unit * /*victim*/)
         {
-            DoScriptText(RAND(SAY_KILL1, SAY_KILL2), me);
+            DoScriptText(RAND(SAY_KILL1,SAY_KILL2), me);
         }
 
         void JustDied(Unit * /*victim*/)
@@ -102,7 +101,7 @@ public:
                 //if evocate, then break evocate
                 if (Evocating)
                 {
-                    if (me->HasAura(SPELL_EVOCATION, 0))
+                    if (me->HasAura(SPELL_EVOCATION))
                         me->RemoveAurasDueToSpell(SPELL_EVOCATION);
 
                     Evocating = false;
@@ -121,7 +120,7 @@ public:
             if (Evocating)
             {
                 //not supposed to do anything while evocate
-                if (me->HasAura(SPELL_EVOCATION, 0))
+                if (me->HasAura(SPELL_EVOCATION))
                     return;
                 else
                     Evocating = false;
@@ -132,7 +131,7 @@ public:
                 if (AddTimer <= diff)
                 {
                     //Summon Astral Flare
-                    Creature* AstralFlare = DoSpawnCreature(17096, rand()%37, rand()%37, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    Creature* AstralFlare = DoSpawnCreature(17096, float(rand()%37), float(rand()%37), 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                     Unit *pTarget = NULL;
                     pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 
@@ -160,9 +159,9 @@ public:
                         }
                         else
                         {
-                            if (urand(0, 1) == 0)
+                            if (urand(0,1) == 0)
                             {
-                                DoScriptText(RAND(SAY_SUMMON1, SAY_SUMMON2), me);
+                                DoScriptText(RAND(SAY_SUMMON1,SAY_SUMMON2), me);
                             }
                         }
                     }
@@ -170,7 +169,7 @@ public:
                     AddTimer = 10000;
                 } else AddTimer -= diff;
 
-                if (me->GetHealth()*100 / me->GetMaxHealth() <= 15)
+                if (!HealthAbovePct(15))
                 {
                     Enraged = true;
                     DoCast(me, SPELL_ENRAGE);
@@ -187,12 +186,15 @@ public:
 
                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 1))
                     DoCast(pTarget, SPELL_HATEFUL_BOLT);
+
             } else HatefulBoltTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_curator()
 {

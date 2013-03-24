@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -20,8 +18,8 @@
 
 /* ScriptData
 SDName: Boss_Netherspite
-SD%Complete: 80
-SDComment: some workaround
+SD%Complete: 90
+SDComment: Not sure about timing and portals placing
 SDCategory: Karazhan
 EndScriptData */
 
@@ -54,28 +52,29 @@ enum Netherspite_Portal{
 };
 
 const uint32 PortalID[3] = {17369, 17367, 17368};
-const uint32 PortalVisual[3] = {30487, 30490, 30491};
-const uint32 PortalBeam[3] = {30465, 30464, 30463};
-const uint32 PlayerBuff[3] = {30421, 30422, 30423};
-const uint32 NetherBuff[3] = {30466, 30467, 30468};
-const uint32 PlayerDebuff[3] = {38637, 38638, 38639};
-class boss_netherspite : public CreatureScript
+const uint32 PortalVisual[3] = {30487,30490,30491};
+const uint32 PortalBeam[3] = {30465,30464,30463};
+const uint32 PlayerBuff[3] = {30421,30422,30423};
+const uint32 NetherBuff[3] = {30466,30467,30468};
+const uint32 PlayerDebuff[3] = {38637,38638,38639};
+
+class boss_netherspite : public CreatureScript
 {
 public:
     boss_netherspite() : CreatureScript("boss_netherspite") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature *pCreature)
     {
-        return new boss_netherspiteAI(creature);
+        return new boss_netherspiteAI(pCreature);
     }
 
     struct boss_netherspiteAI : public ScriptedAI
     {
         boss_netherspiteAI(Creature* c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
 
-            for (int i = 0; i < 3; ++i)
+            for (int i=0; i<3; ++i)
             {
                 PortalGUID[i] = 0;
                 BeamTarget[i] = 0;
@@ -83,7 +82,7 @@ public:
             }
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         bool PortalPhase;
         bool Berserk;
@@ -111,10 +110,10 @@ public:
             yh = pTarget->GetPositionY();
 
             // check if target is between (not checking distance from the beam yet)
-            if (dist(xn, yn, xh, yh) >= dist(xn, yn, xp, yp) || dist(xp, yp, xh, yh) >= dist(xn, yn, xp, yp))
+            if (dist(xn,yn,xh,yh) >= dist(xn,yn,xp,yp) || dist(xp,yp,xh,yh) >= dist(xn,yn,xp,yp))
                 return false;
             // check  distance from the beam
-            return (abs((xn-xp)*yh+(yp-yn)*xh-xn*yp+xp*yn)/dist(xn, yn, xp, yp) < 1.5f);
+            return (abs((xn-xp)*yh+(yp-yn)*xh-xn*yp+xp*yn)/dist(xn,yn,xp,yp) < 1.5f);
         }
 
         float dist(float xa, float ya, float xb, float yb) // auxiliary method for distance
@@ -141,8 +140,8 @@ public:
             pos[GREEN_PORTAL] = (r%2 ? 0: (r>1 ? 2: 1));
             pos[BLUE_PORTAL] = (r>1 ? 1: 2); // Blue Portal not on the left side (0)
 
-            for (int i = 0; i < 3; ++i)
-                if (Creature *portal = me->SummonCreature(PortalID[i],PortalCoord[pos[i]][0],PortalCoord[pos[i]][1],PortalCoord[pos[i]][2],0, TEMPSUMMON_TIMED_DESPAWN, 60000))
+            for (int i=0; i<3; ++i)
+                if (Creature *portal = me->SummonCreature(PortalID[i],PortalCoord[pos[i]][0],PortalCoord[pos[i]][1],PortalCoord[pos[i]][2],0,TEMPSUMMON_TIMED_DESPAWN,60000))
                 {
                     PortalGUID[i] = portal->GetGUID();
                     portal->AddAura(PortalVisual[i], portal);
@@ -151,7 +150,7 @@ public:
 
         void DestroyPortals()
         {
-            for (int i = 0; i < 3; ++i)
+            for (int i=0; i<3; ++i)
             {
                 if (Creature *portal = Unit::GetCreature(*me, PortalGUID[i]))
                     portal->DisappearAndDie();
@@ -207,7 +206,7 @@ public:
                             BeamerGUID[j] = 0;
                         }
                         // create new one and start beaming on the target
-                        if (Creature *beamer = portal->SummonCreature(PortalID[j],portal->GetPositionX(),portal->GetPositionY(),portal->GetPositionZ(),portal->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN, 60000))
+                        if (Creature *beamer = portal->SummonCreature(PortalID[j],portal->GetPositionX(),portal->GetPositionY(),portal->GetPositionZ(),portal->GetOrientation(),TEMPSUMMON_TIMED_DESPAWN,60000))
                         {
                             beamer->CastSpell(pTarget, PortalBeam[j], false);
                             BeamerGUID[j] = beamer->GetGUID();
@@ -228,7 +227,7 @@ public:
             PortalPhase = true;
             PortalTimer = 10000;
             EmpowermentTimer = 10000;
-            DoScriptText(EMOTE_PHASE_PORTAL, me);
+            DoScriptText(EMOTE_PHASE_PORTAL,me);
         }
 
         void SwitchToBanishPhase()
@@ -240,19 +239,19 @@ public:
             DestroyPortals();
             PhaseTimer = 30000;
             PortalPhase = false;
-            DoScriptText(EMOTE_PHASE_BANISH, me);
+            DoScriptText(EMOTE_PHASE_BANISH,me);
 
-            for (int i = 0; i < 3; ++i)
+            for (int i=0; i<3; ++i)
                 me->RemoveAurasDueToSpell(NetherBuff[i]);
         }
 
         void HandleDoors(bool open) // Massive Door switcher
         {
-            if (GameObject *Door = GameObject::GetGameObject(*me, instance ? instance->GetData64(DATA_GO_MASSIVE_DOOR) : 0))
+            if (GameObject *Door = GameObject::GetGameObject(*me, pInstance ? pInstance->GetData64(DATA_GO_MASSIVE_DOOR) : 0))
                 Door->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
         }
 
-        void EnterCombat(Unit* /*who*/)
+        void EnterCombat(Unit * /*who*/)
         {
             HandleDoors(false);
             SwitchToPortalPhase();
@@ -272,7 +271,7 @@ public:
             // Void Zone
             if (VoidZoneTimer <= diff)
             {
-                DoCast(SelectTarget(SELECT_TARGET_RANDOM, 1, 45, true),SPELL_VOIDZONE, true);
+                DoCast(SelectTarget(SELECT_TARGET_RANDOM,1,45,true),SPELL_VOIDZONE,true);
                 VoidZoneTimer = 15000;
             } else VoidZoneTimer -= diff;
 
@@ -315,9 +314,9 @@ public:
                 // Netherbreath
                 if (NetherbreathTimer <= diff)
                 {
-                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 40, true))
+                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM,0,40,true))
                         DoCast(pTarget, SPELL_NETHERBREATH);
-                    NetherbreathTimer = urand(5000, 7000);
+                    NetherbreathTimer = urand(5000,7000);
                 } else NetherbreathTimer -= diff;
 
                 if (PhaseTimer <= diff)
@@ -333,7 +332,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_netherspite()
 {

@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Pandemonius
@@ -42,57 +40,47 @@ EndScriptData */
 #define H_SPELL_VOID_BLAST              38760
 #define SPELL_DARK_SHELL                32358
 #define H_SPELL_DARK_SHELL              38759
-class boss_pandemonius : public CreatureScript
+
+class boss_pandemonius : public CreatureScript
 {
 public:
     boss_pandemonius() : CreatureScript("boss_pandemonius") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_pandemoniusAI (creature);
+        return new boss_pandemoniusAI (pCreature);
     }
 
     struct boss_pandemoniusAI : public ScriptedAI
     {
         boss_pandemoniusAI(Creature *c) : ScriptedAI(c)
         {
-            HeroicMode = me->GetMap()->IsHeroic();
         }
 
-        bool HeroicMode;
         uint32 VoidBlast_Timer;
         uint32 DarkShell_Timer;
         uint32 VoidBlast_Counter;
 
         void Reset()
         {
-            VoidBlast_Timer = 30000;
+            VoidBlast_Timer = 8000+rand()%15000;
             DarkShell_Timer = 20000;
             VoidBlast_Counter = 0;
         }
 
-        void JustDied(Unit* Killer)
+        void JustDied(Unit* /*Killer*/)
         {
             DoScriptText(SAY_DEATH, me);
         }
 
-        void KilledUnit(Unit* victim)
+        void KilledUnit(Unit* /*victim*/)
         {
-            switch (rand()%2)
-            {
-                case 0: DoScriptText(SAY_KILL_1, me); break;
-                case 1: DoScriptText(SAY_KILL_2, me); break;
-            }
+            DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit * /*who*/)
         {
-            switch (rand()%3)
-            {
-                case 0: DoScriptText(SAY_AGGRO_1, me); break;
-                case 1: DoScriptText(SAY_AGGRO_2, me); break;
-                case 2: DoScriptText(SAY_AGGRO_3, me); break;
-            }
+            DoScriptText(RAND(SAY_AGGRO_1,SAY_AGGRO_2,SAY_AGGRO_3), me);
         }
 
         void UpdateAI(const uint32 diff)
@@ -104,14 +92,14 @@ public:
             {
                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                 {
-                    DoCast(pTarget, HeroicMode ? H_SPELL_VOID_BLAST : SPELL_VOID_BLAST);
+                    DoCast(pTarget, SPELL_VOID_BLAST);
                     VoidBlast_Timer = 500;
                     ++VoidBlast_Counter;
                 }
 
                 if (VoidBlast_Counter == 5)
                 {
-                    VoidBlast_Timer = 25000+rand()%10000;
+                    VoidBlast_Timer = 15000+rand()%10000;
                     VoidBlast_Counter = 0;
                 }
             } else VoidBlast_Timer -= diff;
@@ -125,7 +113,7 @@ public:
 
                     DoScriptText(EMOTE_DARK_SHELL, me);
 
-                    DoCast(me, HeroicMode ? H_SPELL_DARK_SHELL : SPELL_DARK_SHELL);
+                    DoCast(me, SPELL_DARK_SHELL);
                     DarkShell_Timer = 20000;
                 } else DarkShell_Timer -= diff;
             }
@@ -133,7 +121,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_pandemonius()
 {

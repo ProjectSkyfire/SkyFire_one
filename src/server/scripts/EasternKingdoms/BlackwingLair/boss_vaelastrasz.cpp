@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -41,37 +39,51 @@ EndScriptData */
 #define SPELL_TAILSWIPE             15847
 #define SPELL_BURNINGADRENALINE     23620
 #define SPELL_CLEAVE                20684                   //Chain cleave is most likely named something different and contains a dummy effect
-class boss_vaelastrasz : public CreatureScript
+
+class boss_vaelastrasz : public CreatureScript
 {
 public:
     boss_vaelastrasz() : CreatureScript("boss_vaelastrasz") { }
 
-    bool GossipSelect_boss_vael(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
+    void SendDefaultMenu(Player* pPlayer, Creature* pCreature, uint32 uiAction)
     {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            CAST_AI(boss_vaelastrasz::boss_vaelAI, pCreature->AI())->BeginSpeech(pPlayer);
+        }
+    }
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        pPlayer->PlayerTalkClass->ClearMenus();
         if (uiSender == GOSSIP_SENDER_MAIN)
-            SendDefaultMenu_boss_vael(player, creature, uiAction);
+            SendDefaultMenu(pPlayer, pCreature, uiAction);
 
         return true;
     }
 
-    bool GossipHello_boss_vael(Player* player, Creature* creature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        player->SEND_GOSSIP_MENU(907, creature->GetGUID());
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+        pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
 
         return true;
     }
 
-    CreatureAI* GetAI_boss_vael(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_vaelAI (creature);
+        return new boss_vaelAI (pCreature);
     }
 
     struct boss_vaelAI : public ScriptedAI
     {
         boss_vaelAI(Creature *c) : ScriptedAI(c)
         {
-            c->SetUInt32Value(UNIT_NPC_FLAGS, 1);
+            c->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
             c->setFaction(35);
             c->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
@@ -130,7 +142,7 @@ public:
         {
             DoCast(me, SPELL_ESSENCEOFTHERED);
             DoZoneInCombat();
-            me->SetHealth(int(me->GetMaxHealth()*.3));
+            me->SetHealth(me->CountPctFromMaxHealth(30));
         }
 
         void UpdateAI(const uint32 diff)
@@ -173,7 +185,7 @@ public:
                 return;
 
             // Yell if hp lower than 15%
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 15 && !HasYelled)
+            if (HealthBelowPct(15) && !HasYelled)
             {
                 DoScriptText(SAY_HALFLIFE, me);
                 HasYelled = true;
@@ -190,7 +202,7 @@ public:
             if (FlameBreath_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_FLAMEBREATH);
-                FlameBreath_Timer = urand(4000, 8000);
+                FlameBreath_Timer = urand(4000,8000);
             } else FlameBreath_Timer -= diff;
 
             //BurningAdrenalineCaster_Timer
@@ -207,7 +219,7 @@ public:
                             i = 3;
                 }
                 if (pTarget)                                     // cast on self (see below)
-                    pTarget->CastSpell(pTarget, SPELL_BURNINGADRENALINE, 1);
+                    pTarget->CastSpell(pTarget,SPELL_BURNINGADRENALINE,1);
 
                 BurningAdrenalineCaster_Timer = 15000;
             } else BurningAdrenalineCaster_Timer -= diff;
@@ -217,7 +229,7 @@ public:
             {
                 // have the victim cast the spell on himself otherwise the third effect aura will be applied
                 // to Vael instead of the player
-                me->getVictim()->CastSpell(me->getVictim(),SPELL_BURNINGADRENALINE, 1);
+                me->getVictim()->CastSpell(me->getVictim(),SPELL_BURNINGADRENALINE,1);
 
                 BurningAdrenalineTank_Timer = 45000;
             } else BurningAdrenalineTank_Timer -= diff;
@@ -244,16 +256,8 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-};
 
-void SendDefaultMenu_boss_vael(Player* player, Creature* creature, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
-    {
-        player->CLOSE_GOSSIP_MENU();
-        CAST_AI(boss_vaelAI, creature->AI())->BeginSpeech(player);
-    }
-}
+};
 
 void AddSC_boss_vael()
 {

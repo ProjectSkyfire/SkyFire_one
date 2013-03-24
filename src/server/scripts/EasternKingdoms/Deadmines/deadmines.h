@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,8 +18,6 @@
 #ifndef DEF_DEADMINES_H
 #define DEF_DEADMINES_H
 
-#include "ScriptPCH.h"
-
 enum CannonState
 {
     CANNON_NOT_USED,
@@ -34,17 +29,18 @@ enum CannonState
 
 enum Data
 {
-    EVENT_CANNON,
-    EVENT_RHAHKZOR,
-    EVENT_SNEED,
-    EVENT_GILNID
+    EVENT_STATE,
+    EVENT_RHAHKZOR
+};
+
+enum Data64
+{
+    DATA_SMITE_CHEST
 };
 
 enum GameObjects
 {
     GO_FACTORY_DOOR                                        = 13965,
-    GO_MAST_ROOM_DOOR                                      = 16400,
-    GO_FOUNDRY_DOOR                                        = 16399,
     GO_IRONCLAD_DOOR                                       = 16397,
     GO_DEFIAS_CANNON                                       = 16398,
     GO_DOOR_LEVER                                          = 101833,

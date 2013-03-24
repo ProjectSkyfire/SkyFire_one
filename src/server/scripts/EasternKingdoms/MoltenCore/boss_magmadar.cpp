@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -34,14 +32,15 @@ EndScriptData */
 #define SPELL_PANIC                 19408
 #define SPELL_LAVABOMB              19411                   //This calls a dummy server side effect that isn't implemented yet
 #define SPELL_LAVABOMB_ALT          19428                   //This is the spell that the lava bomb casts
-class boss_magmadar : public CreatureScript
+
+class boss_magmadar : public CreatureScript
 {
 public:
     boss_magmadar() : CreatureScript("boss_magmadar") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_magmadarAI (creature);
+        return new boss_magmadarAI (pCreature);
     }
 
     struct boss_magmadarAI : public ScriptedAI
@@ -88,7 +87,7 @@ public:
             //Lavabomb_Timer
             if (Lavabomb_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_LAVABOMB_ALT);
 
                 Lavabomb_Timer = 12000;
@@ -97,6 +96,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_magmadar()

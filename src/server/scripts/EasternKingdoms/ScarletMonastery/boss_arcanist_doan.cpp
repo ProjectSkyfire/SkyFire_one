@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -38,14 +36,15 @@ enum eEnums
     SPELL_FIREAOE               = 9435,
     SPELL_ARCANEBUBBLE          = 9438,
 };
-class boss_arcanist_doan : public CreatureScript
+
+class boss_arcanist_doan : public CreatureScript
 {
 public:
     boss_arcanist_doan() : CreatureScript("boss_arcanist_doan") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_arcanist_doanAI (creature);
+        return new boss_arcanist_doanAI (pCreature);
     }
 
     struct boss_arcanist_doanAI : public ScriptedAI
@@ -83,11 +82,11 @@ public:
                 bCanDetonate = false;
             }
 
-            if (me->HasAura(SPELL_ARCANEBUBBLE, 0))
+            if (me->HasAura(SPELL_ARCANEBUBBLE))
                 return;
 
             //If we are <50% hp cast Arcane Bubble
-            if (!bShielded && me->GetHealth()*100 / me->GetMaxHealth() <= 50)
+            if (!bShielded && !HealthAbovePct(50))
             {
                 //wait if we already casting
                 if (me->IsNonMeleeSpellCasted(false))
@@ -102,7 +101,7 @@ public:
 
             if (Polymorph_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
                     DoCast(pTarget, SPELL_POLYMORPH);
 
                 Polymorph_Timer = 20000;
@@ -125,6 +124,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_arcanist_doan()

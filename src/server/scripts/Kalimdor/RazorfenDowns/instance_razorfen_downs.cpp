@@ -1,49 +1,49 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "InstanceScript.h"
 #include "razorfen_downs.h"
+#include "Player.h"
+#include "TemporarySummon.h"
 
 #define    MAX_ENCOUNTER  1
-class instance_razorfen_downs : public InstanceMapScript
+
+class instance_razorfen_downs : public InstanceMapScript
 {
 public:
-    instance_razorfen_downs() : InstanceMapScript("instance_razorfen_downs") { }
+    instance_razorfen_downs() : InstanceMapScript("instance_razorfen_downs", 129) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* map) const
     {
-        return new instance_razorfen_downs_InstanceMapScript(pMap);
+        return new instance_razorfen_downs_InstanceMapScript(map);
     }
 
-    struct instance_razorfen_downs_InstanceMapScript : public ScriptedInstance
+    struct instance_razorfen_downs_InstanceMapScript : public InstanceScript
     {
-        instance_razorfen_downs_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap)
+        instance_razorfen_downs_InstanceMapScript(Map* map) : InstanceScript(map)
         {
-            Initialize();
-        };
+        }
 
         uint64 uiGongGUID;
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-        uint8 uiGongWaves;
+        uint16 uiGongWaves;
 
         std::string str_data;
 
@@ -63,7 +63,7 @@ public:
             std::ostringstream saveStream;
 
             saveStream << "T C " << m_auiEncounter[0]
-                << " " << uiGongWaves;
+                << ' ' << uiGongWaves;
 
             str_data = saveStream.str();
 
@@ -101,14 +101,14 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
 
-        void OnGameObjectCreate(GameObject* pGo, bool /*bAdd*/)
+        void OnGameObjectCreate(GameObject* go)
         {
-            switch (pGo->GetEntry())
+            switch (go->GetEntry())
             {
                 case GO_GONG:
-                    uiGongGUID = pGo->GetGUID();
+                    uiGongGUID = go->GetGUID();
                     if (m_auiEncounter[0] == DONE)
-                        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                     break;
                 default:
                     break;
@@ -125,19 +125,19 @@ public:
                 {
                     case 9:
                     case 14:
-                        if (GameObject* pGo = instance->GetGameObject(uiGongGUID))
-                            pGo->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        if (GameObject* go = instance->GetGameObject(uiGongGUID))
+                            go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
                         break;
                     case 1:
                     case 10:
                     case 16:
                     {
-                        GameObject* pGo = instance->GetGameObject(uiGongGUID);
+                        GameObject* go = instance->GetGameObject(uiGongGUID);
 
-                        if (!pGo)
+                        if (!go)
                             return;
 
-                        pGo->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+                        go->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_NOT_SELECTABLE);
 
                         uint32 uiCreature = 0;
                         uint8 uiSummonTimes = 0;
@@ -159,17 +159,17 @@ public:
                                 break;
                         }
 
-                        if (Creature* creature = pGo->SummonCreature(uiCreature, 2502.635f, 844.140f, 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                        if (Creature* creature = go->SummonCreature(uiCreature, 2502.635f, 844.140f, 46.896f, 0.633f))
                         {
                             if (uiGongWaves == 10 || uiGongWaves == 1)
                             {
                                 for (uint8 i = 0; i < uiSummonTimes; ++i)
                                 {
-                                    if (Creature* pSummon = pGo->SummonCreature(uiCreature, 2502.635f + float(irand(-5, 5)), 844.140f + float(irand(-5, 5)), 46.896f, 0.633f, TEMPSUMMON_MANUAL_DESPAWN, 0))
-                                        pSummon->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
+                                    if (Creature* summon = go->SummonCreature(uiCreature, 2502.635f + float(irand(-5, 5)), 844.140f + float(irand(-5, 5)), 46.896f, 0.633f))
+                                        summon->GetMotionMaster()->MovePoint(0, 2533.479f + float(irand(-5, 5)), 870.020f + float(irand(-5, 5)), 47.678f);
                                 }
                             }
-                            creature->GetMotionMaster()->MovePoint(0, 2533.479 + float(irand(-5, 5)),870.020 + float(irand(-5, 5)),47.678);
+                            creature->GetMotionMaster()->MovePoint(0, 2533.479f + float(irand(-5, 5)), 870.020f + float(irand(-5, 5)), 47.678f);
                         }
                         break;
                     }
@@ -187,7 +187,7 @@ public:
             }
         }
 
-        uint32 GetData(uint32 uiType)
+        uint32 GetData(uint32 uiType) const
         {
             switch (uiType)
             {
@@ -198,7 +198,7 @@ public:
             return 0;
         }
 
-        uint64 GetData64(uint32 uiType)
+        uint64 GetData64(uint32 uiType) const
         {
             switch (uiType)
             {
@@ -208,6 +208,7 @@ public:
             return 0;
         }
     };
+
 };
 
 void AddSC_instance_razorfen_downs()

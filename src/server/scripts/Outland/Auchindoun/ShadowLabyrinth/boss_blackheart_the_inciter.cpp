@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Blackheart_the_Inciter
@@ -33,17 +31,18 @@ EndScriptData */
 #define SPELL_CHARGE          33709
 #define SPELL_WAR_STOMP       33707
 
-#define SAY_INTRO1          -1555008
-#define SAY_INTRO2          -1555009
-#define SAY_INTRO3          -1555010
+#define SAY_INTRO1          -1555008 //not used
+#define SAY_INTRO2          -1555009 //not used
+#define SAY_INTRO3          -1555010 //not used
 #define SAY_AGGRO1          -1555011
 #define SAY_AGGRO2          -1555012
 #define SAY_AGGRO3          -1555013
 #define SAY_SLAY1           -1555014
 #define SAY_SLAY2           -1555015
-#define SAY_HELP            -1555016
+#define SAY_HELP            -1555016 //not used
 #define SAY_DEATH           -1555017
 
+//below, not used
 #define SAY2_INTRO1         -1555018
 #define SAY2_INTRO2         -1555019
 #define SAY2_INTRO3         -1555020
@@ -54,24 +53,25 @@ EndScriptData */
 #define SAY2_SLAY2          -1555025
 #define SAY2_HELP           -1555026
 #define SAY2_DEATH          -1555027
-class boss_blackheart_the_inciter : public CreatureScript
+
+class boss_blackheart_the_inciter : public CreatureScript
 {
 public:
     boss_blackheart_the_inciter() : CreatureScript("boss_blackheart_the_inciter") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_blackheart_the_inciterAI (creature);
+        return new boss_blackheart_the_inciterAI (pCreature);
     }
 
     struct boss_blackheart_the_inciterAI : public ScriptedAI
     {
         boss_blackheart_the_inciterAI(Creature *c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript *pInstance;
 
         bool InciteChaos;
         uint32 InciteChaos_Timer;
@@ -87,38 +87,29 @@ public:
             Charge_Timer = 5000;
             Knockback_Timer = 15000;
 
-            if (instance)
-                instance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, NOT_STARTED);
+            if (pInstance)
+                pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, NOT_STARTED);
         }
 
-        void KilledUnit(Unit *victim)
+        void KilledUnit(Unit * /*victim*/)
         {
-            switch (rand()%2)
-            {
-                case 0: DoScriptText(SAY_SLAY1, me); break;
-                case 1: DoScriptText(SAY_SLAY2, me); break;
-            }
+            DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
         }
 
-        void JustDied(Unit *victim)
+        void JustDied(Unit * /*victim*/)
         {
             DoScriptText(SAY_DEATH, me);
 
-            if (instance)
-                instance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, DONE);
+            if (pInstance)
+                pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, DONE);
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit * /*who*/)
         {
-            switch (rand()%3)
-            {
-                case 0: DoScriptText(SAY_AGGRO1, me); break;
-                case 1: DoScriptText(SAY_AGGRO2, me); break;
-                case 2: DoScriptText(SAY_AGGRO3, me); break;
-            }
+            DoScriptText(RAND(SAY_AGGRO1,SAY_AGGRO2,SAY_AGGRO3), me);
 
-            if (instance)
-                instance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, IN_PROGRESS);
+            if (pInstance)
+                pInstance->SetData(DATA_BLACKHEARTTHEINCITEREVENT, IN_PROGRESS);
         }
 
         void UpdateAI(const uint32 diff)
@@ -143,11 +134,11 @@ public:
                 DoCast(me, SPELL_INCITE_CHAOS);
 
                 std::list<HostileReference *> t_list = me->getThreatManager().getThreatList();
-                for (std::list<HostileReference *>::iterator itr = t_list.begin(); itr != t_list.end(); ++itr)
+                for (std::list<HostileReference *>::const_iterator itr = t_list.begin(); itr!= t_list.end(); ++itr)
                 {
                     Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
                     if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
-                        pTarget->CastSpell(pTarget, SPELL_INCITE_CHAOS_B, true);
+                        pTarget->CastSpell(pTarget,SPELL_INCITE_CHAOS_B,true);
                 }
 
                 DoResetThreat();
@@ -161,19 +152,20 @@ public:
             {
                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                     DoCast(pTarget, SPELL_CHARGE);
-                Charge_Timer = 25000;
+                Charge_Timer = 15000 + rand()%10000;
             } else Charge_Timer -= diff;
 
             //Knockback_Timer
             if (Knockback_Timer <= diff)
             {
                 DoCast(me, SPELL_WAR_STOMP);
-                Knockback_Timer = 20000;
+                Knockback_Timer = 18000 + rand()%6000;
             } else Knockback_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_blackheart_the_inciter()

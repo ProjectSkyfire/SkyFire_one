@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,161 +15,164 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ScriptData
-SDName: Boss_Gluth
-SD%Complete: 100
-SDComment:
-SDCategory: Naxxramas
-EndScriptData */
-
 #include "ScriptPCH.h"
+#include "naxxramas.h"
 
-#define SPELL_MORTALWOUND       25646
-#define SPELL_DECIMATE          28374
-#define SPELL_TERRIFYINGROAR    29685
-#define SPELL_FRENZY            19812
-#define SPELL_ENRAGE            28747
+#define SPELL_MORTAL_WOUND      25646
+#define SPELL_ENRAGE            RAID_MODE(28371,54427)
+#define SPELL_DECIMATE          RAID_MODE(28374,54426)
+#define SPELL_BERSERK           26662
+#define SPELL_INFECTED_WOUND    29307
 
-#define ADD_1X 3269.590f
-#define ADD_1Y -3161.287f
-#define ADD_1Z 297.423f
+#define MOB_ZOMBIE  16360
 
-#define ADD_2X 3277.797f
-#define ADD_2Y -3170.352f
-#define ADD_2Z 297.423f
+const Position PosSummon[3] =
+{
+    {3267.9f, -3172.1f, 297.42f, 0.94f},
+    {3253.2f, -3132.3f, 297.42f, 0},
+    {3308.3f, -3185.8f, 297.42f, 1.58f},
+};
 
-#define ADD_3X 3267.049f
-#define ADD_3Y -3172.820f
-#define ADD_3Z 297.423f
+enum Events
+{
+    EVENT_NONE,
+    EVENT_WOUND,
+    EVENT_ENRAGE,
+    EVENT_DECIMATE,
+    EVENT_BERSERK,
+    EVENT_SUMMON,
+};
 
-#define ADD_4X 3252.157f
-#define ADD_4Y -3132.135f
-#define ADD_4Z 297.423f
+#define EMOTE_NEARBY    " spots a nearby zombie to devour!"
 
-#define ADD_5X 3259.990f
-#define ADD_5Y -3126.590f
-#define ADD_5Z 297.423f
-
-#define ADD_6X 3259.815f
-#define ADD_6Y -3137.576f
-#define ADD_6Z 297.423f
-
-#define ADD_7X 3308.030f
-#define ADD_7Y -3132.135f
-#define ADD_7Z 297.423f
-
-#define ADD_8X 3303.046f
-#define ADD_8Y -3180.682f
-#define ADD_8Z 297.423f
-
-#define ADD_9X 3313.283f
-#define ADD_9Y -3180.766f
-#define ADD_9Z 297.423f
-class boss_gluth : public CreatureScript
+class boss_gluth : public CreatureScript
 {
 public:
     boss_gluth() : CreatureScript("boss_gluth") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_gluthAI (creature);
+        return new boss_gluthAI (pCreature);
     }
 
-    struct boss_gluthAI : public ScriptedAI
+    struct boss_gluthAI : public BossAI
     {
-        boss_gluthAI(Creature *c) : ScriptedAI(c) {}
-
-        uint32 MortalWound_Timer;
-        uint32 Decimate_Timer;
-        uint32 TerrifyingRoar_Timer;
-        uint32 Frenzy_Timer;
-        uint32 Enrage_Timer;
-        uint32 Summon_Timer;
+        boss_gluthAI(Creature *c) : BossAI(c, BOSS_GLUTH)
+        {
+            // Do not let Gluth be affected by zombies' debuff
+            me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_INFECTED_WOUND, true);
+        }
 
         void Reset()
         {
-            MortalWound_Timer = 8000;
-            Decimate_Timer = 100000;
-            TerrifyingRoar_Timer = 21000;
-            Frenzy_Timer = 15000;
-            Enrage_Timer = 304000;
-            Summon_Timer = 10000;
+            _Reset();
+            SetImmuneToDeathGrip();
         }
 
-        void EnterCombat(Unit *who)
+        void MoveInLineOfSight(Unit *who)
         {
+            if (who->GetEntry() == MOB_ZOMBIE && me->IsWithinDistInMap(who, 7))
+            {
+                SetGazeOn(who);
+                // TODO: use a script text
+                me->MonsterTextEmote(EMOTE_NEARBY, 0, true);
+            }
+            else
+                BossAI::MoveInLineOfSight(who);
+        }
+
+        void EnterCombat(Unit * /*who*/)
+        {
+            _EnterCombat();
+            events.ScheduleEvent(EVENT_WOUND, 10000);
+            events.ScheduleEvent(EVENT_ENRAGE, 15000);
+            events.ScheduleEvent(EVENT_DECIMATE, RAID_MODE(120000,90000));
+            events.ScheduleEvent(EVENT_BERSERK, RAID_MODE(8*60000,7*60000));
+            events.ScheduleEvent(EVENT_SUMMON, 15000);
+        }
+
+        void JustSummoned(Creature *summon)
+        {
+            if (summon->GetEntry() == MOB_ZOMBIE)
+            {
+                summon->AI()->AttackStart(me);
+                summon->CastSpell(summon,SPELL_INFECTED_WOUND,true);
+            }
+
+            summons.Summon(summon);
         }
 
         void UpdateAI(const uint32 diff)
         {
-            if (!UpdateVictim())
+            if (!UpdateVictimWithGaze() || !CheckInRoom())
                 return;
 
-            //MortalWound_Timer
-            if (MortalWound_Timer <= diff)
+            events.Update(diff);
+
+            while (uint32 eventId = events.ExecuteEvent())
             {
-                DoCast(me->getVictim(),SPELL_MORTALWOUND);
-                MortalWound_Timer = 10000;
-            } else MortalWound_Timer -= diff;
-
-            //Decimate_Timer
-            if (Decimate_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_DECIMATE);
-                Decimate_Timer = 100000;
-            } else Decimate_Timer -= diff;
-
-            //TerrifyingRoar_Timer
-            if (TerrifyingRoar_Timer <= diff)
-            {
-                DoCast(me->getVictim(),SPELL_TERRIFYINGROAR);
-                TerrifyingRoar_Timer = 20000;
-            } else TerrifyingRoar_Timer -= diff;
-
-            //Frenzy_Timer
-            if (Frenzy_Timer <= diff)
-            {
-                DoCast(me, SPELL_FRENZY);
-                Frenzy_Timer = 10500;
-            } else Frenzy_Timer -= diff;
-
-            //Enrage_Timer
-            if (Enrage_Timer <= diff)
-            {
-                DoCast(me, SPELL_ENRAGE);
-                Enrage_Timer = 61000;
-            } else Enrage_Timer -= diff;
-
-            //Summon_Timer
-            if (Summon_Timer <= diff)
-            {
-                Unit *pTarget = NULL;
-                Unit* SummonedZombies = NULL;
-
-                SummonedZombies = me->SummonCreature(16360, ADD_1X, ADD_1Y, ADD_1Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_2X, ADD_2Y, ADD_2Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_3X, ADD_3Y, ADD_3Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_4X, ADD_4Y, ADD_4Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_5X, ADD_5Y, ADD_5Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_6X, ADD_6Y, ADD_6Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_7X, ADD_7Y, ADD_7Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_8X, ADD_8Y, ADD_8Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-                SummonedZombies = me->SummonCreature(16360, ADD_9X, ADD_9Y, ADD_9Z, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 80000);
-
-                if (SummonedZombies)
+                switch(eventId)
                 {
-                    pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                    if (pTarget)
-                        SummonedZombies->AddThreat(pTarget, 1.0f);
+                    case EVENT_WOUND:
+                        DoCast(me->getVictim(), SPELL_MORTAL_WOUND);
+                        events.ScheduleEvent(EVENT_WOUND, 10000);
+                        break;
+                    case EVENT_ENRAGE:
+                        // TODO : Add missing text
+                        DoCast(me, SPELL_ENRAGE);
+                        events.ScheduleEvent(EVENT_ENRAGE, 15000);
+                        break;
+                    case EVENT_DECIMATE:
+                        // TODO : Add missing text
+                        DoCastAOE(SPELL_DECIMATE);
+                        events.ScheduleEvent(EVENT_DECIMATE, RAID_MODE(120000,90000));
+
+                        for (std::list<uint64>::const_iterator itr = summons.begin(); itr != summons.end(); ++itr)
+                        {
+                            Creature *minion = Unit::GetCreature(*me, *itr);
+                            if (minion && minion->isAlive() )
+                            {
+                                //hack
+                                int32 damage = int32(minion->GetHealth()) - int32(minion->CountPctFromMaxHealth(5));
+                                if (damage > 0)
+                                    me->CastCustomSpell(28375, SPELLVALUE_BASE_POINT0, damage, minion, true);
+
+                                if(minion->AI()) //is useless
+                                {
+                                    minion->GetMotionMaster()->MoveChase(me);
+                                    minion->AddThreat(me,9999999);
+                                }
+                            }
+                        }
+                        break;
+                    case EVENT_BERSERK:
+                        if(!me->HasAura(SPELL_BERSERK))
+                        DoCast(me, SPELL_BERSERK);
+                        events.ScheduleEvent(EVENT_BERSERK, 1*60000);
+                        break;
+                    case EVENT_SUMMON:
+                        for (int32 i = 0; i < RAID_MODE(1, 2); ++i)
+                            DoSummon(MOB_ZOMBIE, PosSummon[RAID_MODE(0,rand() % 3)]);
+                        events.ScheduleEvent(EVENT_SUMMON, 10000);
+                        break;
                 }
+            }
 
-                Summon_Timer = 28000;
-            } else Summon_Timer -= diff;
-
-            DoMeleeAttackIfReady();
+            if (me->getVictim() && me->getVictim()->GetEntry() == MOB_ZOMBIE)
+            {
+                if (me->IsWithinMeleeRange(me->getVictim()))
+                {
+                    me->Kill(me->getVictim());
+                    me->ModifyHealth(int32(me->CountPctFromMaxHealth(5)));
+                }
+            }
+            else
+                DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_gluth()
 {

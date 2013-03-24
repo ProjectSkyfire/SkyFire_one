@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -47,58 +45,62 @@ EndScriptData */
 #define SPELL_ELEMENTALFIRE         20564
 #define SPELL_ERRUPTION             17731
 
-#define ADD_1X 848.740356f
-#define ADD_1Y -816.103455f
-#define ADD_1Z -229.74327f
-#define ADD_1O 2.615287f
+#define ADD_1X 848.740356
+#define ADD_1Y -816.103455
+#define ADD_1Z -229.74327
+#define ADD_1O 2.615287
 
-#define ADD_2X 852.560791f
-#define ADD_2Y -849.861511f
-#define ADD_2Z -228.560974f
-#define ADD_2O 2.836073f
+#define ADD_2X 852.560791
+#define ADD_2Y -849.861511
+#define ADD_2Z -228.560974
+#define ADD_2O 2.836073
 
-#define ADD_3X 808.710632f
-#define ADD_3Y -852.845764f
-#define ADD_3Z -227.914963f
-#define ADD_3O 0.964207f
+#define ADD_3X 808.710632
+#define ADD_3Y -852.845764
+#define ADD_3Z -227.914963
+#define ADD_3O 0.964207
 
-#define ADD_4X 786.597107f
-#define ADD_4Y -821.132874f
-#define ADD_4Z -226.350128f
-#define ADD_4O 0.949377f
+#define ADD_4X 786.597107
+#define ADD_4Y -821.132874
+#define ADD_4Z -226.350128
+#define ADD_4O 0.949377
 
-#define ADD_5X 796.219116f
-#define ADD_5Y -800.948059f
-#define ADD_5Z -226.010361f
-#define ADD_5O 0.560603f
+#define ADD_5X 796.219116
+#define ADD_5Y -800.948059
+#define ADD_5Z -226.010361
+#define ADD_5O 0.560603
 
-#define ADD_6X 821.602539f
-#define ADD_6Y -782.744109f
-#define ADD_6Z -226.023575f
-#define ADD_6O 6.157440f
+#define ADD_6X 821.602539
+#define ADD_6Y -782.744109
+#define ADD_6Z -226.023575
+#define ADD_6O 6.157440
 
-#define ADD_7X 844.924744f
-#define ADD_7Y -769.453735f
-#define ADD_7Z -225.521698f
-#define ADD_7O 4.4539958f
+#define ADD_7X 844.924744
+#define ADD_7Y -769.453735
+#define ADD_7Z -225.521698
+#define ADD_7O 4.4539958
 
-#define ADD_8X 839.823364f
-#define ADD_8Y -810.869385f
-#define ADD_8Z -229.683182f
-#define ADD_8O 4.693108f
-class boss_ragnaros : public CreatureScript
+#define ADD_8X 839.823364
+#define ADD_8Y -810.869385
+#define ADD_8Z -229.683182
+#define ADD_8O 4.693108
+
+class boss_ragnaros : public CreatureScript
 {
 public:
     boss_ragnaros() : CreatureScript("boss_ragnaros") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_ragnarosAI (creature);
+        return new boss_ragnarosAI (pCreature);
     }
 
-    struct boss_ragnarosAI : public Scripted_NoMovementAI
+    struct boss_ragnarosAI : public ScriptedAI
     {
-        boss_ragnarosAI(Creature *c) : Scripted_NoMovementAI(c) {}
+        boss_ragnarosAI(Creature *c) : ScriptedAI(c)
+        {
+            SetCombatMovement(false);
+        }
 
         uint32 WrathOfRagnaros_Timer;
         uint32 HandOfRagnaros_Timer;
@@ -169,7 +171,7 @@ public:
             {
                 DoCast(me->getVictim(), SPELL_WRATHOFRAGNAROS);
 
-                if (urand(0, 1))
+                if (urand(0,1))
                     DoScriptText(SAY_WRATH, me);
 
                 WrathOfRagnaros_Timer = 30000;
@@ -180,7 +182,7 @@ public:
             {
                 DoCast(me, SPELL_HANDOFRAGNAROS);
 
-                if (urand(0, 1))
+                if (urand(0,1))
                     DoScriptText(SAY_HAND, me);
 
                 HandOfRagnaros_Timer = 25000;
@@ -197,14 +199,14 @@ public:
             if (LavaBurst_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_ERRUPTION);
-                Erruption_Timer = urand(20000, 45000);
+                Erruption_Timer = urand(20000,45000);
             } else Erruption_Timer -= diff;
 
             //ElementalFire_Timer
             if (ElementalFire_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_ELEMENTALFIRE);
-                ElementalFire_Timer = urand(10000, 14000);
+                ElementalFire_Timer = urand(10000,14000);
             } else ElementalFire_Timer -= diff;
 
             //Submerge_Timer
@@ -228,9 +230,9 @@ public:
                     // summon 10 elementals
                     for (uint8 i = 0; i < 9; ++i)
                     {
-                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                         {
-                            if (Creature* pSummoned = me->SummonCreature(12143, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 900000))
+                            if (Creature* pSummoned = me->SummonCreature(12143,pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000))
                                 pSummoned->AI()->AttackStart(pTarget);
                         }
                     }
@@ -239,6 +241,7 @@ public:
                     WasBanished = true;
                     DoCast(me, SPELL_RAGSUBMERGE);
                     Attack_Timer = 90000;
+
                 }
                 else
                 {
@@ -246,10 +249,10 @@ public:
 
                     for (uint8 i = 0; i < 9; ++i)
                     {
-                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                         {
-                            if (Creature* pSummoned = me->SummonCreature(12143, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 900000))
-                                pSummoned->AI()->AttackStart(pTarget);
+                            if (Creature* pSummoned = me->SummonCreature(12143,pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(),0.0f,TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,900000))
+                            pSummoned->AI()->AttackStart(pTarget);
                         }
                     }
 
@@ -290,6 +293,7 @@ public:
             }
         }
     };
+
 };
 
 void AddSC_boss_ragnaros()

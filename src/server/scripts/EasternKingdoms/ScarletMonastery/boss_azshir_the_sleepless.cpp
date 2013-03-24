@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -30,14 +28,15 @@ EndScriptData */
 #define SPELL_CALLOFTHEGRAVE            17831
 #define SPELL_TERRIFY                   7399
 #define SPELL_SOULSIPHON                7290
-class boss_azshir_the_sleepless : public CreatureScript
+
+class boss_azshir_the_sleepless : public CreatureScript
 {
 public:
     boss_azshir_the_sleepless() : CreatureScript("boss_azshir_the_sleepless") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_azshir_the_sleeplessAI (creature);
+        return new boss_azshir_the_sleeplessAI (pCreature);
     }
 
     struct boss_azshir_the_sleeplessAI : public ScriptedAI
@@ -65,7 +64,7 @@ public:
                 return;
 
             //If we are <50% hp cast Soul Siphon rank 1
-            if (me->GetHealth()*100 / me->GetMaxHealth() <= 50 && !me->IsNonMeleeSpellCasted(false))
+            if (!HealthAbovePct(50) && !me->IsNonMeleeSpellCasted(false))
             {
                 //SoulSiphon_Timer
                 if (SoulSiphon_Timer <= diff)
@@ -94,7 +93,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_azshir_the_sleepless()
 {

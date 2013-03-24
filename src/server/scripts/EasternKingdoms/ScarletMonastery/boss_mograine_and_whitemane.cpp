@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -54,24 +52,25 @@ enum eEnums
     SPELL_HEAL                   = 12039,
     SPELL_POWERWORDSHIELD        = 22187
 };
-class boss_scarlet_commander_mograine : public CreatureScript
+
+class boss_scarlet_commander_mograine : public CreatureScript
 {
 public:
     boss_scarlet_commander_mograine() : CreatureScript("boss_scarlet_commander_mograine") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_scarlet_commander_mograineAI (creature);
+        return new boss_scarlet_commander_mograineAI (pCreature);
     }
 
     struct boss_scarlet_commander_mograineAI : public ScriptedAI
     {
-        boss_scarlet_commander_mograineAI(Creature* creature) : ScriptedAI(creature)
+        boss_scarlet_commander_mograineAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = creature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiCrusaderStrike_Timer;
         uint32 m_uiHammerOfJustice_Timer;
@@ -92,7 +91,7 @@ public:
 
             if (m_pInstance)
                 if (me->isAlive())
-                    m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, NOT_STARTED);
+                    m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT,NOT_STARTED);
 
             m_bHasDied = false;
             m_bHeal = false;
@@ -134,7 +133,7 @@ public:
             {
                 m_pInstance->SetData(TYPE_MOGRAINE_AND_WHITE_EVENT, IN_PROGRESS);
 
-                Whitemane->GetMotionMaster()->MovePoint(1, 1163.113370, 1398.856812, 32.527786);
+                Whitemane->GetMotionMaster()->MovePoint(1,1163.113370f,1398.856812f,32.527786f);
 
                 me->GetMotionMaster()->MovementExpired();
                 me->GetMotionMaster()->MoveIdle();
@@ -216,25 +215,27 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
-class boss_high_inquisitor_whitemane : public CreatureScript
+
+class boss_high_inquisitor_whitemane : public CreatureScript
 {
 public:
     boss_high_inquisitor_whitemane() : CreatureScript("boss_high_inquisitor_whitemane") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_high_inquisitor_whitemaneAI (creature);
+        return new boss_high_inquisitor_whitemaneAI (pCreature);
     }
 
     struct boss_high_inquisitor_whitemaneAI : public ScriptedAI
     {
-        boss_high_inquisitor_whitemaneAI(Creature* creature) : ScriptedAI(creature)
+        boss_high_inquisitor_whitemaneAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = creature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiHeal_Timer;
         uint32 m_uiPowerWordShield_Timer;
@@ -298,7 +299,7 @@ public:
             }
 
             //Cast Deep sleep when health is less than 50%
-            if (!m_bCanResurrectCheck && me->GetHealth()*100 / me->GetMaxHealth() <= 50)
+            if (!m_bCanResurrectCheck && !HealthAbovePct(50))
             {
                 if (me->IsNonMeleeSpellCasted(false))
                     me->InterruptNonMeleeSpells(false);
@@ -318,7 +319,7 @@ public:
             {
                 Creature* pTarget = NULL;
 
-                if (me->GetHealth() <= me->GetMaxHealth()*0.75f)
+                if (!HealthAbovePct(75))
                     pTarget = me;
 
                 if (m_pInstance)
@@ -326,7 +327,7 @@ public:
                     if (Creature* pMograine = Unit::GetCreature((*me), m_pInstance->GetData64(DATA_MOGRAINE)))
                     {
                         // checking m_bCanResurrectCheck prevents her healing Mograine while he is "faking death"
-                        if (m_bCanResurrectCheck && pMograine->isAlive() && pMograine->GetHealth() <= pMograine->GetMaxHealth()*0.75f)
+                        if (m_bCanResurrectCheck && pMograine->isAlive() && !pMograine->HealthAbovePct(75))
                             pTarget = pMograine;
                     }
                 }
@@ -354,7 +355,10 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
+
 
 void AddSC_boss_mograine_and_whitemane()
 {

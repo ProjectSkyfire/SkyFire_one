@@ -1,22 +1,20 @@
  /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Old_Hillsbrad
@@ -31,26 +29,36 @@ npc_thrall_old_hillsbrad
 npc_taretha
 EndContentData */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "ScriptedGossip.h"
 #include "ScriptedEscortAI.h"
 #include "old_hillsbrad.h"
+#include "Player.h"
 
-#define QUEST_ENTRY_HILLSBRAD   10282
-#define QUEST_ENTRY_DIVERSION   10283
-#define QUEST_ENTRY_ESCAPE      10284
-#define QUEST_ENTRY_RETURN      10285
-#define ITEM_ENTRY_BOMBS        25853
+enum Erozion
+{
+    QUEST_ENTRY_HILLSBRAD   = 10282,
+    QUEST_ENTRY_DIVERSION   = 10283,
+    QUEST_ENTRY_ESCAPE      = 10284,
+    QUEST_ENTRY_RETURN      = 10285,
+    ITEM_ENTRY_BOMBS        = 25853
+};
+#define GOSSIP_HELLO_EROZION1   "I need a pack of Incendiary Bombs."
+#define GOSSIP_HELLO_EROZION2   "[PH] Teleport please, i'm tired."
 
 /*######
 ## npc_erozion
 ######*/
-class npc_erozion : public CreatureScript
+
+class npc_erozion : public CreatureScript
 {
 public:
     npc_erozion() : CreatureScript("npc_erozion") { }
 
-    bool GossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
+        player->PlayerTalkClass->ClearMenus();
         if (action == GOSSIP_ACTION_INFO_DEF+1)
         {
             ItemPosCountVec dest;
@@ -68,22 +76,23 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* player, Creature* creature)
     {
         if (creature->isQuestGiver())
             player->PrepareQuestMenu(creature->GetGUID());
 
-        ScriptedInstance* instance = (creature->GetInstanceScript());
-        if (instance && instance->GetData(TYPE_BARREL_DIVERSION) != DONE && !player->HasItemCount(ITEM_ENTRY_BOMBS, 1))
-            player->ADD_GOSSIP_ITEM(0, "I need a pack of Incendiary Bombs.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        InstanceScript* instance = creature->GetInstanceScript();
+        if (instance && instance->GetData(TYPE_BARREL_DIVERSION) != DONE && !player->HasItemCount(ITEM_ENTRY_BOMBS))
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_EROZION1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-        if (!player->GetQuestRewardStatus(QUEST_ENTRY_RETURN) && player->GetQuestStatus(QUEST_ENTRY_RETURN) == QUEST_STATUS_COMPLETE)
-            player->ADD_GOSSIP_ITEM(0, "[PH] Teleport please, i'm tired.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+        if (player->GetQuestStatus(QUEST_ENTRY_RETURN) == QUEST_STATUS_COMPLETE)
+            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_EROZION2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
 
         player->SEND_GOSSIP_MENU(9778, creature->GetGUID());
 
         return true;
     }
+
 };
 
 /*######
@@ -91,113 +100,102 @@ public:
 ######*/
 
 //Thrall texts
-#define SAY_TH_START_EVENT_PART1    -1560023
-#define SAY_TH_ARMORY               -1560024
-#define SAY_TH_SKARLOC_MEET         -1560025
-#define SAY_TH_SKARLOC_TAUNT        -1560026
-#define SAY_TH_START_EVENT_PART2    -1560027
-#define SAY_TH_MOUNTS_UP            -1560028
-#define SAY_TH_CHURCH_END           -1560029
-#define SAY_TH_MEET_TARETHA         -1560030
-#define SAY_TH_EPOCH_WONDER         -1560031
-#define SAY_TH_EPOCH_KILL_TARETHA   -1560032
-#define SAY_TH_EVENT_COMPLETE       -1560033
+enum ThrallOldHillsbrad
+{
+    SAY_TH_START_EVENT_PART1    = 0,
+    SAY_TH_ARMORY               = 1,
+    SAY_TH_SKARLOC_MEET         = 2,
+    SAY_TH_SKARLOC_TAUNT        = 3,
+    SAY_TH_START_EVENT_PART2    = 4,
+    SAY_TH_MOUNTS_UP            = 5,
+    SAY_TH_CHURCH_END           = 6,
+    SAY_TH_MEET_TARETHA         = 7,
+    SAY_TH_EPOCH_WONDER         = 8,
+    SAY_TH_EPOCH_KILL_TARETHA   = 9,
+    SAY_TH_EVENT_COMPLETE       = 10,
 
-#define SAY_TH_RANDOM_LOW_HP1       -1560034
-#define SAY_TH_RANDOM_LOW_HP2       -1560035
+    SAY_TH_RANDOM_LOW_HP        = 11,
+    SAY_TH_RANDOM_DIE           = 12,
+    SAY_TH_RANDOM_AGGRO         = 13,
+    SAY_TH_RANDOM_KILL          = 14,
+    SAY_TH_LEAVE_COMBAT         = 15,
 
-#define SAY_TH_RANDOM_DIE1          -1560036
-#define SAY_TH_RANDOM_DIE2          -1560037
+    //Taretha texts
+    SAY_TA_FREE                 = 0,
+    SAY_TA_ESCAPED              = 1,
 
-#define SAY_TH_RANDOM_AGGRO1        -1560038
-#define SAY_TH_RANDOM_AGGRO2        -1560039
-#define SAY_TH_RANDOM_AGGRO3        -1560040
-#define SAY_TH_RANDOM_AGGRO4        -1560041
+    //Misc for Thrall
+    SPELL_STRIKE                = 14516,
+    SPELL_SHIELD_BLOCK          = 12169,
+    SPELL_SUMMON_EROZION_IMAGE  = 33954,                   //if thrall dies during escort?
 
-#define SAY_TH_RANDOM_KILL1         -1560042
-#define SAY_TH_RANDOM_KILL2         -1560043
-#define SAY_TH_RANDOM_KILL3         -1560044
+    THRALL_WEAPON_ITEM          = 927,
+    THRALL_WEAPON_INFO          = 218169346,
+    THRALL_SHIELD_ITEM          = 2129,
+    THRALL_SHIELD_INFO          = 234948100,
+    THRALL_MODEL_UNEQUIPPED     = 17292,
+    THRALL_MODEL_EQUIPPED       = 18165,
 
-#define SAY_TH_LEAVE_COMBAT1        -1560045
-#define SAY_TH_LEAVE_COMBAT2        -1560046
-#define SAY_TH_LEAVE_COMBAT3        -1560047
+    //Misc Creature entries
+    ENTRY_ARMORER               = 18764,
+    ENTRY_SCARLOC               = 17862,
 
-//Taretha texts
-#define SAY_TA_FREE                 -1560048
-#define SAY_TA_ESCAPED              -1560049
+    MOB_ENTRY_RIFLE             = 17820,
+    MOB_ENTRY_WARDEN            = 17833,
+    MOB_ENTRY_VETERAN           = 17860,
+    MOB_ENTRY_WATCHMAN          = 17814,
+    MOB_ENTRY_SENTRY            = 17815,
 
-//Misc for Thrall
-#define SPELL_STRIKE                14516
-#define SPELL_SHIELD_BLOCK          12169
-#define SPELL_SUMMON_EROZION_IMAGE  33954                   //if thrall dies during escort?
+    MOB_ENTRY_BARN_GUARDSMAN    = 18092,
+    MOB_ENTRY_BARN_PROTECTOR    = 18093,
+    MOB_ENTRY_BARN_LOOKOUT      = 18094,
+
+    MOB_ENTRY_CHURCH_GUARDSMAN  = 23175,
+    MOB_ENTRY_CHURCH_PROTECTOR  = 23179,
+    MOB_ENTRY_CHURCH_LOOKOUT    = 23177,
+
+    MOB_ENTRY_INN_GUARDSMAN     = 23176,
+    MOB_ENTRY_INN_PROTECTOR     = 23180,
+    MOB_ENTRY_INN_LOOKOUT       = 23178,
+
+    SKARLOC_MOUNT               = 18798,
+    SKARLOC_MOUNT_MODEL         = 18223,
+    EROZION_ENTRY               = 18723,
+    ENTRY_EPOCH                 = 18096,
+
+    GOSSIP_ID_START             = 9568,
+    GOSSIP_ID_SKARLOC1          = 9614,                        //I'm glad Taretha is alive. We now must find a way to free her...
+    GOSSIP_ID_SKARLOC2          = 9579,                        //What do you mean by this? Is Taretha in danger?
+    GOSSIP_ID_SKARLOC3          = 9580,
+    GOSSIP_ID_TARREN            = 9597,                        //tarren mill is beyond these trees
+    GOSSIP_ID_COMPLETE          = 9578                         //Thank you friends, I owe my freedom to you. Where is Taretha? I hoped to see her
+};
 
 #define SPEED_WALK              (0.5f)
 #define SPEED_RUN               (1.0f)
 #define SPEED_MOUNT             (1.6f)
 
-#define THRALL_WEAPON_MODEL     22106
-#define THRALL_WEAPON_INFO      218169346
-#define THRALL_SHIELD_MODEL     18662
-#define THRALL_SHIELD_INFO      234948100
-#define THRALL_MODEL_UNEQUIPPED 17292
-#define THRALL_MODEL_EQUIPPED   18165
-
-//Misc Creature entries
-#define ENTRY_ARMORER               18764
-#define ENTRY_SCARLOC               17862
-
-#define MOB_ENTRY_RIFLE         17820
-#define MOB_ENTRY_WARDEN        17833
-#define MOB_ENTRY_VETERAN       17860
-#define MOB_ENTRY_WATCHMAN      17814
-#define MOB_ENTRY_SENTRY        17815
-
-#define MOB_ENTRY_BARN_GUARDSMAN    18092
-#define MOB_ENTRY_BARN_PROTECTOR    18093
-#define MOB_ENTRY_BARN_LOOKOUT      18094
-
-#define MOB_ENTRY_CHURCH_GUARDSMAN  23175
-#define MOB_ENTRY_CHURCH_PROTECTOR  23179
-#define MOB_ENTRY_CHURCH_LOOKOUT    23177
-
-#define MOB_ENTRY_INN_GUARDSMAN     23176
-#define MOB_ENTRY_INN_PROTECTOR     23180
-#define MOB_ENTRY_INN_LOOKOUT       23178
-
-#define SKARLOC_MOUNT           18798
-#define SKARLOC_MOUNT_MODEL     18223
-#define EROZION_ENTRY           18723
-#define ENTRY_EPOCH                 18096
-
 //gossip items
-#define GOSSIP_ID_START         9568
-#define GOSSIP_ID_SKARLOC1      9614                        //I'm glad Taretha is alive. We now must find a way to free her...
 #define GOSSIP_ITEM_SKARLOC1    "Taretha cannot see you, Thrall."
-#define GOSSIP_ID_SKARLOC2      9579                        //What do you mean by this? Is Taretha in danger?
 #define GOSSIP_ITEM_SKARLOC2    "The situation is rather complicated, Thrall. It would be best for you to head into the mountains now, before more of Blackmoore's men show up. We'll make sure Taretha is safe."
-#define GOSSIP_ID_SKARLOC3      9580
-
-#define GOSSIP_ID_TARREN        9597                        //tarren mill is beyond these trees
 #define GOSSIP_ITEM_TARREN      "We're ready, Thrall."
-
-#define GOSSIP_ID_COMPLETE      9578                        //Thank you friends, I owe my freedom to you. Where is Taretha? I hoped to see her
-
 #define GOSSIP_ITEM_WALKING     "[PH] Start walking."
-class npc_thrall_old_hillsbrad : public CreatureScript
+
+class npc_thrall_old_hillsbrad : public CreatureScript
 {
 public:
     npc_thrall_old_hillsbrad() : CreatureScript("npc_thrall_old_hillsbrad") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_thrall_old_hillsbradAI(creature);
     }
 
-    bool GossipSelect(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
-        ScriptedInstance* instance = (creature->GetInstanceScript());
-
-        switch (uiAction)
+        player->PlayerTalkClass->ClearMenus();
+        InstanceScript* instance = creature->GetInstanceScript();
+        switch (action)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
                 player->CLOSE_GOSSIP_MENU();
@@ -207,9 +205,9 @@ public:
                     instance->SetData(TYPE_THRALL_PART1, IN_PROGRESS);
                 }
 
-                DoScriptText(SAY_TH_START_EVENT_PART1, creature);
+                creature->AI()->Talk(SAY_TH_START_EVENT_PART1);
 
-                if (npc_escortAI* pEscortAI = CAST_AI(npc_thrall_old_hillsbradAI, creature->AI()))
+                if (npc_escortAI* pEscortAI = CAST_AI(npc_thrall_old_hillsbrad::npc_thrall_old_hillsbradAI, creature->AI()))
                     pEscortAI->Start(true, true, player->GetGUID());
 
                 CAST_AI(npc_escortAI, (creature->AI()))->SetMaxPlayerDistance(100.0f);//not really needed, because it will not despawn if player is too far
@@ -228,22 +226,22 @@ public:
                 if (instance)
                     instance->SetData(TYPE_THRALL_PART2, IN_PROGRESS);
 
-                DoScriptText(SAY_TH_START_EVENT_PART2, creature);
+                creature->AI()->Talk(SAY_TH_START_EVENT_PART2);
 
-                CAST_AI(npc_thrall_old_hillsbradAI, creature->AI())->StartWP();
+                CAST_AI(npc_thrall_old_hillsbrad::npc_thrall_old_hillsbradAI, creature->AI())->StartWP();
                 break;
 
             case GOSSIP_ACTION_INFO_DEF+3:
                 player->CLOSE_GOSSIP_MENU();
                 if (instance)
                     instance->SetData(TYPE_THRALL_PART3, IN_PROGRESS);
-                CAST_AI(npc_thrall_old_hillsbradAI, creature->AI())->StartWP();
+                CAST_AI(npc_thrall_old_hillsbrad::npc_thrall_old_hillsbradAI, creature->AI())->StartWP();
                 break;
         }
         return true;
     }
 
-    bool GossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* player, Creature* creature)
     {
         if (creature->isQuestGiver())
         {
@@ -251,7 +249,7 @@ public:
             player->SendPreparedQuest(creature->GetGUID());
         }
 
-        ScriptedInstance* instance = (creature->GetInstanceScript());
+        InstanceScript* instance = creature->GetInstanceScript();
         if (instance)
         {
             if (instance->GetData(TYPE_BARREL_DIVERSION) == DONE && !instance->GetData(TYPE_THRALL_EVENT))
@@ -277,39 +275,39 @@ public:
 
     struct npc_thrall_old_hillsbradAI : public npc_escortAI
     {
-        npc_thrall_old_hillsbradAI(Creature *c) : npc_escortAI(c)
+        npc_thrall_old_hillsbradAI(Creature* creature) : npc_escortAI(creature)
         {
-            instance = c->GetInstanceScript();
+            instance = creature->GetInstanceScript();
             HadMount = false;
             me->setActive(true);
         }
 
-        ScriptedInstance *instance;
+        InstanceScript* instance;
 
         uint64 TarethaGUID;
 
         bool LowHp;
         bool HadMount;
 
-        void WaypointReached(uint32 i)
+        void WaypointReached(uint32 waypointId)
         {
             if (!instance)
                 return;
 
-            switch (i)
+            switch (waypointId)
             {
                 case 8:
                     SetRun(false);
                     me->SummonCreature(18764, 2181.87f, 112.46f, 89.45f, 0.26f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                     break;
                 case 9:
-                    DoScriptText(SAY_TH_ARMORY, me);
-                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, THRALL_WEAPON_MODEL);
-                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, THRALL_WEAPON_INFO);
-                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 781);
-                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, THRALL_SHIELD_MODEL);
-                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, THRALL_SHIELD_INFO);
-                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+3, 1038);
+                    Talk(SAY_TH_ARMORY);
+                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, THRALL_WEAPON_ITEM);
+                    //me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, THRALL_WEAPON_INFO);
+                    //me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 781);
+                    me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, THRALL_SHIELD_ITEM);
+                    //me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, THRALL_SHIELD_INFO);
+                    //me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+3, 1038);
                     break;
                 case 10:
                     me->SetDisplayId(THRALL_MODEL_EQUIPPED);
@@ -336,7 +334,7 @@ public:
                     me->SummonCreature(MOB_ENTRY_VETERAN, 2104.18f, 194.82f, 65.18f, 5.75f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                     break;
                 case 29:
-                    DoScriptText(SAY_TH_SKARLOC_MEET, me);
+                    Talk(SAY_TH_SKARLOC_MEET);
                     me->SummonCreature(ENTRY_SCARLOC, 2036.48f, 271.22f, 63.43f, 5.27f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
                     //temporary, skarloc should rather be triggered to walk up to thrall
                     break;
@@ -346,7 +344,7 @@ public:
                     SetRun(false);
                     break;
                 case 31:
-                    DoScriptText(SAY_TH_MOUNTS_UP, me);
+                    Talk(SAY_TH_MOUNTS_UP);
                     DoMount();
                     SetRun();
                     break;
@@ -392,11 +390,11 @@ public:
                     me->SummonCreature(MOB_ENTRY_CHURCH_GUARDSMAN, 2627.22f, 649.00f, 56.03f, 4.34f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 5000);
                     break;
                 case 84:
-                    DoScriptText(SAY_TH_CHURCH_END, me);
+                    Talk(SAY_TH_CHURCH_END);
                     SetRun();
                     break;
                 case 91:
-                    me->AddUnitMovementFlag(MOVEFLAG_WALK_MODE);
+                    me->SetWalk(true);
                     SetRun(false);
                     break;
                 case 93:
@@ -408,48 +406,44 @@ public:
                 case 94:
                     if (uint64 TarethaGUID = instance->GetData64(DATA_TARETHA))
                     {
-                        if (Unit* Taretha = Unit::GetUnit((*me), TarethaGUID))
-                            DoScriptText(SAY_TA_ESCAPED, Taretha, me);
+                        if (Creature* Taretha = Creature::GetCreature(*me, TarethaGUID))
+                            Taretha->AI()->Talk(SAY_TA_ESCAPED, me->GetGUID());
                     }
                     break;
                 case 95:
-                    DoScriptText(SAY_TH_MEET_TARETHA, me);
+                    Talk(SAY_TH_MEET_TARETHA);
                     instance->SetData(TYPE_THRALL_PART3, DONE);
                     SetEscortPaused(true);
                     break;
                 case 96:
-                    DoScriptText(SAY_TH_EPOCH_WONDER, me);
+                    Talk(SAY_TH_EPOCH_WONDER);
                     break;
                 case 97:
-                    DoScriptText(SAY_TH_EPOCH_KILL_TARETHA, me);
+                    Talk(SAY_TH_EPOCH_KILL_TARETHA);
                     SetRun();
                     break;
                 case 98:
                     //trigger epoch Yell("Thrall! Come outside and face your fate! ....")
                     //from here, thrall should not never be allowed to move to point 106 which he currently does.
                     break;
-
                 case 106:
                     {
                         //trigger taretha to run down outside
-                        if (uint64 TarethaGUID = instance->GetData64(DATA_TARETHA))
+                        if (Creature* Taretha = instance->instance->GetCreature(instance->GetData64(DATA_TARETHA)))
                         {
-                            if (Creature* Taretha = (Unit::GetCreature(*me, TarethaGUID)))
-                            {
-                                if (Player* player = GetPlayerForEscort())
-                                    CAST_AI(npc_escortAI, (Taretha->AI()))->Start(false, true, player->GetGUID());
-                            }
+                            if (Player* player = GetPlayerForEscort())
+                                CAST_AI(npc_escortAI, (Taretha->AI()))->Start(false, true, player->GetGUID());
                         }
 
                         //kill credit Creature for quest
-                        Map* pMap = me->GetMap();
-                        Map::PlayerList const& players = pMap->GetPlayers();
-                        if (!players.isEmpty() && pMap->IsDungeon())
+                        Map* map = me->GetMap();
+                        Map::PlayerList const& players = map->GetPlayers();
+                        if (!players.isEmpty() && map->IsDungeon())
                         {
                             for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                             {
                                 if (Player* player = itr->getSource())
-                                    player->KilledMonsterCredit(20156, me->GetGUID());
+                                    player->KilledMonsterCredit(20156, 0);
                             }
                         }
 
@@ -459,7 +453,7 @@ public:
                     break;
                 case 108:
                     //last waypoint, just set Thrall invisible, respawn is turned off
-                    me->SetVisibility(VISIBILITY_OFF);
+                    me->SetVisible(false);
                     break;
             }
         }
@@ -475,17 +469,13 @@ public:
             {
                 DoUnmount();
                 HadMount = false;
-                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY, 0);
-                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO, 0);
-                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+1, 0);
-                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_DISPLAY+1, 0);
-                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+2, 0);
-                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_INFO+3, 0);
+                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, 0);
+                me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID+1, 0);
                 me->SetDisplayId(THRALL_MODEL_UNEQUIPPED);
             }
             if (HasEscortState(STATE_ESCORT_ESCORTING))
             {
-                DoScriptText(RAND(SAY_TH_LEAVE_COMBAT1, SAY_TH_LEAVE_COMBAT2, SAY_TH_LEAVE_COMBAT3), me);
+                Talk(SAY_TH_LEAVE_COMBAT);
             }
         }
         void StartWP()
@@ -500,12 +490,12 @@ public:
         }
         void DoUnmount()
         {
-            me->Unmount();
+            me->Dismount();
             me->SetSpeed(MOVE_RUN, SPEED_RUN);
         }
-        void EnterCombat(Unit* who)
+        void EnterCombat(Unit* /*who*/)
         {
-            DoScriptText(RAND(SAY_TH_RANDOM_AGGRO1, SAY_TH_RANDOM_AGGRO2, SAY_TH_RANDOM_AGGRO3, SAY_TH_RANDOM_AGGRO4), me);
+            Talk(SAY_TH_RANDOM_AGGRO);
             if (me->IsMounted())
             {
                 DoUnmount();
@@ -530,11 +520,11 @@ public:
              }
         }
 
-        void KilledUnit(Unit *victim)
+        void KilledUnit(Unit* /*victim*/)
         {
-            DoScriptText(RAND(SAY_TH_RANDOM_KILL1, SAY_TH_RANDOM_KILL2, SAY_TH_RANDOM_KILL3), me);
+            Talk(SAY_TH_RANDOM_KILL);
         }
-        void JustDied(Unit *slayer)
+        void JustDied(Unit* slayer)
         {
             if (instance)
                 instance->SetData(TYPE_THRALL_EVENT, FAIL);
@@ -543,7 +533,7 @@ public:
             if (slayer == me)
                 return;
 
-            DoScriptText(RAND(SAY_TH_RANDOM_DIE1, SAY_TH_RANDOM_DIE2), me);
+            Talk(SAY_TH_RANDOM_DIE);
         }
 
         void UpdateAI(const uint32 diff)
@@ -554,42 +544,48 @@ public:
                 return;
 
                  //TODO: add his abilities'n-crap here
-                if (!LowHp && ((me->GetHealth()*100 / me->GetMaxHealth()) < 20))
+                if (!LowHp && HealthBelowPct(20))
                 {
-                    DoScriptText(RAND(SAY_TH_RANDOM_LOW_HP1, SAY_TH_RANDOM_LOW_HP2), me);
+                    Talk(SAY_TH_RANDOM_LOW_HP);
                     LowHp = true;
                 }
         }
     };
+
 };
 
 /*######
 ## npc_taretha
 ######*/
+enum Taretha
+{
+    GOSSIP_ID_EPOCH1        = 9610,                        //Thank you for helping Thrall escape, friends. Now I only hope
+    GOSSIP_ID_EPOCH2        = 9613                        //Yes, friends. This man was no wizard of
+};
 
-#define GOSSIP_ID_EPOCH1        9610                        //Thank you for helping Thrall escape, friends. Now I only hope
 #define GOSSIP_ITEM_EPOCH1      "Strange wizard?"
-#define GOSSIP_ID_EPOCH2        9613                        //Yes, friends. This man was no wizard of
 #define GOSSIP_ITEM_EPOCH2      "We'll get you out. Taretha. Don't worry. I doubt the wizard would wander too far away."
-class npc_taretha : public CreatureScript
+
+class npc_taretha : public CreatureScript
 {
 public:
     npc_taretha() : CreatureScript("npc_taretha") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new npc_tarethaAI(creature);
     }
 
-    bool GossipSelect(Player* player, Creature* creature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
     {
-        ScriptedInstance* instance = (creature->GetInstanceScript());
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        player->PlayerTalkClass->ClearMenus();
+        InstanceScript* instance = creature->GetInstanceScript();
+        if (action == GOSSIP_ACTION_INFO_DEF+1)
         {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_EPOCH2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
             player->SEND_GOSSIP_MENU(GOSSIP_ID_EPOCH2, creature->GetGUID());
         }
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+        if (action == GOSSIP_ACTION_INFO_DEF+2)
         {
             player->CLOSE_GOSSIP_MENU();
 
@@ -603,16 +599,16 @@ public:
                  {
                      Creature* Thrall = (Unit::GetCreature((*creature), ThrallGUID));
                      if (Thrall)
-                         CAST_AI(npc_thrall_old_hillsbradAI, Thrall->AI())->StartWP();
+                         CAST_AI(npc_thrall_old_hillsbrad::npc_thrall_old_hillsbradAI, Thrall->AI())->StartWP();
                  }
             }
         }
         return true;
     }
 
-    bool GossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* player, Creature* creature)
     {
-        ScriptedInstance* instance = (creature->GetInstanceScript());
+        InstanceScript* instance = creature->GetInstanceScript();
         if (instance && instance->GetData(TYPE_THRALL_PART3) == DONE && instance->GetData(TYPE_THRALL_PART4) == NOT_STARTED)
         {
             player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_EPOCH1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -623,33 +619,35 @@ public:
 
     struct npc_tarethaAI : public npc_escortAI
     {
-        npc_tarethaAI(Creature *c) : npc_escortAI(c)
+        npc_tarethaAI(Creature* creature) : npc_escortAI(creature)
         {
-            instance = c->GetInstanceScript();
+            instance = creature->GetInstanceScript();
         }
 
-        ScriptedInstance *instance;
+        InstanceScript* instance;
 
-        void WaypointReached(uint32 i)
+        void WaypointReached(uint32 waypointId)
         {
-            switch (i)
+            switch (waypointId)
             {
                 case 6:
-                    DoScriptText(SAY_TA_FREE, me);
+                    Talk(SAY_TA_FREE);
                     break;
                 case 7:
                     me->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);
                     break;
             }
         }
+
         void Reset() {}
-        void EnterCombat(Unit* who) {}
+        void EnterCombat(Unit* /*who*/) {}
 
         void UpdateAI(const uint32 diff)
         {
             npc_escortAI::UpdateAI(diff);
         }
     };
+
 };
 
 /*######

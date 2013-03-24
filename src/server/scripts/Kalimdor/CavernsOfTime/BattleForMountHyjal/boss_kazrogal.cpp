@@ -1,78 +1,70 @@
 /*
-* Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-* Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-* Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-* Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "SpellAuraEffects.h"
+#include "SpellScript.h"
 #include "hyjal.h"
 #include "hyjal_trash.h"
 
-#define SPELL_CLEAVE 31436
-#define SPELL_WARSTOMP 31480
-#define SPELL_MARK 31447
+enum Spells
+{
+    SPELL_CLEAVE        = 31436,
+    SPELL_WARSTOMP      = 31480,
+    SPELL_MARK          = 31447,
+    SPELL_MARK_DAMAGE   = 31463
+};
 
-#define SOUND_ONDEATH 11018
+enum Texts
+{
+    SAY_ONSLAY          = 0,
+    SAY_MARK            = 1,
+    SAY_ONAGGRO         = 2,
+};
 
-#define SAY_ONSLAY1 "Shaza-Kiel!"
-#define SAY_ONSLAY2 "You... are nothing!"
-#define SAY_ONSLAY3 "Miserable nuisance!"
-#define SOUND_ONSLAY1 11017
-#define SOUND_ONSLAY2 11053
-#define SOUND_ONSLAY3 11054
+enum Sounds
+{
+    SOUND_ONDEATH       = 11018,
+};
 
-#define SAY_MARK1 "Your death will be a painful one."
-#define SAY_MARK2 "You... are marked."
-#define SOUND_MARK1 11016
-#define SOUND_MARK2 11052
-
-#define SAY_ONAGGRO "Cry for mercy! Your meaningless lives will soon be forfeit."
-#define SOUND_ONAGGRO 11015
-class boss_kazrogal : public CreatureScript
+class boss_kazrogal : public CreatureScript
 {
 public:
     boss_kazrogal() : CreatureScript("boss_kazrogal") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* creature) const
     {
         return new boss_kazrogalAI (creature);
     }
 
     struct boss_kazrogalAI : public hyjal_trashAI
     {
-        boss_kazrogalAI(Creature *c) : hyjal_trashAI(c)
+        boss_kazrogalAI(Creature* creature) : hyjal_trashAI(creature)
         {
-            instance = c->GetInstanceScript();
-            pGo = false;
-            pos = 0;
-            SpellEntry *TempSpell = GET_SPELL(SPELL_MARK);
-            if (TempSpell && TempSpell->EffectImplicitTargetA[0] != 1)
-            {
-                TempSpell->EffectImplicitTargetA[0] = 1;
-                TempSpell->EffectImplicitTargetB[0] = 0;
-            }
+            instance = creature->GetInstanceScript();
+            go = false;
         }
 
         uint32 CleaveTimer;
         uint32 WarStompTimer;
         uint32 MarkTimer;
         uint32 MarkTimerBase;
-        bool pGo;
-        uint32 pos;
+        bool go;
 
         void Reset()
         {
@@ -86,47 +78,31 @@ public:
                 instance->SetData(DATA_KAZROGALEVENT, NOT_STARTED);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit* /*who*/)
         {
             if (instance && IsEvent)
                 instance->SetData(DATA_KAZROGALEVENT, IN_PROGRESS);
-            DoPlaySoundToSet(me, SOUND_ONAGGRO);
-            me->MonsterYell(SAY_ONAGGRO, LANG_UNIVERSAL, NULL);
+            Talk(SAY_ONAGGRO);
         }
 
-        void KilledUnit(Unit * /*victim*/)
+        void KilledUnit(Unit* /*victim*/)
         {
-            switch (urand(0, 2))
+            Talk(SAY_ONSLAY);
+        }
+
+        void WaypointReached(uint32 waypointId)
+        {
+            if (waypointId == 7 && instance)
             {
-            case 0:
-                DoPlaySoundToSet(me, SOUND_ONSLAY1);
-                me->MonsterYell(SAY_ONSLAY1, LANG_UNIVERSAL, NULL);
-                break;
-            case 1:
-                DoPlaySoundToSet(me, SOUND_ONSLAY2);
-                me->MonsterYell(SAY_ONSLAY2, LANG_UNIVERSAL, NULL);
-                break;
-            case 2:
-                DoPlaySoundToSet(me, SOUND_ONSLAY3);
-                me->MonsterYell(SAY_ONSLAY3, LANG_UNIVERSAL, NULL);
-                break;
+                Unit* target = Unit::GetUnit(*me, instance->GetData64(DATA_THRALL));
+                if (target && target->isAlive())
+                    me->AddThreat(target, 0.0f);
             }
         }
 
-        void WaypointReached(uint32 i)
+        void JustDied(Unit* killer)
         {
-            pos = i;
-            if (i == 7 && instance)
-            {
-                Unit *pTarget = Unit::GetUnit((*me), instance->GetData64(DATA_THRALL));
-                if (pTarget && pTarget->isAlive())
-                    me->AddThreat(pTarget, 0.0f);
-            }
-        }
-
-        void JustDied(Unit *victim)
-        {
-            hyjal_trashAI::JustDied(victim);
+            hyjal_trashAI::JustDied(killer);
             if (instance && IsEvent)
                 instance->SetData(DATA_KAZROGALEVENT, DONE);
             DoPlaySoundToSet(me, SOUND_ONDEATH);
@@ -138,9 +114,9 @@ public:
             {
                 //Must update npc_escortAI
                 npc_escortAI::UpdateAI(diff);
-                if (!pGo)
+                if (!go)
                 {
-                    pGo = true;
+                    go = true;
                     if (instance)
                     {
                         AddWaypoint(0, 5492.91f,    -2404.61f,    1462.63f);
@@ -173,45 +149,96 @@ public:
                 WarStompTimer = 60000;
             } else WarStompTimer -= diff;
 
-            if (me->HasAura(SPELL_MARK, 0))
-                me->RemoveAurasDueToSpell(SPELL_MARK);
             if (MarkTimer <= diff)
             {
-                //cast dummy, useful for bos addons
-                me->CastCustomSpell(me, SPELL_MARK, NULL, NULL, NULL, false, NULL, NULL, me->GetGUID());
+                DoCastAOE(SPELL_MARK);
 
-                std::list<HostileReference *> t_list = me->getThreatManager().getThreatList();
-                for (std::list<HostileReference *>::iterator itr = t_list.begin(); itr != t_list.end(); ++itr)
-                {
-                    Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
-                    if (pTarget && pTarget->GetTypeId() == TYPEID_PLAYER && pTarget->getPowerType() == POWER_MANA)
-                    {
-                        pTarget->CastSpell(pTarget, SPELL_MARK, true);//only cast on mana users
-                    }
-                }
                 MarkTimerBase -= 5000;
                 if (MarkTimerBase < 5500)
                     MarkTimerBase = 5500;
                 MarkTimer = MarkTimerBase;
-                switch (urand(0, 2))
-                {
-                case 0:
-                    DoPlaySoundToSet(me, SOUND_MARK1);
-                    me->MonsterYell(SAY_MARK1, LANG_UNIVERSAL, NULL);
-                    break;
-                case 1:
-                    DoPlaySoundToSet(me, SOUND_MARK2);
-                    me->MonsterYell(SAY_MARK2, LANG_UNIVERSAL, NULL);
-                    break;
-                }
+                Talk(SAY_MARK);
             } else MarkTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
     };
+
+};
+
+class MarkTargetFilter
+{
+    public:
+        bool operator()(WorldObject* target) const
+        {
+            if (Unit* unit = target->ToUnit())
+                return unit->getPowerType() != POWER_MANA;
+            return false;
+        }
+};
+
+class spell_mark_of_kazrogal : public SpellScriptLoader
+{
+    public:
+        spell_mark_of_kazrogal() : SpellScriptLoader("spell_mark_of_kazrogal") { }
+
+        class spell_mark_of_kazrogal_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_mark_of_kazrogal_SpellScript);
+
+            void FilterTargets(std::list<WorldObject*>& targets)
+            {
+                targets.remove_if(MarkTargetFilter());
+            }
+
+            void Register()
+            {
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_mark_of_kazrogal_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+            }
+        };
+
+        class spell_mark_of_kazrogal_AuraScript : public AuraScript
+        {
+            PrepareAuraScript(spell_mark_of_kazrogal_AuraScript);
+
+            bool Validate(SpellInfo const* /*spell*/)
+            {
+                if (!sSpellMgr->GetSpellInfo(SPELL_MARK_DAMAGE))
+                    return false;
+                return true;
+            }
+
+            void OnPeriodic(AuraEffect const* aurEff)
+            {
+                Unit* target = GetTarget();
+
+                if (target->GetPower(POWER_MANA) == 0)
+                {
+                    target->CastSpell(target, SPELL_MARK_DAMAGE, true, NULL, aurEff);
+                    // Remove aura
+                    SetDuration(0);
+                }
+            }
+
+            void Register()
+            {
+                OnEffectPeriodic += AuraEffectPeriodicFn(spell_mark_of_kazrogal_AuraScript::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_MANA_LEECH);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_mark_of_kazrogal_SpellScript();
+        }
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_mark_of_kazrogal_AuraScript();
+        }
 };
 
 void AddSC_boss_kazrogal()
 {
     new boss_kazrogal();
+    new spell_mark_of_kazrogal();
 }

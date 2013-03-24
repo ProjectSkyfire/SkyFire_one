@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Boss_Hungarfen
@@ -29,24 +27,23 @@ EndScriptData */
 
 #define SPELL_FOUL_SPORES   31673
 #define SPELL_ACID_GEYSER   38739
-class boss_hungarfen : public CreatureScript
+
+class boss_hungarfen : public CreatureScript
 {
 public:
     boss_hungarfen() : CreatureScript("boss_hungarfen") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_hungarfenAI (creature);
+        return new boss_hungarfenAI (pCreature);
     }
 
     struct boss_hungarfenAI : public ScriptedAI
     {
         boss_hungarfenAI(Creature *c) : ScriptedAI(c)
         {
-            HeroicMode = me->GetMap()->IsHeroic();
         }
 
-        bool HeroicMode;
         bool Root;
         uint32 Mushroom_Timer;
         uint32 AcidGeyser_Timer;
@@ -58,7 +55,7 @@ public:
             AcidGeyser_Timer = 10000;
         }
 
-        void EnterCombat(Unit *who)
+        void EnterCombat(Unit * /*who*/)
         {
         }
 
@@ -67,7 +64,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if ((me->GetHealth()*100) / me->GetMaxHealth() <= 20)
+            if (!HealthAbovePct(20))
             {
                 if (!Root)
                 {
@@ -78,17 +75,17 @@ public:
 
             if (Mushroom_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    me->SummonCreature(17990, pTarget->GetPositionX()+float(rand()%8), pTarget->GetPositionY()+float(rand()%8), pTarget->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                    me->SummonCreature(17990, pTarget->GetPositionX()+(rand()%8), pTarget->GetPositionY()+(rand()%8), pTarget->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
                 else
-                    me->SummonCreature(17990, me->GetPositionX()+float(rand()%8), me->GetPositionY()+float(rand()%8), me->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
+                    me->SummonCreature(17990, me->GetPositionX()+(rand()%8), me->GetPositionY()+(rand()%8), me->GetPositionZ(), float(rand()%5), TEMPSUMMON_TIMED_DESPAWN, 22000);
 
                 Mushroom_Timer = 10000;
             } else Mushroom_Timer -= diff;
 
             if (AcidGeyser_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_ACID_GEYSER);
                 AcidGeyser_Timer = 10000+rand()%7500;
             } else AcidGeyser_Timer -= diff;
@@ -96,19 +93,21 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 #define SPELL_SPORE_CLOUD       34168
 #define SPELL_PUTRID_MUSHROOM   31690
 #define SPELL_GROW              31698
-class mob_underbog_mushroom : public CreatureScript
+
+class mob_underbog_mushroom : public CreatureScript
 {
 public:
     mob_underbog_mushroom() : CreatureScript("mob_underbog_mushroom") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_underbog_mushroomAI (creature);
+        return new mob_underbog_mushroomAI (pCreature);
     }
 
     struct mob_underbog_mushroomAI : public ScriptedAI
@@ -129,11 +128,11 @@ public:
             DoCast(me, SPELL_SPORE_CLOUD, true);
         }
 
-        void MoveInLineOfSight(Unit *who) { return; }
+        void MoveInLineOfSight(Unit * /*who*/) {}
 
-        void AttackStart(Unit* who) { return; }
+        void AttackStart(Unit* /*who*/) {}
 
-        void EnterCombat(Unit* who) { }
+        void EnterCombat(Unit* /*who*/) {}
 
         void UpdateAI(const uint32 diff)
         {
@@ -153,6 +152,7 @@ public:
             } else Shrink_Timer -= diff;
         }
     };
+
 };
 
 void AddSC_boss_hungarfen()

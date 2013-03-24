@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -38,14 +36,15 @@ EndScriptData */
 #define SPELL_WARSTOMP          24375
 #define SPELL_FIREBALLVOLLEY    22425
 #define SPELL_CONFLAGRATION     23023
-class boss_razorgore : public CreatureScript
+
+class boss_razorgore : public CreatureScript
 {
 public:
     boss_razorgore() : CreatureScript("boss_razorgore") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_razorgoreAI (creature);
+        return new boss_razorgoreAI (pCreature);
     }
 
     struct boss_razorgoreAI : public ScriptedAI
@@ -84,21 +83,21 @@ public:
             if (Cleave_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_CLEAVE);
-                Cleave_Timer = urand(7000, 10000);
+                Cleave_Timer = urand(7000,10000);
             } else Cleave_Timer -= diff;
 
             //WarStomp_Timer
             if (WarStomp_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_WARSTOMP);
-                WarStomp_Timer = urand(15000, 25000);
+                WarStomp_Timer = urand(15000,25000);
             } else WarStomp_Timer -= diff;
 
             //FireballVolley_Timer
             if (FireballVolley_Timer <= diff)
             {
                 DoCast(me->getVictim(), SPELL_FIREBALLVOLLEY);
-                FireballVolley_Timer = urand(12000, 15000);
+                FireballVolley_Timer = urand(12000,15000);
             } else FireballVolley_Timer -= diff;
 
             //Conflagration_Timer
@@ -114,14 +113,16 @@ public:
             } else Conflagration_Timer -= diff;
 
             // Aura Check. If the gamer is affected by confliguration we attack a random gamer.
-            if (me->getVictim() && me->getVictim()->HasAura(SPELL_CONFLAGRATION, 0))
+            if (me->getVictim() && me->getVictim()->HasAura(SPELL_CONFLAGRATION))
                 if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                     me->TauntApply(pTarget);
 
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_razorgore()
 {

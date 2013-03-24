@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2011-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 3 of the License, or (at your
- * option) any later version.
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 #ifndef OUTDOOR_PVP_TF_
@@ -56,11 +56,11 @@ enum OutdoorPvPTF_TowerType
 
 const go_type TFCapturePoints[TF_TOWER_NUM] =
 {
-    {183104, 530, -3081.65f, 5335.03f, 17.1853f, -2.14675f, 0.0f, 0.0f, 0.878817f, -0.477159f},
-    {183411, 530, -2939.9f, 4788.73f, 18.987f, 2.77507f, 0.0f, 0.0f, 0.983255f, 0.182236f},
-    {183412, 530, -3174.94f, 4440.97f, 16.2281f, 1.86750f, 0.0f, 0.0f, 0.803857f, 0.594823f},
-    {183413, 530, -3603.31f, 4529.15f, 20.9077f, 0.994838f, 0.0f, 0.0f, 0.477159f, 0.878817f},
-    {183414, 530, -3812.37f, 4899.3f, 17.7249f, 0.087266f, 0.0f, 0.0f, 0.043619f, 0.999048f}
+    {183104,530,-3081.65f,5335.03f,17.1853f,-2.14675f,0.0f,0.0f,0.878817f,-0.477159f},
+    {183411,530,-2939.9f,4788.73f,18.987f,2.77507f,0.0f,0.0f,0.983255f,0.182236f},
+    {183412,530,-3174.94f,4440.97f,16.2281f,1.86750f,0.0f,0.0f,0.803857f,0.594823f},
+    {183413,530,-3603.31f,4529.15f,20.9077f,0.994838f,0.0f,0.0f,0.477159f,0.878817f},
+    {183414,530,-3812.37f,4899.3f,17.7249f,0.087266f,0.0f,0.0f,0.043619f,0.999048f}
 };
 
 struct tf_tower_world_state
@@ -72,11 +72,11 @@ struct tf_tower_world_state
 
 const tf_tower_world_state TFTowerWorldStates[TF_TOWER_NUM] =
 {
-    {0xa79, 0xa7a, 0xa7b},
-    {0xa7e, 0xa7d, 0xa7c},
-    {0xa82, 0xa81, 0xa80},
-    {0xa88, 0xa87, 0xa86},
-    {0xa85, 0xa84, 0xa83}
+    {0xa79,0xa7a,0xa7b},
+    {0xa7e,0xa7d,0xa7c},
+    {0xa82,0xa81,0xa80},
+    {0xa88,0xa87,0xa86},
+    {0xa85,0xa84,0xa83}
 };
 
 const uint32 TFTowerPlayerEnterEvents[TF_TOWER_NUM] =
@@ -126,7 +126,7 @@ class OPvPCapturePointTF : public OPvPCapturePoint
 {
     public:
 
-        OPvPCapturePointTF(OutdoorPvP* pvp, OutdoorPvPTF_TowerType type);
+        OPvPCapturePointTF(OutdoorPvP * pvp, OutdoorPvPTF_TowerType type);
 
         bool Update(uint32 diff);
 
@@ -137,8 +137,8 @@ class OPvPCapturePointTF : public OPvPCapturePoint
         void FillInitialWorldStates(WorldPacket & data);
 
         // used when player is activated/inactivated in the area
-        bool HandlePlayerEnter(Player* player);
-        void HandlePlayerLeave(Player* player);
+        bool HandlePlayerEnter(Player * plr);
+        void HandlePlayerLeave(Player * plr);
 
         void UpdateTowerState();
 
@@ -151,28 +151,22 @@ class OPvPCapturePointTF : public OPvPCapturePoint
 
 class OutdoorPvPTF : public OutdoorPvP
 {
+    friend class OPvPCapturePointTF;
+
     public:
 
         OutdoorPvPTF();
 
         bool SetupOutdoorPvP();
 
-        void HandlePlayerEnterZone(Player* player, uint32 zone);
-        void HandlePlayerLeaveZone(Player* player, uint32 zone);
+        void HandlePlayerEnterZone(Player *plr, uint32 zone);
+        void HandlePlayerLeaveZone(Player *plr, uint32 zone);
 
         bool Update(uint32 diff);
 
         void FillInitialWorldStates(WorldPacket &data);
 
-        void SendRemoveWorldStates(Player* player);
-
-        uint32 GetAllianceTowersControlled() const;
-        void SetAllianceTowersControlled(uint32 count);
-
-        uint32 GetHordeTowersControlled() const;
-        void SetHordeTowersControlled(uint32 count);
-
-        bool IsLocked() const;
+        void SendRemoveWorldStates(Player * plr);
 
     private:
 

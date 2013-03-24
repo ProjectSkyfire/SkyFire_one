@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -33,14 +31,15 @@ EndScriptData */
 #define SPELL_FLASHHEAL            10917
 #define SPELL_RENEW                10929
 #define SPELL_HEALINGTOUCH         9889
-class boss_instructor_malicia : public CreatureScript
+
+class boss_instructor_malicia : public CreatureScript
 {
 public:
     boss_instructor_malicia() : CreatureScript("boss_instructor_malicia") { }
 
-    CreatureAI* GetAI_boss_instructormalicia(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_instructormaliciaAI (creature);
+        return new boss_instructormaliciaAI (pCreature);
     }
 
     struct boss_instructormaliciaAI : public ScriptedAI
@@ -68,12 +67,12 @@ public:
 
         void JustDied(Unit * /*killer*/)
         {
-            ScriptedInstance *instance = me->GetInstanceScript();
-            if (instance)
+            InstanceScript *pInstance = me->GetInstanceScript();
+            if (pInstance)
             {
-                instance->SetData(DATA_INSTRUCTORMALICIA_DEATH, 0);
+                pInstance->SetData(DATA_INSTRUCTORMALICIA_DEATH, 0);
 
-                if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
+                if (pInstance->GetData(TYPE_GANDLING) == IN_PROGRESS)
                     me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
             }
         }
@@ -98,7 +97,7 @@ public:
             if (Corruption_Timer <= diff)
             {
                 Unit *pTarget = NULL;
-                pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 if (pTarget) DoCast(pTarget, SPELL_CORRUPTION);
 
                 Corruption_Timer = 24000;
@@ -150,6 +149,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_instructormalicia()

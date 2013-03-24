@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,24 +30,25 @@ EndScriptData */
 #define SPELL_BANSHEECURSE    16867
 #define SPELL_SILENCE    18327
 //#define SPELL_POSSESS   17244
-class boss_baroness_anastari : public CreatureScript
+
+class boss_baroness_anastari : public CreatureScript
 {
 public:
     boss_baroness_anastari() : CreatureScript("boss_baroness_anastari") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_baroness_anastariAI (creature);
+        return new boss_baroness_anastariAI (pCreature);
     }
 
     struct boss_baroness_anastariAI : public ScriptedAI
     {
         boss_baroness_anastariAI(Creature *c) : ScriptedAI(c)
         {
-            instance = me->GetInstanceScript();
+            pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 BansheeWail_Timer;
         uint32 BansheeCurse_Timer;
@@ -70,8 +69,8 @@ public:
 
          void JustDied(Unit* /*Killer*/)
          {
-             if (instance)
-                 instance->SetData(TYPE_BARONESS, IN_PROGRESS);
+             if (pInstance)
+                 pInstance->SetData(TYPE_BARONESS,IN_PROGRESS);
          }
 
         void UpdateAI(const uint32 diff)
@@ -113,7 +112,7 @@ public:
               if (rand()%100 < 65)
             {
             Unit *pTarget = NULL;
-            pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+            pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
             if (pTarget)DoCast(pTarget, SPELL_POSSESS);
             }
             //50 seconds until we should cast this again
@@ -124,6 +123,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_baroness_anastari()

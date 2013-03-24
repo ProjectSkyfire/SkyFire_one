@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -78,12 +76,13 @@ float KaelLocations[3][2]=
 };
 
 #define LOCATION_Z                  -16.727455f
-class boss_felblood_kaelthas : public CreatureScript
+
+class boss_felblood_kaelthas : public CreatureScript
 {
 public:
     boss_felblood_kaelthas() : CreatureScript("boss_felblood_kaelthas") { }
 
-    CreatureAI* GetAI(Creature* c)
+    CreatureAI* GetAI(Creature* c) const
     {
         return new boss_felblood_kaelthasAI(c);
     }
@@ -92,11 +91,10 @@ public:
     {
         boss_felblood_kaelthasAI(Creature* c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
-            Heroic = c->GetMap()->IsHeroic();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         uint32 FireballTimer;
         uint32 PhoenixTimer;
@@ -115,7 +113,6 @@ public:
         // 4 = Applied an aura that allows them to fly, channeling visual, relased Arcane Orbs.
 
         bool FirstGravityLapse;
-        bool Heroic;
         bool HasTaunted;
 
         uint8 Phase;
@@ -141,10 +138,10 @@ public:
 
             Phase = 0;
 
-            if (instance)
+            if (pInstance)
             {
-                instance->SetData(DATA_KAELTHAS_EVENT, NOT_STARTED);
-                instance->HandleGameObject(instance->GetData64(DATA_KAEL_DOOR), true);
+                pInstance->SetData(DATA_KAELTHAS_EVENT, NOT_STARTED);
+                pInstance->HandleGameObject(pInstance->GetData64(DATA_KAEL_DOOR), true);
                // Open the big encounter door. Close it in Aggro and open it only in JustDied(and here)
                // Small door opened after event are expected to be closed by default
             }
@@ -154,10 +151,10 @@ public:
         {
             DoScriptText(SAY_DEATH, me);
 
-            if (!instance)
+            if (!pInstance)
                 return;
 
-            instance->HandleGameObject(instance->GetData64(DATA_KAEL_DOOR), true);
+            pInstance->HandleGameObject(pInstance->GetData64(DATA_KAEL_DOOR), true);
             // Open the encounter door
         }
 
@@ -169,10 +166,10 @@ public:
 
         void EnterCombat(Unit * /*who*/)
         {
-            if (!instance)
+            if (!pInstance)
                 return;
 
-            instance->HandleGameObject(instance->GetData64(DATA_KAEL_DOOR), false);
+            pInstance->HandleGameObject(pInstance->GetData64(DATA_KAEL_DOOR), false);
            //Close the encounter door, open it in JustDied/Reset
         }
 
@@ -210,6 +207,7 @@ public:
             float x = KaelLocations[0][0];
             float y = KaelLocations[0][1];
             me->GetMap()->CreatureRelocation(me, x, y, LOCATION_Z, 0.0f);
+            //me->SendMonsterMove(x, y, LOCATION_Z, 0, 0, 0); // causes some issues...
             std::list<HostileReference*>::const_iterator i = me->getThreatManager().getThreatList().begin();
             for (i = me->getThreatManager().getThreatList().begin(); i!= me->getThreatManager().getThreatList().end(); ++i)
             {
@@ -242,11 +240,10 @@ public:
                 {
                     // Also needs an exception in spell system.
                     pUnit->CastSpell(pUnit, SPELL_GRAVITY_LAPSE_FLY, true, 0, 0, me->GetGUID());
-
                     // Use packet hack
                     WorldPacket data(12);
                     data.SetOpcode(SMSG_MOVE_SET_CAN_FLY);
-                    data << pUnit->GetPackGUID();
+                    data.append(pUnit->GetPackGUID());
                     data << uint32(0);
                     pUnit->SendMessageToSet(&data, true);
                 }
@@ -266,7 +263,7 @@ public:
 
                     WorldPacket data(12);
                     data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
-                    data << pUnit->GetPackGUID();
+                    data.append(pUnit->GetPackGUID());
                     data << uint32(0);
                     pUnit->SendMessageToSet(&data, true);
                 }
@@ -279,12 +276,12 @@ public:
             if (!UpdateVictim())
                 return;
 
-            switch (Phase)
+            switch(Phase)
             {
                 case 0:
                 {
                     // *Heroic mode only:
-                    if (Heroic)
+                    if (IsHeroic())
                     {
                         if (PyroblastTimer <= diff)
                         {
@@ -298,15 +295,16 @@ public:
 
                     if (FireballTimer <= diff)
                     {
-                        DoCast(me->getVictim(), Heroic ? SPELL_FIREBALL_HEROIC : SPELL_FIREBALL_NORMAL);
-                        FireballTimer = urand(2000, 6000);
+                        DoCast(me->getVictim(), SPELL_FIREBALL_NORMAL);
+                        FireballTimer = urand(2000,6000);
                     } else FireballTimer -= diff;
 
                     if (PhoenixTimer <= diff)
                     {
-                        Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
-                        uint8 random = urand(1, 2);
+                        Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+
+                        uint8 random = urand(1,2);
                         float x = KaelLocations[random][0];
                         float y = KaelLocations[random][1];
 
@@ -332,11 +330,11 @@ public:
                             DoCast(pTarget, SPELL_FLAMESTRIKE3, true);
                             DoScriptText(SAY_FLAMESTRIKE, me);
                         }
-                        FlameStrikeTimer = urand(15000, 25000);
+                        FlameStrikeTimer = urand(15000,25000);
                     } else FlameStrikeTimer -= diff;
 
                     // Below 50%
-                    if (me->GetMaxHealth() * 0.5f > me->GetHealth())
+                    if (HealthBelowPct(50))
                     {
                         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
                         me->StopMoving();
@@ -355,7 +353,7 @@ public:
                 {
                     if (GravityLapseTimer <= diff)
                     {
-                        switch (GravityLapsePhase)
+                        switch(GravityLapsePhase)
                         {
                             case 0:
                                 if (FirstGravityLapse)          // Different yells at 50%, and at every following Gravity Lapse
@@ -363,12 +361,12 @@ public:
                                     DoScriptText(SAY_GRAVITY_LAPSE, me);
                                     FirstGravityLapse = false;
 
-                                    if (instance)
+                                    if (pInstance)
                                     {
-                                        instance->HandleGameObject(instance->GetData64(DATA_KAEL_STATUE_LEFT), true);
-                                        instance->HandleGameObject(instance->GetData64(DATA_KAEL_STATUE_RIGHT), true);
+                                        pInstance->HandleGameObject(pInstance->GetData64(DATA_KAEL_STATUE_LEFT), true);
+                                        pInstance->HandleGameObject(pInstance->GetData64(DATA_KAEL_STATUE_RIGHT), true);
                                     }
-                                } else
+                                }else
                                 {
                                     DoScriptText(SAY_RECAST_GRAVITY, me);
                                 }
@@ -398,7 +396,7 @@ public:
                                 for (uint8 i = 0; i < 3; ++i)
                                 {
                                     Unit *pTarget = NULL;
-                                    pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                                    pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
 
                                     Creature* Orb = DoSpawnCreature(CREATURE_ARCANE_SPHERE, 5, 5, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 30000);
                                     if (Orb && pTarget)
@@ -407,6 +405,7 @@ public:
                                         Orb->AddThreat(pTarget, 1000000.0f);
                                         Orb->AI()->AttackStart(pTarget);
                                     }
+
                                 }
 
                                 DoCast(me, SPELL_GRAVITY_LAPSE_CHANNEL);
@@ -427,13 +426,15 @@ public:
             }
         }
     };
+
 };
-class mob_felkael_flamestrike : public CreatureScript
+
+class mob_felkael_flamestrike : public CreatureScript
 {
 public:
     mob_felkael_flamestrike() : CreatureScript("mob_felkael_flamestrike") { }
 
-    CreatureAI* GetAI(Creature* c)
+    CreatureAI* GetAI(Creature* c) const
     {
         return new mob_felkael_flamestrikeAI(c);
     }
@@ -442,11 +443,9 @@ public:
     {
         mob_felkael_flamestrikeAI(Creature *c) : ScriptedAI(c)
         {
-            Heroic = c->GetMap()->IsHeroic();
         }
 
         uint32 FlameStrikeTimer;
-        bool Heroic;
 
         void Reset()
         {
@@ -464,18 +463,20 @@ public:
         {
             if (FlameStrikeTimer <= diff)
             {
-                DoCast(me, Heroic ? SPELL_FLAMESTRIKE1_HEROIC : SPELL_FLAMESTRIKE1_NORMAL, true);
+                DoCast(me, SPELL_FLAMESTRIKE1_NORMAL, true);
                 me->Kill(me);
             } else FlameStrikeTimer -= diff;
         }
     };
+
 };
-class mob_felkael_phoenix : public CreatureScript
+
+class mob_felkael_phoenix : public CreatureScript
 {
 public:
     mob_felkael_phoenix() : CreatureScript("mob_felkael_phoenix") { }
 
-    CreatureAI* GetAI(Creature* c)
+    CreatureAI* GetAI(Creature* c) const
     {
         return new mob_felkael_phoenixAI(c);
     }
@@ -484,10 +485,10 @@ public:
     {
         mob_felkael_phoenixAI(Creature* c) : ScriptedAI(c)
         {
-            instance = c->GetInstanceScript();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
         uint32 BurnTimer;
         uint32 Death_Timer;
         bool Rebirth;
@@ -496,7 +497,7 @@ public:
         void Reset()
         {
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE + UNIT_FLAG_NON_ATTACKABLE);
-            me->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT);
+            me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
             DoCast(me, SPELL_PHOENIX_BURN, true);
             BurnTimer = 2000;
             Death_Timer = 3000;
@@ -516,9 +517,10 @@ public:
             {
                 damage = 0;
                 return;
+
             }
             //Don't really die in all phases of Kael'Thas
-            if (instance && instance->GetData(DATA_KAELTHAS_EVENT) == 0)
+            if (pInstance && pInstance->GetData(DATA_KAELTHAS_EVENT) == 0)
             {
                 //prevent death
                 damage = 0;
@@ -533,11 +535,13 @@ public:
                 me->ModifyAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, false);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 me->ClearAllReactives();
-                me->SetUInt64Value(UNIT_FIELD_TARGET, 0);
+                me->SetUInt64Value(UNIT_FIELD_TARGET,0);
                 me->GetMotionMaster()->Clear();
                 me->GetMotionMaster()->MoveIdle();
                 me->SetStandState(UNIT_STAND_STATE_DEAD);
-            }
+
+           }
+
         }
 
         void JustDied(Unit* /*slayer*/)
@@ -547,6 +551,7 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
+
             //If we are fake death, we cast revbirth and after that we kill the phoenix to spawn the egg.
             if (FakeDeath)
             {
@@ -558,6 +563,7 @@ public:
 
                 if (Rebirth)
                 {
+
                     if (Death_Timer <= diff)
                     {
                         me->SummonCreature(CREATURE_PHOENIX_EGG, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45000);
@@ -565,6 +571,7 @@ public:
                         Rebirth = false;
                     } else Death_Timer -= diff;
                 }
+
             }
 
             if (!UpdateVictim())
@@ -573,7 +580,7 @@ public:
             if (BurnTimer <= diff)
             {
                 //spell Burn should possible do this, but it doesn't, so do this for now.
-                uint16 dmg = urand(1650, 2050);
+                uint16 dmg = urand(1650,2050);
                 me->DealDamage(me, dmg, 0, DOT, SPELL_SCHOOL_MASK_FIRE, NULL, false);
                 BurnTimer += 2000;
             } BurnTimer -= diff;
@@ -581,13 +588,15 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
-class mob_felkael_phoenix_egg : public CreatureScript
+
+class mob_felkael_phoenix_egg : public CreatureScript
 {
 public:
     mob_felkael_phoenix_egg() : CreatureScript("mob_felkael_phoenix_egg") { }
 
-    CreatureAI* GetAI(Creature* c)
+    CreatureAI* GetAI(Creature* c) const
     {
         return new mob_felkael_phoenix_eggAI(c);
     }
@@ -613,15 +622,18 @@ public:
                 me->SummonCreature(CREATURE_PHOENIX, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
                 me->Kill(me);
             } else HatchTimer -= diff;
+
         }
     };
+
 };
-class mob_arcane_sphere : public CreatureScript
+
+class mob_arcane_sphere : public CreatureScript
 {
 public:
     mob_arcane_sphere() : CreatureScript("mob_arcane_sphere") { }
 
-    CreatureAI* GetAI(Creature* c)
+    CreatureAI* GetAI(Creature* c) const
     {
         return new mob_arcane_sphereAI(c);
     }
@@ -636,10 +648,10 @@ public:
         void Reset()
         {
             DespawnTimer = 30000;
-            ChangeTargetTimer = urand(6000, 12000);
+            ChangeTargetTimer = urand(6000,12000);
 
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            me->AddUnitMovementFlag(MOVEFLAG_ONTRANSPORT);
+            me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
             me->setFaction(14);
             DoCast(me, SPELL_ARCANE_SPHERE_PASSIVE, true);
         }
@@ -666,11 +678,17 @@ public:
                     AttackStart(pTarget);
                 }
 
-                ChangeTargetTimer = urand(5000, 15000);
+                ChangeTargetTimer = urand(5000,15000);
             } else ChangeTargetTimer -= diff;
         }
     };
+
 };
+
+
+
+
+
 
 void AddSC_boss_felblood_kaelthas()
 {

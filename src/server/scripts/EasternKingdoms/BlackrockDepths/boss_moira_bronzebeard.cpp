@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -36,14 +34,15 @@ enum Spells
     SPELL_SHADOWWORDPAIN                                   = 10894,
     SPELL_SMITE                                            = 10934
 };
-class boss_moira_bronzebeard : public CreatureScript
+
+class boss_moira_bronzebeard : public CreatureScript
 {
 public:
     boss_moira_bronzebeard() : CreatureScript("boss_moira_bronzebeard") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_moira_bronzebeardAI (creature);
+        return new boss_moira_bronzebeardAI (pCreature);
     }
 
     struct boss_moira_bronzebeardAI : public ScriptedAI
@@ -93,8 +92,10 @@ public:
                 DoCast(me->getVictim(), SPELL_SMITE);
                 Smite_Timer = 10000;
             } else Smite_Timer -= diff;
+
         }
     };
+
 };
 
 void AddSC_boss_moira_bronzebeard()

@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -38,24 +36,25 @@ enum eEnums
 
     SPELL_SHADOWWORDPAIN    = 2767,
 };
-class boss_interrogator_vishas : public CreatureScript
+
+class boss_interrogator_vishas : public CreatureScript
 {
 public:
     boss_interrogator_vishas() : CreatureScript("boss_interrogator_vishas") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_interrogator_vishasAI (creature);
+        return new boss_interrogator_vishasAI (pCreature);
     }
 
     struct boss_interrogator_vishasAI : public ScriptedAI
     {
         boss_interrogator_vishasAI(Creature *c) : ScriptedAI(c)
         {
-            instance = me->GetInstanceScript();
+            pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* instance;
+        InstanceScript* pInstance;
 
         bool Yell30;
         bool Yell60;
@@ -78,11 +77,11 @@ public:
 
         void JustDied(Unit* /*Killer*/)
         {
-            if (!instance)
+            if (!pInstance)
                 return;
 
             //Any other actions to do with vorrel? setStandState?
-            if (Unit *vorrel = Unit::GetUnit(*me, instance->GetData64(DATA_VORREL)))
+            if (Unit *vorrel = Unit::GetUnit(*me,pInstance->GetData64(DATA_VORREL)))
                 DoScriptText(SAY_TRIGGER_VORREL, vorrel);
         }
 
@@ -92,13 +91,13 @@ public:
                 return;
 
             //If we are low on hp Do sayings
-            if (!Yell60 && ((me->GetHealth()*100) / me->GetMaxHealth() <= 60))
+            if (!Yell60 && !HealthAbovePct(60))
             {
                 DoScriptText(SAY_HEALTH1, me);
                 Yell60 = true;
             }
 
-            if (!Yell30 && ((me->GetHealth()*100) / me->GetMaxHealth() <= 30))
+            if (!Yell30 && !HealthAbovePct(30))
             {
                 DoScriptText(SAY_HEALTH2, me);
                 Yell30 = true;
@@ -114,7 +113,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_interrogator_vishas()
 {

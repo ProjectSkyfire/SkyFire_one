@@ -1,26 +1,24 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance_Hellfire_Ramparts
-SD%Complete: 95
+SD%Complete: 50
 SDComment:
 SDCategory: Hellfire Ramparts
 EndScriptData */
@@ -28,134 +26,70 @@ EndScriptData */
 #include "ScriptPCH.h"
 #include "hellfire_ramparts.h"
 
-#define ENCOUNTERS    3
-
-struct instance_ramparts : public ScriptedInstance
+class instance_ramparts : public InstanceMapScript
 {
-    instance_ramparts(Map *map) : ScriptedInstance(map){Initialize();}
-
-    uint32 Encounter[ENCOUNTERS];
-    std::string str_data;
-
-    void Initialize()
-    {
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
-            Encounter[i] = NOT_STARTED;
-    }
-
-    bool IsEncounterInProgress() const
-    {
-        for (uint8 i = 0; i < ENCOUNTERS; i++)
-            if (Encounter[i] == IN_PROGRESS) return true;
-
-        return false;
-    }
-
-    void OnCreatureCreate(Creature* creature, bool /*add*/) { }
-
-    void OnGameObjectCreate(GameObject* pGo, bool add) { }
-
-    Player* GetPlayerInMap()
-    {
-        Map::PlayerList const& players = instance->GetPlayers();
-
-        if (!players.isEmpty())
+    public:
+        instance_ramparts()
+            : InstanceMapScript("instance_ramparts", 543)
         {
-            for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+        }
+
+        struct instance_ramparts_InstanceMapScript : public InstanceScript
+        {
+            instance_ramparts_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();}
+
+            uint32 m_auiEncounter[MAX_ENCOUNTER];
+            uint64 m_uiChestNGUID;
+            uint64 m_uiChestHGUID;
+
+            void Initialize()
             {
-                if (Player* plr = itr->getSource())
-                    return plr;
+                memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
+                m_uiChestNGUID = 0;
+                m_uiChestHGUID = 0;
             }
-        }
 
-        sLog->outDebug("TSCR: Instance Hellfire Ramparts: GetPlayerInMap, but PlayerList is empty!");
-        return NULL;
-    }
+            void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
+            {
+                switch(pGo->GetEntry())
+                {
+                    case 185168:
+                        m_uiChestNGUID = pGo->GetGUID();
+                        break;
+                    case 185169:
+                        m_uiChestHGUID = pGo->GetGUID();
+                        break;
+                }
+            }
 
-    void SetData(uint32 type, uint32 data)
-    {
-        switch (type)
+            void SetData(uint32 uiType, uint32 uiData)
+            {
+                sLog.outDebug("TSCR: Instance Ramparts: SetData received for type %u with data %u",uiType,uiData);
+
+                switch(uiType)
+                {
+                    case TYPE_VAZRUDEN:
+                        if (uiData == DONE && m_auiEncounter[1] == DONE)
+                            DoRespawnGameObject(instance->IsHeroic() ? m_uiChestHGUID : m_uiChestNGUID, HOUR*IN_MILLISECONDS);
+                        m_auiEncounter[0] = uiData;
+                        break;
+                    case TYPE_NAZAN:
+                        if (uiData == DONE && m_auiEncounter[0] == DONE)
+                            DoRespawnGameObject(instance->IsHeroic() ? m_uiChestHGUID : m_uiChestNGUID, HOUR*IN_MILLISECONDS);
+                        m_auiEncounter[1] = uiData;
+                        break;
+                }
+            }
+        };
+
+        InstanceScript* GetInstanceScript(InstanceMap* pMap) const
         {
-            case DATA_GARGOLMAR:
-                if (Encounter[0] != DONE)
-                    Encounter[0] = data;
-                break;
-            case DATA_OMOR:
-                if (Encounter[1] != DONE)
-                    Encounter[1] = data;
-                break;
-            case DATA_VAZRUDEN:
-                if (Encounter[2] != DONE)
-                    Encounter[2] = data;
-				break;
+            return new instance_ramparts_InstanceMapScript(pMap);
         }
-
-        if (data == DONE)
-        {
-            SaveToDB();
-            OUT_SAVE_INST_DATA_COMPLETE;
-        }
-    }
-
-    uint32 GetData(uint32 type)
-    {
-        switch (type)
-        {
-            case DATA_GARGOLMAR: return Encounter[0];
-            case DATA_OMOR: return Encounter[1];
-            case DATA_VAZRUDEN: return Encounter[2];
-        }
-        return false;
-    }
-
-    uint64 GetData64(uint32 identifier)
-    {
-        return 0;
-    }
-
-    std::string GetSaveData()
-    {
-        OUT_SAVE_INST_DATA;
-        std::ostringstream saveStream;
-
-        saveStream << Encounter[0] << " " << Encounter[1] << " " << Encounter[2];
-
-        char* out = new char[saveStream.str().length() + 1];
-        strcpy(out, saveStream.str().c_str());
-        if (out)
-        {
-            OUT_SAVE_INST_DATA_COMPLETE;
-            return out;
-        }
-
-        return str_data.c_str();
-    }
-
-    void Load(const char* in)
-    {
-        if (!in)
-        {
-            OUT_LOAD_INST_DATA_FAIL;
-            return;
-        }
-
-        OUT_LOAD_INST_DATA(in);
-
-        std::istringstream loadStream(in);
-        loadStream >> Encounter[0] >> Encounter[1] >> Encounter[2];
-
-        for (uint8 i = 0; i < ENCOUNTERS; ++i)
-            if (Encounter[i] == IN_PROGRESS)
-                Encounter[i] = NOT_STARTED;
-
-        OUT_LOAD_INST_DATA_COMPLETE;
-    }
 };
-InstanceScript* GetInstanceData_instance_ramparts(Map* pMap)
-{
-    return new instance_ramparts(pMap);
-}
 
 void AddSC_instance_ramparts()
 {
+    new instance_ramparts;
 }

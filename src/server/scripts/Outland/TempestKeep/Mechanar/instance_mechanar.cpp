@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance_Mechanar
@@ -28,68 +26,69 @@ EndScriptData */
 #include "ScriptPCH.h"
 #include "mechanar.h"
 
-#define ENCOUNTERS      1
-class instance_mechanar : public InstanceMapScript
+#define MAX_ENCOUNTER      1
+
+class instance_mechanar : public InstanceMapScript
 {
-public:
-    instance_mechanar() : InstanceMapScript("instance_mechanar") { }
-
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
-    {
-        return new instance_mechanar_InstanceMapScript(map);
-    }
-
-    struct instance_mechanar_InstanceMapScript : public ScriptedInstance
-    {
-        instance_mechanar_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
-
-        uint32 Encounters[ENCOUNTERS];
-
-        void OnCreatureCreate (Creature* creature, uint32 creature_entry)
+    public:
+        instance_mechanar()
+            : InstanceMapScript("instance_mechanar", 554)
         {
         }
 
-        void Initialize()
+        struct instance_mechanar_InstanceMapScript : public InstanceScript
         {
-            for (uint8 i = 0; i < ENCOUNTERS; ++i)
-                Encounters[i] = NOT_STARTED;
-        }
+            instance_mechanar_InstanceMapScript(Map* pMap) : InstanceScript(pMap) { Initialize(); };
 
-        bool IsEncounterInProgress() const
-        {
-            for (uint8 i = 0; i < ENCOUNTERS; ++i)
-                if (Encounters[i] == IN_PROGRESS)
-                    return true;
+            uint32 m_auiEncounter[MAX_ENCOUNTER];
 
-            return false;
-        }
-
-        uint32 GetData(uint32 type)
-        {
-            switch (type)
+            void Initialize()
             {
-            case DATA_NETHERMANCER_EVENT:   return Encounters[0];
+                memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
             }
 
-            return false;
-        }
-
-        uint64 GetData64 (uint32 identifier)
-        {
-            return 0;
-        }
-
-        void SetData(uint32 type, uint32 data)
-        {
-            switch (type)
+            bool IsEncounterInProgress() const
             {
-            case DATA_NETHERMANCER_EVENT:   Encounters[0] = data;   break;
+                for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+                    if (m_auiEncounter[i] == IN_PROGRESS)
+                        return true;
+
+                return false;
             }
+
+            uint32 GetData(uint32 type)
+            {
+                switch(type)
+                {
+                case DATA_NETHERMANCER_EVENT:   return m_auiEncounter[0];
+                }
+
+                return false;
+            }
+
+            uint64 GetData64 (uint32 /*identifier*/)
+            {
+                return 0;
+            }
+
+            void SetData(uint32 type, uint32 data)
+            {
+                switch(type)
+                {
+                case DATA_NETHERMANCER_EVENT:   m_auiEncounter[0] = data;   break;
+                }
+            }
+        };
+
+        InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+        {
+            return new instance_mechanar_InstanceMapScript(pMap);
         }
-    };
 };
+
 
 void AddSC_instance_mechanar()
 {
-    new instance_mechanar();
+    new instance_mechanar;
 }
+

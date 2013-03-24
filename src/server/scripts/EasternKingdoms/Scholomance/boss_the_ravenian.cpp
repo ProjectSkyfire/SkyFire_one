@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -32,14 +30,15 @@ EndScriptData */
 #define SPELL_CLEAVE            20691
 #define SPELL_SUNDERINCLEAVE    25174
 #define SPELL_KNOCKAWAY         10101
-class boss_the_ravenian : public CreatureScript
+
+class boss_the_ravenian : public CreatureScript
 {
 public:
     boss_the_ravenian() : CreatureScript("boss_the_ravenian") { }
 
-    CreatureAI* GetAI_boss_theravenian(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_theravenianAI (creature);
+        return new boss_theravenianAI (pCreature);
     }
 
     struct boss_theravenianAI : public ScriptedAI
@@ -63,12 +62,12 @@ public:
 
         void JustDied(Unit * /*killer*/)
         {
-            ScriptedInstance *instance = me->GetInstanceScript();
-            if (instance)
+            InstanceScript *pInstance = me->GetInstanceScript();
+            if (pInstance)
             {
-                instance->SetData(DATA_THERAVENIAN_DEATH, 0);
+                pInstance->SetData(DATA_THERAVENIAN_DEATH, 0);
 
-                if (instance->GetData(TYPE_GANDLING) == IN_PROGRESS)
+                if (pInstance->GetData(TYPE_GANDLING) == IN_PROGRESS)
                     me->SummonCreature(1853, 180.73f, -9.43856f, 75.507f, 1.61399f, TEMPSUMMON_DEAD_DESPAWN, 0);
             }
         }
@@ -113,7 +112,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_theravenian()
 {

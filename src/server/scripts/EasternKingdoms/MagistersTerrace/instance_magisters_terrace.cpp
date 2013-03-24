@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -36,19 +34,20 @@ EndScriptData */
 2  - Priestess Delrissa
 3  - Kael'thas Sunstrider
 */
-class instance_magisters_terrace : public InstanceMapScript
+
+class instance_magisters_terrace : public InstanceMapScript
 {
 public:
-    instance_magisters_terrace() : InstanceMapScript("instance_magisters_terrace") { }
+    instance_magisters_terrace() : InstanceMapScript("instance_magisters_terrace", 585) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_magisters_terrace_InstanceMapScript(pMap);
     }
 
-    struct instance_magisters_terrace_InstanceMapScript : public ScriptedInstance
+    struct instance_magisters_terrace_InstanceMapScript : public InstanceScript
     {
-        instance_magisters_terrace_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
+        instance_magisters_terrace_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();}
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint32 DelrissaDeathCount;
@@ -98,7 +97,7 @@ public:
 
         uint32 GetData(uint32 identifier)
         {
-            switch (identifier)
+            switch(identifier)
             {
                 case DATA_SELIN_EVENT:          return m_auiEncounter[0];
                 case DATA_VEXALLUS_EVENT:       return m_auiEncounter[1];
@@ -112,7 +111,7 @@ public:
 
         void SetData(uint32 identifier, uint32 data)
         {
-            switch (identifier)
+            switch(identifier)
             {
                 case DATA_SELIN_EVENT:       m_auiEncounter[0] = data;  break;
                 case DATA_VEXALLUS_EVENT:
@@ -138,19 +137,19 @@ public:
             }
         }
 
-        void OnCreatureCreate(Creature* creature, bool /*add*/)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
-            switch (creature->GetEntry())
+            switch(pCreature->GetEntry())
             {
-                case 24723: SelinGUID = creature->GetGUID(); break;
-                case 24560: DelrissaGUID = creature->GetGUID(); break;
-                case 24722: FelCrystals.push_back(creature->GetGUID()); break;
+                case 24723: SelinGUID = pCreature->GetGUID(); break;
+                case 24560: DelrissaGUID = pCreature->GetGUID(); break;
+                case 24722: FelCrystals.push_back(pCreature->GetGUID()); break;
             }
         }
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
                 case 187896:  VexallusDoorGUID = pGo->GetGUID();       break;
                 //SunwellRaid Gate 02
@@ -166,7 +165,7 @@ public:
 
         uint64 GetData64(uint32 identifier)
         {
-            switch (identifier)
+            switch(identifier)
             {
                 case DATA_SELIN:                return SelinGUID;
                 case DATA_DELRISSA:             return DelrissaGUID;
@@ -182,7 +181,7 @@ public:
                 {
                     if (FelCrystals.empty())
                     {
-                        sLog->outError("TSCR: Magisters Terrace: No Fel Crystals loaded in Inst Data");
+                        sLog.outError("TSCR: Magisters Terrace: No Fel Crystals loaded in Inst Data");
                         return 0;
                     }
 
@@ -200,7 +199,9 @@ public:
             return 0;
         }
     };
+
 };
+
 
 void AddSC_instance_magisters_terrace()
 {

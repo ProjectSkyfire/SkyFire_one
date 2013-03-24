@@ -1,8 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,12 +15,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* ScriptData
-SDName: Boss_Balinda
-SD%Complete:
-SDComment:
-EndScriptData */
-
 #include "ScriptPCH.h"
 
 enum Spells
@@ -36,8 +27,8 @@ enum Spells
 
 enum Yells
 {
-    YELL_AGGRO                                    = -1810019,
-    YELL_EVADE                                    = -1810020
+    YELL_AGGRO                                    = -2100019,
+    YELL_EVADE                                    = -2100020
 };
 
 enum Creatures
@@ -49,15 +40,11 @@ enum WaterElementalSpells
 {
     SPELL_WATERBOLT                               = 46983
 };
-class mob_water_elemental : public CreatureScript
+
+class mob_water_elemental : public CreatureScript
 {
 public:
     mob_water_elemental() : CreatureScript("mob_water_elemental") { }
-
-    CreatureAI* GetAI(Creature *_Creature)
-    {
-        return new mob_water_elementalAI (_Creature);
-    }
 
     struct mob_water_elementalAI : public ScriptedAI
     {
@@ -78,14 +65,14 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (uiWaterBoltTimer <= diff)
+            if (uiWaterBoltTimer < diff)
             {
                 DoCast(me->getVictim(), SPELL_WATERBOLT);
                 uiWaterBoltTimer = 5*IN_MILLISECONDS;
             } else uiWaterBoltTimer -= diff;
 
             // check if creature is not outside of building
-            if (uiResetTimer <= diff)
+            if (uiResetTimer < diff)
             {
                 if (Creature *pBalinda = Unit::GetCreature(*me, uiBalindaGUID))
                     if (me->GetDistance2d(pBalinda->GetHomePosition().GetPositionX(), pBalinda->GetHomePosition().GetPositionY()) > 50)
@@ -96,16 +83,17 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new mob_water_elementalAI(creature);
+    }
 };
-class boss_balinda : public CreatureScript
+
+class boss_balinda : public CreatureScript
 {
 public:
     boss_balinda() : CreatureScript("boss_balinda") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new boss_balindaAI (creature);
-    }
 
     struct boss_balindaAI : public ScriptedAI
     {
@@ -122,7 +110,7 @@ public:
 
         void Reset()
         {
-            uiArcaneExplosionTimer      = urand(5*IN_MILLISECONDS, 15*IN_MILLISECONDS);
+            uiArcaneExplosionTimer      = urand(5*IN_MILLISECONDS,15*IN_MILLISECONDS);
             uiConeOfColdTimer           = 8*IN_MILLISECONDS;
             uiFireBoltTimer             = 1*IN_MILLISECONDS;
             uiFrostboltTimer            = 4*IN_MILLISECONDS;
@@ -144,8 +132,8 @@ public:
 
         void JustSummoned(Creature* summoned)
         {
-            ((mob_water_elementalAI*)summoned->AI())->uiBalindaGUID = me->GetGUID();
-            summoned->AI()->AttackStart(SelectTarget(SELECT_TARGET_RANDOM, 0, 50, true));
+            CAST_AI(mob_water_elemental::mob_water_elementalAI, summoned->AI())->uiBalindaGUID = me->GetGUID();
+            summoned->AI()->AttackStart(SelectTarget(SELECT_TARGET_RANDOM,0, 50, true));
             summoned->setFaction(me->getFaction());
             Summons.Summon(summoned);
         }
@@ -160,39 +148,40 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (uiWaterElementalTimer <= diff)
+            if (uiWaterElementalTimer < diff)
             {
                 if (Summons.empty())
                     me->SummonCreature(NPC_WATER_ELEMENTAL, 0, 0, 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 45*IN_MILLISECONDS);
                 uiWaterElementalTimer = 50*IN_MILLISECONDS;
             } else uiWaterElementalTimer -= diff;
 
-            if (uiArcaneExplosionTimer <= diff)
+            if (uiArcaneExplosionTimer < diff)
             {
                 DoCast(me->getVictim(), SPELL_ARCANE_EXPLOSION);
-                uiArcaneExplosionTimer =  urand(5*IN_MILLISECONDS, 15*IN_MILLISECONDS);
+                uiArcaneExplosionTimer =  urand(5*IN_MILLISECONDS,15*IN_MILLISECONDS);
             } else uiArcaneExplosionTimer -= diff;
 
-            if (uiConeOfColdTimer <= diff)
+            if (uiConeOfColdTimer < diff)
             {
                 DoCast(me->getVictim(), SPELL_CONE_OF_COLD);
-                uiConeOfColdTimer = urand(10*IN_MILLISECONDS, 20*IN_MILLISECONDS);
+                uiConeOfColdTimer = urand(10*IN_MILLISECONDS,20*IN_MILLISECONDS);
             } else uiConeOfColdTimer -= diff;
 
-            if (uiFireBoltTimer <= diff)
+            if (uiFireBoltTimer < diff)
             {
                 DoCast(me->getVictim(), SPELL_FIREBALL);
-                uiFireBoltTimer = urand(5*IN_MILLISECONDS, 9*IN_MILLISECONDS);
+                uiFireBoltTimer = urand(5*IN_MILLISECONDS,9*IN_MILLISECONDS);
             } else uiFireBoltTimer -= diff;
 
-            if (uiFrostboltTimer <= diff)
+            if (uiFrostboltTimer < diff)
             {
                 DoCast(me->getVictim(), SPELL_FROSTBOLT);
-                uiFrostboltTimer = urand(4*IN_MILLISECONDS, 12*IN_MILLISECONDS);
+                uiFrostboltTimer = urand(4*IN_MILLISECONDS,12*IN_MILLISECONDS);
             } else uiFrostboltTimer -= diff;
 
+
             // check if creature is not outside of building
-            if (uiResetTimer <= diff)
+            if (uiResetTimer < diff)
             {
                 if (me->GetDistance2d(me->GetHomePosition().GetPositionX(), me->GetHomePosition().GetPositionY()) > 50)
                 {
@@ -205,10 +194,15 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new boss_balindaAI(creature);
+    }
 };
 
 void AddSC_boss_balinda()
 {
-    new boss_balinda();
-    new mob_water_elemental();
-}
+    new boss_balinda;
+    new mob_water_elemental;
+};

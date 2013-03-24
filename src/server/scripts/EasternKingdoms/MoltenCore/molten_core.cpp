@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -42,14 +40,15 @@ EndContentData */
 #define SPELL_WITHERING_HEAT        19367
 #define SPELL_ANCIENT_DESPAIR       19369
 #define SPELL_ANCIENT_HYSTERIA      19372
-class mob_ancient_core_hound : public CreatureScript
+
+class mob_ancient_core_hound : public CreatureScript
 {
 public:
     mob_ancient_core_hound() : CreatureScript("mob_ancient_core_hound") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        SimpleAI *ai = new SimpleAI(creature);
+        SimpleAI *ai = new SimpleAI(pCreature);
 
         ai->Spell[0].Enabled          = true;
         ai->Spell[0].Spell_Id         = SPELL_CONE_OF_FIRE;
@@ -57,8 +56,8 @@ public:
         ai->Spell[0].First_Cast       = 10000;
         ai->Spell[0].Cast_Target_Type = CAST_HOSTILE_TARGET;
 
-        uint32 RandDebuff = RAND(SPELL_GROUND_STOMP, SPELL_ANCIENT_DREAD, SPELL_CAUTERIZING_FLAMES,
-                                 SPELL_WITHERING_HEAT, SPELL_ANCIENT_DESPAIR, SPELL_ANCIENT_HYSTERIA);
+        uint32 RandDebuff = RAND(SPELL_GROUND_STOMP,SPELL_ANCIENT_DREAD,SPELL_CAUTERIZING_FLAMES,
+                                 SPELL_WITHERING_HEAT,SPELL_ANCIENT_DESPAIR,SPELL_ANCIENT_HYSTERIA);
 
         ai->Spell[1].Enabled          = true;
         ai->Spell[1].Spell_Id         = RandDebuff;
@@ -76,6 +75,7 @@ public:
 
         return ai;
     }
+
 };
 
 void AddSC_molten_core()

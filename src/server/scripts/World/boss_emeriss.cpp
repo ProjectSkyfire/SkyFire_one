@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Emeriss
@@ -30,24 +28,19 @@ EndScriptData */
 enum eEnums
 {
     SAY_AGGRO               = -1000401,
-    SAY_CASTCORRUPTION      = -1000402,
+    SAY_CASTCORRUPTION      = -1000402, //signed for 6182
 
     SPELL_SLEEP             = 24777,
     SPELL_NOXIOUSBREATH     = 24818,
     SPELL_TAILSWEEP         = 15847,
-    //SPELL_MARKOFNATURE    = 25040,                        // Not working
     SPELL_VOLATILEINFECTION = 24928,
     SPELL_CORRUPTIONOFEARTH = 24910
 };
-class boss_emeriss : public CreatureScript
+
+class boss_emeriss : public CreatureScript
 {
 public:
     boss_emeriss() : CreatureScript("boss_emeriss") { }
-
-    CreatureAI* GetAI(Creature* creature)
-    {
-        return new boss_emerissAI (creature);
-    }
 
     struct boss_emerissAI : public ScriptedAI
     {
@@ -56,7 +49,6 @@ public:
         uint32 m_uiSleep_Timer;
         uint32 m_uiNoxiousBreath_Timer;
         uint32 m_uiTailSweep_Timer;
-        //uint32 m_uiMarkOfNature_Timer;
         uint32 m_uiVolatileInfection_Timer;
         uint32 m_uiCorruptionsCasted;
 
@@ -65,12 +57,11 @@ public:
             m_uiSleep_Timer = 15000 + rand()%5000;
             m_uiNoxiousBreath_Timer = 8000;
             m_uiTailSweep_Timer = 4000;
-            //m_uiMarkOfNature_Timer = 45000;
             m_uiVolatileInfection_Timer = 12000;
             m_uiCorruptionsCasted = 0;
         }
 
-        void Aggro(Unit* /*pWho*/)
+        void EnterCombat(Unit* /*pWho*/)
         {
             DoScriptText(SAY_AGGRO, me);
         }
@@ -110,15 +101,6 @@ public:
             else
                 m_uiTailSweep_Timer -= uiDiff;
 
-            //MarkOfNature_Timer
-            //if (m_uiMarkOfNature_Timer <= uiDiff)
-            //{
-            //    DoCast(me->getVictim(), SPELL_MARKOFNATURE);
-            //    m_uiMarkOfNature_Timer = 45000;
-            //}
-            //else
-            //    m_uiMarkOfNature_Timer -= uiDiff;
-
             //VolatileInfection_Timer
             if (m_uiVolatileInfection_Timer <= uiDiff)
             {
@@ -130,7 +112,7 @@ public:
 
             //CorruptionofEarth_Timer
             //CorruptionofEarth at 75%, 50% and 25%
-            if ((me->GetHealth()*100 / me->GetMaxHealth()) <= (100-(25*m_uiCorruptionsCasted)))
+            if (!HealthAbovePct(100 - 25 * m_uiCorruptionsCasted))
             {
                 ++m_uiCorruptionsCasted;                        // prevent casting twice on same hp
                 DoScriptText(SAY_CASTCORRUPTION, me);
@@ -140,9 +122,15 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new boss_emerissAI(creature);
+    }
 };
 
 void AddSC_boss_emeriss()
 {
-    new boss_emeriss();
+    new boss_emeriss;
 }
+

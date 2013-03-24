@@ -1,22 +1,20 @@
- /*
-  * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
-  * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
-  * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-  * Free Software Foundation; either version 2 of the License, or (at your
-  * option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful, but WITHOUT
-  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-  * more details.
-  *
-  * You should have received a copy of the GNU General Public License along
-  * with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
+/*
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /* ScriptData
 SDName: Instance_Temple_of_Ahnqiraj
@@ -25,75 +23,92 @@ SDComment:
 SDCategory: Temple of Ahn'Qiraj
 EndScriptData */
 
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
+#include "InstanceScript.h"
 #include "temple_of_ahnqiraj.h"
-class instance_temple_of_ahnqiraj : public InstanceMapScript
+
+class instance_temple_of_ahnqiraj : public InstanceMapScript
 {
-public:
-    instance_temple_of_ahnqiraj() : InstanceMapScript("instance_temple_of_ahnqiraj") { }
+    public:
+        instance_temple_of_ahnqiraj() : InstanceMapScript("instance_temple_of_ahnqiraj", 531) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
-    {
-        return new instance_temple_of_ahnqiraj_InstanceMapScript(map);
-    }
-
-    struct instance_temple_of_ahnqiraj_InstanceMapScript : public ScriptedInstance
-    {
-        instance_temple_of_ahnqiraj_InstanceMapScript(Map *map) : ScriptedInstance(map) {Initialize();};
-
-        //If Vem is dead...
-        bool IsBossDied[3];
-
-        //Storing Skeram, Vem and Kri.
-        uint64 SkeramGUID;
-        uint64 VemGUID;
-        uint64 KriGUID;
-        uint64 VeklorGUID;
-        uint64 VeknilashGUID;
-
-        uint32 BugTrioDeathCount;
-
-        uint32 CthunPhase;
-
-        void Initialize()
+        InstanceScript* GetInstanceScript(InstanceMap* map) const
         {
-            IsBossDied[0] = false;
-            IsBossDied[1] = false;
-            IsBossDied[2] = false;
-
-            SkeramGUID = 0;
-            VemGUID = 0;
-            KriGUID = 0;
-            VeklorGUID = 0;
-            VeknilashGUID = 0;
-
-            BugTrioDeathCount = 0;
-
-            CthunPhase = 0;
+            return new instance_temple_of_ahnqiraj_InstanceMapScript(map);
         }
 
-        void OnCreatureCreate (Creature* creature, uint32 creature_entry)
+        struct instance_temple_of_ahnqiraj_InstanceMapScript : public InstanceScript
         {
-            switch (creature_entry)
+            instance_temple_of_ahnqiraj_InstanceMapScript(Map* map) : InstanceScript(map) {}
+
+            //If Vem is dead...
+            bool IsBossDied[3];
+
+            //Storing Skeram, Vem and Kri.
+            uint64 SkeramGUID;
+            uint64 VemGUID;
+            uint64 KriGUID;
+            uint64 VeklorGUID;
+            uint64 VeknilashGUID;
+            uint64 ViscidusGUID;
+
+            uint32 BugTrioDeathCount;
+
+            uint32 CthunPhase;
+
+            void Initialize()
             {
-                case 15263: SkeramGUID = creature->GetGUID(); break;
-                case 15544: VemGUID = creature->GetGUID(); break;
-                case 15511: KriGUID = creature->GetGUID(); break;
-                case 15276: VeklorGUID = creature->GetGUID(); break;
-                case 15275: VeknilashGUID = creature->GetGUID(); break;
+                IsBossDied[0] = false;
+                IsBossDied[1] = false;
+                IsBossDied[2] = false;
+
+                SkeramGUID = 0;
+                VemGUID = 0;
+                KriGUID = 0;
+                VeklorGUID = 0;
+                VeknilashGUID = 0;
+                ViscidusGUID = 0;
+
+                BugTrioDeathCount = 0;
+
+                CthunPhase = 0;
             }
-        }
 
-        bool IsEncounterInProgress() const
-        {
-            //not active in AQ40
-            return false;
-        }
-
-        uint32 GetData(uint32 type)
-        {
-            switch (type)
+            void OnCreatureCreate(Creature* creature)
             {
+                switch (creature->GetEntry())
+                {
+                case NPC_SKERAM:
+                    SkeramGUID = creature->GetGUID();
+                    break;
+                case NPC_VEM:
+                    VemGUID = creature->GetGUID();
+                    break;
+                case NPC_KRI:
+                    KriGUID = creature->GetGUID();
+                    break;
+                case NPC_VEKLOR:
+                    VeklorGUID = creature->GetGUID();
+                    break;
+                case NPC_VEKNILASH:
+                    VeknilashGUID = creature->GetGUID();
+                    break;
+                case NPC_VISCIDUS:
+                    ViscidusGUID = creature->GetGUID();
+                    break;
+                }
+            }
+
+            bool IsEncounterInProgress() const
+            {
+                //not active in AQ40
+                return false;
+            }
+
+            uint32 GetData(uint32 type) const
+            {
+                switch (type)
+                {
                 case DATA_VEMISDEAD:
                     if (IsBossDied[0])
                         return 1;
@@ -114,14 +129,14 @@ public:
 
                 case DATA_CTHUN_PHASE:
                     return CthunPhase;
+                }
+                return 0;
             }
-            return 0;
-        }
 
-        uint64 GetData64 (uint32 identifier)
-        {
-            switch (identifier)
+            uint64 GetData64(uint32 identifier) const
             {
+                switch (identifier)
+                {
                 case DATA_SKERAM:
                     return SkeramGUID;
                 case DATA_VEM:
@@ -132,20 +147,22 @@ public:
                     return VeklorGUID;
                 case DATA_VEKNILASH:
                     return VeknilashGUID;
-            }
-            return 0;
-        }                                                       // end GetData64
+                case DATA_VISCIDUS:
+                    return ViscidusGUID;
+                }
+                return 0;
+            }                                                       // end GetData64
 
-        void SetData(uint32 type, uint32 data)
-        {
-            switch (type)
+            void SetData(uint32 type, uint32 data)
             {
+                switch (type)
+                {
                 case DATA_VEM_DEATH:
                     IsBossDied[0] = true;
                     break;
 
                 case DATA_BUG_TRIO_DEATH:
-                    BugTrioDeathCount++;
+                    ++BugTrioDeathCount;
                     break;
 
                 case DATA_VEKLOR_DEATH:
@@ -159,9 +176,10 @@ public:
                 case DATA_CTHUN_PHASE:
                     CthunPhase = data;
                     break;
+                }
             }
-        }
-    };
+        };
+
 };
 
 void AddSC_instance_temple_of_ahnqiraj()

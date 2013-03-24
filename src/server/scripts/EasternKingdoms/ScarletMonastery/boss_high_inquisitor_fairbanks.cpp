@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -36,14 +34,15 @@ enum eSpells
     SPELL_POWERWORDSHIELD           = 11647,
     SPELL_SLEEP                     = 8399
 };
-class boss_high_inquisitor_fairbanks : public CreatureScript
+
+class boss_high_inquisitor_fairbanks : public CreatureScript
 {
 public:
     boss_high_inquisitor_fairbanks() : CreatureScript("boss_high_inquisitor_fairbanks") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_high_inquisitor_fairbanksAI (creature);
+        return new boss_high_inquisitor_fairbanksAI (pCreature);
     }
 
     struct boss_high_inquisitor_fairbanksAI : public ScriptedAI
@@ -79,7 +78,7 @@ public:
                 return;
 
             //If we are <25% hp cast Heal
-            if (me->GetHealth()*100 / me->GetMaxHealth() <= 25 && !me->IsNonMeleeSpellCasted(false) && Heal_Timer <= diff)
+            if (!HealthAbovePct(25) && !me->IsNonMeleeSpellCasted(false) && Heal_Timer <= diff)
             {
                 DoCast(me, SPELL_HEAL);
                 Heal_Timer = 30000;
@@ -88,7 +87,7 @@ public:
             //Fear_Timer
             if (Fear_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
                     DoCast(pTarget, SPELL_FEAR);
 
                 Fear_Timer = 40000;
@@ -97,14 +96,14 @@ public:
             //Sleep_Timer
             if (Sleep_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO,0))
                     DoCast(pTarget, SPELL_SLEEP);
 
                 Sleep_Timer = 30000;
             } else Sleep_Timer -= diff;
 
             //PowerWordShield_Timer
-            if (!PowerWordShield && me->GetHealth()*100 / me->GetMaxHealth() <= 25)
+            if (!PowerWordShield && !HealthAbovePct(25))
             {
                 DoCast(me, SPELL_POWERWORDSHIELD);
                 PowerWordShield = true;
@@ -113,7 +112,7 @@ public:
             //Dispel_Timer
             if (Dispel_Timer <= diff)
             {
-                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
                     DoCast(pTarget, SPELL_DISPELMAGIC);
 
                 DispelMagic_Timer = 30000;
@@ -129,7 +128,9 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 void AddSC_boss_high_inquisitor_fairbanks()
 {

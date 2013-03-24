@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -38,19 +36,20 @@ EndScriptData */
 #define GO_GATE_ILLUCIA     177371
 
 #define MAX_ENCOUNTER          2
-class instance_scholomance : public InstanceMapScript
+
+class instance_scholomance : public InstanceMapScript
 {
 public:
-    instance_scholomance() : InstanceMapScript("instance_scholomance") { }
+    instance_scholomance() : InstanceMapScript("instance_scholomance", 289) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_scholomance_InstanceMapScript(pMap);
     }
 
-    struct instance_scholomance_InstanceMapScript : public ScriptedInstance
+    struct instance_scholomance_InstanceMapScript : public InstanceScript
     {
-        instance_scholomance_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_scholomance_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         //Lord Alexei Barov, Doctor Theolen Krastinov, The Ravenian, Lorekeeper Polkelt, Instructor Malicia and the Lady Illucia Barov.
         bool IsBossDied[6];
@@ -84,7 +83,7 @@ public:
 
         void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
-            switch (pGo->GetEntry())
+            switch(pGo->GetEntry())
             {
                 case GO_GATE_KIRTONOS:  GateKirtonosGUID = pGo->GetGUID(); break;
                 case GO_GATE_GANDLING:  GateGandlingGUID = pGo->GetGUID(); break;
@@ -99,7 +98,7 @@ public:
 
         void SetData(uint32 type, uint32 data)
         {
-            switch (type)
+            switch(type)
             {
                 case DATA_LORDALEXEIBAROV_DEATH:
                     IsBossDied[0] = true;
@@ -142,7 +141,9 @@ public:
             return 0;
         }
     };
+
 };
+
 
 void AddSC_instance_scholomance()
 {

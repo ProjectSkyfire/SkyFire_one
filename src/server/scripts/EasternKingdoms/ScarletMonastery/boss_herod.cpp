@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -41,14 +39,15 @@ EndScriptData */
 
 #define ENTRY_SCARLET_TRAINEE       6575
 #define ENTRY_SCARLET_MYRMIDON      4295
-class boss_herod : public CreatureScript
+
+class boss_herod : public CreatureScript
 {
 public:
     boss_herod() : CreatureScript("boss_herod") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_herodAI(creature);
+        return new boss_herodAI(pCreature);
     }
 
     struct boss_herodAI : public ScriptedAI
@@ -81,7 +80,7 @@ public:
          void JustDied(Unit* /*killer*/)
          {
              for (uint8 i = 0; i < 20; ++i)
-                 me->SummonCreature(ENTRY_SCARLET_TRAINEE, 1939.18, -431.58, 17.09, 6.22, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                 me->SummonCreature(ENTRY_SCARLET_TRAINEE, 1939.18f, -431.58f, 17.09f, 6.22f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
          }
 
         void UpdateAI(const uint32 diff)
@@ -90,7 +89,7 @@ public:
                 return;
 
             //If we are <30% hp goes Enraged
-            if (!Enrage && me->GetHealth()*100 / me->GetMaxHealth() <= 30 && !me->IsNonMeleeSpellCasted(false))
+            if (!Enrage && !HealthAbovePct(30) && !me->IsNonMeleeSpellCasted(false))
             {
                 DoScriptText(EMOTE_ENRAGE, me);
                 DoScriptText(SAY_ENRAGE, me);
@@ -116,23 +115,25 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
+
 
 class mob_scarlet_trainee : public CreatureScript
 {
 public:
     mob_scarlet_trainee() : CreatureScript("mob_scarlet_trainee") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_scarlet_traineeAI(creature);
+        return new mob_scarlet_traineeAI(pCreature);
     }
 
     struct mob_scarlet_traineeAI : public npc_escortAI
     {
         mob_scarlet_traineeAI(Creature *c) : npc_escortAI(c)
         {
-            Start_Timer = urand(1000, 6000);
+            Start_Timer = urand(1000,6000);
         }
 
         uint32 Start_Timer;
@@ -147,7 +148,7 @@ public:
             {
                 if (Start_Timer <= diff)
                 {
-                    Start(true, true);
+                    Start(true,true);
                     Start_Timer = 0;
                 } else Start_Timer -= diff;
             }
@@ -155,7 +156,9 @@ public:
             npc_escortAI::UpdateAI(diff);
         }
     };
+
 };
+
 
 void AddSC_boss_herod()
 {

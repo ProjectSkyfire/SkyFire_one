@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,7 +19,7 @@
 /* ScriptData
 SDName: Stratholme
 SD%Complete: 100
-SDComment: Misc mobs for instance. GO-script to apply aura and start event for quest 8945
+SDComment: Misc mobs for instance. pGo-script to apply aura and start event for quest 8945
 SDCategory: Stratholme
 EndScriptData */
 
@@ -38,22 +36,23 @@ EndContentData */
 /*######
 ## go_gauntlet_gate (this is the _first_ of the gauntlet gates, two exist)
 ######*/
-class go_gauntlet_gate : public GameObjectScript
+
+class go_gauntlet_gate : public GameObjectScript
 {
 public:
     go_gauntlet_gate() : GameObjectScript("go_gauntlet_gate") { }
 
-    bool GOHello(Player* player, GameObject* pGo)
+    bool OnGossipHello(Player* pPlayer, GameObject* pGo)
     {
-        ScriptedInstance* instance = pGo->GetInstanceScript();
+        InstanceScript* pInstance = pGo->GetInstanceScript();
 
-        if (!instance)
+        if (!pInstance)
             return false;
 
-        if (instance->GetData(TYPE_BARON_RUN) != NOT_STARTED)
+        if (pInstance->GetData(TYPE_BARON_RUN) != NOT_STARTED)
             return false;
 
-        if (Group *pGroup = player->GetGroup())
+        if (Group *pGroup = pPlayer->GetGroup())
         {
             for (GroupReference *itr = pGroup->GetFirstMember(); itr != NULL; itr = itr->next())
             {
@@ -62,18 +61,19 @@ public:
                     continue;
 
                 if (pGroupie->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
-                    !pGroupie->HasAura(SPELL_BARON_ULTIMATUM, 0) &&
+                    !pGroupie->HasAura(SPELL_BARON_ULTIMATUM) &&
                     pGroupie->GetMap() == pGo->GetMap())
-                    pGroupie->CastSpell(pGroupie, SPELL_BARON_ULTIMATUM, true);
+                    pGroupie->CastSpell(pGroupie,SPELL_BARON_ULTIMATUM,true);
             }
-        } else if (player->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
-                    !player->HasAura(SPELL_BARON_ULTIMATUM, 0) &&
-                    player->GetMap() == pGo->GetMap())
-                    player->CastSpell(player, SPELL_BARON_ULTIMATUM, true);
+        } else if (pPlayer->GetQuestStatus(QUEST_DEAD_MAN_PLEA) == QUEST_STATUS_INCOMPLETE &&
+                    !pPlayer->HasAura(SPELL_BARON_ULTIMATUM) &&
+                    pPlayer->GetMap() == pGo->GetMap())
+                    pPlayer->CastSpell(pPlayer,SPELL_BARON_ULTIMATUM,true);
 
-        instance->SetData(TYPE_BARON_RUN, IN_PROGRESS);
+        pInstance->SetData(TYPE_BARON_RUN,IN_PROGRESS);
         return false;
     }
+
 };
 
 /*######
@@ -85,14 +85,15 @@ public:
 #define SAY_ZAPPED1 -1329001
 #define SAY_ZAPPED2 -1329002
 #define SAY_ZAPPED3 -1329003
-class mob_freed_soul : public CreatureScript
+
+class mob_freed_soul : public CreatureScript
 {
 public:
     mob_freed_soul() : CreatureScript("mob_freed_soul") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_freed_soulAI (creature);
+        return new mob_freed_soulAI (pCreature);
     }
 
     struct mob_freed_soulAI : public ScriptedAI
@@ -101,12 +102,14 @@ public:
 
         void Reset()
         {
-            DoScriptText(RAND(SAY_ZAPPED0, SAY_ZAPPED1, SAY_ZAPPED2, SAY_ZAPPED3), me);
+            DoScriptText(RAND(SAY_ZAPPED0,SAY_ZAPPED1,SAY_ZAPPED2,SAY_ZAPPED3), me);
         }
 
         void EnterCombat(Unit* /*who*/) {}
     };
+
 };
+
 
 /*######
 ## mob_restless_soul
@@ -117,14 +120,15 @@ public:
 #define QUEST_RESTLESS_SOUL 5282
 #define ENTRY_RESTLESS      11122
 #define ENTRY_FREED         11136
-class mob_restless_soul : public CreatureScript
+
+class mob_restless_soul : public CreatureScript
 {
 public:
     mob_restless_soul() : CreatureScript("mob_restless_soul") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_restless_soulAI (creature);
+        return new mob_restless_soulAI (pCreature);
     }
 
     struct mob_restless_soulAI : public ScriptedAI
@@ -158,7 +162,7 @@ public:
 
         void JustSummoned(Creature *summoned)
         {
-            summoned->CastSpell(summoned, SPELL_SOUL_FREED, false);
+            summoned->CastSpell(summoned,SPELL_SOUL_FREED,false);
         }
 
         void JustDied(Unit* /*Killer*/)
@@ -173,7 +177,7 @@ public:
             {
                 if (Die_Timer <= diff)
                 {
-                    if (Unit* pTemp = Unit::GetUnit(*me, Tagger))
+                    if (Unit* pTemp = Unit::GetUnit(*me,Tagger))
                     {
                         CAST_PLR(pTemp)->KilledMonsterCredit(ENTRY_RESTLESS, me->GetGUID());
                         me->Kill(me);
@@ -182,7 +186,9 @@ public:
             }
         }
     };
+
 };
+
 
 /*######
 ## mobs_spectral_ghostly_citizen
@@ -193,14 +199,15 @@ enum eGhostlyCitizenSpells
     SPELL_HAUNTING_PHANTOM  = 16336,
     SPELL_SLAP              = 6754
 };
-class mobs_spectral_ghostly_citizen : public CreatureScript
+
+class mobs_spectral_ghostly_citizen : public CreatureScript
 {
 public:
     mobs_spectral_ghostly_citizen() : CreatureScript("mobs_spectral_ghostly_citizen") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mobs_spectral_ghostly_citizenAI (creature);
+        return new mobs_spectral_ghostly_citizenAI (pCreature);
     }
 
     struct mobs_spectral_ghostly_citizenAI : public ScriptedAI
@@ -231,7 +238,7 @@ public:
                 for (uint32 i = 1; i <= 4; ++i)
                 {
                      //100%, 50%, 33%, 25% chance to spawn
-                     if (urand(1, i) == 1)
+                     if (urand(1,i) == 1)
                          DoSummon(ENTRY_RESTLESS, me, 20.0f, 600000);
                 }
             }
@@ -252,16 +259,16 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void ReceiveEmote(Player* player, uint32 emote)
+        void ReceiveEmote(Player* pPlayer, uint32 emote)
         {
-            switch (emote)
+            switch(emote)
             {
                 case TEXTEMOTE_DANCE:
                     EnterEvadeMode();
                     break;
                 case TEXTEMOTE_RUDE:
-                    if (me->IsWithinDistInMap(player, 5))
-                        DoCast(player, SPELL_SLAP, false);
+                    if (me->IsWithinDistInMap(pPlayer, 5))
+                        DoCast(pPlayer, SPELL_SLAP, false);
                     else
                         me->HandleEmoteCommand(EMOTE_ONESHOT_RUDE);
                     break;
@@ -277,7 +284,9 @@ public:
             }
         }
     };
+
 };
+
 
 void AddSC_stratholme()
 {

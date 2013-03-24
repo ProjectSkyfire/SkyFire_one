@@ -1,8 +1,6 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -39,10 +37,10 @@ EndScriptData */
 #define SAY_ARRIVAL3_RAG    -1409011
 #define SAY_ARRIVAL5_RAG    -1409012
 
-#define SPAWN_RAG_X         838.51f
-#define SPAWN_RAG_Y         -829.84f
-#define SPAWN_RAG_Z         -232.00f
-#define SPAWN_RAG_O         1.70f
+#define SPAWN_RAG_X         838.51
+#define SPAWN_RAG_Y         -829.84
+#define SPAWN_RAG_Z         -232.00
+#define SPAWN_RAG_O         1.70
 
 #define SPELL_MAGIC_REFLECTION      20619
 #define SPELL_DAMAGE_REFLECTION     21075
@@ -54,14 +52,15 @@ EndScriptData */
 
 #define ENTRY_FLAMEWALKER_HEALER    11663
 #define ENTRY_FLAMEWALKER_ELITE     11664
-class boss_majordomo : public CreatureScript
+
+class boss_majordomo : public CreatureScript
 {
 public:
     boss_majordomo() : CreatureScript("boss_majordomo") { }
 
-    CreatureAI* GetAI(Creature* creature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new boss_majordomoAI (creature);
+        return new boss_majordomoAI (pCreature);
     }
 
     struct boss_majordomoAI : public ScriptedAI
@@ -98,7 +97,7 @@ public:
                 return;
 
             //Cast Ageis if less than 50% hp
-            if (me->GetHealth()*100 / me->GetMaxHealth() < 50)
+            if (HealthBelowPct(50))
             {
                 DoCast(me, SPELL_AEGIS);
             }
@@ -131,6 +130,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
 };
 
 void AddSC_boss_majordomo()
