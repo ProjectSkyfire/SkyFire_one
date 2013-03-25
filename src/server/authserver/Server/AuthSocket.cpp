@@ -18,9 +18,9 @@
  */
 
 #include "Common.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 #include "ByteBuffer.h"
-#include "Configuration/Config.h"
+#include "Config.h"
 #include "Log.h"
 #include "RealmList.h"
 #include "AuthSocket.h"
@@ -139,7 +139,8 @@ typedef struct AuthHandler
     bool (AuthSocket::*handler)(void);
 } AuthHandler;
 
-// GCC have alternative #pragma pack() syntax and old gcc version not support pack(pop), also any gcc version not support it at some paltform
+// GCC have alternative #pragma pack() syntax and old gcc version not support pack(pop), 
+// also any gcc version not support it at some platform
 #if defined(__GNUC__)
 #pragma pack()
 #else
@@ -485,9 +486,7 @@ bool AuthSocket::_HandleLogonChallenge()
                     for (int i = 0; i < 4; ++i)
                         _localizationName[i] = ch->country[4-i-1];
 
-                    sLog->outBasic("'%s:%d' [AuthChallenge] account %s is using '%c%c%c%c' locale (%u)", socket().getRemoteAddress().c_str(), socket().getRemotePort(),
-                            _login.c_str (), ch->country[3], ch->country[2], ch->country[1], ch->country[0], GetLocaleByName(_localizationName)
-                        );
+                    sLog->outBasic("'%s:%d' [AuthChallenge] account %s is using '%c%c%c%c' locale (%u)", socket().getRemoteAddress().c_str(), socket().getRemotePort(), _login.c_str (), ch->country[3], ch->country[2], ch->country[1], ch->country[0], GetLocaleByName(_localizationName));
                 }
             }
         }
@@ -663,8 +662,8 @@ bool AuthSocket::_HandleLogonProof()
                         uint32 acc_id = (*loginfail)[0].GetUInt32();
                         LoginDatabase.PExecute("INSERT INTO account_banned VALUES ('%u',UNIX_TIMESTAMP(),UNIX_TIMESTAMP()+'%u','Skyfire realmd','Failed login autoban',1)", acc_id, WrongPassBanTime);
 
-
-                        sLog->outBasic("'%s:%d' [AuthChallenge] account %s got banned for '%u' seconds because it failed to authenticate '%u' times", _login.c_str(), WrongPassBanTime, failed_logins);                    }
+                        sLog->outBasic("'%s:%d' [AuthChallenge] account %s got banned for '%u' seconds because it failed to authenticate '%u' times", _login.c_str(), WrongPassBanTime, failed_logins);
+                    }
                     else
                     {
                         std::string current_ip(socket().getRemoteAddress().c_str());
@@ -726,7 +725,7 @@ bool AuthSocket::_HandleReconnectChallenge()
         return false;
     }
 
-    // Reinitialize build, expansion and the account securitylevel
+    // Reinitialize build, expansion and the account security level
     _build = ch->build;
     _expversion = (AuthHelper::IsPostBCAcceptedClientBuild(_build) ? POST_BC_EXP_FLAG : NO_VALID_EXP_FLAG) | (AuthHelper::IsPreBCAcceptedClientBuild(_build) ? PRE_BC_EXP_FLAG : NO_VALID_EXP_FLAG);
     _os = (const char*)ch->os;

@@ -19,7 +19,7 @@
 
 #include "Common.h"
 #include "RealmList.h"
-#include "Database/DatabaseEnv.h"
+#include "DatabaseEnv.h"
 
 RealmList::RealmList() : m_UpdateInterval(0), m_NextUpdateTime(time(NULL)){}
 
