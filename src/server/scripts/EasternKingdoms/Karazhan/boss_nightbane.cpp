@@ -412,9 +412,7 @@ public:
             }
         }
     };
-
 };
-
 
 void AddSC_boss_nightbane()
 {

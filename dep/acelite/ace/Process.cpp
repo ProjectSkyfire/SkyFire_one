@@ -40,7 +40,6 @@ sigchld_nop (int, siginfo_t *, ucontext_t *)
 }
 #endif /* ACE_WIN32 */
 
-
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 
 ACE_Process::ACE_Process (void)
@@ -1145,7 +1144,6 @@ ACE_Process_Options::set_handles (ACE_HANDLE std_in,
   return 0; // Success.
 }
 
-
 void
 ACE_Process_Options::release_handles ()
 {
@@ -1164,7 +1162,6 @@ ACE_Process_Options::release_handles ()
     }
 }
 #endif /* !ACE_HAS_WINCE */
-
 
 ACE_Process_Options::~ACE_Process_Options (void)
 {

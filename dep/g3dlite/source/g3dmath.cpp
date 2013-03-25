@@ -11,11 +11,8 @@
 #include <cstdlib>
 #include <cstring>
 
-
 namespace G3D {
-
 float gaussRandom(float mean, float stdev) {
-
     // Using Box-Mueller method from http://www.taygeta.com/random/gaussian.html
     // Modified to specify standard deviation and mean of distribution
     float w, x1, x2;
@@ -50,7 +47,6 @@ bool isNaN(double x) {
     return memcmp(&x, &n, sizeof(double)) == 0;
 }
 
-
 /** 
     This value should not be tested against directly, instead
     G3D::isNan() and G3D::isFinite() will return reliable results. */
@@ -69,7 +65,6 @@ float fnan() {
     // double is a standard type and should have quiet NaN
     return std::numeric_limits<float>::quiet_NaN();
 }
-
 
 int highestBit(uint32 x) {
     // Binary search.
@@ -92,7 +87,6 @@ int highestBit(uint32 x) {
     return base + lut[x];
 }
 
-
 int iRandom(int low, int high) {
     int r = iFloor(low + (high - low + 1) * (double)rand() / RAND_MAX);
     
@@ -104,6 +98,4 @@ int iRandom(int low, int high) {
         return r;
     }
 }
-
-
 }

@@ -16,7 +16,6 @@
 #    include "ace/Service_Config.h"
 #endif /* !ACE_HAS_WINCE && !ACE_LACKS_ACE_SVCCONF */
 
-
 #include "ace/Task_T.h"
 #include "ace/Log_Msg.h"
 #include "ace/Framework_Component.h"
@@ -814,7 +813,6 @@ ACE_Proactor::implementation (void) const
   return this->implementation_;
 }
 
-
 ACE_Asynch_Read_Stream_Impl *
 ACE_Proactor::create_asynch_read_stream (void)
 {
@@ -890,7 +888,6 @@ ACE_Proactor::create_asynch_read_stream_result
      priority,
      signal_number);
 }
-
 
 ACE_Asynch_Write_Stream_Result_Impl *
 ACE_Proactor::create_asynch_write_stream_result

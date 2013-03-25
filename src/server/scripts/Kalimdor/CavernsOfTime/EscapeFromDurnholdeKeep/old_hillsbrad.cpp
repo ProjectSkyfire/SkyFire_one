@@ -92,7 +92,6 @@ public:
 
         return true;
     }
-
 };
 
 /*######
@@ -551,7 +550,6 @@ public:
                 }
         }
     };
-
 };
 
 /*######
@@ -647,7 +645,6 @@ public:
             npc_escortAI::UpdateAI(diff);
         }
     };
-
 };
 
 /*######

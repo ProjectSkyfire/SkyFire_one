@@ -20,20 +20,16 @@
 #include "G3D/AABox.h"
 
 namespace G3D {
-
 Cylinder::Cylinder(class BinaryInput& b) {
 	deserialize(b);
 }
 
-
 Cylinder::Cylinder() {
 }
-
 
 Cylinder::Cylinder(const Vector3& _p1, const Vector3& _p2, float _r) 
 	: p1(_p1), p2(_p2), mRadius(_r) {
 }
-
 
 void Cylinder::serialize(class BinaryOutput& b) const {
 	p1.serialize(b);
@@ -41,30 +37,24 @@ void Cylinder::serialize(class BinaryOutput& b) const {
 	b.writeFloat64(mRadius);
 }
 
-
 void Cylinder::deserialize(class BinaryInput& b) {
 	p1.deserialize(b);
 	p2.deserialize(b);
 	mRadius = b.readFloat64();
 }
 
-
 Line Cylinder::axis() const {
 	return Line::fromTwoPoints(p1, p2);
 }
-
-
 
 float Cylinder::radius() const {
 	return mRadius;
 }
 
-
 float Cylinder::volume() const {
 	return
 		(float)pi() * square(mRadius) * (p1 - p2).magnitude();
 }
-
 
 float Cylinder::area() const {
 	return
@@ -85,7 +75,6 @@ bool Cylinder::contains(const Vector3& p) const {
     return LineSegment::fromTwoPoints(p1, p2).distanceSquared(p) <= square(mRadius);
 }
 
-
 void Cylinder::getReferenceFrame(CoordinateFrame& cframe) const {
     cframe.translation = center();
 
@@ -97,7 +86,6 @@ void Cylinder::getReferenceFrame(CoordinateFrame& cframe) const {
     cframe.rotation.setColumn(1, Y);
     cframe.rotation.setColumn(2, Z);
 }
-
 
 void Cylinder::getRandomSurfacePoint(Vector3& p, Vector3& N) const {
     float h = height();
@@ -112,7 +100,6 @@ void Cylinder::getRandomSurfacePoint(Vector3& p, Vector3& N) const {
     float r1 = uniformRandom(0, capRelArea * 2 + sideRelArea);
 
     if (r1 < capRelArea * 2) {
-
         // Select a point uniformly at random on a disk
         // @cite http://mathworld.wolfram.com/DiskPointPicking.html
         float a = uniformRandom(0, (float)twoPi());
@@ -150,7 +137,6 @@ void Cylinder::getRandomSurfacePoint(Vector3& p, Vector3& N) const {
     N = cframe.normalToWorldSpace(N);
 }
 
-
 Vector3 Cylinder::randomInteriorPoint() const {
     float h = height();
     float r = radius();
@@ -172,5 +158,4 @@ Vector3 Cylinder::randomInteriorPoint() const {
     
     return cframe.pointToWorldSpace(p);
 }
-
 } // namespace

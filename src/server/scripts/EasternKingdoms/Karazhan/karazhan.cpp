@@ -319,7 +319,6 @@ public:
                         WipeTimer = 15000;
                     } else WipeTimer -= diff;
                 }
-
             }
         }
     };
@@ -395,10 +394,7 @@ public:
     {
         return new npc_barnesAI(pCreature);
     }
-
 };
-
-
 
 /*###
 # npc_berthold
@@ -438,9 +434,7 @@ public:
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
         return true;
     }
-
 };
-
 
 /*###
 # npc_image_of_medivh
@@ -614,12 +608,10 @@ public:
                 return 5000;
             default : return 9999999;
             }
-
         }
 
         void UpdateAI(const uint32 diff)
         {
-
             if (YellTimer <= diff)
             {
                 if (EventStarted)
@@ -646,9 +638,7 @@ public:
             }
         }
     };
-
 };
-
 
 void AddSC_karazhan()
 {

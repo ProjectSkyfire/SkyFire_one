@@ -49,7 +49,6 @@ public:
 
         return false;
     }
-
 };
 
 /*######
@@ -189,7 +188,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 void AddSC_boss_lieutenant_drake()

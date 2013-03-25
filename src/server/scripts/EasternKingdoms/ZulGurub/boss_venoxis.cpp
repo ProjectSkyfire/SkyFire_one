@@ -139,7 +139,6 @@ class boss_venoxis : public CreatureScript
                             {
                                 HolyNova_Timer = 2000;
                             }
-
                         } else HolyNova_Timer -= diff;
 
                         if (HolyFire_Timer < diff && TargetInRange < 3)

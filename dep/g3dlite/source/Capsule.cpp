@@ -20,20 +20,16 @@
 #include "G3D/AABox.h"
 
 namespace G3D {
-
 Capsule::Capsule(class BinaryInput& b) {
 	deserialize(b);
 }
 
-
 Capsule::Capsule() {
 }
-
 
 Capsule::Capsule(const Vector3& _p1, const Vector3& _p2, float _r) 
 	: p1(_p1), p2(_p2), _radius(_r) {
 }
-
 
 void Capsule::serialize(class BinaryOutput& b) const {
 	p1.serialize(b);
@@ -41,18 +37,15 @@ void Capsule::serialize(class BinaryOutput& b) const {
 	b.writeFloat64(_radius);
 }
 
-
 void Capsule::deserialize(class BinaryInput& b) {
 	p1.deserialize(b);
 	p2.deserialize(b);
 	_radius = b.readFloat64();
 }
 
-
 Line Capsule::axis() const {
 	return Line::fromTwoPoints(p1, p2);
 }
-
 
 float Capsule::volume() const {
 	return 
@@ -63,9 +56,7 @@ float Capsule::volume() const {
 		pow(_radius, 2) * (p1 - p2).magnitude();
 }
 
-
 float Capsule::area() const {
-
 	return
 		// Sphere area
 		pow(_radius, 2) * 4 * pi() +
@@ -74,7 +65,6 @@ float Capsule::area() const {
 		twoPi() * _radius * (p1 - p2).magnitude();
 }
 
-
 void Capsule::getBounds(AABox& out) const {
     Vector3 min = p1.min(p2) - (Vector3(1, 1, 1) * _radius);
     Vector3 max = p1.max(p2) + (Vector3(1, 1, 1) * _radius);
@@ -82,11 +72,9 @@ void Capsule::getBounds(AABox& out) const {
     out = AABox(min, max);
 }
 
-
 bool Capsule::contains(const Vector3& p) const { 
     return LineSegment::fromTwoPoints(p1, p2).distanceSquared(p) <= square(radius());
 }
-
 
 void Capsule::getRandomSurfacePoint(Vector3& p, Vector3& N) const {
     float h = height();
@@ -101,7 +89,6 @@ void Capsule::getRandomSurfacePoint(Vector3& p, Vector3& N) const {
     float r1 = uniformRandom(0, capRelArea * 2 + sideRelArea);
 
     if (r1 < capRelArea * 2) {
-
         // Select a point uniformly at random on a sphere
         N = Sphere(Vector3::zero(), 1).randomSurfacePoint();
         p = N * r;
@@ -125,7 +112,6 @@ void Capsule::getRandomSurfacePoint(Vector3& p, Vector3& N) const {
     N = cframe.normalToWorldSpace(N);
 }
 
-
 void Capsule::getReferenceFrame(CoordinateFrame& cframe) const {
     cframe.translation = center();
 
@@ -137,7 +123,6 @@ void Capsule::getReferenceFrame(CoordinateFrame& cframe) const {
     cframe.rotation.setColumn(1, Y);
     cframe.rotation.setColumn(2, Z);
 }
-
 
 Vector3 Capsule::randomInteriorPoint() const {
     float h = height();
@@ -153,13 +138,10 @@ Vector3 Capsule::randomInteriorPoint() const {
     float r1 = uniformRandom(0, 2.0 * hemiVolume + cylVolume);
 
     if (r1 < 2.0 * hemiVolume) {
-
         p = Sphere(Vector3::zero(), r).randomInteriorPoint();
 
         p.y += sign(p.y) * h / 2.0f;
-
     } else {
-
         // Select a point uniformly at random on a disk
         float a = uniformRandom(0, (float)twoPi());
         float r2 = sqrt(uniformRandom(0, 1)) * r;
@@ -175,5 +157,4 @@ Vector3 Capsule::randomInteriorPoint() const {
     
     return cframe.pointToWorldSpace(p);
 }
-
 } // namespace

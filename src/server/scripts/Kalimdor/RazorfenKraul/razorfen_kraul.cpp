@@ -146,7 +146,6 @@ public:
                 CAST_PLR(player)->FailQuest(QUEST_WILLIX_THE_IMPORTER);
         }
     };
-
 };
 
 void AddSC_razorfen_kraul()

@@ -103,7 +103,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 /*######
@@ -414,7 +413,6 @@ public:
 
                 CheckTimer = 1000;
             } else CheckTimer -= diff;
-
         }
 
         void SendText(int32 iTextEntry, Player* player)

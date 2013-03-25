@@ -56,7 +56,6 @@ static bool MapSessionFilterHelper(WorldSession* session, OpcodeHandler const& o
     return plr->IsInWorld();
 }
 
-
 bool MapSessionFilter::Process(WorldPacket * packet)
 {
     OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];

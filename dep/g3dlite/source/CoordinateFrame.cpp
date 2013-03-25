@@ -30,8 +30,6 @@
 #include "G3D/UprightFrame.h"
 
 namespace G3D {
-
-
 std::string CoordinateFrame::toXYZYPRDegreesString() const {
     UprightFrame uframe(*this);
     
@@ -39,7 +37,6 @@ std::string CoordinateFrame::toXYZYPRDegreesString() const {
                   uframe.translation.x, uframe.translation.y, uframe.translation.z, 
                   toDegrees(uframe.yaw), toDegrees(uframe.pitch), 0.0f);
 }
-
 
 CoordinateFrame::CoordinateFrame(const Any& any) {
     *this = CFrame();
@@ -84,7 +81,6 @@ CoordinateFrame::CoordinateFrame(const Any& any) {
     }
 }
 
-
 CoordinateFrame::operator Any() const {
     float x, y, z, yaw, pitch, roll;
     getXYZYPRDegrees(x, y, z, yaw, pitch, roll); 
@@ -102,11 +98,9 @@ CoordinateFrame::operator Any() const {
     return a;
 }
 
-
 CoordinateFrame::CoordinateFrame(const class UprightFrame& f) {
     *this = f.toCoordinateFrame();
 }
-
 
 CoordinateFrame::CoordinateFrame() : 
     rotation(Matrix3::identity()), translation(Vector3::zero()) {
@@ -124,7 +118,6 @@ CoordinateFrame CoordinateFrame::fromXYZYPRRadians(float x, float y, float z, fl
     return CoordinateFrame(rotation, translation);
 }
 
-
 void CoordinateFrame::getXYZYPRRadians(float& x, float& y, float& z, 
                                        float& yaw, float& pitch, float& roll) const {
     x = translation.x;
@@ -141,7 +134,6 @@ void CoordinateFrame::getXYZYPRRadians(float& x, float& y, float& z,
         roll  = 0.0f;
         
     } else {
-
         // Yaw cannot be affected by others, so pull it first
         yaw = G3D::pi() + atan2(look.x, look.z);
         
@@ -154,7 +146,6 @@ void CoordinateFrame::getXYZYPRRadians(float& x, float& y, float& z,
         roll = 0;//acos(actualRight.dot(expectedRight));  TODO
     }
 }
-
 
 void CoordinateFrame::getXYZYPRDegrees(float& x, float& y, float& z, 
                                        float& yaw, float& pitch, float& roll) const {
@@ -170,14 +161,11 @@ CoordinateFrame CoordinateFrame::fromXYZYPRDegrees(float x, float y, float z,
     return fromXYZYPRRadians(x, y, z, toRadians(yaw), toRadians(pitch), toRadians(roll));
 }
 
-
 Ray CoordinateFrame::lookRay() const {
     return Ray::fromOriginAndDirection(translation, lookVector());
 }
 
-
 bool CoordinateFrame::fuzzyEq(const CoordinateFrame& other) const {
-
     for (int c = 0; c < 3; ++c) {
         for (int r = 0; r < 3; ++r) {
             if (! G3D::fuzzyEq(other.rotation[r][c], rotation[r][c])) {
@@ -191,7 +179,6 @@ bool CoordinateFrame::fuzzyEq(const CoordinateFrame& other) const {
 
     return true;
 }
-
 
 bool CoordinateFrame::fuzzyIsIdentity() const {
     const Matrix3& I = Matrix3::identity();
@@ -210,18 +197,15 @@ bool CoordinateFrame::fuzzyIsIdentity() const {
     return true;
 }
 
-
 bool CoordinateFrame::isIdentity() const {
     return 
         (translation == Vector3::zero()) &&
         (rotation == Matrix3::identity());
 }
 
-
 Matrix4 CoordinateFrame::toMatrix4() const {
     return Matrix4(*this);
 }
-
 
 std::string CoordinateFrame::toXML() const {
     return G3D::format(
@@ -231,7 +215,6 @@ std::string CoordinateFrame::toXML() const {
         rotation[2][0], rotation[2][1], rotation[2][2], translation.z,
         0.0, 0.0, 0.0, 1.0);
 }
-
 
 Plane CoordinateFrame::toObjectSpace(const Plane& p) const {
     Vector3 N, P;
@@ -243,7 +226,6 @@ Plane CoordinateFrame::toObjectSpace(const Plane& p) const {
     return Plane(N, P);
 }
 
-
 Plane CoordinateFrame::toWorldSpace(const Plane& p) const {
     Vector3 N, P;
     double d;
@@ -254,20 +236,17 @@ Plane CoordinateFrame::toWorldSpace(const Plane& p) const {
     return Plane(N, P);
 }
 
-
 Triangle CoordinateFrame::toObjectSpace(const Triangle& t) const {
     return Triangle(pointToObjectSpace(t.vertex(0)),
         pointToObjectSpace(t.vertex(1)),
         pointToObjectSpace(t.vertex(2)));
 }
 
-
 Triangle CoordinateFrame::toWorldSpace(const Triangle& t) const {
     return Triangle(pointToWorldSpace(t.vertex(0)),
         pointToWorldSpace(t.vertex(1)),
         pointToWorldSpace(t.vertex(2)));
 }
-
 
 Cylinder CoordinateFrame::toWorldSpace(const Cylinder& c) const {
     return Cylinder(
@@ -276,7 +255,6 @@ Cylinder CoordinateFrame::toWorldSpace(const Cylinder& c) const {
         c.radius());
 }
 
-
 Capsule CoordinateFrame::toWorldSpace(const Capsule& c) const {
     return Capsule(
         pointToWorldSpace(c.point(0)), 
@@ -284,12 +262,10 @@ Capsule CoordinateFrame::toWorldSpace(const Capsule& c) const {
         c.radius());
 }
 
-
 Box CoordinateFrame::toWorldSpace(const AABox& b) const {
     Box b2(b);
     return toWorldSpace(b2);
 }
-
 
 Box CoordinateFrame::toWorldSpace(const Box& b) const {
     Box out(b);
@@ -308,63 +284,51 @@ Box CoordinateFrame::toWorldSpace(const Box& b) const {
     return out;
 }
 
-
 Box CoordinateFrame::toObjectSpace(const Box &b) const {
     return inverse().toWorldSpace(b);
 }
-
 
 Box CoordinateFrame::toObjectSpace(const AABox& b) const {
     return toObjectSpace(Box(b));
 }
 
-
 CoordinateFrame::CoordinateFrame(class BinaryInput& b) : rotation(Matrix3::zero()) {
     deserialize(b);
 }
-
 
 void CoordinateFrame::deserialize(class BinaryInput& b) {
     rotation.deserialize(b);
     translation.deserialize(b);
 }
 
-
 void CoordinateFrame::serialize(class BinaryOutput& b) const {
     rotation.serialize(b);
     translation.serialize(b);
 }
 
-
 Sphere CoordinateFrame::toWorldSpace(const Sphere &b) const {
     return Sphere(pointToWorldSpace(b.center), b.radius);
 }
-
 
 Sphere CoordinateFrame::toObjectSpace(const Sphere &b) const {
     return Sphere(pointToObjectSpace(b.center), b.radius);
 }
 
-
 Ray CoordinateFrame::toWorldSpace(const Ray& r) const {
     return Ray::fromOriginAndDirection(pointToWorldSpace(r.origin()), vectorToWorldSpace(r.direction()));
 }
-
 
 Ray CoordinateFrame::toObjectSpace(const Ray& r) const {
     return Ray::fromOriginAndDirection(pointToObjectSpace(r.origin()), vectorToObjectSpace(r.direction()));
 }
 
-
 void CoordinateFrame::lookAt(const Vector3 &target) {
     lookAt(target, Vector3::unitY());
 }
 
-
 void CoordinateFrame::lookAt(
     const Vector3&  target,
     Vector3         up) {
-
     up = up.direction();
 
     Vector3 look = (target - translation).direction();
@@ -389,11 +353,9 @@ void CoordinateFrame::lookAt(
     rotation.setColumn(2, z);
 }
 
-
 CoordinateFrame CoordinateFrame::lerp(
     const CoordinateFrame&  other,
     float                   alpha) const {
-
     if (alpha == 1.0f) {
         return other;
     } else if (alpha == 0.0f) {
@@ -408,7 +370,6 @@ CoordinateFrame CoordinateFrame::lerp(
     }
 } 
 
-
 void CoordinateFrame::pointToWorldSpace(const Array<Vector3>& v, Array<Vector3>& vout) const {
     vout.resize(v.size());
 
@@ -416,7 +377,6 @@ void CoordinateFrame::pointToWorldSpace(const Array<Vector3>& v, Array<Vector3>&
         vout[i] = pointToWorldSpace(v[i]);
     }
 }
-
 
 void CoordinateFrame::normalToWorldSpace(const Array<Vector3>& v, Array<Vector3>& vout) const  {
     vout.resize(v.size());
@@ -426,7 +386,6 @@ void CoordinateFrame::normalToWorldSpace(const Array<Vector3>& v, Array<Vector3>
     }
 }
 
-
 void CoordinateFrame::vectorToWorldSpace(const Array<Vector3>& v, Array<Vector3>& vout) const {
     vout.resize(v.size());
 
@@ -434,7 +393,6 @@ void CoordinateFrame::vectorToWorldSpace(const Array<Vector3>& v, Array<Vector3>
         vout[i] = vectorToWorldSpace(v[i]);
     }
 }
-
 
 void CoordinateFrame::pointToObjectSpace(const Array<Vector3>& v, Array<Vector3>& vout) const {
     vout.resize(v.size());
@@ -444,7 +402,6 @@ void CoordinateFrame::pointToObjectSpace(const Array<Vector3>& v, Array<Vector3>
     }
 }
 
-
 void CoordinateFrame::normalToObjectSpace(const Array<Vector3>& v, Array<Vector3>& vout) const {
     vout.resize(v.size());
 
@@ -453,7 +410,6 @@ void CoordinateFrame::normalToObjectSpace(const Array<Vector3>& v, Array<Vector3
     }
 }
 
-
 void CoordinateFrame::vectorToObjectSpace(const Array<Vector3>& v, Array<Vector3>& vout) const {
     vout.resize(v.size());
 
@@ -461,5 +417,4 @@ void CoordinateFrame::vectorToObjectSpace(const Array<Vector3>& v, Array<Vector3
         vout[i] = vectorToObjectSpace(v[i]);
     }
 }
-
 } // namespace

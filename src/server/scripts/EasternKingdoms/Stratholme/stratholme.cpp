@@ -73,7 +73,6 @@ public:
         pInstance->SetData(TYPE_BARON_RUN,IN_PROGRESS);
         return false;
     }
-
 };
 
 /*######
@@ -107,9 +106,7 @@ public:
 
         void EnterCombat(Unit* /*who*/) {}
     };
-
 };
-
 
 /*######
 ## mob_restless_soul
@@ -186,9 +183,7 @@ public:
             }
         }
     };
-
 };
-
 
 /*######
 ## mobs_spectral_ghostly_citizen
@@ -284,9 +279,7 @@ public:
             }
         }
     };
-
 };
-
 
 void AddSC_stratholme()
 {

@@ -366,7 +366,6 @@ public:
             }
         }
     };
-
 };
 
 class go_orb_of_the_blue_flight : public GameObjectScript
@@ -390,7 +389,6 @@ public:
         }
         return true;
     }
-
 };
 
 //AI for Kil'jaeden Event Controller
@@ -490,9 +488,7 @@ public:
             }
         }
     };
-
 };
-
 
 //AI for Kil'jaeden
 class boss_kiljaeden : public CreatureScript
@@ -679,7 +675,6 @@ public:
                 }
             }
         }
-
 
         void UpdateAI(const uint32 diff)
         {
@@ -904,9 +899,7 @@ public:
             }
         }
     };
-
 };
-
 
 //AI for Hand of the Deceiver
 class mob_hand_of_the_deceiver : public CreatureScript
@@ -1006,9 +999,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 //AI for Felfire Portal
 class mob_felfire_portal : public CreatureScript
@@ -1052,9 +1043,7 @@ public:
             } else uiSpawnFiendTimer -= diff;
         }
     };
-
 };
-
 
 //AI for Felfire Fiend
 class mob_volatile_felfire_fiend : public CreatureScript
@@ -1111,9 +1100,7 @@ public:
             }
         }
     };
-
 };
-
 
 //AI for Armageddon target
 class mob_armageddon : public CreatureScript
@@ -1167,9 +1154,7 @@ public:
             } else uiTimer -=diff;
         }
     };
-
 };
-
 
 //AI for Shield Orbs
 class mob_shield_orb : public CreatureScript
@@ -1256,9 +1241,7 @@ public:
             bPointReached = true;
         }
     };
-
 };
-
 
 //AI for Sinister Reflection
 class mob_sinster_reflection : public CreatureScript
@@ -1427,9 +1410,7 @@ public:
                     uiTimer[i] -= diff;
             }
     };
-
 };
-
 
 void AddSC_boss_kiljaeden()
 {

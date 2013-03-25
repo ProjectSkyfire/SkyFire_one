@@ -122,9 +122,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 #define SAY_INTRO                   -1558000
 #define SAY_SUMMON                  -1558001
@@ -219,7 +217,6 @@ public:
 
                 if (Unit *pTarget = Unit::GetUnit(*me,soulholder))
                 {
-
                 CAST_AI(mob_stolen_soul::mob_stolen_soulAI, summoned->AI())->SetMyClass(soulclass);
                  summoned->AI()->AttackStart(pTarget);
                 }
@@ -302,9 +299,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 #define SPELL_AV_MORTAL_STRIKE          16856
 #define SPELL_AV_SUNDER_ARMOR           16145
@@ -348,9 +343,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_exarch_maladaar()
 {

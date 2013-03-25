@@ -631,7 +631,6 @@ ACE_OutputCDR::write_wchar_array_i (const ACE_CDR::WChar *x,
   return false;
 }
 
-
 ACE_CDR::Boolean
 ACE_OutputCDR::write_array (const void *x,
                             size_t size,
@@ -680,7 +679,6 @@ ACE_OutputCDR::write_array (const void *x,
   this->good_bit_ = false;
   return false;
 }
-
 
 ACE_CDR::Boolean
 ACE_OutputCDR::write_boolean_array (const ACE_CDR::Boolean* x,
@@ -1041,7 +1039,6 @@ ACE_OutputCDR::consolidate (void)
 
   return 0;
 }
-
 
 ACE_Message_Block*
 ACE_OutputCDR::find (char* loc)
@@ -1507,7 +1504,6 @@ ACE_InputCDR::read_wchar (ACE_CDR::WChar& x)
               x = static_cast<ACE_CDR::WChar> (ox);
               return true;
             }
-
         }
     }
   return (this->good_bit_ = false);
@@ -1624,7 +1620,6 @@ ACE_InputCDR::read_wstring (ACE_CDR::WChar*& x)
 
           if (this->read_wchar_array (x, len))
             {
-
               //Null character used by applications to find the end of
               //the wstring
               //Is this okay with the GIOP 1.2 spec??
@@ -1752,7 +1747,6 @@ ACE_InputCDR::read_wchar_array_i (ACE_CDR::WChar* x,
     }
   return false;
 }
-
 
 ACE_CDR::Boolean
 ACE_InputCDR::read_boolean_array (ACE_CDR::Boolean *x,

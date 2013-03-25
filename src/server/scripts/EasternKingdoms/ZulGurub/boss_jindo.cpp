@@ -255,7 +255,6 @@ class mob_shade_of_jindo : public CreatureScript
 
             void UpdateAI (const uint32 diff)
             {
-
                 //ShadowShock_Timer
                 if (ShadowShock_Timer <= diff)
                 {

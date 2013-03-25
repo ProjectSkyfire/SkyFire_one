@@ -642,7 +642,6 @@ public:
     {
         return new boss_kelthuzadAI (pCreature);
     }
-
 };
 
 class at_kelthuzad_center : public AreaTriggerScript
@@ -708,7 +707,6 @@ public:
 
         return true;
     }
-
 };
 
 void AddSC_boss_kelthuzad()

@@ -1125,7 +1125,6 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_WARDEN_CLIENT_CHECK_HOLDOFF] = ConfigMgr::GetIntDefault("Warden.ClientCheckHoldOff", 30);
     m_configs[CONFIG_WARDEN_CLIENT_RESPONSE_DELAY] = ConfigMgr::GetIntDefault("Warden.ClientResponseDelay", 15);
 
-
     sScriptMgr->OnConfigLoad(reload);
 }
 

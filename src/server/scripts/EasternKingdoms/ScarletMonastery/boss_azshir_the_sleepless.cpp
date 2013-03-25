@@ -93,9 +93,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_azshir_the_sleepless()
 {

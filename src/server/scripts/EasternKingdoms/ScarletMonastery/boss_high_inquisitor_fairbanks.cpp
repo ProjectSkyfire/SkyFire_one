@@ -128,9 +128,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_high_inquisitor_fairbanks()
 {

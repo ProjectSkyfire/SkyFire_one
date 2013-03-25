@@ -294,7 +294,6 @@ public:
             }
         }
     };
-
 };
 
 /*######
@@ -349,7 +348,6 @@ public:
         }
         return true;
     }
-
 };
 
 /*######
@@ -632,9 +630,7 @@ public:
             }
          }
     };
-
 };
-
 
 class at_commander_dawnforge : public AreaTriggerScript
 {
@@ -659,7 +655,6 @@ public:
         }
         return false;
     }
-
 };
 
 /*######
@@ -714,10 +709,7 @@ public:
 
         return true;
     }
-
 };
-
-
 
 /*######
 ## mob_phase_hunter
@@ -853,9 +845,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /*######
 ## npc_bessy
@@ -893,7 +883,6 @@ public:
 
     struct npc_bessyAI : public npc_escortAI
     {
-
         npc_bessyAI(Creature *c) : npc_escortAI(c) {}
 
         void JustDied(Unit* /*killer*/)
@@ -942,9 +931,7 @@ public:
         {
             me->RestoreFaction();
         }
-
     };
-
 };
 
 /*######
@@ -1051,7 +1038,6 @@ public:
         return true;
     }
 };
-
 
 void AddSC_netherstorm()
 {

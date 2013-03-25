@@ -159,7 +159,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_webwrap : public CreatureScript
@@ -193,10 +192,7 @@ public:
                     victim->RemoveAurasDueToSpell(me->m_spells[0], me->GetGUID());
         }
     };
-
 };
-
-
 
 void AddSC_boss_maexxna()
 {

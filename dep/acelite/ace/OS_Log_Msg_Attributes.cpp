@@ -6,4 +6,3 @@
 # include "ace/OS_Log_Msg_Attributes.inl"
 #endif /* ACE_HAS_INLINED_OSCALLS */
 
-

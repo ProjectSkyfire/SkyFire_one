@@ -179,9 +179,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_the_black_stalker()
 {

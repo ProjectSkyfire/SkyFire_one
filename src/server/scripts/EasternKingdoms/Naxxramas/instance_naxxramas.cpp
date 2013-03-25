@@ -351,9 +351,7 @@ public:
         }
         }
     };
-
 };
-
 
 void AddSC_instance_naxxramas()
 {

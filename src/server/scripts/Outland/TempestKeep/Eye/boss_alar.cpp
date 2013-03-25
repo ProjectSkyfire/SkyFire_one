@@ -232,7 +232,6 @@ class boss_alar : public CreatureScript
                     }
                     else
                         ForceTimer -= diff;
-
                 }
                 if (WaitEvent)
                 {
@@ -526,7 +525,6 @@ class mob_ember_of_alar : public CreatureScript
 
                 DoMeleeAttackIfReady();
             }
-
         };
 
         CreatureAI* GetAI(Creature* Creature) const

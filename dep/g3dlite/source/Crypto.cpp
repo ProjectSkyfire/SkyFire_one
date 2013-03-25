@@ -3,7 +3,6 @@
 
  @author Morgan McGuire, http://graphics.cs.williams.edu
 
-
  @created 2006-03-28
  @edited  2006-04-06
  */
@@ -58,7 +57,6 @@ int Crypto::smallPrime(int n) {
     return table[n];
 }
 
-
 int Crypto::numSmallPrimes() {
     return 303;
 }
@@ -66,5 +64,4 @@ int Crypto::numSmallPrimes() {
 uint32 Crypto::crc32(const void* byte, size_t numBytes) {
     return ::crc32(::crc32(0, Z_NULL, 0), static_cast<const Bytef *>(byte), numBytes);
 }
-
 } // G3D

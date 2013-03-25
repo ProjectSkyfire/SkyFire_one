@@ -26,10 +26,8 @@
 #endif
 
 namespace G3D {
-
 // static helpers
 static HKEY getRootKeyFromString(const char* str, size_t length);
-
 
 bool RegistryUtil::keyExists(const std::string& key) {
     size_t pos = key.find('\\', 0);
@@ -81,7 +79,6 @@ bool RegistryUtil::valueExists(const std::string& key, const std::string& value)
     }
     return (result == ERROR_SUCCESS);
 }
-
 
 bool RegistryUtil::readInt32(const std::string& key, const std::string& value, int32& data) {
     size_t pos = key.find('\\', 0);
@@ -264,7 +261,6 @@ bool RegistryUtil::writeString(const std::string& key, const std::string& value,
     return (result == ERROR_SUCCESS);
 }
 
-
 // static helpers
 static HKEY getRootKeyFromString(const char* str, size_t length) {
     debugAssert(str);
@@ -293,7 +289,6 @@ static HKEY getRootKeyFromString(const char* str, size_t length) {
         return NULL;
     }
 }
-
 } // namespace G3D
 
 #endif // G3D_WIN32

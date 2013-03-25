@@ -13,10 +13,7 @@
 #include "G3D/debug.h"
 
 namespace G3D {
-
-
 Vector3 LineSegment::closestPoint(const Vector3& p) const {
-
     // The vector from the end of the capsule to the point in question.
     Vector3 v(p - _point);
 
@@ -35,7 +32,6 @@ Vector3 LineSegment::closestPoint(const Vector3& p) const {
         return _point + direction * t / direction.squaredMagnitude();
     
     } else {
-
         // The point does not fall within the segment; see which end is closer.
 
         // Distance from 0, squared
@@ -45,18 +41,14 @@ Vector3 LineSegment::closestPoint(const Vector3& p) const {
         float d1Squared = (v - direction).squaredMagnitude();
 
         if (d0Squared < d1Squared) {
-
             // Point 0 is closer
             return _point;
-
         } else {
-
             // Point 1 is closer
             return _point + direction;
         
         }
     }
-
 }
 
 Vector3 LineSegment::point(int i) const {
@@ -73,33 +65,27 @@ Vector3 LineSegment::point(int i) const {
     }
 }
 
-
 bool LineSegment::intersectsSolidSphere(const class Sphere& s) const {
     return distanceSquared(s.center) <= square(s.radius);
 }
 
-
 LineSegment::LineSegment(class BinaryInput& b) {
 	deserialize(b);
 }
-
 
 void LineSegment::serialize(class BinaryOutput& b) const {
 	_point.serialize(b);
 	direction.serialize(b);
 }
 
-
 void LineSegment::deserialize(class BinaryInput& b) {
 	_point.deserialize(b);
 	direction.deserialize(b);
 }
 
-
 Vector3 LineSegment::randomPoint() const {
     return _point + uniformRandom(0, 1) * direction;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -111,7 +97,6 @@ LineSegment2D LineSegment2D::fromTwoPoints(const Vector2& p0, const Vector2& p1)
     return s;
 }
 
-
 Vector2 LineSegment2D::point(int i) const {
     debugAssert(i == 0 || i == 1);
     if (i == 0) {
@@ -120,7 +105,6 @@ Vector2 LineSegment2D::point(int i) const {
         return m_direction + m_origin;
     }
 }
-
 
 Vector2 LineSegment2D::closestPoint(const Vector2& Q) const {
     // Two constants that appear in the result
@@ -150,20 +134,16 @@ Vector2 LineSegment2D::closestPoint(const Vector2& Q) const {
     }
 }
 
-
 float LineSegment2D::distance(const Vector2& p) const {
     Vector2 closest = closestPoint(p);
     return (closest - p).length();
 }
 
-
 float LineSegment2D::length() const {
     return m_length;
 }
 
-
 Vector2 LineSegment2D::intersection(const LineSegment2D& other) const {
-
     if ((m_origin == other.m_origin) ||
         (m_origin == other.m_origin + other.m_direction)) {
         return m_origin;
@@ -231,6 +211,5 @@ Vector2 LineSegment2D::intersection(const LineSegment2D& other) const {
     return m_origin + m_direction * t1;
     
 }
-
 }
 

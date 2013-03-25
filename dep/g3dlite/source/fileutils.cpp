@@ -37,7 +37,6 @@
     #define _stat stat
 #endif
 
-
 namespace G3D {
     
 namespace _internal {
@@ -62,7 +61,6 @@ std::string resolveFilename(const std::string& filename) {
             // Already resolved
             return filename;
         } else {
-
             #ifdef G3D_WIN32
                 if ((filename.size() >= 2) && (filename[1] == ':')) {
                     // There is a drive spec on the front.
@@ -99,7 +97,6 @@ bool zipfileExists(const std::string& filename) {
 
 std::string readWholeFile(
     const std::string& filename) {
-
     _internal::currentFilesUsed.insert(filename);
 
     std::string s;
@@ -122,9 +119,7 @@ std::string readWholeFile(
         s = std::string(buffer);
 
         System::alignedFree(buffer);
-
     } else if (zipfileExists(filename)) {
-
         void* zipBuffer;
         size_t length;
         zipRead(filename, zipBuffer, length);
@@ -140,7 +135,6 @@ std::string readWholeFile(
 
     return s;
 }
-
 
 void zipRead(const std::string& file,
              void*& data,
@@ -174,11 +168,9 @@ void zipRead(const std::string& file,
 #endif
 }
 
-
 void zipClose(void* data) {
 	System::alignedFree(data);
 }
-
 
 int64 fileLength(const std::string& filename) {
     struct _stat st;
@@ -218,7 +210,6 @@ void writeWholeFile(
     const std::string&          filename,
     const std::string&          str,
     bool                        flush) {
-
     // Make sure the directory exists.
     std::string root, base, ext, path;
     Array<std::string> pathArray;
@@ -301,7 +292,6 @@ void createDirectory(
     }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 #if _HAVE_ZIP /* G3DFIX: Use ZIP-library only if defined */
@@ -324,7 +314,6 @@ static void _zip_resolveDirectory(std::string& completeDir, const std::string& d
 		completeDir += path[t];
 	}
 }
-
 
 // assumes that zipDir references a .zip file
 static bool _zip_zipContains(const std::string& zipDir, const std::string& desiredFile){
@@ -441,7 +430,6 @@ std::string generateFilenameBase(const std::string& prefix, const std::string& s
 void copyFile(
     const std::string&          source,
     const std::string&          dest) {
-
     #ifdef G3D_WIN32
         CopyFileA(source.c_str(), dest.c_str(), FALSE);
     #else
@@ -462,7 +450,6 @@ void parseFilename(
     Array<std::string>& path,
     std::string&        base,
     std::string&        ext) {
-
     std::string f = filename;
 
     root = "";
@@ -489,20 +476,16 @@ void parseFilename(
             // e.g.  c:foo
             root = f.substr(2);
             f = f.substr(2, f.size() - 2);
-
         }
-
     } else if ((f.size() >= 2) & isSlash(f[0]) && isSlash(f[1])) {
         
         // e.g. //foo
         root = f.substr(0, 2);
         f = f.substr(2, f.size() - 2);
-
     } else if (isSlash(f[0])) {
         
         root = f.substr(0, 1);
         f = f.substr(1, f.size() - 1);
-
     }
 
     // Pull the extension off
@@ -530,12 +513,10 @@ void parseFilename(
             // There is no slash; the basename is the whole thing
             base = f;
             f    = "";
-
         } else if ((i != std::string::npos) && (i < f.size() - 1)) {
             
             base = f.substr(i + 1, f.size() - i - 1);
             f    = f.substr(0, i);
-
         }
     }
 
@@ -566,7 +547,6 @@ void parseFilename(
         ++cur;
     }
 }
-
 
 /**
  Helper for getFileList and getDirectoryList.
@@ -650,7 +630,6 @@ static void getFileOrDirListNormal
             struct dirent* entry = readdir(dir);
 
             while (entry != NULL) {
-
                 // Exclude '.' and '..'
                 if ((strcmp(entry->d_name, ".") != 0) &&
                     (strcmp(entry->d_name, "..") != 0)) {
@@ -699,7 +678,6 @@ static void _zip_addEntry(const std::string& path,
 						  Set<std::string>& files,
 						  bool wantFiles,
 						  bool includePath) {
-
     // Make certain we are within the desired parent folder (prefix)
     if (beginsWith(file, prefix)) {
         // validityTest was prefix/file
@@ -764,13 +742,11 @@ static void getFileOrDirListZip(const std::string& path,
 #endif
 }
 
-
 static void determineFileOrDirList(
 	const std::string&			filespec,
 	Array<std::string>&			files,
 	bool						wantFiles,
 	bool						includePath) {
-
 	// if it is a .zip, prefix will specify the folder within
 	// whose contents we want to see
     std::string prefix = "";
@@ -799,7 +775,6 @@ static void determineFileOrDirList(
     }
 }
 
-
 void getFiles(const std::string&			filespec,
               Array<std::string>&			files,
               bool					includePath) {
@@ -807,15 +782,12 @@ void getFiles(const std::string&			filespec,
     determineFileOrDirList(filespec, files, true, includePath);
 }
 
-
 void getDirs(
 	const std::string&			filespec,
 	Array<std::string>&			files,
 	bool						includePath) {
-
 	determineFileOrDirList(filespec, files, false, includePath);
 }
-
 
 std::string filenameBaseExt(const std::string& filename) {
     int i = filename.rfind("/");
@@ -839,7 +811,6 @@ std::string filenameBaseExt(const std::string& filename) {
     }
 }
 
-
 std::string filenameBase(const std::string& s) {
     std::string drive;
     std::string base;
@@ -850,7 +821,6 @@ std::string filenameBase(const std::string& s) {
     return base;
 }
 
-
 std::string filenameExt(const std::string& filename) {
     int i = filename.rfind(".");
     if (i >= 0) {
@@ -859,7 +829,6 @@ std::string filenameExt(const std::string& filename) {
         return "";
     }
 }
-
 
 std::string filenamePath(const std::string& filename) {
     int i = filename.rfind("/");
@@ -883,9 +852,7 @@ std::string filenamePath(const std::string& filename) {
     }
 }
 
-
 bool isZipfile(const std::string& filename) {
-
 	FILE* f = fopen(filename.c_str(), "r");
 	if (f == NULL) {
 		return false;
@@ -905,18 +872,15 @@ bool isZipfile(const std::string& filename) {
 	return true;
 }
 
-
 bool isDirectory(const std::string& filename) {
     struct _stat st;
     bool exists = _stat(filename.c_str(), &st) != -1;
     return exists && ((st.st_mode & S_IFDIR) != 0);
 }
 
-
 bool filenameContainsWildcards(const std::string& filename) {
     return (filename.find('*') != std::string::npos) || (filename.find('?') != std::string::npos);
 }
-
 
 bool fileIsNewer(const std::string& src, const std::string& dst) {
     struct _stat sts;
@@ -928,13 +892,11 @@ bool fileIsNewer(const std::string& src, const std::string& dst) {
     return sexists && ((! dexists) || (sts.st_mtime > dts.st_mtime));
 }
 
-
 Array<std::string> filesUsed() {
     Array<std::string> f;
     _internal::currentFilesUsed.getMembers(f);
     return f;
 }
-
 }
 
 #ifndef G3D_WIN32

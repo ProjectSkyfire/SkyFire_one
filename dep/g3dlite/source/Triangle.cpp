@@ -20,10 +20,8 @@
 #include "G3D/Ray.h"
 
 namespace G3D {
-
     
 void Triangle::init(const Vector3& v0, const Vector3& v1, const Vector3& v2) {
-
     _plane = Plane(v0, v1, v2);
     _vertex[0] = v0;
     _vertex[1] = v1;
@@ -50,7 +48,6 @@ void Triangle::init(const Vector3& v0, const Vector3& v1, const Vector3& v2) {
         //0.5f * (_vertex[1] - _vertex[0]).cross(_vertex[2] - _vertex[0]).dot(_plane.normal());
 }
 
-
 Triangle::Triangle() {
     init(Vector3::zero(), Vector3::zero(), Vector3::zero());
 }
@@ -64,18 +61,15 @@ Triangle::Triangle(const Vector3& v0, const Vector3& v1, const Vector3& v2) {
 Triangle::~Triangle() {
 }
 
-
 Triangle::Triangle(class BinaryInput& b) {
     deserialize(b);
 }
-
 
 void Triangle::serialize(class BinaryOutput& b) {
     _vertex[0].serialize(b);
     _vertex[1].serialize(b);
     _vertex[2].serialize(b);
 }
-
 
 void Triangle::deserialize(class BinaryInput& b) {
     _vertex[0].deserialize(b);
@@ -84,21 +78,17 @@ void Triangle::deserialize(class BinaryInput& b) {
     init(_vertex[0], _vertex[1], _vertex[2]);
 }
 
-
 float Triangle::area() const {
     return _area;
 }
-
 
 const Vector3& Triangle::normal() const {
     return _plane.normal();
 }
 
-
 const Plane& Triangle::plane() const {
     return _plane;
 }
-
 
 Vector3 Triangle::center() const {
     return (_vertex[0] + _vertex[1] + _vertex[2]) / 3.0;
@@ -120,7 +110,6 @@ Vector3 Triangle::randomPoint() const {
     return _edge01 * s + _edge02 * t + _vertex[0];
 }
 
-
 void Triangle::getBounds(AABox& out) const {
     Vector3 lo = _vertex[0];
     Vector3 hi = lo;
@@ -132,7 +121,6 @@ void Triangle::getBounds(AABox& out) const {
 
     out = AABox(lo, hi);
 }
-
 
 bool Triangle::intersect(const Ray& ray, float& distance, float baryCoord[3]) const {
     static const float EPS = 1e-5f;
@@ -182,5 +170,4 @@ bool Triangle::intersect(const Ray& ray, float& distance, float baryCoord[3]) co
         return false;
     }
 }
-
 } // G3D

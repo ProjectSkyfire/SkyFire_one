@@ -1003,7 +1003,6 @@ int WorldSocket::iSendPacket (const WorldPacket& pct)
         return -1;
     }
 
-
     m_Crypt.EncryptSend(header.header, header.getHeaderLength());
 
     if (m_OutBuffer->copy((char*) header.header, header.getHeaderLength()) == -1)

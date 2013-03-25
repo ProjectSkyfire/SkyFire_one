@@ -21,14 +21,12 @@
 #endif
 
 namespace G3D {
-
 void logPrintf(const char* fmt, ...) {
 	va_list arg_list;
 	va_start(arg_list, fmt);
     Log::common()->vprintf(fmt, arg_list);
     va_end(arg_list);
 }
-
 
 void logLazyPrintf(const char* fmt, ...) {
 	va_list arg_list;
@@ -41,7 +39,6 @@ Log* Log::commonLog = NULL;
 
 Log::Log(const std::string& filename, int stripFromStackBottom) : 
     stripFromStackBottom(stripFromStackBottom) {
-
     this->filename = filename;
 
     logFile = FileSystem::fopen(filename.c_str(), "w");
@@ -76,7 +73,6 @@ Log::Log(const std::string& filename, int stripFromStackBottom) :
     }
 }
 
-
 Log::~Log() {
     section("Shutdown");
     println("Closing log file");
@@ -89,11 +85,9 @@ Log::~Log() {
     fclose(logFile);
 }
 
-
 FILE* Log::getFile() const {
     return logFile;
 }
-
 
 Log* Log::common() {
     if (commonLog == NULL) {
@@ -102,17 +96,14 @@ Log* Log::common() {
     return commonLog;
 }
 
-
 std::string Log::getCommonLogFilename() {
     return common()->filename;
 }
-
 
 void Log::section(const std::string& s) {
     fprintf(logFile, "_____________________________________________________\n");
     fprintf(logFile, "\n    ###    %s    ###\n\n", s.c_str());
 }
-
 
 void __cdecl Log::printf(const char* fmt, ...) {
     va_list arg_list;
@@ -121,27 +112,22 @@ void __cdecl Log::printf(const char* fmt, ...) {
     va_end(arg_list);
 }
 
-
 void __cdecl Log::vprintf(const char* fmt, va_list argPtr) {
     vfprintf(logFile, fmt, argPtr);
     fflush(logFile);
 }
 
-
 void __cdecl Log::lazyvprintf(const char* fmt, va_list argPtr) {
     vfprintf(logFile, fmt, argPtr);
 }
-
 
 void Log::print(const std::string& s) {
     fprintf(logFile, "%s", s.c_str());
     fflush(logFile);
 }
 
-
 void Log::println(const std::string& s) {
     fprintf(logFile, "%s\n", s.c_str());
     fflush(logFile);
 }
-
 }

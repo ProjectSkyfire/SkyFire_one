@@ -82,7 +82,6 @@ public:
             return;
         }
     };
-
 };
 
 /*######
@@ -240,11 +239,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
-
-
 
 /*####
 # mob_sunspring_villager - should be done with ACID
@@ -281,7 +276,6 @@ public:
             }
         }
     };
-
 };
 
 /*######
@@ -381,10 +375,7 @@ public:
 
         return true;
     }
-
 };
-
-
 
 /*######
 ## npc_greatmother_geyah
@@ -494,9 +485,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 ## npc_lantresor_of_the_blade
@@ -572,9 +561,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*#####
 ## npc_maghar_captive
@@ -694,7 +681,6 @@ public:
             pSummoned->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
             pSummoned->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
             pSummoned->AI()->AttackStart(me);
-
         }
 
         void SpellHitTarget(Unit* /*pTarget*/, const SpellEntry* pSpell)
@@ -744,10 +730,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
-
 
 /*######
 ## npc_creditmarker_visist_with_ancestors
@@ -791,9 +774,7 @@ public:
             }
         }
     };
-
 };
-
 
 /*######
 ## mob_sparrowhawk
@@ -814,7 +795,6 @@ public:
 
     struct mob_sparrowhawkAI : public ScriptedAI
     {
-
         mob_sparrowhawkAI(Creature *c) : ScriptedAI(c) {}
 
         uint32 Check_Timer;
@@ -901,9 +881,7 @@ public:
             return;
         }
     };
-
 };
-
 
 /*####
 #

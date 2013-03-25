@@ -48,7 +48,6 @@ static SHostageInfo HostageInfo[] =
     {23999, 187021, 400, 1414, 74.36f, 3.3f}, // eagle
     {24001, 186672, -35, 1134, 18.71f, 1.9f}, // dragonhawk
     {24024, 186667, 413, 1117,  6.32f, 3.1f}  // lynx
-
 };
 
 class instance_zulaman : public InstanceMapScript
@@ -142,7 +141,6 @@ class instance_zulaman : public InstanceMapScript
                 case 186672: AshlisBagGUID = pGo->GetGUID(); break;
                 case 186667: KrazsPackageGUID  = pGo->GetGUID(); break;
                 default: break;
-
                 }
                 CheckInstanceStatus();
             }

@@ -195,9 +195,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /* ELEMENTALS */
 class mob_syth_fire : public CreatureScript
@@ -308,7 +306,6 @@ public:
     };
 };
 
-
 class mob_syth_frost : public CreatureScript
 {
 public:
@@ -361,9 +358,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 class mob_syth_shadow : public CreatureScript
 {
@@ -417,9 +412,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_darkweaver_syth()
 {

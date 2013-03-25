@@ -455,7 +455,6 @@ void ScriptMgr::OnGetGroupRate(float& rate, uint32 count, bool isRaid)
                 continue; \
             if (entry->MapID == V->GetId()) \
             {
-
 #define SCR_MAP_END \
                 break; \
             } \

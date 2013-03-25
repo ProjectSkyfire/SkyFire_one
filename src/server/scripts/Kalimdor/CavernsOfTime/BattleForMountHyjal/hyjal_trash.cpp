@@ -146,7 +146,6 @@ float AllianceOverrunWP[55][3]=//waypoints in the alliance base used in the end 
     {5180.41f, -2121.87f, 1292.62f}, //52 garg target3
     {5088.68f, -2432.04f, 1441.73f}, //53 garg target4
     {5111.26f, -2454.73f, 1449.63f}//54 garg target5
-
 };
 
 float HordeOverrunWP[21][3]=//waypoints in the horde base used in the end in the cleaning wave
@@ -636,7 +635,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_ghoul : public CreatureScript
@@ -738,7 +736,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_necromancer : public CreatureScript
@@ -865,7 +862,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_banshee : public CreatureScript
@@ -968,7 +964,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_crypt_fiend : public CreatureScript
@@ -1044,7 +1039,6 @@ public:
                             Start(false, true);
                             SetDespawnAtEnd(false);
                         }
-
                     }
                 }
             }
@@ -1058,7 +1052,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_fel_stalker : public CreatureScript
@@ -1134,7 +1127,6 @@ public:
                             Start(false, true);
                             SetDespawnAtEnd(false);
                         }
-
                     }
                 }
             }
@@ -1148,7 +1140,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_frost_wyrm : public CreatureScript
@@ -1260,7 +1251,6 @@ public:
             } else FrostBreathTimer -= diff;
         }
     };
-
 };
 
 class mob_gargoyle : public CreatureScript
@@ -1395,7 +1385,6 @@ public:
             } else StrikeTimer -= diff;
         }
     };
-
 };
 
 class alliance_rifleman : public CreatureScript
@@ -1462,7 +1451,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 void AddSC_hyjal_trash()

@@ -31,7 +31,6 @@
 using namespace std;
 
 namespace G3D { namespace _internal {
-
 ConsolePrintHook _consolePrintHook;
 AssertionHook _debugHook = _handleDebugAssert_;
 AssertionHook _failureHook = _handleErrorCheck_;
@@ -42,7 +41,6 @@ AssertionHook _failureHook = _handleErrorCheck_;
     Window        x11Window  = 0;
 #endif
 #endif
-
 
 #ifdef G3D_WIN32
 static void postToClipboard(const char *text) {
@@ -73,7 +71,6 @@ static void createErrorMessage(
     int                 lineNumber,
     std::string&        outTitle,
     std::string&        outMessage) {
-
     std::string le = "";
     const char* newline = "\n";
 
@@ -130,14 +127,12 @@ static void createErrorMessage(
                  filename, lineNumber, newline, newline, le.c_str());
 }
 
-
 bool _handleDebugAssert_(
     const char*         expression,
     const std::string&  message,
     const char*         filename,
     int                 lineNumber,
     bool                useGuiPrompt) {
-
     std::string dialogTitle = "Assertion Failure";
     std::string dialogText = "";
     createErrorMessage(expression, message, filename, lineNumber, dialogTitle, dialogText);
@@ -185,14 +180,12 @@ bool _handleDebugAssert_(
     return false;
 }
 
-
 bool _handleErrorCheck_(
     const char*         expression,
     const std::string&  message,
     const char*         filename,
     int                 lineNumber,
     bool                useGuiPrompt) {
-
     std::string dialogTitle = "Critical Error";
     std::string dialogText = "";
 
@@ -219,7 +212,6 @@ bool _handleErrorCheck_(
 
     return true;
 }
-
 
 #ifdef G3D_WIN32
 static HCURSOR oldCursor;
@@ -273,7 +265,6 @@ void _releaseInputGrab_() {
     #endif
 }
 
-
 void _restoreInputGrab_() {
     #ifdef G3D_WIN32
 
@@ -298,8 +289,6 @@ void _restoreInputGrab_() {
         // TODO: OS X
     #endif
 }
-
-
 }; // internal namespace
  
 void setAssertionHook(AssertionHook hook) {
@@ -318,7 +307,6 @@ AssertionHook failureHook() {
     return G3D::_internal::_failureHook;
 }
 
-
 void setConsolePrintHook(ConsolePrintHook h) {
     G3D::_internal::_consolePrintHook = h;
 }
@@ -326,7 +314,6 @@ void setConsolePrintHook(ConsolePrintHook h) {
 ConsolePrintHook consolePrintHook() {
     return G3D::_internal::_consolePrintHook;
 }
-
 
 std::string __cdecl debugPrint(const std::string& s) {
 #   ifdef G3D_WIN32
@@ -372,7 +359,6 @@ std::string consolePrint(const std::string& s) {
     return s;
 }
 
-
 std::string __cdecl consolePrintf(const char* fmt ...) {
     va_list argList;
     va_start(argList, fmt);
@@ -381,7 +367,6 @@ std::string __cdecl consolePrintf(const char* fmt ...) {
 
     return consolePrint(s);
 }
-
 } // namespace
 
 #ifdef _MSC_VER

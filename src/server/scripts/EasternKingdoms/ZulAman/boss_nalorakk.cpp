@@ -337,7 +337,6 @@ class boss_nalorakk : public CreatureScript
                             inMove = false;
                             return;
                     }
-
                 }
             }
 
@@ -444,7 +443,6 @@ class boss_nalorakk : public CreatureScript
                 DoMeleeAttackIfReady();
             }
         };
-
 
         CreatureAI* GetAI(Creature* creature) const
         {

@@ -185,7 +185,6 @@ class boss_pathaleon_the_calculator : public CreatureScript
                     DoCast(me, SPELL_FRENZY);
                     DoScriptText(SAY_ENRAGE, me);
                     Enraged = true;
-
                 }
 
                 DoMeleeAttackIfReady();

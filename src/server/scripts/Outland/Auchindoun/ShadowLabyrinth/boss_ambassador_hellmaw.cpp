@@ -201,9 +201,7 @@ public:
             }
         }
     };
-
 };
-
 
 void AddSC_boss_ambassador_hellmaw()
 {

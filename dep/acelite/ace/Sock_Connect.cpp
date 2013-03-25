@@ -113,7 +113,6 @@ namespace
 
   // Does this box have ipv6 turned on?
   int ace_ipv6_enabled = -1;
-
 }
 #else /* ACE_HAS_IPV6 */
 # define SIOCGIFCONF_CMD SIOCGIFCONF
@@ -621,7 +620,6 @@ get_ip_interfaces_win32 (size_t &count,
 
   return 0;
 
-
 # else
   // All non-CE, non-Pharlap Windows. Must support Winsock2.
 
@@ -1073,7 +1071,6 @@ get_ip_interfaces_aix (size_t &count,
 
 #endif // ACE_WIN32 || ACE_HAS_GETIFADDRS || __hpux || _AIX
 
-
 // return an array of all configured IP interfaces on this host, count
 // rc = 0 on success (count == number of interfaces else -1 caller is
 // responsible for calling delete [] on parray
@@ -1263,7 +1260,6 @@ ACE::get_ip_interfaces (size_t &count, ACE_INET_Addr *&addrs)
               ++count;
             }
           freeaddrinfo (res0);
-
         }
       ACE_OS::fclose (fp);
     }
@@ -1417,7 +1413,6 @@ ACE::get_handle (void)
 #endif /* sparc */
   return handle;
 }
-
 
 #if defined (ACE_HAS_IPV6)
 static int

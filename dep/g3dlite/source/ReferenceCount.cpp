@@ -14,11 +14,9 @@
 #include "G3D/ReferenceCount.h"
 
 namespace G3D {
-
 ReferenceCountedObject::ReferenceCountedObject() : 
     ReferenceCountedObject_refCount(0), 
     ReferenceCountedObject_weakPointer(0) {
-
     debugAssertM(isValidHeapPointer(this), 
         "Reference counted objects must be allocated on the heap.");
 }
@@ -41,7 +39,6 @@ void ReferenceCountedObject::ReferenceCountedObject_zeroWeakPointers() {
 
 ReferenceCountedObject::~ReferenceCountedObject() {}
 
-
 ReferenceCountedObject::ReferenceCountedObject(const ReferenceCountedObject& notUsed) : 
     ReferenceCountedObject_refCount(0),
     ReferenceCountedObject_weakPointer(0) {
@@ -57,5 +54,4 @@ ReferenceCountedObject& ReferenceCountedObject::operator=(const ReferenceCounted
     // changes).
     return *this;
 }
-
 } // G3D

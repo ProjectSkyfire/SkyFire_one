@@ -13,7 +13,6 @@
 #include "G3D/Plane.h"
 
 namespace G3D {
-
 Vector3 Line::intersection(const Plane& plane) const {
     float d;
     Vector3 normal = plane.normal();
@@ -21,9 +20,7 @@ Vector3 Line::intersection(const Plane& plane) const {
     float rate = _direction.dot(normal);
 
     if (rate == 0) {
-
         return Vector3::inf();
-
     } else {
         float t = -(d + _point.dot(normal)) / rate;
 
@@ -31,39 +28,32 @@ Vector3 Line::intersection(const Plane& plane) const {
     }
 }
 
-
 Line::Line(class BinaryInput& b) {
 	deserialize(b);
 }
-
 
 void Line::serialize(class BinaryOutput& b) const {
 	_point.serialize(b);
 	_direction.serialize(b);
 }
 
-
 void Line::deserialize(class BinaryInput& b) {
 	_point.deserialize(b);
 	_direction.deserialize(b);
 }
-
 
 Vector3 Line::closestPoint(const Vector3& pt) const {
     float t = _direction.dot(pt - _point);
     return _point + _direction * t;
 }
 
-
 Vector3 Line::point() const {
     return _point;
 }
 
-
 Vector3 Line::direction() const {
     return _direction;
 }
-
 
 Vector3 Line::closestPoint(const Line& B, float& minDist) const {
     const Vector3& P1 = _point;
@@ -84,6 +74,5 @@ Vector3 Line::closestPoint(const Line& B, float& minDist) const {
 
     return P1 + t1 * U1;
 }
-
 }
 

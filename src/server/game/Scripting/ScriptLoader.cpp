@@ -17,7 +17,6 @@
 #include "ScriptPCH.h"
 #include "ScriptLoader.h"
 
-
 //examples
 void AddSC_example_creature();
 void AddSC_example_escort();
@@ -25,7 +24,6 @@ void AddSC_example_gossip_codebox();
 void AddSC_example_misc();
 
 // spells
-
 
 #ifdef SCRIPTS
 //world

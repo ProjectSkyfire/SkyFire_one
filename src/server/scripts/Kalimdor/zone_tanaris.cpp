@@ -143,7 +143,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 /*######
@@ -275,7 +274,6 @@ public:
             npc_escortAI::UpdateAI(diff);
         }
     };
-
 };
 
 /*######
@@ -308,7 +306,6 @@ public:
 
         return true;
     }
-
 };
 
 /*######
@@ -354,7 +351,6 @@ public:
 
         return true;
     }
-
 };
 
 /*######
@@ -418,7 +414,6 @@ public:
 
         return true;
     }
-
 };
 
 /*######
@@ -670,7 +665,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 void AddSC_tanaris()

@@ -219,7 +219,6 @@ public:
                                 me->SetVisible(false);
                                 me->Kill(me);
                                 break;
-
                         }
                     } else uiOutroTimer -= diff;
                     break;
@@ -245,7 +244,6 @@ public:
             Talk(SAY_SLAY);
         }
     };
-
 };
 
 void AddSC_boss_mal_ganis()

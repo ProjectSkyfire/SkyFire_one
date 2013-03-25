@@ -15,20 +15,16 @@
 #include "G3D/BinaryOutput.h"
 
 namespace G3D {
-
 PhysicsFrame::PhysicsFrame() {
     translation = Vector3::zero();
     rotation    = Quat();
 }
 
-
 PhysicsFrame::PhysicsFrame(
     const CoordinateFrame& coordinateFrame) {
-
     translation = coordinateFrame.translation;
     rotation    = Quat(coordinateFrame.rotation);
 }
-
 
 PhysicsFrame::PhysicsFrame(const Any& a) {
     const std::string& n = toLower(a.name());
@@ -60,7 +56,6 @@ PhysicsFrame::PhysicsFrame(const Any& a) {
     }
 }
 
-
 PhysicsFrame PhysicsFrame::operator*(const PhysicsFrame& other) const {
     PhysicsFrame result;
 
@@ -69,7 +64,6 @@ PhysicsFrame PhysicsFrame::operator*(const PhysicsFrame& other) const {
 
     return result;
 }
-
 
 PhysicsFrame::operator CoordinateFrame() const {
     CoordinateFrame f;
@@ -80,11 +74,9 @@ PhysicsFrame::operator CoordinateFrame() const {
     return f;
 }
 
-
 PhysicsFrame PhysicsFrame::lerp(
     const PhysicsFrame&     other,
     float                   alpha) const {
-
     PhysicsFrame result;
 
     result.translation = translation.lerp(other.translation, alpha);
@@ -93,18 +85,14 @@ PhysicsFrame PhysicsFrame::lerp(
     return result;
 }
 
-
 void PhysicsFrame::deserialize(class BinaryInput& b) {
     translation.deserialize(b);
     rotation.deserialize(b);
 }
 
-
 void PhysicsFrame::serialize(class BinaryOutput& b) const {
     translation.serialize(b);
     rotation.serialize(b);
 }
-
-
 }; // namespace
 

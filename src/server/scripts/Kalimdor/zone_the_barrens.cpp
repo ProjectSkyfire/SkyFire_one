@@ -74,7 +74,6 @@ public:
         player->SEND_GOSSIP_MENU(3557, creature->GetGUID());
         return true;
     }
-
 };
 
 /*######
@@ -172,7 +171,6 @@ public:
             }
         }
     };
-
 };
 
 /*######
@@ -208,7 +206,6 @@ public:
         player->SEND_GOSSIP_MENU(player->GetGossipTextId(creature), creature->GetGUID());
         return true;
     }
-
 };
 
 /*######
@@ -309,7 +306,6 @@ public:
             }
         }
     };
-
 };
 
 /*#####
@@ -518,7 +514,6 @@ public:
             }
         }
     };
-
 };
 
 /*#####
@@ -681,7 +676,6 @@ public:
     {
         return new npc_wizzlecrank_shredderAI(creature);
     }
-
 };
 
 void AddSC_the_barrens()

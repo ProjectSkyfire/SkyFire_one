@@ -205,7 +205,6 @@ enum DefiasSays
     SAY_AGGRO                   = 3
 };
 
-
 #define QUEST_DEFIAS_BROTHERHOOD    155
 
 class npc_defias_traitor : public CreatureScript

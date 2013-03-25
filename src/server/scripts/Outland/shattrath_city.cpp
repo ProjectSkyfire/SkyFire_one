@@ -111,11 +111,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
-
-
 
 /*######
 # npc_salsalabim
@@ -190,9 +186,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /*
 ##################################################
@@ -251,9 +245,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 # npc_zephyr
@@ -284,9 +276,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 # npc_kservant
@@ -578,10 +568,7 @@ public:
     {
         return new npc_dirty_larryAI (pCreature);
     }
-
 };
-
-
 
 /*######
 # npc_ishanah
@@ -618,9 +605,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 # npc_khadgar
@@ -687,9 +672,7 @@ public:
 
         return true;
     }
-
 };
-
 
 void AddSC_shattrath_city()
 {

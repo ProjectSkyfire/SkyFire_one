@@ -26,7 +26,6 @@
 #include "WardenBase.h"
 #include "World.h"
 
-
 struct ItemPrototype;
 struct AuctionEntry;
 struct DeclinedName;

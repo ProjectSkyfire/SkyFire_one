@@ -13,7 +13,6 @@
 #include "G3D/BinaryOutput.h"
 
 namespace G3D {
-
 UprightFrame::UprightFrame(const CoordinateFrame& cframe) {
     Vector3 look = cframe.lookVector();
 
@@ -36,16 +35,13 @@ CoordinateFrame UprightFrame::toCoordinateFrame() const {
     return cframe;
 }
 
-
 UprightFrame UprightFrame::operator+(const UprightFrame& other) const {
     return UprightFrame(translation + other.translation, pitch + other.pitch, yaw + other.yaw);
 }
 
-
 UprightFrame UprightFrame::operator*(const float k) const {
     return UprightFrame(translation * k, pitch * k, yaw * k);
 }
-
 
 void UprightFrame::unwrapYaw(UprightFrame* a, int N) {
     // Use the first point to establish the wrapping convention
@@ -77,20 +73,17 @@ void UprightFrame::unwrapYaw(UprightFrame* a, int N) {
     }
 }
 
-
 void UprightFrame::serialize(class BinaryOutput& b) const {
     translation.serialize(b);
     b.writeFloat32(pitch);
     b.writeFloat32(yaw);
 }
 
-
 void UprightFrame::deserialize(class BinaryInput& b) {
     translation.deserialize(b);
     pitch = b.readFloat32();
     yaw = b.readFloat32();
 }
-
 
 void UprightSpline::serialize(class BinaryOutput& b) const {
     b.writeBool8(cyclic);
@@ -104,7 +97,6 @@ void UprightSpline::serialize(class BinaryOutput& b) const {
         b.writeFloat32(time[i]);
     }
 }
-
 
 void UprightSpline::deserialize(class BinaryInput& b) {
     cyclic = b.readBool8();
@@ -128,5 +120,4 @@ void UprightSpline::deserialize(class BinaryInput& b) {
         }
     }
 }
-
 }

@@ -85,7 +85,6 @@ class mob_jadespine_basilisk : public CreatureScript
 
                     if (Target)
                         me->TauntApply(Target);
-
                 } else Cslumber_Timer -= diff;
 
                 DoMeleeAttackIfReady();

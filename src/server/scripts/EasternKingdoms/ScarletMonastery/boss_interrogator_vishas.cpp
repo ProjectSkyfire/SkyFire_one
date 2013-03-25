@@ -113,9 +113,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_interrogator_vishas()
 {

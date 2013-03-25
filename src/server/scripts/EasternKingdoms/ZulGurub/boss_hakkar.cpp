@@ -199,7 +199,6 @@ class boss_hakkar : public CreatureScript
                                 DoCast(me->getVictim(), SPELL_ASPECT_OF_MARLI);
                                 AspectOfMarli_Timer = 10000;
                             } else AspectOfMarli_Timer -= diff;
-
                         }
                     }
                     CheckMarli_Timer = 1000;

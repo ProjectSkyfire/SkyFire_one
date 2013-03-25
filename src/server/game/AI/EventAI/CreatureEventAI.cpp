@@ -890,7 +890,6 @@ void CreatureEventAI::ProcessAction(CreatureEventAI_Action const& action, uint32
             }
             break;
         }
-
     }
 }
 

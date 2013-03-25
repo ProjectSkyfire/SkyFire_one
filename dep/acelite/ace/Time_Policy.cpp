@@ -12,7 +12,6 @@ ACE_Dynamic_Time_Policy_Base::~ACE_Dynamic_Time_Policy_Base ()
 {
 }
 
-
 class NULL_Time_Policy : public ACE_Dynamic_Time_Policy_Base
 {
 protected:

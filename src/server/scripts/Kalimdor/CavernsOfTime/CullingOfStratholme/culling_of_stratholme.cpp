@@ -1123,7 +1123,6 @@ public:
                                         epoch->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                                         epoch->SetReactState(REACT_AGGRESSIVE);
                                     }
-
                                 }
                             JumpToNextStep(1000);
                             break;
@@ -1228,7 +1227,6 @@ public:
                 DoCast(me, SPELL_HOLY_LIGHT);
         }
     };
-
 };
 
 class npc_crate_helper : public CreatureScript

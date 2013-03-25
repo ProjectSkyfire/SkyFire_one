@@ -179,9 +179,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /*###
 # mob_enslaved_netherwing_drake
@@ -322,9 +320,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /*#####
 # mob_dragonmaw_peon
@@ -403,9 +399,7 @@ public:
             }
         }
     };
-
 };
-
 
 /*######
 ## npc_drake_dealer_hurlunk
@@ -434,9 +428,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 ## npc_flanis_swiftwing_and_kagrosh
@@ -487,9 +479,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 ## npc_murkblood_overseer
@@ -557,9 +547,7 @@ public:
         pPlayer->SEND_GOSSIP_MENU(10940, pCreature->GetGUID());
         return true;
     }
-
 };
-
 
 /*######
 ## npc_neltharaku
@@ -612,9 +600,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 ## npc_oronok
@@ -689,9 +675,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*####
 # npc_karynaku
@@ -716,7 +700,6 @@ public:
 
         return true;
     }
-
 };
 
 /*####
@@ -941,10 +924,7 @@ public:
             } else ConversationTimer -= diff;
         }
     };
-
 };
-
-
 
 /*####
 # npc_earthmender_wilda
@@ -1121,10 +1101,7 @@ public:
             }
         }
     };
-
 };
-
-
 
 /*#####
 # Quest: Battle of the crimson watch
@@ -1327,7 +1304,6 @@ public:
                 me->CombatStop();
             } else if (!Timers)
             {
-
                 SpellTimer1 = SpawnCast[6].Timer1;
                 SpellTimer2 = SpawnCast[7].Timer1;
                 SpellTimer3 = SpawnCast[8].Timer1;
@@ -1383,7 +1359,6 @@ public:
             }
         }
     };
-
 };
 
 /*#####
@@ -1531,7 +1506,6 @@ public:
                 EnterEvadeMode();
         }
     };
-
 };
 
 /*######
@@ -1650,7 +1624,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 void npc_lord_illidan_stormrage::npc_lord_illidan_stormrageAI::SummonNextWave()
@@ -1744,11 +1717,7 @@ public:
         }
      return true;
     }
-
 };
-
-
-
 
 /*####
 # npc_enraged_spirits
@@ -1868,7 +1837,6 @@ public:
             }
         }
     };
-
 };
 
 /*#####

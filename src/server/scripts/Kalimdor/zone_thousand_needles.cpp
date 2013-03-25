@@ -103,7 +103,6 @@ public:
             summoned->AI()->AttackStart(me);
         }
     };
-
 };
 
 /*######
@@ -195,7 +194,6 @@ public:
                 me->SummonCreature(NPC_GRIM_BANDIT, BanditLoc[i+AmbushId], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
         }
     };
-
 };
 
 /*######
@@ -391,7 +389,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 enum PantherCage
@@ -449,7 +446,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 void AddSC_thousand_needles()

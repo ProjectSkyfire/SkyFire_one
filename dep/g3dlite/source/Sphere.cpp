@@ -18,48 +18,40 @@
 #include "G3D/Plane.h"
 
 namespace G3D {
-
 int32 Sphere::dummy;
 
 Sphere::Sphere(class BinaryInput& b) {
     deserialize(b);
 }
 
-
 void Sphere::serialize(class BinaryOutput& b) const {
     center.serialize(b);
     b.writeFloat64(radius);
 }
-
 
 void Sphere::deserialize(class BinaryInput& b) {
     center.deserialize(b);
     radius = (float)b.readFloat64();
 }
 
-
 std::string Sphere::toString() const {
     return format("Sphere(<%g, %g, %g>, %g)", 
                   center.x, center.y, center.z, radius);
 }
-
 
 bool Sphere::contains(const Vector3& point) const {
     float distance = (center - point).squaredMagnitude();
     return distance <= square(radius);
 }
 
-
 bool Sphere::contains(const Sphere& other) const {
     float distance = (center - other.center).squaredMagnitude();
     return (radius >= other.radius) && (distance <= square(radius - other.radius));
 }
 
-
 bool Sphere::intersects(const Sphere& other) const {
     return (other.center - center).length() <= (radius + other.radius);
 }
-
 
 void Sphere::merge(const Sphere& other) {
     if (other.contains(*this)) {
@@ -80,7 +72,6 @@ void Sphere::merge(const Sphere& other) {
     // (if this contains other, we're done)
 }
 
-
 bool Sphere::culledBy(
     const Array<Plane>&		plane,
     int&				    cullingPlaneIndex,
@@ -99,14 +90,12 @@ bool Sphere::culledBy(
     return culledBy(plane.getCArray(), plane.size(), cullingPlaneIndex, inMask);
 }
 
-
 bool Sphere::culledBy(
     const class Plane*  plane,
     int                 numPlanes,
     int&				cullingPlane,
     const uint32		_inMask,
     uint32&             childMask) const {
-
     if (radius == finf()) {
         // No plane can cull the infinite box
         return false;
@@ -120,7 +109,6 @@ bool Sphere::culledBy(
     // See if there is one plane for which all of the
 	// vertices are in the negative half space.
     for (int p = 0; p < numPlanes; p++) {
-
 		// Only test planes that are not masked
 		if ((inMask & 1) != 0) {
 		
@@ -137,7 +125,6 @@ bool Sphere::culledBy(
                 // will immediately cull the volume.
                 childMask = 1 << p;
 				return true;
-
             } else if (culledHigh) {
                 // The bounding volume straddled the plane; we have
                 // to keep testing against this plane
@@ -154,20 +141,17 @@ bool Sphere::culledBy(
     return false;
 }
 
-
 bool Sphere::culledBy(
     const class Plane*  plane,
     int                 numPlanes,
 	int&				cullingPlane,
 	const uint32		_inMask) const {
-
 	uint32 inMask = _inMask;
 	assert(numPlanes < 31);
 
     // See if there is one plane for which all of the
 	// vertices are in the negative half space.
     for (int p = 0; p < numPlanes; p++) {
-
 		// Only test planes that are not masked
 		if ((inMask & 1) != 0) {
 			bool culled = ! plane[p].halfSpaceContains(center + plane[p].normal() * radius);
@@ -187,11 +171,9 @@ bool Sphere::culledBy(
     return false;
 }
 
-
 Vector3 Sphere::randomSurfacePoint() const {
     return Vector3::random() * radius + center;
 }
-
 
 Vector3 Sphere::randomInteriorPoint() const {
     Vector3 result;
@@ -204,20 +186,16 @@ Vector3 Sphere::randomInteriorPoint() const {
     return result * radius + center;
 }
 
-
 float Sphere::volume() const {
     return (float)pi() * (4.0f / 3.0f) * powf((float)radius, 3.0f);
 }
-
 
 float Sphere::area() const {
     return (float)pi() * 4.0f * powf((float)radius, 2.0f);
 }
 
-
 void Sphere::getBounds(AABox& out) const {
     Vector3 extent(radius, radius, radius);
     out = AABox(center - extent, center + extent);
 }
-
 } // namespace

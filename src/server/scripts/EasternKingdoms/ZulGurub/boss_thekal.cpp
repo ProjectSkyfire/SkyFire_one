@@ -252,7 +252,6 @@ class boss_thekal : public CreatureScript
                     }
 
                     DoMeleeAttackIfReady();
-
             }
         };
 

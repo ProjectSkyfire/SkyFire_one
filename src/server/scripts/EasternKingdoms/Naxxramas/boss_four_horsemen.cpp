@@ -337,7 +337,6 @@ public:
 
             if(spell->Id == SPELL_MARK[0] || spell->Id == SPELL_MARK[1] || spell->Id == SPELL_MARK[2] || spell->Id == SPELL_MARK[3])
                 me->getThreatManager().modifyThreatPercent(target,-50);
-
         }
 
         void UpdateAI(const uint32 diff)
@@ -409,7 +408,6 @@ public:
                 doDelayPunish = true;
         }
     };
-
 };
 
 void AddSC_boss_four_horsemen()

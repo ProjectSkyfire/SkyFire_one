@@ -167,7 +167,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 /*####
@@ -299,7 +298,6 @@ public:
             //pSummoned->AI()->AttackStart(me);
         }
     };
-
 };
 
 /*####
@@ -383,7 +381,6 @@ public:
             SetFollowComplete();
         }
     };
-
 };
 
 void AddSC_darkshore()

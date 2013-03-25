@@ -550,7 +550,6 @@ class Creature : public Unit, public GridObject<Creature>
         virtual void SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask);
         virtual void DeleteFromDB();                        // overriden in Pet
 
-
         Loot loot;
         bool lootForPickPocketed;
         bool lootForBody;

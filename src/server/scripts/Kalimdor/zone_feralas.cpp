@@ -66,7 +66,6 @@ public:
         player->SEND_GOSSIP_MENU(2433, creature->GetGUID());
         return true;
     }
-
 };
 
 /*######
@@ -113,7 +112,6 @@ public:
 
             if (npc_escortAI* pEscortAI = CAST_AI(npc_oox22fe::npc_oox22feAI, creature->AI()))
                 pEscortAI->Start(true, false, player->GetGUID());
-
         }
         return true;
     }
@@ -180,7 +178,6 @@ public:
             summoned->AI()->AttackStart(me);
         }
     };
-
 };
 
 /*######
@@ -200,7 +197,6 @@ public:
 
         return true;
     }
-
 };
 
 enum GordunniTrap

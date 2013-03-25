@@ -12,7 +12,6 @@
 #include "G3D/Random.h"
 
 namespace G3D {
-
 Random& Random::common() {
     static Random r;
     return r;
@@ -21,7 +20,6 @@ Random& Random::common() {
 Random::Random(void* x) : state(NULL), m_threadsafe(false) {
     (void)x;
 }
-
 
 Random::Random(uint32 seed, bool threadsafe) : m_threadsafe(threadsafe) {
     const uint32 X = 1812433253UL;
@@ -33,12 +31,10 @@ Random::Random(uint32 seed, bool threadsafe) : m_threadsafe(threadsafe) {
     }
 }
 
-
 Random::~Random() {
     delete[] state;
     state = NULL;
 }
-
 
 uint32 Random::bits() {
     // See http://en.wikipedia.org/wiki/Mersenne_twister
@@ -71,7 +67,6 @@ uint32 Random::bits() {
     
     return r;    
 }
-
 
 /** Generate the next N ints, and store them for readback later */
 void Random::generate() {
@@ -128,7 +123,6 @@ int Random::integer(int low, int high) {
 
     
 float Random::gaussian(float mean, float stdev) {
-
     // Using Box-Mueller method from http://www.taygeta.com/random/gaussian.html
     // Modified to specify standard deviation and mean of distribution
     float w, x1, x2;
@@ -145,7 +139,6 @@ float Random::gaussian(float mean, float stdev) {
     // Multiply by sigma (stdev ^ 2) and add mean.
     return x2 * (float)square(stdev) * sqrtf((-2.0f * logf(w) ) / w) + mean; 
 }
-
 
 void Random::cosHemi(float& x, float& y, float& z) {
     const float e1 = uniform();
@@ -169,7 +162,6 @@ void Random::cosHemi(float& x, float& y, float& z) {
     //  z = sqrt(1.0 - x*x + y*y);
 }
 
-
 void Random::cosPowHemi(const float k, float& x, float& y, float& z) {
     const float e1 = uniform();
     const float e2 = uniform();
@@ -183,12 +175,10 @@ void Random::cosPowHemi(const float k, float& x, float& y, float& z) {
     z = cos_theta;
 }
 
-
 void Random::hemi(float& x, float& y, float& z) {
     sphere(x, y, z);
     z = fabsf(z);
 }
-
 
 void Random::sphere(float& x, float& y, float& z) {
     // Squared magnitude
@@ -208,5 +198,4 @@ void Random::sphere(float& x, float& y, float& z) {
     y *= s;
     z *= s;
 }
-
 } // G3D

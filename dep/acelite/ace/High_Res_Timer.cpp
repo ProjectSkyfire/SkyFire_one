@@ -187,7 +187,6 @@ ACE_High_Res_Timer::get_cpuinfo (void)
 }
 #endif /* ACE_LINUX */
 
-
 ACE_High_Res_Timer::global_scale_factor_type
 ACE_High_Res_Timer::global_scale_factor (void)
 {

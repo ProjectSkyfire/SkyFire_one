@@ -102,7 +102,6 @@ public:
             //Illusion_Timer
             if (!Invisible && Illusion_Timer <= diff)
             {
-
                 //Interrupt any spell casting
                 me->InterruptNonMeleeSpells(false);
                 me->setFaction(35);
@@ -148,7 +147,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 // Illusion of Jandice Barov Script
@@ -198,10 +196,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
-
 
 void AddSC_boss_jandicebarov()
 {

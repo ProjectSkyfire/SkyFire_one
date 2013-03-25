@@ -106,9 +106,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 enum SporeSpells
 {
@@ -134,9 +132,7 @@ public:
             DoCastAOE(SPELL_FUNGAL_CREEP, true); //A Little bit hacky ... but it works now (without triggered no cast on death)
         }
     };
-
 };
-
 
 void AddSC_boss_loatheb()
 {

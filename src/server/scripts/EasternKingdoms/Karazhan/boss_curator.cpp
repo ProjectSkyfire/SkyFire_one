@@ -186,15 +186,12 @@ public:
 
                 if (Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 1))
                     DoCast(pTarget, SPELL_HATEFUL_BOLT);
-
             } else HatefulBoltTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_curator()
 {

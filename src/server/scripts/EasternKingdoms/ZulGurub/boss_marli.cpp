@@ -204,7 +204,6 @@ class boss_marli : public CreatureScript
                             PhaseTwo = false;
                             TransformBack_Timer = urand(25000,40000);
                         } else TransformBack_Timer -= diff;
-
                     }
 
                     DoMeleeAttackIfReady();

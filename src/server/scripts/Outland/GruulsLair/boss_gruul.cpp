@@ -250,9 +250,7 @@ public:
             }
         }
     };
-
 };
-
 
 void AddSC_boss_gruul()
 {

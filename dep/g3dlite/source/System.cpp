@@ -86,8 +86,6 @@
 #endif
 
 namespace G3D {
-
-
 /** Checks if the CPUID command is available on the processor (called from init) */
 static bool checkForCPUID();
 
@@ -97,12 +95,10 @@ static void getG3DVersion(std::string& s);
 /** Called from init */
 static G3DEndian checkEndian();
 
-
 System& System::instance() {
     static System thesystem;
     return thesystem;
 }
-
 
 System::System() :
     m_initialized(false),
@@ -125,10 +121,8 @@ System::System() :
     m_outOfMemoryCallback(NULL),
     m_realWorldGetTickTime0(0),
     m_highestCPUIDFunction(0) {
-
     init();
 }
-
 
 void System::init() {
     // NOTE: Cannot use most G3D data structures or utility functions
@@ -182,7 +176,6 @@ void System::init() {
             break;
         }
 
-
         unsigned int highestFunction = eaxreg;
         if (highestFunction >= CPUID_NUM_CORES) {
             cpuid(CPUID_NUM_CORES, eaxreg, ebxreg, ecxreg, edxreg);
@@ -192,7 +185,6 @@ void System::init() {
 
         cpuid(CPUID_GET_HIGHEST_FUNCTION, m_highestCPUIDFunction, ebxreg, ecxreg, edxreg);
     }
-
 
     // Get the operating system name (also happens to read some other information)
 #    ifdef G3D_WIN32
@@ -325,7 +317,6 @@ void System::init() {
     getStandardProcessorExtensions();
 }
 
-
 void getG3DVersion(std::string& s) {
     char cstr[100];
     if ((G3D_VER % 100) != 0) {
@@ -341,11 +332,9 @@ void getG3DVersion(std::string& s) {
     s = cstr;
 }
 
-
 std::string System::findDataFile
 (const std::string&  full,
  bool                errorIfNotFound) {
-
     // Places where specific files were most recently found.  This is
     // used to cache seeking of common files.
     static Table<std::string, std::string> lastFound;
@@ -463,11 +452,9 @@ std::string System::findDataFile
     return "";
 }
 
-
 void System::setAppDataDir(const std::string& path) {
     instance().m_appDataDir = path;
 }
-
 
 std::string demoFindData(bool errorIfNotFound) {
     static const char* g3dPath = getenv("G3DDATA");
@@ -497,7 +484,6 @@ std::string demoFindData(bool errorIfNotFound) {
     }
 }
 
-
 const std::string& System::build() {
     const static std::string b =
 #   ifdef _DEBUG
@@ -509,7 +495,6 @@ const std::string& System::build() {
     return b;
 }
 
-
 static G3DEndian checkEndian() {
     int32 a = 1;
     if (*(uint8*)&a == 1) {
@@ -519,7 +504,6 @@ static G3DEndian checkEndian() {
     }
 }
 
-
 static bool checkForCPUID() {
     // all known supported architectures have cpuid
     // add cases for incompatible architectures if they are added
@@ -527,7 +511,6 @@ static bool checkForCPUID() {
 
     return true;
 }
-
 
 void System::getStandardProcessorExtensions() {
 #if ! defined(G3D_OSX) || defined(G3D_OSX_INTEL)
@@ -622,7 +605,6 @@ void System::memcpy(void* dst, const void* src, size_t numBytes) {
 #endif
 }
 
-
 /** Michael Herf's fastest memset. n32 must be filled with the same
     character repeated. */
 #if defined(G3D_WIN32) && !defined(G3D_64BIT) && !defined(__MINGW32__) /* G3DFIX: Don't check if on 64-bit Windows platforms or using MinGW */
@@ -630,7 +612,6 @@ void System::memcpy(void* dst, const void* src, size_t numBytes) {
 
 // On x86 processors, use MMX
 void memfill(void *dst, int n32, unsigned long i) {
-
     int originalSize = i;
     int bytesRemaining = i;
 
@@ -662,7 +643,6 @@ void memfill(void *dst, int n32, unsigned long i) {
 }
 #endif
 
-
 void System::memset(void* dst, uint8 value, size_t numBytes) {
 #if defined(G3D_WIN32) && !defined(G3D_64BIT) && !defined(__MINGW32__) /* G3DFIX: Don't check if on 64-bit Windows platforms or using MinGW */
     uint32 v = value;
@@ -672,7 +652,6 @@ void System::memset(void* dst, uint8 value, size_t numBytes) {
     ::memset(dst, value, numBytes);
 #endif
 }
-
 
 /** Removes the 'd' that icompile / Morgan's VC convention appends. */
 static std::string computeAppName(const std::string& start) {
@@ -702,12 +681,10 @@ static std::string computeAppName(const std::string& start) {
     return start;
 }
 
-
 std::string& System::appName() {
     static std::string n = computeAppName(filenameBase(currentProgramFilename()));
     return n;
 }
-
 
 std::string System::currentProgramFilename() {
     char filename[2048];
@@ -750,9 +727,7 @@ std::string System::currentProgramFilename() {
     return filename;
 }
 
-
 void System::sleep(RealTime t) {
-
     // Overhead of calling this function, measured from a previous run.
     static const RealTime OVERHEAD = 0.00006f;
 
@@ -769,7 +744,6 @@ void System::sleep(RealTime t) {
     static RealTime minRealSleepTime = 3 * units::milliseconds();
 
     while (remainingTime > 0) {
-
         if (remainingTime > minRealSleepTime * 2.5) {
             // Safe to use Sleep with a time... sleep for half the remaining time
             sleepTime = max(remainingTime * 0.5, 0.0005);
@@ -798,7 +772,6 @@ void System::sleep(RealTime t) {
     }
 }
 
-
 void System::consoleClearScreen() {
 #   ifdef G3D_WIN32
         system("cls");
@@ -806,7 +779,6 @@ void System::consoleClearScreen() {
         system("clear");
 #   endif
 }
-
 
 bool System::consoleKeyPressed() {
     #ifdef G3D_WIN32
@@ -849,7 +821,6 @@ bool System::consoleKeyPressed() {
     #endif
 }
 
-
 int System::consoleReadKey() {
 #   ifdef G3D_WIN32
         return _getch();
@@ -859,7 +830,6 @@ int System::consoleReadKey() {
         return c;
 #   endif
 }
-
 
 void System::initTime() {
     #ifdef G3D_WIN32
@@ -899,7 +869,6 @@ void System::initTime() {
     #endif
 }
 
-
 RealTime System::time() { 
 #   ifdef G3D_WIN32
         LARGE_INTEGER now;
@@ -921,9 +890,7 @@ RealTime System::time() {
 #   endif
 }
 
-
 ////////////////////////////////////////////////////////////////
-
 
 #define REALPTR_TO_USERPTR(x)   ((uint8*)(x) + sizeof(uint32))
 #define USERPTR_TO_REALPTR(x)   ((uint8*)(x) - sizeof(uint32))
@@ -1078,7 +1045,6 @@ private:
         // Put the pointer back into the free list
         tinyPool[tinyPoolSize] = ptr;
         ++tinyPoolSize;
-
     }
 
     void flushPool(MemBlock* pool, int& poolSize) {
@@ -1091,11 +1057,9 @@ private:
         poolSize = 0;
     }
 
-
     /** Allocate out of a specific pool.  Return NULL if no suitable 
         memory was found. */
     UserPtr malloc(MemBlock* pool, int& poolSize, size_t bytes) {
-
         // OPT: find the smallest block that satisfies the request.
 
         // See if there's something we can use in the buffer pool.
@@ -1151,7 +1115,6 @@ public:
 
         medPoolSize          = 0;
 
-
         // Initialize the tiny heap as a bunch of pointers into one
         // pre-allocated buffer.
         tinyHeap = ::malloc(maxTinyBuffers * tinyBufferSize);
@@ -1168,7 +1131,6 @@ public:
 #       endif
 #endif        ///---------------------------------- old mutex
     }
-
 
     ~BufferPool() {
         ::free(tinyHeap);
@@ -1200,7 +1162,6 @@ public:
                 System::memcpy(newPtr, ptr, tinyBufferSize);
                 tinyFree(ptr);
                 return newPtr;
-
             }
         } else {
             // In one of our heaps.
@@ -1220,13 +1181,11 @@ public:
         }
     }
 
-
     UserPtr malloc(size_t bytes) {
         lock();
         ++totalMallocs;
 
         if (bytes <= tinyBufferSize) {
-
             UserPtr ptr = tinyMalloc(bytes);
 
             if (ptr) {
@@ -1234,7 +1193,6 @@ public:
                 unlock();
                 return ptr;
             }
-
         } 
         
         // Failure to allocate a tiny buffer is allowed to flow
@@ -1248,7 +1206,6 @@ public:
                 unlock();
                 return ptr;
             }
-
         } else if (bytes <= medBufferSize) {
             // Note that a small allocation failure does *not* fall
             // through into a medium allocation because that would
@@ -1307,7 +1264,6 @@ public:
 
         return REALPTR_TO_USERPTR(ptr);
     }
-
 
     void free(UserPtr ptr) {
         if (ptr == NULL) {
@@ -1399,7 +1355,6 @@ std::string System::mallocStatus() {
 #endif
 }
 
-
 void System::resetMallocPerformanceCounters() {
 #ifndef NO_BUFFERPOOL
     bufferpool->totalMallocs         = 0;
@@ -1408,7 +1363,6 @@ void System::resetMallocPerformanceCounters() {
     bufferpool->mallocsFromTinyPool  = 0;
 #endif
 }
-
 
 #ifndef NO_BUFFERPOOL
 inline void initMem() {
@@ -1421,7 +1375,6 @@ inline void initMem() {
     }
 }
 #endif
-
 
 void* System::malloc(size_t bytes) {
 #ifndef NO_BUFFERPOOL
@@ -1444,7 +1397,6 @@ void* System::calloc(size_t n, size_t x) {
 #endif
 }
 
-
 void* System::realloc(void* block, size_t bytes) {
 #ifndef NO_BUFFERPOOL
     initMem();
@@ -1454,7 +1406,6 @@ void* System::realloc(void* block, size_t bytes) {
 #endif
 }
 
-
 void System::free(void* p) {
 #ifndef NO_BUFFERPOOL
     bufferpool->free(p);
@@ -1463,9 +1414,7 @@ void System::free(void* p) {
 #endif
 }
 
-
 void* System::alignedMalloc(size_t bytes, size_t alignment) {
-
     alwaysAssertM(isPow2(alignment), "alignment must be a power of 2");
 
     // We must align to at least a word boundary.
@@ -1516,7 +1465,6 @@ void* System::alignedMalloc(size_t bytes, size_t alignment) {
     return (void *)alignedPtr;
 }
 
-
 void System::alignedFree(void* _ptr) {
     if (_ptr == NULL) {
         return;
@@ -1536,7 +1484,6 @@ void System::alignedFree(void* _ptr) {
     System::free(truePtr);
 }
 
-
 void System::setEnv(const std::string& name, const std::string& value) {
     std::string cmd = name + "=" + value;
 #   ifdef G3D_WIN32
@@ -1547,11 +1494,9 @@ void System::setEnv(const std::string& name, const std::string& value) {
 #   endif
 }
 
-
 const char* System::getEnv(const std::string& name) {
     return getenv(name.c_str());
 }
-
 
 static void var(TextOutput& t, const std::string& name, const std::string& val) {
     t.writeSymbols(name,"=");
@@ -1559,12 +1504,10 @@ static void var(TextOutput& t, const std::string& name, const std::string& val) 
     t.writeNewline();
 }
 
-
 static void var(TextOutput& t, const std::string& name, const bool val) {
     t.writeSymbols(name, "=", val ? "Yes" : "No");
     t.writeNewline();
 }
-
 
 static void var(TextOutput& t, const std::string& name, const int val) {
     t.writeSymbols(name,"=");
@@ -1572,10 +1515,8 @@ static void var(TextOutput& t, const std::string& name, const int val) {
     t.writeNewline();
 }
 
-
 void System::describeSystem(
     std::string&        s) {
-
     TextOutput t;
     describeSystem(t);
     t.commitString(s);
@@ -1583,7 +1524,6 @@ void System::describeSystem(
 
 void System::describeSystem(
     TextOutput& t) {
-
     t.writeSymbols("App", "{");
     t.writeNewline();
     t.pushIndent();
@@ -1642,7 +1582,6 @@ void System::describeSystem(
     t.writeNewline();
 }
 
-
 void System::setClipboardText(const std::string& s) {
 #   ifdef G3D_WIN32
         if (OpenClipboard(NULL)) {
@@ -1661,7 +1600,6 @@ void System::setClipboardText(const std::string& s) {
         }
 #   endif
 }
-
 
 std::string System::getClipboardText() {
     std::string s;
@@ -1683,7 +1621,6 @@ std::string System::getClipboardText() {
 #   endif
     return s;
 }
-
 
 std::string System::currentDateString() {
     time_t t1;
@@ -1761,5 +1698,4 @@ void System::cpuid(CPUIDFunction func, uint32& eax, uint32& ebx, uint32& ecx, ui
 }
 
 #endif
-
 }  // namespace

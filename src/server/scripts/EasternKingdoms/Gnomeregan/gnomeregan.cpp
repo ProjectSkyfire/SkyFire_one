@@ -540,11 +540,7 @@ public:
             AggroAllPlayers(pSummon);
         }
     };
-
 };
-
-
-
 
 class boss_grubbis : public CreatureScript
 {
@@ -589,9 +585,7 @@ public:
                 CAST_CRE(pSummon)->AI()->SetData(2,2);
         }
     };
-
 };
-
 
 void AddSC_gnomeregan()
 {

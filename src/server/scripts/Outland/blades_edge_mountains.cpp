@@ -72,7 +72,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 /*######
@@ -252,9 +251,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /*######
 ## npc_daranelle
@@ -299,9 +296,7 @@ public:
             ScriptedAI::MoveInLineOfSight(who);
         }
     };
-
 };
-
 
 /*######
 ## npc_overseer_nuaar
@@ -334,9 +329,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 ## npc_saikkal_the_elder
@@ -376,9 +369,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 ## go_legion_obelisk
@@ -426,14 +417,11 @@ public:
 
         return true;
     }
-
 };
-
 
 /*######
 ## npc_bloodmaul_brutebane
 ######*/
-
 
 enum eBloodmaul
 {
@@ -472,9 +460,7 @@ public:
 
         void UpdateAI(const uint32 /*uiDiff*/) {}
     };
-
 };
-
 
 /*######
 ## npc_ogre_brute
@@ -535,9 +521,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /*######
 ## AddSC

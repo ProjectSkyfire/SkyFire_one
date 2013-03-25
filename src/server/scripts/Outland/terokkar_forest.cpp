@@ -149,9 +149,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 /*######
 ## mob_infested_root_walker
@@ -183,7 +181,6 @@ public:
                         DoCast(me, 39130, true);
         }
     };
-
 };
 
 /*######
@@ -245,7 +242,6 @@ public:
             npc_escortAI::UpdateAI(diff);
         }
     };
-
 };
 
 /*######
@@ -278,7 +274,6 @@ public:
                         DoCast(me, 39134, true);
         }
     };
-
 };
 
 /*######
@@ -331,7 +326,6 @@ public:
             }
         }
     };
-
 };
 
 /*######
@@ -439,11 +433,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
-
-
 
 /*######
 ## npc_isla_starmane
@@ -535,9 +525,7 @@ public:
     {
         return new npc_isla_starmaneAI(pCreature);
     }
-
 };
-
 
 /*######
 ## go_skull_pile
@@ -631,9 +619,7 @@ public:
 
         return true;
     }
-
 };
-
 
 /*########
 ####npc_akuno
@@ -699,7 +685,6 @@ public:
             summon->AI()->AttackStart(me);
         }
     };
-
 };
 
 void AddSC_terokkar_forest()

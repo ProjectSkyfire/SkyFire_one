@@ -204,7 +204,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class go_najentus_spine : public GameObjectScript
@@ -223,9 +222,7 @@ public:
                 }
         return true;
     }
-
 };
-
 
 void AddSC_boss_najentus()
 {

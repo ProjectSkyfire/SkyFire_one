@@ -200,9 +200,7 @@ public:
             return 0;
          }
     };
-
 };
-
 
 void AddSC_instance_sunken_temple()
 {

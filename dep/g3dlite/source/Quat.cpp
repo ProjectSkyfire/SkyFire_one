@@ -16,11 +16,9 @@
 #include "G3D/BinaryOutput.h"
 
 namespace G3D {
-
 Quat Quat::fromAxisAngleRotation(
     const Vector3&      axis,
     float               angle) {
-
     Quat q;
 
     q.w = cos(angle / 2.0f);
@@ -28,7 +26,6 @@ Quat Quat::fromAxisAngleRotation(
 
     return q;
 }
-
 
 Quat::Quat(const class Any& a) {
     *this = Quat();
@@ -44,9 +41,7 @@ Quat::Quat(const class Any& a) {
     }
 }
 
-
 Quat::Quat(const Matrix3& rot) {
-
     static const int plus1mod3[] = {1, 2, 0};
 
     // Find the index of the largest diagonal component
@@ -98,7 +93,6 @@ Quat::Quat(const Matrix3& rot) {
     }
 }
 
-
 void Quat::toAxisAngleRotation(
     Vector3&            axis,
     double&             angle) const {
@@ -137,7 +131,6 @@ void Quat::toAxisAngleRotation(
 	}
 }
 
-
 Matrix3 Quat::toRotationMatrix() const {
     Matrix3 out = Matrix3::zero();
 
@@ -146,10 +139,8 @@ Matrix3 Quat::toRotationMatrix() const {
     return out;
 }
 
-
 void Quat::toRotationMatrix(
     Matrix3&            rot) const {
-
     rot = Matrix3(*this);
 }
 
@@ -158,7 +149,6 @@ Quat Quat::slerp(
     const Quat&         _quat1,
     float               alpha,
     float               threshold) const {
-
     // From: Game Physics -- David Eberly pg 538-540
     // Modified to include lerp for small angles, which
 	// is a common practice.
@@ -172,7 +162,6 @@ Quat Quat::slerp(
     // angle between quaternion rotations
     float phi;
     float cosphi = quat0.dot(quat1);
-
 
     if (cosphi < 0) {
         // Change the sign and fix the dot product; we need to
@@ -198,18 +187,14 @@ Quat Quat::slerp(
     }
 }
 
-
 Quat Quat::nlerp(
     const Quat&         quat1,
     float               alpha) const {
-
     Quat result = (*this) * (1.0f - alpha) + quat1 * alpha;
 	return result / result.magnitude();
 }
 
-
 Quat Quat::operator*(const Quat& other) const {
-
     // Following Watt & Watt, page 360
     const Vector3& v1 = imag();
     const Vector3& v2 = other.imag();
@@ -218,7 +203,6 @@ Quat Quat::operator*(const Quat& other) const {
 
     return Quat(s1*v2 + s2*v1 + v1.cross(v2), s1*s2 - v1.dot(v2));
 }
-
 
 // From "Uniform Random Rotations", Ken Shoemake, Graphics Gems III.
 Quat Quat::unitRandom() {
@@ -234,7 +218,6 @@ Quat Quat::unitRandom() {
     return Quat(s1 * r1, c1 * r1, s2 * r2, c2 * r2);
 }
 
-
 void Quat::deserialize(class BinaryInput& b) {
     x = b.readFloat32();
     y = b.readFloat32();
@@ -242,14 +225,12 @@ void Quat::deserialize(class BinaryInput& b) {
     w = b.readFloat32();
 }
 
-
 void Quat::serialize(class BinaryOutput& b) const {
     b.writeFloat32(x);
     b.writeFloat32(y);
     b.writeFloat32(z);
     b.writeFloat32(w);
 }
-
 
 // 2-char swizzles
 

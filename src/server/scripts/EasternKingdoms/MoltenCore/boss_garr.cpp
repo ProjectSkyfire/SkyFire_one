@@ -87,7 +87,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class mob_firesworn : public CreatureScript
@@ -140,9 +139,7 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
-
 
 void AddSC_boss_garr()
 {

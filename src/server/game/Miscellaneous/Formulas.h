@@ -21,7 +21,6 @@
 #ifndef SKYFIRE_FORMULAS_H
 #define SKYFIRE_FORMULAS_H
 
-
 #include "World.h"
 #include "SharedDefines.h"
 #include "ScriptMgr.h"

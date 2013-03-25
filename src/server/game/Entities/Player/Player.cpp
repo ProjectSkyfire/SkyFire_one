@@ -1426,7 +1426,6 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
     // First login
     *p_data << uint8(atLoginFlags & AT_LOGIN_FIRST ? 1 : 0);
 
-
     // Pets info
     {
         uint32 petDisplayId = 0;

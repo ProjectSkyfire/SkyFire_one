@@ -43,7 +43,6 @@
 #endif
 
 namespace G3D {
-
 static FileSystem* common = NULL;
 
 FileSystem& FileSystem::instance() {
@@ -51,13 +50,11 @@ FileSystem& FileSystem::instance() {
     return *common;
 }
 
-
 void FileSystem::init() {
     if (common == NULL) {
         common = new FileSystem();
     }
 }
-
 
 void FileSystem::cleanup() {
     if (common != NULL) {
@@ -139,7 +136,6 @@ void FileSystem::Dir::computeZipListing(const std::string& zipfile, const std::s
 #endif
 }
 
-
 FileSystem::Dir& FileSystem::getContents(const std::string& path, bool forceUpdate) {
     const std::string& key = 
 #   if defined(G3D_WIN32)
@@ -163,7 +159,6 @@ FileSystem::Dir& FileSystem::getContents(const std::string& path, bool forceUpda
 
         // Does this path exist on the real filesystem?
         if (exists && isDirectory) {
-
             // Is this path actually a directory?
             if (isDirectory) {
                 dir.exists = true;
@@ -224,7 +219,6 @@ FileSystem::Dir& FileSystem::getContents(const std::string& path, bool forceUpda
                     entry = NULL;
 #               endif
             }
-
         } else {
             std::string zip;
 
@@ -232,9 +226,7 @@ FileSystem::Dir& FileSystem::getContents(const std::string& path, bool forceUpda
                 // This is a zipfile; get its root
                 dir.isZipfile = true;                
                 dir.computeZipListing(path, "");
-
             } else if (inZipfile(path, zip)) {
-
                 // There is a zipfile somewhere in the path.  Does
                 // the rest of the path exist inside the zipfile?
                 dir.inZipfile = true;
@@ -246,7 +238,6 @@ FileSystem::Dir& FileSystem::getContents(const std::string& path, bool forceUpda
 
     return dir;
 }
-
 
 bool FileSystem::_inZipfile(const std::string& path, std::string& z) {
     // Reject trivial cases before parsing
@@ -285,7 +276,6 @@ bool FileSystem::_inZipfile(const std::string& path, std::string& z) {
     return false;
 }
 
-
 bool FileSystem::_isZipfile(const std::string& filename) {
     if (FilePath::ext(filename).empty()) {
         return false;
@@ -310,7 +300,6 @@ bool FileSystem::_isZipfile(const std::string& filename) {
     return true;
 }
 
-
 FILE* FileSystem::_fopen(const char* filename, const char* mode) {
     for (const char* m = mode; *m != '\0'; ++m) {
         if (*m == 'w') {
@@ -321,7 +310,6 @@ FILE* FileSystem::_fopen(const char* filename, const char* mode) {
     }
     return ::fopen(filename, mode);
 }
-
 
 void FileSystem::_clearCache(const std::string& path) {
     if ((path == "") || FilePath::isRoot(path)) {
@@ -347,11 +335,9 @@ void FileSystem::_clearCache(const std::string& path) {
     }
 }
 
-
 void FileSystem::_setCacheLifetime(float t) {
     m_cacheLifetime = t;
 }
-
 
 void FileSystem::_createDirectory(const std::string& dir) {
     
@@ -406,7 +392,6 @@ void FileSystem::_createDirectory(const std::string& dir) {
     _clearCache(FilePath::parent(FilePath::removeTrailingSlash(d)));
 }
 
-
 void FileSystem::_copyFile(const std::string& source, const std::string& dest) {
 #   ifdef G3D_WIN32
         // TODO: handle case where srcPath is in a zipfile
@@ -421,9 +406,7 @@ void FileSystem::_copyFile(const std::string& source, const std::string& dest) {
 #   endif        
 }
 
-
 bool FileSystem::_exists(const std::string& f, bool trustCache) {
-
     if (FilePath::isRoot(f)) {
 #       ifdef G3D_WIN32
             const std::string& winname = toLower(f.substr(0, 1)) + ":\\";
@@ -461,12 +444,10 @@ bool FileSystem::_exists(const std::string& f, bool trustCache) {
 
         // Could not find a match
         return false;
-
     } else {
         return entry.exists && entry.contains(FilePath::baseExt(path));
     }
 }
-
 
 bool FileSystem::_isDirectory(const std::string& filename) {
     // TODO: work with zipfiles and cache
@@ -475,14 +456,12 @@ bool FileSystem::_isDirectory(const std::string& filename) {
     return exists && ((st.st_mode & S_IFDIR) != 0);
 }
 
-
 std::string FileSystem::_resolve(const std::string& filename, const std::string& cwd) {
     if (filename.size() >= 1) {
         if (isSlash(filename[0])) {
             // Already resolved
             return filename;
         } else {
-
             #ifdef G3D_WIN32
                 if ((filename.size() >= 2) && (filename[1] == ':')) {
                     // There is a drive spec on the front.
@@ -506,7 +485,6 @@ std::string FileSystem::_resolve(const std::string& filename, const std::string&
     return FilePath::concat(cwd, filename);
 }
 
-
 std::string FileSystem::_currentDirectory() {
     static const int N = 2048;
     char buffer[N];
@@ -514,7 +492,6 @@ std::string FileSystem::_currentDirectory() {
     _getcwd(buffer, N);
     return std::string(buffer);
 }
-
 
 bool FileSystem::_isNewer(const std::string& src, const std::string& dst) {
     // TODO: work with cache and zipfiles
@@ -526,7 +503,6 @@ bool FileSystem::_isNewer(const std::string& src, const std::string& dst) {
 
     return sexists && ((! dexists) || (sts.st_mtime > dts.st_mtime));
 }
-
 
 int64 FileSystem::_size(const std::string& filename) {
     struct stat64 st;
@@ -560,7 +536,6 @@ int64 FileSystem::_size(const std::string& filename) {
     return st.st_size;
 }
 
-
 void FileSystem::listHelper(const std::string& shortSpec, const std::string& parentPath, Array<std::string>& result, const ListSettings& settings) {
     Dir& dir = getContents(parentPath, false);
 
@@ -572,7 +547,6 @@ void FileSystem::listHelper(const std::string& shortSpec, const std::string& par
         Entry& entry = dir.nodeArray[i];
         // See if it matches the spec
         if (FilePath::matches(entry.name, shortSpec, settings.caseSensitive)) {
-
             if ((entry.type == UNKNOWN) && ! (settings.files && settings.directories)) {
                 // Update the type
                 entry.type = isDirectory(FilePath::concat(parentPath, entry.name)) ? DIR_TYPE : FILE_TYPE;
@@ -596,15 +570,12 @@ void FileSystem::listHelper(const std::string& shortSpec, const std::string& par
     } // for
 }
 
-
 void FileSystem::_list(const std::string& spec, Array<std::string>& result, const ListSettings& settings) {
     const std::string& shortSpec = FilePath::baseExt(spec);
     const std::string& parentPath = FilePath::parent(spec);
 
     listHelper(shortSpec, parentPath, result, settings);
 }
-
-
 
 #ifdef G3D_WIN32
 const Array<std::string>& FileSystem::_drives() {
@@ -657,13 +628,11 @@ bool FilePath::isRoot(const std::string& f) {
     return false;
 }
 
-
 std::string FilePath::removeTrailingSlash(const std::string& f) {
     bool removeSlash = ((endsWith(f, "/") || endsWith(f, "\\"))) && ! isRoot(f);
 
     return removeSlash ? f.substr(0, f.length() - 1) : f;
 }
-
 
 std::string FilePath::concat(const std::string& dirname, const std::string& file) {
     // Ensure that the directory ends in a slash
@@ -676,7 +645,6 @@ std::string FilePath::concat(const std::string& dirname, const std::string& file
     }
 }
 
-
 std::string FilePath::ext(const std::string& filename) {
     int i = filename.rfind(".");
     if (i >= 0) {
@@ -685,7 +653,6 @@ std::string FilePath::ext(const std::string& filename) {
         return "";
     }
 }
-
 
 std::string FilePath::baseExt(const std::string& filename) {
     int i = findLastSlash(filename);
@@ -704,7 +671,6 @@ std::string FilePath::baseExt(const std::string& filename) {
     }
 }
 
-
 std::string FilePath::base(const std::string& path) {
     std::string filename = baseExt(path);
     int i = filename.rfind(".");
@@ -715,7 +681,6 @@ std::string FilePath::base(const std::string& path) {
         return filename.substr(0, i);
     }
 }
-
 
 std::string FilePath::parent(const std::string& path) {    
     int i = findLastSlash(removeTrailingSlash(path));
@@ -734,11 +699,9 @@ std::string FilePath::parent(const std::string& path) {
     }
 }
 
-
 bool FilePath::containsWildcards(const std::string& filename) {
     return (filename.find('*') != std::string::npos) || (filename.find('?') != std::string::npos);
 }
-
 
 bool FilePath::matches(const std::string& path, const std::string& pattern, bool caseSensitive) {
     int flags = FNM_PERIOD | FNM_NOESCAPE | FNM_PATHNAME;
@@ -748,17 +711,14 @@ bool FilePath::matches(const std::string& path, const std::string& pattern, bool
     return g3dfnmatch(pattern.c_str(), path.c_str(), flags) == 0;
 }
 
-
 static int fixslash(int c) {
     return (c == '\\') ? '/' : c;
 }
-
 
 std::string FilePath::canonicalize(std::string x) {
     std::transform(x.begin(), x.end(), x.begin(), fixslash);
     return x;
 }
-
 
 void FilePath::parse
 (const std::string&     filename,
@@ -766,7 +726,6 @@ void FilePath::parse
  Array<std::string>&    path,
  std::string&           base,
  std::string&           ext) {
-
     std::string f = filename;
 
     root = "";
@@ -793,20 +752,16 @@ void FilePath::parse
             // e.g.  c:foo
             root = f.substr(2);
             f = f.substr(2, f.size() - 2);
-
         }
-
     } else if ((f.size() >= 2) & isSlash(f[0]) && isSlash(f[1])) {
         
         // e.g. //foo
         root = f.substr(0, 2);
         f = f.substr(2, f.size() - 2);
-
     } else if (isSlash(f[0])) {
         
         root = f.substr(0, 1);
         f = f.substr(1, f.size() - 1);
-
     }
 
     // Pull the extension off
@@ -834,12 +789,10 @@ void FilePath::parse
             // There is no slash; the basename is the whole thing
             base = f;
             f    = "";
-
         } else if ((i != std::string::npos) && (i < f.size() - 1)) {
             
             base = f.substr(i + 1, f.size() - i - 1);
             f    = f.substr(0, i);
-
         }
     }
 
@@ -870,5 +823,4 @@ void FilePath::parse
         ++cur;
     }
 }
-
 }

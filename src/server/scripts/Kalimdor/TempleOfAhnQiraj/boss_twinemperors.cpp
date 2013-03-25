@@ -63,8 +63,6 @@ enum Misc
     TELEPORTTIME                  = 30000
 };
 
-
-
 struct boss_twinemperorsAI : public ScriptedAI
 {
     boss_twinemperorsAI(Creature* creature): ScriptedAI(creature)
@@ -469,7 +467,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 class boss_veklor : public CreatureScript
@@ -595,7 +592,6 @@ public:
             }
         }
     };
-
 };
 
 void AddSC_boss_twinemperors()

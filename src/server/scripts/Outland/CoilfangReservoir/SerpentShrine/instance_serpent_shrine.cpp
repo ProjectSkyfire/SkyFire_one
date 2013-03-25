@@ -64,7 +64,6 @@ public:
 
         return true;
     }
-
 };
 
 class instance_serpent_shrine : public InstanceMapScript
@@ -136,7 +135,6 @@ public:
             FrenzySpawnTimer = 2000;
             DoSpawnFrenzy = false;
             TrashCount = 0;
-
         }
 
         bool IsEncounterInProgress() const
@@ -177,7 +175,6 @@ public:
                         {
                             if (Water == WATERSTATE_SCALDING)
                             {
-
                                 if (!pPlayer->HasAura(SPELL_SCALDINGWATER))
                                 {
                                     pPlayer->CastSpell(pPlayer, SPELL_SCALDINGWATER,true);
@@ -199,7 +196,6 @@ public:
                         if (!pPlayer->IsInWater())
                             pPlayer->RemoveAurasDueToSpell(SPELL_SCALDINGWATER);
                     }
-
                 }
                 WaterCheckTimer = 500;//remove stress from core
             } else WaterCheckTimer -= diff;
@@ -394,9 +390,7 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
-
 };
-
 
 void AddSC_instance_serpentshrine_cavern()
 {
