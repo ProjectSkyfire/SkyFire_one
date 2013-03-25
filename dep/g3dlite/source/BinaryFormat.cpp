@@ -9,6 +9,7 @@
 #include "G3D/BinaryFormat.h"
 
 namespace G3D {
+
 int32 byteSize(BinaryFormat f) {
     switch (f) {
     case BOOL8_BINFMT:

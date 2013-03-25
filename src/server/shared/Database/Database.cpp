@@ -65,7 +65,7 @@ Database::~Database()
 
 bool Database::Initialize(const char* infoString)
 {
-    // Enable logging of SQL commands (usally only GM commands)
+    // Enable logging of SQL commands (usually only GM commands)
     // (See method: PExecuteLog)
     m_logSQL = ConfigMgr::GetBoolDefault("LogSQL", false);
     m_logsDir = ConfigMgr::GetStringDefault("LogsDir","");
@@ -86,7 +86,7 @@ bool Database::Initialize(const char* infoString)
 
     InitDelayThread();
 
-    Tokens tokens = StrSplit(infoString, ";");
+    Tokens tokens(infoString, ';');
 
     Tokens::iterator iter;
 

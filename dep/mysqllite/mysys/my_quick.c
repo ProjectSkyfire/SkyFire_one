@@ -31,11 +31,11 @@ size_t my_quick_read(File Filedes,uchar *Buffer,size_t Count,myf MyFlags)
 #else
   readbytes= read(Filedes, Buffer, Count);
 #endif
-  if (readbytes != Count)
+  if(readbytes != Count)
   {
 #ifndef DBUG_OFF
     if ((readbytes == 0 || readbytes == (size_t) -1) && errno == EINTR)
-    {
+    {  
       DBUG_PRINT("error", ("my_quick_read() was interrupted and returned %d"
                            ".  This function does not retry the read!",
                            (int) readbytes));
@@ -65,7 +65,7 @@ size_t my_quick_write(File Filedes, const uchar *Buffer, size_t Count)
   {
 #ifndef DBUG_OFF
     if ((writtenbytes == 0 || writtenbytes == (size_t) -1) && errno == EINTR)
-    {
+    {  
       DBUG_PRINT("error", ("my_quick_write() was interrupted and returned %d"
                            ".  This function does not retry the write!",
                            (int) writtenbytes));

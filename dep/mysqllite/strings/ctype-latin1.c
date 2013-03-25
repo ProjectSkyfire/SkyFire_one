@@ -97,7 +97,7 @@ static uchar sort_order_latin1[] = {
 
 /*
   WL#1494 notes:
-
+  
   We'll use cp1252 instead of iso-8859-1.
   cp1252 contains printable characters in the range 0x80-0x9F.
   In ISO 8859-1, these code points have no associated printable
@@ -105,7 +105,7 @@ static uchar sort_order_latin1[] = {
   one would lose the euro (for instance). Since most people are
   unaware of the difference, and since we don't really want a
   "Windows ANSI" to differ from a "Unix ANSI", we will:
-
+   
    - continue to pretend the latin1 character set is ISO 8859-1
    - actually allow the storage of euro etc. so it's actually cp1252
 
@@ -358,28 +358,28 @@ NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
 
 static
 int my_mb_wc_latin1(CHARSET_INFO *cs  __attribute__((unused)),
-            my_wc_t *wc,
-            const uchar *str,
-            const uchar *end __attribute__((unused)))
+		    my_wc_t *wc,
+		    const uchar *str,
+		    const uchar *end __attribute__((unused)))
 {
   if (str >= end)
     return MY_CS_TOOSMALL;
-
+  
   *wc=cs_to_uni[*str];
   return (!wc[0] && str[0]) ? -1 : 1;
 }
 
 static
 int my_wc_mb_latin1(CHARSET_INFO *cs  __attribute__((unused)),
-            my_wc_t wc,
-            uchar *str,
-            uchar *end __attribute__((unused)))
+		    my_wc_t wc,
+		    uchar *str,
+		    uchar *end __attribute__((unused)))
 {
   uchar *pl;
-
+  
   if (str >= end)
     return MY_CS_TOOSMALL;
-
+  
   pl= uni_to_cs[(wc>>8) & 0xFF];
   str[0]= pl ? pl[wc & 0xFF] : '\0';
   return (!str[0] && wc) ? MY_CS_ILUNI : 1;
@@ -536,8 +536,8 @@ uchar combo2map[]={
 */
 
 static int my_strnncoll_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
-                  const uchar *a, size_t a_length,
-                  const uchar *b, size_t b_length,
+				  const uchar *a, size_t a_length,
+				  const uchar *b, size_t b_length,
                                   my_bool b_is_prefix)
 {
   const uchar *a_end= a + a_length;
@@ -572,12 +572,12 @@ static int my_strnncoll_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
     which string ran out first
   */
   return ((a < a_end || a_extend) ? (b_is_prefix ? 0 : 1) :
-      (b < b_end || b_extend) ? -1 : 0);
+	  (b < b_end || b_extend) ? -1 : 0);
 }
 
 static int my_strnncollsp_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
-                    const uchar *a, size_t a_length,
-                    const uchar *b, size_t b_length,
+				    const uchar *a, size_t a_length,
+				    const uchar *b, size_t b_length,
                                     my_bool diff_if_only_endspace_difference)
 {
   const uchar *a_end= a + a_length, *b_end= b + b_length;
@@ -640,7 +640,7 @@ static int my_strnncollsp_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
     for ( ; a < a_end ; a++)
     {
       if (*a != ' ')
-    return (*a < ' ') ? -swap : swap;
+	return (*a < ' ') ? -swap : swap;
     }
   }
   return res;
@@ -665,8 +665,8 @@ static size_t my_strnxfrm_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 void my_hash_sort_latin1_de(CHARSET_INFO *cs __attribute__((unused)),
-                const uchar *key, size_t len,
-                ulong *nr1, ulong *nr2)
+			    const uchar *key, size_t len,
+			    ulong *nr1, ulong *nr2)
 {
   const uchar *end;
   /*
@@ -766,3 +766,4 @@ CHARSET_INFO my_charset_latin1_bin=
   &my_charset_handler,
   &my_collation_8bit_bin_handler
 };
+

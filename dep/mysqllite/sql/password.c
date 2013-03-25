@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,10 +45,11 @@
            hash_stage2=sha1(hash_stage1)
            reply=xor(hash_stage1, sha1(public_seed,hash_stage2)
 
-           // this three steps are done in scramble()
+           // this three steps are done in scramble() 
 
            send(reply)
 
+     
   SERVER:  recv(reply)
            hash_stage1=xor(reply, sha1(public_seed,hash_stage2))
            candidate_hash2=sha1(hash_stage1)
@@ -104,7 +105,7 @@ double my_rnd(struct rand_struct *rand_st)
 }
 
 /*
-    Generate binary hash from raw text string
+    Generate binary hash from raw text string 
     Used for Pre-4.1 password handling
   SYNOPSIS
     hash_password()
@@ -256,7 +257,7 @@ static inline uint8 char_val(uint8 X)
     Convert password from hex string (as stored in mysql.user) to binary form.
   SYNOPSIS
     get_salt_from_password_323()
-    res       OUT store salt here
+    res       OUT store salt here 
     password  IN  password string as stored in mysql.user
   NOTE
     This function does not have length check for passwords. It will just crash
@@ -283,8 +284,8 @@ void get_salt_from_password_323(ulong *res, const char *password)
     Convert scrambled password from binary form to asciiz hex string.
   SYNOPSIS
     make_password_from_salt_323()
-    to    OUT store resulting string password here, at least 17 bytes
-    salt  IN  password in salt format, 2 ulongs
+    to    OUT store resulting string password here, at least 17 bytes 
+    salt  IN  password in salt format, 2 ulongs 
 */
 
 void make_password_from_salt_323(char *to, const ulong *salt)
@@ -333,7 +334,7 @@ void create_random_string(char *to, uint length, struct rand_struct *rand_st)
 
 char *octet2hex(char *to, const char *str, uint len)
 {
-  const char *str_end= str + len;
+  const char *str_end= str + len; 
   for (; str != str_end; ++str)
   {
     *to++= _dig_vec_upper[((uchar) *str) >> 4];
@@ -351,7 +352,7 @@ char *octet2hex(char *to, const char *str, uint len)
     to        OUT buffer to place result; must be at least len/2 bytes
     str, len  IN  begin, length for character string; str and to may not
                   overlap; len % 2 == 0
-*/
+*/ 
 
 static void
 hex2octet(uint8 *to, const char *str, uint len)
@@ -416,6 +417,7 @@ void my_make_scrambled_password(char *to, const char *password,
   *to++= PVERSION41_CHAR;
   octet2hex(to, (const char*) hash_stage2, SHA1_HASH_SIZE);
 }
+  
 
 /*
   Wrapper around my_make_scrambled_password() to maintain client lib ABI
@@ -443,11 +445,11 @@ void make_scrambled_password(char *to, const char *password)
     server's greeting.
   SYNOPSIS
     scramble()
-    buf       OUT store scrambled string here. The buf must be at least
-                  SHA1_HASH_SIZE bytes long.
-    message   IN  random message, must be exactly SCRAMBLE_LENGTH long and
+    buf       OUT store scrambled string here. The buf must be at least 
+                  SHA1_HASH_SIZE bytes long. 
+    message   IN  random message, must be exactly SCRAMBLE_LENGTH long and 
                   NULL-terminated.
-    password  IN  users' password
+    password  IN  users' password 
 */
 
 void
@@ -484,7 +486,7 @@ scramble(char *to, const char *message, const char *password)
     check_scramble()
     scramble     clients' reply, presumably produced by scramble()
     message      original random string, previously sent to client
-                 (presumably second argument of scramble()), must be
+                 (presumably second argument of scramble()), must be 
                  exactly SCRAMBLE_LENGTH long and NULL-terminated.
     hash_stage2  hex2octet-decoded database entry
     All params are IN.
@@ -513,7 +515,7 @@ check_scramble(const uchar *scramble_arg, const char *message,
   mysql_sha1_reset(&sha1_context);
   mysql_sha1_input(&sha1_context, buf, SHA1_HASH_SIZE);
   mysql_sha1_result(&sha1_context, hash_stage2_reassured);
-  return memcmp(hash_stage2, hash_stage2_reassured, SHA1_HASH_SIZE);
+  return test(memcmp(hash_stage2, hash_stage2_reassured, SHA1_HASH_SIZE));
 }
 
 /*
@@ -525,7 +527,7 @@ check_scramble(const uchar *scramble_arg, const char *message,
                   bytes long.
     password  IN  4.1.1 version value of user.password
 */
-
+    
 void get_salt_from_password(uint8 *hash_stage2, const char *password)
 {
   hex2octet(hash_stage2, password+1 /* skip '*' */, SHA1_HASH_SIZE * 2);
@@ -535,7 +537,7 @@ void get_salt_from_password(uint8 *hash_stage2, const char *password)
     Convert scrambled password from binary form to asciiz hex string.
   SYNOPSIS
     make_password_from_salt()
-    to    OUT store resulting string here, 2*SHA1_HASH_SIZE+2 bytes
+    to    OUT store resulting string here, 2*SHA1_HASH_SIZE+2 bytes 
     salt  IN  password in salt format
 */
 

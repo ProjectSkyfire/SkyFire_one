@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 #include <my_global.h>
 #include <my_sys.h>
 
-struct errentry
+struct errentry 
 {
   unsigned long oscode;   /* OS return value */
   int sysv_errno;  /* System V error code */
@@ -95,9 +95,9 @@ static int get_errno_from_oserr(unsigned long oserrno)
   int i;
 
   /* check the table for the OS error code */
-  for (i= 0; i < ERRTABLESIZE; ++i)
+  for (i= 0; i < ERRTABLESIZE; ++i) 
   {
-    if (oserrno == errtable[i].oscode)
+    if (oserrno == errtable[i].oscode) 
     {
       return  errtable[i].sysv_errno;
     }

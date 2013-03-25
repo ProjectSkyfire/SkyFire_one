@@ -20,27 +20,27 @@
 
 /*
   Check a file or path for accessability.
-
+ 
   SYNOPSIS
     file_access()
     path 	Path to file
     amode	Access method
-
+ 
   DESCRIPTION
-    This function wraps the normal access method because the access
-    available in MSVCRT> +reports that filenames such as LPT1 and
+    This function wraps the normal access method because the access 
+    available in MSVCRT> +reports that filenames such as LPT1 and 
     COM1 are valid (they are but should not be so for us).
-
+ 
   RETURN VALUES
   0    ok
   -1   error  (We use -1 as my_access is mapped to access on other platforms)
 */
 
-int my_access(const char *path, int amode)
-{
+int my_access(const char *path, int amode) 
+{ 
   WIN32_FILE_ATTRIBUTE_DATA fileinfo;
   BOOL result;
-
+	
   result= GetFileAttributesEx(path, GetFileExInfoStandard, &fileinfo);
   if (! result ||
       (fileinfo.dwFileAttributes & FILE_ATTRIBUTE_READONLY) && (amode & W_OK))
@@ -57,7 +57,7 @@ int my_access(const char *path, int amode)
   List of file names that causes problem on windows
 
   NOTE that one can also not have file names of type CON.TXT
-
+  
   NOTE: it is important to keep "CLOCK$" on the first place,
   we skip it in check_if_legal_tablename.
 */
@@ -75,7 +75,7 @@ static const char *reserved_names[]=
 /*
   Looks up a null-terminated string in a list,
   case insensitively.
-
+ 
   SYNOPSIS
     str_list_find()
     list        list of items
@@ -125,7 +125,7 @@ static char reserved_map[256]=
 
 /*
   Check if a table name may cause problems
-
+ 
   SYNOPSIS
     check_if_legal_tablename
     name 	Table name (without any extensions)
@@ -144,7 +144,8 @@ static char reserved_map[256]=
 int check_if_legal_tablename(const char *name)
 {
   DBUG_ENTER("check_if_legal_tablename");
-  DBUG_RETURN((reserved_map[(uchar) name[0]] & 1) &&
+  DBUG_RETURN(name[0] != 0 && name[1] != 0 &&
+              (reserved_map[(uchar) name[0]] & 1) &&
               (reserved_map[(uchar) name[1]] & 2) &&
               (reserved_map[(uchar) name[2]] & 4) &&
               str_list_find(&reserved_names[1], name));
@@ -154,7 +155,7 @@ int check_if_legal_tablename(const char *name)
 
 /*
   Check if a path will access a reserverd file name that may cause problems
-
+ 
   SYNOPSIS
     check_if_legal_filename
     path 	Path to file
@@ -180,7 +181,7 @@ int check_if_legal_filename(const char *path)
   {
     const char *reserved= *reserved_name;       /* never empty */
     const char *name= path;
-
+    
     do
     {
       if (*reserved != my_toupper(&my_charset_latin1, *name))

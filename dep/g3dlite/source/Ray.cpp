@@ -1,8 +1,8 @@
 /**
- @file Ray.cpp
-
+ @file Ray.cpp 
+ 
  @maintainer Morgan McGuire, http://graphics.cs.williams.edu
-
+ 
  @created 2002-07-12
  @edited  2004-03-19
  */
@@ -14,6 +14,7 @@
 #include "G3D/CollisionDetection.h"
 
 namespace G3D {
+
 void Ray::set(const Vector3& origin, const Vector3& direction) {
 	m_origin = origin;
 	m_direction = direction;
@@ -35,7 +36,7 @@ void Ray::set(const Vector3& origin, const Vector3& direction) {
 	c_yx = m_origin.x - ibyj * m_origin.y;
 	c_yz = m_origin.z - kbyj * m_origin.y;
 	c_zx = m_origin.x - ibyk * m_origin.z;
-	c_zy = m_origin.y - jbyk * m_origin.z;
+	c_zy = m_origin.y - jbyk * m_origin.z;	
 
 	//ray slope classification
 	if (m_direction.x < 0) {
@@ -116,7 +117,7 @@ void Ray::set(const Vector3& origin, const Vector3& direction) {
 						classification = PPP;
 					}
 				}
-			}
+			}			
 		}
 	}
 }
@@ -125,10 +126,12 @@ Ray::Ray(class BinaryInput& b) {
 	deserialize(b);
 }
 
+
 void Ray::serialize(class BinaryOutput& b) const {
 	m_origin.serialize(b);
 	m_direction.serialize(b);
 }
+
 
 void Ray::deserialize(class BinaryInput& b) {
 	m_origin.deserialize(b);
@@ -136,21 +139,26 @@ void Ray::deserialize(class BinaryInput& b) {
 	set(m_origin, m_direction);
 }
 
+
 Ray Ray::refract(
     const Vector3&  newOrigin,
     const Vector3&  normal,
     float           iInside,
     float           iOutside) const {
+
     Vector3 D = m_direction.refractionDirection(normal, iInside, iOutside);
     return Ray(newOrigin + (m_direction + normal * (float)sign(m_direction.dot(normal))) * 0.001f, D);
 }
 
+
 Ray Ray::reflect(
     const Vector3&  newOrigin,
     const Vector3&  normal) const {
+
     Vector3 D = m_direction.reflectionDirection(normal);
     return Ray(newOrigin + (D + normal) * 0.001f, D);
 }
+
 
 Vector3 Ray::intersection(const Plane& plane) const {
     float d;
@@ -166,17 +174,20 @@ Vector3 Ray::intersection(const Plane& plane) const {
     }
 }
 
+
 float Ray::intersectionTime(const class Sphere& sphere, bool solid) const {
     Vector3 dummy;
     return CollisionDetection::collisionTimeForMovingPointFixedSphere(
             m_origin, m_direction, sphere, dummy, dummy, solid);
 }
 
+
 float Ray::intersectionTime(const class Plane& plane) const {
     Vector3 dummy;
     return CollisionDetection::collisionTimeForMovingPointFixedPlane(
             m_origin, m_direction, plane, dummy);
 }
+
 
 float Ray::intersectionTime(const class Box& box) const {
     Vector3 dummy;
@@ -190,6 +201,7 @@ float Ray::intersectionTime(const class Box& box) const {
     }
 }
 
+
 float Ray::intersectionTime(const class AABox& box) const {
     Vector3 dummy;
     bool inside;
@@ -202,4 +214,5 @@ float Ray::intersectionTime(const class AABox& box) const {
         return time;
     }
 }
+
 }

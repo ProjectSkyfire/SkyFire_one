@@ -181,7 +181,7 @@ static uchar sort_order_cp932[]=
                        (0x80<=(c) && (c)<=0xfc))
 
 static uint ismbchar_cp932(CHARSET_INFO *cs __attribute__((unused)),
-             const char* p, const char *e)
+			 const char* p, const char *e)
 {
   return (iscp932head((uchar) *p) && (e-p)>1 && iscp932tail((uchar)p[1]) ? 2: 0);
 }
@@ -207,7 +207,7 @@ static MY_UNICASE_INFO c81[256]=
   /* 8130-813F */
   {0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},
   {0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},
-
+  
   {0x8140,0x8140,0x3000}, /* 8140-814F */
   {0x8141,0x8141,0x3001},
   {0x8142,0x8142,0x3002},
@@ -1267,7 +1267,7 @@ static MY_UNICASE_INFO cEE[256]=
   {0xEE4D,0xEE4D,0x7429},
   {0xEE4E,0xEE4E,0x742E},
   {0xEE4F,0xEE4F,0x7462},
-
+  
   {0xEE50,0xEE50,0x7489}, /* EE50 */
   {0xEE51,0xEE51,0x749F},
   {0xEE52,0xEE52,0x7501},
@@ -1692,8 +1692,8 @@ static MY_UNICASE_INFO *my_caseinfo_cp932[256]=
 };
 
 static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
-                      const uchar **a_res, size_t a_length,
-                      const uchar **b_res, size_t b_length)
+				      const uchar **a_res, size_t a_length,
+				      const uchar **b_res, size_t b_length)
 {
   const uchar *a= *a_res, *b= *b_res;
   const uchar *a_end= a + a_length;
@@ -1701,18 +1701,18 @@ static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
   while (a < a_end && b < b_end)
   {
     if (ismbchar_cp932(cs,(char*) a, (char*) a_end) &&
-    ismbchar_cp932(cs,(char*) b, (char*) b_end))
+	ismbchar_cp932(cs,(char*) b, (char*) b_end))
     {
       uint a_char= cp932code(*a, *(a+1));
       uint b_char= cp932code(*b, *(b+1));
       if (a_char != b_char)
-    return a_char - b_char;
+	return a_char - b_char;
       a += 2;
       b += 2;
     } else
     {
       if (sort_order_cp932[(uchar)*a] != sort_order_cp932[(uchar)*b])
-    return sort_order_cp932[(uchar)*a] - sort_order_cp932[(uchar)*b];
+	return sort_order_cp932[(uchar)*a] - sort_order_cp932[(uchar)*b];
       a++;
       b++;
     }
@@ -1723,8 +1723,8 @@ static int my_strnncoll_cp932_internal(CHARSET_INFO *cs,
 }
 
 static int my_strnncoll_cp932(CHARSET_INFO *cs __attribute__((unused)),
-                  const uchar *a, size_t a_length,
-                  const uchar *b, size_t b_length,
+			      const uchar *a, size_t a_length, 
+			      const uchar *b, size_t b_length,
                               my_bool b_is_prefix)
 {
   int res= my_strnncoll_cp932_internal(cs, &a, a_length, &b, b_length);
@@ -1734,7 +1734,7 @@ static int my_strnncoll_cp932(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 static int my_strnncollsp_cp932(CHARSET_INFO *cs __attribute__((unused)),
-                                const uchar *a, size_t a_length,
+                                const uchar *a, size_t a_length, 
                                 const uchar *b, size_t b_length,
                                 my_bool diff_if_only_endspace_difference
                                 __attribute__((unused)))
@@ -1767,7 +1767,7 @@ static int my_strnncollsp_cp932(CHARSET_INFO *cs __attribute__((unused)),
     for (; a < a_end ; a++)
     {
       if (*a != (uchar) ' ')
-    return (*a < (uchar) ' ') ? -swap : swap;
+	return (*a < (uchar) ' ') ? -swap : swap;
     }
   }
   return res;
@@ -1785,7 +1785,7 @@ static size_t my_strnxfrm_cp932(CHARSET_INFO *cs __attribute__((unused)),
     {
       *dest++ = *src++;
       if (dest < d_end && src < s_end)
-    *dest++ = *src++;
+	*dest++ = *src++;
     }
     else
       *dest++ = sort_order_cp932[(uchar)*src++];
@@ -34573,11 +34573,11 @@ static uint16 unicode_to_cp932[65536]=
 
 /*
   CP932 encoding components:
-
+  
   [00..7F]                        = ASCII [U+0000..U+007F]
   [A1..DF]                        = JIS-X-0201 Katakana [U+FF61..U+FF9F]
   [81..9F,E0..FC][40..7E,80..FC]  = JIS-X-0208 (MS version)
-
+  
   [80,A0,FD,FE,FF]                = Invalid leading byte
 */
 
@@ -34598,7 +34598,7 @@ static uint16 unicode_to_cp932[65536]=
 
 static int
 my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
-           my_wc_t *pwc, const uchar *s, const uchar *e){
+	       my_wc_t *pwc, const uchar *s, const uchar *e){
   int hi;
 
   if (s >= e)
@@ -34641,7 +34641,7 @@ my_mb_wc_cp932(CHARSET_INFO *cs  __attribute__((unused)),
 */
 static int
 my_wc_mb_cp932(CHARSET_INFO *cs __attribute__((unused)),
-           my_wc_t wc, uchar *s, uchar *e)
+	       my_wc_t wc, uchar *s, uchar *e)
 {
   int code;
 
@@ -34684,7 +34684,7 @@ size_t my_numcells_cp932(CHARSET_INFO *cs __attribute__((unused)),
   size_t clen= 0;
   const uchar *b= (const uchar *) str;
   const uchar *e= (const uchar *) str_end;
-
+  
   for (clen= 0; b < e; )
   {
     if (*b >= 0xA1 && *b <= 0xDF)

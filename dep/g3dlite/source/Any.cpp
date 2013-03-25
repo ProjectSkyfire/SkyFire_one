@@ -3,7 +3,7 @@
 
  @author Morgan McGuire
  @author Shawn Yarbrough
-
+  
  @created 2006-06-11
  @edited  2010-07-24
 
@@ -21,6 +21,7 @@
 #include <iostream>
 
 namespace G3D {
+
 std::string Any::resolveStringAsFilename() const {
     verifyType(STRING);
     std::string f = FileSystem::resolve(string(), sourceDirectory());
@@ -36,18 +37,22 @@ std::string Any::resolveStringAsFilename() const {
     }
 }
 
+
 bool Any::nameBeginsWith(const std::string& s) const {
     return nameBeginsWith(s.c_str());
 }
+
 
 bool Any::nameEquals(const std::string& s) const {
     // If std::string has a fast hash compare, use it first
     return (name() == s) || nameEquals(s.c_str());
 }
 
+
 inline static char toLower(char c) {
     return ((c >= 'A') && (c <= 'Z')) ? (c - 'A' + 'a') : c;
 }
+
 
 bool Any::nameBeginsWith(const char* s) const {
     verifyType(Any::ARRAY, Any::TABLE);
@@ -65,6 +70,7 @@ bool Any::nameBeginsWith(const char* s) const {
     return (*s == '\0');
 }
 
+
 bool Any::nameEquals(const char* s) const {
     verifyType(Any::ARRAY, Any::TABLE);
 #ifdef G3D_WIN32
@@ -72,7 +78,9 @@ bool Any::nameEquals(const char* s) const {
 #else
     return strcasecmp(name().c_str(), s) == 0;
 #endif
+
 }
+
 
 void Any::beforeRead() const {
     if (isPlaceholder()) {
@@ -85,14 +93,15 @@ void Any::beforeRead() const {
         e.line      = m_data->source.line;
         e.character = m_data->source.character;
         e.key       = m_placeholderName;
-        e.message   =
+        e.message   = 
             "This exception may have been thrown later than "
             "the actual operator[] invocation.";
 
         throw e;
-    }
+    } 
 }
 
+   
 Any::Data* Any::Data::create(const Data* d) {
     Data* p = create(d->type);
 
@@ -123,6 +132,7 @@ Any::Data* Any::Data::create(const Data* d) {
 
     return p;
 }
+
 
 Any::Data* Any::Data::create(Any::Type t) {
     size_t s = sizeof(Data);
@@ -169,10 +179,11 @@ Any::Data* Any::Data::create(Any::Type t) {
     case TABLE:
         p->value.t = new (p + 1) AnyTable();
         break;
-    }
+    }    
 
     return p;
 }
+
 
 void Any::Data::destroy(Data* d) {
     if (d != NULL) {
@@ -180,6 +191,7 @@ void Any::Data::destroy(Data* d) {
         MemoryManager::create()->free(d);
     }
 }
+
 
 Any::Data::~Data() {
     debugAssertM(referenceCount.value() <= 0, "Deleted while still referenced.");
@@ -209,6 +221,7 @@ Any::Data::~Data() {
     value.s = NULL;
 }
 
+
 //////////////////////////////////////////////////////////////
 
 bool Any::containsKey(const std::string& x) const {
@@ -221,6 +234,7 @@ bool Any::containsKey(const std::string& x) const {
     return (a != NULL) && (! a->isPlaceholder());
 }
 
+
 void Any::dropReference() {
     if (m_data && m_data->referenceCount.decrement() <= 0) {
         // This was the last reference to the shared data
@@ -228,6 +242,7 @@ void Any::dropReference() {
     }
     m_data = NULL;
 }
+
 
 void Any::ensureMutable() {
     if (m_data && (m_data->referenceCount.value() >= 1)) {
@@ -239,41 +254,52 @@ void Any::ensureMutable() {
     }
 }
 
+
 Any::Any() : m_type(NONE), m_data(NULL) {
 }
+
 
 Any::Any(TextInput& t) : m_type(NONE), m_data(NULL) {
     deserialize(t);
 }
+
 
 Any::Any(const Any& x) : m_type(NONE), m_data(NULL) {
     x.beforeRead();
     *this = x;
 }
 
+
 Any::Any(double x) : m_type(NUMBER), m_simpleValue(x), m_data(NULL) {
 }
+
 
 #ifdef G3D_32BIT
 Any::Any(int64 x) : m_type(NUMBER), m_simpleValue((double)x), m_data(NULL) {
 }
 #endif    // G3D_32BIT
 
+
 Any::Any(long x) : m_type(NUMBER), m_simpleValue((double)x), m_data(NULL) {
 }
+
 
 Any::Any(int x) : m_type(NUMBER), m_simpleValue((double)x), m_data(NULL) {
 }
 
+
 Any::Any(short x) : m_type(NUMBER), m_simpleValue((double)x), m_data(NULL) {
 }
+
 
 Any::Any(bool x) : m_type(BOOLEAN), m_simpleValue(x), m_data(NULL) {
 }
 
+
 Any::Any(const std::string& s) : m_type(STRING), m_data(Data::create(STRING)) {
     *(m_data->value.s) = s;
 }
+
 
 Any::Any(const char* s) : m_type(STRING), m_data(NULL) {
     if (s == NULL) {
@@ -284,6 +310,7 @@ Any::Any(const char* s) : m_type(STRING), m_data(NULL) {
     }
 }
 
+
 Any::Any(Type t, const std::string& name) : m_type(t), m_data(NULL) {
     alwaysAssertM(t == ARRAY || t == TABLE, "Can only create ARRAY or TABLE from Type enum.");
 
@@ -293,9 +320,11 @@ Any::Any(Type t, const std::string& name) : m_type(t), m_data(NULL) {
     }
 }
 
+
 Any::~Any() {
     dropReference();
 }
+
 
 void Any::beforeWrite() {
     if (isPlaceholder()) {
@@ -326,38 +355,44 @@ Any& Any::operator=(const Any& x) {
     return *this;
 }
 
+
 Any& Any::operator=(double x) {
     *this = Any(x);
     return *this;
 }
 
+
 Any& Any::operator=(int x) {
     return (*this = Any(x));
 }
+
 
 Any& Any::operator=(bool x) {
     *this = Any(x);
     return *this;
 }
 
+
 Any& Any::operator=(const std::string& x) {
     *this = Any(x);
     return *this;
 }
+
 
 Any& Any::operator=(const char* x) {
     *this = Any(x);
     return *this;
 }
 
+
 Any& Any::operator=(Type t) {
     switch (t) {
-    case NONE:
+    case NONE:  
         *this = Any();
         break;
 
-    case TABLE:
-    case ARRAY:
+    case TABLE: 
+    case ARRAY: 
         *this = Any(t);
         break;
 
@@ -368,10 +403,12 @@ Any& Any::operator=(Type t) {
     return *this;
 }
 
+
 Any::Type Any::type() const {
     beforeRead();
     return m_type;
 }
+
 
 const std::string& Any::comment() const {
     beforeRead();
@@ -384,16 +421,19 @@ const std::string& Any::comment() const {
     }
 }
 
+
 void Any::setComment(const std::string& c) {
     beforeRead();
     ensureData();
     m_data->comment = c;
 }
 
+
 bool Any::isNone() const {
     beforeRead();
     return (m_type == NONE);
 }
+
 
 double Any::number() const {
     beforeRead();
@@ -401,17 +441,20 @@ double Any::number() const {
     return m_simpleValue.n;
 }
 
+
 const std::string& Any::string() const {
     beforeRead();
     verifyType(STRING);
     return *(m_data->value.s);
 }
 
+
 bool Any::boolean() const {
     beforeRead();
     verifyType(BOOLEAN);
     return m_simpleValue.b;
 }
+
 
 const std::string& Any::name() const {
     beforeRead();
@@ -423,11 +466,13 @@ const std::string& Any::name() const {
     }
 }
 
+
 void Any::setName(const std::string& n) {
     beforeRead();
     ensureData();
     m_data->name = n;
 }
+
 
 int Any::size() const {
     beforeRead();
@@ -444,10 +489,12 @@ int Any::size() const {
     } // switch (m_type)
 }
 
+
 int Any::length() const {
     beforeRead();
     return size();
 }
+
 
 void Any::resize(int n) {
     beforeRead();
@@ -455,6 +502,7 @@ void Any::resize(int n) {
     verifyType(ARRAY);
     m_data->value.a->resize(n);
 }
+
 
 void Any::clear() {
     beforeRead();
@@ -472,6 +520,7 @@ void Any::clear() {
     }
 }
 
+
 const Any& Any::operator[](int i) const {
     beforeRead();
     verifyType(ARRAY);
@@ -479,6 +528,7 @@ const Any& Any::operator[](int i) const {
     Array<Any>& array = *(m_data->value.a);
     return array[i];
 }
+
 
 Any& Any::next() {
     beforeRead();
@@ -488,6 +538,7 @@ Any& Any::next() {
     return (*this)[n];
 }
 
+
 Any& Any::operator[](int i) {
     beforeRead();
     verifyType(ARRAY);
@@ -496,12 +547,14 @@ Any& Any::operator[](int i) {
     return array[i];
 }
 
+
 const Array<Any>& Any::array() const {
     beforeRead();
     verifyType(ARRAY);
     debugAssert(m_data != NULL);
     return *(m_data->value.a);
 }
+
 
 void Any::append(const Any& x0) {
     beforeRead();
@@ -510,11 +563,13 @@ void Any::append(const Any& x0) {
     m_data->value.a->append(x0);
 }
 
+
 void Any::append(const Any& x0, const Any& x1) {
     beforeRead();
     append(x0);
     append(x1);
 }
+
 
 void Any::append(const Any& x0, const Any& x1, const Any& x2) {
     beforeRead();
@@ -522,6 +577,7 @@ void Any::append(const Any& x0, const Any& x1, const Any& x2) {
     append(x1);
     append(x2);
 }
+
 
 void Any::append(const Any& x0, const Any& x1, const Any& x2, const Any& x3) {
     beforeRead();
@@ -531,12 +587,14 @@ void Any::append(const Any& x0, const Any& x1, const Any& x2, const Any& x3) {
     append(x3);
 }
 
+
 const Table<std::string, Any>& Any::table() const {
     beforeRead();
     verifyType(TABLE);
     debugAssert(m_data != NULL);
     return *(m_data->value.t);
 }
+
 
 const Any& Any::operator[](const std::string& x) const {
     beforeRead();
@@ -556,6 +614,7 @@ const Any& Any::operator[](const std::string& x) const {
     }
     return *value;
 }
+
 
 Any& Any::operator[](const std::string& key) {
     beforeRead();
@@ -577,6 +636,7 @@ Any& Any::operator[](const std::string& key) {
     return value;
 }
 
+
 void Any::set(const std::string& k, const Any& v) {
     beforeRead();
     v.beforeRead();
@@ -585,6 +645,7 @@ void Any::set(const std::string& k, const Any& v) {
     Table<std::string, Any>& table = *(m_data->value.t);
     table.set(k, v);
 }
+
 
 const Any& Any::get(const std::string& x, const Any& defaultVal) const {
     beforeRead();
@@ -595,6 +656,7 @@ const Any& Any::get(const std::string& x, const Any& defaultVal) const {
         return defaultVal;
     }
 }
+
 
 bool Any::operator==(const Any& x) const {
     beforeRead();
@@ -661,13 +723,16 @@ bool Any::operator==(const Any& x) const {
         alwaysAssertM(false, "Unknown type.");
         return false;
     }    // switch (m_type)
+
 }
+
 
 bool Any::operator!=(const Any& x) const {
     beforeRead();
     x.beforeRead();
     return !operator==(x);
 }
+
 
 static void getDeserializeSettings(TextInput::Settings& settings) {
     settings.cppBlockComments = true;
@@ -679,6 +744,7 @@ static void getDeserializeSettings(TextInput::Settings& settings) {
     settings.caseSensitive = false;
 }
 
+
 std::string Any::unparse() const {
     beforeRead();
     TextOutput::Settings settings;
@@ -686,6 +752,7 @@ std::string Any::unparse() const {
     serialize(to);
     return to.commitString();
 }
+
 
 void Any::parse(const std::string& src) {
     beforeRead();
@@ -696,6 +763,7 @@ void Any::parse(const std::string& src) {
     deserialize(ti);
 }
 
+
 void Any::load(const std::string& filename) {
     beforeRead();
     TextInput::Settings settings;
@@ -704,6 +772,7 @@ void Any::load(const std::string& filename) {
     TextInput ti(FileSystem::resolve(filename), settings);
     deserialize(ti);
 }
+
 
 void Any::save(const std::string& filename) const {
     beforeRead();
@@ -715,6 +784,7 @@ void Any::save(const std::string& filename) const {
     to.commit();
 }
 
+
 static bool needsQuotes(const std::string& s) {
     if (! isLetter(s[0]) && (s[0] != '_')) {
         return true;
@@ -722,13 +792,13 @@ static bool needsQuotes(const std::string& s) {
 
     for (int i = 0; i < (int)s.length(); ++i) {
         char c = s[i];
-
+        
         // peek character
         char p = (i == (int)s.length() - 1) ? '_' : s[i + 1];
 
         // Identify separators
         if ((c == '-' && p == '>') ||
-            (c == ':' && p == ':')) {
+            (c == ':' && p == ':')) {            
             // Skip over this symbol
             ++i;
             continue;
@@ -742,6 +812,7 @@ static bool needsQuotes(const std::string& s) {
 
     return false;
 }
+
 
 // TODO: if the output will fit on one line, compress tables and arrays into a single line
 void Any::serialize(TextOutput& to) const {
@@ -786,6 +857,7 @@ void Any::serialize(TextOutput& to) const {
         keys.sort();
 
         for (int i = 0; i < keys.size(); ++i) {
+
             to.writeSymbol(keys[i]);
             to.writeSymbol("=");
             table[keys[i]].serialize(to);
@@ -821,7 +893,7 @@ void Any::serialize(TextOutput& to) const {
                 to.writeSymbol(",");
                 to.writeNewline();
             }
-
+            
             // Put the close paren on an array right behind the last element
         }
         to.popIndent();
@@ -830,6 +902,7 @@ void Any::serialize(TextOutput& to) const {
     }
     }
 }
+
 
 void Any::deserializeComment(TextInput& ti, Token& token, std::string& comment) {
     // Parse comments
@@ -851,10 +924,12 @@ static bool isOpen(const char c) {
     return c == '(' || c == '[' || c == '{';
 }
 
+
 /** True if \a c is an open paren of some form */
 static bool isClose(const char c) {
     return c == ')' || c == ']' || c == '}';
 }
+
 
 void Any::deserializeName(TextInput& ti, Token& token, std::string& name) {
     debugAssert(token.type() == Token::SYMBOL);
@@ -866,12 +941,13 @@ void Any::deserializeName(TextInput& ti, Token& token, std::string& name) {
         token = ti.readSignificant();
 
         if (token.type() != Token::SYMBOL) {
-            throw ParseError(ti.filename(), token.line(), token.character(),
+            throw ParseError(ti.filename(), token.line(), token.character(), 
                 "Expected symbol while parsing Any");
         }
         s = token.string();
     }
 }
+
 
 void Any::deserialize(TextInput& ti) {
     beforeRead();
@@ -880,6 +956,7 @@ void Any::deserialize(TextInput& ti) {
     // Restore the last token
     ti.push(token);
 }
+
 
 void Any::deserialize(TextInput& ti, Token& token) {
     // Deallocate old data
@@ -890,7 +967,7 @@ void Any::deserialize(TextInput& ti, Token& token) {
     // Skip leading newlines
     while (token.type() == Token::NEWLINE) {
         token = ti.read();
-    }
+    } 
 
     std::string comment;
     if (token.type() == Token::COMMENT) {
@@ -900,13 +977,13 @@ void Any::deserialize(TextInput& ti, Token& token) {
     if (token.type() == Token::END) {
         // There should never be a comment without an Any following it; even
         // if the file ends with some commented out stuff,
-        // that should not happen after a comma, so we'd never read that
+        // that should not happen after a comma, so we'd never read that 
         // far in a proper file.
-        throw ParseError(ti.filename(), token.line(), token.character(),
+        throw ParseError(ti.filename(), token.line(), token.character(), 
             "File ended without a properly formed Any");
     }
 
-    // Do we need to read one more token after the end?
+    // Do we need to read one more token after the end? 
     bool needRead = true;
 
     switch (token.type()) {
@@ -935,7 +1012,7 @@ void Any::deserialize(TextInput& ti, Token& token) {
         // Pragma, Named Array, Named Table, Array, Table, or NONE
         if (token.string() == "#") {
             // Pragma
-
+            
             // Currently, "include" is the only pragma allowed
             token = ti.read();
             if (! ((token.type() == Token::SYMBOL) &&
@@ -943,7 +1020,7 @@ void Any::deserialize(TextInput& ti, Token& token) {
                 throw ParseError(ti.filename(), token.line(), token.character(),
                                  "Expected 'include' pragma after '#'");
             }
-
+            
             ti.readSymbol("(");
             const std::string& includeName = ti.readString();
 
@@ -961,10 +1038,11 @@ void Any::deserialize(TextInput& ti, Token& token) {
 
             // Update the source information
             ensureData();
-            m_data->source.filename +=
+            m_data->source.filename += 
                 format(" [included from %s:%d(%d)]", ti.filename().c_str(), token.line(), token.character());
-
+            
             ti.readSymbol(")");
+
         } else if (toUpper(token.string()) == "NONE") {
             // Nothing left to do; we initialized to NONE originally
             ensureData();
@@ -979,7 +1057,7 @@ void Any::deserialize(TextInput& ti, Token& token) {
             std::string name;
             deserializeName(ti, token, name);
             if (token.type() != Token::SYMBOL) {
-                throw ParseError(ti.filename(), token.line(), token.character(),
+                throw ParseError(ti.filename(), token.line(), token.character(), 
                     "Malformed Any TABLE or ARRAY; must start with [, (, or {");
             }
 
@@ -987,7 +1065,7 @@ void Any::deserialize(TextInput& ti, Token& token) {
                 // Array or table
                 deserializeBody(ti, token);
             } else {
-                throw ParseError(ti.filename(), token.line(), token.character(),
+                throw ParseError(ti.filename(), token.line(), token.character(), 
                     "Malformed Any TABLE or ARRAY; must start with [, (, or {");
             }
 
@@ -1000,8 +1078,9 @@ void Any::deserialize(TextInput& ti, Token& token) {
         break;
 
     default:
-        throw ParseError(ti.filename(), token.line(), token.character(),
+        throw ParseError(ti.filename(), token.line(), token.character(), 
             "Unexpected token");
+
     } // switch
 
     if (! comment.empty()) {
@@ -1015,15 +1094,18 @@ void Any::deserialize(TextInput& ti, Token& token) {
     }
 }
 
+
 void Any::ensureData() {
     if (m_data == NULL) {
         m_data = Data::create(m_type);
     }
 }
 
+
 static bool isSeparator(char c) {
     return c == ',' || c == ';';
 }
+
 
 void Any::readUntilCommaOrClose(TextInput& ti, Token& token) {
     bool atClose = (token.type() == Token::SYMBOL) && isClose(token.string()[0]);
@@ -1037,7 +1119,7 @@ void Any::readUntilCommaOrClose(TextInput& ti, Token& token) {
             break;
 
         default:
-            throw ParseError(ti.filename(), token.line(), token.character(),
+            throw ParseError(ti.filename(), token.line(), token.character(), 
                 "Expected a comma or close paren");
         }
 
@@ -1047,12 +1129,13 @@ void Any::readUntilCommaOrClose(TextInput& ti, Token& token) {
     }
 }
 
+
 void Any::deserializeBody(TextInput& ti, Token& token) {
     char closeSymbol = '}';
     m_type = TABLE;
-
+    
     const char c = token.string()[0];
-
+    
     if (c != '{') {
         m_type = ARRAY;
         // Chose the appropriate close symbol
@@ -1067,6 +1150,7 @@ void Any::deserializeBody(TextInput& ti, Token& token) {
     token = ti.read();
 
     while (! ((token.type() == Token::SYMBOL) && (token.string()[0] == closeSymbol))) {
+
         // Read any leading comment.  This must be done here (and not in the recursive deserialize
         // call) in case the body contains only a comment.
         std::string comment;
@@ -1080,13 +1164,13 @@ void Any::deserializeBody(TextInput& ti, Token& token) {
         // Pointer the value being read
         Any a = NULL;
         std::string key;
-
+        
         if (m_type == TABLE) {
             // Read the key
             if (token.type() != Token::SYMBOL && token.type() != Token::STRING) {
                 throw ParseError(ti.filename(), token.line(), token.character(), "Expected a name");
-            }
-
+            } 
+            
             key = token.string();
             // Consume everything up to the = sign, returning the "=" sign.
             token = ti.readSignificant();
@@ -1105,7 +1189,7 @@ void Any::deserializeBody(TextInput& ti, Token& token) {
             a.ensureData();
             a.m_data->comment = trimWhitespace(comment + "\n" + a.m_data->comment);
         }
-
+        
         if (m_type == TABLE) {
             set(key, a);
         } else {
@@ -1125,30 +1209,36 @@ void Any::deserializeBody(TextInput& ti, Token& token) {
     token = ti.read();
 }
 
+
 Any::operator int() const {
     beforeRead();
     return iRound(number());
 }
+
 
 Any::operator float() const {
     beforeRead();
     return float(number());
 }
 
+
 Any::operator double() const {
     beforeRead();
     return number();
 }
+
 
 Any::operator bool() const {
     beforeRead();
     return boolean();
 }
 
+
 Any::operator std::string() const {
     beforeRead();
     return string();
 }
+
 
 const Any::Source& Any::source() const {
     static Source s;
@@ -1159,6 +1249,7 @@ const Any::Source& Any::source() const {
     }
 }
 
+
 std::string Any::sourceDirectory() const {
     if (m_data) {
         return FilePath::parent(m_data->source.filename);
@@ -1166,6 +1257,7 @@ std::string Any::sourceDirectory() const {
         return "";
     }
 }
+
 
 void Any::verify(bool value, const std::string& message) const {
     beforeRead();
@@ -1191,10 +1283,12 @@ void Any::verify(bool value, const std::string& message) const {
     }
 }
 
+
 void Any::verifyName(const std::string& n) const {
     beforeRead();
     verify(beginsWith(toUpper(name()), toUpper(n)), "Name must begin with " + n);
 }
+
 
 void Any::verifyName(const std::string& n, const std::string& m) const {
     beforeRead();
@@ -1203,6 +1297,7 @@ void Any::verifyName(const std::string& n, const std::string& m) const {
            beginsWith(x, toUpper(m)), "Name must begin with " + n + " or " + m);
 }
 
+
 void Any::verifyType(Type t) const {
     beforeRead();
     if (type() != t) {
@@ -1210,12 +1305,14 @@ void Any::verifyType(Type t) const {
     }
 }
 
+
 void Any::verifyType(Type t0, Type t1) const {
     beforeRead();
     if (type() != t0 && type() != t1) {
         verify(false, "Must have type " + toString(t0) + " or " + toString(t1));
     }
 }
+
 
 void Any::verifySize(int low, int high) const {
     beforeRead();
@@ -1225,6 +1322,7 @@ void Any::verifySize(int low, int high) const {
     }
 }
 
+
 void Any::verifySize(int s) const {
     beforeRead();
     verifyType(ARRAY, TABLE);
@@ -1233,8 +1331,9 @@ void Any::verifySize(int s) const {
     }
 }
 
+
 std::string Any::toString(Type t) {
-    switch (t) {
+    switch(t) {
     case NONE:    return "NONE";
     case BOOLEAN: return "BOOLEAN";
     case NUMBER:  return "NUMBER";
@@ -1246,4 +1345,6 @@ std::string Any::toString(Type t) {
         return "";
     }
 }
+
 }    // namespace G3D
+

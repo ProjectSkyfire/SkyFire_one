@@ -52,9 +52,9 @@ void safe_mutex_global_init(void)
 }
 
 int safe_mutex_init(safe_mutex_t *mp,
-            const pthread_mutexattr_t *attr __attribute__((unused)),
-            const char *file,
-            uint line)
+		    const pthread_mutexattr_t *attr __attribute__((unused)),
+		    const char *file,
+		    uint line)
 {
   bzero((char*) mp,sizeof(*mp));
   pthread_mutex_init(&mp->global,MY_MUTEX_INIT_ERRCHK);
@@ -98,8 +98,8 @@ int safe_mutex_lock(safe_mutex_t *mp, my_bool try_lock, const char *file, uint l
   if (!mp->file)
   {
     fprintf(stderr,
-        "safe_mutex: Trying to lock unitialized mutex at %s, line %d\n",
-        file, line);
+	    "safe_mutex: Trying to lock unitialized mutex at %s, line %d\n",
+	    file, line);
     fflush(stderr);
     abort();
   }
@@ -152,7 +152,7 @@ int safe_mutex_lock(safe_mutex_t *mp, my_bool try_lock, const char *file, uint l
   if (error || (error=pthread_mutex_lock(&mp->global)))
   {
     fprintf(stderr,"Got error %d when trying to lock mutex at %s, line %d\n",
-        error, file, line);
+	    error, file, line);
     fflush(stderr);
     abort();
   }
@@ -177,14 +177,14 @@ int safe_mutex_unlock(safe_mutex_t *mp,const char *file, uint line)
   if (mp->count == 0)
   {
     fprintf(stderr,"safe_mutex: Trying to unlock mutex that wasn't locked at %s, line %d\n            Last used at %s, line: %d\n",
-        file,line,mp->file ? mp->file : "",mp->line);
+	    file,line,mp->file ? mp->file : "",mp->line);
     fflush(stderr);
     abort();
   }
   if (!pthread_equal(pthread_self(),mp->thread))
   {
     fprintf(stderr,"safe_mutex: Trying to unlock mutex at %s, line %d  that was locked by another thread at: %s, line: %d\n",
-        file,line,mp->file,mp->line);
+	    file,line,mp->file,mp->line);
     fflush(stderr);
     abort();
   }
@@ -207,7 +207,7 @@ int safe_mutex_unlock(safe_mutex_t *mp,const char *file, uint line)
 }
 
 int safe_cond_wait(pthread_cond_t *cond, safe_mutex_t *mp, const char *file,
-           uint line)
+		   uint line)
 {
   int error;
   pthread_mutex_lock(&mp->global);
@@ -220,7 +220,7 @@ int safe_cond_wait(pthread_cond_t *cond, safe_mutex_t *mp, const char *file,
   if (!pthread_equal(pthread_self(),mp->thread))
   {
     fprintf(stderr,"safe_mutex: Trying to cond_wait on a mutex at %s, line %d  that was locked by another thread at: %s, line: %d\n",
-        file,line,mp->file,mp->line);
+	    file,line,mp->file,mp->line);
     fflush(stderr);
     abort();
   }
@@ -228,7 +228,7 @@ int safe_cond_wait(pthread_cond_t *cond, safe_mutex_t *mp, const char *file,
   if (mp->count-- != 1)
   {
     fprintf(stderr,"safe_mutex:  Count was %d on locked mutex at %s, line %d\n",
-        mp->count+1, file, line);
+	    mp->count+1, file, line);
     fflush(stderr);
     abort();
   }
@@ -245,8 +245,8 @@ int safe_cond_wait(pthread_cond_t *cond, safe_mutex_t *mp, const char *file,
   if (mp->count++)
   {
     fprintf(stderr,
-        "safe_mutex:  Count was %d in thread 0x%lx when locking mutex at %s, line %d\n",
-        mp->count-1, my_thread_dbug_id(), file, line);
+	    "safe_mutex:  Count was %d in thread 0x%lx when locking mutex at %s, line %d\n",
+	    mp->count-1, my_thread_dbug_id(), file, line);
     fflush(stderr);
     abort();
   }
@@ -282,8 +282,8 @@ int safe_cond_timedwait(pthread_cond_t *cond, safe_mutex_t *mp,
   if (mp->count++)
   {
     fprintf(stderr,
-        "safe_mutex:  Count was %d in thread 0x%lx when locking mutex at %s, line %d (error: %d (%d))\n",
-        mp->count-1, my_thread_dbug_id(), file, line, error, error);
+	    "safe_mutex:  Count was %d in thread 0x%lx when locking mutex at %s, line %d (error: %d (%d))\n",
+	    mp->count-1, my_thread_dbug_id(), file, line, error, error);
     fflush(stderr);
     abort();
   }
@@ -299,19 +299,19 @@ int safe_mutex_destroy(safe_mutex_t *mp, const char *file, uint line)
   if (!mp->file)
   {
     fprintf(stderr,
-        "safe_mutex: Trying to destroy unitialized mutex at %s, line %d\n",
-        file, line);
+	    "safe_mutex: Trying to destroy unitialized mutex at %s, line %d\n",
+	    file, line);
     fflush(stderr);
     abort();
   }
   if (mp->count != 0)
   {
     fprintf(stderr,"safe_mutex: Trying to destroy a mutex that was locked at %s, line %d at %s, line %d\n",
-        mp->file,mp->line, file, line);
+	    mp->file,mp->line, file, line);
     fflush(stderr);
     abort();
   }
-#ifdef __WIN__
+#ifdef __WIN__ 
   pthread_mutex_destroy(&mp->global);
   pthread_mutex_destroy(&mp->mutex);
 #else
@@ -381,7 +381,7 @@ void safe_mutex_end(FILE *file __attribute__((unused)))
     for (ptr= safe_mutex_root ; ptr ; ptr= ptr->next)
     {
       fprintf(file, "\tMutex initiated at line %4u in '%s'\n",
-          ptr->init_line, ptr->init_file);
+	      ptr->init_line, ptr->init_file);
       (void) fflush(file);
     }
   }
@@ -421,8 +421,8 @@ ulong mutex_delay(ulong delayloops)
   for (i = 0; i < delayloops * 50; i++)
     j += i;
 
-  return(j);
-}
+  return(j); 
+}	
 
 #define MY_PTHREAD_FASTMUTEX_SPINS 8
 #define MY_PTHREAD_FASTMUTEX_DELAY 4
@@ -433,11 +433,11 @@ int my_pthread_fastmutex_init(my_pthread_fastmutex_t *mp,
                               const pthread_mutexattr_t *attr)
 {
   if ((cpu_count > 1) && (attr == MY_MUTEX_INIT_FAST))
-    mp->spins= MY_PTHREAD_FASTMUTEX_SPINS;
+    mp->spins= MY_PTHREAD_FASTMUTEX_SPINS; 
   else
     mp->spins= 0;
   mp->rng_state= 1;
-  return pthread_mutex_init(&mp->mutex, attr);
+  return pthread_mutex_init(&mp->mutex, attr); 
 }
 
 /**
@@ -491,5 +491,5 @@ void fastmutex_global_init(void)
   cpu_count= sysconf(_SC_NPROCESSORS_CONF);
 #endif
 }
-
-#endif /* defined(MY_PTHREAD_FASTMUTEX) && !defined(SAFE_MUTEX) */
+  
+#endif /* defined(MY_PTHREAD_FASTMUTEX) && !defined(SAFE_MUTEX) */ 

@@ -24,7 +24,7 @@
   SYNOPSIS
     my_open()
       FileName	Fully qualified file name
-      Flags	Read | write
+      Flags	Read | write 
       MyFlags	Special flags
 
   RETURN VALUE
@@ -32,14 +32,14 @@
 */
 
 File my_open(const char *FileName, int Flags, myf MyFlags)
-                /* Path-name of file */
-                /* Read | write .. */
-                /* Special flags */
+				/* Path-name of file */
+				/* Read | write .. */
+				/* Special flags */
 {
   File fd;
   DBUG_ENTER("my_open");
   DBUG_PRINT("my",("Name: '%s'  Flags: %d  MyFlags: %d",
-           FileName, Flags, MyFlags));
+		   FileName, Flags, MyFlags));
 #if defined(_WIN32)
   fd= my_win_open(FileName, Flags);
 #elif !defined(NO_OPEN_3)
@@ -49,7 +49,7 @@ File my_open(const char *FileName, int Flags, myf MyFlags)
 #endif
 
   DBUG_RETURN(my_register_filename(fd, FileName, FILE_BY_OPEN,
-                   EE_FILENOTFOUND, MyFlags));
+				   EE_FILENOTFOUND, MyFlags));
 } /* my_open */
 
 /*
@@ -99,7 +99,7 @@ int my_close(File fd, myf MyFlags)
 
 /*
   Register file in my_file_info[]
-
+   
   SYNOPSIS
     my_register_filename()
     fd			   File number opened, -1 if error on open
@@ -115,14 +115,14 @@ int my_close(File fd, myf MyFlags)
 */
 
 File my_register_filename(File fd, const char *FileName, enum file_type
-              type_of_file, uint error_message_number, myf MyFlags)
+			  type_of_file, uint error_message_number, myf MyFlags)
 {
   DBUG_ENTER("my_register_filename");
   if ((int) fd >= MY_FILE_MIN)
   {
     if ((uint) fd >= my_file_limit)
     {
-#if !defined(HAVE_PREAD)
+#if !defined(HAVE_PREAD) 
       my_errno= EMFILE;
 #else
       thread_safe_increment(my_file_opened,&THR_LOCK_open);

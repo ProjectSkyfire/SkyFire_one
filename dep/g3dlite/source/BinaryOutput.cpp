@@ -1,9 +1,9 @@
 /**
  @file BinaryOutput.cpp
-
+ 
  @author Morgan McGuire, http://graphics.cs.williams.edu
  Copyright 2002-2010, Morgan McGuire, All rights reserved.
-
+ 
  @created 2002-02-20
  @edited  2010-03-17
  */
@@ -22,6 +22,10 @@
 #    include <errno.h>
 #endif
 
+#ifdef __CYGWIN__
+#    include <errno.h>
+#endif
+
 // Largest memory buffer that the system will use for writing to
 // disk.  After this (or if the system runs out of memory)
 // chunks of the file will be dumped to disk.
@@ -30,11 +34,13 @@
 #define MAX_BINARYOUTPUT_BUFFER_SIZE 400000000
 
 namespace G3D {
+
 void BinaryOutput::writeBool8(const std::vector<bool>& out, int n) {
     for (int i = 0; i < n; ++i) {
         writeBool8(out[i]);
     }
 }
+
 
 void BinaryOutput::writeBool8(const Array<bool>& out, int n) {
     writeBool8(out.getCArray(), n);
@@ -50,6 +56,7 @@ void BinaryOutput::write##ucase(const Array<lcase>& out, int n) {\
     write##ucase(out.getCArray(), n);\
 }
 
+
 IMPLEMENT_WRITER(UInt8,   uint8)
 IMPLEMENT_WRITER(Int8,    int8)
 IMPLEMENT_WRITER(UInt16,  uint16)
@@ -59,11 +66,11 @@ IMPLEMENT_WRITER(Int32,   int32)
 IMPLEMENT_WRITER(UInt64,  uint64)
 IMPLEMENT_WRITER(Int64,   int64)
 IMPLEMENT_WRITER(Float32, float32)
-IMPLEMENT_WRITER(Float64, float64)
+IMPLEMENT_WRITER(Float64, float64)    
 
 #undef IMPLEMENT_WRITER
 
-// Data structures that are one byte per element can be
+// Data structures that are one byte per element can be 
 // directly copied, regardles of endian-ness.
 #define IMPLEMENT_WRITER(ucase, lcase)\
 void BinaryOutput::write##ucase(const lcase* out, int n) {\
@@ -82,6 +89,7 @@ IMPLEMENT_WRITER(Int8,    int8)
 
 #undef IMPLEMENT_WRITER
 
+
 #define IMPLEMENT_WRITER(ucase, lcase)\
 void BinaryOutput::write##ucase(const lcase* out, int n) {\
     if (m_swapBytes) {\
@@ -93,6 +101,7 @@ void BinaryOutput::write##ucase(const lcase* out, int n) {\
     }\
 }
 
+
 IMPLEMENT_WRITER(UInt16,  uint16)
 IMPLEMENT_WRITER(Int16,   int16)
 IMPLEMENT_WRITER(UInt32,  uint32)
@@ -100,9 +109,10 @@ IMPLEMENT_WRITER(Int32,   int32)
 IMPLEMENT_WRITER(UInt64,  uint64)
 IMPLEMENT_WRITER(Int64,   int64)
 IMPLEMENT_WRITER(Float32, float32)
-IMPLEMENT_WRITER(Float64, float64)
+IMPLEMENT_WRITER(Float64, float64)    
 
 #undef IMPLEMENT_WRITER
+
 
 void BinaryOutput::reallocBuffer(size_t bytes, size_t oldBufferLen) {
     //debugPrintf("reallocBuffer(%d, %d)\n", bytes, oldBufferLen);
@@ -114,7 +124,7 @@ void BinaryOutput::reallocBuffer(size_t bytes, size_t oldBufferLen) {
         // We're either writing to memory (in which case we *have* to try and allocate)
         // or we've been asked to allocate a reasonable size buffer.
 
-        //debugPrintf("  realloc(%d)\n", newBufferLen);
+        //debugPrintf("  realloc(%d)\n", newBufferLen); 
         newBuffer = (uint8*)System::realloc(m_buffer, newBufferLen);
         if (newBuffer != NULL) {
             m_maxBufferLen = newBufferLen;
@@ -132,13 +142,15 @@ void BinaryOutput::reallocBuffer(size_t bytes, size_t oldBufferLen) {
     }
 }
 
+
 void BinaryOutput::reserveBytesWhenOutOfMemory(size_t bytes) {
     if (m_filename == "<memory>") {
         throw "Out of memory while writing to memory in BinaryOutput (no RAM left).";
     } else if ((int)bytes > (int)m_maxBufferLen) {
         throw "Out of memory while writing to disk in BinaryOutput (could not create a large enough buffer).";
     } else {
-        // Dump the contents to disk.  In order to enable seeking backwards,
+
+        // Dump the contents to disk.  In order to enable seeking backwards, 
         // we keep the last 10 MB in memory.
         int writeBytes = m_bufferLen - 10 * 1024 * 1024;
 
@@ -176,14 +188,15 @@ void BinaryOutput::reserveBytesWhenOutOfMemory(size_t bytes) {
         System::memcpy(m_buffer, m_buffer + writeBytes, m_bufferLen);
         debugAssert(isValidHeapPointer(m_buffer));
 
-        // *now* we allocate bytes (there should presumably be enough
-        // space in the buffer; if not, we'll come back through this
-        // code and dump the last 10MB to disk as well.  Note that the
+        // *now* we allocate bytes (there should presumably be enough 
+        // space in the buffer; if not, we'll come back through this 
+        // code and dump the last 10MB to disk as well.  Note that the 
         // bytes > maxBufferLen case above would already have triggered
-        // if this call couldn't succeed.
+        // if this call couldn't succeed. 
         reserveBytes(bytes);
     }
 }
+
 
 BinaryOutput::BinaryOutput() {
     m_alreadyWritten = 0;
@@ -200,9 +213,11 @@ BinaryOutput::BinaryOutput() {
     m_committed = false;
 }
 
+
 BinaryOutput::BinaryOutput(
     const std::string&  filename,
     G3DEndian           fileEndian) {
+
     m_pos = 0;
     m_alreadyWritten = 0;
     setEndian(fileEndian);
@@ -215,15 +230,16 @@ BinaryOutput::BinaryOutput(
     m_bitPos = 0;
     m_committed = false;
 
-    m_ok = true;
+    m_ok = true;    
     /** Verify ability to write to disk */
     commit(false);
     m_committed = false;
 }
 
+
 void BinaryOutput::reset() {
     debugAssert(m_beginEndBits == 0);
-    alwaysAssertM(m_filename == "<memory>",
+    alwaysAssertM(m_filename == "<memory>", 
         "Can only reset a BinaryOutput that writes to memory.");
 
     // Do not reallocate, just clear the size of the buffer.
@@ -236,6 +252,7 @@ void BinaryOutput::reset() {
     m_committed = false;
 }
 
+
 BinaryOutput::~BinaryOutput() {
     debugAssert((m_buffer == NULL) || isValidHeapPointer(m_buffer));
     System::free(m_buffer);
@@ -244,14 +261,17 @@ BinaryOutput::~BinaryOutput() {
     m_maxBufferLen = 0;
 }
 
+
 void BinaryOutput::setEndian(G3DEndian fileEndian) {
     m_fileEndian = fileEndian;
     m_swapBytes = (fileEndian != System::machineEndian());
 }
 
+
 bool BinaryOutput::ok() const {
     return m_ok;
 }
+
 
 void BinaryOutput::compress() {
     if (m_alreadyWritten > 0) {
@@ -265,7 +285,7 @@ void BinaryOutput::compress() {
     // Zlib requires the output buffer to be this big
     unsigned long newSize = iCeil(m_bufferLen * 1.01) + 12;
     uint8* temp = (uint8*)System::malloc(newSize);
-    int result = compress2(temp, &newSize, m_buffer, m_bufferLen, 9);
+    int result = compress2(temp, &newSize, m_buffer, m_bufferLen, 9); 
 
     debugAssert(result == Z_OK); (void)result;
 
@@ -294,6 +314,7 @@ void BinaryOutput::compress() {
     System::free(temp);
 }
 
+
 void BinaryOutput::commit(bool flush) {
     debugAssertM(! m_committed, "Cannot commit twice");
     m_committed = true;
@@ -302,7 +323,7 @@ void BinaryOutput::commit(bool flush) {
     // Make sure the directory exists.
     std::string root, base, ext, path;
     Array<std::string> pathArray;
-    parseFilename(m_filename, root, pathArray, base, ext);
+    parseFilename(m_filename, root, pathArray, base, ext); 
 
     path = root + stringJoin(pathArray, '/');
     if (! FileSystem::exists(path, false)) {
@@ -336,6 +357,7 @@ void BinaryOutput::commit(bool flush) {
     }
 }
 
+
 void BinaryOutput::commit(
     uint8*                  out) {
     debugAssertM(! m_committed, "Cannot commit twice");
@@ -343,6 +365,7 @@ void BinaryOutput::commit(
 
     System::memcpy(out, m_buffer, m_bufferLen);
 }
+
 
 void BinaryOutput::writeUInt16(uint16 u) {
     reserveBytes(2);
@@ -358,6 +381,7 @@ void BinaryOutput::writeUInt16(uint16 u) {
 
     m_pos += 2;
 }
+
 
 void BinaryOutput::writeUInt32(uint32 u) {
     reserveBytes(4);
@@ -377,6 +401,7 @@ void BinaryOutput::writeUInt32(uint32 u) {
 
     m_pos += 4;
 }
+
 
 void BinaryOutput::writeUInt64(uint64 u) {
     reserveBytes(8);
@@ -399,6 +424,7 @@ void BinaryOutput::writeUInt64(uint64 u) {
     m_pos += 8;
 }
 
+
 void BinaryOutput::writeString(const char* s) {
     // +1 is because strlen doesn't count the null
     int len = strlen(s) + 1;
@@ -408,6 +434,7 @@ void BinaryOutput::writeString(const char* s) {
     System::memcpy(m_buffer + m_pos, s, len);
     m_pos += len;
 }
+
 
 void BinaryOutput::writeStringEven(const char* s) {
     // +1 is because strlen doesn't count the null
@@ -423,10 +450,12 @@ void BinaryOutput::writeStringEven(const char* s) {
     }
 }
 
+
 void BinaryOutput::writeString32(const char* s) {
     writeUInt32(strlen(s) + 1);
     writeString(s);
 }
+
 
 void BinaryOutput::writeVector4(const Vector4& v) {
     writeFloat32(v.x);
@@ -435,16 +464,19 @@ void BinaryOutput::writeVector4(const Vector4& v) {
     writeFloat32(v.w);
 }
 
+
 void BinaryOutput::writeVector3(const Vector3& v) {
     writeFloat32(v.x);
     writeFloat32(v.y);
     writeFloat32(v.z);
 }
 
+
 void BinaryOutput::writeVector2(const Vector2& v) {
     writeFloat32(v.x);
     writeFloat32(v.y);
 }
+
 
 void BinaryOutput::writeColor4(const Color4& v) {
     writeFloat32(v.r);
@@ -453,11 +485,13 @@ void BinaryOutput::writeColor4(const Color4& v) {
     writeFloat32(v.a);
 }
 
+
 void BinaryOutput::writeColor3(const Color3& v) {
     writeFloat32(v.r);
     writeFloat32(v.g);
     writeFloat32(v.b);
 }
+
 
 void BinaryOutput::beginBits() {
     debugAssertM(m_beginEndBits == 0, "Already in beginBits...endBits");
@@ -466,7 +500,9 @@ void BinaryOutput::beginBits() {
     m_beginEndBits = 1;
 }
 
+
 void BinaryOutput::writeBits(uint32 value, int numBits) {
+
     while (numBits > 0) {
         // Extract the current bit of value and
         // insert it into the current byte
@@ -484,6 +520,7 @@ void BinaryOutput::writeBits(uint32 value, int numBits) {
     }
 }
 
+
 void BinaryOutput::endBits() {
     debugAssertM(m_beginEndBits == 1, "Not in beginBits...endBits");
     if (m_bitPos > 0) {
@@ -493,4 +530,5 @@ void BinaryOutput::endBits() {
     m_bitPos = 0;
     m_beginEndBits = 0;
 }
+
 }

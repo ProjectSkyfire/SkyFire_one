@@ -60,12 +60,12 @@ static void check_srwlock_availability(void)
     "TryAcquireSRWLockShared");
 
   /*
-    We currently require TryAcquireSRWLockExclusive. This API is missing on
+    We currently require TryAcquireSRWLockExclusive. This API is missing on 
     Vista, this means SRWLock are only used starting with Win7.
 
-    If "trylock" usage for rwlocks is eliminated from server codebase (it is used
-    in a single place currently, in query cache), then SRWLock can be enabled on
-    Vista too. In this case  condition below needs to be changed to  e.g check
+    If "trylock" usage for rwlocks is eliminated from server codebase (it is used 
+    in a single place currently, in query cache), then SRWLock can be enabled on 
+    Vista too. In this case  condition below needs to be changed to  e.g check 
     for my_InitializeSRWLock.
   */
 
@@ -172,8 +172,8 @@ int my_rw_init(my_rw_lock_t *rwp)
     Once initialization is used here rather than in my_init(), in order to
     - avoid  my_init() pitfalls- (undefined order in which initialization should
     run)
-    - be potentially useful C++ (static constructors)
-    - just to simplify  the API.
+    - be potentially useful C++ (static constructors) 
+    - just to simplify  the API. 
     Also, the overhead is of my_pthread_once is very small.
   */
   static my_pthread_once_t once_control= MY_PTHREAD_ONCE_INIT;
@@ -284,7 +284,7 @@ int my_rw_trywrlock(my_rw_lock_t *rwp)
 
   pthread_mutex_lock(&rwp->lock);
   if (rwp->state)
-    res= EBUSY;					/* Can't get lock */
+    res= EBUSY;					/* Can't get lock */    
   else
   {
     res=0;
@@ -305,7 +305,7 @@ int my_rw_unlock(my_rw_lock_t *rwp)
 #endif
 
   DBUG_PRINT("rw_unlock",
-         ("state: %d waiters: %d", rwp->state, rwp->waiters));
+	     ("state: %d waiters: %d", rwp->state, rwp->waiters));
   pthread_mutex_lock(&rwp->lock);
 
   DBUG_ASSERT(rwp->state != 0);
@@ -450,3 +450,4 @@ int rw_pr_unlock(rw_pr_lock_t *rwlock)
   }
   return 0;
 }
+

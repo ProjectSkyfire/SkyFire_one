@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2001, 2011, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2001, 2012, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License
@@ -23,6 +23,11 @@
   the file descriptior.
 */
 
+#ifdef __WIN__
+  #include <winsock2.h>
+  #include <MSWSock.h>
+  #pragma comment(lib, "ws2_32.lib")
+#endif
 #include "vio_priv.h"
 
 #ifdef FIONREAD_IN_SYS_FILIO
@@ -130,14 +135,14 @@ size_t vio_write(Vio * vio, const uchar* buf, size_t size)
 }
 
 int vio_blocking(Vio * vio __attribute__((unused)), my_bool set_blocking_mode,
-         my_bool *old_mode)
+		 my_bool *old_mode)
 {
   int r=0;
   DBUG_ENTER("vio_blocking");
 
   *old_mode= test(!(vio->fcntl_mode & O_NONBLOCK));
   DBUG_PRINT("enter", ("set_blocking_mode: %d  old_mode: %d",
-               (int) set_blocking_mode, (int) *old_mode));
+		       (int) set_blocking_mode, (int) *old_mode));
 
 #if !defined(__WIN__)
 #if !defined(NO_FCNTL_NONBLOCK)
@@ -163,7 +168,7 @@ int vio_blocking(Vio * vio __attribute__((unused)), my_bool set_blocking_mode,
 #endif /* !defined(NO_FCNTL_NONBLOCK) */
 #else /* !defined(__WIN__) */
   if (vio->type != VIO_TYPE_NAMEDPIPE && vio->type != VIO_TYPE_SHARED_MEMORY)
-  {
+  { 
     ulong arg;
     int old_fcntl=vio->fcntl_mode;
     if (set_blocking_mode)
@@ -234,13 +239,13 @@ int vio_keepalive(Vio* vio, my_bool set_keep_alive)
   uint opt = 0;
   DBUG_ENTER("vio_keepalive");
   DBUG_PRINT("enter", ("sd: %d  set_keep_alive: %d", vio->sd, (int)
-               set_keep_alive));
+		       set_keep_alive));
   if (vio->type != VIO_TYPE_NAMEDPIPE)
   {
     if (set_keep_alive)
       opt = 1;
     r = setsockopt(vio->sd, SOL_SOCKET, SO_KEEPALIVE, (char *) &opt,
-           sizeof(opt));
+		   sizeof(opt));
   }
   DBUG_RETURN(r);
 }
@@ -267,7 +272,37 @@ vio_was_interrupted(Vio *vio __attribute__((unused)))
 {
   int en= socket_errno;
   return (en == SOCKET_EAGAIN || en == SOCKET_EINTR ||
-      en == SOCKET_EWOULDBLOCK || en == SOCKET_ETIMEDOUT);
+	  en == SOCKET_EWOULDBLOCK || en == SOCKET_ETIMEDOUT);
+}
+
+int
+mysql_socket_shutdown(my_socket mysql_socket, int how)
+{
+  int result;
+
+#ifdef __WIN__
+  static LPFN_DISCONNECTEX DisconnectEx = NULL;
+  if (DisconnectEx == NULL)
+  {
+    DWORD dwBytesReturned;
+    GUID guidDisconnectEx = WSAID_DISCONNECTEX;
+    WSAIoctl(mysql_socket, SIO_GET_EXTENSION_FUNCTION_POINTER,
+             &guidDisconnectEx, sizeof(GUID),
+             &DisconnectEx, sizeof(DisconnectEx), 
+             &dwBytesReturned, NULL, NULL);
+  }
+#endif
+
+  /* Non instrumented code */
+#ifdef __WIN__
+  if (DisconnectEx)
+    result= (DisconnectEx(mysql_socket, (LPOVERLAPPED) NULL,
+                          (DWORD) 0, (DWORD) 0) == TRUE) ? 0 : -1;
+  else
+#endif
+    result= shutdown(mysql_socket, how);
+
+  return result;
 }
 
 int vio_close(Vio * vio)
@@ -282,7 +317,7 @@ int vio_close(Vio * vio)
       vio->type == VIO_TYPE_SSL);
 
     DBUG_ASSERT(vio->sd >= 0);
-    if (shutdown(vio->sd, SHUT_RDWR))
+    if (mysql_socket_shutdown(vio->sd, SHUT_RDWR))
       r= -1;
     if (closesocket(vio->sd))
       r= -1;
@@ -720,7 +755,7 @@ static size_t pipe_complete_io(Vio* vio, char* buf, size_t size, DWORD timeout_m
     WaitForSingleObjects will normally return WAIT_OBJECT_O (success, IO completed)
     or WAIT_TIMEOUT.
   */
-  if (ret != WAIT_OBJECT_0)
+  if(ret != WAIT_OBJECT_0)
   {
     CancelIo(vio->hPipe);
     DBUG_PRINT("error",("WaitForSingleObject() returned  %d", ret));
@@ -729,7 +764,7 @@ static size_t pipe_complete_io(Vio* vio, char* buf, size_t size, DWORD timeout_m
 
   if (!GetOverlappedResult(vio->hPipe,&(vio->pipe_overlapped),&length, FALSE))
   {
-    DBUG_PRINT("error",("GetOverlappedResult() returned last error  %d",
+    DBUG_PRINT("error",("GetOverlappedResult() returned last error  %d", 
       GetLastError()));
     DBUG_RETURN((size_t)-1);
   }
@@ -773,7 +808,7 @@ size_t vio_write_pipe(Vio * vio, const uchar* buf, size_t size)
   DBUG_PRINT("enter", ("sd: %d  buf: 0x%lx  size: %u", vio->sd, (long) buf,
                        (uint) size));
 
-  if (WriteFile(vio->hPipe, buf, (DWORD)size, &bytes_written,
+  if (WriteFile(vio->hPipe, buf, (DWORD)size, &bytes_written, 
       &(vio->pipe_overlapped)))
   {
     retval= bytes_written;
@@ -824,7 +859,7 @@ void vio_win32_timeout(Vio *vio, uint which , uint timeout_sec)
 {
     DWORD timeout_ms;
     /*
-      Windows is measuring timeouts in milliseconds. Check for possible int
+      Windows is measuring timeouts in milliseconds. Check for possible int 
       overflow.
     */
     if (timeout_sec > UINT_MAX/1000)
@@ -833,7 +868,7 @@ void vio_win32_timeout(Vio *vio, uint which , uint timeout_sec)
       timeout_ms= timeout_sec * 1000;
 
     /* which == 1 means "write", which == 0 means "read".*/
-    if (which)
+    if(which)
       vio->write_timeout_ms= timeout_ms;
     else
       vio->read_timeout_ms= timeout_ms;
@@ -866,7 +901,7 @@ size_t vio_read_shared_memory(Vio * vio, uchar* buf, size_t size)
         WaitForMultipleObjects can return next values:
          WAIT_OBJECT_0+0 - event from vio->event_server_wrote
          WAIT_OBJECT_0+1 - event from vio->event_conn_closed. We can't read
-                   anything
+		           anything
          WAIT_ABANDONED_0 and WAIT_TIMEOUT - fail.  We can't read anything
       */
       if (WaitForMultipleObjects(array_elements(events), events, FALSE,
@@ -972,7 +1007,7 @@ int vio_close_shared_memory(Vio * vio)
       Close all handlers. UnmapViewOfFile and CloseHandle return non-zero
       result if they are success.
     */
-    if (UnmapViewOfFile(vio->handle_map) == 0)
+    if (UnmapViewOfFile(vio->handle_map) == 0) 
     {
       error_count++;
       DBUG_PRINT("vio_error", ("UnmapViewOfFile() failed"));

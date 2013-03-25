@@ -81,16 +81,16 @@ int find_type(const char *x, const TYPELIB *typelib, uint flags)
   find=0;
   for (pos=0 ; (j=typelib->type_names[pos]) ; pos++)
   {
-    for (i=x ;
-        *i && (!(flags & FIND_TYPE_COMMA_TERM) || !is_field_separator(*i)) &&
-        my_toupper(&my_charset_latin1,*i) ==
-            my_toupper(&my_charset_latin1,*j) ; i++, j++) ;
+    for (i=x ; 
+    	*i && (!(flags & FIND_TYPE_COMMA_TERM) || !is_field_separator(*i)) &&
+        my_toupper(&my_charset_latin1,*i) == 
+    		my_toupper(&my_charset_latin1,*j) ; i++, j++) ;
     if (! *j)
     {
       while (*i == ' ')
-    i++;					/* skip_end_space */
+	i++;					/* skip_end_space */
       if (! *i || ((flags & FIND_TYPE_COMMA_TERM) && is_field_separator(*i)))
-    DBUG_RETURN(pos+1);
+	DBUG_RETURN(pos+1);
     }
     if ((!*i &&
          (!(flags & FIND_TYPE_COMMA_TERM) || !is_field_separator(*i))) &&
@@ -119,13 +119,13 @@ int find_type(const char *x, const TYPELIB *typelib, uint flags)
 
 /**
   Get name of type nr
-
+ 
   @note
   first type is 1, 0 = empty field
 */
 
 void make_type(register char * to, register uint nr,
-           register TYPELIB *typelib)
+	       register TYPELIB *typelib)
 {
   DBUG_ENTER("make_type");
   if (!nr)
@@ -155,7 +155,7 @@ const char *get_type(TYPELIB *typelib, uint nr)
 
   @param x      string to decompose
   @param lib    TYPELIB (struct of pointer to values + count)
-  @param err    index (not char position) of string element which was not
+  @param err    index (not char position) of string element which was not 
                 found or 0 if there was no error
 
   @retval
@@ -290,14 +290,14 @@ static uint parse_name(const TYPELIB *lib, const char **strpos, const char *end)
   @details
   Parse a set of flag assignments, that is, parse a string in form:
 
-    param_name1=value1,param_name2=value2,...
-
+    param_name1=value1,param_name2=value2,... 
+  
   where the names are specified in the TYPELIB, and each value can be
-  either 'on','off', or 'default'. Setting the same name twice is not
+  either 'on','off', or 'default'. Setting the same name twice is not 
   allowed.
-
-  Besides param=val assignments, we support the "default" keyword (keyword
-  #default_name in the typelib). It can be used one time, if specified it
+  
+  Besides param=val assignments, we support the "default" keyword (keyword 
+  #default_name in the typelib). It can be used one time, if specified it 
   causes us to build the new set over the default_set rather than cur_set
   value.
 
@@ -320,7 +320,7 @@ my_ulonglong find_set_from_flags(const TYPELIB *lib, uint default_name,
   *err_pos= 0;                  /* No error yet */
   if (str != end)
   {
-    const char *start= str;
+    const char *start= str;    
     for (;;)
     {
       const char *pos= start;
@@ -344,7 +344,7 @@ my_ulonglong find_set_from_flags(const TYPELIB *lib, uint default_name,
             pos >= end || *pos++ != '=' ||
             !(value= parse_name(&on_off_default_typelib, &pos, end)))
           goto err;
-
+        
         if (value == 1) /* this is '=off' */
           flags_to_clear|= bit;
         else if (value == 2) /* this is '=on' */
@@ -376,3 +376,4 @@ my_ulonglong find_set_from_flags(const TYPELIB *lib, uint default_name,
   res&= ~flags_to_clear;
   return res;
 }
+

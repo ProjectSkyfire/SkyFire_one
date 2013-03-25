@@ -25,17 +25,17 @@
 #include <sys/timeb.h>
 
 /*
-  Windows native condition variables. We use runtime loading / function
-  pointers, because they are not available on XP
+  Windows native condition variables. We use runtime loading / function 
+  pointers, because they are not available on XP 
 */
 
 /* Prototypes and function pointers for condition variable functions */
-typedef VOID (WINAPI * InitializeConditionVariableProc)
+typedef VOID (WINAPI * InitializeConditionVariableProc) 
   (PCONDITION_VARIABLE ConditionVariable);
 
 typedef BOOL (WINAPI * SleepConditionVariableCSProc)
   (PCONDITION_VARIABLE ConditionVariable,
-  PCRITICAL_SECTION CriticalSection,
+  PCRITICAL_SECTION CriticalSection, 
   DWORD dwMilliseconds);
 
 typedef VOID (WINAPI * WakeAllConditionVariableProc)
@@ -57,7 +57,7 @@ static WakeConditionVariableProc my_WakeConditionVariable;
 static BOOL have_native_conditions= FALSE;
 
 /**
-  Check if native conditions can be used, load function pointers
+  Check if native conditions can be used, load function pointers 
 */
 
 static void check_native_cond_availability(void)
@@ -83,7 +83,7 @@ static void check_native_cond_availability(void)
 
 static DWORD get_milliseconds(const struct timespec *abstime)
 {
-  long long millis;
+  long long millis; 
   union ft64 now;
 
   if (abstime == NULL)
@@ -97,7 +97,7 @@ static DWORD get_milliseconds(const struct timespec *abstime)
     - convert to millisec by dividing with 10000
   */
   millis= (abstime->tv.i64 - now.i64) / 10000;
-
+  
   /* Don't allow the timeout to be negative */
   if (millis < 0)
     return 0;
@@ -108,7 +108,7 @@ static DWORD get_milliseconds(const struct timespec *abstime)
   */
   if (millis > abstime->max_timeout_msec)
     millis= abstime->max_timeout_msec;
-
+  
   if (millis > UINT_MAX)
     millis= UINT_MAX;
 
@@ -123,7 +123,7 @@ static int legacy_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr
 {
   cond->waiting= 0;
   InitializeCriticalSection(&cond->lock_waiting);
-
+    
   cond->events[SIGNAL]= CreateEvent(NULL,  /* no security */
                                     FALSE, /* auto-reset event */
                                     FALSE, /* non-signaled initially */
@@ -139,8 +139,8 @@ static int legacy_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr
                                            TRUE,  /* manual-reset */
                                            TRUE,  /* signaled initially */
                                            NULL); /* unnamed */
-
-  if ( cond->events[SIGNAL] == NULL ||
+  
+  if( cond->events[SIGNAL] == NULL ||
       cond->events[BROADCAST] == NULL ||
       cond->broadcast_block_event == NULL )
     return ENOMEM;
@@ -162,10 +162,10 @@ static int legacy_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
                            struct timespec *abstime)
 {
   int result;
-  DWORD timeout;
+  DWORD timeout; 
 
   timeout= get_milliseconds(abstime);
-  /*
+  /* 
     Block access if previous broadcast hasn't finished.
     This is just for safety and should normally not
     affect the total time spent in this function.
@@ -178,15 +178,15 @@ static int legacy_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
 
   LeaveCriticalSection(mutex);
   result= WaitForMultipleObjects(2, cond->events, FALSE, timeout);
-
+  
   EnterCriticalSection(&cond->lock_waiting);
   cond->waiting--;
-
+  
   if (cond->waiting == 0)
   {
     /*
       We're the last waiter to be notified or to stop waiting, so
-      reset the manual event.
+      reset the manual event. 
     */
     /* Close broadcast gate */
     ResetEvent(cond->events[BROADCAST]);
@@ -194,7 +194,7 @@ static int legacy_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
     SetEvent(cond->broadcast_block_event);
   }
   LeaveCriticalSection(&cond->lock_waiting);
-
+  
   EnterCriticalSection(mutex);
 
   return result == WAIT_TIMEOUT ? ETIMEDOUT : 0;
@@ -203,12 +203,12 @@ static int legacy_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
 static int legacy_cond_signal(pthread_cond_t *cond)
 {
   EnterCriticalSection(&cond->lock_waiting);
-
-  if (cond->waiting > 0)
+  
+  if(cond->waiting > 0)
     SetEvent(cond->events[SIGNAL]);
 
   LeaveCriticalSection(&cond->lock_waiting);
-
+  
   return 0;
 }
 
@@ -220,27 +220,27 @@ static int legacy_cond_broadcast(pthread_cond_t *cond)
      there isn't any thread waiting to open the
      block gate after this call has closed it.
    */
-  if (cond->waiting > 0)
+  if(cond->waiting > 0)
   {
     /* Close block gate */
-    ResetEvent(cond->broadcast_block_event);
+    ResetEvent(cond->broadcast_block_event); 
     /* Open broadcast gate */
     SetEvent(cond->events[BROADCAST]);
   }
 
-  LeaveCriticalSection(&cond->lock_waiting);
+  LeaveCriticalSection(&cond->lock_waiting);  
 
   return 0;
 }
 
-/*
+/* 
  Posix API functions. Just choose between native and legacy implementation.
 */
 
 int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
 {
   /*
-    Once initialization is used here rather than in my_init(), to
+    Once initialization is used here rather than in my_init(), to 
     1) avoid  my_init() pitfalls- undefined order in which initialization should
     run
     2) be potentially useful C++ (in static constructors that run before main())
@@ -255,7 +255,7 @@ int pthread_cond_init(pthread_cond_t *cond, const pthread_condattr_t *attr)
     my_InitializeConditionVariable(&cond->native_cond);
     return 0;
   }
-  else
+  else 
     return legacy_cond_init(cond, attr);
 }
 
@@ -297,7 +297,7 @@ int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
     DWORD timeout= get_milliseconds(abstime);
     if (!my_SleepConditionVariableCS(&cond->native_cond, mutex, timeout))
       return ETIMEDOUT;
-    return 0;
+    return 0;  
   }
   else
     return legacy_cond_timedwait(cond, mutex, abstime);

@@ -24,14 +24,14 @@ size_t my_caseup_str_mb(CHARSET_INFO * cs, char *str)
   register uint32 l;
   register uchar *map= cs->to_upper;
   char *str_orig= str;
-
+  
   while (*str)
   {
     /* Pointing after the '\0' is safe here. */
     if ((l= my_ismbchar(cs, str, str + cs->mbmaxlen)))
       str+= l;
     else
-    {
+    { 
       *str= (char) map[(uchar)*str];
       str++;
     }
@@ -44,7 +44,7 @@ size_t my_casedn_str_mb(CHARSET_INFO * cs, char *str)
   register uint32 l;
   register uchar *map= cs->to_lower;
   char *str_orig= str;
-
+  
   while (*str)
   {
     /* Pointing after the '\0' is safe here. */
@@ -80,7 +80,7 @@ size_t my_caseup_mb(CHARSET_INFO * cs, char *src, size_t srclen,
   DBUG_ASSERT(cs->caseup_multiply == 1);
   DBUG_ASSERT(src == dst && srclen == dstlen);
   DBUG_ASSERT(cs->mbmaxlen == 2);
-
+  
   while (src < srcend)
   {
     if ((l=my_ismbchar(cs, src, srcend)))
@@ -94,7 +94,7 @@ size_t my_caseup_mb(CHARSET_INFO * cs, char *src, size_t srclen,
       else
         src+= l;
     }
-    else
+    else 
     {
       *src=(char) map[(uchar) *src];
       src++;
@@ -112,9 +112,9 @@ size_t my_casedn_mb(CHARSET_INFO * cs, char *src, size_t srclen,
   register uchar *map=cs->to_lower;
 
   DBUG_ASSERT(cs->casedn_multiply == 1);
-  DBUG_ASSERT(src == dst && srclen == dstlen);
+  DBUG_ASSERT(src == dst && srclen == dstlen);  
   DBUG_ASSERT(cs->mbmaxlen == 2);
-
+  
   while (src < srcend)
   {
     if ((l= my_ismbchar(cs, src, srcend)))
@@ -189,7 +189,7 @@ size_t
 my_casedn_mb_varlen(CHARSET_INFO * cs, char *src, size_t srclen,
                     char *dst, size_t dstlen)
 {
-  DBUG_ASSERT(dstlen >= srclen * cs->casedn_multiply);
+  DBUG_ASSERT(dstlen >= srclen * cs->casedn_multiply); 
   DBUG_ASSERT(src != dst || cs->casedn_multiply == 1);
   return my_casefold_mb_varlen(cs, src, srclen, dst, dstlen, cs->to_lower, 0);
 }
@@ -211,14 +211,14 @@ int my_strcasecmp_mb(CHARSET_INFO * cs,const char *s, const char *t)
 {
   register uint32 l;
   register uchar *map=cs->to_upper;
-
+  
   while (*s && *t)
   {
     /* Pointing after the '\0' is safe here. */
     if ((l=my_ismbchar(cs, s, s + cs->mbmaxlen)))
     {
       while (l--)
-        if (*s++ != *t++)
+        if (*s++ != *t++) 
           return 1;
     }
     else if (my_mbcharlen(cs, *t) > 1)
@@ -242,9 +242,9 @@ int my_strcasecmp_mb(CHARSET_INFO * cs,const char *s, const char *t)
 #define likeconv(s,A) (uchar) (s)->sort_order[(uchar) (A)]
 
 int my_wildcmp_mb(CHARSET_INFO *cs,
-          const char *str,const char *str_end,
-          const char *wildstr,const char *wildend,
-          int escape, int w_one, int w_many)
+		  const char *str,const char *str_end,
+		  const char *wildstr,const char *wildend,
+		  int escape, int w_one, int w_many)
 {
   int result= -1;				/* Not found, using wildcards */
 
@@ -254,65 +254,65 @@ int my_wildcmp_mb(CHARSET_INFO *cs,
     {
       int l;
       if (*wildstr == escape && wildstr+1 != wildend)
-    wildstr++;
+	wildstr++;
       if ((l = my_ismbchar(cs, wildstr, wildend)))
       {
-      if (str+l > str_end || memcmp(str, wildstr, l) != 0)
-          return 1;
-      str += l;
-      wildstr += l;
+	  if (str+l > str_end || memcmp(str, wildstr, l) != 0)
+	      return 1;
+	  str += l;
+	  wildstr += l;
       }
       else
       if (str == str_end || likeconv(cs,*wildstr++) != likeconv(cs,*str++))
-    return(1);				/* No match */
+	return(1);				/* No match */
       if (wildstr == wildend)
-    return (str != str_end);		/* Match if both are at end */
+	return (str != str_end);		/* Match if both are at end */
       result=1;					/* Found an anchor char */
     }
     if (*wildstr == w_one)
     {
       do
       {
-    if (str == str_end)			/* Skip one char if possible */
-      return (result);
-    INC_PTR(cs,str,str_end);
+	if (str == str_end)			/* Skip one char if possible */
+	  return (result);
+	INC_PTR(cs,str,str_end);
       } while (++wildstr < wildend && *wildstr == w_one);
       if (wildstr == wildend)
-    break;
+	break;
     }
     if (*wildstr == w_many)
     {						/* Found w_many */
       uchar cmp;
       const char* mb = wildstr;
       int mb_len=0;
-
+      
       wildstr++;
       /* Remove any '%' and '_' from the wild search string */
       for (; wildstr != wildend ; wildstr++)
       {
-    if (*wildstr == w_many)
-      continue;
-    if (*wildstr == w_one)
-    {
-      if (str == str_end)
-        return (-1);
-      INC_PTR(cs,str,str_end);
-      continue;
-    }
-    break;					/* Not a wild character */
+	if (*wildstr == w_many)
+	  continue;
+	if (*wildstr == w_one)
+	{
+	  if (str == str_end)
+	    return (-1);
+	  INC_PTR(cs,str,str_end);
+	  continue;
+	}
+	break;					/* Not a wild character */
       }
       if (wildstr == wildend)
-    return(0);				/* Ok if w_many is last */
+	return(0);				/* Ok if w_many is last */
       if (str == str_end)
-    return -1;
-
+	return -1;
+      
       if ((cmp= *wildstr) == escape && wildstr+1 != wildend)
-    cmp= *++wildstr;
-
+	cmp= *++wildstr;
+	
       mb=wildstr;
       mb_len= my_ismbchar(cs, wildstr, wildend);
       INC_PTR(cs,wildstr,wildend);		/* This is compared trough cmp */
-      cmp=likeconv(cs,cmp);
+      cmp=likeconv(cs,cmp);   
       do
       {
         for (;;)
@@ -335,12 +335,12 @@ int my_wildcmp_mb(CHARSET_INFO *cs,
           }
           INC_PTR(cs,str, str_end);
         }
-    {
-      int tmp=my_wildcmp_mb(cs,str,str_end,wildstr,wildend,escape,w_one,
+	{
+	  int tmp=my_wildcmp_mb(cs,str,str_end,wildstr,wildend,escape,w_one,
                                 w_many);
-      if (tmp <= 0)
-        return (tmp);
-    }
+	  if (tmp <= 0)
+	    return (tmp);
+	}
       } while (str != str_end && wildstr[0] != w_many);
       return(-1);
     }
@@ -349,10 +349,10 @@ int my_wildcmp_mb(CHARSET_INFO *cs,
 }
 
 size_t my_numchars_mb(CHARSET_INFO *cs __attribute__((unused)),
-              const char *pos, const char *end)
+		      const char *pos, const char *end)
 {
   register size_t count= 0;
-  while (pos < end)
+  while (pos < end) 
   {
     uint mb_len;
     pos+= (mb_len= my_ismbchar(cs,pos,end)) ? mb_len : 1;
@@ -362,10 +362,10 @@ size_t my_numchars_mb(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 size_t my_charpos_mb(CHARSET_INFO *cs __attribute__((unused)),
-             const char *pos, const char *end, size_t length)
+		     const char *pos, const char *end, size_t length)
 {
   const char *start= pos;
-
+  
   while (length && pos < end)
   {
     uint mb_len;
@@ -397,13 +397,13 @@ size_t my_well_formed_len_mb(CHARSET_INFO *cs, const char *b, const char *e,
 }
 
 uint my_instr_mb(CHARSET_INFO *cs,
-                 const char *b, size_t b_length,
+                 const char *b, size_t b_length, 
                  const char *s, size_t s_length,
                  my_match_t *match, uint nmatch)
 {
   register const char *end, *b0;
   int res= 0;
-
+  
   if (s_length <= b_length)
   {
     if (!s_length)
@@ -416,16 +416,16 @@ uint my_instr_mb(CHARSET_INFO *cs,
       }
       return 1;		/* Empty string is always found */
     }
-
+    
     b0= b;
     end= b+b_length-s_length+1;
-
+    
     while (b < end)
     {
       int mb_len;
-
-      if (!cs->coll->strnncoll(cs, (uchar*) b,   s_length,
-                       (uchar*) s, s_length, 0))
+      
+      if (!cs->coll->strnncoll(cs, (uchar*) b,   s_length, 
+      				   (uchar*) s, s_length, 0))
       {
         if (nmatch)
         {
@@ -464,8 +464,8 @@ my_strnncoll_mb_bin(CHARSET_INFO * cs __attribute__((unused)),
 }
 
 /*
-  Compare two strings.
-
+  Compare two strings. 
+  
   SYNOPSIS
     my_strnncollsp_mb_bin()
     cs			Chararacter set
@@ -474,7 +474,7 @@ my_strnncoll_mb_bin(CHARSET_INFO * cs __attribute__((unused)),
     t			String to compare
     tlen		Length of 't'
     diff_if_only_endspace_difference
-                Set to 1 if the strings should be regarded as different
+		        Set to 1 if the strings should be regarded as different
                         if they only difference in end space
 
   NOTE
@@ -490,7 +490,7 @@ my_strnncoll_mb_bin(CHARSET_INFO * cs __attribute__((unused)),
 
 int
 my_strnncollsp_mb_bin(CHARSET_INFO * cs __attribute__((unused)),
-                      const uchar *a, size_t a_length,
+                      const uchar *a, size_t a_length, 
                       const uchar *b, size_t b_length,
                       my_bool diff_if_only_endspace_difference)
 {
@@ -501,7 +501,7 @@ my_strnncollsp_mb_bin(CHARSET_INFO * cs __attribute__((unused)),
 #ifndef VARCHAR_WITH_DIFF_ENDSPACE_ARE_DIFFERENT_FOR_UNIQUE
   diff_if_only_endspace_difference= 0;
 #endif
-
+  
   end= a + (length= min(a_length, b_length));
   while (a < end)
   {
@@ -529,7 +529,7 @@ my_strnncollsp_mb_bin(CHARSET_INFO * cs __attribute__((unused)),
     for (end= a + a_length-length; a < end ; a++)
     {
       if (*a != ' ')
-    return (*a < ' ') ? -swap : swap;
+	return (*a < ' ') ? -swap : swap;
     }
   }
   return res;
@@ -558,22 +558,22 @@ my_hash_sort_mb_bin(CHARSET_INFO *cs __attribute__((unused)),
                     const uchar *key, size_t len,ulong *nr1, ulong *nr2)
 {
   const uchar *pos = key;
-
+  
   /*
      Remove trailing spaces. We have to do this to be able to compare
     'A ' and 'A' as identical
   */
   key= skip_trailing_space(key, len);
-
+  
   for (; pos < (uchar*) key ; pos++)
   {
-    nr1[0]^=(ulong) ((((uint) nr1[0] & 63)+nr2[0]) *
-         ((uint)*pos)) + (nr1[0] << 8);
+    nr1[0]^=(ulong) ((((uint) nr1[0] & 63)+nr2[0]) * 
+	     ((uint)*pos)) + (nr1[0] << 8);
     nr2[0]+=3;
   }
 }
 
-/*
+/* 
   Fill the given buffer with 'maximum character' for given charset
   SYNOPSIS
       pad_max_char()
@@ -589,13 +589,13 @@ my_hash_sort_mb_bin(CHARSET_INFO *cs __attribute__((unused)),
         and optionally pad with a single space character.
       - for Unicode character set (utf-8):
         create a buffer with multibyte representation of the max_sort_char
-        character, and copy it into max_str in a loop.
+        character, and copy it into max_str in a loop. 
 */
 static void pad_max_char(CHARSET_INFO *cs, char *str, char *end)
 {
   char buf[10];
   char buflen;
-
+  
   if (!(cs->state & MY_CS_UNICODE))
   {
     if (cs->max_sort_char <= 255)
@@ -612,7 +612,7 @@ static void pad_max_char(CHARSET_INFO *cs, char *str, char *end)
     buflen= cs->cset->wc_mb(cs, cs->max_sort_char, (uchar*) buf,
                             (uchar*) buf + sizeof(buf));
   }
-
+  
   DBUG_ASSERT(buflen > 0);
   do
   {
@@ -624,10 +624,10 @@ static void pad_max_char(CHARSET_INFO *cs, char *str, char *end)
     }
     else
     {
-      /*
+      /* 
         There is no space for whole multibyte
         character, then add trailing spaces.
-      */
+      */  
       *str++= ' ';
     }
   } while (str < end);
@@ -651,11 +651,11 @@ static void pad_max_char(CHARSET_INFO *cs, char *str, char *end)
 */
 
 my_bool my_like_range_mb(CHARSET_INFO *cs,
-             const char *ptr,size_t ptr_length,
-             pbool escape, pbool w_one, pbool w_many,
-             size_t res_length,
-             char *min_str,char *max_str,
-             size_t *min_length,size_t *max_length)
+			 const char *ptr,size_t ptr_length,
+			 pbool escape, pbool w_one, pbool w_many,
+			 size_t res_length,
+			 char *min_str,char *max_str,
+			 size_t *min_length,size_t *max_length)
 {
   uint mb_len;
   const char *end= ptr + ptr_length;
@@ -663,7 +663,7 @@ my_bool my_like_range_mb(CHARSET_INFO *cs,
   char *min_end= min_str + res_length;
   char *max_end= max_str + res_length;
   size_t maxcharlen= res_length / cs->mbmaxlen;
-  const char *contraction_flags= cs->contractions ?
+  const char *contraction_flags= cs->contractions ? 
               ((const char*) cs->contractions) + 0x40*0x40 : NULL;
 
   for (; ptr != end && min_str != min_end && maxcharlen ; maxcharlen--)
@@ -672,7 +672,7 @@ my_bool my_like_range_mb(CHARSET_INFO *cs,
     if (*ptr == escape && ptr+1 != end)
       ptr++;                                    /* Skip escape */
     else if (*ptr == w_one || *ptr == w_many)   /* '_' and '%' in SQL */
-    {
+    {      
 fill_max_and_min:
       /*
         Calculate length of keys:
@@ -685,13 +685,13 @@ fill_max_and_min:
       /* Create min key  */
       do
       {
-    *min_str++= (char) cs->min_sort_char;
+	*min_str++= (char) cs->min_sort_char;
       } while (min_str != min_end);
-
-      /*
+      
+      /* 
         Write max key: create a buffer with multibyte
         representation of the max_sort_char character,
-        and copy it into max_str in a loop.
+        and copy it into max_str in a loop. 
       */
       *max_length= res_length;
       pad_max_char(cs, max_str, max_end);
@@ -736,21 +736,21 @@ fill_max_and_min:
           contraction_flags[(uchar) *ptr])
       {
         /* Ptr[0] is a contraction head. */
-
+        
         if (ptr[1] == w_one || ptr[1] == w_many)
         {
           /* Contraction head followed by a wildcard, quit. */
           goto fill_max_and_min;
         }
-
+        
         /*
           Some letters can be both contraction heads and contraction tails.
           For example, in Danish 'aa' is a separate single letter which
           is sorted after 'z'. So 'a' can be both head and tail.
-
+          
           If ptr[0]+ptr[1] is a contraction,
           then put both letters together.
-
+          
           If ptr[1] can be a contraction part, but ptr[0]+ptr[1]
           is not a contraction, then we put only ptr[0],
           and continue with ptr[1] on the next loop.
@@ -764,14 +764,14 @@ fill_max_and_min:
             /* Both contraction parts don't fit, quit */
             goto fill_max_and_min;
           }
-
+          
           /* Put contraction head */
           *min_str++= *max_str++= *ptr++;
           maxcharlen--;
         }
       }
       /* Put contraction tail, or a single character */
-      *min_str++= *max_str++= *ptr++;
+      *min_str++= *max_str++= *ptr++;    
     }
   }
 
@@ -980,61 +980,61 @@ my_wildcmp_mb_bin(CHARSET_INFO *cs,
     {
       int l;
       if (*wildstr == escape && wildstr+1 != wildend)
-    wildstr++;
+	wildstr++;
       if ((l = my_ismbchar(cs, wildstr, wildend)))
       {
-      if (str+l > str_end || memcmp(str, wildstr, l) != 0)
-          return 1;
-      str += l;
-      wildstr += l;
+	  if (str+l > str_end || memcmp(str, wildstr, l) != 0)
+	      return 1;
+	  str += l;
+	  wildstr += l;
       }
       else
       if (str == str_end || *wildstr++ != *str++)
-    return(1);				/* No match */
+	return(1);				/* No match */
       if (wildstr == wildend)
-    return (str != str_end);		/* Match if both are at end */
+	return (str != str_end);		/* Match if both are at end */
       result=1;					/* Found an anchor char */
     }
     if (*wildstr == w_one)
     {
       do
       {
-    if (str == str_end)			/* Skip one char if possible */
-      return (result);
-    INC_PTR(cs,str,str_end);
+	if (str == str_end)			/* Skip one char if possible */
+	  return (result);
+	INC_PTR(cs,str,str_end);
       } while (++wildstr < wildend && *wildstr == w_one);
       if (wildstr == wildend)
-    break;
+	break;
     }
     if (*wildstr == w_many)
     {						/* Found w_many */
       uchar cmp;
       const char* mb = wildstr;
       int mb_len=0;
-
+      
       wildstr++;
       /* Remove any '%' and '_' from the wild search string */
       for (; wildstr != wildend ; wildstr++)
       {
-    if (*wildstr == w_many)
-      continue;
-    if (*wildstr == w_one)
-    {
-      if (str == str_end)
-        return (-1);
-      INC_PTR(cs,str,str_end);
-      continue;
-    }
-    break;					/* Not a wild character */
+	if (*wildstr == w_many)
+	  continue;
+	if (*wildstr == w_one)
+	{
+	  if (str == str_end)
+	    return (-1);
+	  INC_PTR(cs,str,str_end);
+	  continue;
+	}
+	break;					/* Not a wild character */
       }
       if (wildstr == wildend)
-    return(0);				/* Ok if w_many is last */
+	return(0);				/* Ok if w_many is last */
       if (str == str_end)
-    return -1;
-
+	return -1;
+      
       if ((cmp= *wildstr) == escape && wildstr+1 != wildend)
-    cmp= *++wildstr;
-
+	cmp= *++wildstr;
+	
       mb=wildstr;
       mb_len= my_ismbchar(cs, wildstr, wildend);
       INC_PTR(cs,wildstr,wildend);		/* This is compared trough cmp */
@@ -1059,11 +1059,11 @@ my_wildcmp_mb_bin(CHARSET_INFO *cs,
           }
           INC_PTR(cs,str, str_end);
         }
-    {
-      int tmp=my_wildcmp_mb_bin(cs,str,str_end,wildstr,wildend,escape,w_one,w_many);
-      if (tmp <= 0)
-        return (tmp);
-    }
+	{
+	  int tmp=my_wildcmp_mb_bin(cs,str,str_end,wildstr,wildend,escape,w_one,w_many);
+	  if (tmp <= 0)
+	    return (tmp);
+	}
       } while (str != str_end && wildstr[0] != w_many);
       return(-1);
     }
@@ -1072,7 +1072,7 @@ my_wildcmp_mb_bin(CHARSET_INFO *cs,
 }
 
 /*
-  Data was produced from EastAsianWidth.txt
+  Data was produced from EastAsianWidth.txt 
   using utt11-dump utility.
 */
 static char pg11[256]=
@@ -1283,7 +1283,7 @@ size_t my_numcells_mb(CHARSET_INFO *cs, const char *b, const char *e)
 {
   my_wc_t wc;
   size_t clen= 0;
-
+  
   while (b < e)
   {
     int mb_len;
@@ -1320,7 +1320,7 @@ int my_mb_ctype_mb(CHARSET_INFO *cs, int *ctype,
   else
     *ctype= my_uni_ctype[wc>>8].ctype ?
             my_uni_ctype[wc>>8].ctype[wc&0xFF] :
-            my_uni_ctype[wc>>8].pctype;
+            my_uni_ctype[wc>>8].pctype;    
   return res;
 }
 

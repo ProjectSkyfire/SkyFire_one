@@ -1,15 +1,15 @@
 /* Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved. & tommy@valley.ne.jp.
-
+   
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
    License as published by the Free Software Foundation; version 2
    of the License.
-
+   
    This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
    Library General Public License for more details.
-
+   
    You should have received a copy of the GNU Library General Public
    License along with this library; if not, write to the Free
    Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
@@ -64,11 +64,11 @@ static uchar bin_char_array[] =
   240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255
 };
 
-static my_bool
+static my_bool 
 my_coll_init_8bit_bin(CHARSET_INFO *cs,
                       void *(*alloc)(size_t) __attribute__((unused)))
 {
-  cs->max_sort_char=255;
+  cs->max_sort_char=255; 
   return FALSE;
 }
 
@@ -141,7 +141,7 @@ static int my_strnncoll_8bit_bin(CHARSET_INFO * cs __attribute__((unused)),
     t			String to compare
     tlen		Length of 't'
     diff_if_only_endspace_difference
-                Set to 1 if the strings should be regarded as different
+		        Set to 1 if the strings should be regarded as different
                         if they only difference in end space
 
   NOTE
@@ -156,7 +156,7 @@ static int my_strnncoll_8bit_bin(CHARSET_INFO * cs __attribute__((unused)),
 */
 
 static int my_strnncollsp_8bit_bin(CHARSET_INFO * cs __attribute__((unused)),
-                                   const uchar *a, size_t a_length,
+                                   const uchar *a, size_t a_length, 
                                    const uchar *b, size_t b_length,
                                    my_bool diff_if_only_endspace_difference)
 {
@@ -195,7 +195,7 @@ static int my_strnncollsp_8bit_bin(CHARSET_INFO * cs __attribute__((unused)),
     for (end= a + a_length-length; a < end ; a++)
     {
       if (*a != ' ')
-    return (*a < ' ') ? -swap : swap;
+	return (*a < ' ') ? -swap : swap;
     }
   }
   return res;
@@ -219,7 +219,7 @@ static size_t my_case_bin(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 static int my_strcasecmp_bin(CHARSET_INFO * cs __attribute__((unused)),
-                 const char *s, const char *t)
+			     const char *s, const char *t)
 {
   return strcmp(s,t);
 }
@@ -231,21 +231,21 @@ uint my_mbcharlen_8bit(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 static int my_mb_wc_bin(CHARSET_INFO *cs __attribute__((unused)),
-            my_wc_t *wc,
-            const uchar *str,
-            const uchar *end __attribute__((unused)))
+			my_wc_t *wc,
+			const uchar *str,
+			const uchar *end __attribute__((unused)))
 {
   if (str >= end)
     return MY_CS_TOOSMALL;
-
+  
   *wc=str[0];
   return 1;
 }
 
 static int my_wc_mb_bin(CHARSET_INFO *cs __attribute__((unused)),
-            my_wc_t wc,
-            uchar *s,
-            uchar *e __attribute__((unused)))
+			my_wc_t wc,
+			uchar *s,
+			uchar *e __attribute__((unused)))
 {
   if (s >= e)
     return MY_CS_TOOSMALL;
@@ -263,7 +263,7 @@ void my_hash_sort_8bit_bin(CHARSET_INFO *cs __attribute__((unused)),
                            ulong *nr1, ulong *nr2)
 {
   const uchar *pos = key;
-
+  
   /*
      Remove trailing spaces. We have to do this to be able to compare
     'A ' and 'A' as identical
@@ -272,23 +272,23 @@ void my_hash_sort_8bit_bin(CHARSET_INFO *cs __attribute__((unused)),
 
   for (; pos < (uchar*) key ; pos++)
   {
-    nr1[0]^=(ulong) ((((uint) nr1[0] & 63)+nr2[0]) *
-         ((uint)*pos)) + (nr1[0] << 8);
+    nr1[0]^=(ulong) ((((uint) nr1[0] & 63)+nr2[0]) * 
+	     ((uint)*pos)) + (nr1[0] << 8);
     nr2[0]+=3;
   }
 }
 
 void my_hash_sort_bin(CHARSET_INFO *cs __attribute__((unused)),
-              const uchar *key, size_t len,ulong *nr1, ulong *nr2)
+		      const uchar *key, size_t len,ulong *nr1, ulong *nr2)
 {
   const uchar *pos = key;
-
+  
   key+= len;
-
+  
   for (; pos < (uchar*) key ; pos++)
   {
-    nr1[0]^=(ulong) ((((uint) nr1[0] & 63)+nr2[0]) *
-         ((uint)*pos)) + (nr1[0] << 8);
+    nr1[0]^=(ulong) ((((uint) nr1[0] & 63)+nr2[0]) * 
+	     ((uint)*pos)) + (nr1[0] << 8);
     nr2[0]+=3;
   }
 }
@@ -307,29 +307,29 @@ int my_wildcmp_bin(CHARSET_INFO *cs,
                    int escape, int w_one, int w_many)
 {
   int result= -1;			/* Not found, using wildcards */
-
+  
   while (wildstr != wildend)
   {
     while (*wildstr != w_many && *wildstr != w_one)
     {
       if (*wildstr == escape && wildstr+1 != wildend)
-    wildstr++;
+	wildstr++;
       if (str == str_end || likeconv(cs,*wildstr++) != likeconv(cs,*str++))
-    return(1);			/* No match */
+	return(1);			/* No match */
       if (wildstr == wildend)
-    return(str != str_end);		/* Match if both are at end */
+	return(str != str_end);		/* Match if both are at end */
       result=1;				/* Found an anchor char */
     }
     if (*wildstr == w_one)
     {
       do
       {
-    if (str == str_end)		/* Skip one char if possible */
-      return(result);
-    INC_PTR(cs,str,str_end);
+	if (str == str_end)		/* Skip one char if possible */
+	  return(result);
+	INC_PTR(cs,str,str_end);
       } while (++wildstr < wildend && *wildstr == w_one);
       if (wildstr == wildend)
-    break;
+	break;
     }
     if (*wildstr == w_many)
     {					/* Found w_many */
@@ -338,39 +338,39 @@ int my_wildcmp_bin(CHARSET_INFO *cs,
       /* Remove any '%' and '_' from the wild search string */
       for (; wildstr != wildend ; wildstr++)
       {
-    if (*wildstr == w_many)
-      continue;
-    if (*wildstr == w_one)
-    {
-      if (str == str_end)
-        return(-1);
-      INC_PTR(cs,str,str_end);
-      continue;
-    }
-    break;				/* Not a wild character */
+	if (*wildstr == w_many)
+	  continue;
+	if (*wildstr == w_one)
+	{
+	  if (str == str_end)
+	    return(-1);
+	  INC_PTR(cs,str,str_end);
+	  continue;
+	}
+	break;				/* Not a wild character */
       }
       if (wildstr == wildend)
-    return(0);			/* match if w_many is last */
+	return(0);			/* match if w_many is last */
       if (str == str_end)
-    return(-1);
-
+	return(-1);
+      
       if ((cmp= *wildstr) == escape && wildstr+1 != wildend)
-    cmp= *++wildstr;
+	cmp= *++wildstr;
 
       INC_PTR(cs,wildstr,wildend);	/* This is compared through cmp */
       cmp=likeconv(cs,cmp);
       do
       {
-    while (str != str_end && (uchar) likeconv(cs,*str) != cmp)
-      str++;
-    if (str++ == str_end)
-      return(-1);
-    {
-      int tmp=my_wildcmp_bin(cs,str,str_end,wildstr,wildend,escape,w_one,
-                 w_many);
-      if (tmp <= 0)
-        return(tmp);
-    }
+	while (str != str_end && (uchar) likeconv(cs,*str) != cmp)
+	  str++;
+	if (str++ == str_end)
+	  return(-1);
+	{
+	  int tmp=my_wildcmp_bin(cs,str,str_end,wildstr,wildend,escape,w_one,
+				 w_many);
+	  if (tmp <= 0)
+	    return(tmp);
+	}
       } while (str != str_end && wildstr[0] != w_many);
       return(-1);
     }
@@ -403,9 +403,9 @@ size_t my_strnxfrm_8bit_bin(CHARSET_INFO *cs __attribute__((unused)),
 
 static
 uint my_instr_bin(CHARSET_INFO *cs __attribute__((unused)),
-          const char *b, size_t b_length,
-          const char *s, size_t s_length,
-          my_match_t *match, uint nmatch)
+		  const char *b, size_t b_length,
+		  const char *s, size_t s_length,
+		  my_match_t *match, uint nmatch)
 {
   register const uchar *str, *search, *end, *search_end;
 
@@ -432,29 +432,29 @@ skip:
     {
       if ( (*str++) == (*search))
       {
-    register const uchar *i,*j;
+	register const uchar *i,*j;
 
-    i= str;
-    j= search+1;
+	i= str;
+	j= search+1;
 
-    while (j != search_end)
-      if ((*i++) != (*j++))
+	while (j != search_end)
+	  if ((*i++) != (*j++))
             goto skip;
 
         if (nmatch > 0)
-    {
-      match[0].beg= 0;
-      match[0].end= (size_t) (str- (const uchar*)b-1);
-      match[0].mb_len= match[0].end;
+	{
+	  match[0].beg= 0;
+	  match[0].end= (size_t) (str- (const uchar*)b-1);
+	  match[0].mb_len= match[0].end;
 
-      if (nmatch > 1)
-      {
-        match[1].beg= match[0].end;
-        match[1].end= match[0].end+s_length;
-        match[1].mb_len= match[1].end-match[1].beg;
-      }
-    }
-    return 2;
+	  if (nmatch > 1)
+	  {
+	    match[1].beg= match[0].end;
+	    match[1].end= match[0].end+s_length;
+	    match[1].mb_len= match[1].end-match[1].beg;
+	  }
+	}
+	return 2;
       }
     }
   }

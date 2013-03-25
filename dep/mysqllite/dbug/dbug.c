@@ -286,7 +286,7 @@ static void DBUGOpenFile(CODE_STATE *,const char *, const char *, int);
 static void DBUGCloseFile(CODE_STATE *cs, FILE *fp);
         /* Push current debug settings */
 static void PushState(CODE_STATE *cs);
-    /* Free memory associated with debug state. */
+	/* Free memory associated with debug state. */
 static void FreeState (CODE_STATE *cs, struct settings *state, int free_state);
         /* Test for tracing enabled */
 static int DoTrace(CODE_STATE *cs);
@@ -683,7 +683,7 @@ void FixTraceFlags_helper(CODE_STATE *cs, const char *func,
     It's ok, because cs->framep may only affect DO_TRACE/DONT_TRACE return
     values, but we ignore them here anyway
   */
-  switch (DoTrace(cs)) {
+  switch(DoTrace(cs)) {
   case ENABLE_TRACE:
     framep->level|= TRACE_ON;
     break;
@@ -1175,7 +1175,7 @@ void _db_return_(uint _line_, struct _db_stack_frame_ *_stack_frame_)
         pthread_mutex_lock(&THR_LOCK_dbug);
       DoPrefix(cs, _line_);
       Indent(cs, cs->level);
-      (void) fprintf(cs->stack->out_file, "<%s\n", cs->func);
+      (void) fprintf(cs->stack->out_file, "<%s %u\n", cs->func, _line_);
       DbugFlush(cs);
     }
   }
@@ -1273,7 +1273,7 @@ void _db_doprnt_(const char *format,...)
 
 /*
  * This function is intended as a
- * vfprintf clone with consistent, platform independent output for
+ * vfprintf clone with consistent, platform independent output for 
  * problematic formats like %p, %zd and %lld.
  */
 static void DbugVfprintf(FILE *stream, const char* format, va_list args)
@@ -1658,7 +1658,7 @@ static int DoTrace(CODE_STATE *cs)
 {
   if ((cs->stack->maxdepth == 0 || cs->level <= cs->stack->maxdepth) &&
       InList(cs->stack->processes, cs->process) & (MATCHED|INCLUDE))
-    switch (InList(cs->stack->functions, cs->func)) {
+    switch(InList(cs->stack->functions, cs->func)) {
     case INCLUDE|SUBDIR:  return ENABLE_TRACE;
     case INCLUDE:         return DO_TRACE;
     case MATCHED|SUBDIR:

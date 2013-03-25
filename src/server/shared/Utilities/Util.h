@@ -1,38 +1,55 @@
 /*
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
  *
- * Copyright (C) 2008-2010 Skyfire <http://www.trinitycore.org/>
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _UTIL_H
 #define _UTIL_H
 
 #include "Common.h"
+//#include "Containers.h"
 
+#include <algorithm>
 #include <string>
 #include <vector>
+#include <list>
 
-typedef std::vector<std::string> Tokens;
+// Searcher for map of structs
+template<typename T, class S> struct Finder
+{
+    T val_;
+    T S::* idMember_;
 
-Tokens StrSplit(const std::string &src, const std::string &sep);
+    Finder(T val, T S::* idMember) : val_(val), idMember_(idMember) {}
+    bool operator()(const std::pair<int, S> &obj) { return obj.second.*idMember_ == val_; }
+};
+
+struct Tokens: public std::vector<char*>
+{
+    Tokens(const std::string &src, const char sep, uint32 vectorReserve = 0);
+    ~Tokens() { delete[] m_str; }
+
+    char* m_str;
+};
 
 void stripLineInvisibleChars(std::string &src);
 
-std::string secsToTimeString(uint32 timeInSecs, bool shortText = false, bool hoursOnly = false);
+int64 MoneyStringToMoney(const std::string& moneyString);
+
+std::string secsToTimeString(uint64 timeInSecs, bool shortText = false, bool hoursOnly = false);
 uint32 TimeStringToSecs(const std::string& timestring);
 std::string TimeToTimestampStr(time_t t);
 
@@ -46,20 +63,26 @@ inline uint32 secsToTimeBitFields(time_t secs)
  int32 irand(int32 min, int32 max);
 
 /* Return a random number in the range min..max (inclusive). For reliable results, the difference
-* between max and min should be less than RAND32_MAX. */
+ * between max and min should be less than RAND32_MAX.
+ */
  uint32 urand(uint32 min, uint32 max);
 
 /* Return a random number in the range 0 .. RAND32_MAX. */
  int32 rand32();
 
+  /* Return a random number in the range min..max */
+ float frand(float min, float max);
+
 /* Return a random double from 0.0 to 1.0 (exclusive). Floats support only 7 valid decimal digits.
  * A double supports up to 15 valid decimal digits and is used internally (RAND32_MAX has 10 digits).
- * With an FPU, there is usually no difference in performance between float and double. */
+ * With an FPU, there is usually no difference in performance between float and double.
+ */
  double rand_norm(void);
 
 /* Return a random double from 0.0 to 99.9999999999999. Floats support only 7 valid decimal digits.
- * A double supports up to 15 valid decimal digits and is used internaly (RAND32_MAX has 10 digits).
- * With an FPU, there is usually no difference in performance between float and double. */
+ * A double supports up to 15 valid decimal digits and is used internally (RAND32_MAX has 10 digits).
+ * With an FPU, there is usually no difference in performance between float and double.
+ */ 
  double rand_chance(void);
 
 /* Return true if a random roll fits in the specified chance (range 0-100). */
@@ -94,11 +117,78 @@ inline void ApplyPercentModFloatVar(float& var, float val, bool apply)
 {
     if (val == -100.0f)     // prevent set var to zero
         val = -99.99f;
-    var *= (apply?(100.0f+val)/100.0f : 100.0f / (100.0f+val));
+    var *= (apply ? (100.0f + val) / 100.0f : 100.0f / (100.0f + val));
 }
 
+// Percentage calculation
+template <class T>
+inline T CalculatePctF(T base, float pct)
+{
+    return T(base * pct / 100.0f);
+}
+
+template <class T>
+inline T CalculatePctN(T base, int32 pct)
+{
+    return T(base * float(pct) / 100.0f);
+}
+
+template <class T>
+inline T CalculatePctU(T base, uint32 pct)
+{
+    return T(base * float(pct) / 100.0f);
+}
+
+template <class T>
+inline T AddPctF(T& base, float pct)
+{
+    return base += CalculatePctF(base, pct);
+}
+
+template <class T>
+inline T AddPctN(T& base, int32 pct)
+{
+    return base += CalculatePctN(base, pct);
+}
+
+template <class T>
+inline T AddPctU(T& base, uint32 pct)
+{
+    return base += CalculatePctU(base, pct);
+}
+
+template <class T>
+inline T ApplyPctF(T& base, float pct)
+{
+    return base = CalculatePctF(base, pct);
+}
+
+template <class T>
+inline T ApplyPctN(T& base, int32 pct)
+{
+    return base = CalculatePctN(base, pct);
+}
+
+template <class T>
+inline T ApplyPctU(T& base, uint32 pct)
+{
+    return base = CalculatePctU(base, pct);
+}
+
+template <class T>
+inline T RoundToInterval(T& num, T floor, T ceil)
+{
+    return num = std::min(std::max(num, floor), ceil);
+}
+
+inline float roundf(float value)
+{
+    return floor(value + 0.5f);
+}
+
+// UTF8 handling
 bool Utf8toWStr(const std::string& utf8str, std::wstring& wstr);
-// in wsize==max size of buffer, out wsize==real string size
+// in wsize == max size of buffer, out wsize == real string size
 bool Utf8toWStr(char const* utf8str, size_t csize, wchar_t* wstr, size_t& wsize);
 inline bool Utf8toWStr(const std::string& utf8str, wchar_t* wstr, size_t& wsize)
 {
@@ -106,11 +196,11 @@ inline bool Utf8toWStr(const std::string& utf8str, wchar_t* wstr, size_t& wsize)
 }
 
 bool WStrToUtf8(std::wstring wstr, std::string& utf8str);
-// size==real string size
+// size == real string size
 bool WStrToUtf8(wchar_t* wstr, size_t size, std::string& utf8str);
 
 size_t utf8length(std::string& utf8str);                    // set string to "" if invalid utf8 sequence
-void utf8truncate(std::string& utf8str,size_t len);
+void utf8truncate(std::string& utf8str, size_t len);
 
 inline bool isBasicLatinCharacter(wchar_t wchar)
 {
@@ -167,7 +257,7 @@ inline bool isEastAsianCharacter(wchar_t wchar)
         return true;
     if (wchar >= 0xAC00 && wchar <= 0xD7A3)                  // Hangul Syllables
         return true;
-    if (wchar >= 0xFF01 && wchar <= 0xFFEE)                  // Halfwidth forms
+    if (wchar >= 0xFF01 && wchar <= 0xFFEE)                  // Half-width forms
         return true;
     return false;
 }
@@ -292,10 +382,10 @@ inline void wstrToLower(std::wstring& str)
 std::wstring GetMainPartOfName(std::wstring wname, uint32 declension);
 
 bool utf8ToConsole(const std::string& utf8str, std::string& conStr);
-bool consoleToUtf8(const std::string& conStr,std::string& utf8str);
+bool consoleToUtf8(const std::string& conStr, std::string& utf8str);
 bool Utf8FitTo(const std::string& str, std::wstring search);
-void utf8printf(FILE *out, const char *str, ...);
-void vutf8printf(FILE *out, const char *str, va_list* ap);
+void utf8printf(FILE* out, const char *str, ...);
+void vutf8printf(FILE* out, const char *str, va_list* ap);
 
 bool IsIPAddress(char const* ipaddress);
 uint32 CreatePIDFile(const std::string& filename);
@@ -313,7 +403,7 @@ std::string ByteArrayToHexStr(uint8* bytes, uint32 length);
 #define PAIR64_LOPART(x)   (uint32)(uint64(x)         & UI64LIT(0x00000000FFFFFFFF))
 #endif
 
-// simple class for not-modifyable list
+// simple class for not-modifiable list
 template <typename T>
 class HookList
 {
@@ -350,7 +440,7 @@ class flag96
 private:
     uint32 part[3];
 public:
-    flag96(uint32 p1=0,uint32 p2=0,uint32 p3=0)
+    flag96(uint32 p1=0, uint32 p2=0, uint32 p3=0)
     {
         part[0]=p1;
         part[1]=p2;
@@ -364,37 +454,36 @@ public:
         part[2]=p2;
     }
 
-    inline bool IsEqual(uint32 p1=0, uint32 p2=0, uint32 p3=0) const
+    inline bool IsEqual(uint32 p1 = 0, uint32 p2 = 0, uint32 p3 = 0) const
     {
-        return (
-            part[0]==p1 &&
-            part[1]==p2 &&
-            part[2]==p3);
+        return (part[0] == p1 && part[1] == p2 && part[2] == p3);
     };
 
-    inline bool HasFlag(uint32 p1=0, uint32 p2=0, uint32 p3=0) const
+    inline bool HasFlag(uint32 p1 = 0, uint32 p2  =0, uint32 p3 = 0) const
     {
-        return (
-            part[0]&p1 ||
-            part[1]&p2 ||
-            part[2]&p3);
-    };
+        return (part[0] & p1 || part[1] & p2 || part[2] & p3);
+    }
 
-    inline void Set(uint32 p1=0, uint32 p2=0, uint32 p3=0)
+    inline bool HasFlag(flag96 flags) const
     {
-        part[0]=p1;
-        part[1]=p2;
-        part[2]=p3;
+        return (part[0] & flags[0] || part[1] & flags[1] || part[2] & flags[2]);
+    }
+
+    inline void Set(uint32 p1 = 0, uint32 p2 = 0, uint32 p3 = 0)
+    {
+        part[0] = p1;
+        part[1] = p2;
+        part[2] = p3;
     };
 
     template<class type>
     inline bool operator < (type & right)
     {
-        for (uint8 i=3; i > 0; --i)
+        for (uint8 i = 3; i > 0; --i)
         {
-            if (part[i-1]<right.part[i-1])
+            if (part[i-1] < right.part[i-1])
                 return 1;
-            else if (part[i-1]>right.part[i-1])
+            else if (part[i-1] > right.part[i-1])
                 return 0;
         }
         return 0;
@@ -407,7 +496,7 @@ public:
         {
             if (part[i-1]<right.part[i-1])
                 return 1;
-            else if (part[i-1]>right.part[i-1])
+            else if (part[i-1] > right.part[i-1])
                 return 0;
         }
         return 0;
@@ -416,62 +505,58 @@ public:
     template<class type>
     inline bool operator != (type & right)
     {
-        if (part[0]!=right.part[0]
-            || part[1]!=right.part[1]
-            || part[2]!=right.part[2])
-                return true;
+        if (part[0] != right.part[0] || part[1] != right.part[1] || part[2] != right.part[2])
+            return true;
+        
         return false;
     }
 
     template<class type>
     inline bool operator != (type & right) const
     {
-        if (part[0]!=right.part[0]
-            || part[1]!=right.part[1]
-            || part[2]!=right.part[2])
-                return true;
+        if (part[0] != right.part[0] || part[1] != right.part[1] || part[2] != right.part[2])
+            return true;
+        
         return false;
     };
 
     template<class type>
     inline bool operator == (type & right)
     {
-        if (part[0]!=right.part[0]
-            || part[1]!=right.part[1]
-            || part[2]!=right.part[2])
-                return false;
+        if (part[0] != right.part[0] || part[1] != right.part[1] || part[2] != right.part[2])
+            return false;
+        
         return true;
     };
 
     template<class type>
     inline bool operator == (type & right) const
     {
-        if (part[0]!=right.part[0]
-            || part[1]!=right.part[1]
-            || part[2]!=right.part[2])
-                return false;
+        if (part[0] != right.part[0] || part[1] != right.part[1] || part[2] != right.part[2])
+            return false;
+        
         return true;
     };
 
     template<class type>
     inline void operator = (type & right)
     {
-        part[0]=right.part[0];
-        part[1]=right.part[1];
-        part[2]=right.part[2];
+        part[0] = right.part[0];
+        part[1] = right.part[1];
+        part[2] = right.part[2];
     };
 
     template<class type>
     inline flag96 operator & (type & right)
     {
-        flag96 ret(part[0] & right.part[0],part[1] & right.part[1],part[2] & right.part[2]);
+        flag96 ret(part[0] & right.part[0], part[1] & right.part[1], part[2] & right.part[2]);
         return
             ret;
     };
     template<class type>
     inline flag96 operator & (type & right) const
     {
-        flag96 ret(part[0] & right.part[0],part[1] & right.part[1],part[2] & right.part[2]);
+        flag96 ret(part[0] & right.part[0], part[1] & right.part[1], part[2] & right.part[2]);
         return
             ret;
     };
@@ -485,7 +570,7 @@ public:
     template<class type>
     inline flag96 operator | (type & right)
     {
-        flag96 ret(part[0] | right.part[0],part[1] | right.part[1],part[2] | right.part[2]);
+        flag96 ret(part[0] | right.part[0], part[1] | right.part[1], part[2] | right.part[2]);
         return
             ret;
     };
@@ -493,7 +578,7 @@ public:
     template<class type>
     inline flag96 operator | (type & right) const
     {
-        flag96 ret(part[0] | right.part[0],part[1] | right.part[1],part[2] | right.part[2]);
+        flag96 ret(part[0] | right.part[0], part[1] | right.part[1], part[2] | right.part[2]);
         return
             ret;
     };
@@ -506,15 +591,15 @@ public:
 
     inline void operator ~ ()
     {
-        part[2]=~part[2];
-        part[1]=~part[1];
-        part[0]=~part[0];
+        part[2] =~ part[2];
+        part[1] =~ part[1];
+        part[0] =~ part[0];
     };
 
     template<class type>
     inline flag96 operator ^ (type & right)
     {
-        flag96 ret(part[0] ^ right.part[0],part[1] ^ right.part[1],part[2] ^ right.part[2]);
+        flag96 ret(part[0] ^ right.part[0], part[1] ^ right.part[1], part[2] ^ right.part[2]);
         return
             ret;
     };
@@ -522,7 +607,7 @@ public:
     template<class type>
     inline flag96 operator ^ (type & right) const
     {
-        flag96 ret(part[0] ^ right.part[0],part[1] ^ right.part[1],part[2] ^ right.part[2]);
+        flag96 ret(part[0] ^ right.part[0], part[1] ^ right.part[1], part[2] ^ right.part[2]);
         return
             ret;
     };
@@ -530,49 +615,46 @@ public:
     template<class type>
     inline void operator ^= (type & right)
     {
-        *this=*this^right;
+        *this=*this ^ right;
     };
 
     inline operator bool() const
     {
-        return(
-            part[0] != 0 ||
-            part[1] != 0 ||
-            part[2] != 0);
+        return(part[0] != 0 || part[1] != 0 || part[2] != 0);
     };
 
     inline operator bool()
     {
-        return(
-            part[0] != 0 ||
-            part[1] != 0 ||
-            part[2] != 0);
+        return(part[0] != 0 || part[1] != 0 || part[2] != 0);
     };
 
     inline bool operator ! () const
     {
-        return(
-            part[0] == 0 &&
-            part[1] == 0 &&
-            part[2] == 0);
+        return(part[0] == 0 && part[1] == 0 && part[2] == 0);
     };
 
     inline bool operator ! ()
     {
-        return(
-            part[0] == 0 &&
-            part[1] == 0 &&
-            part[2] == 0);
+        return(part[0] == 0 && part[1] == 0 && part[2] == 0);
     };
 
     inline uint32 & operator[](uint8 el)
     {
-        return (part[el]);
+        return part[el];
     };
 
-    inline const uint32 & operator[](uint8 el) const
+    inline uint32 operator[](uint8 el) const
     {
-        return (part[el]);
+        return part[el];
     };
 };
+
+/* Select a random element from a container. Note: make sure you explicitly empty check the container */
+template <class C> typename C::value_type const& SelectRandomContainerElement(C const& container)
+{
+    typename C::const_iterator it = container.begin();
+    std::advance(it, urand(0, container.size() - 1));
+    return *it;
+}
+
 #endif

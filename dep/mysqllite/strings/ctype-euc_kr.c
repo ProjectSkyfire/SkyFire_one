@@ -13,7 +13,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
-/*
+/* 
  * This file is for Korean EUC charset, and created by powerm90@tinc.co.kr.
  * and updated by mrpark@tinc.co.kr.
  */
@@ -181,11 +181,11 @@ static uchar sort_order_euc_kr[]=
 /*
  Unicode mapping is done according to:
  ftp://ftp.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/KSC/KSC5601.TXT
-
+ 
  Valid multi-byte characters:
-
+ 
    [81..FE][41..5A,61..7A,81..FE]
-
+ 
  Note, 0x5C is not a valid MB tail,
  so escape_with_backslash_is_dangerous is not set.
 */
@@ -618,7 +618,7 @@ static MY_UNICASE_INFO cA5[256]=
   {0xA5FC,0xA5FC,0x003F},
   {0xA5FD,0xA5FD,0x003F},
   {0xA5FE,0xA5FE,0x003F},
-  {0xA5FF,0xA5FF,0x003F}
+  {0xA5FF,0xA5FF,0x003F} 
 };
 
 static MY_UNICASE_INFO cA7[256]=
@@ -1231,7 +1231,7 @@ static MY_UNICASE_INFO cA9[256]=
   {0xA9FD,0xA9FD,0x2083},
   {0xA9FE,0xA9FE,0x2084},
   {0xA9FF,0xA9FF,0x003F}
-};
+};  
 
 static MY_UNICASE_INFO cAC[256]=
 {
@@ -9859,52 +9859,53 @@ static int func_uni_ksc5601_onechar(int code){
 
 static int
 my_wc_mb_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
-         my_wc_t wc, uchar *s, uchar *e)
+		 my_wc_t wc, uchar *s, uchar *e)
 {
   int code;
-
+  
   if (s >= e)
     return MY_CS_TOOSMALL;
-
+  
   if ((uint) wc < 0x80)
   {
     s[0]= (uchar) wc;
     return 1;
   }
-
+  
   if (!(code=func_uni_ksc5601_onechar(wc)))
     return MY_CS_ILUNI;
-
+  
   if (s+2>e)
     return MY_CS_TOOSMALL2;
-
+  
   s[0]=code>>8;
   s[1]=code&0xFF;
-
+  
   return 2;
 }
 
-static int
+static int 
 my_mb_wc_euc_kr(CHARSET_INFO *cs __attribute__((unused)),
-         my_wc_t *pwc, const uchar *s, const uchar *e)
+		 my_wc_t *pwc, const uchar *s, const uchar *e)
 {
+  
   int hi;
-
+  
   if (s >= e)
     return MY_CS_TOOSMALL;
-
+  
   if ((hi= s[0]) < 0x80)
   {
     pwc[0]=hi;
     return 1;
   }
-
+  
   if (s+2>e)
     return MY_CS_TOOSMALL2;
-
+  
   if (!(pwc[0]=func_ksc5601_uni_onechar((hi<<8)+s[1])))
     return -2;
-
+  
   return 2;
 }
 

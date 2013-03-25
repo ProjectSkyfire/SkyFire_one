@@ -1,6 +1,7 @@
 /**
   @file Matrix4.cpp
-
+ 
+ 
   @maintainer Morgan McGuire, http://graphics.cs.williams.edu
 
   @created 2003-10-02
@@ -20,6 +21,8 @@
 #include "G3D/stringutils.h"
 
 namespace G3D {
+
+    
 Matrix4::Matrix4(const Any& any) {
     any.verifyName("Matrix4");
     any.verifyType(Any::ARRAY);
@@ -51,6 +54,7 @@ Matrix4::Matrix4(const Any& any) {
     }
 }
 
+
 Matrix4::operator Any() const {
     Any any(Any::ARRAY, "Matrix4");
     any.resize(16);
@@ -72,6 +76,7 @@ const Matrix4& Matrix4::identity() {
     return m;
 }
 
+
 const Matrix4& Matrix4::zero() {
     static Matrix4 m(
         0, 0, 0, 0,
@@ -80,6 +85,7 @@ const Matrix4& Matrix4::zero() {
         0, 0, 0, 0);
     return m;
 }
+
 
 Matrix4::Matrix4(const class CoordinateFrame& cframe) {
     for (int r = 0; r < 3; ++r) {
@@ -107,11 +113,13 @@ Matrix4::Matrix4(const Matrix3& upper3x3, const Vector3& lastCol) {
     elt[3][3] = 1.0f;
 }
 
+
 Matrix3 Matrix4::upper3x3() const {
     return Matrix3(elt[0][0], elt[0][1], elt[0][2],
                    elt[1][0], elt[1][1], elt[1][2],
                    elt[2][0], elt[2][1], elt[2][2]);
 }
+
 
 Matrix4 Matrix4::orthogonalProjection(
     const class Rect2D& rect,
@@ -121,6 +129,7 @@ Matrix4 Matrix4::orthogonalProjection(
     return Matrix4::orthogonalProjection(rect.x0(), rect.x1(), rect.y1(), rect.y0(), nearval, farval, upDirection);
 }
 
+
 Matrix4 Matrix4::orthogonalProjection(
     float            left,
     float            right,
@@ -129,7 +138,8 @@ Matrix4 Matrix4::orthogonalProjection(
     float            nearval,
     float            farval,
     float            upDirection) {
-    // Adapted from Mesa.  Note that Microsoft (http://msdn.microsoft.com/library/default.asp?url=/library/en-us/opengl/glfunc03_8qnj.asp)
+
+    // Adapted from Mesa.  Note that Microsoft (http://msdn.microsoft.com/library/default.asp?url=/library/en-us/opengl/glfunc03_8qnj.asp) 
     // and Linux (http://www.xfree86.org/current/glOrtho.3.html) have different matrices shown in their documentation.
 
     float x, y, z;
@@ -145,21 +155,23 @@ Matrix4 Matrix4::orthogonalProjection(
     y  *= upDirection;
     ty *= upDirection;
 
-    return
+    return 
         Matrix4( x , 0.0f, 0.0f,  tx,
                 0.0f,  y , 0.0f,  ty,
                 0.0f, 0.0f,  z ,  tz,
                 0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+
 Matrix4 Matrix4::perspectiveProjection(
-    float left,
+    float left,    
     float right,
-    float bottom,
+    float bottom,  
     float top,
-    float nearval,
+    float nearval, 
     float farval,
     float upDirection) {
+
     float x, y, a, b, c, d;
 
     x = (2.0f*nearval) / (right-left);
@@ -187,14 +199,16 @@ Matrix4 Matrix4::perspectiveProjection(
         0,  0, -1,  0);
 }
 
+
 void Matrix4::getPerspectiveProjectionParameters(
-    float& left,
+    float& left,    
     float& right,
-    float& bottom,
+    float& bottom,  
     float& top,
-    float& nearval,
+    float& nearval, 
     float& farval,
     float upDirection) const {
+
     debugAssertM(abs(upDirection) == 1.0f, "upDirection must be -1 or +1");
 
     float x = elt[0][0];
@@ -224,12 +238,14 @@ void Matrix4::getPerspectiveProjectionParameters(
         farval = nearval * ((c - 1.0f) / (c + 1.0f));
     }
 
+
     left = (a - 1.0f) * nearval / x;
     right = 2.0f * nearval / x + left;
 
     bottom = (b - 1.0f) * nearval / y;
     top = 2.0f * nearval / y + bottom;
 }
+
 
 Matrix4::Matrix4(
     float r1c1, float r1c2, float r1c3, float r1c4,
@@ -253,6 +269,7 @@ Matrix4::Matrix4(const float* init) {
     }
 }
 
+
 Matrix4::Matrix4(const double* init) {
     for (int r = 0; r < 4; ++r) {
         for (int c = 0; c < 4; ++c) {
@@ -260,6 +277,7 @@ Matrix4::Matrix4(const double* init) {
         }
     }
 }
+
 
 Matrix4::Matrix4() {
     for (int r = 0; r < 4; ++r) {
@@ -269,11 +287,13 @@ Matrix4::Matrix4() {
     }
 }
 
+
 void Matrix4::setRow(int r, const Vector4& v) {
     for (int c = 0; c < 4; ++c) {
         elt[r][c] = v[c];
     }
 }
+
 
 void Matrix4::setColumn(int c, const Vector4& v) {
     for (int r = 0; r < 4; ++r) {
@@ -281,9 +301,11 @@ void Matrix4::setColumn(int c, const Vector4& v) {
     }
 }
 
+
 const Vector4& Matrix4::row(int r) const {
     return reinterpret_cast<const Vector4*>(elt[r])[0];
 }
+
 
 Vector4 Matrix4::column(int c) const {
     Vector4 v;
@@ -292,6 +314,7 @@ Vector4 Matrix4::column(int c) const {
     }
     return v;
 }
+
 
 Matrix4 Matrix4::operator*(const Matrix4& other) const {
     Matrix4 result;
@@ -306,6 +329,7 @@ Matrix4 Matrix4::operator*(const Matrix4& other) const {
     return result;
 }
 
+
 Matrix4 Matrix4::operator*(const float s) const {
     Matrix4 result;
     for (int r = 0; r < 4; ++r) {
@@ -317,10 +341,12 @@ Matrix4 Matrix4::operator*(const float s) const {
     return result;
 }
 
+
 Vector3 Matrix4::homoMul(const class Vector3& v, float w) const {
     Vector4 r = (*this) * Vector4(v, w);
     return r.xyz() * (1.0f / r.w);
 }
+
 
 Vector4 Matrix4::operator*(const Vector4& vector) const {
     Vector4 result(0,0,0,0);
@@ -333,6 +359,7 @@ Vector4 Matrix4::operator*(const Vector4& vector) const {
     return result;
 }
 
+
 Matrix4 Matrix4::transpose() const {
     Matrix4 result;
     for (int r = 0; r < 4; ++r) {
@@ -344,17 +371,20 @@ Matrix4 Matrix4::transpose() const {
     return result;
 }
 
+
 bool Matrix4::operator!=(const Matrix4& other) const {
     return ! (*this == other);
 }
 
+
 bool Matrix4::operator==(const Matrix4& other) const {
+
     // If the bit patterns are identical, they must be
     // the same matrix.  If not, they *might* still have
     // equal elements due to floating point weirdness.
     if (memcmp(this, &other, sizeof(Matrix4) == 0)) {
         return true;
-    }
+    } 
 
     for (int r = 0; r < 4; ++r) {
         for (int c = 0; c < 4; ++c) {
@@ -367,15 +397,18 @@ bool Matrix4::operator==(const Matrix4& other) const {
     return true;
 }
 
+
 float Matrix4::determinant() const {
     // Determinant is the dot product of the first row and the first row
     // of cofactors (i.e. the first col of the adjoint matrix)
 	return cofactor().row(0).dot(row(0));
 }
 
+
 Matrix4 Matrix4::adjoint() const {
     return cofactor().transpose();
 }
+
 
 Matrix4 Matrix4::inverse() const {
     // Inverse = adjoint / determinant
@@ -388,6 +421,7 @@ Matrix4 Matrix4::inverse() const {
 
 	return A * (1.0f / det);
 }
+
 
 Matrix4 Matrix4::cofactor() const {
 	Matrix4 out;
@@ -408,6 +442,7 @@ Matrix4 Matrix4::cofactor() const {
     return out;
 }
 
+
 float Matrix4::subDeterminant(int excludeRow, int excludeCol) const {
     // Compute non-excluded row and column indices
     int row[3];
@@ -425,16 +460,16 @@ float Matrix4::subDeterminant(int excludeRow, int excludeCol) const {
         }
     }
 
-    // Compute the first row of cofactors
-    float cofactor00 =
+    // Compute the first row of cofactors 
+    float cofactor00 = 
       elt[row[1]][col[1]] * elt[row[2]][col[2]] -
       elt[row[1]][col[2]] * elt[row[2]][col[1]];
 
-    float cofactor10 =
+    float cofactor10 = 
       elt[row[1]][col[2]] * elt[row[2]][col[0]] -
       elt[row[1]][col[0]] * elt[row[2]][col[2]];
 
-    float cofactor20 =
+    float cofactor20 = 
       elt[row[1]][col[0]] * elt[row[2]][col[1]] -
       elt[row[1]][col[1]] * elt[row[2]][col[0]];
 
@@ -444,6 +479,7 @@ float Matrix4::subDeterminant(int excludeRow, int excludeCol) const {
       elt[row[0]][col[1]] * cofactor10 +
       elt[row[0]][col[2]] * cofactor20;
 }
+
 
 CoordinateFrame Matrix4::approxCoordinateFrame() const {
 	CoordinateFrame cframe;
@@ -461,6 +497,7 @@ CoordinateFrame Matrix4::approxCoordinateFrame() const {
 	return cframe;
 }
 
+
 void Matrix4::serialize(class BinaryOutput& b) const {
     for (int r = 0; r < 4; ++r) {
         for (int c = 0; c < 4; ++c) {
@@ -468,6 +505,7 @@ void Matrix4::serialize(class BinaryOutput& b) const {
         }
     }
 }
+
 
 void Matrix4::deserialize(class BinaryInput& b) {
     for (int r = 0; r < 4; ++r) {
@@ -478,10 +516,13 @@ void Matrix4::deserialize(class BinaryInput& b) {
 }
 
 std::string Matrix4::toString() const {
-    return G3D::format("[%g, %g, %g, %g; %g, %g, %g, %g; %g, %g, %g, %g; %g, %g, %g, %g]",
+    return G3D::format("[%g, %g, %g, %g; %g, %g, %g, %g; %g, %g, %g, %g; %g, %g, %g, %g]", 
 			elt[0][0], elt[0][1], elt[0][2], elt[0][3],
 			elt[1][0], elt[1][1], elt[1][2], elt[1][3],
 			elt[2][0], elt[2][1], elt[2][2], elt[2][3],
 			elt[3][0], elt[3][1], elt[3][2], elt[3][3]);
 }
+
 } // namespace
+
+

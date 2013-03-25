@@ -313,14 +313,14 @@ my_bool my_thread_init(void)
 #ifdef EXTRA_DEBUG_THREADS
   fprintf(stderr,"my_thread_init(): thread_id: 0x%lx\n",
           (ulong) pthread_self());
-#endif
+#endif  
 
   if (my_pthread_getspecific(struct st_my_thread_var *,THR_KEY_mysys))
   {
 #ifdef EXTRA_DEBUG_THREADS
     fprintf(stderr,"my_thread_init() called more than once in thread 0x%lx\n",
             (long) pthread_self());
-#endif
+#endif    
     goto end;
   }
 
@@ -374,8 +374,8 @@ void my_thread_end(void)
 
 #ifdef EXTRA_DEBUG_THREADS
   fprintf(stderr,"my_thread_end(): tmp: 0x%lx  pthread_self: 0x%lx  thread_id: %ld\n",
-      (long) tmp, (long) pthread_self(), tmp ? (long) tmp->id : 0L);
-#endif
+	  (long) tmp, (long) pthread_self(), tmp ? (long) tmp->id : 0L);
+#endif  
 
 #ifdef HAVE_PSI_INTERFACE
   /*
@@ -469,7 +469,7 @@ static uint get_thread_lib(void)
 {
 #ifdef _CS_GNU_LIBPTHREAD_VERSION
   char buff[64];
-
+    
   confstr(_CS_GNU_LIBPTHREAD_VERSION, buff, sizeof(buff));
 
   if (!strncasecmp(buff, "NPTL", 4))
@@ -485,7 +485,7 @@ static uint get_thread_lib(void)
   In Visual Studio 2005 and later, default SIGABRT handler will overwrite
   any unhandled exception filter set by the application  and will try to
   call JIT debugger. This is not what we want, this we calling __debugbreak
-  to stop in debugger, if process is being debugged or to generate
+  to stop in debugger, if process is being debugged or to generate 
   EXCEPTION_BREAKPOINT and then handle_segfault will do its magic.
 */
 
@@ -505,3 +505,4 @@ static void install_sigabrt_handler(void)
 #endif /* _MSC_VER >=1400 */
 }
 #endif
+

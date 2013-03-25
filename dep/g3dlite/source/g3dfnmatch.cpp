@@ -46,6 +46,7 @@
 #include <stdio.h>
 
 namespace G3D {
+
 #define	EOS	'\0'
 
 #define	RANGE_MATCH	1
@@ -207,6 +208,7 @@ rangematch(const char *pattern, char test, int flags, char **newp)
 	*newp = (char *)pattern;
 	return (ok == negate ? RANGE_NOMATCH : RANGE_MATCH);
 }
+
 }
 
 #else
@@ -218,3 +220,4 @@ int g3dfnmatch(const char * a, const char *b, int c) {
 }
 
 #endif
+

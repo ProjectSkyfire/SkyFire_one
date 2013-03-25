@@ -13,7 +13,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
-/* This file is for Chinese character sets GBK, created by Wei He
+/* This file is for Chinese character sets GBK, created by Wei He 
    (hewei@mail.ied.ac.cn)
 */
 
@@ -3431,10 +3431,10 @@ static uint16 gbksortorder(uint16 i)
 }
 
 int my_strnncoll_gbk_internal(const uchar **a_res, const uchar **b_res,
-                  size_t length)
+			      size_t length)
 {
   const uchar *a= *a_res, *b= *b_res;
-  uint a_char,b_char;
+  uint a_char,b_char; 
 
   while (length--)
   {
@@ -3444,14 +3444,14 @@ int my_strnncoll_gbk_internal(const uchar **a_res, const uchar **b_res,
       b_char= gbkcode(*b,*(b+1));
       if (a_char != b_char)
         return ((int) gbksortorder((uint16) a_char) -
-        (int) gbksortorder((uint16) b_char));
+		(int) gbksortorder((uint16) b_char));
       a+= 2;
       b+= 2;
       length--;
     }
     else if (sort_order_gbk[*a++] != sort_order_gbk[*b++])
       return ((int) sort_order_gbk[a[-1]] -
-          (int) sort_order_gbk[b[-1]]);
+	      (int) sort_order_gbk[b[-1]]);
   }
   *a_res= a;
   *b_res= b;
@@ -3459,7 +3459,7 @@ int my_strnncoll_gbk_internal(const uchar **a_res, const uchar **b_res,
 }
 
 int my_strnncoll_gbk(CHARSET_INFO *cs __attribute__((unused)),
-             const uchar *a, size_t a_length,
+		     const uchar *a, size_t a_length,
                      const uchar *b, size_t b_length,
                      my_bool b_is_prefix)
 {
@@ -3469,8 +3469,8 @@ int my_strnncoll_gbk(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 static int my_strnncollsp_gbk(CHARSET_INFO * cs __attribute__((unused)),
-                  const uchar *a, size_t a_length,
-                  const uchar *b, size_t b_length,
+			      const uchar *a, size_t a_length, 
+			      const uchar *b, size_t b_length,
                               my_bool diff_if_only_endspace_difference)
 {
   size_t length= min(a_length, b_length);
@@ -3501,7 +3501,7 @@ static int my_strnncollsp_gbk(CHARSET_INFO * cs __attribute__((unused)),
     for (end= a + a_length-length; a < end ; a++)
     {
       if (*a != ' ')
-    return (*a < ' ') ? -swap : swap;
+	return (*a < ' ') ? -swap : swap;
     }
   }
   return res;
@@ -3526,7 +3526,7 @@ static size_t my_strnxfrm_gbk(CHARSET_INFO *cs __attribute__((unused)),
         *dest++ = gbktail(e);
       src+=2;
       len--;
-    } else
+    } else 
       *dest++ = sort_order_gbk[(uchar) *src++];
   }
   if (dstlen > srclen)
@@ -3535,7 +3535,7 @@ static size_t my_strnxfrm_gbk(CHARSET_INFO *cs __attribute__((unused)),
 }
 
 static uint ismbchar_gbk(CHARSET_INFO *cs __attribute__((unused)),
-         const char* p, const char *e)
+		 const char* p, const char *e)
 {
   return (isgbkhead(*(p)) && (e)-(p)>1 && isgbktail(*((p)+1))? 2: 0);
 }
@@ -10649,25 +10649,25 @@ static int func_uni_gbk_onechar(int code){
 
 static int
 my_wc_mb_gbk(CHARSET_INFO *cs  __attribute__((unused)),
-          my_wc_t wc, uchar *s, uchar *e)
+	      my_wc_t wc, uchar *s, uchar *e)
 {
   int code;
-
+  
   if (s >= e)
     return MY_CS_TOOSMALL;
-
+  
   if ((uint) wc < 0x80)
   {
     s[0]= (uchar) wc;
     return 1;
   }
-
+  
   if (!(code=func_uni_gbk_onechar(wc)))
     return MY_CS_ILUNI;
-
+  
   if (s+2>e)
     return MY_CS_TOOSMALL2;
-
+    
   s[0]=code>>8;
   s[1]=code&0xFF;
   return 2;
@@ -10675,28 +10675,29 @@ my_wc_mb_gbk(CHARSET_INFO *cs  __attribute__((unused)),
 
 static int
 my_mb_wc_gbk(CHARSET_INFO *cs __attribute__((unused)),
-          my_wc_t *pwc, const uchar *s, const uchar *e)
+	      my_wc_t *pwc, const uchar *s, const uchar *e)
 {
   int hi;
-
+  
   if (s >= e)
     return MY_CS_TOOSMALL;
-
+  
   hi=s[0];
-
+  
   if (hi<0x80)
   {
     pwc[0]=hi;
     return 1;
   }
-
+  
   if (s+2>e)
     return MY_CS_TOOSMALL2;
-
+    
   if (!(pwc[0]=func_gbk_uni_onechar( (hi<<8) + s[1])))
     return -2;
-
+  
   return 2;
+  
 }
 
 /*
@@ -10732,6 +10733,8 @@ size_t my_well_formed_len_gbk(CHARSET_INFO *cs __attribute__((unused)),
   }
   return (size_t) (b - b0);
 }
+
+                             
 
 static MY_COLLATION_HANDLER my_collation_ci_handler =
 {

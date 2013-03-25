@@ -21,6 +21,7 @@
 // implementation at http://www.ijs.si/software/snprintf/
 
 namespace G3D {
+
 std::string __cdecl format(const char* fmt,...) {
     va_list argList;
     va_start(argList,fmt);
@@ -48,22 +49,25 @@ std::string vformat(const char *fmt, va_list argPtr) {
     int actualSize = _vscprintf(fmt, argPtr) + 1;
 
     if (actualSize > bufSize) {
+
         // Now use the heap.
         char* heapBuffer = NULL;
 
         if (actualSize < maxSize) {
+
             heapBuffer = (char*)System::malloc(maxSize + 1);
             _vsnprintf(heapBuffer, maxSize, fmt, argPtr);
             heapBuffer[maxSize] = '\0';
         } else {
             heapBuffer = (char*)System::malloc(actualSize);
-            vsprintf(heapBuffer, fmt, argPtr);
+            vsprintf(heapBuffer, fmt, argPtr);            
         }
 
         std::string formattedString(heapBuffer);
         System::free(heapBuffer);
         return formattedString;
     } else {
+
         vsprintf(stackBuffer, fmt, argPtr);
         return std::string(stackBuffer);
     }
@@ -82,18 +86,20 @@ std::string vformat(const char *fmt, va_list argPtr) {
 	char stackBuffer[bufSize];
 
 	// MSVC6 doesn't support va_copy, however it also seems to compile
-	// correctly if we just pass our argument list along.  Note that
+	// correctly if we just pass our argument list along.  Note that 
 	// this whole code block is only compiled if we're on MSVC6 anyway
 	int actualWritten = _vsnprintf(stackBuffer, bufSize, fmt, argPtr);
 
     // Not a big enough buffer, bufSize characters written
     if (actualWritten == -1) {
+
         int heapSize = 512;
         double powSize = 1.0;
         char* heapBuffer = (char*)System::malloc(heapSize);
-
+        
         while ((_vsnprintf(heapBuffer, heapSize, fmt, argPtr) == -1) &&
             (heapSize  < maxSize)) {
+
             heapSize = iCeil(heapSize * ::pow((double)2.0, powSize++));
             heapBuffer = (char*)System::realloc(heapBuffer, heapSize);
         }
@@ -105,6 +111,7 @@ std::string vformat(const char *fmt, va_list argPtr) {
 
         return heapString;
     } else {
+
         return std::string(stackBuffer);
     }
 }
@@ -136,16 +143,20 @@ std::string vformat(const char* fmt, va_list argPtr) {
       (void)numChars2;
 
       std::string result(heapBuffer);
-
+      
       System::free(heapBuffer);
 
       return result;
+
     } else {
+
       return std::string(stackBuffer);
+
     }
 }
 
 #endif
+
 } // namespace
 
 #ifdef _MSC_VER
