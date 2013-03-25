@@ -17,10 +17,6 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** \file
-    \ingroup Trinityd
-*/
-
 #include "Common.h"
 #include "SystemConfig.h"
 #include "SignalHandler.h"
@@ -37,7 +33,7 @@
 #include "TCSoap.h"
 #include "Timer.h"
 #include "Util.h"
-#include "AuthSocket.h"
+#include "RealmList.h"
 #include "BigNumber.h"
 
 #include <ace/Sig_Handler.h>

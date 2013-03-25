@@ -195,7 +195,23 @@ BOOL WheatyExceptionReport::_GetWindowsVersion(TCHAR* szVersion, DWORD cntMax)
         case VER_PLATFORM_WIN32_NT:
             // Test for the specific product family.
             if (osvi.dwMajorVersion == 6)
-                _tcsncat(szVersion, _T("Windows Vista or Windows Server 2008 "), cntMax);
+                {
+            #if WINVER < 0x0500
+                if (osvi.wReserved[1] == VER_NT_WORKSTATION)
+            #else
+                if (osvi.wProductType == VER_NT_WORKSTATION)
+            #endif                                          // WINVER < 0x0500
+                {
+                    if (osvi.dwMinorVersion == 1)
+                        _tcsncat(szVersion, _T("Windows 7 "), cntMax);
+                    else
+                        _tcsncat(szVersion, _T("Windows Vista "), cntMax);
+                }
+                else if (osvi.dwMinorVersion == 1)
+                    _tcsncat(szVersion, _T("Windows Server 2008 R2 "), cntMax);
+                else
+                    _tcsncat(szVersion, _T("Windows Server 2008 "), cntMax);
+            }
             if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2)
                 _tcsncat(szVersion, _T("Microsoft Windows Server 2003 "), cntMax);
             if (osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1)
@@ -399,7 +415,7 @@ void WheatyExceptionReport::printTracesForAllThreads()
         }
         CloseHandle(threadHandle);
     }
-  } while(Thread32Next(hThreadSnap, &te32));
+  } while (Thread32Next(hThreadSnap, &te32));
 
 //  Don't forget to clean up the snapshot object.
   CloseHandle(hThreadSnap);
@@ -427,7 +443,7 @@ PEXCEPTION_POINTERS pExceptionInfo)
         pExceptionRecord->ExceptionCode,
         GetExceptionString(pExceptionRecord->ExceptionCode));
 
-    // Now print information about where the fault occured
+    // Now print information about where the fault occurred
     TCHAR szFaultingModule[MAX_PATH];
     DWORD section;
     DWORD_PTR offset;
@@ -751,7 +767,7 @@ bool bWriteVariables, HANDLE pThreadHandle)                                     
 BOOL CALLBACK
 WheatyExceptionReport::EnumerateSymbolsCallback(
 PSYMBOL_INFO  pSymInfo,
-ULONG         SymbolSize,
+ULONG         /*SymbolSize*/,
 PVOID         UserContext)
 {
     char szBuffer[2048];
@@ -779,7 +795,7 @@ bool WheatyExceptionReport::FormatSymbolValue(
 PSYMBOL_INFO pSym,
 STACKFRAME * sf,
 char * pszBuffer,
-unsigned cbBuffer)
+unsigned /*cbBuffer*/)
 {
     char * pszCurrBuffer = pszBuffer;
 
@@ -850,7 +866,7 @@ DWORD dwTypeIndex,
 unsigned nestingLevel,
 DWORD_PTR offset,
 bool & bHandled,
-char* Name)
+char* /*Name*/)
 {
     bHandled = false;
 

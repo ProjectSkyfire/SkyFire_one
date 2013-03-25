@@ -193,7 +193,7 @@ CREATE TABLE `realmlist` (
   `address` varchar(32) NOT NULL default '127.0.0.1',
   `port` int(11) NOT NULL default '8085',
   `icon` tinyint(3) unsigned NOT NULL default '0',
-  `color` tinyint(3) unsigned NOT NULL default '2',
+  `flag` tinyint(3) unsigned NOT NULL DEFAULT '2',
   `timezone` tinyint(3) unsigned NOT NULL default '0',
   `allowedSecurityLevel` tinyint(3) unsigned NOT NULL default '0',
   `population` float unsigned NOT NULL default '0',
