@@ -39,13 +39,13 @@
 #endif
 
 bool StartDB();
-// void StopDB();
+//void StopDB();
 
-bool stopEvent = false;                                     // Setting it to true stops the server
+bool stopEvent = false;      // Setting it to true stops the server
 
-DatabaseType LoginDatabase;                                 // Accessor to the realm server database
+DatabaseType LoginDatabase;  // Accessor to the auth-server database
 
-// Handle authserver's termination signals
+// Handle auth-server's termination signals
 class AuthServerSignalHandler : public Skyfire::SignalHandler
 {
 public:
@@ -76,7 +76,7 @@ extern int main(int argc, char **argv)
     // Command line parsing to get the configuration file name
     char const* cfg_file = _AUTHSERVER_CONFIG;
     int c = 1;
-    while(c < argc)
+    while (c < argc)
     {
         if (strcmp(argv[c], "-c") == 0)
         {
@@ -104,15 +104,13 @@ extern int main(int argc, char **argv)
     sLog->outString( "<Ctrl-C> to stop.\n");
     sLog->outString( "Using configuration file %s.", cfg_file);
 
-    sLog->outString(" ");
     sLog->outString("   ______  __  __  __  __  ______ __  ______  ______ ");
     sLog->outString("  /\\  ___\\/\\ \\/ / /\\ \\_\\ \\/\\  ___/\\ \\/\\  == \\/\\  ___\\ ");
     sLog->outString("  \\ \\___  \\ \\  _'-\\ \\____ \\ \\  __\\ \\ \\ \\  __<\\ \\  __\\ ");
     sLog->outString("   \\/\\_____\\ \\_\\ \\_\\/\\_____\\ \\_\\  \\ \\_\\ \\_\\ \\_\\ \\_____\\ ");
     sLog->outString("    \\/_____/\\/_/\\/_/\\/_____/\\/_/   \\/_/\\/_/ /_/\\/_____/ ");
-    sLog->outString("  Project SkyFireEmu 2012(c) Open-sourced Game Emulation ");
-    sLog->outString("           <http://www.projectskyfire.org/> ");
-    sLog->outString("<Ctrl-C> to stop.\n");
+    sLog->outString("  Project SkyFireEMU 2013(c) Open-sourced Game Emulation ");
+    sLog->outString("           <http://www.projectskyfire.org/> \n");
 
     sLog->outDetail("%s (Library: %s)", OPENSSL_VERSION_TEXT, SSLeay_version(SSLEAY_VERSION));
 
@@ -124,7 +122,7 @@ extern int main(int argc, char **argv)
 
     sLog->outBasic("Max allowed open files is %d", ACE::max_handles());
 
-    // authserver PID file creation
+    // auth-server PID file creation
     std::string pidfile = ConfigMgr::GetStringDefault("PidFile", "");
     if (!pidfile.empty())
     {
@@ -172,7 +170,7 @@ extern int main(int argc, char **argv)
     // Initialize the signal handlers
     AuthServerSignalHandler SignalINT, SignalTERM;
 
-    // Register authservers's signal handlers
+    // Register auth-servers's signal handlers
     ACE_Sig_Handler Handler;
     Handler.register_handler(SIGINT, &SignalINT);
     Handler.register_handler(SIGTERM, &SignalTERM);
@@ -233,7 +231,7 @@ extern int main(int argc, char **argv)
     // Wait for termination signal
     while (!stopEvent)
     {
-        // don't move this outside the loop, the reactor will modify it
+        // dont move this outside the loop, the reactor will modify it
         ACE_Time_Value interval(0, 100000);
 
         if (ACE_Reactor::instance()->run_reactor_event_loop(interval) == -1)
@@ -278,7 +276,8 @@ bool StartDB()
         synch_threads = 1;
     }
 
-    // NOTE: While authserver is singlethreaded you should keep synch_threads == 1. Increasing it is just silly since only 1 will be used ever.
+    // NOTE: While auth-server is single-threaded you should keep synch_threads == 1. 
+    // Increasing it is just silly since only 1 will be used ever.
     if (!LoginDatabase.Initialize(dbstring.c_str()))
     {
         sLog->outError("Cannot connect to database");

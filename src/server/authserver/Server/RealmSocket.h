@@ -5,7 +5,7 @@
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -25,6 +25,7 @@
 #include <ace/SOCK_Stream.h>
 #include <ace/Message_Block.h>
 #include <ace/Basic_Types.h>
+#include "Define.h"
 
 class RealmSocket : public ACE_Svc_Handler<ACE_SOCK_STREAM, ACE_NULL_SYNCH>
 {
@@ -55,7 +56,7 @@ public:
 
     const std::string& getRemoteAddress(void) const;
 
-    const uint16 getRemotePort(void) const;
+    uint16 getRemotePort(void) const;
 
     virtual int open(void *);
 

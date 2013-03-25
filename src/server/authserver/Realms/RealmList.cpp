@@ -5,7 +5,7 @@
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -19,7 +19,7 @@
 
 #include "Common.h"
 #include "RealmList.h"
-#include "DatabaseEnv.h"
+#include "Database/DatabaseEnv.h"
 
 RealmList::RealmList() : m_UpdateInterval(0), m_NextUpdateTime(time(NULL)){}
 
@@ -32,7 +32,7 @@ void RealmList::Initialize(uint32 updateInterval)
     UpdateRealms(true);
 }
 
-void RealmList::UpdateRealm(uint32 ID, const std::string& name, const std::string& address, uint32 port, uint8 icon, uint8 color, uint8 timezone, AccountTypes allowedSecurityLevel, float popu, uint32 build)
+void RealmList::UpdateRealm(uint32 ID, const std::string& name, const std::string& address, uint32 port, uint8 icon, RealmFlags flag, uint8 timezone, AccountTypes allowedSecurityLevel, float popu, uint32 build)
 {
     // Create new if not exist or update existed
     Realm& realm = m_realms[name];
@@ -40,7 +40,7 @@ void RealmList::UpdateRealm(uint32 ID, const std::string& name, const std::strin
     realm.m_ID = ID;
     realm.name = name;
     realm.icon = icon;
-    realm.color = color;
+    realm.flag = flag;
     realm.timezone = timezone;
     realm.allowedSecurityLevel = allowedSecurityLevel;
     realm.populationLevel = popu;
@@ -71,9 +71,9 @@ void RealmList::UpdateRealms(bool init)
 {
     sLog->outDetail("Updating Realm List...");
 
-    QueryResult_AutoPtr result = LoginDatabase.Query("SELECT id, name, address, port, icon, color, timezone, allowedSecurityLevel, population, gamebuild FROM realmlist WHERE color <> 3 ORDER BY name");
+    QueryResult_AutoPtr result = LoginDatabase.Query("SELECT id, name, address, port, icon, flag, timezone, allowedSecurityLevel, population, gamebuild FROM realmlist WHERE flag 3 ORDER BY name");
 
-    // Circle through results and add them to the realm map
+    // Circle through results and add them to the realm map 
     if (result)
     {
         do
@@ -84,13 +84,13 @@ void RealmList::UpdateRealms(bool init)
             const std::string& address = fields[2].GetString();
             uint32 port = fields[3].GetUInt32();
             uint8 icon = fields[4].GetUInt8();
-            uint8 color = fields[5].GetUInt8();
+            RealmFlags flag = RealmFlags(fields[5].GetUInt8());
             uint8 timezone = fields[6].GetUInt8();
             uint8 allowedSecurityLevel = fields[7].GetUInt8();
             float pop = fields[8].GetFloat();
             uint32 build = fields[9].GetUInt32();
 
-            UpdateRealm(realmId, name, address, port, icon, color, timezone, (allowedSecurityLevel <= SEC_ADMINISTRATOR ? AccountTypes(allowedSecurityLevel) : SEC_ADMINISTRATOR), pop, build);
+            UpdateRealm(realmId, name, address, port, icon, flag, timezone, (allowedSecurityLevel <= SEC_ADMINISTRATOR ? AccountTypes(allowedSecurityLevel) : SEC_ADMINISTRATOR), pop, build);
 
             if (init)
                 sLog->outString("Added realm \"%s\".", fields[1].GetString());
