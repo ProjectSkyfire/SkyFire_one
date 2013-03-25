@@ -1,0 +1,6 @@
+DO NOT Use (WiP)
+this is the EAI.SQL scripts being used for new scripting system, not all included since backporting wip
+thanks to "Heisei team" "Mountain Frost Private Edition"
+
+EAI.sql mostly sorted (partly tested)
+others.sql not sorted (untested)
