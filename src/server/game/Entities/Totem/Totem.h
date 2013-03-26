@@ -27,6 +27,7 @@ enum TotemType
 {
     TOTEM_PASSIVE    = 0,
     TOTEM_ACTIVE     = 1,
+    TOTEM_STATUE     = 2 // copied straight from MaNGOS, may need more implementation to work
 };
 
 #define SENTRY_TOTEM_ENTRY  3968
@@ -34,14 +35,15 @@ enum TotemType
 class Totem : public Minion
 {
     public:
-        explicit Totem(SummonPropertiesEntry const *properties, Unit *owner);
-        virtual ~Totem(){};
+        Totem(SummonPropertiesEntry const* properties, Unit* owner);
+        virtual ~Totem() {}
         void Update(uint32 time);
         void InitStats(uint32 duration);
         void InitSummon();
         void UnSummon();
-        uint32 GetSpell() const { return m_spells[0]; }
+        uint32 GetSpell(uint8 slot = 0) const { return _spells[slot]; }
         uint32 GetTotemDuration() const { return m_duration; }
+        void SetTotemDuration(uint32 duration) { m_duration = duration; }
         TotemType GetTotemType() const { return m_type; }
 
         bool UpdateStats(Stats /*stat*/) { return true; }
@@ -53,11 +55,10 @@ class Totem : public Minion
         void UpdateAttackPowerAndDamage(bool /*ranged*/) {}
         void UpdateDamagePhysical(WeaponAttackType /*attType*/) {}
 
-        bool IsImmunedToSpellEffect(SpellEntry const* spellInfo, uint32 index) const;
+        bool IsImmunedToSpellEffect(SpellInfo const* spellInfo, uint32 index) const;
 
     protected:
         TotemType m_type;
         uint32 m_duration;
 };
 #endif
-

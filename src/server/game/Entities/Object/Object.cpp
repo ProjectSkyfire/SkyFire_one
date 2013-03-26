@@ -1650,6 +1650,7 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
                 break;
             case SUMMON_CATEGORY_WILD:
             case SUMMON_CATEGORY_ALLY:
+            case SUMMON_CATEGORY_UNK:
             {
                 switch (properties->Type)
                 {
@@ -1673,7 +1674,7 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
             }
             default:
                 return NULL;
-        }
+        } 
     }
 
     uint32 team = 0;

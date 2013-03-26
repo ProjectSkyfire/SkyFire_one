@@ -938,7 +938,7 @@ bool Guardian::InitStatsForLevel(uint32 petlevel)
 
     SetLevel(petlevel);
 
-    //Determine pet type
+    // Determine pet type
     PetType petType = MAX_PET_TYPE;
     if (isPet() && m_owner->GetTypeId() == TYPEID_PLAYER)
     {
@@ -978,7 +978,7 @@ bool Guardian::InitStatsForLevel(uint32 petlevel)
         else
             scale = cFamily->minScale + float(getLevel() - cFamily->minScaleLevel) / cFamily->maxScaleLevel * (cFamily->maxScale - cFamily->minScale);
 
-        SetFloatValue(OBJECT_FIELD_SCALE_X, scale);
+        SetFloatValue(OBJECT_FIELD_SCALE_X, scale); 
     }
 
     //resistance
