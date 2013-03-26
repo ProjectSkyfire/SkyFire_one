@@ -164,15 +164,15 @@ void PlayerTaxi::InitTaxiNodesForLevel(uint32 race, uint32 level)
 
 void PlayerTaxi::LoadTaxiMask(const char* data)
 {
-    Tokens tokens(data, ' ');
+    Tokens tokens = StrSplit(data, " ");
 
-    uint8 index;
+    int index;
     Tokens::iterator iter;
     for (iter = tokens.begin(), index = 0;
         (index < TaxiMaskSize) && (iter != tokens.end()); ++iter, ++index)
     {
         // load and set bits only for existed taxi nodes
-        _taximask[index] = sTaxiNodesMask[index] & uint32(atol(*iter));
+        m_taximask[index] = sTaxiNodesMask[index] & uint32(atol((*iter).c_str()));
     }
 }
 

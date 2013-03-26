@@ -3294,10 +3294,9 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
     {
         case SUMMON_CATEGORY_WILD:
         case SUMMON_CATEGORY_ALLY:
-        case SUMMON_CATEGORY_UNK:
             if (properties->Flags & 512)
             {
-                SummonGuardian(i, entry, properties);
+                SummonGuardian(effIndex, entry, properties);
                 break;
             }
             switch (properties->Type)
@@ -3306,7 +3305,7 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
                 case SUMMON_TYPE_GUARDIAN:
                 case SUMMON_TYPE_GUARDIAN2:
                 case SUMMON_TYPE_MINION:
-                    SummonGuardian(i, entry, properties);
+                    SummonGuardian(effIndex, entry, properties);
                     break;
                 case SUMMON_TYPE_TOTEM:
                 {
@@ -3327,8 +3326,8 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
                     if (!summon || !summon->HasSummonMask(SUMMON_MASK_MINION))
                         return;
 
-                    summon->SelectLevel(summon->GetCreatureInfo());       // some summoned creaters have different from 1 DB data for level/hp
-                    summon->SetUInt32Value(UNIT_NPC_FLAGS, summon->GetCreatureInfo()->npcflag);
+                    summon->SelectLevel(summon->GetCreatureTemplate());       // some summoned creaters have different from 1 DB data for level/hp
+                    summon->SetUInt32Value(UNIT_NPC_FLAGS, summon->GetCreatureTemplate()->npcflag);
 
                     summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_PASSIVE);
 
@@ -3337,18 +3336,18 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
                 }
                 default:
                 {
-                    float radius = GetSpellRadius(m_spellInfo, i, false);
+                    float radius = GetSpellRadius(m_spellInfo, effIndex, false);
 
                     uint32 amount = damage > 0 ? damage : 1;
                     if (m_spellInfo->Id == 18662 || // Curse of Doom
-                        properties->Id == 2081)     // Mechanical Dragonling, Arcanite Dragonling, Mithril Dragonling.
+                        properties->Id == 2081 || m_spellInfo->Id == 43302)     // Mechanical Dragonling, Arcanite Dragonling, Mithril Dragonling.
                         amount = 1;
 
                     TempSummonType summonType = (duration == 0) ? TEMPSUMMON_DEAD_DESPAWN : TEMPSUMMON_TIMED_DESPAWN;
 
                     for (uint32 count = 0; count < amount; ++count)
                     {
-                        GetSummonPosition(i, pos, radius, count);
+                        GetSummonPosition(effIndex, pos, radius, count);
 
                         summon = m_originalCaster->SummonCreature(entry, pos, summonType, duration);
                         if (!summon)
@@ -3366,7 +3365,7 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
             }
             break;
         case SUMMON_CATEGORY_PET:
-            SummonGuardian(i, entry, properties);
+            SummonGuardian(effIndex, entry, properties);
             break;
         case SUMMON_CATEGORY_PUPPET:
             summon = m_caster->GetMap()->SummonCreature(entry, pos, properties, duration, m_originalCaster);
@@ -3378,7 +3377,7 @@ void Spell::EffectSummonType(SpellEffIndex effIndex)
 
             summon->setFaction(faction);
             break;
-    } 
+    }
 
     if (summon)
     {
@@ -6373,15 +6372,14 @@ void Spell::EffectBind(SpellEffIndex effIndex)
 
 void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const *properties)
 {
-    Unit* caster = m_originalCaster;
+    Unit *caster = m_originalCaster;
     if (caster && caster->GetTypeId() == TYPEID_UNIT && caster->ToCreature()->isTotem())
         caster = caster->GetOwner();
-    
     if (!caster)
         return;
 
     // in another case summon new
-    uint8 level = caster->getLevel(); 
+    uint8 level = caster->getLevel();
 
     // level of pet summoned using engineering item based at engineering skill level
     if (m_CastItem && caster->GetTypeId() == TYPEID_PLAYER)
@@ -6397,33 +6395,30 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const *
         }
     }
 
-    // float radius = GetSpellRadiusForFriend(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[i]));
+    //float radius = GetSpellRadiusForFriend(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[i]));
     float radius = 5.0f;
     uint32 amount = damage > 0 ? damage : 1;
     int32 duration = GetSpellDuration(m_spellInfo);
-
     switch (m_spellInfo->Id)
     {
         case 1122: // Inferno
             amount = 1;
             break;
     }
-    
-    if (Player* modOwner = m_originalCaster->GetSpellModOwner())
+    if (Player *modOwner = m_originalCaster->GetSpellModOwner())
         modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_DURATION, duration);
 
-    // TempSummonType summonType = (duration == 0) ? TEMPSUMMON_DEAD_DESPAWN : TEMPSUMMON_TIMED_DESPAWN;     Map* map = caster->GetMap();
+    //TempSummonType summonType = (duration == 0) ? TEMPSUMMON_DEAD_DESPAWN : TEMPSUMMON_TIMED_DESPAWN;
+    Map *map = caster->GetMap();
 
     for (uint32 count = 0; count < amount; ++count)
     {
         Position pos;
         GetSummonPosition(i, pos, radius, count);
 
-        TempSummon* summon = map->SummonCreature(entry, pos, properties, duration, caster);
-        
+        TempSummon *summon = map->SummonCreature(entry, pos, properties, duration, caster);
         if (!summon)
             return;
-        
         if (summon->HasSummonMask(SUMMON_MASK_GUARDIAN))
             ((Guardian*)summon)->InitStatsForLevel(level);
 
@@ -6436,7 +6431,7 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const *
         summon->SetUInt32Value(UNIT_CREATED_BY_SPELL, m_spellInfo->Id);
         summon->AI()->EnterEvadeMode();
     }
-} 
+}
 
 void Spell::GetSummonPosition(uint32 i, Position &pos, float radius, uint32 count)
 {
