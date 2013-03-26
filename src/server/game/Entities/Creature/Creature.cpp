@@ -514,7 +514,7 @@ void Creature::Update(uint32 diff)
             if (m_corpseRemoveTime <= time(NULL))
             {
                 RemoveCorpse(false);
-                sLog->outDebug("Removing corpse... %u ", GetUInt32Value(OBJECT_FIELD_ENTRY));
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "Removing corpse... %u ", GetUInt32Value(OBJECT_FIELD_ENTRY));
             }
             else
             {
@@ -544,7 +544,7 @@ void Creature::Update(uint32 diff)
                 if (m_corpseRemoveTime <= time(NULL))
                 {
                     RemoveCorpse(false);
-                    sLog->outDebug("Removing alive corpse... %u ", GetUInt32Value(OBJECT_FIELD_ENTRY));
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "Removing alive corpse... %u ", GetUInt32Value(OBJECT_FIELD_ENTRY));
                 }
             }
 
@@ -671,7 +671,7 @@ bool Creature::AIM_Initialize(CreatureAI* ai)
     // make sure nothing can change the AI during AI update
     if (m_AI_locked)
     {
-        sLog->outDebug("AIM_Initialize: failed to init, locked.");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "AIM_Initialize: failed to init, locked.");
         return false;
     }
 
@@ -1261,7 +1261,7 @@ void Creature::DeleteFromDB()
 {
     if (!m_DBTableGuid)
     {
-        sLog->outDebug("Trying to delete not saved creature!");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Trying to delete not saved creature!");
         return;
     }
 
@@ -1472,7 +1472,7 @@ void Creature::Respawn(bool force)
         if (m_DBTableGuid)
             sObjectMgr->SaveCreatureRespawnTime(m_DBTableGuid, GetInstanceId(), 0);
 
-        sLog->outDebug("Respawning...");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Respawning...");
         m_respawnTime = 0;
         lootForPickPocketed = false;
         lootForBody         = false;
@@ -1914,7 +1914,7 @@ bool Creature::LoadCreaturesAddon(bool reload)
 
             Aura* AdditionalAura = CreateAura(AdditionalSpellInfo, cAura->effect_idx, NULL, this, this, 0);
             AddAura(AdditionalAura);
-            sLog->outDebug("Spell: %u with Aura %u added to creature (GUIDLow: %u Entry: %u)", cAura->spell_id, AdditionalSpellInfo->EffectApplyAuraName[0], GetGUIDLow(), GetEntry());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Spell: %u with Aura %u added to creature (GUIDLow: %u Entry: %u)", cAura->spell_id, AdditionalSpellInfo->EffectApplyAuraName[0], GetGUIDLow(), GetEntry());
         }
     }
     return true;

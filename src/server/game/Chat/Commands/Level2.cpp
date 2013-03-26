@@ -821,7 +821,7 @@ bool ChatHandler::HandleGameObjectCommand(const char* args)
     {
         uint32 value = atoi((char*)spawntimeSecs);
         pGameObj->SetRespawnTime(value);
-        //sLog->outDebug("*** spawntimeSecs: %d", value);
+        //sLog->outDebug(LOG_FILTER_NETWORKIO, "*** spawntimeSecs: %d", value);
     }
 
     // fill the gameobject data and save to the db
@@ -2139,7 +2139,7 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
 
 bool ChatHandler::HandleWpAddCommand(const char* args)
 {
-    sLog->outDebug("DEBUG: HandleWpAddCommand");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpAddCommand");
 
     // optional
     char* path_number = NULL;
@@ -2160,7 +2160,7 @@ bool ChatHandler::HandleWpAddCommand(const char* args)
             QueryResult_AutoPtr result = WorldDatabase.Query("SELECT MAX(id) FROM waypoint_data");
             uint32 maxpathid = result->Fetch()->GetInt32();
             pathid = maxpathid+1;
-            sLog->outDebug("DEBUG: HandleWpAddCommand - New path started.");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpAddCommand - New path started.");
             PSendSysMessage("%s%s|r", "|cff00ff00", "New path started.");
         }
     }
@@ -2172,12 +2172,12 @@ bool ChatHandler::HandleWpAddCommand(const char* args)
 
     if (!pathid)
     {
-        sLog->outDebug("DEBUG: HandleWpAddCommand - Current creature has no loaded path.");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpAddCommand - Current creature has no loaded path.");
         PSendSysMessage("%s%s|r", "|cffff33ff", "Current creature has no loaded path.");
         return true;
     }
 
-    sLog->outDebug("DEBUG: HandleWpAddCommand - point == 0");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpAddCommand - point == 0");
 
     QueryResult_AutoPtr result = WorldDatabase.PQuery("SELECT MAX(point) FROM waypoint_data WHERE id = '%u'", pathid);
 
@@ -2211,7 +2211,7 @@ bool ChatHandler::HandleWpLoadPathCommand(const char *args)
 
     // Did player provide a path_id?
     if (!path_number)
-        sLog->outDebug("DEBUG: HandleWpLoadPathCommand - No path number provided");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpLoadPathCommand - No path number provided");
 
     if (!target)
     {
@@ -2517,7 +2517,7 @@ bool ChatHandler::HandleWpEventCommand(const char* args)
 
 bool ChatHandler::HandleWpModifyCommand(const char* args)
 {
-    sLog->outDebug("DEBUG: HandleWpModifyCommand");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpModifyCommand");
 
     if (!*args)
         return false;
@@ -2556,7 +2556,7 @@ bool ChatHandler::HandleWpModifyCommand(const char* args)
         return false;
     }
 
-    sLog->outDebug("DEBUG: HandleWpModifyCommand - User did select an NPC");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpModifyCommand - User did select an NPC");
     // The visual waypoint
     Creature* wpCreature = NULL;
     wpGuid = target->GetGUIDLow();
@@ -2578,7 +2578,7 @@ bool ChatHandler::HandleWpModifyCommand(const char* args)
 
         if (!result)
         {
-            sLog->outDebug("DEBUG: HandleWpModifyCommand - No waypoint found - used 'wpguid'");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpModifyCommand - No waypoint found - used 'wpguid'");
 
             PSendSysMessage(LANG_WAYPOINT_NOTFOUNDSEARCH, target->GetGUIDLow());
             // Select waypoint number from database
@@ -2596,7 +2596,7 @@ bool ChatHandler::HandleWpModifyCommand(const char* args)
                     return true;
             }
         }
-        sLog->outDebug("DEBUG: HandleWpModifyCommand - After getting wpGuid");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpModifyCommand - After getting wpGuid");
 
         do
         {
@@ -2611,7 +2611,7 @@ bool ChatHandler::HandleWpModifyCommand(const char* args)
         arg_str = strtok((char*)NULL, " ");
     }
 
-    sLog->outDebug("DEBUG: HandleWpModifyCommand - Parameters parsed - now execute the command");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpModifyCommand - Parameters parsed - now execute the command");
 
     // Check for argument
     if (show != "del" && show != "move" && arg_str == NULL)
@@ -2708,7 +2708,7 @@ bool ChatHandler::HandleWpModifyCommand(const char* args)
 
 bool ChatHandler::HandleWpShowCommand(const char* args)
 {
-    sLog->outDebug("DEBUG: HandleWpShowCommand");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpShowCommand");
 
     if (!*args)
         return false;
@@ -2720,7 +2720,7 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
 
     // second arg: GUID (optional, if a creature is selected)
     char* guid_str = strtok((char*)NULL, " ");
-    sLog->outDebug("DEBUG: HandleWpShowCommand: show_str: %s guid_str: %s", show_str, guid_str);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpShowCommand: show_str: %s guid_str: %s", show_str, guid_str);
 
     uint32 pathid = 0;
     Creature* target = getSelectedCreature();
@@ -2729,7 +2729,7 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
 
     if (!guid_str)
     {
-        sLog->outDebug("DEBUG: HandleWpShowCommand: !guid_str");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpShowCommand: !guid_str");
         // No PathID provided
         // -> Player must have selected a creature
 
@@ -2744,7 +2744,7 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
     }
     else
     {
-        sLog->outDebug("|cff00ff00DEBUG: HandleWpShowCommand: PathID provided|r");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "|cff00ff00DEBUG: HandleWpShowCommand: PathID provided|r");
         // PathID provided
         // Warn if player also selected a creature
         // -> Creature selection is ignored <-
@@ -2754,12 +2754,12 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
         pathid = atoi((char*)guid_str);
     }
 
-    sLog->outDebug("DEBUG: HandleWpShowCommand: danach");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpShowCommand: danach");
 
     std::string show = show_str;
     uint32 Maxpoint;
 
-    sLog->outDebug("DEBUG: HandleWpShowCommand: PathID: %u", pathid);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: HandleWpShowCommand: PathID: %u", pathid);
 
     //PSendSysMessage("wpshow - show: %s", show);
 
@@ -2874,7 +2874,7 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
                 return false;
             }
 
-            sLog->outDebug("DEBUG: UPDATE waypoint_data SET wpguid = '%u");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG: UPDATE waypoint_data SET wpguid = '%u");
             // set "wpguid" column to the visual waypoint
             WorldDatabase.PExecuteLog("UPDATE waypoint_data SET wpguid = '%u' WHERE id = '%u' and point = '%u'", wpCreature->GetGUIDLow(), pathid, point);
 

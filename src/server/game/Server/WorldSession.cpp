@@ -289,7 +289,7 @@ bool WorldSession::Update(PacketFilter& updater)
                     sLog->outDebug( "SESSION: received not allowed opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
                     break;
                 case STATUS_UNHANDLED:
-                    sLog->outDebug("SESSION: received not handled opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "SESSION: received not handled opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
                     break;
                 default:
                     sLog->outError("SESSION: received wrong-status-req opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
@@ -301,7 +301,7 @@ bool WorldSession::Update(PacketFilter& updater)
             sLog->outError("WorldSession::Update ByteBufferException occurred while parsing a packet (opcode: %u) from client %s, accountid=%i. Skipped packet.", packet->GetOpcode(), GetRemoteAddress().c_str(), GetAccountId());
             if (sLog->IsOutDebug())
             {
-                sLog->outDebug("Dumping error causing packet:");
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "Dumping error causing packet:");
                 packet->hexlike();
             }
         }
@@ -491,7 +491,7 @@ void WorldSession::LogoutPlayer(bool Save)
         //No SQL injection as AccountId is uint32
         CharacterDatabase.PExecute("UPDATE characters SET online = 0 WHERE account = '%u'",
             GetAccountId());
-        sLog->outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
     }
 
     m_playerLogout = false;

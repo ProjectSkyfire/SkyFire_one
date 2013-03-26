@@ -61,7 +61,7 @@ void GuardAI::EnterEvadeMode()
 {
     if (!me->isAlive())
     {
-        sLog->outDebug("Creature stopped attacking because he's dead [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature stopped attacking because he's dead [guid=%u]", me->GetGUIDLow());
         me->GetMotionMaster()->MoveIdle();
 
         i_state = STATE_NORMAL;
@@ -76,23 +76,23 @@ void GuardAI::EnterEvadeMode()
 
     if (!victim)
     {
-        sLog->outDebug("Creature stopped attacking because victim is non exist [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature stopped attacking because victim is non exist [guid=%u]", me->GetGUIDLow());
     }
     else if (!victim ->isAlive())
     {
-        sLog->outDebug("Creature stopped attacking because victim is dead [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature stopped attacking because victim is dead [guid=%u]", me->GetGUIDLow());
     }
     else if (victim ->HasStealthAura())
     {
-        sLog->outDebug("Creature stopped attacking because victim is using stealth [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature stopped attacking because victim is using stealth [guid=%u]", me->GetGUIDLow());
     }
     else if (victim ->isInFlight())
     {
-        sLog->outDebug("Creature stopped attacking because victim is flying away [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature stopped attacking because victim is flying away [guid=%u]", me->GetGUIDLow());
     }
     else
     {
-        sLog->outDebug("Creature stopped attacking because victim outran him [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature stopped attacking because victim outran him [guid=%u]", me->GetGUIDLow());
     }
 
     me->RemoveAllAuras();

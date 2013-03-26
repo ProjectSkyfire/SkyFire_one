@@ -41,7 +41,7 @@ void InstanceScript::HandleGameObject(uint64 GUID, bool open, GameObject *go)
     if (go)
         go->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
     else
-        sLog->outDebug("TSCR: InstanceScript: HandleGameObject failed");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "TSCR: InstanceScript: HandleGameObject failed");
 }
 
 bool InstanceScript::IsEncounterInProgress() const
@@ -62,7 +62,7 @@ void InstanceScript::LoadMinionData(const MinionData *data)
 
         ++data;
     }
-    sLog->outDebug("InstanceScript::LoadMinionData: %u minions loaded.", doors.size());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "InstanceScript::LoadMinionData: %u minions loaded.", doors.size());
 }
 
 void InstanceScript::LoadDoorData(const DoorData *data)
@@ -74,7 +74,7 @@ void InstanceScript::LoadDoorData(const DoorData *data)
 
         ++data;
     }
-    sLog->outDebug("InstanceScript::LoadDoorData: %u doors loaded.", doors.size());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "InstanceScript::LoadDoorData: %u doors loaded.", doors.size());
 }
 
 void InstanceScript::UpdateMinionState(Creature *minion, EncounterState state)

@@ -884,14 +884,14 @@ uint32 GameEventMgr::Update()                                  // return the nex
                 // changed, save to DB the gameevent state, will be updated in next update cycle
                 SaveWorldEventStateToDB(itr);
 
-            //sLog->outDebug("GameEvent %u is active", itr->first);
+            //sLog->outDebug(LOG_FILTER_NETWORKIO, "GameEvent %u is active", itr->first);
             // queue for activation
             if (!IsActiveEvent(itr))
                 activate.insert(itr);
         }
         else
         {
-            //sLog->outDebug("GameEvent %u is not active", itr->first);
+            //sLog->outDebug(LOG_FILTER_NETWORKIO, "GameEvent %u is not active", itr->first);
             if (IsActiveEvent(itr))
                 deactivate.insert(itr);
             else
@@ -1039,7 +1039,7 @@ void GameEventMgr::GameEventSpawn(int16 event_id)
             if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
             {
                 Creature* creature = new Creature;
-                //sLog->outDebug("Spawning creature %u", *itr);
+                //sLog->outDebug(LOG_FILTER_NETWORKIO, "Spawning creature %u", *itr);
                 if (!creature->LoadFromDB(*itr, map))
                     delete creature;
                 else
@@ -1067,7 +1067,7 @@ void GameEventMgr::GameEventSpawn(int16 event_id)
             if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
             {
                 GameObject* pGameobject = new GameObject;
-                //sLog->outDebug("Spawning gameobject %u", *itr);
+                //sLog->outDebug(LOG_FILTER_NETWORKIO, "Spawning gameobject %u", *itr);
                 if (!pGameobject->LoadFromDB(*itr, map))
                     delete pGameobject;
                 else

@@ -93,13 +93,13 @@ uint32 AuctionHouseMgr::GetAuctionDeposit(AuctionHouseEntry const* entry, uint32
         faction_pct = 0.0f;
         deposit = 0.0f;
     }
-    sLog->outDebug("SellPrice:\t\t%u", MSV);
-    sLog->outDebug("Deposit Percent:\t%f", faction_pct);
-    sLog->outDebug("Auction Time1:\t\t%u", time);
-    sLog->outDebug("Auction Time2:\t\t%u", MIN_AUCTION_TIME);
-    sLog->outDebug("Auction Time3:\t\t%u", (time / MIN_AUCTION_TIME));
-    sLog->outDebug("Count:\t\t\t%u", pItem->GetCount());
-    sLog->outDebug("Deposit:\t\t%f", deposit);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "SellPrice:\t\t%u", MSV);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Deposit Percent:\t%f", faction_pct);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Auction Time1:\t\t%u", time);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Auction Time2:\t\t%u", MIN_AUCTION_TIME);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Auction Time3:\t\t%u", (time / MIN_AUCTION_TIME));
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Count:\t\t\t%u", pItem->GetCount());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Deposit:\t\t%f", deposit);
     if (deposit > 0)
         return (uint32)deposit;
     else
@@ -161,7 +161,7 @@ void AuctionHouseMgr::SendAuctionWonMail(AuctionEntry *auction)
         msgAuctionWonBody.width(16);
         msgAuctionWonBody << std::right << std::hex << auction->owner;
         msgAuctionWonBody << std::dec << ":" << auction->bid << ":" << auction->buyout;
-        sLog->outDebug("AuctionWon body string : %s", msgAuctionWonBody.str().c_str());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "AuctionWon body string : %s", msgAuctionWonBody.str().c_str());
 
         // prepare mail data... :
         uint32 itemTextId = sObjectMgr->CreateItemText(msgAuctionWonBody.str());
@@ -201,7 +201,7 @@ void AuctionHouseMgr::SendAuctionSalePendingMail(AuctionEntry * auction)
         msgAuctionSalePendingBody << ":" << auction->deposit << ":" << auctionCut << ":0:";
         msgAuctionSalePendingBody << secsToTimeBitFields(distrTime);
 
-        sLog->outDebug("AuctionSalePending body string : %s", msgAuctionSalePendingBody.str().c_str());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "AuctionSalePending body string : %s", msgAuctionSalePendingBody.str().c_str());
 
         uint32 itemTextId = sObjectMgr->CreateItemText(msgAuctionSalePendingBody.str());
 
@@ -230,7 +230,7 @@ void AuctionHouseMgr::SendAuctionSuccessfulMail(AuctionEntry * auction)
         auctionSuccessfulBody << std::dec << ":" << auction->bid << ":" << auction->buyout;
         auctionSuccessfulBody << ":" << auction->deposit << ":" << auctionCut;
 
-        sLog->outDebug("AuctionSuccessful body string : %s", auctionSuccessfulBody.str().c_str());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "AuctionSuccessful body string : %s", auctionSuccessfulBody.str().c_str());
 
         uint32 itemTextId = sObjectMgr->CreateItemText(auctionSuccessfulBody.str());
 

@@ -39,7 +39,7 @@ namespace VMAP
         if (!iModel)
         {
 #ifdef VMAP_DEBUG
-            sLog->outDebug("<object not loaded>");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "<object not loaded>");
 #endif
             return false;
         }
@@ -47,7 +47,7 @@ namespace VMAP
         if (time == G3D::inf())
         {
 #ifdef VMAP_DEBUG
-            sLog->outDebug("Ray does not hit '%s'", name.c_str());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Ray does not hit '%s'", name.c_str());
 #endif
             return false;
         }

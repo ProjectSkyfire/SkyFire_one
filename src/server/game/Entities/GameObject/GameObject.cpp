@@ -1119,7 +1119,7 @@ void GameObject::Use(Unit* user)
                     int32 chance = skill - zone_skill + 5;
                     int32 roll = irand(1, 100);
 
-                    sLog->outDebug("Fishing check (skill: %i zone min skill: %i chance %i roll: %i", skill, zone_skill, chance, roll);
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "Fishing check (skill: %i zone min skill: %i chance %i roll: %i", skill, zone_skill, chance, roll);
 
                     if (skill >= zone_skill && chance >= roll)
                     {
@@ -1364,7 +1364,7 @@ void GameObject::Use(Unit* user)
             break;
         }
         default:
-            sLog->outDebug("Unknown Object Type %u", GetGoType());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Unknown Object Type %u", GetGoType());
             break;
     }
 
@@ -1377,7 +1377,7 @@ void GameObject::Use(Unit* user)
         if (user->GetTypeId() != TYPEID_PLAYER || !sOutdoorPvPMgr->HandleCustomSpell(user->ToPlayer(), spellId, this))
             sLog->outError("WORLD: unknown spell id %u at use action for gameobject (Entry: %u GoType: %u)", spellId, GetEntry(), GetGoType());
         else
-            sLog->outDebug("WORLD: %u non-dbc spell was handled by OutdoorPvP", spellId);
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: %u non-dbc spell was handled by OutdoorPvP", spellId);
         return;
     }
 

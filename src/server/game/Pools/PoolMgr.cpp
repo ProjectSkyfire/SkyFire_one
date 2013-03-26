@@ -299,7 +299,7 @@ void PoolGroup<Creature>::Spawn1Object(PoolObject* obj)
         if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
         {
             Creature* creature = new Creature;
-            //sLog->outDebug("Spawning creature %u",guid);
+            //sLog->outDebug(LOG_FILTER_NETWORKIO, "Spawning creature %u",guid);
             if (!creature->LoadFromDB(obj->guid, map))
             {
                 delete creature;
@@ -325,7 +325,7 @@ void PoolGroup<GameObject>::Spawn1Object(PoolObject* obj)
         if (!map->Instanceable() && map->IsLoaded(data->posX, data->posY))
         {
             GameObject* pGameobject = new GameObject;
-            //sLog->outDebug("Spawning gameobject %u", guid);
+            //sLog->outDebug(LOG_FILTER_NETWORKIO, "Spawning gameobject %u", guid);
             if (!pGameobject->LoadFromDB(obj->guid, map))
             {
                 delete pGameobject;

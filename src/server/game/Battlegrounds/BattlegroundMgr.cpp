@@ -309,7 +309,7 @@ void BattlegroundQueue::RemovePlayer(uint64 guid, bool decreaseInvitedCount)
             ArenaTeam * at = sObjectMgr->GetArenaTeamById(group->ArenaTeamId);
             if (at)
             {
-                sLog->outDebug("UPDATING memberLost's personal arena rating for %u by opponents rating: %u", GUID_LOPART(guid), group->OpponentsTeamRating);
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "UPDATING memberLost's personal arena rating for %u by opponents rating: %u", GUID_LOPART(guid), group->OpponentsTeamRating);
                 Player *plr = ObjectAccessor::FindPlayer(guid);
                 if (plr)
                     at->MemberLost(plr, group->OpponentsTeamRating);
@@ -381,7 +381,7 @@ bool BattlegroundQueue::InviteGroupToBG(GroupQueueInfo * ginfo, Battleground * b
 
             uint32 queueSlot = plr->GetBattlegroundQueueIndex(bgQueueTypeId);
 
-            sLog->outDebug("Battleground: invited plr %s (%u) to BG instance %u queueindex %u bgtype %u, I can't help it if they don't press the enter battle button.", plr->GetName(), plr->GetGUIDLow(), bg->GetInstanceID(), queueSlot, bg->GetTypeID());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: invited plr %s (%u) to BG instance %u queueindex %u bgtype %u, I can't help it if they don't press the enter battle button.", plr->GetName(), plr->GetGUIDLow(), bg->GetInstanceID(), queueSlot, bg->GetTypeID());
 
             // send status packet
             sBattlegroundMgr->BuildBattlegroundStatusPacket(&data, bg, side?side:plr->GetTeam(), queueSlot, STATUS_WAIT_JOIN, INVITE_ACCEPT_WAIT_TIME, 0);
@@ -440,7 +440,7 @@ bool BattlegroundQueue::BuildSelectionPool(uint32 bgTypeId, uint32 queue_id, uin
             break;
         default:
             //unknown mode, return false
-            sLog->outDebug("Battleground: unknown selection pool build mode, returning...");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: unknown selection pool build mode, returning...");
             return false;
             break;
     }
@@ -455,13 +455,13 @@ bool BattlegroundQueue::BuildSelectionPool(uint32 bgTypeId, uint32 queue_id, uin
     if (m_SelectionPools[mode].Build(MinPlayers, MaxPlayers, m_EligibleGroups.begin()))
     {
         // the selection pool is set, return
-        sLog->outDebug("Battleground-debug: pool build succeeded, return true");
-        sLog->outDebug("Battleground-debug: Player size for mode %u is %u", mode, m_SelectionPools[mode].GetPlayerCount());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground-debug: pool build succeeded, return true");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground-debug: Player size for mode %u is %u", mode, m_SelectionPools[mode].GetPlayerCount());
         for (std::list<GroupQueueInfo* >::iterator itr = m_SelectionPools[mode].SelectedGroups.begin(); itr != m_SelectionPools[mode].SelectedGroups.end(); ++itr)
         {
-            sLog->outDebug("Battleground-debug: queued group in selection with %u players", (*itr)->Players.size());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground-debug: queued group in selection with %u players", (*itr)->Players.size());
             for (std::map<uint64, PlayerQueueInfo * >::iterator itr2 = (*itr)->Players.begin(); itr2 != (*itr)->Players.end(); ++itr2)
-                sLog->outDebug("Battleground-debug:    player in above group GUID %u", (uint32)(itr2->first));
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground-debug:    player in above group GUID %u", (uint32)(itr2->first));
         }
         return true;
     }
@@ -642,14 +642,14 @@ void BattlegroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
     // try to build the selection pools
     bool bAllyOK = BuildSelectionPool(bgTypeId, queue_id, MinPlayersPerTeam, MaxPlayersPerTeam, NORMAL_ALLIANCE, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime);
     if (bAllyOK)
-        sLog->outDebug("Battleground: ally pool successfully built");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: ally pool successfully built");
     else
-        sLog->outDebug("Battleground: ally pool wasn't created");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: ally pool wasn't created");
     bool bHordeOK = BuildSelectionPool(bgTypeId, queue_id, MinPlayersPerTeam, MaxPlayersPerTeam, NORMAL_HORDE, arenatype, isRated, arenaMinRating, arenaMaxRating, discardTime);
     if (bHordeOK)
-        sLog->outDebug("Battleground: horde pool successfully built");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: horde pool successfully built");
     else
-        sLog->outDebug("Battleground: horde pool wasn't created");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: horde pool wasn't created");
 
     // if selection pools are ready, create the new bg
     if ((bAllyOK && bHordeOK) || (sBattlegroundMgr->isTesting() && (bAllyOK || bHordeOK)))
@@ -748,9 +748,9 @@ void BattlegroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
             std::list<GroupQueueInfo* >::iterator itr_alliance = m_SelectionPools[NORMAL_ALLIANCE].SelectedGroups.begin();
             std::list<GroupQueueInfo* >::iterator itr_horde = m_SelectionPools[NORMAL_HORDE].SelectedGroups.begin();
             (*itr_alliance)->OpponentsTeamRating = (*itr_horde)->ArenaTeamRating;
-            sLog->outDebug("setting opposite team rating for team %u to %u", (*itr_alliance)->ArenaTeamId, (*itr_alliance)->OpponentsTeamRating);
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "setting opposite team rating for team %u to %u", (*itr_alliance)->ArenaTeamId, (*itr_alliance)->OpponentsTeamRating);
             (*itr_horde)->OpponentsTeamRating = (*itr_alliance)->ArenaTeamRating;
-            sLog->outDebug("setting opposite team rating for team %u to %u", (*itr_horde)->ArenaTeamId, (*itr_horde)->OpponentsTeamRating);
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "setting opposite team rating for team %u to %u", (*itr_horde)->ArenaTeamId, (*itr_horde)->OpponentsTeamRating);
         }
 
         // start the battleground
@@ -837,7 +837,7 @@ void BattlegroundQueue::Update(uint32 bgTypeId, uint32 queue_id, uint8 arenatype
                 return;
             }
 
-            sLog->outDebug("Battleground: One-faction arena created.");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: One-faction arena created.");
             // init stats
             if (sBattlegroundMgr->isArenaTesting())
             {
@@ -960,7 +960,7 @@ bool BGQueueRemoveEvent::Execute(uint64 /*e_time*/, uint32 /*p_time*/)
     if (!bg)
         return true;
 
-    sLog->outDebug("Battleground: removing player %u from bg queue for instance %u because of not pressing enter battle in time.", plr->GetGUIDLow(), m_BgInstanceGUID);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: removing player %u from bg queue for instance %u because of not pressing enter battle in time.", plr->GetGUIDLow(), m_BgInstanceGUID);
 
     uint32 bgQueueTypeId = sBattlegroundMgr->BGQueueTypeId(bg->GetTypeID(), bg->GetArenaType());
     uint32 queueSlot = plr->GetBattlegroundQueueIndex(bgQueueTypeId);
@@ -979,7 +979,7 @@ bool BGQueueRemoveEvent::Execute(uint64 /*e_time*/, uint32 /*p_time*/)
         }
     }
     else
-        sLog->outDebug("Battleground: Player was already removed from queue");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: Player was already removed from queue");
 
     //event will be deleted
     return true;
@@ -1186,7 +1186,7 @@ void BattlegroundMgr::BuildPvpLogDataPacket(WorldPacket *data, Battleground *bg)
         {
             *data << uint32(3000-bg->m_ArenaTeamRatingChanges[i]);                      // rating change: showed value - 3000
             *data << uint32(3999);  // huge thanks for TOM_RUS for this!
-            sLog->outDebug("rating change: %d", bg->m_ArenaTeamRatingChanges[i]);
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "rating change: %d", bg->m_ArenaTeamRatingChanges[i]);
         }
         for (int8 i = 1; i >= 0; --i)
         {
@@ -1272,7 +1272,7 @@ void BattlegroundMgr::BuildPvpLogDataPacket(WorldPacket *data, Battleground *bg)
                 *data << uint32(0);
                 break;
             default:
-                sLog->outDebug("Unhandled MSG_PVP_LOG_DATA for BG id %u", bg->GetTypeID());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "Unhandled MSG_PVP_LOG_DATA for BG id %u", bg->GetTypeID());
                 *data << uint32(0);
                 break;
         }
@@ -1610,18 +1610,18 @@ void BattlegroundMgr::InitAutomaticArenaPointDistribution()
 {
     if (m_AutoDistributePoints)
     {
-        sLog->outDebug("Initializing Automatic Arena Point Distribution");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Initializing Automatic Arena Point Distribution");
         QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT NextArenaPointDistributionTime FROM saved_variables");
         if (!result)
         {
-            sLog->outDebug("Battleground: Next arena point distribution time not found in SavedVariables, reseting it now.");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Battleground: Next arena point distribution time not found in SavedVariables, reseting it now.");
             m_NextAutoDistributionTime = time(NULL) + BATTLEGROUND_ARENA_POINT_DISTRIBUTION_DAY * sWorld->getConfig(CONFIG_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS);
             CharacterDatabase.PExecute("INSERT INTO saved_variables (NextArenaPointDistributionTime) VALUES ('"UI64FMTD"')", m_NextAutoDistributionTime);
         }
         else
             m_NextAutoDistributionTime = (*result)[0].GetUInt64();
 
-        sLog->outDebug("Automatic Arena Point Distribution initialized.");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Automatic Arena Point Distribution initialized.");
     }
 }
 

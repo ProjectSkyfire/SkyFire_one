@@ -1,11 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2013 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -17,20 +17,46 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SKYFIRECORE_LOG_H
-#define SKYFIRECORE_LOG_H
+#ifndef SKYFIRE_LOG_H
+#define SKYFIRE_LOG_H
 
 #include "Common.h"
-#include <ace/Singleton.h>
 #include "DatabaseEnv.h"
+
+#include <ace/Singleton.h>
+#include <ace/Stack_Trace.h>
 
 class Config;
 
-enum LogFilters
+enum DebugLogFilters
 {
-    LOG_FILTER_TRANSPORT_MOVES     = 1,
-    LOG_FILTER_CREATURE_MOVES      = 2,
-    LOG_FILTER_VISIBILITY_CHANGES  = 4,
+    LOG_FILTER_NONE                     = 0x00000000,
+    LOG_FILTER_UNITS                    = 0x00000001,   // Anything related to units that doesn't fit in other categories. ie. creature formations
+    LOG_FILTER_PETS                     = 0x00000002,
+    LOG_FILTER_VEHICLES                 = 0x00000004,
+    LOG_FILTER_TSCR                     = 0x00000008,   // C++ AI, instance scripts, etc.
+    LOG_FILTER_DATABASE_AI              = 0x00000010,   // SmartAI, EventAI, CreatureAI
+    LOG_FILTER_MAPSCRIPTS               = 0x00000020,
+    LOG_FILTER_NETWORKIO                = 0x00000040,   // Anything packet/netcode related
+    LOG_FILTER_SPELLS_AURAS             = 0x00000080,
+    LOG_FILTER_ACHIEVEMENTSYS           = 0x00000100,
+    LOG_FILTER_CONDITIONSYS             = 0x00000200,
+    LOG_FILTER_POOLSYS                  = 0x00000400,
+    LOG_FILTER_AUCTIONHOUSE             = 0x00000800,
+    LOG_FILTER_BATTLEGROUND             = 0x00001000,   // Anything related to arena's and battlegrounds
+    LOG_FILTER_OUTDOORPVP               = 0x00002000,
+    LOG_FILTER_CHATSYS                  = 0x00004000,
+    LOG_FILTER_LFG                      = 0x00008000,
+    LOG_FILTER_MAPS                     = 0x00010000,   // Maps, instances, grids, cells, visibility
+    LOG_FILTER_PLAYER_LOADING           = 0x00020000,   // Debug output from Player::_Load functions
+    LOG_FILTER_PLAYER_ITEMS             = 0x00040000,   // Anything item related
+    LOG_FILTER_PLAYER_SKILLS            = 0x00080000,   // Skills related
+    LOG_FILTER_LOOT                     = 0x00100000,   // Loot related
+    LOG_FILTER_GUILD                    = 0x00200000,   // Guild related
+    LOG_FILTER_TRANSPORTS               = 0x00400000,   // Transport related
+    LOG_FILTER_BATTLEFIELD              = 0x00800000,   // Battlefield related
+    LOG_FILTER_OPCODES                  = 0x01000000,   // OpCode related
+    LOG_FILTER_WARDEN                   = 0x02000000,   // Warden related
 };
 
 enum LogTypes
@@ -83,37 +109,44 @@ const int Colors = int(WHITE)+1;
 class Log
 {
     friend class ACE_Singleton<Log, ACE_Thread_Mutex>;
-    Log();
-    ~Log();
+
+    private:
+        Log();
+        ~Log();
 
     public:
         void Initialize();
+
+        void ReloadConfig();
 
         void InitColors(const std::string& init_str);
         void SetColor(bool stdout_stream, ColorTypes color);
         void ResetColor(bool stdout_stream);
 
+        void outErrorST( const char * err, ... )                ATTR_PRINTF(2, 3);
         void outDB( LogTypes type, const char * str );
-        void outString( const char * str, ... )                 ATTR_PRINTF(2,3);
+        void outString( const char * str, ... )                 ATTR_PRINTF(2, 3);
         void outString( );
-        void outStringInLine( const char * str, ... )           ATTR_PRINTF(2,3);
-        void outError( const char * err, ... )                  ATTR_PRINTF(2,3);
-        void outCrash( const char * err, ... )                  ATTR_PRINTF(2,3);
-        void outBasic( const char * str, ... )                  ATTR_PRINTF(2,3);
-        void outDetail( const char * str, ... )                 ATTR_PRINTF(2,3);
-        void outDebug( const char * str, ... )                  ATTR_PRINTF(2,3);
-        void outStaticDebug( const char * str, ... )            ATTR_PRINTF(2, 3);
-        void outDebugInLine( const char * str, ... )            ATTR_PRINTF(2,3);
-        void outErrorDb( const char * str, ... )                ATTR_PRINTF(2,3);
-        void outChar( const char * str, ... )                   ATTR_PRINTF(2,3);
-        void outCommand( uint32 account, const char * str, ...) ATTR_PRINTF(3,4);
-        void outRemote( const char * str, ... )                 ATTR_PRINTF(2,3);
-        void outChat( const char * str, ... )                   ATTR_PRINTF(2,3);
-        void outArena( const char * str, ... )                  ATTR_PRINTF(2,3);
-        void outCharDump( const char * str, uint32 account_id, uint32 guid, const char * name );
+        void outStringInLine( const char * str, ... )           ATTR_PRINTF(2, 3);
+        void outError( const char * err, ... )                  ATTR_PRINTF(2, 3);
+        void outCrash( const char * err, ... )                  ATTR_PRINTF(2, 3);
+        void outBasic( const char * str, ... )                  ATTR_PRINTF(2, 3);
+        void outDetail( const char * str, ... )                 ATTR_PRINTF(2, 3);
         void outSQLDev( const char * str, ... )                 ATTR_PRINTF(2, 3);
+        void outDebug(DebugLogFilters f, const char* str, ...)  ATTR_PRINTF(3, 4);
+        void outStaticDebug( const char * str, ... )            ATTR_PRINTF(2, 3);
+        void outDebugInLine( const char * str, ... )            ATTR_PRINTF(2, 3);
+        void outErrorDb( const char * str, ... )                ATTR_PRINTF(2, 3);
+        void outChar( const char * str, ... )                   ATTR_PRINTF(2, 3);
+        void outCommand( uint32 account, const char * str, ...) ATTR_PRINTF(3, 4);
+        void outRemote( const char * str, ... )                 ATTR_PRINTF(2, 3);
+        void outChat( const char * str, ... )                   ATTR_PRINTF(2, 3);
+        void outArena( const char * str, ... )                  ATTR_PRINTF(2, 3);
         void outSQLDriver( const char* str, ... )               ATTR_PRINTF(2, 3);
         void outWarden( const char * str, ... )                 ATTR_PRINTF(2, 3);
+        void outCharDump( const char * str, uint32 account_id, uint32 guid, const char * name );
+        void outOpCode(uint32 op, const char * name, bool smsg = true);
+
         static void outTimestamp(FILE* file);
         static std::string GetTimestampStr();
 
@@ -123,17 +156,16 @@ class Log
         void SetSQLDriverQueryLogging(bool newStatus) { m_sqlDriverQueryLogging = newStatus; }
         void SetRealmID(uint32 id) { realm = id; }
 
-        uint32 getLogFilter() const { return m_logFilter; }
         bool IsOutDebug() const { return m_logLevel > 2 || (m_logFileLevel > 2 && logfile); }
         bool IsOutCharDump() const { return m_charLog_Dump; }
 
-        bool GetLogDB() { return m_enableLogDB; }
-        bool GetLogDBLater() { return m_enableLogDBLater; }
+        bool GetLogDB() const { return m_enableLogDB; }
+        bool GetLogDBLater() const { return m_enableLogDBLater; }
         void SetLogDB(bool enable) { m_enableLogDB = enable; }
         void SetLogDBLater(bool value) { m_enableLogDBLater = value; }
         bool GetSQLDriverQueryLogging() const { return m_sqlDriverQueryLogging; }
     private:
-        FILE* openLogFile(char const* configFileName,char const* configTimeStampFlag, char const* mode);
+        FILE* openLogFile(char const* configFileName, char const* configTimeStampFlag, char const* mode);
         FILE* openGmlogPerAccount(uint32 account);
 
         FILE* raLogfile;
@@ -146,8 +178,8 @@ class Log
         FILE* sqlLogFile;
         FILE* sqlDevLogFile;
         FILE* wardenLogFile;
-        
-        // cache values for after initialization use (like gm log per account case)
+
+        // cache values for after initilization use (like gm log per account case)
         std::string m_logsDir;
         std::string m_logsTimestamp;
 
@@ -172,7 +204,6 @@ class Log
         uint8 m_dbLogLevel;
         uint8 m_logLevel;
         uint8 m_logFileLevel;
-        uint8 m_logFilter;
         bool m_dbChar;
         bool m_dbRA;
         bool m_dbGM;
@@ -180,9 +211,10 @@ class Log
         bool m_charLog_Dump;
         bool m_charLog_Dump_Separate;
         std::string m_dumpsDir;
+
+        DebugLogFilters _DebugLogMask;
 };
 
 #define sLog ACE_Singleton<Log, ACE_Thread_Mutex>::instance()
 
 #endif
-

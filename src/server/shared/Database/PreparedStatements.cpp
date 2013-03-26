@@ -30,7 +30,7 @@ void PreparedStatementHolder::_prepareStatement(const char* name, const char* sq
     strcat(query, sql);
     strcat(query, "'");
 
-    sLog->outDebug("Preparing statement: %s", query);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Preparing statement: %s", query);
     db->Execute(query);
 
     delete[] query;
@@ -50,7 +50,7 @@ void PreparedStatementHolder::Execute(Database* db, const char* name)
     strcpy(query, prefix);
     strcat(query, name);
 
-    sLog->outDebug("Prepared statement: %s", query);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Prepared statement: %s", query);
     db->Execute(query);
     delete[] query;
 }
@@ -68,7 +68,7 @@ void PreparedStatementHolder::PExecute(Database* db, const char* name, const cha
     strcat(query, " USING ");
     strcat(query, args);
 
-    sLog->outDebug("Prepared statement (parsed args): %s", query);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Prepared statement (parsed args): %s", query);
     db->Execute(query);
     delete[] query;
 }
@@ -83,7 +83,7 @@ QueryResult_AutoPtr PreparedStatementHolder::Query(Database* db, const char* nam
     strcpy(query, prefix);
     strcat(query, name);
 
-    sLog->outDebug("Prepared statement with resultset: %s", query);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Prepared statement with resultset: %s", query);
     _return = db->Query(query);
     delete[] query;
     return _return;
@@ -104,7 +104,7 @@ QueryResult_AutoPtr PreparedStatementHolder::PQuery(Database* db, const char* na
     strcat(query, " USING ");
     strcat(query, args);
 
-    sLog->outDebug("Prepared statement with resultset (parsed args): %s", query);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Prepared statement with resultset (parsed args): %s", query);
     _return = db->Query(query);
     delete[] query;
     return _return;

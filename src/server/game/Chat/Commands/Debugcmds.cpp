@@ -215,12 +215,12 @@ bool ChatHandler::HandleSendOpcodeCommand(const char* /*args*/)
         }
         else
         {
-            sLog->outDebug("Sending opcode: unknown type '%s'", type.c_str());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Sending opcode: unknown type '%s'", type.c_str());
             break;
         }
     }
     ifs.close();
-    sLog->outDebug("Sending opcode %u", data.GetOpcode());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Sending opcode %u", data.GetOpcode());
     data.hexlike();
     unit->ToPlayer()->GetSession()->SendPacket(&data);
     PSendSysMessage(LANG_COMMAND_OPCODESENT, data.GetOpcode(), unit->GetName());

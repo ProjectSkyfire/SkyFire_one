@@ -83,7 +83,7 @@ void WardenBase::HandleData(ByteBuffer &buff)
 
 void WardenBase::SendModuleToClient()
 {
-    sLog->outDebug("Send module to client");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Send module to client");
 
     // Create packet structure
     WardenModuleTransfer pkt;
@@ -109,7 +109,7 @@ void WardenBase::SendModuleToClient()
 
 void WardenBase::RequestModule()
 {
-    sLog->outDebug("Request module");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Request module");
 
     // Create packet structure
     WardenModuleUse Request;
@@ -178,7 +178,7 @@ bool WardenBase::IsValidCheckSum(uint32 checksum, const uint8 *Data, const uint1
     }
     else
     {
-        sLog->outDebug("CHECKSUM IS VALID");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "CHECKSUM IS VALID");
         return true;
     }
 }
@@ -198,7 +198,7 @@ void WorldSession::HandleWardenDataOpcode(WorldPacket& recv_data)
     m_Warden->DecryptData(const_cast<uint8*>(recv_data.contents()), recv_data.size());
     uint8 Opcode;
     recv_data >> Opcode;
-    sLog->outDebug("Got packet, opcode %02X, size %u", Opcode, recv_data.size());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Got packet, opcode %02X, size %u", Opcode, recv_data.size());
     recv_data.hexlike();
 
     switch(Opcode)
@@ -213,14 +213,14 @@ void WorldSession::HandleWardenDataOpcode(WorldPacket& recv_data)
             m_Warden->HandleData(recv_data);
             break;
         case WARDEN_CMSG_MEM_CHECKS_RESULT:
-            sLog->outDebug("NYI WARDEN_CMSG_MEM_CHECKS_RESULT received!");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "NYI WARDEN_CMSG_MEM_CHECKS_RESULT received!");
             break;
         case WARDEN_CMSG_HASH_RESULT:
             m_Warden->HandleHashResult(recv_data);
             m_Warden->InitializeModule();
             break;
         case WARDEN_CMSG_MODULE_FAILED:
-            sLog->outDebug("NYI WARDEN_CMSG_MODULE_FAILED received!");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "NYI WARDEN_CMSG_MODULE_FAILED received!");
             break;
         default:
             sLog->outError("Got unknown warden opcode %02X of size %u.", Opcode, recv_data.size() - 1);

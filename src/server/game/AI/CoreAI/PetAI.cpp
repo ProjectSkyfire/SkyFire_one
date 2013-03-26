@@ -61,7 +61,7 @@ void PetAI::_stopAttack()
 {
     if (!me->isAlive())
     {
-        sLog->outDebug("Creature stoped attacking cuz his dead [guid=%u]", me->GetGUIDLow());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature stoped attacking cuz his dead [guid=%u]", me->GetGUIDLow());
         me->GetMotionMaster()->Clear();
         me->GetMotionMaster()->MoveIdle();
         me->CombatStop();
@@ -90,7 +90,7 @@ void PetAI::UpdateAI(const uint32 diff)
     {
         if (_needToStop())
         {
-            sLog->outDebug("Pet AI stoped attacking [guid=%u]", me->GetGUIDLow());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Pet AI stoped attacking [guid=%u]", me->GetGUIDLow());
             _stopAttack();
             return;
         }

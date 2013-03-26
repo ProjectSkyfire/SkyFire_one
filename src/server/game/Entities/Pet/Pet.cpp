@@ -326,7 +326,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         CastPetAuras(current);
     }
 
-    sLog->outDebug("New Pet has guid %u", GetGUIDLow());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "New Pet has guid %u", GetGUIDLow());
 
     owner->PetSpellInitialize();
 
@@ -878,7 +878,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     }
     uint32 guid=sObjectMgr->GenerateLowGuid(HIGHGUID_PET);
 
-    sLog->outDebug("Create pet");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Create pet");
     uint32 pet_number = sObjectMgr->GeneratePetNumber();
     if (!Create(guid, creature->GetMap(), creature->GetEntry(), pet_number))
         return false;
@@ -1219,7 +1219,7 @@ void Pet::_LoadSpellCooldowns()
 
             _AddCreatureSpellCooldown(spell_id, db_time);
 
-            sLog->outDebug("Pet (Number: %u) spell %u cooldown loaded (%u secs).", m_charmInfo->GetPetNumber(), spell_id, uint32(db_time-curTime));
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Pet (Number: %u) spell %u cooldown loaded (%u secs).", m_charmInfo->GetPetNumber(), spell_id, uint32(db_time-curTime));
         }
         while (result->NextRow());
 

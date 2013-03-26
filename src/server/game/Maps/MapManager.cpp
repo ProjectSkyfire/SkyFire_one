@@ -177,7 +177,7 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                     // probably there must be special opcode, because client has this string constant in GlobalStrings.lua
                     // TODO: this is not a good place to send the message
                     player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetSkyFireString(LANG_INSTANCE_RAID_GROUP_ONLY), mapName);
-                    sLog->outDebug("MAP: Player '%s' must be in a raid group to enter instance of '%s'", player->GetName(), mapName);
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "MAP: Player '%s' must be in a raid group to enter instance of '%s'", player->GetName(), mapName);
                     return false;
                 }
             }
@@ -210,14 +210,14 @@ bool MapManager::CanPlayerEnter(uint32 mapid, Player* player)
                 if (!instance_map)
                 {
                     player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetSkyFireString(811), mapName);
-                    sLog->outDebug("MAP: Player '%s' doesn't has a corpse in instance '%s' and can't enter", player->GetName(), mapName);
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "MAP: Player '%s' doesn't has a corpse in instance '%s' and can't enter", player->GetName(), mapName);
                     return false;
                 }
-                sLog->outDebug("MAP: Player '%s' has corpse in instance '%s' and can enter", player->GetName(), mapName);
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "MAP: Player '%s' has corpse in instance '%s' and can enter", player->GetName(), mapName);
             }
             else
             {
-                sLog->outDebug("Map::CanEnter - player '%s' is dead but doesn't have a corpse!", player->GetName());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "Map::CanEnter - player '%s' is dead but doesn't have a corpse!", player->GetName());
             }
         }
 

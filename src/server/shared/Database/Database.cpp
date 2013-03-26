@@ -273,7 +273,7 @@ bool Database::_Query(const char *sql, MYSQL_RES **pResult, MYSQL_FIELD **pField
         else
         {
             #ifdef SKYFIRE_DEBUG
-            sLog->outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql );
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql );
             #endif
         }
 
@@ -454,7 +454,7 @@ bool Database::DirectExecute(const char* sql)
         else
         {
             #ifdef SKYFIRE_DEBUG
-            sLog->outDebug("[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "[%u ms] SQL: %s", getMSTimeDiff(_s, getMSTime()), sql);
             #endif
         }
     }
@@ -528,7 +528,7 @@ bool Database::_TransactionCmd(const char* sql)
         return false;
     }
     else
-        sLog->outDebug("SQL: %s", sql);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "SQL: %s", sql);
 
     return true;
 }

@@ -574,7 +574,7 @@ void CreatureEventAIMgr::LoadCreatureEventAI_Scripts()
                             {
                                 //output as debug for now, also because there's no general rule all spells have RecoveryTime
                                 if (temp.raw.param3 < spell->RecoveryTime)
-                                    sLog->outDebug("CreatureEventAI:  Event %u Action %u uses SpellID %u but cooldown is longer(%u) than minumum defined in event param3(%u).", i, j+1, action.cast.spellId, spell->RecoveryTime, temp.raw.param3);
+                                    sLog->outDebug(LOG_FILTER_NETWORKIO, "CreatureEventAI:  Event %u Action %u uses SpellID %u but cooldown is longer(%u) than minumum defined in event param3(%u).", i, j+1, action.cast.spellId, spell->RecoveryTime, temp.raw.param3);
                             }
                         }
                         //Cast is always triggered if target is forced to cast on self

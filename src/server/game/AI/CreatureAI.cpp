@@ -161,7 +161,7 @@ void CreatureAI::EnterEvadeMode()
     if (!_EnterEvadeMode())
         return;
 
-    sLog->outDebug("Creature %u enters evade mode.", me->GetEntry());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature %u enters evade mode.", me->GetEntry());
 
     if (Unit *owner = me->GetCharmerOrOwner())
     {

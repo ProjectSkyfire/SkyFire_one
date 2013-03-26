@@ -25,12 +25,12 @@
 OutdoorPvPMgr::OutdoorPvPMgr()
 {
     m_UpdateTimer = 0;
-    //sLog->outDebug("Instantiating OutdoorPvPMgr");
+    //sLog->outDebug(LOG_FILTER_NETWORKIO, "Instantiating OutdoorPvPMgr");
 }
 
 void OutdoorPvPMgr::Die()
 {
-    //sLog->outDebug("Deleting OutdoorPvPMgr");
+    //sLog->outDebug(LOG_FILTER_NETWORKIO, "Deleting OutdoorPvPMgr");
     for (OutdoorPvPSet::iterator itr = m_OutdoorPvPSet.begin(); itr != m_OutdoorPvPSet.end(); ++itr)
         delete *itr;
 
@@ -123,7 +123,7 @@ void OutdoorPvPMgr::HandlePlayerEnterZone(Player* player, uint32 zoneid)
         return;
 
     itr->second->HandlePlayerEnterZone(player, zoneid);
-    sLog->outDebug("Player %u entered outdoorpvp id %u", player->GetGUIDLow(), itr->second->GetTypeId());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Player %u entered outdoorpvp id %u", player->GetGUIDLow(), itr->second->GetTypeId());
 }
 
 void OutdoorPvPMgr::HandlePlayerLeaveZone(Player* player, uint32 zoneid)
@@ -137,7 +137,7 @@ void OutdoorPvPMgr::HandlePlayerLeaveZone(Player* player, uint32 zoneid)
         return;
 
     itr->second->HandlePlayerLeaveZone(player, zoneid);
-    sLog->outDebug("Player %u left outdoorpvp id %u", player->GetGUIDLow(), itr->second->GetTypeId());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Player %u left outdoorpvp id %u", player->GetGUIDLow(), itr->second->GetTypeId());
 }
 
 OutdoorPvP* OutdoorPvPMgr::GetOutdoorPvPToZoneId(uint32 zoneid)

@@ -814,7 +814,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
         }
     }
 
-    sLog->outDebug("DealDamageStart");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DealDamageStart");
 
     uint32 health = pVictim->GetHealth();
     sLog->outDetail("deal dmg:%d to health:%d ", damage, health);
@@ -886,7 +886,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
 
     if (health <= damage)
     {
-        sLog->outDebug("DealDamage: victim just died");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "DealDamage: victim just died");
         Kill(pVictim, durabilityLoss);
 
         //Hook for OnPVPKill Event
@@ -898,7 +898,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
     }
     else                                                    // if (health <= damage)
     {
-        sLog->outDebug("DealDamageAlive");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "DealDamageAlive");
 
         pVictim->ModifyHealth(- (int32)damage);
 
@@ -1008,7 +1008,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
         }
     }
 
-    sLog->outDebug("DealDamageEnd returned %d damage", damage);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "DealDamageEnd returned %d damage", damage);
 
     return damage;
 }
@@ -1076,7 +1076,7 @@ void Unit::CastSpell(Unit* Victim, SpellEntry const *spellInfo, bool triggered, 
     }
 
     if (castItem)
-        sLog->outDebug("WORLD: cast Item spellId - %i", spellInfo->Id);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: cast Item spellId - %i", spellInfo->Id);
 
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
@@ -1152,7 +1152,7 @@ void Unit::CastCustomSpell(uint32 spellId, CustomSpellValues const &value, Unit*
 
     if (castItem)
     {
-        sLog->outDebug("WORLD: cast Item spellId - %i", spellInfo->Id);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: cast Item spellId - %i", spellInfo->Id);
         spell->m_CastItem = castItem;
     }
 
@@ -1174,7 +1174,7 @@ void Unit::CastSpell(float x, float y, float z, uint32 spellId, bool triggered, 
     }
 
     if (castItem)
-        sLog->outDebug("WORLD: cast Item spellId - %i", spellInfo->Id);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: cast Item spellId - %i", spellInfo->Id);
 
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
@@ -1208,7 +1208,7 @@ void Unit::CastSpell(GameObject *go, uint32 spellId, bool triggered, Item *castI
     }
 
     if (castItem)
-        sLog->outDebug("WORLD: cast Item spellId - %i", spellInfo->Id);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: cast Item spellId - %i", spellInfo->Id);
 
     if (!originalCaster && triggeredByAura)
         originalCaster = triggeredByAura->GetCasterGUID();
@@ -1351,7 +1351,7 @@ void Unit::DealSpellDamage(SpellNonMeleeDamage *damageInfo, bool durabilityLoss)
     SpellEntry const *spellProto = sSpellStore.LookupEntry(damageInfo->SpellID);
     if (spellProto == NULL)
     {
-        sLog->outDebug("Unit::DealSpellDamage has invalid damageInfo->SpellID: %u", damageInfo->SpellID);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Unit::DealSpellDamage has invalid damageInfo->SpellID: %u", damageInfo->SpellID);
         return;
     }
 
@@ -2059,10 +2059,10 @@ void Unit::AttackerStateUpdate (Unit *pVictim, WeaponAttackType attType, bool ex
     ProcDamageAndSpell(damageInfo.target, damageInfo.procAttacker, damageInfo.procVictim, damageInfo.procEx, damageInfo.damage, damageInfo.attackType);
 
     if (GetTypeId() == TYPEID_PLAYER)
-        sLog->outDebug("AttackerStateUpdate: (Player) %u attacked %u (TypeId: %u) for %u dmg, absorbed %u, blocked %u, resisted %u.",
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "AttackerStateUpdate: (Player) %u attacked %u (TypeId: %u) for %u dmg, absorbed %u, blocked %u, resisted %u.",
             GetGUIDLow(), pVictim->GetGUIDLow(), pVictim->GetTypeId(), damageInfo.damage, damageInfo.absorb, damageInfo.blocked_amount, damageInfo.resist);
     else
-        sLog->outDebug("AttackerStateUpdate: (NPC)    %u attacked %u (TypeId: %u) for %u dmg, absorbed %u, blocked %u, resisted %u.",
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "AttackerStateUpdate: (NPC)    %u attacked %u (TypeId: %u) for %u dmg, absorbed %u, blocked %u, resisted %u.",
             GetGUIDLow(), pVictim->GetGUIDLow(), pVictim->GetTypeId(), damageInfo.damage, damageInfo.absorb, damageInfo.blocked_amount, damageInfo.resist);
 }
 
@@ -2083,7 +2083,7 @@ MeleeHitOutcome Unit::RollMeleeOutcomeAgainst(const Unit *pVictim, WeaponAttackT
     float parry_chance = pVictim->GetUnitParryChance();
 
     // Useful if want to specify crit & miss chances for melee, else it could be removed
-    sLog->outDebug("MELEE OUTCOME: miss %f crit %f dodge %f parry %f block %f", miss_chance, crit_chance, dodge_chance, parry_chance, block_chance);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "MELEE OUTCOME: miss %f crit %f dodge %f parry %f block %f", miss_chance, crit_chance, dodge_chance, parry_chance, block_chance);
 
     return RollMeleeOutcomeAgainst(pVictim, attType, int32(crit_chance*100), int32(miss_chance*100), int32(dodge_chance*100), int32(parry_chance*100), int32(block_chance*100), false);
 }
@@ -2321,7 +2321,7 @@ void Unit::SendMeleeAttackStart(Unit* pVictim)
     data << uint64(pVictim->GetGUID());
 
     SendMessageToSet(&data, true);
-    sLog->outDebug("WORLD: Sent SMSG_ATTACKSTART");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_ATTACKSTART");
 }
 
 void Unit::SendMeleeAttackStop(Unit* victim)
@@ -3568,7 +3568,7 @@ bool Unit::AddAura(Aura *Aur)
                     caster->AddAura(*itr, this);
     }
 
-    sLog->outDebug("Aura %u now is in use", Aur->GetModifier()->m_auraname);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Aura %u now is in use", Aur->GetModifier()->m_auraname);
     return true;
 }
 
@@ -4085,7 +4085,7 @@ void Unit::RemoveAura(AuraMap::iterator &i, AuraRemoveMode mode)
         }
     }
 
-    sLog->outDebug("Aura %u (%u) now is remove mode %d", Aur->GetId(), Aur->GetModifier()->m_auraname, mode);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Aura %u (%u) now is remove mode %d", Aur->GetId(), Aur->GetModifier()->m_auraname, mode);
     ASSERT(!Aur->IsInUse());
     Aur->ApplyModifier(false, true);
 
@@ -4189,7 +4189,7 @@ void Unit::DelayAura(uint32 spellId, uint32 effindex, int32 delaytime)
         else
             iter->second->SetAuraDuration(iter->second->GetAuraDuration() - delaytime);
         iter->second->UpdateAuraDuration();
-        sLog->outDebug("Aura %u partially interrupted on unit %u, new duration: %u ms", iter->second->GetModifier()->m_auraname, GetGUIDLow(), iter->second->GetAuraDuration());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Aura %u partially interrupted on unit %u, new duration: %u ms", iter->second->GetModifier()->m_auraname, GetGUIDLow(), iter->second->GetAuraDuration());
     }
 }
 
@@ -4383,7 +4383,7 @@ void Unit::SendSpellNonMeleeDamageLog(SpellNonMeleeDamage *log)
 
 void Unit::SendSpellNonMeleeDamageLog(Unit *target, uint32 SpellID, uint32 Damage, SpellSchoolMask damageSchoolMask, uint32 AbsorbedDamage, uint32 Resist, bool PhysicalDamage, uint32 Blocked, bool CriticalHit)
 {
-    sLog->outDebug("Sending: SMSG_SPELLNONMELEEDAMAGELOG");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Sending: SMSG_SPELLNONMELEEDAMAGELOG");
     WorldPacket data(SMSG_SPELLNONMELEEDAMAGELOG, (16+4+4+1+4+4+1+1+4+4+1)); // we guess size
     data << target->GetPackGUID();
     data << GetPackGUID();
@@ -4450,7 +4450,7 @@ void Unit::SendAttackStateUpdate(CalcDamageInfo *damageInfo)
 
 void Unit::SendAttackStateUpdate(uint32 HitInfo, Unit *target, uint8 SwingType, SpellSchoolMask damageSchoolMask, uint32 Damage, uint32 AbsorbDamage, uint32 Resist, VictimState TargetState, uint32 BlockedAmount)
 {
-    sLog->outDebug("WORLD: Sending SMSG_ATTACKERSTATEUPDATE");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sending SMSG_ATTACKERSTATEUPDATE");
 
     WorldPacket data(SMSG_ATTACKERSTATEUPDATE, (16+45));    // we guess size
     data << (uint32)HitInfo;
@@ -6973,7 +6973,7 @@ Unit* Unit::GetCharm() const
 
 void Unit::SetMinion(Minion *minion, bool apply)
 {
-    sLog->outDebug("SetMinion %u for %u, apply %u", minion->GetEntry(), GetEntry(), apply);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "SetMinion %u for %u, apply %u", minion->GetEntry(), GetEntry(), apply);
 
     if (apply)
     {
@@ -8537,7 +8537,7 @@ void Unit::CombatStart(Unit* target, bool initialAggro)
             if (target->ToCreature()->GetFormation())
             {
                 target->ToCreature()->GetFormation()->MemberAttackStart(target->ToCreature(), this);
-                sLog->outDebug("Unit::CombatStart() calls CreatureGroups::MemberHasAttacked(this);");
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "Unit::CombatStart() calls CreatureGroups::MemberHasAttacked(this);");
             }
         }
 
@@ -10313,7 +10313,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
             {
                 case SPELL_AURA_PROC_TRIGGER_SPELL:
                 {
-                    sLog->outDebug("ProcDamageAndSpell: casting spell (triggered by %s proc aura of spell %u)",
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell (triggered by %s proc aura of spell %u)",
                         (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                     casted = HandleProcTriggerSpell(pTarget, damage, triggeredByAura, procSpell, procFlag, attType, i->cooldown);
                     break;
@@ -10321,7 +10321,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
                 case SPELL_AURA_PROC_TRIGGER_DAMAGE:
                 {
                     uint32 triggered_damage = triggeredByAura->GetModifier()->m_amount;
-                    sLog->outDebug("ProcDamageAndSpell: doing %u damage (triggered by %s aura of spell %u)",
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: doing %u damage (triggered by %s aura of spell %u)",
                         triggered_damage, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                     SpellNonMeleeDamageLog(pTarget, triggeredByAura->GetId(), triggered_damage, true, true);
                     casted = true;
@@ -10330,14 +10330,14 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
                 case SPELL_AURA_DUMMY:
                 {
                     uint32 effect = triggeredByAura->GetEffIndex();
-                    sLog->outDebug("ProcDamageAndSpell: casting spell (triggered by %s dummy aura of spell %u)",
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell (triggered by %s dummy aura of spell %u)",
                         (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                     casted = HandleDummyAuraProc(pTarget, damage, triggeredByAura, procSpell, procFlag, i->cooldown);
                     break;
                 }
                 case SPELL_AURA_PRAYER_OF_MENDING:
                 {
-                    sLog->outDebug("ProcDamageAndSpell: casting mending (triggered by %s dummy aura of spell %u)",
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting mending (triggered by %s dummy aura of spell %u)",
                         (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
 
                     casted = HandleMendingAuraProc(triggeredByAura);
@@ -10345,7 +10345,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
                 }
                 case SPELL_AURA_MOD_HASTE:
                 {
-                    sLog->outDebug("ProcDamageAndSpell: casting spell (triggered by %s haste aura of spell %u)",
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell (triggered by %s haste aura of spell %u)",
                         (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                     casted = HandleHasteAuraProc(pTarget, damage, triggeredByAura, procSpell, procFlag, i->cooldown);
                     break;
@@ -10359,7 +10359,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
                 }
                 case SPELL_AURA_OVERRIDE_CLASS_SCRIPTS:
                 {
-                    sLog->outDebug("ProcDamageAndSpell: casting spell (triggered by %s class script aura of spell %u)",
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell (triggered by %s class script aura of spell %u)",
                         (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                     casted = HandleOverrideClassScriptAuraProc(pTarget, triggeredByAura, procSpell, i->cooldown);
                     break;
@@ -10623,11 +10623,11 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
             }
             if (!found)
             {
-//                sLog->outDebug("Spell aura %u (id:%u effect:%u) has been deleted before call spell proc event handler", i->triggeredByAura->GetModifier()->m_auraname, i->triggeredByAura_SpellPair.first, i->triggeredByAura_SpellPair.second);
-//                sLog->outDebug("It can be deleted one from early proccesed auras:");
+//                sLog->outDebug(LOG_FILTER_NETWORKIO, "Spell aura %u (id:%u effect:%u) has been deleted before call spell proc event handler", i->triggeredByAura->GetModifier()->m_auraname, i->triggeredByAura_SpellPair.first, i->triggeredByAura_SpellPair.second);
+//                sLog->outDebug(LOG_FILTER_NETWORKIO, "It can be deleted one from early proccesed auras:");
 //                for (ProcTriggeredList::iterator i2 = procTriggered.begin(); i != i2; ++i2)
-//                    sLog->outDebug("     Spell aura %u (id:%u effect:%u)", i->triggeredByAura->GetModifier()->m_auraname, i2->triggeredByAura_SpellPair.first, i2->triggeredByAura_SpellPair.second);
-//                    sLog->outDebug("     <end of list>");
+//                    sLog->outDebug(LOG_FILTER_NETWORKIO, "     Spell aura %u (id:%u effect:%u)", i->triggeredByAura->GetModifier()->m_auraname, i2->triggeredByAura_SpellPair.first, i2->triggeredByAura_SpellPair.second);
+//                    sLog->outDebug(LOG_FILTER_NETWORKIO, "     <end of list>");
                 continue;
             }
         }
@@ -10647,7 +10647,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
         {
             case SPELL_AURA_PROC_TRIGGER_SPELL:
             {
-                sLog->outDebug("ProcDamageAndSpell: casting spell %u (triggered by %s aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell %u (triggered by %s aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                 // Don`t drop charge or add cooldown for not started trigger
                 if (!HandleProcTriggerSpell(pTarget, damage, triggeredByAura, procSpell, procFlag, procExtra, cooldown))
                     continue;
@@ -10655,7 +10655,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
             }
             case SPELL_AURA_PROC_TRIGGER_DAMAGE:
             {
-                sLog->outDebug("ProcDamageAndSpell: doing %u damage from spell id %u (triggered by %s aura of spell %u)", auraModifier->m_amount, spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: doing %u damage from spell id %u (triggered by %s aura of spell %u)", auraModifier->m_amount, spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                 SpellNonMeleeDamage damageInfo(this, pTarget, spellInfo->Id, spellInfo->SchoolMask);
                 uint32 damage = SpellDamageBonus(pTarget, spellInfo, auraModifier->m_amount, SPELL_DIRECT_DAMAGE);
                 CalculateSpellDamageTaken(&damageInfo, damage, spellInfo);
@@ -10666,28 +10666,28 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
             case SPELL_AURA_MANA_SHIELD:
             case SPELL_AURA_DUMMY:
             {
-                sLog->outDebug("ProcDamageAndSpell: casting spell id %u (triggered by %s dummy aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell id %u (triggered by %s dummy aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                 if (!HandleDummyAuraProc(pTarget, damage, triggeredByAura, procSpell, procFlag, procExtra, cooldown))
                     continue;
                 break;
             }
             case SPELL_AURA_MOD_HASTE:
             {
-                sLog->outDebug("ProcDamageAndSpell: casting spell id %u (triggered by %s haste aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell id %u (triggered by %s haste aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                 if (!HandleHasteAuraProc(pTarget, damage, triggeredByAura, procSpell, procFlag, procExtra, cooldown))
                     continue;
                 break;
             }
             case SPELL_AURA_OVERRIDE_CLASS_SCRIPTS:
             {
-                sLog->outDebug("ProcDamageAndSpell: casting spell id %u (triggered by %s aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell id %u (triggered by %s aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
                 if (!HandleOverrideClassScriptAuraProc(pTarget, triggeredByAura, procSpell, cooldown))
                     continue;
                 break;
             }
             case SPELL_AURA_PRAYER_OF_MENDING:
             {
-                sLog->outDebug("ProcDamageAndSpell: casting mending (triggered by %s dummy aura of spell %u)",
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting mending (triggered by %s dummy aura of spell %u)",
                     (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
 
                 HandleMendingAuraProc(triggeredByAura);
@@ -10695,7 +10695,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
             }
             case SPELL_AURA_PROC_TRIGGER_SPELL_WITH_VALUE:
             {
-                sLog->outDebug("ProcDamageAndSpell: casting spell %u (triggered with value by %s aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "ProcDamageAndSpell: casting spell %u (triggered with value by %s aura of spell %u)", spellInfo->Id, (isVictim?"a victim's":"an attacker's"), triggeredByAura->GetId());
 
                 if (!HandleProcTriggerSpell(pTarget, damage, triggeredByAura, procSpell, procFlag, procExtra, cooldown))
                     continue;
@@ -11485,7 +11485,7 @@ bool Unit::SetPosition(float x, float y, float z, float orientation, bool telepo
     // prevent crash when a bad coord is sent by the client
     if (!Skyfire::IsValidMapCoord(x, y, z, orientation))
     {
-        sLog->outDebug("Unit::SetPosition(%f, %f, %f) .. bad coordinates!", x, y, z);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Unit::SetPosition(%f, %f, %f) .. bad coordinates!", x, y, z);
         return false;
     }
 
@@ -11587,7 +11587,7 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
 
     if (!SpiritOfRedemption)
     {
-        sLog->outDebug("SET JUST_DIED");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "SET JUST_DIED");
         pVictim->setDeathState(JUST_DIED);
         pVictim->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE); // reactive attackable flag
     }
@@ -11603,7 +11603,7 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
         // only if not player and not controlled by player pet. And not at BG
         if (durabilityLoss && !player && !pVictim->ToPlayer()->InBattleground())
         {
-            sLog->outDebug("We are dead, loosing 10 percents durability");
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "We are dead, loosing 10 percents durability");
             pVictim->ToPlayer()->DurabilityLossAll(0.10f, false);
             // durability lost message
             WorldPacket data(SMSG_DURABILITY_DAMAGE_DEATH, 0);
@@ -11625,7 +11625,7 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
     }
     else                                                // creature died
     {
-        sLog->outDebug("DealDamageNotPlayer");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "DealDamageNotPlayer");
 
         if (!creature->isPet())
         {
@@ -11885,7 +11885,7 @@ void Unit::SetCharmedBy(Unit* charmer, CharmType type)
 
     ASSERT(type != CHARM_TYPE_POSSESS || charmer->GetTypeId() == TYPEID_PLAYER);
 
-    sLog->outDebug("SetCharmedBy: charmer %u, charmed %u, type %u.", charmer->GetEntry(), GetEntry(), (uint32)type);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "SetCharmedBy: charmer %u, charmed %u, type %u.", charmer->GetEntry(), GetEntry(), (uint32)type);
 
     if (this == charmer)
     {

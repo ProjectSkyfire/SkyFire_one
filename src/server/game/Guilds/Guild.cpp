@@ -85,7 +85,7 @@ bool Guild::Create(Player* leader, std::string gname)
     m_CreatedMonth = local.tm_mon + 1;
     m_CreatedYear = local.tm_year + 1900;
 
-    sLog->outDebug("GUILD: creating guild %s to leader: %u", gname.c_str(), GUID_LOPART(m_LeaderGuid));
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "GUILD: creating guild %s to leader: %u", gname.c_str(), GUID_LOPART(m_LeaderGuid));
 
     // gname already assigned to Guild::name, use it to encode string for DB
     CharacterDatabase.EscapeString(gname);
@@ -789,7 +789,7 @@ void Guild::Roster(WorldSession *session /*= NULL*/)
         session->SendPacket(&data);
     else
         BroadcastPacket(&data);
-    sLog->outDebug("WORLD: Sent (SMSG_GUILD_ROSTER)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (SMSG_GUILD_ROSTER)");
 }
 
 void Guild::Query(WorldSession *session)
@@ -814,7 +814,7 @@ void Guild::Query(WorldSession *session)
     data << uint32(m_BackgroundColor);
 
     session->SendPacket(&data);
-    sLog->outDebug("WORLD: Sent (SMSG_GUILD_QUERY_RESPONSE)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (SMSG_GUILD_QUERY_RESPONSE)");
 }
 
 void Guild::SetEmblem(uint32 emblemStyle, uint32 emblemColor, uint32 borderStyle, uint32 borderColor, uint32 backgroundColor)
@@ -889,7 +889,7 @@ void Guild::DisplayGuildEventlog(WorldSession *session)
         data << uint32(time(NULL)-itr->TimeStamp);
     }
     session->SendPacket(&data);
-    sLog->outDebug("WORLD: Sent (MSG_GUILD_EVENT_LOG_QUERY)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (MSG_GUILD_EVENT_LOG_QUERY)");
 }
 
 // Load guild eventlog from DB
@@ -999,7 +999,7 @@ void Guild::DisplayGuildBankContent(WorldSession *session, uint8 TabId)
 
     session->SendPacket(&data);
 
-    sLog->outDebug("WORLD: Sent (SMSG_GUILD_BANK_LIST)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (SMSG_GUILD_BANK_LIST)");
 }
 
 void Guild::DisplayGuildBankMoneyUpdate()
@@ -1013,7 +1013,7 @@ void Guild::DisplayGuildBankMoneyUpdate()
     data << uint8(0);                                       // not send items
     BroadcastPacket(&data);
 
-    sLog->outDebug("WORLD: Sent (SMSG_GUILD_BANK_LIST)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (SMSG_GUILD_BANK_LIST)");
 }
 
 void Guild::DisplayGuildBankContentUpdate(uint8 TabId, int32 slot1, int32 slot2)
@@ -1062,7 +1062,7 @@ void Guild::DisplayGuildBankContentUpdate(uint8 TabId, int32 slot1, int32 slot2)
         player->GetSession()->SendPacket(&data);
     }
 
-    sLog->outDebug("WORLD: Sent (SMSG_GUILD_BANK_LIST)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (SMSG_GUILD_BANK_LIST)");
 }
 
 void Guild::DisplayGuildBankContentUpdate(uint8 TabId, GuildItemPosCountVec const& slots)
@@ -1099,7 +1099,7 @@ void Guild::DisplayGuildBankContentUpdate(uint8 TabId, GuildItemPosCountVec cons
         player->GetSession()->SendPacket(&data);
     }
 
-    sLog->outDebug("WORLD: Sent (SMSG_GUILD_BANK_LIST)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (SMSG_GUILD_BANK_LIST)");
 }
 
 Item* Guild::GetItem(uint8 TabId, uint8 SlotId)
@@ -1135,7 +1135,7 @@ void Guild::DisplayGuildBankTabsInfo(WorldSession *session)
     data << uint8(0);                                       // Do not send tab content
     session->SendPacket(&data);
 
-    sLog->outDebug("WORLD: Sent (SMSG_GUILD_BANK_LIST)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (SMSG_GUILD_BANK_LIST)");
 }
 
 void Guild::CreateNewBankTab()
@@ -1179,7 +1179,7 @@ void Guild::SetGuildBankTabInfo(uint8 TabId, std::string Name, std::string Icon)
 
 void Guild::CreateBankRightForTab(uint32 rankId, uint8 TabId)
 {
-    sLog->outDebug("CreateBankRightForTab. rank: %u, TabId: %u", rankId, uint32(TabId));
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "CreateBankRightForTab. rank: %u, TabId: %u", rankId, uint32(TabId));
     if (rankId >= m_Ranks.size() || TabId >= GUILD_BANK_MAX_TABS)
         return;
 
@@ -1314,7 +1314,7 @@ void Guild::SendMoneyInfo(WorldSession *session, uint32 LowGuid)
     WorldPacket data(MSG_GUILD_BANK_MONEY_WITHDRAWN, 4);
     data << uint32(GetMemberMoneyWithdrawRem(LowGuid));
     session->SendPacket(&data);
-    sLog->outDebug("WORLD: Sent MSG_GUILD_BANK_MONEY_WITHDRAWN");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent MSG_GUILD_BANK_MONEY_WITHDRAWN");
 }
 
 bool Guild::MemberMoneyWithdraw(uint32 amount, uint32 LowGuid)
@@ -1639,7 +1639,7 @@ void Guild::DisplayGuildBankLogs(WorldSession *session, uint8 TabId)
         }
         session->SendPacket(&data);
     }
-    sLog->outDebug("WORLD: Sent (MSG_GUILD_BANK_LOG_QUERY)");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent (MSG_GUILD_BANK_LOG_QUERY)");
 }
 
 void Guild::LogBankEvent(uint8 LogEntry, uint8 TabId, uint32 PlayerGuidLow, uint32 ItemOrMoney, uint8 ItemStackCount, uint8 DestTabId)
@@ -1755,7 +1755,7 @@ Item* Guild::_StoreItem(uint8 tab, uint8 slot, Item *pItem, uint32 count, bool c
     if (!pItem)
         return NULL;
 
-    sLog->outDebug("GUILD STORAGE: StoreItem tab = %u, slot = %u, item = %u, count = %u", tab, slot, pItem->GetEntry(), count);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "GUILD STORAGE: StoreItem tab = %u, slot = %u, item = %u, count = %u", tab, slot, pItem->GetEntry(), count);
 
     Item* pItem2 = m_TabListMap[tab]->Slots[slot];
 
@@ -1905,7 +1905,7 @@ uint8 Guild::_CanStoreItem_InTab(uint8 tab, GuildItemPosCountVec &dest, uint32& 
 
 uint8 Guild::CanStoreItem(uint8 tab, uint8 slot, GuildItemPosCountVec &dest, uint32 count, Item *pItem, bool swap) const
 {
-    sLog->outDebug("GUILD STORAGE: CanStoreItem tab = %u, slot = %u, item = %u, count = %u", tab, slot, pItem->GetEntry(), count);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "GUILD STORAGE: CanStoreItem tab = %u, slot = %u, item = %u, count = %u", tab, slot, pItem->GetEntry(), count);
 
     if (count > pItem->GetCount())
         return EQUIP_ERR_COULDNT_SPLIT_ITEMS;
@@ -2017,7 +2017,7 @@ void Guild::BroadcastEvent(GuildEvents event, uint64 guid, char const* str1 /*=N
 
     BroadcastPacket(&data);
 
-    sLog->outDebug("WORLD: Sent SMSG_GUILD_EVENT");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_GUILD_EVENT");
 }
 
 bool GuildItemPosCount::isContainedIn(GuildItemPosCountVec const &vec) const

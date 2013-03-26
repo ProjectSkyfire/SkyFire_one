@@ -62,7 +62,7 @@ bool ArenaTeam::Create(uint64 captainGuid, uint32 type, std::string arenaTeamNam
     if (sObjectMgr->GetArenaTeamByName(arenaTeamName))            // arena team with this name already exist
         return false;
 
-    sLog->outDebug("GUILD: creating arena team %s to leader: %u", arenaTeamName.c_str(), GUID_LOPART(captainGuid));
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "GUILD: creating arena team %s to leader: %u", arenaTeamName.c_str(), GUID_LOPART(captainGuid));
 
     m_CaptainGuid = captainGuid;
     m_Name = arenaTeamName;
@@ -338,7 +338,7 @@ void ArenaTeam::Roster(WorldSession *session)
     }
 
     session->SendPacket(&data);
-    sLog->outDebug("WORLD: Sent SMSG_ARENA_TEAM_ROSTER");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_ARENA_TEAM_ROSTER");
 }
 
 void ArenaTeam::Query(WorldSession *session)
@@ -353,7 +353,7 @@ void ArenaTeam::Query(WorldSession *session)
     data << uint32(m_BorderStyle);                          // border style
     data << uint32(m_BorderColor);                          // border color
     session->SendPacket(&data);
-    sLog->outDebug("WORLD: Sent SMSG_ARENA_TEAM_QUERY_RESPONSE");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_ARENA_TEAM_QUERY_RESPONSE");
 }
 
 void ArenaTeam::Stats(WorldSession *session)
@@ -439,7 +439,7 @@ void ArenaTeam::SetStats(uint32 stat_type, uint32 value)
             CharacterDatabase.PExecute("UPDATE arena_team_stats SET rank = '%u' WHERE arenateamid = '%u'", value, GetId());
             break;
         default:
-            sLog->outDebug("unknown stat type in ArenaTeam::SetStats() %u", stat_type);
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "unknown stat type in ArenaTeam::SetStats() %u", stat_type);
             break;
     }
 }
@@ -481,7 +481,7 @@ void ArenaTeam::BroadcastEvent(ArenaTeamEvents event, uint64 guid, char const* s
 
     BroadcastPacket(&data);
 
-    sLog->outDebug("WORLD: Sent SMSG_ARENA_TEAM_EVENT");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_ARENA_TEAM_EVENT");
 }
 
 uint8 ArenaTeam::GetSlotByType(uint32 type)

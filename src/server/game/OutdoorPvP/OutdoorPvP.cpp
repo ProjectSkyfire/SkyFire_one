@@ -119,7 +119,7 @@ bool OPvPCapturePoint::AddCreature(uint32 type, uint32 entry, uint32 team, uint3
 
 bool OPvPCapturePoint::SetCapturePointData(uint32 entry, uint32 map, float x, float y, float z, float o, float rotation0, float rotation1, float rotation2, float rotation3)
 {
-    sLog->outDebug("Creating capture point %u", entry);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Creating capture point %u", entry);
 
     // check info existence
     GameObjectTemplate const* goinfo = sObjectMgr->GetGameObjectInfo(entry);
@@ -146,7 +146,7 @@ bool OPvPCapturePoint::DelCreature(uint32 type)
 {
     if (!m_Creatures[type])
     {
-        sLog->outDebug("opvp creature type %u was already deleted", type);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "opvp creature type %u was already deleted", type);
         return false;
     }
 
@@ -157,7 +157,7 @@ bool OPvPCapturePoint::DelCreature(uint32 type)
         m_Creatures[type] = 0;
         return false;
     }
-    sLog->outDebug("deleting opvp creature type %u", type);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "deleting opvp creature type %u", type);
     uint32 guid = cr->GetDBTableGUIDLow();
     // Don't save respawn time
     cr->SetRespawnTime(0);
@@ -253,7 +253,7 @@ void OutdoorPvP::HandlePlayerLeaveZone(Player* player, uint32 /*zone*/)
     if (!player->GetSession()->PlayerLogout())
         SendRemoveWorldStates(player);
     m_players[player->GetTeamId()].erase(player);
-    sLog->outDebug("Player %s left an outdoorpvp zone", player->GetName());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Player %s left an outdoorpvp zone", player->GetName());
 }
 
 void OutdoorPvP::HandlePlayerResurrects(Player* /*player*/, uint32 /*zone*/)

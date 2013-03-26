@@ -2871,7 +2871,7 @@ void Spell::SendSpellStart()
     if (!IsNeedSendToClient())
         return;
 
-    sLog->outDebug("Sending SMSG_SPELL_START id=%u", m_spellInfo->Id);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Sending SMSG_SPELL_START id=%u", m_spellInfo->Id);
 
     uint32 castFlags = CAST_FLAG_UNKNOWN1;
     if (IsRangedSpell())
@@ -2904,7 +2904,7 @@ void Spell::SendSpellGo()
     if (!IsNeedSendToClient())
         return;
 
-    sLog->outDebug("Sending SMSG_SPELL_GO id=%u", m_spellInfo->Id);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Sending SMSG_SPELL_GO id=%u", m_spellInfo->Id);
 
     Unit *target = m_targets.getUnitTarget() ? m_targets.getUnitTarget() : m_caster;
 
@@ -3407,7 +3407,7 @@ void Spell::HandleThreatSpells(uint32 spellId)
 
     m_targets.getUnitTarget()->AddThreat(m_caster, float(threatSpell->threat));
 
-    sLog->outDebug("Spell %u, rank %u, added an additional %i threat", spellId, sSpellMgr->GetSpellRank(spellId), threatSpell->threat);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Spell %u, rank %u, added an additional %i threat", spellId, sSpellMgr->GetSpellRank(spellId), threatSpell->threat);
 }
 
 void Spell::HandleEffects(Unit *pUnitTarget, Item *pItemTarget, GameObject *pGOTarget, uint32 i, float /*DamageMultiplier*/)
@@ -3418,20 +3418,20 @@ void Spell::HandleEffects(Unit *pUnitTarget, Item *pItemTarget, GameObject *pGOT
 
     uint8 eff = m_spellInfo->Effect[i];
 
-    sLog->outDebug("Spell: Effect : %u", eff);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Spell: Effect : %u", eff);
 
     //we do not need DamageMultiplier here.
     damage = CalculateDamage(i, NULL);
 
     if (eff<TOTAL_SPELL_EFFECTS)
     {
-        //sLog->outDebug("WORLD: Spell FX %d < TOTAL_SPELL_EFFECTS ", eff);
+        //sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Spell FX %d < TOTAL_SPELL_EFFECTS ", eff);
         (*this.*SpellEffects[eff])((SpellEffIndex)i);
     }
     /*
     else
     {
-        sLog->outDebug("WORLD: Spell FX %d > TOTAL_SPELL_EFFECTS ", eff);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Spell FX %d > TOTAL_SPELL_EFFECTS ", eff);
         if (m_CastItem)
             EffectEnchantItemTmp(i);
         else
@@ -5074,7 +5074,7 @@ void Spell::DelayedChannel()
     else
         m_timer -= delaytime;
 
-    sLog->outDebug("Spell %u partially interrupted for %i ms, new duration: %u ms", m_spellInfo->Id, delaytime, m_timer);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Spell %u partially interrupted for %i ms, new duration: %u ms", m_spellInfo->Id, delaytime, m_timer);
 
     for (std::list<TargetInfo>::iterator ihit= m_UniqueTargetInfo.begin();ihit != m_UniqueTargetInfo.end();++ihit)
     {

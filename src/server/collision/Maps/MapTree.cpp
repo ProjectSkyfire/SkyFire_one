@@ -56,7 +56,7 @@ namespace VMAP
             void operator()(const Vector3& point, uint32 entry)
             {
 #ifdef VMAP_DEBUG
-                sLog->outDebug("trying to intersect '%s'", prims[entry].name.c_str());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "trying to intersect '%s'", prims[entry].name.c_str());
 #endif
                 prims[entry].intersectPoint(point, aInfo);
             }
@@ -72,7 +72,7 @@ namespace VMAP
             void operator()(const Vector3& point, uint32 entry)
             {
 #ifdef VMAP_DEBUG
-                sLog->outDebug("trying to intersect '%s'", prims[entry].name.c_str());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "trying to intersect '%s'", prims[entry].name.c_str());
 #endif
                 if (prims[entry].GetLocationInfo(point, locInfo))
                     result = true;
@@ -259,7 +259,7 @@ namespace VMAP
 
     bool StaticMapTree::InitMap(const std::string &fname, VMapManager2 *vm)
     {
-        sLog->outDebug("Initializing StaticMapTree '%s'", fname.c_str());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Initializing StaticMapTree '%s'", fname.c_str());
         bool success = true;
         std::string fullname = iBasePath + fname;
         FILE *rf = fopen(fullname.c_str(), "rb");
@@ -287,12 +287,12 @@ namespace VMAP
             // only non-tiled maps have them, and if so exactly one (so far at least...)
             ModelSpawn spawn;
 #ifdef VMAP_DEBUG
-            sLog->outDebug("Map isTiled: %u", static_cast<uint32>(iIsTiled));
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Map isTiled: %u", static_cast<uint32>(iIsTiled));
 #endif
             if (!iIsTiled && ModelSpawn::readFromFile(rf, spawn))
             {
                 WorldModel *model = vm->acquireModelInstance(iBasePath, spawn.name);
-                sLog->outDebug("StaticMapTree::InitMap(): loading %s", spawn.name.c_str());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "StaticMapTree::InitMap(): loading %s", spawn.name.c_str());
                 if (model)
                 {
                     // assume that global model always is the first and only tree value (could be improved...)
@@ -370,7 +370,7 @@ namespace VMAP
 #ifdef VMAP_DEBUG
                         if (referencedVal > iNTreeValues)
                         {
-                            sLog->outDebug("invalid tree element! (%u/%u)", referencedVal, iNTreeValues);
+                            sLog->outDebug(LOG_FILTER_NETWORKIO, "invalid tree element! (%u/%u)", referencedVal, iNTreeValues);
                             continue;
                         }
 #endif
@@ -382,9 +382,9 @@ namespace VMAP
                         ++iLoadedSpawns[referencedVal];
 #ifdef VMAP_DEBUG
                         if (iTreeValues[referencedVal].ID != spawn.ID)
-                            sLog->outDebug("Error: trying to load wrong spawn in node!");
+                            sLog->outDebug(LOG_FILTER_NETWORKIO, "Error: trying to load wrong spawn in node!");
                         else if (iTreeValues[referencedVal].name != spawn.name)
-                            sLog->outDebug("Error: name mismatch on GUID=%u", spawn.ID);
+                            sLog->outDebug(LOG_FILTER_NETWORKIO, "Error: name mismatch on GUID=%u", spawn.ID);
 #endif
                     }
                 }

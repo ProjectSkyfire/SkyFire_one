@@ -187,16 +187,16 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket& recv_data)
         data << (float)1.0f;                                // unk
         data << uint8(ci->RacialLeader);
         SendPacket(&data);
-        sLog->outDebug("WORLD: Sent SMSG_CREATURE_QUERY_RESPONSE");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_CREATURE_QUERY_RESPONSE");
     }
     else
     {
-        sLog->outDebug("WORLD: CMSG_CREATURE_QUERY - NO CREATURE INFO! (GUID: %u, ENTRY: %u)",
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: CMSG_CREATURE_QUERY - NO CREATURE INFO! (GUID: %u, ENTRY: %u)",
             GUID_LOPART(guid), entry);
         WorldPacket data(SMSG_CREATURE_QUERY_RESPONSE, 4);
         data << uint32(entry | 0x80000000);
         SendPacket(&data);
-        sLog->outDebug("WORLD: Sent SMSG_CREATURE_QUERY_RESPONSE");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_CREATURE_QUERY_RESPONSE");
     }
 }
 
@@ -242,16 +242,16 @@ void WorldSession::HandleGameObjectQueryOpcode(WorldPacket& recv_data)
         data.append(info->raw.data, 24);
         data << float(info->size);                          // go size
         SendPacket(&data);
-        sLog->outDebug("WORLD: Sent SMSG_GAMEOBJECT_QUERY_RESPONSE");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_GAMEOBJECT_QUERY_RESPONSE");
     }
     else
     {
-        sLog->outDebug("WORLD: CMSG_GAMEOBJECT_QUERY - Missing gameobject info for (GUID: %u, ENTRY: %u)",
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: CMSG_GAMEOBJECT_QUERY - Missing gameobject info for (GUID: %u, ENTRY: %u)",
             GUID_LOPART(guid), entryID);
         WorldPacket data (SMSG_GAMEOBJECT_QUERY_RESPONSE, 4);
         data << uint32(entryID | 0x80000000);
         SendPacket(&data);
-        sLog->outDebug("WORLD: Sent SMSG_GAMEOBJECT_QUERY_RESPONSE");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_GAMEOBJECT_QUERY_RESPONSE");
     }
 }
 
@@ -388,7 +388,7 @@ void WorldSession::HandleNpcTextQueryOpcode(WorldPacket& recv_data)
 
     SendPacket(&data);
 
-    sLog->outDebug("WORLD: Sent SMSG_NPC_TEXT_UPDATE");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_NPC_TEXT_UPDATE");
 }
 
 void WorldSession::HandlePageTextQueryOpcode(WorldPacket& recv_data)
@@ -434,7 +434,7 @@ void WorldSession::HandlePageTextQueryOpcode(WorldPacket& recv_data)
         }
         SendPacket(&data);
 
-        sLog->outDebug("WORLD: Sent SMSG_PAGE_TEXT_QUERY_RESPONSE");
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_PAGE_TEXT_QUERY_RESPONSE");
     }
 }
 

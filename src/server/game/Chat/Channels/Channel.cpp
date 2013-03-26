@@ -74,7 +74,7 @@ Channel::Channel(const std::string& name, uint32 channel_id, uint32 Team)
                     uint64 banned_guid = atol(*iter);
                     if (banned_guid)
                     {
-                        sLog->outDebug("Channel(%s) loaded banned guid:" UI64FMTD "", name.c_str(), banned_guid);
+                        sLog->outDebug(LOG_FILTER_NETWORKIO, "Channel(%s) loaded banned guid:" UI64FMTD "", name.c_str(), banned_guid);
                         banned.insert(banned_guid);
                     }
                 }
@@ -86,7 +86,7 @@ Channel::Channel(const std::string& name, uint32 channel_id, uint32 Team)
             if (CharacterDatabase.PExecute("INSERT INTO channels (m_name, _team, m_announce, m_moderate, m_public, m_password) "
                 "VALUES ('%s', '%u', '1', '0', '1', '')", _name.c_str(), m_Team))
             {
-                sLog->outDebug("New Channel(%s) saved", name.c_str());
+                sLog->outDebug(LOG_FILTER_NETWORKIO, "New Channel(%s) saved", name.c_str());
                 m_IsSaved = true;
             }
         }
@@ -124,7 +124,7 @@ void Channel::_UpdateBanListInDB() const
             banlist << (*iter) << " ";
         std::string banListStr = banlist.str();
         if (_UpdateStringInDB("BannedList", banListStr))
-            sLog->outDebug("Channel(%s) BannedList saved", m_name.c_str());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Channel(%s) BannedList saved", m_name.c_str());
     }
 }
 
@@ -388,7 +388,7 @@ void Channel::Password(uint64 p, const char *pass)
         MakePasswordChanged(&data, p);
         SendToAll(&data);
         if (m_IsSaved && _UpdateStringInDB("m_password", m_password))
-            sLog->outDebug("Channel(%s) password saved", m_name.c_str());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Channel(%s) password saved", m_name.c_str());
     }
 }
 
@@ -595,7 +595,7 @@ void Channel::Announce(uint64 p)
             MakeAnnouncementsOff(&data, p);
         SendToAll(&data);
         if (m_IsSaved && _UpdateIntInDB("m_announce", m_announce ? 1 : 0))
-            sLog->outDebug("Channel(%s) announce saved", m_name.c_str());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Channel(%s) announce saved", m_name.c_str());
     }
 }
 
@@ -629,7 +629,7 @@ void Channel::Moderate(uint64 p)
             MakeModerationOff(&data, p);
         SendToAll(&data);
         if (m_IsSaved && _UpdateIntInDB("m_announce", m_announce ? 1 : 0))
-            sLog->outDebug("Channel(%s) announce saved", m_name.c_str());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Channel(%s) announce saved", m_name.c_str());
     }
 }
 
@@ -767,7 +767,7 @@ void Channel::SetOwner(uint64 guid, bool exclaim)
             SendToAll(&data);
         }
         if (m_IsSaved && _UpdateIntInDB("m_moderate", m_moderate ? 1 : 0))
-            sLog->outDebug("Channel(%s) moderate saved", m_name.c_str());
+            sLog->outDebug(LOG_FILTER_NETWORKIO, "Channel(%s) moderate saved", m_name.c_str());
     }
 }
 

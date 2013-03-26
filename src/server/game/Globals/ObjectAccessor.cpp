@@ -261,7 +261,7 @@ Corpse* ObjectAccessor::ConvertCorpseForPlayer(uint64 player_guid, bool insignia
         return NULL;
     }
 
-    sLog->outDebug("Deleting Corpse and spawned bones.");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Deleting Corpse and spawned bones.");
 
     Map *map = corpse->FindMap();
 

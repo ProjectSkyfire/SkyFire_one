@@ -95,7 +95,7 @@ namespace FactorySelector
         // select NullCreatureAI if not another cases
         ainame = (ai_factory == NULL) ? "NullCreatureAI" : ai_factory->key();
 
-        sLog->outDebug("Creature %u used AI is %s.", creature->GetGUIDLow(), ainame.c_str());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "Creature %u used AI is %s.", creature->GetGUIDLow(), ainame.c_str());
         return (ai_factory == NULL ? new NullCreatureAI(creature) : ai_factory->Create(creature));
     }
 
@@ -146,7 +146,7 @@ namespace FactorySelector
 
         std::string ainame = (ai_factory == NULL || go->GetScriptId()) ? "NullGameObjectAI" : ai_factory->key();
 
-        sLog->outDebug("GameObject %u used AI is %s.", go->GetGUIDLow(), ainame.c_str());
+        sLog->outDebug(LOG_FILTER_NETWORKIO, "GameObject %u used AI is %s.", go->GetGUIDLow(), ainame.c_str());
 
         return (ai_factory == NULL ? new NullGameObjectAI(go) : ai_factory->Create(go));
     }
