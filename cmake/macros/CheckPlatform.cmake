@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
 # Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
@@ -22,6 +22,8 @@ include("${CMAKE_SOURCE_DIR}/cmake/platform/settings.cmake")
 
 if(WIN32)
   include("${CMAKE_SOURCE_DIR}/cmake/platform/win/settings.cmake")
+elseif(APPLE)
+  include("${CMAKE_SOURCE_DIR}/cmake/platform/osx/settings.cmake")
 elseif(UNIX)
   include("${CMAKE_SOURCE_DIR}/cmake/platform/unix/settings.cmake")
 endif()

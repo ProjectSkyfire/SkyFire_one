@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
 # Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
@@ -11,10 +11,7 @@
 
 # Package overloads - Linux
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-	if (NOT NOJEM)
-    set(JEMALLOC_LIBRARY "jemalloc")
-    message(STATUS "UNIX: Using jemalloc")
-  endif()
+  set(JEMALLOC_LIBRARY "jemalloc")
 endif()
 
 # set default configuration directory
@@ -47,6 +44,4 @@ if(CMAKE_C_COMPILER MATCHES "gcc")
   include(${CMAKE_SOURCE_DIR}/cmake/compiler/gcc/settings.cmake)
 elseif(CMAKE_C_COMPILER MATCHES "icc")
   include(${CMAKE_SOURCE_DIR}/cmake/compiler/icc/settings.cmake)
-elseif(CMAKE_C_COMPILER MATCHES "clang")
-  include(${CMAKE_SOURCE_DIR}/cmake/compiler/clang/settings.cmake)
 endif()

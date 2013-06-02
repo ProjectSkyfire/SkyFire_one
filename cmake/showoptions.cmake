@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
 # Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
@@ -11,10 +11,10 @@
 
 # output generic information about the core and buildtype chosen
 message("")
-message("* SkyFireONE rev. hash  : ${rev_hash}")
-message("* SkyFireONE rev. date  : ${rev_date}")
+message("* SkyFireEMU rev. hash  : ${rev_hash}")
+message("* SkyFireEMU rev. date  : ${rev_date}")
 if( UNIX )
-  message("* SkyFireONE buildtype  : ${CMAKE_BUILD_TYPE}")
+  message("* SkyFireEMU buildtype  : ${CMAKE_BUILD_TYPE}")
 endif()
 message("")
 
@@ -36,16 +36,22 @@ else()
 endif()
 
 if( SCRIPTS )
-  message("* Build with scripts     : Yes")
+  message("* Build with scripts     : Yes (default)")
   add_definitions(-DSCRIPTS)
 else()
-  message("* Build with scripts     : No (default)")
+  message("* Build with scripts     : No")
   set(USE_SCRIPTPCH 0)
+endif()
+
+if( EXAMPLES )
+  message("* Build example scripts  : Yes")
+  add_definitions(-EXAMPLES)
+else()
+  message("* Build example scripts  : No (default)")
 endif()
 
 if( TOOLS )
   message("* Build map/vmap tools   : Yes")
-  add_definitions(-DNO_CORE_FUNCS)
 else()
   message("* Build map/vmap tools   : No  (default)")
 endif()
@@ -83,28 +89,4 @@ if( WIN32 )
   endif()
 endif( WIN32 )
 
-if ( WITHOUT_GIT )
-  message("* Use GIT revision hash  : No")
-  message("")
-  message(" *** WITHOUT_GIT - WARNING!")
-  message(" *** By choosing the WITHOUT_GIT option you have waived all rights for support,")
-  message(" *** and accept that or all requests for support or assistance sent to the core")
-  message(" *** developers will be rejected. This due to that we will be unable to detect")
-  message(" *** what revision of the codebase you are using in a proper way.")
-  message(" *** We remind you that you need to use the repository codebase and a supported")
-  message(" *** version of git for the revision-hash to work, and be allowede to ask for")
-  message(" *** support if needed.")
-else()
-  message("* Use GIT revision hash  : Yes")
-endif()
-
-if ( NOJEM )
-  message("")
-  message(" *** NOJEM - WARNING!")
-  message(" *** jemalloc linking has been disabled!")
-  message(" *** Please note that this is for DEBUGGING WITH VALGRIND only!")
-  message(" *** DO NOT DISABLE IT UNLESS YOU KNOW WHAT YOU'RE DOING!")
-endif()
-
 message("")
-
