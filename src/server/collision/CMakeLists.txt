@@ -16,7 +16,6 @@ endif()
 file(GLOB_RECURSE sources_Management Management/*.cpp Management/*.h)
 file(GLOB_RECURSE sources_Maps Maps/*.cpp Maps/*.h)
 file(GLOB_RECURSE sources_Models Models/*.cpp Models/*.h)
-file(GLOB_RECURSE sources_Pathfinding Pathfinding/*.cpp Pathfinding/*.h)
 file(GLOB sources_localdir *.cpp *.h)
 
 if( USE_COREPCH AND MSVC )
@@ -31,14 +30,13 @@ set(collision_STAT_SRCS
   ${sources_Management}
   ${sources_Maps}
   ${sources_Models}
-  ${sources_Pathfinding}
   ${sources_localdir}
 )
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/dep/g3dlite/include
-  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour
-  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour  -- NYI
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast  -- NYI
   ${CMAKE_SOURCE_DIR}/src/server/shared/Configuration
   ${CMAKE_SOURCE_DIR}/src/server/shared
   ${CMAKE_SOURCE_DIR}/src/server/shared/Debugging
@@ -58,7 +56,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Unit
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object/Updates
-  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Vehicle
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Item
   ${CMAKE_SOURCE_DIR}/src/server/game/Grids
   ${CMAKE_SOURCE_DIR}/src/server/game/Grids/Cells

@@ -56,8 +56,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/zlib
   ${CMAKE_SOURCE_DIR}/dep/SFMT
   ${CMAKE_SOURCE_DIR}/dep/utf8cpp
-  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour
-  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour  -- NYI
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast  -- NYI
   ${CMAKE_SOURCE_DIR}/src/server
   ${CMAKE_SOURCE_DIR}/src/server/game/World
   ${CMAKE_SOURCE_DIR}/src/server/game/Addons

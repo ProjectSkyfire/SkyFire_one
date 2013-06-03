@@ -14,18 +14,13 @@ if( USE_COREPCH )
 endif()
 
 file(GLOB_RECURSE sources_Accounts Accounts/*.cpp Accounts/*.h)
-file(GLOB_RECURSE sources_Achievements Achievements/*.cpp Achievements/*.h)
 file(GLOB_RECURSE sources_Addons Addons/*.cpp Addons/*.h)
 file(GLOB_RECURSE sources_AI AI/*.cpp AI/*.h)
 file(GLOB_RECURSE sources_AuctionHouse AuctionHouse/*.cpp AuctionHouse/*.h)
-file(GLOB_RECURSE sources_Battlefields Battlefields/*.cpp Battlefields/*.h)
 file(GLOB_RECURSE sources_Battlegrounds Battlegrounds/*.cpp Battlegrounds/*.h)
-file(GLOB_RECURSE sources_Calendar Calendar/*.cpp Calendar/*.h)
 file(GLOB_RECURSE sources_Chat Chat/*.cpp Chat/*.h)
 file(GLOB_RECURSE sources_Combat Combat/*.cpp Combat/*.h)
-file(GLOB_RECURSE sources_Conditions Conditions/*.cpp Conditions/*.h)
 file(GLOB_RECURSE sources_DataStores DataStores/*.cpp DataStores/*.h)
-file(GLOB_RECURSE sources_DungeonFinding DungeonFinding/*.cpp DungeonFinding/*.h)
 file(GLOB_RECURSE sources_Entities Entities/*.cpp Entities/*.h)
 file(GLOB_RECURSE sources_Events Events/*.cpp Events/*.h)
 file(GLOB_RECURSE sources_Globals Globals/*.cpp Globals/*.h)
@@ -56,19 +51,15 @@ file(GLOB_RECURSE sources_World World/*.cpp World/*.h)
 
 source_group(CMake FILES CMakeLists.txt)
 source_group(Accounts FILES ${sources_Accounts})
-source_group(Achievements FILES ${sources_Achievements})
 source_group(Addons FILES ${sources_Addons})
 source_group(AI FILES ${sources_AI})
 source_group(AI\\ScriptedAI FILES ${sources_AI})
 source_group(AuctionHouse FILES ${sources_AuctionHouse})
-source_group(Battlefields FILES ${sources_Battlefields})
 source_group(Battlegrounds FILES ${sources_Battlegrounds})
-source_group(Calendar FILES ${sources_Calendar})
 source_group(Chat FILES ${sources_Chat})
 source_group(Combat FILES ${sources_Combat})
 source_group(Conditions FILES ${sources_Conditions})
 source_group(DataStores FILES ${sources_DataStores})
-source_group(DungeonFinding FILES ${sources_DungeonFinding})
 source_group(PrecompiledHeaders FILES ${sources_PrecompiledHeaders})
 source_group(Entities FILES ${sources_Entities})
 source_group(Events FILES ${sources_Events})
@@ -110,18 +101,14 @@ endif()
 set(game_STAT_SRCS
   ${game_STAT_SRCS}
   ${sources_Accounts}
-  ${sources_Achievements}
   ${sources_Addons}
   ${sources_AI}
   ${sources_AuctionHouse}
-  ${sources_Battlefields}
   ${sources_Battlegrounds}
-  ${sources_Calendar}
   ${sources_Chat}
   ${sources_Combat}
   ${sources_Conditions}
   ${sources_DataStores}
-  ${sources_DungeonFinding}
   ${sources_Entities}
   ${sources_Events}
   ${sources_Globals}
@@ -156,11 +143,11 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/dep/g3dlite/include
   ${CMAKE_SOURCE_DIR}/dep/SFMT
   ${CMAKE_SOURCE_DIR}/dep/zlib
-  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour  
-  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast 
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour  -- NYI
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast  -- NYI 
   ${CMAKE_SOURCE_DIR}/src/server/collision
   ${CMAKE_SOURCE_DIR}/src/server/collision/Management
-  ${CMAKE_SOURCE_DIR}/src/server/collision/Pathfinding
+#  ${CMAKE_SOURCE_DIR}/src/server/collision/Pathfinding  -- NYI
   ${CMAKE_SOURCE_DIR}/src/server/shared
   ${CMAKE_SOURCE_DIR}/src/server/shared/Configuration
   ${CMAKE_SOURCE_DIR}/src/server/shared/Cryptography
@@ -168,8 +155,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Database
   ${CMAKE_SOURCE_DIR}/src/server/shared/Database/Implementation
   ${CMAKE_SOURCE_DIR}/src/server/shared/DataStores
-  ${CMAKE_SOURCE_DIR}/src/server/shared/DataStores/DBC
-  ${CMAKE_SOURCE_DIR}/src/server/shared/DataStores/DB2
   ${CMAKE_SOURCE_DIR}/src/server/shared/Debugging
   ${CMAKE_SOURCE_DIR}/src/server/shared/Dynamic/LinkedReference
   ${CMAKE_SOURCE_DIR}/src/server/shared/Dynamic
@@ -178,31 +163,25 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
   ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
   ${CMAKE_SOURCE_DIR}/src/server/game/Movement
-  ${CMAKE_SOURCE_DIR}/src/server/game/Movement/Spline
+#  ${CMAKE_SOURCE_DIR}/src/server/game/Movement/Spline  -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Accounts
-  ${CMAKE_CURRENT_SOURCE_DIR}/Achievements
   ${CMAKE_CURRENT_SOURCE_DIR}/Addons
   ${CMAKE_CURRENT_SOURCE_DIR}/AI
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/CoreAI
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/EventAI
   ${CMAKE_CURRENT_SOURCE_DIR}/AI/ScriptedAI
-  ${CMAKE_CURRENT_SOURCE_DIR}/AI/SmartScripts
+#  ${CMAKE_CURRENT_SOURCE_DIR}/AI/SmartScripts  -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/AuctionHouse
-  ${CMAKE_CURRENT_SOURCE_DIR}/Battlefields
-  ${CMAKE_CURRENT_SOURCE_DIR}/Battlefields/Zones 
   ${CMAKE_CURRENT_SOURCE_DIR}/Battlegrounds
   ${CMAKE_CURRENT_SOURCE_DIR}/Battlegrounds/Zones
-  ${CMAKE_CURRENT_SOURCE_DIR}/Calendar
   ${CMAKE_CURRENT_SOURCE_DIR}/Chat
   ${CMAKE_CURRENT_SOURCE_DIR}/Chat/Channels
   ${CMAKE_CURRENT_SOURCE_DIR}/Chat/Commands
   ${CMAKE_CURRENT_SOURCE_DIR}/Combat
-  ${CMAKE_CURRENT_SOURCE_DIR}/Conditions
-  ${CMAKE_CURRENT_SOURCE_DIR}/DataStores
-  ${CMAKE_CURRENT_SOURCE_DIR}/DataStores/DBC
-  ${CMAKE_CURRENT_SOURCE_DIR}/DataStores/DB2  
-  ${CMAKE_CURRENT_SOURCE_DIR}/DungeonFinding
+#  ${CMAKE_CURRENT_SOURCE_DIR}/Conditions  -- NYI
+  ${CMAKE_CURRENT_SOURCE_DIR}/DataStores 
+#  ${CMAKE_CURRENT_SOURCE_DIR}/DungeonFinding  -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Creature
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Corpse
@@ -216,7 +195,6 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Player
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Totem
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Unit
-  ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Vehicle
   ${CMAKE_CURRENT_SOURCE_DIR}/Entities/Transport
   ${CMAKE_CURRENT_SOURCE_DIR}/Events
   ${CMAKE_CURRENT_SOURCE_DIR}/Globals
@@ -232,7 +210,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Maps
   ${CMAKE_CURRENT_SOURCE_DIR}/Miscellaneous
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement
-  ${CMAKE_CURRENT_SOURCE_DIR}/Movement/Spline
+#  ${CMAKE_CURRENT_SOURCE_DIR}/Movement/Spline  -- NYI
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement/MovementGenerators
   ${CMAKE_CURRENT_SOURCE_DIR}/Movement/Waypoints
   ${CMAKE_CURRENT_SOURCE_DIR}/OutdoorPvP
