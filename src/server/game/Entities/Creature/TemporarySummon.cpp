@@ -1,30 +1,30 @@
 /*
-* Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
-* Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
-* Copyright (C) 2005-2013 MaNGOS <http://getmangos.com/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2013 MaNGOS <http://getmangos.com/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Totem.h"
 #include "Log.h"
 #include "ObjectAccessor.h"
 #include "CreatureAI.h"
 #include "ObjectMgr.h"
 #include "TemporarySummon.h"
 
-TempSummon::TempSummon(SummonPropertiesEntry const *properties, Unit *owner) :
+TempSummon::TempSummon(SummonPropertiesEntry const* properties, Unit* owner, bool isWorldObject) :
 Creature(), m_Properties(properties), m_type(TEMPSUMMON_MANUAL_DESPAWN), m_timer(0), m_lifetime(0)
 {
     m_summonerGUID = owner ? owner->GetGUID() : 0;
@@ -160,7 +160,7 @@ void TempSummon::Update(uint32 diff)
         }
         default:
             UnSummon();
-            sLog.outError("Temporary summoned creature (entry: %u) has unknown type %u. ",GetEntry(),m_type);
+            sLog->outError("Temporary summoned creature (entry: %u) has unknown type %u. ", GetEntry(), m_type);
             break;
     }
 }
@@ -223,8 +223,17 @@ void TempSummon::SetTempSummonType(TempSummonType type)
     m_type = type;
 }
 
-void TempSummon::UnSummon()
+void TempSummon::UnSummon(uint32 msTime)
 {
+    if (msTime)
+    {
+        ForcedUnsummonDelayEvent* pEvent = new ForcedUnsummonDelayEvent(*this);
+
+        m_Events.AddEvent(pEvent, m_Events.CalculateTime(msTime));
+        return;
+    }
+
+    //ASSERT(!isPet());
     if (isPet())
     {
         ((Pet*)this)->Remove(PET_SAVE_NOT_IN_SLOT);
@@ -256,12 +265,8 @@ void TempSummon::RemoveFromWorld()
     Creature::RemoveFromWorld();
 }
 
-void TempSummon::SaveToDB()
-{
-}
 
-Minion::Minion(SummonPropertiesEntry const *properties, Unit *owner) : TempSummon(properties, owner)
-, m_owner(owner)
+Minion::Minion(SummonPropertiesEntry const* properties, Unit* owner, bool isWorldObject) : TempSummon(properties, owner, isWorldObject), m_owner(owner)
 {
     ASSERT(m_owner);
     m_summonMask |= SUMMON_MASK_MINION;
@@ -294,9 +299,9 @@ bool Minion::IsGuardianPet() const
     return isPet() || (m_Properties && m_Properties->Category == SUMMON_CATEGORY_PET);
 }
 
-Guardian::Guardian(SummonPropertiesEntry const *properties, Unit *owner) : Minion(properties, owner)
-, m_bonusdamage(0)
+Guardian::Guardian(SummonPropertiesEntry const* properties, Unit* owner, bool isWorldObject) : Minion(properties, owner, isWorldObject), m_bonusSpellDamage(0)
 {
+    memset(m_statFromOwner, 0, sizeof(float)*MAX_STATS);
     m_summonMask |= SUMMON_MASK_GUARDIAN;
     if (properties && properties->Type == SUMMON_TYPE_PET)
     {
@@ -327,10 +332,10 @@ void Guardian::InitSummon()
         m_owner->ToPlayer()->CharmSpellInitialize();
 }
 
-Puppet::Puppet(SummonPropertiesEntry const *properties, Unit *owner) : Minion(properties, owner)
+Puppet::Puppet(SummonPropertiesEntry const* properties, Unit* owner) : Minion(properties, owner, false) //maybe true?
 {
     ASSERT(owner->GetTypeId() == TYPEID_PLAYER);
-    m_owner = owner->ToPlayer();
+    m_owner = (Player*)owner;
     m_summonMask |= SUMMON_MASK_PUPPET;
 }
 
@@ -345,14 +350,21 @@ void Puppet::InitSummon()
 {
     Minion::InitSummon();
     SetCharmedBy(m_owner, CHARM_TYPE_POSSESS);
+    ASSERT(false);
 }
 
 void Puppet::Update(uint32 time)
 {
     Minion::Update(time);
-    //check if caster is channelling?
-    if (IsInWorld() && !isAlive())
-        UnSummon();
+    //check if caster is channeling?
+    if (IsInWorld())
+    {
+        if (!isAlive())
+        {
+            UnSummon();
+            // TODO: why long distance .die does not remove it
+        }
+    }
 }
 
 void Puppet::RemoveFromWorld()

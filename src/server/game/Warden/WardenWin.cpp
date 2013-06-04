@@ -325,12 +325,12 @@ void WardenWin::RequestData()
     stream << "Sent check id's: ";
     for (std::vector<uint32>::iterator itr = SendDataId.begin(); itr != SendDataId.end(); ++itr)
         stream << *itr << " ";
-    sLog->outDebug(stream.str().c_str());
+    sLog->outDebug(LOG_FILTER_WARDEN, stream.str().c_str());
 }
 
 void WardenWin::HandleData(ByteBuffer &buff)
 {
-    sLog->outDebug(LOG_FILTER_NETWORKIO, "Handle data");
+    sLog->outDebug(LOG_FILTER_WARDEN, "Handle data");
 
     m_WardenDataSent = false;
     m_WardenKickTimer = 0;

@@ -1,12 +1,11 @@
 /*
- * Copyright (C) 2010-2012 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2012 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2013 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -45,13 +44,15 @@ class MapUpdater
         int deactivate(void);
 
         bool activated();
+
     private:
-        void update_finished();
 
         DelayExecutor m_executor;
-        ACE_Condition_Thread_Mutex m_condition;
         ACE_Thread_Mutex m_mutex;
-        size_t pedning_requests;
-};
-#endif //_MAP_UPDATER_H_INCLUDED
+        ACE_Condition_Thread_Mutex m_condition;
+        size_t pending_requests;
 
+        void update_finished();
+};
+
+#endif //_MAP_UPDATER_H_INCLUDED

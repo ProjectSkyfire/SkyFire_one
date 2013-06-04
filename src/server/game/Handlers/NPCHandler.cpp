@@ -69,7 +69,7 @@ void WorldSession::SendTabardVendorActivate(uint64 guid)
 
 void WorldSession::HandleBankerActivateOpcode(WorldPacket& recv_data)
 {
-    sLog->outDebug( "WORLD: Received CMSG_BANKER_ACTIVATE");
+    sLog->outDebug(LOG_FILTER_UNITS, "WORLD: Received CMSG_BANKER_ACTIVATE");
 
     uint64 guid;
     recv_data >> guid;

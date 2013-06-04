@@ -834,7 +834,7 @@ bool ChatHandler::HandleGameObjectCommand(const char* args)
         return false;
     }
 
-    sLog->outDebug(GetSkyFireString(LANG_GAMEOBJECT_CURRENT), gInfo->name, db_lowGUID, x, y, z, o);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_GAMEOBJECT_CURRENT), gInfo->name, db_lowGUID, x, y, z, o);
 
     map->Add(pGameObj);
 
@@ -950,7 +950,7 @@ bool ChatHandler::HandleModifyRepCommand(const char * args)
     }
 
     target->GetReputationMgr().SetReputation(factionEntry, amount);
-    PSendSysMessage(LANG_COMMAND_MODIFY_REP, factionEntry->name[m_session->GetSessionDbcLocale()], factionId, 
+    PSendSysMessage(LANG_COMMAND_MODIFY_REP, factionEntry->name[m_session->GetSessionDbcLocale()], factionId,
         /*GetNameLink(target).c_str(),*/ target->GetReputationMgr().GetReputation(factionEntry));
     return true;
 }
@@ -2104,18 +2104,18 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
             SetSentErrorMessage(true);
             return false;
         }
-		
-		FactionStateList const& targetFSL = target->GetReputationMgr().GetStateList();
+
+        FactionStateList const& targetFSL = target->GetReputationMgr().GetStateList();
         for (FactionStateList::const_iterator itr = targetFSL.begin(); itr != targetFSL.end(); ++itr)
         {
-			FactionEntry const *factionEntry = sFactionStore.LookupEntry(itr->second.ID);
+            FactionEntry const *factionEntry = sFactionStore.LookupEntry(itr->second.ID);
             char const* factionName = factionEntry ? factionEntry->name[m_session->GetSessionDbcLocale()] : "#Not found#";
             ReputationRank rank = target->GetReputationMgr().GetRank(factionEntry);
             std::string rankName = GetSkyFireString(ReputationRankStrIndex[rank]);
             std::ostringstream ss;
             ss << itr->second.ID << ": |cffffffff|Hfaction:" << itr->second.ID << "|h[" << factionName << "]|h|r " << rankName << "|h|r ("
                << target->GetReputationMgr().GetReputation(factionEntry) << ")";
-               
+
             if (itr->second.Flags & FACTION_FLAG_VISIBLE)
                 ss << GetSkyFireString(LANG_FACTION_VISIBLE);
             if (itr->second.Flags & FACTION_FLAG_AT_WAR)

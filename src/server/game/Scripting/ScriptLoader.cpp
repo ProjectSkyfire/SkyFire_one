@@ -17,12 +17,14 @@
 #include "ScriptPCH.h"
 #include "ScriptLoader.h"
 
+//#ifdef EXAMPLES -- ToDo re-add these when script changes are finished.
 //examples
-void AddSC_example_creature();
-void AddSC_example_escort();
-void AddSC_example_gossip_codebox();
-void AddSC_example_misc();
-
+//void AddSC_example_creature();
+//void AddSC_example_escort();
+//void AddSC_example_gossip_codebox();
+//void AddSC_example_misc();
+//void AddSC_example_commandscript();
+//#endif
 // spells
 
 #ifdef SCRIPTS
@@ -116,7 +118,7 @@ void AddSC_boss_majordomo();
 void AddSC_boss_ragnaros();
 void AddSC_instance_molten_core();
 void AddSC_molten_core();
-void AddSC_boss_anubrekhan();            //Naxxramas
+void AddSC_boss_anubrekhan();               //Naxxramas
 void AddSC_boss_maexxna();
 void AddSC_boss_patchwerk();
 void AddSC_boss_grobbulus();
@@ -435,13 +437,13 @@ void AddScripts()
 #endif
 }
 
-void AddExampleScripts()
+/*void AddExampleScripts()
 {
     AddSC_example_creature();
     AddSC_example_escort();
     AddSC_example_gossip_codebox();
     AddSC_example_misc();
-}
+}*/
 
 void AddSpellScripts()
 {

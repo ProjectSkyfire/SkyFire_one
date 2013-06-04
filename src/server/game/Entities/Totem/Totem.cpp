@@ -27,7 +27,7 @@
 #include "ObjectMgr.h"
 #include "SpellMgr.h"
 
-Totem::Totem(SummonPropertiesEntry const *properties, Unit *owner) : Minion(properties, owner)
+Totem::Totem(SummonPropertiesEntry const* properties, Unit* owner) : Minion(properties, owner, false)
 {
     m_summonMask |= SUMMON_MASK_TOTEM;
     m_duration = 0;

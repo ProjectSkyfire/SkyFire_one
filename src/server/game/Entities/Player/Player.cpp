@@ -164,15 +164,15 @@ void PlayerTaxi::InitTaxiNodesForLevel(uint32 race, uint32 level)
 
 void PlayerTaxi::LoadTaxiMask(const char* data)
 {
-    Tokens tokens = StrSplit(data, " ");
+    Tokens tokens(data, ' ');
 
-    int index;
+    uint8 index;
     Tokens::iterator iter;
     for (iter = tokens.begin(), index = 0;
         (index < TaxiMaskSize) && (iter != tokens.end()); ++iter, ++index)
     {
         // load and set bits only for existed taxi nodes
-        m_taximask[index] = sTaxiNodesMask[index] & uint32(atol((*iter).c_str()));
+        m_taximask[index] = sTaxiNodesMask[index] & uint32(atol(*iter));
     }
 }
 
@@ -190,15 +190,15 @@ void PlayerTaxi::AppendTaximaskTo(ByteBuffer& data, bool all)
     }
 }
 
-bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values)
+bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values, uint32 team)
 {
     ClearTaxiDestinations();
 
-    Tokens tokens = StrSplit(values, " ");
+    Tokens tokens(values, ' ');
 
     for (Tokens::iterator iter = tokens.begin(); iter != tokens.end(); ++iter)
     {
-        uint32 node = uint32(atol(iter->c_str()));
+        uint32 node = uint32(atol(*iter));
         AddTaxiDestination(node);
     }
 
@@ -217,6 +217,10 @@ bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values)
         if (!path)
             return false;
     }
+
+    // can't load taxi path without mount set (quest taxi path?)
+    if (!sObjectMgr->GetTaxiMountDisplayId(GetTaxiSource(), team, true))
+        return false;
 
     return true;
 }
@@ -12149,7 +12153,7 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
             pMenu->GetGossipMenu().AddGossipMenuItemData(itr->second.action_menu_id, itr->second.action_poi_id, itr->second.action_script_id);
         }
     }
-    
+
     if (canSeeQuests)
         PrepareQuestMenu(pSource->GetGUID());
 

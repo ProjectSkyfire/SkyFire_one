@@ -719,7 +719,7 @@ bool Object::LoadValues(const char* data)
 {
     if (!m_uint32Values) _InitValues();
 
-    Tokens tokens = StrSplit(data, " ");
+    Tokens tokens(data, ' ');
 
     if (tokens.size() != m_valuesCount)
         return false;
@@ -728,7 +728,7 @@ bool Object::LoadValues(const char* data)
     int index;
     for (iter = tokens.begin(), index = 0; index < m_valuesCount; ++iter, ++index)
     {
-        m_uint32Values[index] = atol((*iter).c_str());
+        m_uint32Values[index] = atol(*iter);
     }
 
     return true;
@@ -739,16 +739,14 @@ void Object::_LoadIntoDataField(const char* data, uint32 startOffset, uint32 cou
     if (!data)
         return;
 
-    Tokens tokens = StrSplit(data, " ");
+    Tokens tokens(data, ' ', count);
 
     if (tokens.size() != count)
         return;
 
-    Tokens::iterator iter;
-    uint32 index;
-    for (iter = tokens.begin(), index = 0; index < count; ++iter, ++index)
+    for (uint32 index = 0; index < count; ++index)
     {
-        m_uint32Values[startOffset + index] = atol((*iter).c_str());
+        m_uint32Values[startOffset + index] = atol(tokens[index]);
     }
 }
 
@@ -1684,10 +1682,10 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
     switch (mask)
     {
         case SUMMON_MASK_SUMMON:
-            summon = new TempSummon(properties, summoner);
+            summon = new TempSummon(properties, summoner, false);
             break;
         case SUMMON_MASK_GUARDIAN:
-            summon = new Guardian(properties, summoner);
+            summon = new Guardian(properties, summoner, false);
             break;
         case SUMMON_MASK_PUPPET:
             summon = new Puppet(properties, summoner);
@@ -1696,7 +1694,7 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
             summon = new Totem(properties, summoner);
             break;
         case SUMMON_MASK_MINION:
-            summon = new Minion(properties, summoner);
+            summon = new Minion(properties, summoner, false);
             break;
         default:
             return NULL;

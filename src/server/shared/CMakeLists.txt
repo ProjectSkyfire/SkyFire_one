@@ -9,7 +9,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-if( USE_COREPCH )
+if (USE_COREPCH)
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -23,16 +23,17 @@ file(GLOB_RECURSE sources_Logging Logging/*.cpp Logging/*.h)
 file(GLOB_RECURSE sources_Packets Packets/*.cpp Packets/*.h)
 file(GLOB_RECURSE sources_Threading Threading/*.cpp Threading/*.h)
 file(GLOB_RECURSE sources_Utilities Utilities/*.cpp Utilities/*.h)
+
 file(GLOB sources_localdir *.cpp *.h)
 
 #
 # Build shared sourcelist
 #
 
-if( USE_COREPCH AND MSVC )
+if (USE_COREPCH AND MSVC)
   set(shared_STAT_SRCS
-    PrecompiledHeaders/sharedPCH.cpp
-    PrecompiledHeaders/sharedPCH.h
+    PrecompiledHeaders/SharedPCH.cpp
+    PrecompiledHeaders/SharedPCH.h
   )
 endif()
 
@@ -42,8 +43,8 @@ set(shared_STAT_SRCS
   ${sources_Cryptography}
   ${sources_Database}
   ${sources_DataStores}
-  ${sources_Dynamic}  
   ${sources_Debugging}
+  ${sources_Dynamic} 
   ${sources_Logging}
   ${sources_Packets}
   ${sources_Threading}
@@ -53,17 +54,18 @@ set(shared_STAT_SRCS
 
 include_directories(
   ${CMAKE_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/dep/zlib
   ${CMAKE_SOURCE_DIR}/dep/SFMT
+  ${CMAKE_SOURCE_DIR}/dep/mersennetwister
+  #${CMAKE_SOURCE_DIR}/dep/recastlite/Detour
+  #${CMAKE_SOURCE_DIR}/dep/recastlite/Recast
   ${CMAKE_SOURCE_DIR}/dep/utf8cpp
-#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour  -- NYI
-#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast  -- NYI
   ${CMAKE_SOURCE_DIR}/src/server
-  ${CMAKE_SOURCE_DIR}/src/server/game/World
-  ${CMAKE_SOURCE_DIR}/src/server/game/Addons
-  ${CMAKE_SOURCE_DIR}/src/server/game/Server
-  ${CMAKE_SOURCE_DIR}/src/server/game/Server/Protocol
-  ${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous
+  #${CMAKE_SOURCE_DIR}/src/server/game/World  
+  #${CMAKE_SOURCE_DIR}/src/server/game/Addons    
+  #${CMAKE_SOURCE_DIR}/src/server/game/Server 
+  #${CMAKE_SOURCE_DIR}/src/server/game/Server/Protocol 
+  #${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous
+  #${CMAKE_SOURCE_DIR}/src/server/game/Warden  
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Configuration
   ${CMAKE_CURRENT_SOURCE_DIR}/Cryptography
@@ -75,7 +77,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Packets
   ${CMAKE_CURRENT_SOURCE_DIR}/Threading
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities
-  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object
+  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object/Updates
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
@@ -88,10 +90,10 @@ target_link_libraries(shared
 )
 
 # Generate precompiled header
-if( USE_COREPCH )
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    add_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/sharedPCH.h)
+if (USE_COREPCH)
+  if (CMAKE_COMPILER_IS_GNUCXX)
+    add_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH.h)
   elseif(MSVC)
-    add_native_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/sharedPCH)
+    add_native_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH)
   endif()
 endif()
