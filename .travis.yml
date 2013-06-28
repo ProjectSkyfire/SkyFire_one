@@ -14,9 +14,9 @@ language: cpp
 git:
   depth: 1
 
-branches:
-  only:
-    - ScriptSystem
+#branches:
+#  only:
+#    - ScriptSystem
 
 compiler:
   - gcc
