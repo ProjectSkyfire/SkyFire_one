@@ -2033,11 +2033,8 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
     uint32 security = 0;
     std::string last_login = GetSkyFireString(LANG_ERROR);
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.username, aa.gmlevel, a.email, a.last_ip, a.last_login "
-                                                      "FROM account a "
-                                                      "LEFT JOIN account_access aa "
-                                                      "ON (a.id = aa.id) "
-                                                      "WHERE a.id = '%u'", accId);
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.username, aa.gmlevel, a.last_ip, a.last_login FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE id = '%u'", accId);
+
     if (result)
     {
         Field* fields = result->Fetch();
@@ -3622,7 +3619,7 @@ bool ChatHandler::HandleLookupPlayerIpCommand(const char* args)
 
     LoginDatabase.EscapeString (ip);
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE last_ip = '%s'", ip.c_str ());
+    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT a.id, a.username, a.last_ip, aa.gmlevel, a.expansion FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE last_ip "_LIKE_" "_CONCAT3_("'%%'", "'%s'", "'%%'"), ip.c_str());
 
     return LookupPlayerSearchCommand (result, limit);
 }
@@ -3657,7 +3654,7 @@ bool ChatHandler::HandleLookupPlayerEmailCommand(const char* args)
 
     LoginDatabase.EscapeString (email);
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE email = '%s'", email.c_str ());
+    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT a.id, a.username, a.last_ip, aa.gmlevel, a.expansion FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE email "_LIKE_" "_CONCAT3_("'%%'", "'%s'", "'%%'"), email.c_str());
 
     return LookupPlayerSearchCommand (result, limit);
 }
@@ -3671,14 +3668,14 @@ bool ChatHandler::LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 li
         return false;
     }
 
-    int i =0;
+    int i = 0;
     do
     {
         Field* fields = result->Fetch();
         uint32 acc_id = fields[0].GetUInt32();
         std::string acc_name = fields[1].GetCppString();
 
-        QueryResult_AutoPtr chars = CharacterDatabase.PQuery("SELECT guid, name FROM characters WHERE account = '%u'", acc_id);
+        QueryResult_AutoPtr chars = CharacterDatabase.PQuery("SELECT guid,name FROM characters WHERE account = '%u'", acc_id);
         if (chars)
         {
             PSendSysMessage(LANG_LOOKUP_PLAYER_ACCOUNT, acc_name.c_str(), acc_id);

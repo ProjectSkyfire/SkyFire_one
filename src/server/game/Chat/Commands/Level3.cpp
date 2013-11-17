@@ -806,7 +806,8 @@ bool ChatHandler::HandleAccountSetGmLevelCommand(const char *args)
     std::string targetAccountName;
     uint32 targetAccountId = 0;
     uint32 targetSecurity = 0;
-    uint32 gm = 0;
+    int32 gm = 0;
+    uint32 gmRealmID = realmID;
     char* arg1 = strtok((char*)args, " ");
     char* arg2 = strtok(NULL, " ");
     char* arg3 = strtok(NULL, " ");
@@ -6331,7 +6332,7 @@ bool ChatHandler::HandleInstanceSaveDataCommand(const char * /*args*/)
 bool ChatHandler::HandleGMListFullCommand(const char* /*args*/)
 {
     // Get the accounts with GM Level >0
-    QueryResult_AutoPtr result = LoginDatabase.Query("SELECT a.username, aa.gmlevel FROM account a, account_access aa WHERE a.id=aa.id AND aa.gmlevel > 0");
+    QueryResult_AutoPtr result = LoginDatabase.Query("SELECT a.username, aa.gmlevel FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE gmlevel > 0");
     if (result)
     {
         SendSysMessage(LANG_GMLIST);
