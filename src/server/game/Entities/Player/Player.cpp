@@ -1454,12 +1454,11 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
         *p_data << uint32(petFamily);
     }
 
-    Tokens data = StrSplit(fields[19].GetCppString(), " ");
-
+    Tokens tokens(fields[19].GetCppString(), ' ');
     for (uint8 slot = 0; slot < EQUIPMENT_SLOT_END; ++slot)
     {
         uint32 visualbase = PLAYER_VISIBLE_ITEM_1_0 + (slot * MAX_VISIBLE_ITEM_OFFSET);
-        uint32 item_id = GetUInt32ValueFromArray(data, visualbase);
+        uint32 item_id = GetUInt32ValueFromArray(tokens, visualbase);
         const ItemPrototype * proto = sObjectMgr->GetItemPrototype(item_id);
         if (!proto)
         {
@@ -1473,7 +1472,7 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
 
         for (uint8 enchantSlot = PERM_ENCHANTMENT_SLOT; enchantSlot <= TEMP_ENCHANTMENT_SLOT; ++enchantSlot)
         {
-            uint32 enchantId = GetUInt32ValueFromArray(data, visualbase+1+enchantSlot);
+            uint32 enchantId = GetUInt32ValueFromArray(tokens, visualbase+1+enchantSlot);
             if (!enchantId)
                 continue;
 
@@ -14174,12 +14173,13 @@ bool Player::LoadPositionFromDB(uint32& mapid, float& x, float& y, float& z, flo
 bool Player::LoadValuesArrayFromDB(Tokens& data, uint64 guid)
 {
     QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT data FROM characters WHERE guid='%u'", GUID_LOPART(guid));
+    
     if (!result)
         return false;
 
-    Field *fields = result->Fetch();
+    Field* fields = result->Fetch();
 
-    data = StrSplit(fields[0].GetCppString(), " ");
+    Tokens tokens(fields[0].GetString(), ' ');
 
     return true;
 }
@@ -14189,31 +14189,13 @@ uint32 Player::GetUInt32ValueFromArray(Tokens const& data, uint16 index)
     if (index >= data.size())
         return 0;
 
-    return (uint32)atoi(data[index].c_str());
+    return (uint32)atoi(data[index]);
 }
 
 float Player::GetFloatValueFromArray(Tokens const& data, uint16 index)
 {
     float result;
     uint32 temp = Player::GetUInt32ValueFromArray(data, index);
-    memcpy(&result, &temp, sizeof(result));
-
-    return result;
-}
-
-uint32 Player::GetUInt32ValueFromDB(uint16 index, uint64 guid)
-{
-    Tokens data;
-    if (!LoadValuesArrayFromDB(data, guid))
-        return 0;
-
-    return GetUInt32ValueFromArray(data, index);
-}
-
-float Player::GetFloatValueFromDB(uint16 index, uint64 guid)
-{
-    float result;
-    uint32 temp = Player::GetUInt32ValueFromDB(index, guid);
     memcpy(&result, &temp, sizeof(result));
 
     return result;
@@ -14463,7 +14445,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
             for (int i = 0; i < 2; ++i)
                 m_taxi.AddTaxiDestination(m_bgData.taxiPath[i]);
         }
-        else if (!m_taxi.LoadTaxiDestinationsFromString(taxi_nodes))
+        else if (!m_taxi.LoadTaxiDestinationsFromString(taxi_nodes, GetTeam()))
         {
             // problems with taxi path loading
             TaxiNodesEntry const* nodeEntry = NULL;
@@ -16467,14 +16449,14 @@ void Player::SavePositionInDB(uint32 mapid, float x, float y, float z, float o, 
        << "',position_z='"<<z<<"',orientation='"<<o<<"',map='"<<mapid
        << "',zone='"<<zone<<"',trans_x='0',trans_y='0',trans_z='0',"
        << "transguid='0',taxi_path='' WHERE guid='"<< GUID_LOPART(guid) <<"'";
-    sLog->outDebug(ss.str().c_str());
+    sLog->outDebug(LOG_FILTER_NETWORKIO, ss.str().c_str());
     CharacterDatabase.Execute(ss.str().c_str());
 }
 
 void Player::SaveDataFieldToDB()
 {
     std::ostringstream ss;
-    ss<<"UPDATE characters SET data='";
+    ss << "UPDATE characters SET data='";
 
     for (uint16 i = 0; i < m_valuesCount; i++)
     {
@@ -16484,20 +16466,20 @@ void Player::SaveDataFieldToDB()
 
     CharacterDatabase.Execute(ss.str().c_str());
 }
-
+/*
 bool Player::SaveValuesArrayInDB(Tokens const& tokens, uint64 guid)
 {
     std::ostringstream ss2;
-    ss2<<"UPDATE characters SET data='";
+    ss2 <<"UPDATE characters SET data='";
     int i = 0;
     for (Tokens::const_iterator iter = tokens.begin(); iter != tokens.end(); ++iter, ++i)
     {
-        ss2<<tokens[i]<<" ";
+        ss2 << tokens[i] << " ";
     }
     ss2<<"' WHERE guid='"<< GUID_LOPART(guid) <<"'";
 
     return CharacterDatabase.Execute(ss2.str().c_str());
-}
+}*/
 
 void Player::SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value)
 {
@@ -16509,10 +16491,10 @@ void Player::SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value)
 
     tokens[index] = buf;
 }
-
-void Player::SetUInt32ValueInDB(uint16 index, uint32 value, uint64 guid)
+/*
+void Player::SetUInt32ValueInDB(Tokens const& tokens, uint16 index, uint32 value, uint64 guid)
 {
-    Tokens tokens;
+
     if (!LoadValuesArrayFromDB(tokens, guid))
         return;
 
@@ -16526,12 +16508,12 @@ void Player::SetUInt32ValueInDB(uint16 index, uint32 value, uint64 guid)
     SaveValuesArrayInDB(tokens, guid);
 }
 
-void Player::SetFloatValueInDB(uint16 index, float value, uint64 guid)
+void Player::SetFloatValueInDB(Tokens const& tokens, uint16 index, float value, uint64 guid)
 {
     uint32 temp;
     memcpy(&temp, &value, sizeof(value));
     Player::SetUInt32ValueInDB(index, temp, guid);
-}
+}*/
 
 void Player::SendAttackSwingNotStanding()
 {

@@ -23,8 +23,20 @@ file(GLOB_RECURSE sources_Logging Logging/*.cpp Logging/*.h)
 file(GLOB_RECURSE sources_Packets Packets/*.cpp Packets/*.h)
 file(GLOB_RECURSE sources_Threading Threading/*.cpp Threading/*.h)
 file(GLOB_RECURSE sources_Utilities Utilities/*.cpp Utilities/*.h)
-
 file(GLOB sources_localdir *.cpp *.h)
+
+source_group(CMake FILES CMakeLists.txt)
+source_group(Configuration FILES ${sources_Configuration})
+source_group(Cryptography FILES ${sources_Cryptography})
+source_group(Database FILES ${sources_Database})
+source_group(DataStores FILES ${sources_DataStores})
+source_group(Debugging FILES ${sources_Debugging})
+source_group(Dynamic FILES ${sources_Dynamic})
+source_group(Logging FILES ${sources_Logging})
+source_group(Packets FILES ${sources_Packets})
+source_group(Threading FILES ${sources_Threading})
+source_group(Utilities FILES ${sources_Utilities})
+source_group(localdir FILES ${sources_localdir})
 
 #
 # Build shared sourcelist
@@ -43,8 +55,8 @@ set(shared_STAT_SRCS
   ${sources_Cryptography}
   ${sources_Database}
   ${sources_DataStores}
+  ${sources_Dynamic}  
   ${sources_Debugging}
-  ${sources_Dynamic} 
   ${sources_Logging}
   ${sources_Packets}
   ${sources_Threading}
@@ -55,17 +67,15 @@ set(shared_STAT_SRCS
 include_directories(
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/dep/SFMT
-  ${CMAKE_SOURCE_DIR}/dep/mersennetwister
   #${CMAKE_SOURCE_DIR}/dep/recastlite/Detour
   #${CMAKE_SOURCE_DIR}/dep/recastlite/Recast
   ${CMAKE_SOURCE_DIR}/dep/utf8cpp
   ${CMAKE_SOURCE_DIR}/src/server
-  #${CMAKE_SOURCE_DIR}/src/server/game/World  
-  #${CMAKE_SOURCE_DIR}/src/server/game/Addons    
-  #${CMAKE_SOURCE_DIR}/src/server/game/Server 
-  #${CMAKE_SOURCE_DIR}/src/server/game/Server/Protocol 
-  #${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous
-  #${CMAKE_SOURCE_DIR}/src/server/game/Warden  
+  ${CMAKE_SOURCE_DIR}/src/server/game/World
+  ${CMAKE_SOURCE_DIR}/src/server/game/Addons
+  ${CMAKE_SOURCE_DIR}/src/server/game/Server
+  ${CMAKE_SOURCE_DIR}/src/server/game/Server/Protocol
+  ${CMAKE_SOURCE_DIR}/src/server/game/Miscellaneous
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/Configuration
   ${CMAKE_CURRENT_SOURCE_DIR}/Cryptography

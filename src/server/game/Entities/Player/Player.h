@@ -800,7 +800,7 @@ class PlayerTaxi
         void AppendTaximaskTo(ByteBuffer& data, bool all);
 
         // Destinations
-        bool LoadTaxiDestinationsFromString(const std::string& values);
+        bool LoadTaxiDestinationsFromString(const std::string& values, uint32 team);
         std::string SaveTaxiDestinationsToString();
 
         void ClearTaxiDestinations() { m_TaxiDestinations.clear(); }
@@ -1263,11 +1263,11 @@ class Player : public Unit, public GridObject<Player>
         void SaveInventoryAndGoldToDB();                    // fast save function for item/money cheating preventing
         void SaveGoldToDB();
         void SaveDataFieldToDB();
-        static bool SaveValuesArrayInDB(Tokens const& data, uint64 guid);
+        //static bool SaveValuesArrayInDB(Tokens const& data, uint64 guid);
         static void SetUInt32ValueInArray(Tokens& data, uint16 index, uint32 value);
         static void SetFloatValueInArray(Tokens& data, uint16 index, float value);
-        static void SetUInt32ValueInDB(uint16 index, uint32 value, uint64 guid);
-        static void SetFloatValueInDB(uint16 index, float value, uint64 guid);
+        //static void SetUInt32ValueInDB(Tokens const& data, uint16 index, uint32 value, uint64 guid);
+        //static void SetFloatValueInDB(Tokens const& data, uint16 index, float value, uint64 guid);
         static void SavePositionInDB(uint32 mapid, float x, float y, float z, float o, uint32 zone, uint64 guid);
 
         static void DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmChars = true, bool deleteFinally = false);

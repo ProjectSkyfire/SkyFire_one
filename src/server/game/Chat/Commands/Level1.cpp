@@ -798,7 +798,7 @@ bool ChatHandler::HandleGPSCommand(const char* args)
         GetName(),
         (obj->GetTypeId() == TYPEID_PLAYER ? "player" : "creature"), obj->GetName(),
         (obj->GetTypeId() == TYPEID_PLAYER ? "GUID" : "Entry"), (obj->GetTypeId() == TYPEID_PLAYER ? obj->GetGUIDLow(): obj->GetEntry()));
-    sLog->outDebug(GetSkyFireString(LANG_MAP_POSITION),
+    sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_MAP_POSITION),
         obj->GetMapId(), (mapEntry ? mapEntry->name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
         zone_id, (zoneEntry ? zoneEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
         area_id, (areaEntry ? areaEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),

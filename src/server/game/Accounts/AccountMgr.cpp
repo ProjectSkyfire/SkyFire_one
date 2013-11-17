@@ -57,7 +57,7 @@ AccountOpResult AccountMgr::CreateAccount(std::string username, std::string pass
 
 AccountOpResult AccountMgr::DeleteAccount(uint32 accid)
 {
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT 1 FROM account WHERE id='%d'", accid);
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT 1 FROM account_access WHERE id='%d'", accid);
     if (!result)
         return AOR_NAME_NOT_EXIST;                          // account doesn't exist
 
