@@ -1,4 +1,4 @@
-// $Id: WFMO_Reactor.cpp 91286 2010-08-05 09:04:31Z johnnyw $
+// $Id: WFMO_Reactor.cpp 95368 2011-12-19 13:38:49Z mcorino $
 
 #include "ace/WFMO_Reactor.h"
 
@@ -13,6 +13,8 @@
 #if !defined (__ACE_INLINE__)
 #include "ace/WFMO_Reactor.inl"
 #endif /* __ACE_INLINE__ */
+
+
 
 #include "ace/Auto_Ptr.h"
 
@@ -1151,6 +1153,8 @@ ACE_WFMO_Reactor::open (size_t size,
   // Timer Queue
   if (this->delete_timer_queue_)
     delete this->timer_queue_;
+  else if (this->timer_queue_)
+    this->timer_queue_->close ();
 
   if (tq == 0)
     {
@@ -1281,8 +1285,14 @@ ACE_WFMO_Reactor::timer_queue (void) const
 int
 ACE_WFMO_Reactor::timer_queue (ACE_Timer_Queue *tq)
 {
-  if (this->timer_queue_ != 0 && this->delete_timer_queue_)
-    delete this->timer_queue_;
+  if (this->delete_timer_queue_)
+    {
+      delete this->timer_queue_;
+    }
+  else if (this->timer_queue_)
+    {
+      this->timer_queue_->close ();
+    }
   this->timer_queue_ = tq;
   this->delete_timer_queue_ = false;
   return 0;
@@ -1323,6 +1333,11 @@ ACE_WFMO_Reactor::~ACE_WFMO_Reactor (void)
       delete this->timer_queue_;
       this->timer_queue_ = 0;
       this->delete_timer_queue_ = false;
+    }
+  else if (this->timer_queue_)
+    {
+      this->timer_queue_->close ();
+      this->timer_queue_ = 0;
     }
 
   if (this->delete_signal_handler_)
@@ -1433,6 +1448,7 @@ ACE_WFMO_Reactor::register_handler_i (ACE_HANDLE event_handle,
     return -1;
 
 #endif /* ACE_HAS_WINSOCK2 || ACE_HAS_WINSOCK2 == 0 */
+
 }
 
 int
@@ -1471,6 +1487,8 @@ ACE_WFMO_Reactor::mask_ops_i (ACE_HANDLE io_handle,
   else
     return -1;
 }
+
+
 
 int
 ACE_WFMO_Reactor_Handler_Repository::modify_network_events_i (ACE_HANDLE io_handle,
@@ -1678,7 +1696,10 @@ ACE_WFMO_Reactor::event_handling (ACE_Time_Value *max_wait_time,
 
   // Make sure we are not closed
   if (!this->open_for_business_ || this->deactivated_)
-    return -1;
+    {
+      errno = ESHUTDOWN;
+      return -1;
+    }
 
   // Stash the current time -- the destructor of this object will
   // automatically compute how much time elapsed since this method was
@@ -1882,6 +1903,7 @@ ACE_WFMO_Reactor::calculate_timeout (ACE_Time_Value *max_wait_time)
     return time->msec ();
 }
 
+
 int
 ACE_WFMO_Reactor::expire_timers (void)
 {
@@ -1946,7 +1968,6 @@ ACE_WFMO_Reactor::dispatch_handles (DWORD wait_status)
     {
       const bool ok = (
 #if ! defined(__BORLANDC__) \
-    && !defined (ghs) \
     && !defined (__MINGW32__) \
     && !defined (_MSC_VER)
                  // wait_status is unsigned in Borland, Green Hills,
@@ -2248,6 +2269,7 @@ ACE_WFMO_Reactor::upcall (ACE_Event_Handler *event_handler,
   events.lNetworkEvents = actual_events;
   return problems;
 }
+
 
 int
 ACE_WFMO_Reactor::update_state (void)
@@ -2715,6 +2737,7 @@ ACE_WFMO_Reactor::resumable_handler (void)
   ACE_TRACE ("ACE_WFMO_Reactor::resumable_handler");
   return 0;
 }
+
 
 // No-op WinSOCK2 methods to help WFMO_Reactor compile
 #if !defined (ACE_HAS_WINSOCK2) || (ACE_HAS_WINSOCK2 == 0)

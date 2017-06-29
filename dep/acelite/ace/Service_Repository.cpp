@@ -109,6 +109,7 @@ ACE_Service_Repository::ACE_Service_Repository (size_t size)
   ACE_TRACE ("ACE_Service_Repository::ACE_Service_Repository");
 }
 
+
 /// Finalize (call fini() and possibly delete) all the services.
 
 int
@@ -204,6 +205,7 @@ ACE_Service_Repository::fini (void)
   return (retval == 0) ? 0 : -1;
 }
 
+
 /// Close down all the services.
 int
 ACE_Service_Repository::close (void)
@@ -212,7 +214,7 @@ ACE_Service_Repository::close (void)
   ACE_MT (ACE_GUARD_RETURN (ACE_Recursive_Thread_Mutex, ace_mon, this->lock_, -1));
 
 #ifndef ACE_NLOGGING
-  if (ACE::debug ())
+  if(ACE::debug ())
     ACE_DEBUG ((LM_DEBUG,
                 ACE_TEXT ("ACE (%P|%t) SR::close - repo=%@, size=%d\n"),
                 this,
@@ -228,7 +230,7 @@ ACE_Service_Repository::close (void)
         const_cast<ACE_Service_Type *> (this->service_array_[i]);
 
 #ifndef ACE_NLOGGING
-      if (ACE::debug ())
+      if(ACE::debug ())
         {
           if (s == 0)
             ACE_DEBUG ((LM_DEBUG,
@@ -256,7 +258,7 @@ ACE_Service_Repository::~ACE_Service_Repository (void)
 {
   ACE_TRACE ("ACE_Service_Repository::~ACE_Service_Repository");
 #ifndef ACE_NLOGGING
-  if (ACE::debug ())
+  if(ACE::debug ())
     ACE_DEBUG ((LM_DEBUG, "ACE (%P|%t) SR::<dtor>, this=%@\n", this));
 #endif
   this->close ();
@@ -312,6 +314,7 @@ ACE_Service_Repository::find_i (const ACE_TCHAR name[],
 
   return -1;
 }
+
 
 /// @brief Relocate (a static) service to another DLL.
 ///
