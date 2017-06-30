@@ -22,6 +22,7 @@
 #define SKYFIRE_FORMULAS_H
 
 #include "World.h"
+#include "SharedDefines.h"
 
 namespace Skyfire
 {
@@ -34,8 +35,6 @@ namespace Skyfire
     }
     namespace XP
     {
-        typedef enum XPColorChar { RED, ORANGE, YELLOW, GREEN, GRAY };
-
         inline uint32 GetGrayLevel(uint32 pl_level)
         {
             if (pl_level <= 5)
@@ -51,15 +50,15 @@ namespace Skyfire
         inline XPColorChar GetColorCode(uint32 pl_level, uint32 mob_level)
         {
             if (mob_level >= pl_level + 5)
-                return RED;
+                return XP_RED;
             else if (mob_level >= pl_level + 3)
-                return ORANGE;
+                return XP_ORANGE;
             else if (mob_level >= pl_level - 2)
-                return YELLOW;
+                return XP_YELLOW;
             else if (mob_level > GetGrayLevel(pl_level))
-                return GREEN;
+                return XP_GREEN;
             else
-                return GRAY;
+                return XP_GRAY;
         }
 
         inline uint32 GetZeroDifference(uint32 pl_level)
