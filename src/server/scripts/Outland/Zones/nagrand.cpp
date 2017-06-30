@@ -560,8 +560,8 @@ enum eMagharCaptive
     NPC_MURK_PUTRIFIER          = 18202
 };
 
-static float m_afAmbushA[]= {-1568.805786, 8533.873047, 1.958};
-static float m_afAmbushB[]= {-1491.554321, 8506.483398, 1.248};
+static float m_afAmbushA[]= {-1568.805786f, 8533.873047f, 1.958f};
+static float m_afAmbushB[]= {-1491.554321f, 8506.483398f, 1.248f};
 
 struct npc_maghar_captiveAI : public npc_escortAI
 {
@@ -1351,8 +1351,8 @@ enum
     MURK_PUTRIFIER           = 18202
 };
 
-static float m_afAmbushC[]= {-1531.204712, 8456.174805, -4.102};
-static float m_afAmbushD[]= {-1442.524780, 8500.364258, 6.381};
+static float m_afAmbushC[]= {-1531.204712f, 8456.174805f, -4.102f};
+static float m_afAmbushD[]= {-1442.524780f, 8500.364258f, 6.381f};
 
 struct npc_kurenai_captiveAI : public npc_escortAI
 {
