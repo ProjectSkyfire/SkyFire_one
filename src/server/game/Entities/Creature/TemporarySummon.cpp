@@ -25,7 +25,8 @@
 #include "TemporarySummon.h"
 
 TempSummon::TempSummon(SummonPropertiesEntry const* properties, Unit* owner, bool isWorldObject) :
-Creature(), m_Properties(properties), m_type(TEMPSUMMON_MANUAL_DESPAWN), m_timer(0), m_lifetime(0)
+Creature(), m_type(TEMPSUMMON_MANUAL_DESPAWN), m_timer(0), m_lifetime(0)
+, m_Properties(properties)
 {
     m_summonerGUID = owner ? owner->GetGUID() : 0;
     m_summonMask |= SUMMON_MASK_SUMMON;
@@ -45,7 +46,7 @@ void TempSummon::Update(uint32 diff)
         UnSummon();
         return;
     }
-    switch(m_type)
+    switch (m_type)
     {
         case TEMPSUMMON_MANUAL_DESPAWN:
             break;
@@ -260,7 +261,7 @@ void TempSummon::RemoveFromWorld()
                     owner->m_SummonSlot[slot] = 0;
 
     //if (GetOwnerGUID())
-    //    sLog.outError("Unit %u has owner guid when removed from world", GetEntry());
+    //    sLog->outError("Unit %u has owner guid when removed from world", GetEntry());
 
     Creature::RemoveFromWorld();
 }

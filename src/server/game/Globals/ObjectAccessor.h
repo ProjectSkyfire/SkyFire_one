@@ -88,7 +88,7 @@ class ObjectAccessor
     ObjectAccessor();
     ~ObjectAccessor();
     ObjectAccessor(const ObjectAccessor&);
-    ObjectAccessor& operator=(const ObjectAccessor&);
+    ObjectAccessor& operator = (const ObjectAccessor&);
 
     public:
 

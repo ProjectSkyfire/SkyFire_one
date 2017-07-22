@@ -290,9 +290,9 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         Tokens::iterator iter;
         for (iter = statetokens.begin(), index = 0; index < 10; ++iter, ++index)
         {
-            m_charmInfo->GetActionBarEntry(index)->Type = atol(*iter);
+            m_charmInfo->GetActionBarEntry(index)->Type = atol(tokens[index]);
             ++iter;
-            m_charmInfo->GetActionBarEntry(index)->SpellOrAction = atol(*iter);
+            m_charmInfo->GetActionBarEntry(index)->SpellOrAction = atol(tokens[index]);
             if (m_charmInfo->GetActionBarEntry(index)->Type == ACT_ENABLED && !IsAutocastableSpell(m_charmInfo->GetActionBarEntry(index)->SpellOrAction))
                 m_charmInfo->GetActionBarEntry(index)->Type = ACT_PASSIVE;
         }
@@ -301,12 +301,12 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         Tokens petspelltokens(fields[17].GetString(), ' ');
         for (iter = petspelltokens.begin(), index = 0; index < 4; ++iter, ++index)
         {
-            uint32 tmp = atol(*iter);
+            uint32 tmp = atol(tokens[index]);
 
             ++iter;
 
             if (tmp)
-                AddTeachSpell(tmp, atol(*iter));
+                AddTeachSpell(tmp, atol(tokens[index]));
             else
                 break;
         }

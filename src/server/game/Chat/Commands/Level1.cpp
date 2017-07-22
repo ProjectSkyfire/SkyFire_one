@@ -725,94 +725,94 @@ bool ChatHandler::HandleVisibleCommand(const char* args)
 
 bool ChatHandler::HandleGPSCommand(const char* args)
 {
-    WorldObject *obj = NULL;
-    if (*args)
-    {
-        std::string name = args;
-        if (normalizePlayerName(name))
-            obj = sObjectAccessor->FindPlayerByName(name.c_str());
+	WorldObject *obj = NULL;
+	if (*args)
+	{
+		std::string name = args;
+		if (normalizePlayerName(name))
+			obj = sObjectAccessor->FindPlayerByName(name.c_str());
 
-        if (!obj)
-        {
-            SendSysMessage(LANG_PLAYER_NOT_FOUND);
-            SetSentErrorMessage(true);
-            return false;
-        }
-    }
-    else
-    {
-        obj = getSelectedUnit();
+		if (!obj)
+		{
+			SendSysMessage(LANG_PLAYER_NOT_FOUND);
+			SetSentErrorMessage(true);
+			return false;
+		}
+	}
+	else
+	{
+		obj = getSelectedUnit();
 
-        if (!obj)
-        {
-            SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
-            SetSentErrorMessage(true);
-            return false;
-        }
-    }
-    CellPair cell_val = Skyfire::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
-    Cell cell(cell_val);
+		if (!obj)
+		{
+			SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
+			SetSentErrorMessage(true);
+			return false;
+		}
+	}
+	CellPair cell_val = Skyfire::ComputeCellPair(obj->GetPositionX(), obj->GetPositionY());
+	Cell cell(cell_val);
 
-    uint32 zone_id = obj->GetZoneId();
-    uint32 area_id = obj->GetAreaId();
+	uint32 zone_id = obj->GetZoneId();
+	uint32 area_id = obj->GetAreaId();
 
-    MapEntry const* mapEntry = sMapStore.LookupEntry(obj->GetMapId());
-    AreaTableEntry const* zoneEntry = GetAreaEntryByAreaID(zone_id);
-    AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(area_id);
+	MapEntry const* mapEntry = sMapStore.LookupEntry(obj->GetMapId());
+	AreaTableEntry const* zoneEntry = GetAreaEntryByAreaID(zone_id);
+	AreaTableEntry const* areaEntry = GetAreaEntryByAreaID(area_id);
 
-    float zone_x = obj->GetPositionX();
-    float zone_y = obj->GetPositionY();
+	float zone_x = obj->GetPositionX();
+	float zone_y = obj->GetPositionY();
 
-    Map2ZoneCoordinates(zone_x, zone_y, zone_id);
+	Map2ZoneCoordinates(zone_x, zone_y, zone_id);
 
-    Map const *map = obj->GetMap();
-    float ground_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), MAX_HEIGHT);
-    float floor_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ());
+	Map const *map = obj->GetMap();
+	float ground_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), MAX_HEIGHT);
+	float floor_z = map->GetHeight(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ());
 
-    GridPair p = Skyfire::ComputeGridPair(obj->GetPositionX(), obj->GetPositionY());
+	GridPair p = Skyfire::ComputeGridPair(obj->GetPositionX(), obj->GetPositionY());
 
-    int gx=63-p.x_coord;
-    int gy=63-p.y_coord;
+	int gx = 63 - p.x_coord;
+	int gy = 63 - p.y_coord;
 
-    uint32 have_map = Map::ExistMap(obj->GetMapId(), gx, gy) ? 1 : 0;
-    uint32 have_vmap = Map::ExistVMap(obj->GetMapId(), gx, gy) ? 1 : 0;
+	uint32 have_map = Map::ExistMap(obj->GetMapId(), gx, gy) ? 1 : 0;
+	uint32 have_vmap = Map::ExistVMap(obj->GetMapId(), gx, gy) ? 1 : 0;
 
-    if (have_vmap)
-    {
-        if (map->IsOutdoors(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ()))
-            PSendSysMessage("You are outdoors");
-        else
-            PSendSysMessage("You are indoor");
-    }
-    else PSendSysMessage("no VMAP available for area info");
+	if (have_vmap)
+	{
+		if (map->IsOutdoors(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ()))
+			PSendSysMessage("You are outdoors");
+		else
+			PSendSysMessage("You are indoor");
+	}
+	else PSendSysMessage("no VMAP available for area info");
 
-    PSendSysMessage(LANG_MAP_POSITION,
-        obj->GetMapId(), (mapEntry ? mapEntry->name[m_session->GetSessionDbcLocale()] : "<unknown>"),
-        zone_id, (zoneEntry ? zoneEntry->area_name[m_session->GetSessionDbcLocale()] : "<unknown>"),
-        area_id, (areaEntry ? areaEntry->area_name[m_session->GetSessionDbcLocale()] : "<unknown>"),
-        obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), obj->GetOrientation(),
-        cell.GridX(), cell.GridY(), cell.CellX(), cell.CellY(), obj->GetInstanceId(),
-        zone_x, zone_y, ground_z, floor_z, have_map, have_vmap);
+	PSendSysMessage(LANG_MAP_POSITION,
+		obj->GetMapId(), (mapEntry ? mapEntry->name[m_session->GetSessionDbcLocale()] : "<unknown>"),
+		zone_id, (zoneEntry ? zoneEntry->area_name[m_session->GetSessionDbcLocale()] : "<unknown>"),
+		area_id, (areaEntry ? areaEntry->area_name[m_session->GetSessionDbcLocale()] : "<unknown>"),
+		obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), obj->GetOrientation(),
+		cell.GridX(), cell.GridY(), cell.CellX(), cell.CellY(), obj->GetInstanceId(),
+		zone_x, zone_y, ground_z, floor_z, have_map, have_vmap);
 
-    sLog->outDebug(LOG_FILTER_NETWORKIO, "Player %s GPS call for %s '%s' (%s: %u):",
-        GetName(),
-        (obj->GetTypeId() == TYPEID_PLAYER ? "player" : "creature"), obj->GetName(),
-        (obj->GetTypeId() == TYPEID_PLAYER ? "GUID" : "Entry"), (obj->GetTypeId() == TYPEID_PLAYER ? obj->GetGUIDLow(): obj->GetEntry()));
-    sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_MAP_POSITION),
-        obj->GetMapId(), (mapEntry ? mapEntry->name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
-        zone_id, (zoneEntry ? zoneEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
-        area_id, (areaEntry ? areaEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
-        obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), obj->GetOrientation(),
-        cell.GridX(), cell.GridY(), cell.CellX(), cell.CellY(), obj->GetInstanceId(),
-        zone_x, zone_y, ground_z, floor_z, have_map, have_vmap);
+	sLog->outDebug(LOG_FILTER_MAPS, "Player %s GPS call for %s '%s' (%s: %u):",
+		GetName(),
+		(obj->GetTypeId() == TYPEID_PLAYER ? "player" : "creature"), obj->GetName(),
+		(obj->GetTypeId() == TYPEID_PLAYER ? "GUID" : "Entry"), (obj->GetTypeId() == TYPEID_PLAYER ? obj->GetGUIDLow() : obj->GetEntry()));
+	sLog->outDebug(LOG_FILTER_MAPS, GetSkyFireString(LANG_MAP_POSITION),
+		obj->GetMapId(), (mapEntry ? mapEntry->name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
+		zone_id, (zoneEntry ? zoneEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
+		area_id, (areaEntry ? areaEntry->area_name[sWorld->GetDefaultDbcLocale()] : "<unknown>"),
+		obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), obj->GetOrientation(),
+		cell.GridX(), cell.GridY(), cell.CellX(), cell.CellY(), obj->GetInstanceId(),
+		zone_x, zone_y, ground_z, floor_z, have_map, have_vmap);
 
-    LiquidData liquid_status;
-    ZLiquidStatus res = map->getLiquidStatus(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), MAP_ALL_LIQUIDS, &liquid_status);
-    if (res)
-    {
-        PSendSysMessage(LANG_LIQUID_STATUS, liquid_status.level, liquid_status.depth_level, liquid_status.type, res);
-    }
-    return true;
+	LiquidData liquid_status;
+	ZLiquidStatus res = map->getLiquidStatus(obj->GetPositionX(), obj->GetPositionY(), obj->GetPositionZ(), MAP_ALL_LIQUIDS, &liquid_status);
+	if (res)
+	{
+		PSendSysMessage(LANG_LIQUID_STATUS, liquid_status.level, liquid_status.depth_level, liquid_status.type, res);
+	}
+	return true;
 }
 
 //Summon Player
