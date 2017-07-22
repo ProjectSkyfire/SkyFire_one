@@ -231,6 +231,7 @@ ACE_Time_Value::normalize (bool saturate)
 #endif /* __QNX__  */
 }
 
+
 ACE_Time_Value &
 ACE_Time_Value::operator *= (double d)
 {
