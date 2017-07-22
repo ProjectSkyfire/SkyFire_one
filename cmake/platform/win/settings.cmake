@@ -1,5 +1,5 @@
-# Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
-# Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -18,12 +18,10 @@ set(ACE_LIBRARY "ace")
 set(BZIP2_LIBRARIES "bzip2")
 set(ZLIB_LIBRARIES "zlib")
 
-if( USE_MYSQL_SOURCES )
-  set(MYSQL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/dep/mysqllite/include)
-  set(MYSQL_LIBRARY "libmysql")
-  set( MYSQL_FOUND 1 )
-  message(STATUS "Using supplied MySQL sources")
-endif()
+# We require at least Visual Studio 2015 (aka 14.0) which has version nr 1900.
+IF(NOT FORCE_UNSUPPORTED_COMPILER AND MSVC_VERSION LESS 1900)
+  MESSAGE(FATAL_ERROR "Visual Studio 2015 or newer is required!")
+ENDIF()
 
 # check the CMake preload parameters (commented out by default)
 
