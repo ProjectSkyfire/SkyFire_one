@@ -25,6 +25,7 @@
 # include "ace/Dev_Poll_Reactor.inl"
 #endif /* __ACE_INLINE__ */
 
+
 #include "ace/Handle_Set.h"
 #include "ace/Reactor.h"
 #include "ace/Timer_Heap.h"
@@ -273,6 +274,7 @@ ACE_Dev_Poll_Reactor_Notify::read_notify_pipe (ACE_HANDLE handle,
 #endif /* ACE_HAS_REACTOR_NOTIFICATION_QUEUE */
 }
 
+
 int
 ACE_Dev_Poll_Reactor_Notify::handle_input (ACE_HANDLE /*handle*/)
 {
@@ -400,6 +402,7 @@ ACE_Dev_Poll_Reactor_Notify::dequeue_one (ACE_Notification_Buffer &nb)
   nb.mask_ = 0;
   return this->read_notify_pipe (this->notify_handle (), nb);
 }
+
 
 // -----------------------------------------------------------------
 
@@ -781,6 +784,7 @@ ACE_Dev_Poll_Reactor::current_info (ACE_HANDLE, size_t & /* size */)
   ACE_NOTSUP_RETURN (-1);
 }
 
+
 int
 ACE_Dev_Poll_Reactor::set_sig_handler (ACE_Sig_Handler *signal_handler)
 {
@@ -990,6 +994,7 @@ ACE_Dev_Poll_Reactor::work_pending_i (ACE_Time_Value * max_wait_time)
   return (nfds == 0 && timers_pending != 0 ? 1 : nfds);
 }
 
+
 int
 ACE_Dev_Poll_Reactor::handle_events (ACE_Time_Value *max_wait_time)
 {
@@ -1128,6 +1133,7 @@ ACE_Dev_Poll_Reactor::dispatch_notification_handlers (
 int
 ACE_Dev_Poll_Reactor::dispatch_io_event (Token_Guard &guard)
 {
+
   // Dispatch a ready event.
 
   // Define bits to check for while dispatching.
@@ -2327,6 +2333,7 @@ ACE_Dev_Poll_Reactor::mask_ops_i (ACE_HANDLE handle,
   // cleared, we can un-control the fd now.
   if (!info->suspended || (info->controlled && new_mask == 0))
     {
+
       short const events = this->reactor_mask_to_poll_event (new_mask);
 
 #if defined (sun)

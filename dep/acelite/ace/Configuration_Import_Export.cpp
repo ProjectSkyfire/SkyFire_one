@@ -389,6 +389,7 @@ ACE_Registry_ImpExp::process_previous_line_format (ACE_TCHAR* buffer,
   return 0;
 }                // end read_previous_line_format
 
+
 ACE_Ini_ImpExp::ACE_Ini_ImpExp (ACE_Configuration& config)
     : ACE_Config_ImpExp_Base (config)
 {
@@ -607,6 +608,7 @@ ACE_Ini_ImpExp::export_section (const ACE_Configuration_Section_Key& section,
               }
             default:
               return -3;
+
             }// end switch on type
 
           line += ACE_TEXT ("\n");
@@ -633,6 +635,7 @@ ACE_Ini_ImpExp::export_section (const ACE_Configuration_Section_Key& section,
       ++index;
     }
   return 0;
+
 }
 
 // Method to squish leading and trailing whitespaces from a string.
