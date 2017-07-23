@@ -172,7 +172,7 @@ int WorldSocket::SendPacket(const WorldPacket& pct)
     if (sWorldLog->LogWorld())
     {
         sWorldLog->outTimestampLog("SERVER:\nSOCKET: %u\nLENGTH: %u\nOPCODE: %s (0x%.4X)\nDATA:\n",
-                     (uint32) get_handle(),
+                     (uint64) get_handle(),
                      pct.size(),
                      LookupOpcodeName (pct.GetOpcode()),
                      pct.GetOpcode());
@@ -274,7 +274,7 @@ int WorldSocket::open(void *a)
     return 0;
 }
 
-int WorldSocket::close(u_long)
+int WorldSocket::close (int)
 {
     shutdown();
 
