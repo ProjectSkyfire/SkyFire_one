@@ -1,4 +1,5 @@
-# Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -23,9 +24,6 @@ endif()
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   if(SERVERS)
     add_subdirectory(acelite)
-    if(USE_MYSQL_SOURCES)
-      add_subdirectory(mysqllite)
-    endif()
   endif()
   if(TOOLS)
     add_subdirectory(bzip2)
