@@ -734,7 +734,6 @@ DROP TABLE IF EXISTS `characters`;
 CREATE TABLE `characters` (
   `guid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Global Unique Identifier',
   `account` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Account Identifier',
-  `data` longtext,
   `name` varchar(12) NOT NULL DEFAULT '',
   `race` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `class` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -793,6 +792,10 @@ CREATE TABLE `characters` (
   `deleteInfos_Name` varchar(12) DEFAULT NULL,
   `deleteDate` bigint(20) DEFAULT NULL,
   `latency` int(11) unsigned NOT NULL DEFAULT '0',
+  `exploredZones` longtext,
+  `equipmentCache` longtext,
+  `ammoId` int(10) UNSIGNED NOT NULL default '0',
+  `knownTitles` longtext, 
   PRIMARY KEY (`guid`),
   KEY `idx_account` (`account`),
   KEY `idx_online` (`online`),
