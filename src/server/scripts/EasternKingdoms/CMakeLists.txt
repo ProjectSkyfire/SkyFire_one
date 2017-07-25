@@ -219,4 +219,4 @@ set(scripts_STAT_SRCS
   #EasternKingdoms/Zones/silverpine_forest.cpp    
 )
 
-message("  -> Prepared: Eastern Kingdoms")
+message("  -> Prepared: Eastern Kingdoms Scripts")

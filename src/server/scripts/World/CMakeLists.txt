@@ -16,4 +16,4 @@ set(scripts_STAT_SRCS
   #World/npc_innkeeper.cpp
 )
 
-message("  -> Prepared: #World")
+message("  -> Prepared: World Scripts")

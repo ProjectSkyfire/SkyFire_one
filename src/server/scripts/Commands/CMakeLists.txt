@@ -111,4 +111,4 @@ set(scripts_STAT_SRCS
 #  Commands/cs_playall.cpp
 )
 
-message("  -> Prepared: Commands")
+message("  -> Prepared: Command Scripts")

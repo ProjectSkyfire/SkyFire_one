@@ -647,7 +647,7 @@ ChatCommand * ChatHandler::getCommandTable()
         { "explorecheat",  SEC_ADMINISTRATOR,  false, &ChatHandler::HandleExploreCheatCommand,        "", NULL },
         { "hover",         SEC_ADMINISTRATOR,  false, &ChatHandler::HandleHoverCommand,               "", NULL },
         { "waterwalk",     SEC_ADMINISTRATOR,  false, &ChatHandler::HandleWaterwalkCommand,           "", NULL },
-        { "levelup",       SEC_ADMINISTRATOR,  false, &ChatHandler::HandleLevelUpCommand,             "", NULL },
+//        { "levelup",       SEC_ADMINISTRATOR,  false, &ChatHandler::HandleLevelUpCommand,             "", NULL },   // FixMe
         { "showarea",      SEC_ADMINISTRATOR,  false, &ChatHandler::HandleShowAreaCommand,            "", NULL },
         { "hidearea",      SEC_ADMINISTRATOR,  false, &ChatHandler::HandleHideAreaCommand,            "", NULL },
         { "additem",       SEC_ADMINISTRATOR,  false, &ChatHandler::HandleAddItemCommand,             "", NULL },

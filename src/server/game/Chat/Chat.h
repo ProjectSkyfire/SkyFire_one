@@ -409,7 +409,7 @@ class ChatHandler
         bool HandleExploreCheatCommand(const char* args);
         bool HandleHoverCommand(const char* args);
         bool HandleWaterwalkCommand(const char* args);
-        bool HandleLevelUpCommand(const char* args);
+        //bool HandleLevelUpCommand(const char* args);  // FixMe
         bool HandleShowAreaCommand(const char* args);
         bool HandleHideAreaCommand(const char* args);
         bool HandleAddItemCommand(const char* args);
