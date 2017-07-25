@@ -105,4 +105,4 @@ set(scripts_STAT_SRCS
   #Kalimdor/Zones/teldrassil.cpp    
 )
 
-message("  -> Prepared: #Kalimdor")
+message("  -> Prepared: Kalimdor Scripts")

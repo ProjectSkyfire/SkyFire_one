@@ -27,4 +27,4 @@ set(scripts_STAT_SRCS
 #  Spells/spell_holiday.cpp
 )
 
-message("  -> Prepared: Spells")
+message("  -> Prepared: Spell Scripts")
