@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -19,7 +18,7 @@
  */
 
 /** \file
-    \ingroup Trinityd
+    \ingroup SkyFire Daemon
 */
 
 #include "Common.h"
@@ -67,7 +66,13 @@ int RASocket::handle_close(ACE_HANDLE, ACE_Reactor_Mask)
 
 int RASocket::send(const std::string& line)
 {
-    return size_t(peer().send(line.c_str(), line.length())) == line.length() ? 0 : -1;
+#ifdef MSG_NOSIGNAL
+    ssize_t n = peer().send(line.c_str(), line.length(), MSG_NOSIGNAL);
+#else
+    ssize_t n = peer().send(line.c_str(), line.length());
+#endif // MSG_NOSIGNAL
+
+    return n == ssize_t(line.length()) ? 0 : -1;
 }
 
 int RASocket::recv_line(ACE_Message_Block& buffer)
@@ -162,7 +167,7 @@ int RASocket::process_command(const std::string& command)
             break;
         }
 
-        if (size_t(peer().send(mb->rd_ptr(), mb->length())) != mb->length())
+        if (send(std::string(mb->rd_ptr(), mb->length())) == -1)
         {
             mb->release();
             return -1;
@@ -176,13 +181,11 @@ int RASocket::process_command(const std::string& command)
 
 int RASocket::check_access_level(const std::string& user)
 {
-    std::string safe_user = user;
+    std::string safeUser = user;
 
-	AccountMgr::normalizeString(safe_user);
-    LoginDatabase.EscapeString(safe_user);
-
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.id, aa.gmlevel, aa.RealmID FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE a.username = '%s'", safe_user.c_str());
-
+    AccountMgr::normalizeString(safeUser);
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.id, aa.gmlevel, aa.RealmID FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE a.username = '%s'", safeUser.c_str());
+    
     if (!result)
     {
         sLog->outRemote("User %s does not exist in database", user.c_str());
@@ -191,7 +194,7 @@ int RASocket::check_access_level(const std::string& user)
 
     Field* fields = result->Fetch();
 
-    if (fields[1].GetUInt32() < iMinLevel)
+    if (fields[1].GetUInt8() < iMinLevel)
     {
         sLog->outRemote("User %s has no privilege to login", user.c_str());
         return -1;
@@ -208,18 +211,16 @@ int RASocket::check_access_level(const std::string& user)
 int RASocket::check_password(const std::string& user, const std::string& pass)
 {
     std::string safe_user = user;
-	AccountMgr::normalizeString(safe_user);
-    LoginDatabase.EscapeString(safe_user);
+    AccountMgr::normalizeString(safe_user);
 
     std::string safe_pass = pass;
-	AccountMgr::normalizeString(safe_pass);
-    LoginDatabase.EscapeString(safe_pass);
+    AccountMgr::normalizeString(safe_pass);
 
     std::string hash = AccountMgr::CalculateShaPassHash(safe_user, safe_pass);
 
     QueryResult_AutoPtr check = LoginDatabase.PQuery(
-            "SELECT 1 FROM account WHERE username = '%s' AND sha_pass_hash = '%s'",
-            safe_user.c_str(), hash.c_str());
+        "SELECT 1 FROM account WHERE username = '%s' AND sha_pass_hash = '%s'",
+        safe_user.c_str(), hash.c_str());
 
     if (!check)
     {
@@ -287,7 +288,7 @@ int RASocket::subnegotiate()
 
     if (n >= 1024)
     {
-        sLog->outRemote("RASocket::subnegotiate: allocated buffer 1024 bytes was too small for negotiation packet, size: %u", uint32(n));
+        sLog->outRemote("RASocket::subnegotiate: allocated buffer 1024 bytes was too small for negotiation packet, size: %u", n);
         return -1;
     }
 
@@ -353,8 +354,7 @@ int RASocket::svc(void)
     for (;;)
     {
         // show prompt
-        const char* tc_prompt = "TC> ";
-        if (size_t(peer().send(tc_prompt, strlen(tc_prompt))) != strlen(tc_prompt))
+        if (send("SF> ") == -1) 
             return -1;
 
         std::string line;

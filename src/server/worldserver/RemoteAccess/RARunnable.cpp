@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -19,7 +18,7 @@
  */
 
 /** \file
-    \ingroup Trinityd
+    \ingroup SkyFire Daemon
  */
 
 #include "Common.h"
@@ -70,11 +69,11 @@ void RARunnable::run()
 
     if (acceptor.open(listen_addr, m_Reactor) == -1)
     {
-        sLog->outError("Skyfire RA can not bind to port %d on %s", raport, stringip.c_str());
+        sLog->outError("SkyFireEMU RA can not bind to port %d on %s", raport, stringip.c_str());
         return;
     }
 
-    sLog->outString("Starting Skyfire RA on port %d on %s", raport, stringip.c_str());
+    sLog->outString("Starting SkyFireEMU RA on port %d on %s", raport, stringip.c_str());
 
     while (!World::IsStopped())
     {
@@ -85,5 +84,5 @@ void RARunnable::run()
             break;
     }
 
-    sLog->outString("Skyfire RA thread exiting");
+    sLog->outStaticDebug("SkyFireEMU RA thread exiting");
 }

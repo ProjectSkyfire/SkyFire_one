@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -19,7 +18,7 @@
  */
 
 /** \file
-    \ingroup Trinityd
+    \ingroup SkyFire Daemon
 */
 
 #include "Common.h"
@@ -32,6 +31,7 @@
 #include "MapManager.h"
 #include "Timer.h"
 #include "WorldRunnable.h"
+#include "OutdoorPvPMgr.h"
 
 #define WORLD_SLEEP_CONST 50
 
@@ -52,7 +52,7 @@ void WorldRunnable::run()
 
     uint32 prevSleepTime = 0;                               // used for balanced full tick time length near WORLD_SLEEP_CONST
 
-    // sScriptMgr->OnStartup(); //NYI
+    //sScriptMgr->OnStartup();  -NYI
 
     ///- While we have not World::m_stopEvent, update the world
     while (!World::IsStopped())
@@ -86,20 +86,21 @@ void WorldRunnable::run()
         #endif
     }
 
-    // sScriptMgr->OnShutdown(); //NYI
+    //sScriptMgr->OnShutdown();  -NYI
 
     sWorld->KickAll();                                       // save and kick all players
     sWorld->UpdateSessions( 1 );                             // real players unload required UpdateSessions call
 
     // unload battleground templates before different singletons destroyed
-    sBattlegroundMgr->DeleteAlllBattlegrounds();
+    sBattlegroundMgr->DeleteAllBattlegrounds();
 
     sWorldSocketMgr->StopNetwork();
 
     sMapMgr->UnloadAll();                     // unload all grids (including locked in memory)
 
     // End the database thread
-    WorldDatabase.ThreadEnd();                                  // free mySQL thread resources
+    WorldDatabase.ThreadEnd();             // free mySQL thread resources
     //sObjectMgr->UnloadAll();             // unload 'i_player2corpse' storage and remove from world
-    //sScriptMgr->Unload();
+    //sScriptMgr->Unload();                
+    sOutdoorPvPMgr->Die();
 }

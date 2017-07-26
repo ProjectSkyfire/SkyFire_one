@@ -1,5 +1,5 @@
 ################################################
-# SkyFireONE World Server configuration file   #
+# SkyFireEMU World Server configuration file   #
 ################################################
 [worldserver]
 
@@ -312,6 +312,20 @@ vmap.enableIndoorCheck = 1
 
 DetectPosCollision = 1
 
+#    mmap.enablePathFinding
+#        Description: Enable/Disable pathfinding using mmaps
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+mmap.enablePathFinding = 1
+
+#
+#    mmap.ignoreMapIds
+#        Disable mmap pathfinding on the listed maps.
+#        List of map ids with delimiter ','
+
+mmap.ignoreMapIds = "638"
+
 #
 #    TargetPosRecalculateRange
 #        Description: Max distance from movement target point (+moving unit size) and targeted
@@ -373,6 +387,24 @@ AddonChannel = 1
 MapUpdate.Threads = 1
 
 #
+#    CleanCharacterDB
+#        Description: Clean out deprecated achievements, skills, spells and talents from the db.
+#        Default:     0 - (Disabled)
+#                     1 - (Enable)
+
+CleanCharacterDB = 0
+
+#
+#    PersistentCharacterCleanFlags
+#        Description: Determines the character clean flags that remain set after cleanups.
+#                     This is a bitmask value, check /doc/CharacterDBCleanup.txt for more
+#                     information.
+#        Example:     14 - (Cleaning up skills, talents and spells will remain enabled after the
+#                           next cleanup)
+#        Default:     0  - (All cleanup methods will be disabled after the next cleanup)
+
+PersistentCharacterCleanFlags = 0
+
 #
 ###################################################################################################
 
@@ -1003,7 +1035,7 @@ CharactersPerRealm = 10
 #
 #    HeroicCharactersPerRealm
 #        Description: Limit number of heroic class characters per account on this realm.
-#        Range:       1-10
+#        Range:       1-12
 #        Default:     1
 
 HeroicCharactersPerRealm = 1
@@ -1038,12 +1070,35 @@ SkipCinematics = 0
 MaxPlayerLevel = 85
 
 #
+#    MinDualSpecLevel
+#        Description: Level requirement for Dual Talent Specialization
+#        Default:     30
+
+MinDualSpecLevel = 30
+
+#
 #    StartPlayerLevel
 #        Description: Starting level for characters after creation.
 #        Range:       1-MaxPlayerLevel
 #        Default:     1
 
 StartPlayerLevel = 1
+
+#
+#    StartPetbarLevel
+#        Description: Select the level that pet bars appear.
+#        Range:       1-25
+#        Default:     10
+
+StartPetbarLevel = 10
+
+#
+#    StartHeroicPlayerLevel
+#        Description: Staring level for heroic class characters after creation.
+#        Range:       1-MaxPlayerLevel
+#        Default:     55
+
+StartHeroicPlayerLevel = 55
 
 #
 #    StartPlayerMoney
@@ -1066,6 +1121,34 @@ MaxHonorPoints = 75000
 #        Default:     0
 
 StartHonorPoints = 0
+
+#
+#    MaxConquestPoints
+#        Description: Maximum conquest points a character can have.
+#        Default:     4000
+
+MaxConquestPoints = 4000
+
+#
+#    StartConquestPoints
+#        Description: Amount of conquest points that characters has after creation.
+#        Default:     0
+
+StartConquestPoints = 0
+
+#
+#    MaxJusticePoints
+#        Description: Maximum justice points a character can have.
+#        Default:     4000
+
+MaxJusticePoints = 4000
+
+#
+#    StartJusticePoints
+#        Description: Amount of justice points that characters has after creation.
+#        Default:     0
+
+StartJusticePoints = 0
 
 #
 #    MaxArenaPoints
@@ -1138,13 +1221,13 @@ AllFlightPaths = 0
 InstantFlightPaths = 0
 
 #
-#    AlwaysMaxSkillForLevel
+#    OldSkillSystem
 #        Description: Players will have to gain on-level skills manually. (weapon, defense)
 #                     up.
 #        Default:     0 - (Disabled)
 #                     1 - (Enabled)
 
-AlwaysMaxSkillForLevel = 0
+OldSkillSystem = 0
 
 #
 #    ActivateWeather
@@ -1218,6 +1301,99 @@ Quests.LowLevelHideDiff = 4
 Quests.HighLevelHideDiff = 7
 
 #
+#    Quests.IgnoreRaid
+#        Description: Allow non-raid quests to be completed while in a raid group.
+#        Default:     0 - (Disabled)
+#                     1 - (Enabled)
+
+Quests.IgnoreRaid = 0
+
+#
+#    Quests.IgnoreAutoAccept
+#        Description: Ignore auto accept flag. Clients will have to manually accept all quests.
+#        Default:     0 - (Disabled, DB values determine if quest is marked auto accept or not.)
+#                     1 - (Enabled, clients will not be told to automatically accept any quest.)
+
+Quests.IgnoreAutoAccept = 0
+
+#
+#    Quests.IgnoreAutoComplete
+#        Description: Ignore auto complete flag. Clients will have to manually complete all quests.
+#        Default:     0 - (Disabled, DB values determine if quest is marked auto complete or not.)
+#                     1 - (Enabled, clients will not be told to automatically complete any quest.)
+
+Quests.IgnoreAutoComplete = 0
+
+#
+#    Guild.EventLogRecordsCount
+#        Description: Number of log entries for guild events that are stored per guild. Old entries
+#                     will be overwritten if the number of log entries exceed the configured value.
+#                     High numbers prevent this behavior but may have performance impacts.
+#        Default:     100
+
+Guild.EventLogRecordsCount = 100
+
+#
+#    Guild.BankEventLogRecordsCount
+#        Description: Number of log entries for guild bank events that are stored per guild. Old
+#                     entries will be overwritten if the number of log entries exceed the
+#                     configured value. High numbers prevent this behavior but may have performance
+#                     impacts.
+#        Default:     25 - (Minimum)
+
+Guild.BankEventLogRecordsCount = 25
+
+#
+#    Guild.NewsLogRecordsCount
+#        Description: Number of log entries for guild news that are stored per guild. Old
+#                     entries will be overwritten if the number of log entries exceed the
+#                     configured value. High numbers prevent this behavior but may have performance
+#                     impacts.
+#        Default:     250
+
+Guild.NewsLogRecordsCount = 250
+
+#
+#    GuildAdvancement.Enabled
+#        Enables the cataclysm guild leveling system. 
+#        It's currently far from being complete. 
+#        Use on your own risk!
+#        Default: 0 - disabled
+
+GuildAdvancement.Enabled = 0
+
+#        
+#    GuildAdvancement.MaxLevel
+#        Max level a guild can reach. 
+#        Only has effect if Guild Advancement is enabled
+#        Default: 25
+
+GuildAdvancement.MaxLevel = 25
+
+#        
+#    GuildAdvancement.DailyXPCap
+#        Max XP a guild can earn in a day 
+#        Only has effect if Guild Advancement is enabled
+#        Default: 6246000
+
+GuildAdvancement.DailyXPCap = 6246000
+
+#        
+#    GuildAdvancement.UncappedLevel
+#        Level the guild must reach to remove the daily XP limit 
+#        Only has effect if Guild Advancement is enabled
+#        Default: 23
+
+GuildAdvancement.UncappedLevel = 23
+
+#        
+#    GuildAdvancement.ResetHour
+#        Reset Hourly XP Cap at specified hour of the day (0-23)
+#        Default: 3
+
+GuildAdvancement.ResetHour = 3
+
+#
 #    MaxPrimaryTradeSkill
 #        Description: Maximum number of primary professions a character can learn.
 #        Range:       0-10
@@ -1242,27 +1418,19 @@ MinPetitionSigns = 9
 MaxGroupXPDistance = 74
 
 #
+#    MaxRecruitAFriendBonusDistance
+#        Description: Max distance between character and and group to gain the Recruit-A-Friend
+#                     XP multiplier.
+#        Default:     100
+
+MaxRecruitAFriendBonusDistance = 100
+
+#
 #    MailDeliveryDelay
 #        Description: Time (in seconds) mail delivery is delayed when sending items.
 #        Default:     3600 - (1 hour)
 
 MailDeliveryDelay = 3600
-
-#
-#    ExternalMail
-#        Enable external mail delivery from mail_external table.
-#        Default: 0 (disabled)
-#                 1 (enabled)
-
-ExternalMail = 0
-
-#
-#    ExternalMailInterval
-#        Mail delivery delay time for item sending from mail_external table,
-#         in minutes.
-#        Default: 1 minute
-
-ExternalMailInterval = 1
 
 #
 #    SkillChance.Prospecting
@@ -1287,7 +1455,7 @@ SkillChance.Milling = 0
 #        Default:     1 - (Recheck offhand slot weapon at unlearning a spell)
 #                     0 - (Recheck offhand slot weapon only at zone update)
 
-#OffhandCheckAtSpellUnlearn = 1
+OffhandCheckAtSpellUnlearn = 1
 
 #
 #    ClientCacheVersion
@@ -1295,7 +1463,7 @@ SkillChance.Milling = 0
 #                     from DB and not recently been used to trigger client side cache reset.
 #        Default:     0 - (Use DB value from world DB db_version.cache_id field)
 
-#ClientCacheVersion = 0
+ClientCacheVersion = 0
 
 #
 #    Event.Announce
@@ -1344,6 +1512,23 @@ Command.LookupMaxResults = 0
 #                     0 - (Disabled)
 
 AllowTickets = 1
+
+#
+#     DungeonFinder.Enable
+#        Description: Dungeon and raid finder system.
+#                     0 - (Disabled)
+#        Default:     1 - (Enabled, Experimental as of still being in development)
+
+DungeonFinder.Enable = 1
+
+#
+#   DB2.EnforceItemAttributes
+#        Description: Disallow overriding item attributes stored in DB2 files with values from the
+#                     database.
+#        Default:     1 - (Enabled, Enforce DB2 values)
+#                     0 - (Disabled, Use database values)
+
+DB2.EnforceItemAttributes = 1
 
 #
 #   AccountInstancesPerHour
@@ -1773,21 +1958,21 @@ Channel.SilentlyGMJoin = 0
 #        Description: Level requirement for characters to be able to write in chat channels.
 #        Default:     1
 
-#ChatLevelReq.Channel = 1
+ChatLevelReq.Channel = 1
 
 #
 #    ChatLevelReq.Whisper
 #        Description: Level requirement for characters to be able to whisper other characters.
 #        Default:     1
 
-#ChatLevelReq.Whisper = 1
+ChatLevelReq.Whisper = 1
 
 #
 #    ChatLevelReq.Say
 #        Description: Level requirement for characters to be able to use say/yell/emote.
 #        Default:     1
 
-#ChatLevelReq.Say = 1
+ChatLevelReq.Say = 1
 
 #
 #    AllowPlayerCommands
@@ -1795,7 +1980,7 @@ Channel.SilentlyGMJoin = 0
 #                     1 - (Enabled)
 #         Default:    0 - (Disabled)
 
-#AllowPlayerCommands = 0
+AllowPlayerCommands = 0
 
 #
 #    PreserveCustomChannels
@@ -1806,7 +1991,7 @@ Channel.SilentlyGMJoin = 0
 #        Default:     0 - (Disabled, Blizzlike, Channel settings are lost if last person left)
 #                     1 - (Enabled)
 
-#PreserveCustomChannels = 1
+PreserveCustomChannels = 1
 
 #
 #    PreserveCustomChannelDuration
@@ -1816,7 +2001,7 @@ Channel.SilentlyGMJoin = 0
 #        Default:     14 - (Enabled, Clean channels that haven't been used for 14 days)
 #                     0  - (Disabled, Infinite channel storage)
 
-#PreserveCustomChannelDuration = 14
+PreserveCustomChannelDuration = 14
 
 #
 ###################################################################################################
@@ -1880,14 +2065,6 @@ GM.InGMList.Level = 3
 GM.InWhoList.Level = 3
 
 #
-#    GM.Mail
-#        If GM ON, is outgoing mail with GM stationary?
-#        Default: 0 (false)
-#                 1 (true)
-
-GM.Mail = 0
-
-#
 #    GM.LogTrade
 #        Description: Include GM trade and trade slot enchanting operations in GM log.
 #        Default:     1 - (Enabled)
@@ -1925,7 +2102,7 @@ GM.AllowFriend = 0
 #        Default:     0 - (Disabled)
 #                     1 - (Enabled)
 
-#GM.LowerSecurity = 0
+GM.LowerSecurity = 0
 
 #
 #    GM.TicketSystem.ChanceOfGMSurvey
@@ -1991,6 +2168,8 @@ Visibility.Notify.Period.InBGArenas   = 1000
 #    Rate.Mana
 #    Rate.Rage.Income
 #    Rate.Rage.Loss
+#    Rate.RunicPower.Income
+#    Rate.RunicPower.Loss
 #    Rate.Focus
 #    Rate.Energy
 #    Rate.Loyalty
@@ -2000,6 +2179,8 @@ Visibility.Notify.Period.InBGArenas   = 1000
 #                     1 - (Rate.Mana)
 #                     1 - (Rate.Rage.Income)
 #                     1 - (Rate.Rage.Loss)
+#                     1 - (Rate.RunicPower.Income)
+#                     1 - (Rate.RunicPower.Loss)
 #                     1 - (Rate.Focus)
 #                     1 - (Rate.Energy)
 #                     1 - (Rate.Loyalty)
@@ -2008,6 +2189,8 @@ Rate.Health            = 1
 Rate.Mana              = 1
 Rate.Rage.Income       = 1
 Rate.Rage.Loss         = 1
+Rate.RunicPower.Income = 1
+Rate.RunicPower.Loss   = 1
 Rate.Focus             = 1
 Rate.Energy            = 1
 Rate.Loyalty           = 1
@@ -2159,6 +2342,13 @@ Rate.Reputation.LowLevel.Kill = 1
 #        Default:     1
 
 Rate.Reputation.LowLevel.Quest = 1
+
+#
+#    Rate.Reputation.RecruitAFriendBonus
+#        Description: Reputation bonus rate for recruit-a-friend.
+#        Default:     0.1
+
+Rate.Reputation.RecruitAFriendBonus = 0.1
 
 #
 #    Rate.MoveSpeed
@@ -2402,6 +2592,113 @@ BattleGround.PremadeGroupWaitForMatch = 1800000
 Battleground.GiveXPForKills = 0
 
 #
+#    Battleground.Random.ResetHour
+#        Description: Hour of the day when the global instance resets occur.
+#        Range:       0-23
+#        Default:     6 - (06:00 AM)
+
+Battleground.Random.ResetHour = 6
+
+#
+###################################################################################################
+
+###################################################################################################
+# BATTLEFIELD CONFIG
+#
+#     Wintergrasp.Enable
+#         Description: Enable the Wintergrasp battlefield.
+#         Default:     0 - (Disabled)
+#                      1 - (Enabled, Experimental as of still being in development)
+
+Wintergrasp.Enable = 0
+
+#
+#     Wintergrasp.PlayerMax
+#         Description: Maximum number of players allowed in Wintergrasp.
+#         Default:     100
+
+Wintergrasp.PlayerMax = 100
+
+#
+#     Wintergrasp.PlayerMin
+#         Description: Minimum number of players required for Wintergrasp.
+#         Default:     0
+
+Wintergrasp.PlayerMin = 0
+
+#
+#     Wintergrasp.PlayerMinLvl
+#         Description: Required character level for the Wintergrasp battle.
+#         Default:     77
+
+Wintergrasp.PlayerMinLvl = 77
+
+#
+#     Wintergrasp.BattleTimer
+#         Description: Time (in minutes) for the Wintergrasp battle to last.
+#         Default:     15
+
+Wintergrasp.BattleTimer = 15
+
+#
+#     Wintergrasp.NoBattleTimer
+#         Description: Time (in minutes) between Wintergrasp battles.
+#         Default:     150
+
+Wintergrasp.NoBattleTimer = 150
+
+#
+#     Wintergrasp.CrashRestartTimer
+#         Description: Time (in minutes) to delay the restart of Wintergrasp if the world server
+#                      crashed during a running battle.
+#         Default:     10
+
+Wintergrasp.CrashRestartTimer = 10
+
+#
+#   Tol Barad.Enable
+#         Enable Tol Barad
+#         Default: 0 - off
+#                  1 - on
+
+Tol Barad.Enable = 0
+
+#
+#    Tol Barad.PlayerMax
+#         Max players allowed in Tol Barad
+#         Default: 100 (players)
+
+Tol Barad.PlayerMax = 100
+
+#
+#    Tol Barad.PlayerMin
+#         Min players allowed in Tol Barad
+#         Default: 0 (players)
+
+Tol Barad.PlayerMin = 0
+
+#
+#    Tol Barad.PlayerMinLvl
+#         Min player level allowed in Tol Barad
+#         Default: 80
+
+Tol Barad.PlayerMinLvl = 80
+
+#
+#    Tol Barad.BattleTimer
+#         Wartime timer
+#         Default: 30 (in min)
+
+Tol Barad.BattleTimer = 30
+
+#
+#    Tol Barad.NoBattleTimer
+#         Out of wartime timer
+#         Default: 150 (in min)
+
+Tol Barad.NoBattleTimer = 150
+
+#
 ###################################################################################################
 
 ###################################################################################################
@@ -2450,9 +2747,9 @@ Arena.QueueAnnouncer.Enable = 0
 #
 #    Arena.ArenaSeason.ID
 #        Description: Current area season id shown in clients.
-#        Default:     3
+#        Default:     9
 
-Arena.ArenaSeason.ID = 3
+Arena.ArenaSeason.ID = 9
 
 #
 #    Arena.ArenaSeason.InProgress
@@ -2482,6 +2779,14 @@ Arena.ArenaStartPersonalRating = 0
 #        Default:     1500
 
 Arena.ArenaStartMatchmakerRating = 1500
+
+#
+#    Rate.ConquestPointsWeekLimit
+#        Description: Rate for Conquest Point Week Limit
+#                     Rate multiplier. (range 0-100)
+#        Default:     1
+
+Rate.ConquestPointsWeekLimit = 1
 
 #
 #
@@ -2600,12 +2905,21 @@ CharDelete.Method = 0
 
 #
 #    CharDelete.MinLevel
-#        Description: Required level to use the unlinking method if enabled.
+#        Description: Required level to use the unlinking method if enabled for non-heroic classes.
 #        Default:     0  - (Same method for every level)
 #                     1+ - (Only characters with the specified level will use the unlinking method)
 
 CharDelete.MinLevel = 0
 
+#
+#    CharDelete.Heroic.MinLevel
+#        Description: Required level to use the unlinking method if enabled for heroic classes.
+#        Default:     0  - (Same method for every level)
+#                     1+ - (Only characters with the specified level will use the unlinking method)
+
+CharDelete.Heroic.MinLevel = 0
+
+#
 #
 #    CharDelete.KeepDays
 #        Description: Time (in days) before unlinked characters will be removed from the database.
@@ -2654,14 +2968,6 @@ PlayerStart.AllSpells = 0
 #                     1 - (Enabled)
 
 PlayerStart.MapsExplored = 0
-
-#
-#    MusicInBattleground
-#        If enabled "L70ETC-Power of the horde" will be played when BG starts
-#        Default:     0 - (Disabled)
-#                     1 - (Enabled)
-
-MusicInBattleground = 0
 
 #
 #    HonorPointsAfterDuel
@@ -2723,12 +3029,13 @@ PvPToken.ItemCount = 1
 NoResetTalentsCost = 0
 
 #
-#   ForbiddenMaps
-#       Map ids that users below SEC_GAMEMASTER cannot enter,
-#        with delimiter ','
-#       Default: ""
-#       example: "538,90"
-#       Note that it's HIGHLY DISCOURAGED to forbid starting maps (0,1,530)!
+#     Guild.AllowMultipleGuildMaster
+#        Description: Allow more than one guild master. Additional Guild Masters must be set using
+#                     the ".guild rank" command.
+#        Default:     0 - (Disabled)
+#                     1 - (Enabled)
+
+Guild.AllowMultipleGuildMaster = 0
 
 #
 #     ShowKickInWorld
