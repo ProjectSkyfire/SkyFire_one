@@ -212,7 +212,7 @@ class BattlegroundMgr
         void RemoveBattleground(uint32 instanceID);
 
         void CreateInitialBattlegrounds();
-        void DeleteAlllBattlegrounds();
+        void DeleteAllBattlegrounds();
 
         void SendToBattleground(Player *pl, uint32 bgTypeId);
 

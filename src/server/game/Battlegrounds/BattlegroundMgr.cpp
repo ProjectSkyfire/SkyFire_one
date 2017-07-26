@@ -1010,10 +1010,10 @@ BattlegroundMgr::BattlegroundMgr()
 
 BattlegroundMgr::~BattlegroundMgr()
 {
-    DeleteAlllBattlegrounds();
+    DeleteAllBattlegrounds();
 }
 
-void BattlegroundMgr::DeleteAlllBattlegrounds()
+void BattlegroundMgr::DeleteAllBattlegrounds()
 {
     for (BattlegroundSet::iterator itr = m_Battlegrounds.begin(); itr != m_Battlegrounds.end();)
     {

@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
  * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
  * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -18,20 +17,19 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// \addtogroup Trinityd Skyfire Daemon
+/// \addtogroup SkyFire Daemon
 /// @{
 /// \file
-
-#include <openssl/opensslv.h>
-#include <openssl/crypto.h>
-#include <ace/Version.h>
 
 #include "Common.h"
 #include "DatabaseEnv.h"
 #include "Config.h"
-
 #include "Log.h"
 #include "Master.h"
+
+#include <openssl/opensslv.h>
+#include <openssl/crypto.h>
+#include <ace/Version.h>
 
 #ifndef _SKYFIRE_CORE_CONFIG
 # define _SKYFIRE_CORE_CONFIG  "worldserver.conf"
@@ -40,8 +38,8 @@
 #ifdef _WIN32
 #include "ServiceWin32.h"
 char serviceName[] = "worldserver";
-char serviceLongName[] = "TrinityCore world service";
-char serviceDescription[] = "TrinityCore World of Warcraft emulator world service";
+char serviceLongName[] = "SkyFireEMU world service";
+char serviceDescription[] = "SkyFireEMU World of Warcraft:Cataclysm emulator world service";
 /*
  * -1 - not in service mode
  *  0 - stopped
@@ -60,18 +58,18 @@ uint32 realmID;                                             ///< Id of the realm
 /// Print out the usage string for this program on the console.
 void usage(const char *prog)
 {
-    sLog->outString("Usage: \n %s [<options>]\n"
-        "    -c config_file           use config_file as configuration file\n\r"
-        #ifdef _WIN32
-        "    Running as service functions:\n\r"
-        "    --service                run as service\n\r"
-        "    -s install               install service\n\r"
-        "    -s uninstall             uninstall service\n\r"
-        #endif
-        , prog);
+    printf("Usage:\n");
+    printf(" %s [<options>]\n", prog);
+    printf("    -c config_file           use config_file as configuration file\n");
+#ifdef _WIN32
+    printf("    Running as service functions:\n");
+    printf("    --service                run as service\n");
+    printf("    -s install               install service\n");
+    printf("    -s uninstall             uninstall service\n");
+#endif
 }
 
-/// Launch the Skyfire server
+/// Launch the SkyFire server
 extern int main(int argc, char **argv)
 {
     ///- Command line parsing to get the configuration file name
@@ -139,8 +137,8 @@ extern int main(int argc, char **argv)
     }
     sLog->outString("Using configuration file %s.", cfg_file);
 
-    sLog->outDetail("%s (Library: %s)", OPENSSL_VERSION_TEXT, SSLeay_version(SSLEAY_VERSION));
-    sLog->outDetail("Using ACE: %s", ACE_VERSION);
+    sLog->outString("Using SSL version: %s (library: %s)", OPENSSL_VERSION_TEXT, SSLeay_version(SSLEAY_VERSION));
+    sLog->outString("Using ACE version: %s", ACE_VERSION);
 
     ///- and run the 'Master'
     /// \todo Why do we need this 'Master'? Can't all of this be in the Main as for Realmd?
@@ -149,7 +147,7 @@ extern int main(int argc, char **argv)
     // at sMaster return function exist with codes
     // 0 - normal shutdown
     // 1 - shutdown at error
-    // 2 - restart command used, this code can be used by restarter for restart Trinityd
+    // 2 - restart command used, this code can be used by restarter for restart SkyFire Daemon
 
     return ret;
 }
