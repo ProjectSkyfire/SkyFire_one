@@ -284,7 +284,10 @@ int Master::Run()
     ///- Clean database before leaving
     ClearOnlineAccounts();
 
-    _StopDB();
+	// Wait for delay threads to end
+	CharacterDatabase.HaltDelayThread();
+	WorldDatabase.HaltDelayThread();
+	LoginDatabase.HaltDelayThread();
 
     sLog->outString("Halting process...");
 
