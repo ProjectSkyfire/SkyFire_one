@@ -516,7 +516,7 @@ bool ChatHandler::HandleGMTicketAssignToCommand(const char* args)
 
     uint64 tarGUID = sObjectMgr->GetPlayerGUIDByName(targm.c_str());
     uint64 accid = sObjectMgr->GetPlayerAccountIdByGUID(tarGUID);
-    uint32 gmlevel = sAccountMgr->GetSecurity(accid, realmID);
+    uint32 gmlevel = AccountMgr::GetSecurity(accid, realmID);
 
     if (!tarGUID || gmlevel == SEC_PLAYER)
     {
