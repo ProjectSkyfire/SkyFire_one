@@ -1,5 +1,6 @@
+# Copyright (C) 2010-2017 Project SkyFire <http://www.projectskyfire.org/>
 # Copyright (C) 2010-2012 Oregon <http://www.oregoncore.com/>
-# Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
