@@ -1,6 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/ProjectSkyfire/SkyFire.548.png?label=ready&title=Ready)](https://waffle.io/ProjectSkyfire/SkyFire.548)
-# ![logo](http://www.projectskyfire.org/public/style_images/15_14_skyfire_logo.png)
-
 ## Introduction
 
 SkyFireONE is a MMORPG Framework based mostly on C++. 
@@ -48,20 +45,21 @@ Fixes are submitted as pull requests via BitBucket.
 
 Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/THANKS.md)
 
-
 ## Links
 
 For further information on the Project SkyFireEMU, please visit our
-project website at Forum [http://www.projectskyfire.org](http://www.projectskyfire.org)
+project website at Forum [Project SkyFire](http://www.projectskyfire.org)
 
-Database [https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/](https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/)
+Database [SF1DB Release v1.0.0](https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/)
 
 For further information on the TrinityCore project, please visit the
-project website at Forum [http://www.TrinityCore.org](http://www.TrinityCore.org)
+project website at Forum [TrinityCore](http://www.TrinityCore.org)
 
 For further information on the MaNGOS project, please visit the
-project website at Forum [http://www.getmangos.com/](http://www.getmangos.com/)
+project website at Forum [MaNGOS](http://www.getmangos.com/)
 
 For further information on the Oregon project, please visit the
-project website at Forum [http://www.oregoncore.com/](http://www.oregoncore.com/)
+project website at Forum [OregonCore](http://www.oregoncore.com/)
+
+
 
