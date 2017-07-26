@@ -218,4 +218,3 @@ int g3dfnmatch(const char * a, const char *b, int c) {
 }
 
 #endif
-

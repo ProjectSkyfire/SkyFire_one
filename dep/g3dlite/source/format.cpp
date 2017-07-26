@@ -57,7 +57,7 @@ std::string vformat(const char *fmt, va_list argPtr) {
             heapBuffer[maxSize] = '\0';
         } else {
             heapBuffer = (char*)System::malloc(actualSize);
-            vsprintf(heapBuffer, fmt, argPtr);            
+            vsprintf(heapBuffer, fmt, argPtr);
         }
 
         std::string formattedString(heapBuffer);
@@ -82,7 +82,7 @@ std::string vformat(const char *fmt, va_list argPtr) {
 	char stackBuffer[bufSize];
 
 	// MSVC6 doesn't support va_copy, however it also seems to compile
-	// correctly if we just pass our argument list along.  Note that 
+	// correctly if we just pass our argument list along.  Note that
 	// this whole code block is only compiled if we're on MSVC6 anyway
 	int actualWritten = _vsnprintf(stackBuffer, bufSize, fmt, argPtr);
 
@@ -91,7 +91,7 @@ std::string vformat(const char *fmt, va_list argPtr) {
         int heapSize = 512;
         double powSize = 1.0;
         char* heapBuffer = (char*)System::malloc(heapSize);
-        
+
         while ((_vsnprintf(heapBuffer, heapSize, fmt, argPtr) == -1) &&
             (heapSize  < maxSize)) {
             heapSize = iCeil(heapSize * ::pow((double)2.0, powSize++));
@@ -136,7 +136,7 @@ std::string vformat(const char* fmt, va_list argPtr) {
       (void)numChars2;
 
       std::string result(heapBuffer);
-      
+
       System::free(heapBuffer);
 
       return result;

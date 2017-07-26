@@ -1,14 +1,14 @@
 /**
  @file BinaryInput.cpp
- 
+
  @author Morgan McGuire, graphics3d.com
  Copyright 2001-2007, Morgan McGuire.  All rights reserved.
- 
+
  @created 2001-08-09
  @edited  2010-03-05
 
   <PRE>
-    {    
+    {
     BinaryOutput b("c:/tmp/test.b", BinaryOutput::LITTLE_ENDIAN);
 
     float f = 3.1415926;
@@ -19,7 +19,6 @@
     b.writeInt32(i);
     b.writeString(s);
     b.commit();
-    
 
     BinaryInput in("c:/tmp/test.b", BinaryInput::LITTLE_ENDIAN);
 
@@ -78,11 +77,11 @@ IMPLEMENT_READER(Int32,   int32)
 IMPLEMENT_READER(UInt64,  uint64)
 IMPLEMENT_READER(Int64,   int64)
 IMPLEMENT_READER(Float32, float32)
-IMPLEMENT_READER(Float64, float64)    
+IMPLEMENT_READER(Float64, float64)
 
 #undef IMPLEMENT_READER
 
-// Data structures that are one byte per element can be 
+// Data structures that are one byte per element can be
 // directly copied, regardles of endian-ness.
 #define IMPLEMENT_READER(ucase, lcase)\
 void BinaryInput::read##ucase(lcase* out, int64 n) {\
@@ -119,7 +118,7 @@ IMPLEMENT_READER(Int32,   int32)
 IMPLEMENT_READER(UInt64,  uint64)
 IMPLEMENT_READER(Int64,   int64)
 IMPLEMENT_READER(Float32, float32)
-IMPLEMENT_READER(Float64, float64)    
+IMPLEMENT_READER(Float64, float64)
 
 #undef IMPLEMENT_READER
 
@@ -153,7 +152,7 @@ void BinaryInput::loadIntoMemory(int64 startPosition, int64 minLength) {
         debugAssert(ret == toRead);
         fclose(file);
         file = NULL;
-    
+
 #   else
         FILE* file = fopen(m_filename.c_str(), "rb");
         debugAssert(file);
@@ -171,7 +170,7 @@ void BinaryInput::loadIntoMemory(int64 startPosition, int64 minLength) {
 }
 
 const bool BinaryInput::NO_COPY = false;
-    
+
 static bool needSwapBytes(G3DEndian fileEndian) {
     return (fileEndian != System::machineEndian());
 }
@@ -257,7 +256,6 @@ BinaryInput::BinaryInput(
 
     // Update global file tracker
     _internal::currentFilesUsed.insert(m_filename);
-    
 
 #if _HAVE_ZIP /* G3DFIX: Use ZIP-library only if defined */
     std::string zipfile;
@@ -320,7 +318,7 @@ BinaryInput::BinaryInput(
         if (compressed) {
             throw "Not enough memory to load compressed file. (1)";
         }
-        
+
         // Try to allocate a small array; not much memory is available.
         // Give up if we can't allocate even 1k.
         while ((m_buffer == NULL) && (m_bufferLength > 1024)) {
@@ -329,7 +327,7 @@ BinaryInput::BinaryInput(
         }
     }
     debugAssert(m_buffer);
-    
+
     fread(m_buffer, m_bufferLength, sizeof(int8), file);
     fclose(file);
     file = NULL;
@@ -347,28 +345,28 @@ void BinaryInput::decompress() {
     // Decompress
     // Use the existing buffer as the source, allocate
     // a new buffer to use as the destination.
-    
+
     int64 tempLength = m_length;
     m_length = G3D::readUInt32(m_buffer, m_swapBytes);
-    
+
     // The file couldn't have better than 500:1 compression
     alwaysAssertM(m_length < m_bufferLength * 500, "Compressed file header is corrupted");
-    
+
     uint8* tempBuffer = m_buffer;
     m_buffer = (uint8*)System::alignedMalloc(m_length, 16);
-    
+
     debugAssert(m_buffer);
     debugAssert(isValidHeapPointer(tempBuffer));
     debugAssert(isValidHeapPointer(m_buffer));
-    
+
     unsigned long L = m_length;
     int64 result = uncompress(m_buffer, &L, tempBuffer + 4, tempLength - 4);
     m_length = L;
     m_bufferLength = m_length;
-    
-    debugAssertM(result == Z_OK, "BinaryInput/zlib detected corruption in " + m_filename); 
+
+    debugAssertM(result == Z_OK, "BinaryInput/zlib detected corruption in " + m_filename);
     (void)result;
-    
+
     System::alignedFree(tempBuffer);
 }
 
@@ -411,7 +409,7 @@ uint64 BinaryInput::readUInt64() {
 std::string BinaryInput::readString(int64 n) {
     prepareToRead(n);
     debugAssertM((m_pos + n) <= m_length, "Read past end of file");
-    
+
     char *s = (char*)System::alignedMalloc(n + 1, 16);
     assert(s != NULL);
 

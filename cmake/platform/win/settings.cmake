@@ -9,15 +9,16 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+
 # Package overloads
 set(ACE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/dep/acelite)
 set(ACE_LIBRARY "ace")
 set(BZIP2_LIBRARIES "bzip2")
 set(ZLIB_LIBRARIES "zlib")
 
-# We require at least Visual Studio 2015 (aka 14.0) which has version nr 1900.
+# We require at least Visual Studio 2017 (aka 14.0) which has version nr 1900.
 IF(NOT FORCE_UNSUPPORTED_COMPILER AND MSVC_VERSION LESS 1900)
-  MESSAGE(FATAL_ERROR "Visual Studio 2015 or newer is required!")
+  MESSAGE(FATAL_ERROR "Visual Studio 2017 or newer is required!")
 ENDIF()
 
 # check the CMake preload parameters (commented out by default)

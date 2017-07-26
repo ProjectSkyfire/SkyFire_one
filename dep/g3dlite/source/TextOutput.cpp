@@ -30,7 +30,7 @@ TextOutput::TextOutput(const std::string& fil, const TextOutput::Settings& opt) 
     currentColumn(0),
 	inDQuote(false),
 	filename(fil),
-	indentLevel(0) 
+	indentLevel(0)
 {
     setOptions(opt);
 }
@@ -40,9 +40,9 @@ void TextOutput::setIndentLevel(int i) {
 
     // If there were more pops than pushes, don't let that take us below 0 indent.
     // Don't ever indent more than the number of columns.
-    indentSpaces = 
-        iClamp(option.spacesPerIndent * indentLevel, 
-               0, 
+    indentSpaces =
+        iClamp(option.spacesPerIndent * indentLevel,
+               0,
                option.numColumns - 1);
 }
 
@@ -206,8 +206,8 @@ void TextOutput::wordWrapIndentAppend(const std::string& str) {
 
     // Number of columns to wrap against
     int cols = option.numColumns - indentSpaces;
-    
-    // Copy forward until we exceed the column size, 
+
+    // Copy forward until we exceed the column size,
     // and then back up and try to insert newlines as needed.
     for (uint32 i = 0; i < str.size(); ++i) {
         indentAppend(str[i]);
@@ -219,7 +219,7 @@ void TextOutput::wordWrapIndentAppend(const std::string& str) {
 
         if (currentColumn >= cols) {
             debugAssertM(str[i] != '\n' && str[i] != '\r',
-                "Should never enter word-wrapping on a newline character");            
+                "Should never enter word-wrapping on a newline character");
 
             // True when we're allowed to treat a space as a space.
             bool unquotedSpace = option.allowWordWrapInsideDoubleQuotes || ! inDQuote;
@@ -271,9 +271,9 @@ void TextOutput::wordWrapIndentAppend(const std::string& str) {
                     // the word wrap code after writing another character
                 }
             } else {
-                // We found a series of spaces.  If they continue 
+                // We found a series of spaces.  If they continue
                 // to the new string, strip spaces off both.  Otherwise
-                // strip spaces from data only and insert a newline.                
+                // strip spaces from data only and insert a newline.
 
                 // Find the start of the spaces.  firstSpace is the index of the
                 // first non-space, looking backwards from lastSpace.
@@ -348,7 +348,7 @@ void TextOutput::indentAppend(char c) {
     if (c != '\r') {
         ++currentColumn;
     }
-    
+
     if (c == '\"') {
         inDQuote = ! inDQuote;
     }

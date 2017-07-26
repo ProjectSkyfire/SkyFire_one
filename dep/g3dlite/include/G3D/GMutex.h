@@ -19,7 +19,6 @@
 #   include <unistd.h>
 #endif
 
-
 namespace G3D {
 
 /**
