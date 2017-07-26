@@ -1,9 +1,12 @@
 /*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -25,9 +28,12 @@ EndScriptData */
 
 #include "ScriptPCH.h"
 
-#define HALLOWEEN_EVENTID       12
-#define SPELL_TRICK_OR_TREATED  24755
-#define SPELL_TREAT             24715
+enum HalloweenSpells
+{
+	HALLOWEEN_EVENTID        = 12,
+	SPELL_TRICK_OR_TREATED   = 24755,
+	SPELL_TREAT              = 24715
+};
 
 #define LOCALE_TRICK_OR_TREAT_0 "Trick or Treat!"
 #define LOCALE_TRICK_OR_TREAT_2 "Des bonbons ou des blagues!"
@@ -44,7 +50,7 @@ public:
 
     bool OnGossipHello(Player *pPlayer, Creature *pCreature)
     {
-        if (IsEventActive(HALLOWEEN_EVENTID) && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED))
+        if (isGameEventActive(HALLOWEEN_EVENTID) && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED, 0))
         {
             const char* localizedEntry;
             switch (pPlayer->GetSession()->GetSessionDbcLocale())
@@ -54,7 +60,7 @@ public:
                 case LOCALE_esES: localizedEntry = LOCALE_TRICK_OR_TREAT_6; break;
                 case LOCALE_enUS: default: localizedEntry = LOCALE_TRICK_OR_TREAT_0;
             }
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, localizedEntry, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + HALLOWEEN_EVENTID);
         }
 
         if (pCreature->isQuestGiver())
@@ -82,7 +88,7 @@ public:
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         pPlayer->PlayerTalkClass->ClearMenus();
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+HALLOWEEN_EVENTID && IsEventActive(HALLOWEEN_EVENTID) && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED))
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + HALLOWEEN_EVENTID && isGameEventActive(HALLOWEEN_EVENTID) && !pPlayer->HasAura(SPELL_TRICK_OR_TREATED, 0))
         {
             pPlayer->CastSpell(pPlayer, SPELL_TRICK_OR_TREATED, true);
 
@@ -93,16 +99,16 @@ public:
                 uint32 trickspell = 0;
                 switch (urand(0, 13))
                 {
-                    case 0: trickspell = 24753; break; // cannot cast, random 30sec
-                    case 1: trickspell = 24713; break; // lepper gnome costume
-                    case 2: trickspell = 24735; break; // male ghost costume
-                    case 3: trickspell = 24736; break; // female ghostcostume
-                    case 4: trickspell = 24710; break; // male ninja costume
-                    case 5: trickspell = 24711; break; // female ninja costume
-                    case 6: trickspell = 24708; break; // male pirate costume
-                    case 7: trickspell = 24709; break; // female pirate costume
-                    case 8: trickspell = 24723; break; // skeleton costume
-                    case 9: trickspell = 24753; break; // Trick
+                    case 0: trickspell  = 24753; break; // cannot cast, random 30sec
+                    case 1: trickspell  = 24713; break; // lepper gnome costume
+                    case 2: trickspell  = 24735; break; // male ghost costume
+                    case 3: trickspell  = 24736; break; // female ghostcostume
+                    case 4: trickspell  = 24710; break; // male ninja costume
+                    case 5: trickspell  = 24711; break; // female ninja costume
+                    case 6: trickspell  = 24708; break; // male pirate costume
+                    case 7: trickspell  = 24709; break; // female pirate costume
+                    case 8: trickspell  = 24723; break; // skeleton costume
+                    case 9: trickspell  = 24753; break; // Trick
                     case 10: trickspell = 24924; break; // Hallow's End Candy
                     case 11: trickspell = 24925; break; // Hallow's End Candy
                     case 12: trickspell = 24926; break; // Hallow's End Candy

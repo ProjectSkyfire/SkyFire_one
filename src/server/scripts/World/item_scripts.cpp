@@ -1,10 +1,12 @@
 /*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -64,10 +66,6 @@ public:
                 if (pPlayer->GetZoneId() != 4080)
                     disabled = true;
                     break;
-           case 34475:
-                if (const SpellEntry* pSpellInfo = GetSpellStore()->LookupEntry(SPELL_ARCANE_CHARGES))
-                    Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_NOT_ON_GROUND);
-                    break;
         }
 
         // allow use in flight only
@@ -75,7 +73,7 @@ public:
             return false;
 
         // error
-        pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,pItem,NULL);
+        pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pItem, NULL);
         return true;
     }
 };
@@ -111,7 +109,7 @@ public:
                     if (Item* item = pPlayer->StoreNewItem(dest, itemId, true))
                         pPlayer->SendNewItem(item, 1, false, true);
                 } else
-                    pPlayer->SendEquipError(msg, NULL, NULL, itemId);
+                    pPlayer->SendEquipError(msg, NULL, NULL);
             }
         }
         return false;
@@ -161,8 +159,8 @@ public:
             if (pPlayer->GetBaseSkillValue(SKILL_RIDING) == 300)
                 return false;
 
-        sLog.outDebug("TSCR: Player attempt to use item %u, but did not meet riding requirement",itemId);
-        pPlayer->SendEquipError(EQUIP_ERR_CANT_EQUIP_SKILL,pItem,NULL);
+        sLog->outDebug(LOG_FILTER_TSCR, "TSCR: Player attempt to use item %u, but did not meet riding requirement", itemId);
+        pPlayer->SendEquipError(EQUIP_ERR_ERR_CANT_EQUIP_SKILL, pItem, NULL);
         return true;
     }
 };
@@ -179,7 +177,7 @@ public:
     bool OnUse(Player *pPlayer, Item *pItem, SpellCastTargets const& targets)
     {
         if (targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
-            targets.getUnitTarget()->GetEntry() == 20748 && !targets.getUnitTarget()->HasAura(32578))
+            targets.getUnitTarget()->GetEntry() == 20748 && !targets.getUnitTarget()->HasAura(32578, 0))
             return false;
 
         pPlayer->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW,pItem,NULL);
@@ -247,40 +245,6 @@ public:
     }
 };
 
-/*#####
-# item_harvesters_gift
-#####*/
-#define GHOULS 28845
-
-class item_harvesters_gift : public ItemScript
-{
-public:
-    item_harvesters_gift() : ItemScript("item_harvesters_gift") { }
-
-    bool OnUse(Player* pPlayer, Item* /*pItem*/, SpellCastTargets const& /*targets*/)
-    {
-        std::list<Creature*> MinionList;
-        pPlayer->GetAllMinionsByEntry(MinionList,GHOULS);
-
-        if (pPlayer->GetQuestStatus(12698) == QUEST_STATUS_INCOMPLETE)
-        {
-            if (!MinionList.empty())
-            {
-                if (MinionList.size() < 5)
-                    return false;
-                else
-                {
-                    //This should be sent to the player as red text.
-                    pPlayer->Say("You have created enough ghouls. Return to Gothik the Harvester at Death's Breach.",LANG_UNIVERSAL);
-                    return true;
-                }
-            }
-            else
-                return false;
-        }
-        return true;
-    }
-};
 
 /*#####
 # item_pile_fake_furs
@@ -345,41 +309,6 @@ public:
             summon->SetReactState(REACT_PASSIVE);
             summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
         }
-        return false;
-    }
-};
-
-/*#####
-# item_petrov_cluster_bombs
-#####*/
-
-enum ePetrovClusterBombs
-{
-    SPELL_PETROV_BOMB           = 42406,
-    AREA_ID_SHATTERED_STRAITS   = 4064,
-    ZONE_ID_HOWLING             = 495
-};
-
-class item_petrov_cluster_bombs : public ItemScript
-{
-public:
-    item_petrov_cluster_bombs() : ItemScript("item_petrov_cluster_bombs") { }
-
-    bool OnUse(Player* pPlayer, Item* pItem, const SpellCastTargets & /*pTargets*/)
-    {
-        if (pPlayer->GetZoneId() != ZONE_ID_HOWLING)
-            return false;
-
-        if (!pPlayer->GetTransport() || pPlayer->GetAreaId() != AREA_ID_SHATTERED_STRAITS)
-        {
-            pPlayer->SendEquipError(EQUIP_ERR_NONE, pItem, NULL);
-
-            if (const SpellEntry* pSpellInfo = GetSpellStore()->LookupEntry(SPELL_PETROV_BOMB))
-                Spell::SendCastResult(pPlayer, pSpellInfo, 1, SPELL_FAILED_NOT_HERE);
-
-            return true;
-        }
-
         return false;
     }
 };
@@ -484,6 +413,25 @@ public:
     }
 };
 
+/*#####
+# item_zezzak_shard
+#####*/
+class item_zezzaks_shard : public ItemScript
+{
+public:
+	item_zezzaks_shard() : ItemScript("item_zezzaks_shard") { }
+
+	bool OnUse(Player* player, Item* _Item, SpellCastTargets const& targets)
+	{
+		if (targets.getUnitTarget() && targets.getUnitTarget()->GetTypeId() == TYPEID_UNIT &&
+			targets.getUnitTarget()->GetEntry() == 19440)
+			return false;
+
+		player->SendEquipError(EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM, _Item, NULL);
+		return true;
+	}
+};
+
 void AddSC_item_scripts()
 {
     new item_only_for_flight;
@@ -494,9 +442,8 @@ void AddSC_item_scripts()
     new item_incendiary_explosives;
     new item_mysterious_egg;
     new item_disgusting_jar;
-    new item_harvesters_gift;
     new item_pile_fake_furs;
-    new item_petrov_cluster_bombs;
     new item_dehta_trap_smasher;
     new item_trident_of_nazjan;
+	new item_zezzaks_shard;
 }

@@ -1,10 +1,12 @@
 /*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -330,7 +332,7 @@ public:
                     if (Spell)
                         pCreature->CastSpell(pPlayer, Spell, false);
                     else
-                        sLog.outError("TSCR: go_ethereum_prison summoned Creature (entry %u) but faction (%u) are not expected by script.", pCreature->GetEntry(), pCreature->getFaction());
+                        sLog->outError("TSCR: go_ethereum_prison summoned Creature (entry %u) but faction (%u) are not expected by script.", pCreature->GetEntry(), pCreature->getFaction());
                 }
             }
         }
@@ -945,17 +947,17 @@ public:
         uint32 newSpell = 0;
         if (pGO->GetEntry() == 193169)                                  // Soulwell for rank 2
         {
-            if (caster->HasAura(18693))      // Improved Healthstone rank 2
+            if (caster->HasAura(18693, 0))      // Improved Healthstone rank 2
                 newSpell = 58898;
-            else if (caster->HasAura(18692)) // Improved Healthstone rank 1
+            else if (caster->HasAura(18692, 0)) // Improved Healthstone rank 1
                 newSpell = 58896;
             else newSpell = 58890;
         }
         else if (pGO->GetEntry() == 181621)                             // Soulwell for rank 1
         {
-            if (caster->HasAura(18693))      // Improved Healthstone rank 2
+            if (caster->HasAura(18693, 0))      // Improved Healthstone rank 2
                 newSpell = 34150;
-            else if (caster->HasAura(18692)) // Improved Healthstone rank 1
+            else if (caster->HasAura(18692, 0)) // Improved Healthstone rank 1
                 newSpell = 34149;
             else newSpell = 34130;
         }
@@ -1005,7 +1007,7 @@ public:
         if (!pPrisoner || !pPrisoner->isAlive())
             return true;
 
-        Quest const* qInfo = sObjectMgr.GetQuestTemplate(QUEST_PRISONERS_OF_WYRMSKULL);
+        Quest const* qInfo = sObjectMgr->GetQuestTemplate(QUEST_PRISONERS_OF_WYRMSKULL);
         if (qInfo)
         {
             //TODO: prisoner should help player for a short period of time
