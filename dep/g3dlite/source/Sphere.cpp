@@ -1,10 +1,10 @@
 /**
  @file Sphere.cpp
- 
+
  Sphere class
- 
+
  @maintainer Morgan McGuire, http://graphics.cs.williams.edu
- 
+
  @created 2001-04-17
  @edited  2009-01-20
  */
@@ -35,7 +35,7 @@ void Sphere::deserialize(class BinaryInput& b) {
 }
 
 std::string Sphere::toString() const {
-    return format("Sphere(<%g, %g, %g>, %g)", 
+    return format("Sphere(<%g, %g, %g>, %g)",
                   center.x, center.y, center.z, radius);
 }
 
@@ -77,16 +77,13 @@ bool Sphere::culledBy(
     int&				    cullingPlaneIndex,
     const uint32			inMask,
     uint32&					outMask) const {
-    
     return culledBy(plane.getCArray(), plane.size(), cullingPlaneIndex, inMask, outMask);
 }
-    
 
 bool Sphere::culledBy(
                       const Array<Plane>&		plane,
                       int&				    cullingPlaneIndex,
                       const uint32			inMask) const {
-    
     return culledBy(plane.getCArray(), plane.size(), cullingPlaneIndex, inMask);
 }
 
@@ -111,7 +108,6 @@ bool Sphere::culledBy(
     for (int p = 0; p < numPlanes; p++) {
 		// Only test planes that are not masked
 		if ((inMask & 1) != 0) {
-		
             bool culledLow = ! plane[p].halfSpaceContainsFinite(center + plane[p].normal() * radius);
             bool culledHigh = ! plane[p].halfSpaceContainsFinite(center - plane[p].normal() * radius);
 
@@ -178,8 +174,8 @@ Vector3 Sphere::randomSurfacePoint() const {
 Vector3 Sphere::randomInteriorPoint() const {
     Vector3 result;
     do {
-        result = Vector3(uniformRandom(-1, 1), 
-                         uniformRandom(-1, 1), 
+        result = Vector3(uniformRandom(-1, 1),
+                         uniformRandom(-1, 1),
                          uniformRandom(-1, 1));
     } while (result.squaredMagnitude() >= 1.0f);
 

@@ -1,6 +1,6 @@
 /**
  @file Capsule.cpp
-  
+
  @maintainer Morgan McGuire, http://graphics.cs.williams.edu
 
  @created 2003-02-07
@@ -27,7 +27,7 @@ Capsule::Capsule(class BinaryInput& b) {
 Capsule::Capsule() {
 }
 
-Capsule::Capsule(const Vector3& _p1, const Vector3& _p2, float _r) 
+Capsule::Capsule(const Vector3& _p1, const Vector3& _p2, float _r)
 	: p1(_p1), p2(_p2), _radius(_r) {
 }
 
@@ -48,7 +48,7 @@ Line Capsule::axis() const {
 }
 
 float Capsule::volume() const {
-	return 
+	return
 		// Sphere volume
 		pow(_radius, 3) * pi() * 4 / 3 +
 
@@ -72,7 +72,7 @@ void Capsule::getBounds(AABox& out) const {
     out = AABox(min, max);
 }
 
-bool Capsule::contains(const Vector3& p) const { 
+bool Capsule::contains(const Vector3& p) const {
     return LineSegment::fromTwoPoints(p1, p2).distanceSquared(p) <= square(radius());
 }
 
@@ -107,7 +107,7 @@ void Capsule::getRandomSurfacePoint(Vector3& p, Vector3& N) const {
     // Transform to world space
     CoordinateFrame cframe;
     getReferenceFrame(cframe);
-    
+
     p = cframe.pointToWorldSpace(p);
     N = cframe.normalToWorldSpace(N);
 }
@@ -118,7 +118,7 @@ void Capsule::getReferenceFrame(CoordinateFrame& cframe) const {
     Vector3 Y = (p1 - p2).direction();
     Vector3 X = (abs(Y.dot(Vector3::unitX())) > 0.9) ? Vector3::unitY() : Vector3::unitX();
     Vector3 Z = X.cross(Y).direction();
-    X = Y.cross(Z);        
+    X = Y.cross(Z);
     cframe.rotation.setColumn(0, X);
     cframe.rotation.setColumn(1, Y);
     cframe.rotation.setColumn(2, Z);
@@ -134,7 +134,7 @@ Vector3 Capsule::randomInteriorPoint() const {
 
     float hemiVolume = pi() * (r*r*r) * 4 / 6.0;
     float cylVolume = pi() * square(r) * h;
-    
+
     float r1 = uniformRandom(0, 2.0 * hemiVolume + cylVolume);
 
     if (r1 < 2.0 * hemiVolume) {
@@ -154,7 +154,7 @@ Vector3 Capsule::randomInteriorPoint() const {
     // Transform to world space
     CoordinateFrame cframe;
     getReferenceFrame(cframe);
-    
+
     return cframe.pointToWorldSpace(p);
 }
 } // namespace

@@ -19,11 +19,6 @@
 #include "G3D/G3DGameUnits.h"
 #include "G3D/BinaryFormat.h"
 #include <string>
-
-#ifndef G3D_WIN32
-#   include <unistd.h>
-#endif
-
 #ifdef G3D_LINUX
 #   include <sys/socket.h>
 #endif

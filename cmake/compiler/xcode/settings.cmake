@@ -1,5 +1,5 @@
-# Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
-# Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2011-2014 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -10,4 +10,5 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 # Set build-directive (used in core to tell which buildtype we used)
+
 add_definitions(-D_BUILD_DIRECTIVE='"$(CONFIGURATION)"')
