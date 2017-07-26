@@ -1,61 +1,67 @@
-= SkyFireONE 2.4.3 -- General information =
+[![Stories in Ready](https://badge.waffle.io/ProjectSkyfire/SkyFire.548.png?label=ready&title=Ready)](https://waffle.io/ProjectSkyfire/SkyFire.548)
+# ![logo](http://www.projectskyfire.org/public/style_images/15_14_skyfire_logo.png)
 
-DB Located here. https://github.com/ProjectSkyfire/SkyFire_One_DB
+## Introduction
 
-Copyright (C) SkyFireEMU  (http://www.projectskyfire.org)
-Copyright (C) Oregon      (http://www.oregoncore.com)
-Copyright (C) TrinityCore (http://www.trinitycore.org)
-Copyright (C) MaNGOS      (http://www.getmangos.com)
+SkyFireONE is a MMORPG Framework based mostly on C++. 
+It is completely open source, and is community supported. 
+It is derived from OregonCore, TrinityCore, and MaNGOS, 
+the Massive Network Game Object Servers, and is based on 
+the code of there projects with extensive changes over time 
+to optimize, improve and cleanup the codebase at the same 
+time as improving the ingame mechanics and functionality. 
+If you wish to contribute ideas or code please visit 
+our site linked below or make pull requests to our BitBucket repo at 
+https://bitbucket.org/EMPulseGaming/skyfire_one
+
+## Supported Client Version
+**TBC 2.4.3 Build 8606**
+
+## Requirements
++ Platform: Linux, Windows or Mac
++ Processor with SSE2 support
++ ACE     = 6.1.4 (included for Windows)
++ MySQL   = 5.6.36 (Windows / Linux)
++ CMake   = 3.8.1 / 2.8.9 (Windows / Linux)
++ OpenSSL = 1.0.2L
++ GCC     = 4.7.2 (Linux only)
++ MS Visual Studio = 15 (2017) (Windows only)
+
+## Copyright
+
+License: GPL 3.0
+
+Read file [COPYING](COPYING.md)
+
+## Reporting issues
+
+Issues can be reported via the [BitBucket issue tracker](https://bitbucket.org/EMPulseGaming/skyfire_one/issues).
+
+Please take the time to review existing issues before submitting your own to
+prevent duplicates.
+
+## Submitting fixes
+
+Fixes are submitted as pull requests via BitBucket.
+
+## Authors &amp; Contributors
+
+Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/THANKS.md)
 
 
-  SkyFireEMU is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 3 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  In addition, as a special exception, the SkyFireEMU project
-  gives permission to link the code of its release of SkyFireEMU with
-  the OpenSSL project's "OpenSSL" library (or with modified versions of
-  it that use the same license as the "OpenSSL" library), and distribute
-  the linked executables.  You must obey the GNU General Public License
-  in all respects for all of the code used other than "OpenSSL".  If you
-  modify this file, you may extend this exception to your version of the
-  file, but you are not obligated to do so.  If you do not wish to do
-  so, delete this exception statement from your version.
-
-SkyFireONE is a MMORPG Framework based mostly on C++. It is completely 
-open source, and is community supported. It is derived
-from OregonCore, TrinityCore, and MaNGOS, the Massive Network Game Object Servers, 
-and is based on the code of there projects with extensive changes over time to optimize, 
-improve and cleanup the codebase at the same time as improving the ingame mechanics
-and functionality. If you wish to contribute ideas or code please visit 
-our site linked below or make pull requests to our github repo at 
-https://github.com/ProjectSkyfire/SkyFire_one
+## Links
 
 For further information on the Project SkyFireEMU, please visit our
-project website at http://www.projectskyfire.org/
+project website at Forum [http://www.projectskyfire.org](http://www.projectskyfire.org)
+
+Database [https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/](https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/)
 
 For further information on the TrinityCore project, please visit the
-project website at http://www.TrinityCore.org
+project website at Forum [http://www.TrinityCore.org](http://www.TrinityCore.org)
 
 For further information on the MaNGOS project, please visit the
-project website at http://www.getmangos.com/.
+project website at Forum [http://www.getmangos.com/](http://www.getmangos.com/)
 
 For further information on the Oregon project, please visit the
-project website at http://www.oregoncore.com/
+project website at Forum [http://www.oregoncore.com/](http://www.oregoncore.com/)
 
-SQL files to create the database can be found in the database directory. Files
-to update your database from an older revision/version can be found in the
-database/updates directory.
-
-Our Bug Tracker is located here, Register to post:
-http://www.projectskyfire.org/one
