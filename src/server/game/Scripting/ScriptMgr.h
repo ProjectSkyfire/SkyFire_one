@@ -200,7 +200,7 @@ template<class TObject> class UpdatableScript
         virtual void OnUpdate(TObject* obj, uint32 diff) { }
 };
 
-class SpellHandlerScript : public ScriptObject
+/*class SpellHandlerScript : public ScriptObject
 {
     protected:
 
@@ -214,7 +214,7 @@ class SpellHandlerScript : public ScriptObject
 
         // Should return a fully valid SpellScript pointer.
         virtual SpellScript* GetSpellScript() const = 0;
-};
+};*/
 
 class AuraHandlerScript : public ScriptObject
 {
@@ -388,20 +388,20 @@ class InstanceMapScript : public ScriptObject, public MapScript<InstanceMap>
 {
 protected:
 
-	InstanceMapScript(const char* name, uint32 mapId = 0) : ScriptObject(name), MapScript<InstanceMap>(mapId)
-	{
-		if (GetEntry() && !GetEntry()->IsDungeon())
-			sLog->outError("InstanceMapScript for map %u is invalid.", mapId);
-	}
+    InstanceMapScript(const char* name, uint32 mapId = 0) : ScriptObject(name), MapScript<InstanceMap>(mapId)
+    {
+        if (GetEntry() && !GetEntry()->IsDungeon())
+            sLog->outError("InstanceMapScript for map %u is invalid.", mapId);
+    }
 
-	void RegisterSelf();
+    void RegisterSelf();
 
 public:
 
-	bool IsDatabaseBound() const { return true; }
+    bool IsDatabaseBound() const { return true; }
 
-	// Gets an InstanceData object for this instance.
-	virtual InstanceScript* GetInstanceScript(InstanceMap* map) const { return NULL; }
+    // Gets an InstanceData object for this instance.
+    virtual InstanceScript* GetInstanceScript(InstanceMap* map) const { return NULL; }
 };
 
 class BattlegroundMapScript : public ScriptObject, public MapScript<BattlegroundMap>
@@ -561,18 +561,16 @@ class OutdoorPvPScript : public ScriptObject
 {
 protected:
 
-	OutdoorPvPScript(const char* name)
-		: ScriptObject(name)
-	{ }
+    OutdoorPvPScript(const char* name) : ScriptObject(name) { }
 
-	void RegisterSelf();
+    void RegisterSelf();
 
 public:
 
-	bool IsDatabaseBound() const { return true; }
+    bool IsDatabaseBound() const { return true; }
 
-	// Should return a fully valid OutdoorPvP object for the type ID.
-	virtual OutdoorPvP* GetOutdoorPvP() const = 0;
+    // Should return a fully valid OutdoorPvP object for the type ID.
+    virtual OutdoorPvP* GetOutdoorPvP() const = 0;
 };
 
 class CommandScript : public ScriptObject
