@@ -39,7 +39,7 @@
 #include "ServiceWin32.h"
 char serviceName[] = "worldserver";
 char serviceLongName[] = "SkyFireEMU world service";
-char serviceDescription[] = "SkyFireEMU World of Warcraft:Cataclysm emulator world service";
+char serviceDescription[] = "SkyFireEMU World of Warcraft: The Burning Crusades(TBC) emulator world service";
 /*
  * -1 - not in service mode
  *  0 - stopped
