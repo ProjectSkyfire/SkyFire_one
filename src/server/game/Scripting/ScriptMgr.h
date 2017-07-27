@@ -386,16 +386,22 @@ class WorldMapScript : public ScriptObject, public MapScript<Map>
 
 class InstanceMapScript : public ScriptObject, public MapScript<InstanceMap>
 {
-    protected:
+protected:
 
-        InstanceMapScript(const char* name, uint32 mapId);
+	InstanceMapScript(const char* name, uint32 mapId = 0) : ScriptObject(name), MapScript<InstanceMap>(mapId)
+	{
+		if (GetEntry() && !GetEntry()->IsDungeon())
+			sLog->outError("InstanceMapScript for map %u is invalid.", mapId);
+	}
 
-    public:
+	void RegisterSelf();
 
-        bool IsDatabaseBound() const { return true; }
+public:
 
-        // Gets an InstanceScript object for this instance.
-        virtual InstanceScript* GetInstanceScript(InstanceMap* /*map*/) const { return NULL; }
+	bool IsDatabaseBound() const { return true; }
+
+	// Gets an InstanceData object for this instance.
+	virtual InstanceScript* GetInstanceScript(InstanceMap* map) const { return NULL; }
 };
 
 class BattlegroundMapScript : public ScriptObject, public MapScript<BattlegroundMap>
@@ -553,16 +559,20 @@ class BattlegroundScript : public ScriptObject
 
 class OutdoorPvPScript : public ScriptObject
 {
-    protected:
+protected:
 
-        OutdoorPvPScript(const char* name);
+	OutdoorPvPScript(const char* name)
+		: ScriptObject(name)
+	{ }
 
-    public:
+	void RegisterSelf();
 
-        bool IsDatabaseBound() const { return true; }
+public:
 
-        // Should return a fully valid OutdoorPvP object for the type ID.
-        virtual OutdoorPvP* GetOutdoorPvP() const = 0;
+	bool IsDatabaseBound() const { return true; }
+
+	// Should return a fully valid OutdoorPvP object for the type ID.
+	virtual OutdoorPvP* GetOutdoorPvP() const = 0;
 };
 
 class CommandScript : public ScriptObject

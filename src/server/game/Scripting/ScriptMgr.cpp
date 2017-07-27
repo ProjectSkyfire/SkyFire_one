@@ -1085,17 +1085,14 @@ void BattlegroundScript::RegisterSelf()
     ScriptMgr::ScriptRegistry<BattlegroundScript>::AddScript(this);
 }
 
-InstanceMapScript::InstanceMapScript(const char* name, uint32 mapId) : ScriptObject(name), MapScript<InstanceMap>(mapId)
+void InstanceMapScript::RegisterSelf()
 {
-    if (GetEntry() && !GetEntry()->IsDungeon())
-        sLog->outError("InstanceMapScript for map %u is invalid.", mapId);
-
-    ScriptMgr::ScriptRegistry<InstanceMapScript>::AddScript(this);
+	ScriptMgr::ScriptRegistry<InstanceMapScript>::AddScript(this);
 }
 
-OutdoorPvPScript::OutdoorPvPScript(const char* name) : ScriptObject(name)
+void OutdoorPvPScript::RegisterSelf()
 {
-    ScriptMgr::ScriptRegistry<OutdoorPvPScript>::AddScript(this);
+	ScriptMgr::ScriptRegistry<OutdoorPvPScript>::AddScript(this);
 }
 
 void CommandScript::RegisterSelf()
