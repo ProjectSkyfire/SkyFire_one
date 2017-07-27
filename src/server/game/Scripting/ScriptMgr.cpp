@@ -145,7 +145,7 @@ ScriptMgr::~ScriptMgr()
         SCR_REG_LST(T).clear();
 
     // Clear scripts for every script type.
-    SCR_CLEAR(SpellHandlerScript);
+    //SCR_CLEAR(SpellHandlerScript); // NYI
     SCR_CLEAR(AuraHandlerScript);
     SCR_CLEAR(ServerScript);
     SCR_CLEAR(WorldScript);
@@ -1087,12 +1087,12 @@ void BattlegroundScript::RegisterSelf()
 
 void InstanceMapScript::RegisterSelf()
 {
-	ScriptMgr::ScriptRegistry<InstanceMapScript>::AddScript(this);
+    ScriptMgr::ScriptRegistry<InstanceMapScript>::AddScript(this);
 }
 
 void OutdoorPvPScript::RegisterSelf()
 {
-	ScriptMgr::ScriptRegistry<OutdoorPvPScript>::AddScript(this);
+    ScriptMgr::ScriptRegistry<OutdoorPvPScript>::AddScript(this);
 }
 
 void CommandScript::RegisterSelf()
@@ -1205,7 +1205,7 @@ template<class TScript> std::map<uint32, TScript*> ScriptMgr::ScriptRegistry<TSc
 template<class TScript> uint32 ScriptMgr::ScriptRegistry<TScript>::_scriptIdCounter;
 
 // Specialize for each script type class like so:
-template class ScriptMgr::ScriptRegistry<SpellHandlerScript>;
+//template class ScriptMgr::ScriptRegistry<SpellHandlerScript>;
 template class ScriptMgr::ScriptRegistry<AuraHandlerScript>;
 template class ScriptMgr::ScriptRegistry<ServerScript>;
 template class ScriptMgr::ScriptRegistry<WorldScript>;

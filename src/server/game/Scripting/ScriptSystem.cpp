@@ -34,6 +34,25 @@ SystemMgr& SystemMgr::Instance()
     return pSysMgr;
 }
 
+void SystemMgr::LoadVersion()
+{
+    //Get Version information
+    QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT script_version FROM version LIMIT 1");
+
+    if (Result)
+    {
+        Field* pFields = Result->Fetch();
+
+        sLog->outString("TSCR: Database version is: %s", pFields[0].GetString());
+        sLog->outString("");
+    }
+    else
+    {
+        sLog->outError("TSCR: Missing `version`.`script_version` information.");
+        sLog->outString("");
+    }
+}
+
 void SystemMgr::LoadScriptTexts()
 {
     sLog->outString("TSCR: Loading Script Texts...");
