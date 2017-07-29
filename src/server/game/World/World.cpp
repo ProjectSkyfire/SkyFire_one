@@ -163,14 +163,14 @@ void World::SetClosed(bool val)
     m_isClosed = val;
 
     // Invert the value, for simplicity for scripters.
-    sScriptMgr.OnOpenStateChange(!val);
+    sScriptMgr->OnOpenStateChange(!val);
 }
 
 void World::SetMotd(const std::string& motd)
 {
     m_motd = motd;
 
-    sScriptMgr.OnMotdChange(m_motd);
+    sScriptMgr->OnMotdChange(m_motd);
 }
 
 const char* World::GetMotd() const
@@ -1126,7 +1126,7 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_WARDEN_CLIENT_CHECK_HOLDOFF] = ConfigMgr::GetIntDefault("Warden.ClientCheckHoldOff", 30);
     m_configs[CONFIG_WARDEN_CLIENT_RESPONSE_DELAY] = ConfigMgr::GetIntDefault("Warden.ClientResponseDelay", 15);
 
-    sScriptMgr.OnConfigLoad(reload);
+    sScriptMgr->OnConfigLoad(reload);
 }
 
 // Initialize the World
@@ -1456,7 +1456,7 @@ void World::SetInitialWorldSettings()
     CreatureEAI_Mgr->LoadCreatureEventAI_Scripts();
 
     sLog->outString("Initializing Scripts...");
-    sScriptMgr.Initialize();
+    sScriptMgr->Initialize();
 
     // Initialize game time and timers
     sLog->outDebug(LOG_FILTER_NETWORKIO, "DEBUG:: Initialize game time and timers");
@@ -1814,7 +1814,7 @@ void World::Update(time_t diff)
     // And last, but not least handle the issued cli commands
     ProcessCliCommands();
 
-    sScriptMgr.OnWorldUpdate(diff);
+    sScriptMgr->OnWorldUpdate(diff);
 }
 
 void World::ForceGameEventUpdate()
@@ -2196,7 +2196,7 @@ void World::ShutdownServ(uint32 time, uint32 options, uint8 exitcode)
         ShutdownMsg(true);
     }
 
-    sScriptMgr.OnShutdown(ShutdownExitCode(exitcode), ShutdownMask(options));
+    sScriptMgr->OnShutdown(ShutdownExitCode(exitcode), ShutdownMask(options));
 }
 
 /// Display a shutdown message to the user(s)
@@ -2239,7 +2239,7 @@ void World::ShutdownCancel()
 
     sLog->outDebug(LOG_FILTER_NETWORKIO, "Server %s canceled.", (m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shutdown"));
 
-    sScriptMgr.OnShutdownCancel();
+    sScriptMgr->OnShutdownCancel();
 }
 
 // Send a server message to the user(s)

@@ -279,7 +279,7 @@ bool WorldSession::Update(PacketFilter& updater)
                     // and before other STATUS_LOGGEDIN_OR_RECENTLY_LOGGOUT opcodes.
                     if (packet->GetOpcode() != CMSG_SET_ACTIVE_VOICE_CHANNEL)
                         m_playerRecentlyLogout = false;
-
+                
                     sScriptMgr->OnPacketReceive(m_Socket, WorldPacket(*packet));
                     (this->*opHandle.handler)(*packet);
                     if (sLog->IsOutDebug() && packet->rpos() < packet->wpos())
