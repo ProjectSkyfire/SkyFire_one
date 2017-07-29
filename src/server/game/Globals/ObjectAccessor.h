@@ -223,6 +223,8 @@ class ObjectAccessor
         Corpse* ConvertCorpseForPlayer(uint64 player_guid, bool insignia = false);
         void RemoveOldCorpses();
 
+        void UnloadAll();
+
         typedef ACE_Thread_Mutex LockType;
 
     private:

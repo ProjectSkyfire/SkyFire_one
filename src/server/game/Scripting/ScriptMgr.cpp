@@ -139,6 +139,25 @@ ScriptMgr::ScriptMgr()
 
 ScriptMgr::~ScriptMgr()
 {
+}
+
+void ScriptMgr::Initialize()
+{
+    uint32 oldMSTime = getMSTime();
+
+    LoadDatabase();
+
+    sLog->outString("Loading C++ scripts");
+
+    FillSpellSummary();
+    AddScripts();
+
+    sLog->outString(">> Loaded %u C++ scripts in %u ms", GetScriptCount(), GetMSTimeDiffToNow(oldMSTime));
+    sLog->outString();
+}
+
+void ScriptMgr::Unload()
+{
     #define SCR_CLEAR(T) \
         FOR_SCRIPTS(T, itr, end) \
             delete itr->second; \
@@ -168,19 +187,6 @@ ScriptMgr::~ScriptMgr()
     SCR_CLEAR(TransportScript);
 
     #undef SCR_CLEAR
-}
-
-void ScriptMgr::Initialize()
-{
-    LoadDatabase();
-
-    sLog->outString("Loading C++ scripts");
-    sLog->outString("");
-
-    FillSpellSummary();
-    AddScripts();
-
-    sLog->outString(">> Loaded %u C++ scripts", GetScriptCount());
 }
 
 void ScriptMgr::LoadDatabase()
@@ -388,9 +394,19 @@ void ScriptMgr::OnMotdChange(std::string& newMotd)
     FOREACH_SCRIPT(WorldScript)->OnMotdChange(newMotd);
 }
 
-void ScriptMgr::OnShutdown(ShutdownExitCode code, ShutdownMask mask)
+void ScriptMgr::OnStartup()
 {
-    FOREACH_SCRIPT(WorldScript)->OnShutdown(code, mask);
+    FOREACH_SCRIPT(WorldScript)->OnStartup();
+}
+
+void ScriptMgr::OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask)
+{
+    FOREACH_SCRIPT(WorldScript)->OnShutdownInitiate(code, mask);
+}
+
+void ScriptMgr::OnShutdown()
+{
+    FOREACH_SCRIPT(WorldScript)->OnShutdown();
 }
 
 void ScriptMgr::OnShutdownCancel()
