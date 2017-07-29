@@ -69,11 +69,13 @@ public:
 /*******************************************************
  * guard_shattrath_aldor
  *******************************************************/
-
-#define SPELL_BANISHED_SHATTRATH_A  36642
-#define SPELL_BANISHED_SHATTRATH_S  36671
-#define SPELL_BANISH_TELEPORT       36643
-#define SPELL_EXILE                 39533
+enum aldorSpells
+{
+	SPELL_BANISHED_SHATTRATH_A  = 36642,
+	SPELL_BANISHED_SHATTRATH_S  = 36671,
+	SPELL_BANISH_TELEPORT       = 36643,
+	SPELL_EXILE                 = 39533
+};
 
 class guard_shattrath_aldor : public CreatureScript
 {

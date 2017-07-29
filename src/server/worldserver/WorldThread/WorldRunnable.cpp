@@ -32,6 +32,7 @@
 #include "Timer.h"
 #include "WorldRunnable.h"
 #include "OutdoorPvPMgr.h"
+#include "ScriptMgr.h"
 
 #define WORLD_SLEEP_CONST 50
 
@@ -101,6 +102,6 @@ void WorldRunnable::run()
     // End the database thread
     WorldDatabase.ThreadEnd();             // free mySQL thread resources
     //sObjectMgr->UnloadAll();             // unload 'i_player2corpse' storage and remove from world
-    //sScriptMgr->Unload();                
+    //sScriptMgr.Unload();                
     sOutdoorPvPMgr->Die();
 }

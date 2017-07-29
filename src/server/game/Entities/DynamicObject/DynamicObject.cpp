@@ -157,7 +157,7 @@ void DynamicObject::Update(uint32 p_time)
         Delete();
     }
     else
-        sScriptMgr->OnDynamicObjectUpdate(this, p_time);
+        sScriptMgr.OnDynamicObjectUpdate(this, p_time);
 }
 
 void DynamicObject::Delete()

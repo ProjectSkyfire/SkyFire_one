@@ -487,7 +487,7 @@ bool AuctionHouseObject::RemoveAuction(AuctionEntry *auction, uint32 item_templa
 {
     bool wasInMap = AuctionsMap.erase(auction->Id) ? true : false;
 
-    sScriptMgr->OnRemoveAuction(this, auction);
+    sScriptMgr.OnRemoveAuction(this, auction);
 
     // we need to delete the entry, it is not referenced any more
     delete auction;
@@ -537,7 +537,7 @@ void AuctionHouseObject::Update()
         if (auction->bidder == 0)
         {
             sAuctionMgr->SendAuctionExpiredMail(auction);
-            sScriptMgr->OnAuctionExpire(this, auction);
+            sScriptMgr.OnAuctionExpire(this, auction);
         }
         ///- Or perform the transaction
         else
@@ -547,7 +547,7 @@ void AuctionHouseObject::Update()
             //we send the money to the seller
             sAuctionMgr->SendAuctionSuccessfulMail(auction);
             sAuctionMgr->SendAuctionWonMail(auction);
-            sScriptMgr->OnAuctionSuccessful(this, auction);
+            sScriptMgr.OnAuctionSuccessful(this, auction);
         }
 
         ///- In any case clear the auction

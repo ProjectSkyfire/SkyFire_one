@@ -325,12 +325,12 @@ class AreaTrigger_at_last_rites : public AreaTriggerScript
 
 void AddSC_areatrigger_scripts()
 {
-    new AreaTrigger_at_aldurthar_gate();
-    new AreaTrigger_at_coilfang_waterfall();
-    new AreaTrigger_at_legion_teleporter();
-    new AreaTrigger_at_ravenholdt();
-    new AreaTrigger_at_warsong_farms();
-    new AreaTrigger_at_stormwright_shelf();
-    new AreaTrigger_at_scent_larkorwi();
-    new AreaTrigger_at_last_rites();
+    new AreaTrigger_at_aldurthar_gate;
+    new AreaTrigger_at_coilfang_waterfall;
+    new AreaTrigger_at_legion_teleporter;
+    new AreaTrigger_at_ravenholdt;
+    new AreaTrigger_at_warsong_farms;
+    new AreaTrigger_at_stormwright_shelf;
+    new AreaTrigger_at_scent_larkorwi;
+    new AreaTrigger_at_last_rites;
 }

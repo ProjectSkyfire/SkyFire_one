@@ -1587,20 +1587,20 @@ public:
 
 void AddSC_npcs_special()
 {
-    new npc_lunaclaw_spirit();
-    new npc_chicken_cluck();
-    new npc_dancing_flames();
-    new npc_injured_patient();
-    new npc_doctor();
-    new npc_garments_of_quests();
-    new npc_guardian();
-    new npc_mount_vendor();
-    new npc_rogue_trainer();
-    new npc_sayge();
-    new npc_steam_tonk();
-    new npc_tonk_mine();
-    new npc_winter_reveler();
-    new npc_brewfest_reveler();
-    new npc_snake_trap_serpents();
-    new mob_mojo();
+    new npc_lunaclaw_spirit;
+    new npc_chicken_cluck;
+    new npc_dancing_flames;
+    new npc_injured_patient;
+    new npc_doctor;
+    new npc_garments_of_quests;
+    new npc_guardian;
+    new npc_mount_vendor;
+    new npc_rogue_trainer;
+    new npc_sayge;
+    new npc_steam_tonk;
+    new npc_tonk_mine;
+    new npc_winter_reveler;
+    new npc_brewfest_reveler;
+    new npc_snake_trap_serpents;
+    new mob_mojo;
 }

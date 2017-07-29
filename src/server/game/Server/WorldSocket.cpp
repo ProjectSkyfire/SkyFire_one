@@ -646,11 +646,11 @@ int WorldSocket::ProcessIncoming(WorldPacket* new_pct)
                     return -1;
                 }
                 
-                sScriptMgr->OnPacketReceive(this, WorldPacket(*new_pct));
+                sScriptMgr.OnPacketReceive(this, WorldPacket(*new_pct));
                 return HandleAuthSession(*new_pct);
             case CMSG_KEEP_ALIVE:
                 sLog->outDebug(LOG_FILTER_NETWORKIO, "CMSG_KEEP_ALIVE , size: %d", new_pct->size());
-                sScriptMgr->OnPacketReceive(this, WorldPacket(*new_pct));
+                sScriptMgr.OnPacketReceive(this, WorldPacket(*new_pct));
                 return 0;
             default:
             {
@@ -994,7 +994,7 @@ int WorldSocket::HandlePing(WorldPacket& recvPacket)
 int WorldSocket::iSendPacket (const WorldPacket& pct)
 {
     // Create a copy of the original packet; this is to avoid issues if a hook modifies it.
-    sScriptMgr->OnPacketSend(this, WorldPacket(pct));
+    sScriptMgr.OnPacketSend(this, WorldPacket(pct));
 
     ServerPktHeader header(pct.size()+2, pct.GetOpcode());
     if (m_OutBuffer->space() < pct.size() + header.getHeaderLength())

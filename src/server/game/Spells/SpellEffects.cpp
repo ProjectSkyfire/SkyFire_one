@@ -1862,7 +1862,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
     }
 
     if (unitTarget && unitTarget->GetTypeId() == TYPEID_UNIT)
-        sScriptMgr->OnDummyEffect(m_caster, m_spellInfo->Id, effIndex, unitTarget->ToCreature());
+        sScriptMgr.OnDummyEffect(m_caster, m_spellInfo->Id, effIndex, unitTarget->ToCreature());
 }
 
 void Spell::EffectTriggerSpellWithValue(SpellEffIndex effIndex)
@@ -2905,7 +2905,7 @@ void Spell::SendLoot(uint64 guid, LootType loottype)
 
     if (gameObjTarget)
     {
-        if (sScriptMgr->OnGossipHello(player, gameObjTarget))
+        if (sScriptMgr.OnGossipHello(player, gameObjTarget))
             return;
 
         switch (gameObjTarget->GetGoType())
@@ -2942,7 +2942,7 @@ void Spell::SendLoot(uint64 guid, LootType loottype)
                     if (player->GetQuestStatus(gameObjTarget->GetGOInfo()->goober.questId) != QUEST_STATUS_INCOMPLETE)
                         return;
 
-                sScriptMgr->OnGossipHello(player, gameObjTarget);
+                sScriptMgr.OnGossipHello(player, gameObjTarget);
                 player->GetMap()->ScriptsStart(sGameObjectScripts, gameObjTarget->GetDBTableGUIDLow(), player, gameObjTarget);
 
                 gameObjTarget->AddUniqueUse(player);
