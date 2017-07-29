@@ -9,11 +9,11 @@ set(scripts_STAT_SRCS
   #World/item_scripts.cpp
   #World/boss_ysondre.cpp
   #World/npcs_special.cpp
-  #World/chat_log.cpp
+  ##World/chat_log.cpp
   #World/areatrigger_scripts.cpp
   #World/go_scripts.cpp
   #World/npc_innkeeper.cpp
-  World/npc_professions.cpp  
+  #World/npc_professions.cpp  
 )
 
 message("  -> Prepared: World Scripts")

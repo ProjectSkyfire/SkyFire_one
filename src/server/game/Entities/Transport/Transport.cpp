@@ -469,7 +469,7 @@ bool Transport::AddPassenger(Player* passenger)
         sLog->outDetail("Player %s boarded transport %s.", passenger->GetName(), GetName());
         m_passengers.insert(passenger);
     }
-
+    
     sScriptMgr->OnAddPassenger(this, passenger);
     return true;
 }
@@ -478,7 +478,7 @@ bool Transport::RemovePassenger(Player* passenger)
 {
     if (m_passengers.erase(passenger))
         sLog->outDetail("Player %s removed from transport %s.", passenger->GetName(), GetName());
-
+       
     sScriptMgr->OnRemovePassenger(this, passenger);
     return true;
 }
@@ -522,8 +522,8 @@ void Transport::Update(uint32 p_diff)
 
         m_nextNodeTime = m_curr->first;
 
-        if (m_curr == m_WayPoints.begin())
-            sLog->outDebug(LOG_FILTER_TRANSPORTS, " ************ BEGIN ************** %s", m_name.c_str());
+		if (m_curr == m_WayPoints.begin())
+			sLog->outDebug(LOG_FILTER_TRANSPORTS, " ************ BEGIN ************** %s", m_name.c_str());
 
         sLog->outDebug(LOG_FILTER_TRANSPORTS, "%s moved to %d %f %f %f %d", m_name.c_str(), m_curr->second.id, m_curr->second.x, m_curr->second.y, m_curr->second.z, m_curr->second.mapid);
 

@@ -945,7 +945,7 @@ int ChatHandler::ParseCommands(const char* text)
 
     if (!ExecuteCommandInTable(getCommandTable(), text, fullcmd))
     {
-        if (!ExecuteCommandInTables(sScriptMgr.GetChatCommands(), text, fullcmd))
+        if (!ExecuteCommandInTables(sScriptMgr->GetChatCommands(), text, fullcmd))
         {
             if (m_session && m_session->GetSecurity() == SEC_PLAYER)
                 return 0;
