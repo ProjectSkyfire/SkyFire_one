@@ -145,8 +145,8 @@ ScriptMgr::~ScriptMgr()
         SCR_REG_LST(T).clear();
 
     // Clear scripts for every script type.
-    //SCR_CLEAR(SpellHandlerScript); // NYI
-    SCR_CLEAR(AuraHandlerScript);
+    //SCR_CLEAR(SpellHandlerScript); // NYI  SpellScripting.
+    //SCR_CLEAR(AuraHandlerScript);  // NYI: Part of SpellScripting.
     SCR_CLEAR(ServerScript);
     SCR_CLEAR(WorldScript);
     SCR_CLEAR(FormulaScript);
@@ -162,8 +162,8 @@ ScriptMgr::~ScriptMgr()
     SCR_CLEAR(CommandScript);
     SCR_CLEAR(WeatherScript);
     SCR_CLEAR(AuctionHouseScript);
-    //SCR_CLEAR(ConditionScript); // NYI
-    //SCR_CLEAR(VehicleScript);   // NotUsed
+    //SCR_CLEAR(ConditionScript); // NYI: Conditions.
+    //SCR_CLEAR(VehicleScript);   // Vehicle DBC does not exist.
     SCR_CLEAR(DynamicObjectScript);
     SCR_CLEAR(TransportScript);
 
@@ -813,14 +813,14 @@ uint32 ScriptMgr::GetDialogStatus(Player* player, GameObject* go)
     return tmpscript->OnDialogStatus(player, go);
 }
 
-/*void ScriptMgr::OnGameObjectDestroyed(Player* player, GameObject* go, uint32 eventId)
+void ScriptMgr::OnGameObjectDestroyed(Player* player, GameObject* go, uint32 eventId)
 {
     ASSERT(player);
     ASSERT(go);
 
     GET_SCRIPT(GameObjectScript, go->GetScriptId(), tmpscript);
     tmpscript->OnDestroyed(player, go, eventId);
-}*/
+}
 
 void ScriptMgr::OnGameObjectUpdate(GameObject* go, uint32 diff)
 {
@@ -1030,10 +1030,10 @@ void ScriptMgr::OnTransportUpdate(Transport* transport, uint32 diff)
     ScriptMgr::ScriptRegistry<SpellHandlerScript>::AddScript(this);
 }*/
 
-void AuraHandlerScript::RegisterSelf()
+/*void AuraHandlerScript::RegisterSelf()
 {
     ScriptMgr::ScriptRegistry<AuraHandlerScript>::AddScript(this);
-}
+}*/
 
 void ServerScript::RegisterSelf()
 {
@@ -1206,7 +1206,7 @@ template<class TScript> uint32 ScriptMgr::ScriptRegistry<TScript>::_scriptIdCoun
 
 // Specialize for each script type class like so:
 //template class ScriptMgr::ScriptRegistry<SpellHandlerScript>;
-template class ScriptMgr::ScriptRegistry<AuraHandlerScript>;
+//template class ScriptMgr::ScriptRegistry<AuraHandlerScript>;
 template class ScriptMgr::ScriptRegistry<ServerScript>;
 template class ScriptMgr::ScriptRegistry<WorldScript>;
 template class ScriptMgr::ScriptRegistry<FormulaScript>;
