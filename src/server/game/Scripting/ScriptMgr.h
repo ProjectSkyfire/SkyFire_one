@@ -286,9 +286,15 @@ class WorldScript : public ScriptObject, public UpdatableScript<void>
 
         // Called before the message of the day is changed.
         virtual void OnMotdChange(std::string& newMotd) { }
+    
+        // Called when the world is started.
+        virtual void OnStartup() { }
 
         // Called when a world shutdown is initiated.
-        virtual void OnShutdown(ShutdownExitCode code, ShutdownMask mask) { }
+        virtual void OnShutdownInitiate(ShutdownExitCode /*code*/, ShutdownMask /*mask*/) { }
+
+        // Called when a world shutdown is initiated.
+        virtual void OnShutdown() { }
 
         // Called when a world shutdown is cancelled.
         virtual void OnShutdownCancel() { }
@@ -419,27 +425,27 @@ class BattlegroundMapScript : public ScriptObject, public MapScript<Battleground
 
 class ItemScript : public ScriptObject
 {
-    protected:
+protected:
 
-        ItemScript(const char* name) : ScriptObject(name) { }
+    ItemScript(const char* name);
 
-        void RegisterSelf();
+    void RegisterSelf();
 
-    public:
+public:
 
-        bool IsDatabaseBound() const { return true; }
+    bool IsDatabaseBound() const { return true; }
 
-        // Called when a dummy spell effect is triggered on the item.
-        virtual bool OnDummyEffect(Unit* caster, uint32 spellId, SpellEffIndex effIndex, Item* target) { return false; }
+    // Called when a dummy spell effect is triggered on the item.
+    virtual bool OnDummyEffect(Unit* /*caster*/, uint32 /*spellId*/, SpellEffIndex /*effIndex*/, Item* /*target*/) { return false; }
 
-        // Called when a player accepts a quest from the item.
-        virtual bool OnQuestAccept(Player* player, Item* item, Quest const* quest) { return false; }
+    // Called when a player accepts a quest from the item.
+    virtual bool OnQuestAccept(Player* /*player*/, Item* /*item*/, Quest const* /*quest*/) { return false; }
 
-        // Called when a player uses the item.
-        virtual bool OnUse(Player* player, Item* item, SpellCastTargets const& targets) { return false; }
+    // Called when a player uses the item.
+    virtual bool OnUse(Player* /*player*/, Item* /*item*/, SpellCastTargets const& /*targets*/) { return false; }
 
-        // Called when the item expires (is destroyed).
-        virtual bool OnExpire(Player* player, ItemPrototype const* proto) { return false; }
+    // Called when the item expires (is destroyed).
+    virtual bool OnExpire(Player* /*player*/, ItemPrototype const* /*proto*/) { return false; }
 };
 
 class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
@@ -715,22 +721,28 @@ class ScriptMgr
     friend class ACE_Singleton<ScriptMgr, ACE_Null_Mutex>;
     friend class ScriptObject;
 
-    ScriptMgr();
-    ~ScriptMgr();
+    private:
 
-    uint32 _scriptCount;
-    
-    void LoadDatabase();
-    void FillSpellSummary();
+        ScriptMgr();
+        virtual ~ScriptMgr();
+        
+        uint32 _scriptCount;
 
     public: /* Initialization */
 
         void Initialize();
-        const char* ScriptsVersion() const { return "Integrated SkyFireEMU Scripts"; }
+        void LoadDatabase();
+        void FillSpellSummary();
+
+        const char* ScriptsVersion() const { return "Integrated SkyFire Scripts"; }
 
         void IncrementScriptCount() { ++_scriptCount; }
         uint32 GetScriptCount() const { return _scriptCount; }
-    
+
+    public: /* Unloading */
+
+        void Unload();
+
     /* Too be handled by scripting "after spell system updates" */
     //public: /* SpellHandlerScript */
 
@@ -757,9 +769,11 @@ class ScriptMgr
         void OnOpenStateChange(bool open);
         void OnConfigLoad(bool reload);
         void OnMotdChange(std::string& newMotd);
-        void OnShutdown(ShutdownExitCode code, ShutdownMask mask);
+        void OnShutdownInitiate(ShutdownExitCode code, ShutdownMask mask);
         void OnShutdownCancel();
         void OnWorldUpdate(uint32 diff);
+        void OnStartup();
+        void OnShutdown();
 
     public: /* FormulaScript */
 
@@ -902,6 +916,7 @@ class ScriptMgr
                 // Attempts to add a new script to the list.
                 static void AddScript(TScript* const script);
         };
+
 };
 
 #endif

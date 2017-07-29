@@ -52,7 +52,7 @@ void WorldRunnable::run()
 
     uint32 prevSleepTime = 0;                               // used for balanced full tick time length near WORLD_SLEEP_CONST
 
-    //sScriptMgr->OnStartup();  -NYI
+    sScriptMgr->OnStartup();
 
     ///- While we have not World::m_stopEvent, update the world
     while (!World::IsStopped())
@@ -86,7 +86,7 @@ void WorldRunnable::run()
         #endif
     }
 
-    //sScriptMgr->OnShutdown();  -NYI
+    sScriptMgr->OnShutdown();
 
     sWorld->KickAll();                                       // save and kick all players
     sWorld->UpdateSessions( 1 );                             // real players unload required UpdateSessions call
@@ -100,7 +100,7 @@ void WorldRunnable::run()
 
     // End the database thread
     WorldDatabase.ThreadEnd();             // free mySQL thread resources
-    //sObjectMgr->UnloadAll();             // unload 'i_player2corpse' storage and remove from world
-    //sScriptMgr->Unload();                
+    sObjectAccessor->UnloadAll();             // unload 'i_player2corpse' storage and remove from world
+    sScriptMgr->Unload();                
     sOutdoorPvPMgr->Die();
 }

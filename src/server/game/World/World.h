@@ -534,7 +534,7 @@ class World
         void ShutdownMsg(bool show = false, Player* player = NULL);
         static uint8 GetExitCode() { return m_ExitCode; }
         static void StopNow(uint8 exitcode) { m_stopEvent = true; m_ExitCode = exitcode; }
-        static bool IsStopped() { return m_stopEvent; }
+        static bool IsStopped() { return m_stopEvent.value(); }
 
         void Update(time_t diff);
 
@@ -625,7 +625,7 @@ class World
     private:
         //atomic op counter for active scripts amount
         ACE_Atomic_Op<ACE_Thread_Mutex, long> m_scheduledScripts;        
-        static volatile bool m_stopEvent;
+        static ACE_Atomic_Op<ACE_Thread_Mutex, bool> m_stopEvent;
         static uint8 m_ExitCode;
         uint32 m_ShutdownTimer;
         uint32 m_ShutdownMask;

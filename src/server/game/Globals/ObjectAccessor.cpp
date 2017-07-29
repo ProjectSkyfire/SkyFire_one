@@ -359,6 +359,15 @@ void ObjectAccessor::Update(uint32 /*diff*/)
     }
 }
 
+void ObjectAccessor::UnloadAll()
+{
+    for (Player2CorpsesMapType::const_iterator itr = i_player2corpse.begin(); itr != i_player2corpse.end(); ++itr)
+    {
+        itr->second->RemoveFromWorld();
+        delete itr->second;
+    }
+}
+
 // Define the static members of HashMapHolder
 
 template <class T> UNORDERED_MAP< uint64, T* > HashMapHolder<T>::m_objectMap;
