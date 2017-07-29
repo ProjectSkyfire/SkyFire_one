@@ -42,7 +42,7 @@ GridState* si_GridStates[MAX_GRID_STATE];
 Map::~Map()
 {
     if (!Instanceable())
-        sScriptMgr->OnDestroyMap(this);
+        sScriptMgr.OnDestroyMap(this);
 
     UnloadAll();
 
@@ -149,7 +149,7 @@ void Map::LoadMap(int gx, int gy, bool reload)
         delete (GridMaps[gx][gy]);
         GridMaps[gx][gy]=NULL;
 
-        sScriptMgr->OnUnloadGridMap(this, gx, gy);
+        sScriptMgr.OnUnloadGridMap(this, gx, gy);
     }
 
     // map file name
@@ -166,7 +166,7 @@ void Map::LoadMap(int gx, int gy, bool reload)
     }
     delete [] tmp;
 
-    sScriptMgr->OnLoadGridMap(this, gx, gy);
+    sScriptMgr.OnLoadGridMap(this, gx, gy);
 }
 
 void Map::LoadMapAndVMap(int gx, int gy)
@@ -215,7 +215,7 @@ i_scriptLock(false)
     Map::InitVisibilityDistance();
 
     if (!Instanceable())
-        sScriptMgr->OnCreateMap(this);
+        sScriptMgr.OnCreateMap(this);
 }
 
 void Map::InitVisibilityDistance()
@@ -414,7 +414,7 @@ bool Map::Add(Player* player)
     player->m_clientGUIDs.clear();
     player->UpdateObjectVisibility(true);
 
-    sScriptMgr->OnPlayerEnter(this, player);
+    sScriptMgr.OnPlayerEnter(this, player);
     return true;
 }
 
@@ -598,7 +598,7 @@ void Map::Update(const uint32 &t_diff)
     if (!m_mapRefManager.isEmpty() || !m_activeNonPlayers.empty())
         ProcessRelocationNotifies(t_diff);
 
-    sScriptMgr->OnMapUpdate(this, t_diff);
+    sScriptMgr.OnMapUpdate(this, t_diff);
 }
 
 struct ResetNotifier
@@ -717,7 +717,7 @@ void Map::Remove(Player* player, bool remove)
     if (remove)
         DeleteFromWorld(player);
 
-    sScriptMgr->OnPlayerLeave(this, player);
+    sScriptMgr.OnPlayerLeave(this, player);
 }
 
 template<class T>
@@ -2390,7 +2390,7 @@ void InstanceMap::CreateInstanceData(bool load)
     if (mInstance)
     {
         i_script_id = mInstance->script_id;
-        i_data = sScriptMgr->CreateInstanceData(this);
+        i_data = sScriptMgr.CreateInstanceData(this);
     }
 
     if (!i_data)

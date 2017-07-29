@@ -114,7 +114,7 @@ public:
 
             //CorruptionofEarth_Timer
             //CorruptionofEarth at 75%, 50% and 25%
-            if (!HealthAbovePct(100 - 25 * m_uiCorruptionsCasted))
+            if ((me->GetHealth()*100 / me->GetMaxHealth()) <= (100-(25*m_uiCorruptionsCasted)))
             {
                 ++m_uiCorruptionsCasted;                        // prevent casting twice on same hp
                 DoScriptText(SAY_CASTCORRUPTION, me);
