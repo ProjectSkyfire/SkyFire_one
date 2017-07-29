@@ -216,7 +216,7 @@ template<class TObject> class UpdatableScript
         virtual SpellScript* GetSpellScript() const = 0;
 };*/
 
-class AuraHandlerScript : public ScriptObject
+/*class AuraHandlerScript : public ScriptObject
 {
     protected:
 
@@ -226,11 +226,11 @@ class AuraHandlerScript : public ScriptObject
 
     public:
 
-        bool IsDatabaseBound() const { return true; }
+        bool IsDatabaseBound() const { return true; }*/
 
         // Should return a fully valid AuraScript pointer.
-        // virtual AuraScript* GetAuraScript() const = 0;
-};
+        //virtual AuraScript* GetAuraScript() const = 0;
+//};
 
 class ServerScript : public ScriptObject
 {
@@ -732,12 +732,12 @@ class ScriptMgr
         uint32 GetScriptCount() const { return _scriptCount; }
     
     /* Too be handled by scripting "after spell system updates" */
-    public: /* SpellHandlerScript */
+    //public: /* SpellHandlerScript */
 
        // void CreateSpellScripts(uint32 spell_id, std::list<SpellScript*>& script_vector);
         //void CreateSpellScripts(uint32 spell_id, std::vector<std::pair<SpellScript*, SpellScriptsMap::iterator> >& script_vector);
 
-    public: /* AuraHandlerScript */
+    //public: /* AuraHandlerScript */
 
         // void CreateAuraScripts(uint32 spell_id, std::list<AuraScript*>& script_vector);
         // void CreateAuraScripts(uint32 spell_id, std::vector<std::pair<AuraScript*, SpellScriptsMap::iterator> >& script_vector);
