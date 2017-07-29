@@ -427,7 +427,7 @@ class ItemScript : public ScriptObject
 {
 protected:
 
-    ItemScript(const char* name);
+    ItemScript(const char* name) : ScriptObject(name) { }
 
     void RegisterSelf();
 
