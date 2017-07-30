@@ -343,7 +343,8 @@ enum EUnitFields
     PLAYER_FIELD_INV_SLOT_HEAD                = UNIT_END + 0x01A0, // Size: 46, Type: LONG, Flags: PRIVATE
     PLAYER_FIELD_PACK_SLOT_1                  = UNIT_END + 0x01CE, // Size: 32, Type: LONG, Flags: PRIVATE
     PLAYER_FIELD_BANK_SLOT_1                  = UNIT_END + 0x01EE, // Size: 56, Type: LONG, Flags: PRIVATE
-    PLAYER_FIELD_BANKBAG_SLOT_1               = UNIT_END + 0x0226, // Size: 14, Type: LONG, Flags: PRIVATE
+    PLAYER_FIELD_KNOWN_CURRENCIES             = UNIT_END + 0x01E4, // Size: 2, Type: LONG, Flags: PRIVATE    
+	PLAYER_FIELD_BANKBAG_SLOT_1               = UNIT_END + 0x0226, // Size: 14, Type: LONG, Flags: PRIVATE
     PLAYER_FIELD_VENDORBUYBACK_SLOT_1         = UNIT_END + 0x0234, // Size: 24, Type: LONG, Flags: PRIVATE
     PLAYER_FIELD_KEYRING_SLOT_1               = UNIT_END + 0x024C, // Size: 64, Type: LONG, Flags: PRIVATE
     PLAYER_FIELD_VANITYPET_SLOT_1             = UNIT_END + 0x028C, // Size: 36, Type: LONG, Flags: PRIVATE
@@ -394,8 +395,8 @@ enum EUnitFields
     PLAYER_FIELD_MOD_MANA_REGEN               = UNIT_END + 0x0532, // Size: 1, Type: FLOAT, Flags: PRIVATE
     PLAYER_FIELD_MOD_MANA_REGEN_INTERRUPT     = UNIT_END + 0x0533, // Size: 1, Type: FLOAT, Flags: PRIVATE
     PLAYER_FIELD_MAX_LEVEL                    = UNIT_END + 0x0534, // Size: 1, Type: INT, Flags: PRIVATE
-    PLAYER_FIELD_DAILY_QUESTS_1               = UNIT_END + 0x0535, // Size: 25, Type: INT, Flags: PRIVATE
-    PLAYER_END                                = UNIT_END + 0x054E,
+    PLAYER_FIELD_DAILY_QUESTS_1               = UNIT_END + 0x0535, // Size: 25, Type: INT, Flags: PRIVATE 
+	PLAYER_END                                = UNIT_END + 0x054E,
 };
 
 enum EGameObjectFields
