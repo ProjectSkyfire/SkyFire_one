@@ -4,7 +4,7 @@ set(scripts_STAT_SRCS
   #World/boss_lethon.cpp
   #World/boss_taerar.cpp
   #World/boss_emeriss.cpp
-  #World/npc_taxi.cpp 
+  World/npc_taxi.cpp 
   #World/guards.cpp
   #World/item_scripts.cpp
   #World/boss_ysondre.cpp
