@@ -1,10 +1,11 @@
-// $Id: TP_Reactor.cpp 91286 2010-08-05 09:04:31Z johnnyw $
+// $Id: TP_Reactor.cpp 95332 2011-12-15 11:09:41Z mcorino $
 
 #include "ace/TP_Reactor.h"
 #include "ace/Thread.h"
 #include "ace/Timer_Queue.h"
 #include "ace/Sig_Handler.h"
 #include "ace/Log_Msg.h"
+#include "ace/Functor_T.h"
 #include "ace/OS_NS_sys_time.h"
 
 #if !defined (__ACE_INLINE__)
@@ -93,6 +94,7 @@ ACE_TP_Token_Guard::acquire_token (ACE_Time_Value *max_wait_time)
   return result;
 }
 
+
 ACE_TP_Reactor::ACE_TP_Reactor (ACE_Sig_Handler *sh,
                                 ACE_Timer_Queue *tq,
                                 bool mask_signals,
@@ -160,7 +162,10 @@ ACE_TP_Reactor::handle_events (ACE_Time_Value *max_wait_time)
 
   // After getting the lock just just for deactivation..
   if (this->deactivated_)
-    return -1;
+    {
+      errno = ESHUTDOWN;
+      return -1;
+    }
 
   // Update the countdown to reflect time waiting for the token.
   countdown.update ();
@@ -247,6 +252,7 @@ ACE_TP_Reactor::dispatch_i (ACE_Time_Value *max_wait_time,
   return result;
 }
 
+
 #if 0
   // @Ciju
   // signal handling isn't in a production state yet.
@@ -296,44 +302,15 @@ endif
 }
 #endif // #if 0
 
+
 int
 ACE_TP_Reactor::handle_timer_events (int & /*event_count*/,
                                      ACE_TP_Token_Guard &guard)
 {
-  if (this->timer_queue_ == 0 || this->timer_queue_->is_empty())
-    { // Empty timer queue so cannot have any expired timers.
-      return 0;
-    }
+  typedef ACE_Member_Function_Command<ACE_TP_Token_Guard> Guard_Release;
 
-  // Get the current time
-  ACE_Time_Value cur_time (this->timer_queue_->gettimeofday () +
-                           this->timer_queue_->timer_skew ());
-
-  // Look for a node in the timer queue whose timer <= the present
-  // time.
-  ACE_Timer_Node_Dispatch_Info info;
-
-  if (this->timer_queue_->dispatch_info (cur_time, info))
-    {
-      const void *upcall_act = 0;
-
-      // Preinvoke.
-      this->timer_queue_->preinvoke (info, cur_time, upcall_act);
-
-      // Release the token before dispatching notifies...
-      guard.release_token ();
-
-      // call the functor
-      this->timer_queue_->upcall (info, cur_time);
-
-      // Postinvoke
-      this->timer_queue_->postinvoke (info, cur_time, upcall_act);
-
-      // We have dispatched a timer
-      return 1;
-    }
-
-  return 0;
+  Guard_Release release(guard, &ACE_TP_Token_Guard::release_token);
+  return this->timer_queue_->expire_single(release);
 }
 
 int
@@ -391,6 +368,7 @@ int
 ACE_TP_Reactor::handle_socket_events (int &event_count,
                                       ACE_TP_Token_Guard &guard)
 {
+
   // We got the lock, lets handle some I/O events.
   ACE_EH_Dispatch_Info dispatch_info;
 
@@ -406,6 +384,7 @@ ACE_TP_Reactor::handle_socket_events (int &event_count,
           this->handler_rep_.unbind(dispatch_info.handle_,
                                     dispatch_info.mask_);
         }
+
 
       return 0;
     }

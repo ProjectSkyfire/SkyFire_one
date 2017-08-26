@@ -1,4 +1,4 @@
-// $Id: IOStream.cpp 91286 2010-08-05 09:04:31Z johnnyw $
+// $Id: IOStream.cpp 93359 2011-02-11 11:33:12Z mcorino $
 
 #ifndef ACE_IOSTREAM_CPP
 #define ACE_IOSTREAM_CPP
@@ -46,6 +46,7 @@
   // a reference to iostream.  The second >> has no idea of the ACE_IOStream and
   // gets invoked on iostream.  Probably NOT what you wanted!
 
+
   // In order to make all of this work the way you want, you have to do this:
 
   class myiostream : public iostream
@@ -75,6 +76,7 @@
   foo >> i;
   // OK
   // invokes myiostream::operator>> (int&) returning myiostream&
+
 
   foo >> i >> s;
   // OK
@@ -161,7 +163,7 @@ ACE_Streambuf::underflow (void)
           if (out_waiting () && syncout () == EOF)
             return EOF;
 
-          if ( ! pbase() )
+          if( ! pbase() )
             {
               delete [] pbase_saved_;
               (void) reset_put_buffer();

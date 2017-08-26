@@ -1,4 +1,4 @@
-// $Id: ACE.cpp 92791 2010-12-04 16:25:22Z shuston $
+// $Id: ACE.cpp 96017 2012-08-08 22:18:09Z mitza $
 
 #include "ace/ACE.h"
 
@@ -24,10 +24,6 @@
 #include "ace/OS_NS_fcntl.h"
 #include "ace/OS_TLI.h"
 #include "ace/Truncate.h"
-
-#if defined (ACE_VXWORKS) && (ACE_VXWORKS < 0x620)
-extern "C" int maxFiles;
-#endif /* ACE_VXWORKS */
 
 #if !defined (__ACE_INLINE__)
 #include "ace/ACE.inl"
@@ -56,6 +52,7 @@ namespace ACE
   char debug_;
 }
 
+
 int
 ACE::out_of_handles (int error)
 {
@@ -67,7 +64,7 @@ ACE::out_of_handles (int error)
 #elif defined (HPUX)
       // On HPUX, we need to check for EADDRNOTAVAIL also.
       error == EADDRNOTAVAIL ||
-#elif defined (linux)
+#elif defined (ACE_LINUX)
       // On linux, we need to check for ENOENT also.
       error == ENOENT ||
       // For RedHat5.2, need to check for EINVAL too.
@@ -2172,7 +2169,7 @@ ACE::handle_ready (ACE_HANDLE handle,
   fds.fd = handle;
   fds.events = read_ready ? POLLIN : 0;
 
-  if ( write_ready )
+  if( write_ready )
   {
     fds.events |= POLLOUT;
   }
@@ -2307,7 +2304,7 @@ ACE::format_hexdump (const char *buffer,
                                ACE_TEXT (" "));
               ++obuf;
             }
-          textver[j] = ACE_OS::ace_isprint (c) ? c : '.';
+          textver[j] = ACE_OS::ace_isprint (c) ? c : u_char ('.');
         }
 
       textver[j] = 0;
@@ -2339,7 +2336,7 @@ ACE::format_hexdump (const char *buffer,
                                ACE_TEXT (" "));
               ++obuf;
             }
-          textver[i] = ACE_OS::ace_isprint (c) ? c : '.';
+          textver[i] = ACE_OS::ace_isprint (c) ? c : u_char ('.');
         }
 
       for (i = size % 16; i < 16; i++)
@@ -2422,9 +2419,9 @@ ACE::timestamp (const ACE_Time_Value& time_value,
                     tms.tm_hour,
                     tms.tm_min,
                     tms.tm_sec,
-                    cur_time.usec());
+                    static_cast<long> (cur_time.usec()));
   date_and_time[date_and_timelen - 1] = '\0';
-  return &date_and_time[11 + (return_pointer_to_first_digit != 0)];
+  return &date_and_time[10 + (return_pointer_to_first_digit != 0)];
 }
 
 // This function rounds the request to a multiple of the page size.
@@ -2809,9 +2806,7 @@ ACE::max_handles (void)
 #endif /* RLIMIT_NOFILE && !ACE_LACKS_RLIMIT */
 
 #if defined (_SC_OPEN_MAX)
-  return ACE_OS::sysconf (_SC_OPEN_MAX);
-#elif defined (ACE_VXWORKS) && (ACE_VXWORKS < 0x620)
-  return maxFiles;
+  return static_cast<int> (ACE_OS::sysconf (_SC_OPEN_MAX));
 #elif defined (FD_SETSIZE)
   return FD_SETSIZE;
 #else
@@ -2858,7 +2853,7 @@ ACE::set_handle_limit (int new_limit,
 #if !defined (ACE_LACKS_RLIMIT) && defined (RLIMIT_NOFILE)
       rl.rlim_cur = new_limit;
       return ACE_OS::setrlimit (RLIMIT_NOFILE, &rl);
-#elif defined (ACE_LACKS_RLIMIT_NOFILE)
+#elif !defined (RLIMIT_NOFILE)
       return 0;
 #else
       // Must return EINVAL errno.
@@ -2895,6 +2890,7 @@ ACE::gcd (u_long x, u_long y)
 
   return x;
 }
+
 
 // Calculates the minimum enclosing frame size for the given values.
 u_long
@@ -2938,6 +2934,7 @@ ACE::minimum_frame_size (u_long period1, u_long period2)
       return (period1 * period2) / greatest_common_divisor;
     }
 }
+
 
 u_long
 ACE::is_prime (const u_long n,
@@ -3283,10 +3280,7 @@ ACE::strnew (const char *s)
   ACE_NEW_RETURN (t,
                   char [ACE_OS::strlen (s) + 1],
                   0);
-  if (t == 0)
-    return 0;
-  else
-    return ACE_OS::strcpy (t, s);
+  return ACE_OS::strcpy (t, s);
 }
 
 #if defined (ACE_HAS_WCHAR)
@@ -3299,16 +3293,14 @@ ACE::strnew (const wchar_t *s)
   ACE_NEW_RETURN (t,
                   wchar_t[ACE_OS::strlen (s) + 1],
                   0);
-  if (t == 0)
-    return 0;
-  else
-    return ACE_OS::strcpy (t, s);
+  return ACE_OS::strcpy (t, s);
 }
 #endif /* ACE_HAS_WCHAR */
 
 // helper functions for ACE::wild_match()
 namespace
 {
+
   inline bool equal_char (char a, char b, bool case_sensitive)
   {
     if (case_sensitive)
@@ -3340,7 +3332,7 @@ namespace
             // characters are allowed as the range endpoints.  These characters
             // are the same values in both signed and unsigned chars so we
             // don't have to account for any "pathological cases."
-            for (char range = p[-1] + 1; range <= p[1]; ++range)
+            for (char range = static_cast<char> (p[-1] + 1); range <= p[1]; ++range)
               {
                 if (equal_char (s, range, case_sensitive))
                   {

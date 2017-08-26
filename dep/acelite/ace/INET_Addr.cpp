@@ -1,4 +1,4 @@
-// $Id: INET_Addr.cpp 92493 2010-11-05 14:21:21Z shuston $
+// $Id: INET_Addr.cpp 95533 2012-02-14 22:59:17Z wotte $
 
 // Defines the Internet domain address family address format.
 
@@ -137,6 +137,7 @@ ACE_INET_Addr::is_ip_equal (const ACE_INET_Addr &sap) const
 #endif /* ACE_HAS_IPV6 */
   return this->get_ip_address () == sap.get_ip_address();
 }
+
 
 u_long
 ACE_INET_Addr::hash (void) const
@@ -309,6 +310,7 @@ ACE_INET_Addr::set (u_short port_number,
   return 0;
 }
 
+
 // Initializes a ACE_INET_Addr from a PORT_NUMBER and the remote
 // HOST_NAME.
 
@@ -409,9 +411,6 @@ ACE_INET_Addr::set (u_short port_number,
                       encode);
   else
     {
-#if defined (ACE_VXWORKS) && defined (ACE_LACKS_GETHOSTBYNAME)
-      hostent *hp = ACE_OS::gethostbyname (host_name);
-#else
       hostent hentry;
       ACE_HOSTENT_DATA buf;
       int h_error = 0;  // Not the same as errno!
@@ -420,7 +419,6 @@ ACE_INET_Addr::set (u_short port_number,
                                              buf, &h_error);
       if (hp == 0)
         errno = h_error;
-#endif /* ACE_VXWORKS */
 
       if (hp == 0)
         {
@@ -855,19 +853,6 @@ ACE_INET_Addr::get_host_name_i (char hostname[], size_t len) const
     }
   else
     {
-#if defined (ACE_VXWORKS) && defined (ACE_LACKS_GETHOSTBYADDR)
-      ACE_UNUSED_ARG (len);
-      int error =
-        ::hostGetByAddr ((int) this->inet_addr_.in4_.sin_addr.s_addr,
-                         hostname);
-      if (error == OK)
-        return 0;
-      else
-        {
-          errno = error;
-          return -1;
-        }
-#else
       void* addr = this->ip_addr_pointer ();
       int   size = this->ip_addr_size ();
       int   type = this->get_type ();
@@ -917,7 +902,6 @@ ACE_INET_Addr::get_host_name_i (char hostname[], size_t len) const
 
       ACE_OS::strcpy (hostname, hp->h_name);
       return 0;
-#endif /* ACE_VXWORKS */
     }
 }
 
@@ -941,6 +925,7 @@ int ACE_INET_Addr::set_address (const char *ip_addr,
       ACE_UINT32 ip4 = *reinterpret_cast<const ACE_UINT32 *> (ip_addr);
       if (encode)
         ip4 = ACE_HTONL (ip4);
+
 
       if (this->get_type () == AF_INET && map == 0) {
         this->base_set (AF_INET, sizeof (this->inet_addr_.in4_));
@@ -1020,9 +1005,10 @@ int ACE_INET_Addr::set_address (const char *ip_addr,
   // Here with an unrecognized length.
   errno = EAFNOSUPPORT;
   return -1;
+
 }
 
-#if (defined (__linux__) || defined (ACE_WIN32)) && defined (ACE_HAS_IPV6)
+#if (defined (ACE_LINUX) || defined (ACE_WIN32)) && defined (ACE_HAS_IPV6)
 int
 ACE_INET_Addr::set_interface (const char *intf_name)
 {
@@ -1030,7 +1016,7 @@ ACE_INET_Addr::set_interface (const char *intf_name)
       (IN6_IS_ADDR_LINKLOCAL (&this->inet_addr_.in6_.sin6_addr) ||
        IN6_IS_ADDR_MC_LINKLOCAL (&this->inet_addr_.in6_.sin6_addr)))
     {
-#if defined (__linux__)
+#if defined (ACE_LINUX)
       this->inet_addr_.in6_.sin6_scope_id =
         ACE_OS::if_nametoindex (intf_name);
 #else
@@ -1045,8 +1031,9 @@ ACE_INET_Addr::set_interface (const char *intf_name)
     }
   else
     return 0;
+
 }
-#endif /* __linux && ACE_HAS_IPV6 */
+#endif /* ACE_LINUX && ACE_HAS_IPV6 */
 
 const char *
 ACE_INET_Addr::get_host_addr (char *dst, int size) const
@@ -1083,7 +1070,7 @@ ACE_INET_Addr::get_host_addr (char *dst, int size) const
                                           &this->inet_addr_.in6_.sin6_addr,
                                           dst,
                                           size);
-#if defined (__linux__)
+#if defined (ACE_LINUX)
       if ((IN6_IS_ADDR_LINKLOCAL (&this->inet_addr_.in6_.sin6_addr) ||
            IN6_IS_ADDR_MC_LINKLOCAL (&this->inet_addr_.in6_.sin6_addr)) &&
           this->inet_addr_.in6_.sin6_scope_id != 0)
