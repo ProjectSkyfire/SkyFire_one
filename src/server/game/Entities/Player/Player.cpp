@@ -14226,7 +14226,8 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     SetUInt64Value(OBJECT_FIELD_GUID, MAKE_NEW_GUID(guid, 0, HIGHGUID_PLAYER));
 
     // overwrite some data fields
-    uint32 bytes0 = GetUInt32Value(UNIT_FIELD_BYTES_0) & 0xFF000000;
+    //uint32 bytes0 = GetUInt32Value(UNIT_FIELD_BYTES_0) & 0xFF000000;
+    uint32 bytes0 = 0;
     bytes0 |= fields[4].GetUInt8();                         // race
     bytes0 |= fields[5].GetUInt8() << 8;                    // class
     bytes0 |= fields[6].GetUInt8() << 16;                   // gender
@@ -14234,6 +14235,13 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
 
     SetUInt32Value(UNIT_FIELD_LEVEL, fields[7].GetUInt8());
     SetUInt32Value(PLAYER_XP, fields[8].GetUInt32());
+
+    _LoadIntoDataField(fields[57].GetString(), PLAYER_EXPLORED_ZONES_1, PLAYER_EXPLORED_ZONES_SIZE);
+    _LoadIntoDataField(fields[60].GetString(), PLAYER__FIELD_KNOWN_TITLES, KNOWN_TITLES_SIZE * 2);
+
+    SetFloatValue(UNIT_FIELD_BOUNDINGRADIUS, DEFAULT_WORLD_OBJECT_SIZE);
+    SetFloatValue(UNIT_FIELD_COMBATREACH, 1.5f);
+    SetFloatValue(UNIT_FIELD_HOVERHEIGHT, 1.0f);
 
     uint32 money = fields[9].GetUInt32();
     if (money > MAX_MONEY_AMOUNT)
@@ -14542,17 +14550,12 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     uint16 newDrunkenValue = uint16(soberFactor*(GetUInt32Value(PLAYER_BYTES_3) & 0xFFFE));
     SetDrunkValue(newDrunkenValue);
 
-    m_rest_bonus = fields[22].GetFloat();
-    //speed collect rest bonus in offline, in logout, far from tavern, city (section/in hour)
-    float bubble0 = 0.031;
-    //speed collect rest bonus in offline, in logout, in tavern, city (section/in hour)
-    float bubble1 = 0.125;
+    m_cinematic = fields[19].GetUInt32();
+    m_Played_time[PLAYED_TIME_TOTAL] = fields[20].GetUInt32();
+    m_Played_time[PLAYED_TIME_LEVEL] = fields[21].GetUInt32();
 
-    if ((int32)fields[16].GetUInt32() > 0)
-    {
-        float bubble = fields[24].GetUInt32() > 0
-            ? bubble1*sWorld->getRate(RATE_REST_OFFLINE_IN_TAVERN_OR_CITY)
-            : bubble0*sWorld->getRate(RATE_REST_OFFLINE_IN_WILDERNESS);
+    m_resetTalentsCost = fields[25].GetUInt32();
+    m_resetTalentsTime = time_t(fields[26].GetUInt64());
 
         SetRestBonus(GetRestBonus()+ time_diff*((float)GetUInt32Value(PLAYER_NEXT_LEVEL_XP)/72000)*bubble);
     }
@@ -14624,6 +14627,22 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     // reset stats before loading any modifiers
     InitStatsForLevel();
     InitTaxiNodesForLevel();
+
+    // rest bonus can only be calculated after InitStatsForLevel()
+    m_rest_bonus = fields[22].GetFloat();
+ 
+    if (time_diff > 0)
+    {
+        //speed collect rest bonus in offline, in logout, far from tavern, city (section/in hour)
+        float bubble0 = 0.031f;
+        //speed collect rest bonus in offline, in logout, in tavern, city (section/in hour)
+        float bubble1 = 0.125f;
+        float bubble = fields[23].GetUInt32() > 0
+            ? bubble1*sWorld->getRate(RATE_REST_OFFLINE_IN_TAVERN_OR_CITY)
+            : bubble0*sWorld->getRate(RATE_REST_OFFLINE_IN_WILDERNESS);
+
+        SetRestBonus(GetRestBonus() + time_diff*((float)GetUInt32Value(PLAYER_NEXT_LEVEL_XP) / 72000)*bubble);
+    }
 
     // apply original stats mods before spell loading or item equipment that call before equip _RemoveStatsMods()
 
@@ -14897,9 +14916,9 @@ void Player::LoadCorpse()
 void Player::_LoadInventory(QueryResult_AutoPtr result, uint32 timediff)
 {
     //QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT data, bag, slot, item, item_template FROM character_inventory JOIN item_instance ON character_inventory.item = item_instance.guid WHERE character_inventory.guid = '%u' ORDER BY bag, slot", GetGUIDLow());
-    std::map<uint64, Bag*> bagMap;                          // fast guid lookup for bags
+    std::map<uint64, Bag*> bagMap;                          // fast guid lookup for bags   
     //NOTE: the "order by `bag`" is important because it makes sure
-    //the bagMap is filled before items in the bags are loaded
+    //the bagMap is filled before items in the bags are loaded  
     //NOTE2: the "order by `slot`" is needed because mainhand weapons are (wrongly?)
     //expected to be equipped before offhand items (TODO: fixme)
 
@@ -15825,7 +15844,7 @@ void Player::SaveToDB()
                                                             //save, but in tavern/city
     sLog->outDebug(LOG_FILTER_NETWORKIO, "The value of player %s at save: ", m_name.c_str());
     outDebugValues();
-
+    
     // save state (after auras removing), if aura remove some flags then it must set it back by self)
     uint32 tmp_bytes = GetUInt32Value(UNIT_FIELD_BYTES_1);
     uint32 tmp_bytes2 = GetUInt32Value(UNIT_FIELD_BYTES_2);
@@ -15840,20 +15859,18 @@ void Player::SaveToDB()
     RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
     SetDisplayId(GetNativeDisplayId());
 
-    bool inworld = IsInWorld();
-
     std::string sql_name = m_name;
     CharacterDatabase.EscapeString(sql_name);
 
     std::ostringstream ss;
-    ss << "REPLACE INTO characters (guid, account, name, race, class, gender, level, xp, money, playerBytes, playerBytes2, playerFlags, "
+    ss << "REPLACE INTO characters (guid,account,name,race,class,gender,level,xp,money,playerBytes,playerBytes2,playerFlags,"
         "map, instance_id, dungeon_difficulty, position_x, position_y, position_z, orientation, data, "
         "taximask, online, cinematic, "
         "totaltime, leveltime, rest_bonus, logout_time, is_logout_resting, resettalents_cost, resettalents_time, "
         "trans_x, trans_y, trans_z, trans_o, transguid, extra_flags, stable_slots, at_login, zone, "
-        "death_expire_time, taxi_path, arenaPoints, totalHonorPoints, todayHonorPoints, yesterdayHonorPoints, "
-        "totalKills, todayKills, yesterdayKills, chosenTitle, watchedFaction, drunk, health, "
-        "powerMana, powerRage, powerFocus, powerEnergy, powerHappiness, latency) VALUES ("
+        "death_expire_time, taxi_path, arenaPoints, totalHonorPoints, todayHonorPoints, yesterdayHonorPoints, totalKills, "
+        "todayKills, yesterdayKills, chosenTitle, knownCurrencies, watchedFaction, drunk, health, powerMana, powerRage, powerFocus, "
+        "powerEnergy, powerHappiness, latency, exploredZones, equipmentCache, ammoId, knownTitles) VALUES ("
         << GetGUIDLow() << ", "
         << GetSession()->GetAccountId() << ", '"
         << sql_name << "', "
@@ -15870,35 +15887,26 @@ void Player::SaveToDB()
     if (!IsBeingTeleported())
     {
         ss << GetMapId() << ", "
-        << (uint32)GetInstanceId() << ", "
-        << (uint32)GetDifficulty() << ", "
-        << finiteAlways(GetPositionX()) << ", "
-        << finiteAlways(GetPositionY()) << ", "
-        << finiteAlways(GetPositionZ()) << ", "
-        << finiteAlways(GetOrientation()) << ", '";
+            << (uint32)GetInstanceId() << ", "
+            << (uint32)GetDifficulty() << ", "
+            << finiteAlways(GetPositionX()) << ", "
+            << finiteAlways(GetPositionY()) << ", "
+            << finiteAlways(GetPositionZ()) << ", "
+            << finiteAlways(GetOrientation()) << ", '";
     }
     else
     {
         ss << GetTeleportDest().GetMapId() << ", "
-        << (uint32)0 << ", "
-        << (uint32)GetDifficulty() << ", "
-        << finiteAlways(GetTeleportDest().GetPositionX()) << ", "
-        << finiteAlways(GetTeleportDest().GetPositionY()) << ", "
-        << finiteAlways(GetTeleportDest().GetPositionZ()) << ", "
-        << finiteAlways(GetTeleportDest().GetOrientation()) << ", '";
+            << (uint32)0 << ", "
+            << (uint32)GetDifficulty() << ", "
+            << finiteAlways(GetTeleportDest().GetPositionX()) << ", "
+            << finiteAlways(GetTeleportDest().GetPositionY()) << ", "
+            << finiteAlways(GetTeleportDest().GetPositionZ()) << ", "
+            << finiteAlways(GetTeleportDest().GetOrientation()) << ", '";
     }
-    uint16 i;
-    for (i = 0; i < m_valuesCount; ++i)
-        ss << GetUInt32Value(i) << " ";
 
-    ss << "', '";
+    ss << m_taxi << "', ";                                   // string with TaxiMaskSize numbers
 
-    for (i = 0; i < 8; i++)
-        ss << m_taxi.GetTaximask(i) << " ";
-
-    ss << "', ";
-    
-    ss << m_taxi << ", ";
     ss << (IsInWorld() ? 1 : 0) << ", ";
 
     ss << m_cinematic << ", ";
@@ -15909,8 +15917,8 @@ void Player::SaveToDB()
     ss << finiteAlways(m_rest_bonus) << ", ";
     ss << (uint64)time(NULL) << ", ";
     ss << (HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING) ? 1 : 0) << ", ";
-                                                            //save, far from tavern/city
-                                                            //save, but in tavern/city
+    //save, far from tavern/city
+    //save, but in tavern/city
     ss << m_resetTalentsCost << ", ";
     ss << (uint64)m_resetTalentsTime << ", ";
 
@@ -15951,8 +15959,8 @@ void Player::SaveToDB()
     ss << GetUInt16Value(PLAYER_FIELD_KILLS, 1) << ", ";
 
     ss << GetUInt32Value(PLAYER_CHOSEN_TITLE) << ", ";
-    
-    ss << GetUInt64Value(PLAYER_FIELD_KNOWN_CURRENCIES) << ", ";    
+
+    ss << GetUInt64Value(PLAYER_FIELD_KNOWN_CURRENCIES) << ", ";
 
     ss << GetUInt32Value(PLAYER_FIELD_WATCHED_FACTION_INDEX) << ", ";
 
@@ -15962,10 +15970,28 @@ void Player::SaveToDB()
 
     for (uint32 i = 0; i < MAX_POWERS; ++i)
         ss << ", " << GetPower(Powers(i));
-    ss << ", '";
-
+    ss << ", ";
     ss << GetSession()->GetLatency();
-    ss << "')";
+    ss << ", '";
+    for (uint32 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
+    {   
+        ss << GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + i) << " ";
+    }
+
+    ss << "', '";
+    for (uint32 i = 0; i < EQUIPMENT_SLOT_END * 2; ++i )
+    {
+        ss << GetUInt32Value(PLAYER_VISIBLE_ITEM_1_0 + i) << " ";   
+    }
+
+    ss << "', ";
+
+    ss << GetUInt32Value(PLAYER_AMMO_ID) << ", '";
+    for (uint32 i = 0; i < KNOWN_TITLES_SIZE*2; ++i)
+    {
+        ss << GetUInt32Value(PLAYER__FIELD_KNOWN_TITLES + i) << " ";
+    }
+    ss << "') ";
 
     CharacterDatabase.BeginTransaction();
 
