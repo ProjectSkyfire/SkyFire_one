@@ -67,6 +67,18 @@ enum AreaFlags
     AREA_FLAG_OUTSIDE          = 0x04000000,                // used for determinating spell related inside/outside questions in Map::IsOutdoors
 };
 
+// TBC does not have heroic/epic modes Default = 0
+enum Difficulty
+{
+    REGULAR_DIFFICULTY           = 0,
+
+    DUNGEON_DIFFICULTY_NORMAL    = 0,
+    DUNGEON_DIFFICULTY_HEROIC    = 1,
+    DUNGEON_DIFFICULTY_EPIC      = 2,
+};
+#define MAX_DUNGEON_DIFFICULTY     3
+#define MAX_DIFFICULTY             3
+
 enum FactionTemplateFlags
 {
     FACTION_TEMPLATE_FLAG_CONTESTED_GUARD   =   0x00001000, // faction will attack players that were involved in PvP combats

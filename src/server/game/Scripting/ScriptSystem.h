@@ -21,6 +21,8 @@
 #ifndef SC_SYSTEM_H
 #define SC_SYSTEM_H
 
+#include <ace/Singleton.h>
+
 #define TEXT_SOURCE_RANGE -1000000                          //the amount of entries each text source has available
 
 //TODO: find better namings and definitions.
@@ -57,37 +59,36 @@ struct ScriptPointMove
     uint32 uiWaitTime;
 };
 
+typedef std::vector<ScriptPointMove> ScriptPointVector;
+
 struct StringTextData
 {
-    uint32 uiSoundId;
-    uint8  uiType;
-    uint32 uiLanguage;
-    uint32 uiEmote;
+    uint32 SoundId;
+    uint8  Type;
+    uint32 Language;
+    uint32 Emote;
 };
 
 class SystemMgr
 {
-    public:
-
-        SystemMgr();
+        friend class ACE_Singleton<SystemMgr, ACE_Null_Mutex>;
+        SystemMgr() {}
         ~SystemMgr() {}
 
-        static SystemMgr& Instance();
-
+    public:
         //Maps and lists
         typedef UNORDERED_MAP<int32, StringTextData> TextDataMap;
-        typedef UNORDERED_MAP<uint32, std::vector<ScriptPointMove> > PointMoveMap;
+        typedef UNORDERED_MAP<uint32, ScriptPointVector> PointMoveMap;
 
         //Database
-        void LoadVersion();
         void LoadScriptTexts();
         void LoadScriptTextsCustom();
         void LoadScriptWaypoints();
 
         //Retrive from storage
-        StringTextData const* GetTextData(int32 uiTextId) const
+        StringTextData const* GetTextData(int32 textId) const
         {
-            TextDataMap::const_iterator itr = m_mTextDataMap.find(uiTextId);
+            TextDataMap::const_iterator itr = m_mTextDataMap.find(textId);
 
             if (itr == m_mTextDataMap.end())
                 return NULL;
@@ -95,24 +96,24 @@ class SystemMgr
             return &itr->second;
         }
 
-        std::vector<ScriptPointMove> const &GetPointMoveList(uint32 uiCreatureEntry) const
+        ScriptPointVector const& GetPointMoveList(uint32 creatureEntry) const
         {
-            static std::vector<ScriptPointMove> vEmpty;
-
-            PointMoveMap::const_iterator itr = m_mPointMoveMap.find(uiCreatureEntry);
+            PointMoveMap::const_iterator itr = m_mPointMoveMap.find(creatureEntry);
 
             if (itr == m_mPointMoveMap.end())
-                return vEmpty;
+                return _empty;
 
             return itr->second;
         }
 
     protected:
-
         TextDataMap     m_mTextDataMap;                     //additional data for text strings
         PointMoveMap    m_mPointMoveMap;                    //coordinates for waypoints
+
+    private:
+        static ScriptPointVector const _empty;
 };
 
-#define sScriptSystemMgr SystemMgr::Instance()
+#define sScriptSystemMgr ACE_Singleton<SystemMgr, ACE_Null_Mutex>::instance()
 
 #endif

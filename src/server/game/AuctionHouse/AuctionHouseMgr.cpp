@@ -476,18 +476,19 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(uint32 factionTem
     return sAuctionHouseStore.LookupEntry(houseid);
 }
 
-void AuctionHouseObject::AddAuction(AuctionEntry *ah)
+void AuctionHouseObject::AddAuction(AuctionEntry* auction)
 {
-    ASSERT(ah);
-    
-    AuctionsMap[ah->Id] = ah;
+	ASSERT(auction);
+
+	AuctionsMap[auction->Id] = auction;
+	sScriptMgr->OnAuctionAdd(this, auction);
 }
 
 bool AuctionHouseObject::RemoveAuction(AuctionEntry *auction, uint32 item_template)
 {
     bool wasInMap = AuctionsMap.erase(auction->Id) ? true : false;
 
-    sScriptMgr->OnRemoveAuction(this, auction);
+    sScriptMgr->OnAuctionRemove(this, auction);
 
     // we need to delete the entry, it is not referenced any more
     delete auction;

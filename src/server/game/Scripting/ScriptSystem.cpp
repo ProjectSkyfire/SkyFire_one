@@ -20,218 +20,190 @@
 
 #include "ScriptPCH.h"
 #include "ScriptSystem.h"
-
 #include "ObjectMgr.h"
 #include "DatabaseEnv.h"
 
-SystemMgr::SystemMgr()
-{
-}
-
-SystemMgr& SystemMgr::Instance()
-{
-    static SystemMgr pSysMgr;
-    return pSysMgr;
-}
-
-void SystemMgr::LoadVersion()
-{
-    //Get Version information
-    QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT script_version FROM version LIMIT 1");
-
-    if (Result)
-    {
-        Field* pFields = Result->Fetch();
-
-        sLog->outString("TSCR: Database version is: %s", pFields[0].GetString());
-        sLog->outString("");
-    }
-    else
-    {
-        sLog->outError("TSCR: Missing `version`.`script_version` information.");
-        sLog->outString("");
-    }
-}
+ScriptPointVector const SystemMgr::_empty;
 
 void SystemMgr::LoadScriptTexts()
 {
     sLog->outString("TSCR: Loading Script Texts...");
-    LoadSkyFireStrings(WorldDatabase, "script_texts", TEXT_SOURCE_RANGE, 1+(TEXT_SOURCE_RANGE*2));
-
-    QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM script_texts");
+    LoadSkyFireStrings("script_texts", TEXT_SOURCE_RANGE, 1+(TEXT_SOURCE_RANGE*2));
 
     sLog->outString("TSCR: Loading Script Texts additional data...");
+    uint32 oldMSTime = getMSTime();
 
-    if (Result)
+	QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM script_texts");
+
+    if (!result)
     {
-        uint32 uiCount = 0;
+        sLog->outString(">> Loaded 0 additional Script Texts data. DB table `script_texts` is empty.");
+        sLog->outString();
+        return;
+    }
 
-        do
+    uint32 uiCount = 0;
+
+    do
+    {
+        Field* fields = result->Fetch();
+        StringTextData temp;
+
+        int32 Id         = fields[0].GetInt32();
+        temp.SoundId     = fields[1].GetUInt32();
+        temp.Type        = fields[2].GetUInt32();
+        temp.Language    = fields[3].GetUInt32();
+        temp.Emote       = fields[4].GetUInt32();
+
+        if (Id >= 0)
         {
-            Field* pFields = Result->Fetch();
-            StringTextData pTemp;
+            sLog->outErrorDb("TSCR: Entry %i in table `script_texts` is not a negative value.", Id);
+            continue;
+        }
 
-            int32 iId           = pFields[0].GetInt32();
-            pTemp.uiSoundId     = pFields[1].GetUInt32();
-            pTemp.uiType        = pFields[2].GetUInt32();
-            pTemp.uiLanguage    = pFields[3].GetUInt32();
-            pTemp.uiEmote       = pFields[4].GetUInt32();
+        if (Id > TEXT_SOURCE_RANGE || Id <= TEXT_SOURCE_RANGE*2)
+        {
+            sLog->outErrorDb("TSCR: Entry %i in table `script_texts` is out of accepted entry range for table.", Id);
+            continue;
+        }
 
-            if (iId >= 0)
-            {
-                sLog->outErrorDb("TSCR: Entry %i in table script_texts is not a negative value.", iId);
-                continue;
-            }
+        if (temp.SoundId)
+        {
+            if (!sSoundEntriesStore.LookupEntry(temp.SoundId))
+                sLog->outErrorDb("TSCR: Entry %i in table `script_texts` has soundId %u but sound does not exist.", Id, temp.SoundId);
+        }
 
-            if (iId > TEXT_SOURCE_RANGE || iId <= TEXT_SOURCE_RANGE*2)
-            {
-                sLog->outErrorDb("TSCR: Entry %i in table script_texts is out of accepted entry range for table.", iId);
-                continue;
-            }
+        if (!GetLanguageDescByID(temp.Language))
+            sLog->outErrorDb("TSCR: Entry %i in table `script_texts` using Language %u but Language does not exist.", Id, temp.Language);
 
-            if (pTemp.uiSoundId)
-            {
-                if (!GetSoundEntriesStore()->LookupEntry(pTemp.uiSoundId))
-                    sLog->outErrorDb("TSCR: Entry %i in table script_texts has soundId %u but sound does not exist.", iId, pTemp.uiSoundId);
-            }
+        if (temp.Type > CHAT_TYPE_ZONE_YELL)
+            sLog->outErrorDb("TSCR: Entry %i in table `script_texts` has Type %u but this Chat Type does not exist.", Id, temp.Type);
 
-            if (!GetLanguageDescByID(pTemp.uiLanguage))
-                sLog->outErrorDb("TSCR: Entry %i in table script_texts using Language %u but Language does not exist.", iId, pTemp.uiLanguage);
+        m_mTextDataMap[Id] = temp;
+        ++uiCount;
+    } while (result->NextRow());
 
-            if (pTemp.uiType > CHAT_TYPE_ZONE_YELL)
-                sLog->outErrorDb("TSCR: Entry %i in table script_texts has Type %u but this Chat Type does not exist.", iId, pTemp.uiType);
-
-            m_mTextDataMap[iId] = pTemp;
-            ++uiCount;
-        } while (Result->NextRow());
-
-        sLog->outString("");
-        sLog->outString(">> Loaded %u additional Script Texts data.", uiCount);
-    }
-    else
-    {
-        sLog->outString("");
-        sLog->outString(">> Loaded 0 additional Script Texts data. DB table script_texts is empty.");
-    }
+    sLog->outString(">> Loaded %u additional Script Texts data in %u ms", uiCount, GetMSTimeDiffToNow(oldMSTime));
+    sLog->outString();
 }
 
 void SystemMgr::LoadScriptTextsCustom()
 {
     sLog->outString("TSCR: Loading Custom Texts...");
-    LoadSkyFireStrings(WorldDatabase, "custom_texts", TEXT_SOURCE_RANGE*2, 1+(TEXT_SOURCE_RANGE*3));
-
-    QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM custom_texts");
+    LoadSkyFireStrings("custom_texts", TEXT_SOURCE_RANGE*2, 1+(TEXT_SOURCE_RANGE*3));
 
     sLog->outString("TSCR: Loading Custom Texts additional data...");
 
-    if (Result)
-    {
-        uint32 uiCount = 0;
+	QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM custom_texts");
 
-        do
+    if (!result)
+    {
+        sLog->outString(">> Loaded 0 additional Custom Texts data. DB table `custom_texts` is empty.");
+        sLog->outString();
+        return;
+    }
+
+    uint32 uiCount = 0;
+
+    do
+    {
+        Field* fields = result->Fetch();
+        StringTextData temp;
+
+        int32 iId           = fields[0].GetInt32();
+        temp.SoundId        = fields[1].GetUInt32();
+        temp.Type           = fields[2].GetUInt32();
+        temp.Language       = fields[3].GetUInt32();
+        temp.Emote          = fields[4].GetUInt16();
+
+        if (iId >= 0)
         {
-            Field* pFields = Result->Fetch();
-            StringTextData pTemp;
+            sLog->outErrorDb("TSCR: Entry %i in table `custom_texts` is not a negative value.", iId);
+            continue;
+        }
 
-            int32 iId              = pFields[0].GetInt32();
-            pTemp.uiSoundId        = pFields[1].GetUInt32();
-            pTemp.uiType           = pFields[2].GetUInt32();
-            pTemp.uiLanguage       = pFields[3].GetUInt32();
-            pTemp.uiEmote          = pFields[4].GetUInt32();
+        if (iId > TEXT_SOURCE_RANGE * 2 || iId <= TEXT_SOURCE_RANGE * 3)
+        {
+            sLog->outErrorDb("TSCR: Entry %i in table `custom_texts` is out of accepted entry range for table.", iId);
+            continue;
+        }
 
-            if (iId >= 0)
-            {
-                sLog->outErrorDb("TSCR: Entry %i in table custom_texts is not a negative value.", iId);
-                continue;
-            }
+        if (temp.SoundId)
+        {
+            if (!sSoundEntriesStore.LookupEntry(temp.SoundId))
+                sLog->outErrorDb("TSCR: Entry %i in table `custom_texts` has soundId %u but sound does not exist.", iId, temp.SoundId);
+        }
 
-            if (iId > TEXT_SOURCE_RANGE*2 || iId <= TEXT_SOURCE_RANGE*3)
-            {
-                sLog->outErrorDb("TSCR: Entry %i in table custom_texts is out of accepted entry range for table.", iId);
-                continue;
-            }
+        if (!GetLanguageDescByID(temp.Language))
+            sLog->outErrorDb("TSCR: Entry %i in table `custom_texts` using Language %u but Language does not exist.", iId, temp.Language);
 
-            if (pTemp.uiSoundId)
-            {
-                if (!GetSoundEntriesStore()->LookupEntry(pTemp.uiSoundId))
-                    sLog->outErrorDb("TSCR: Entry %i in table custom_texts has soundId %u but sound does not exist.", iId, pTemp.uiSoundId);
-            }
+        if (temp.Type > CHAT_TYPE_ZONE_YELL)
+            sLog->outErrorDb("TSCR: Entry %i in table `custom_texts` has Type %u but this Chat Type does not exist.", iId, temp.Type);
 
-            if (!GetLanguageDescByID(pTemp.uiLanguage))
-                sLog->outErrorDb("TSCR: Entry %i in table custom_texts using Language %u but Language does not exist.", iId, pTemp.uiLanguage);
+        m_mTextDataMap[iId] = temp;
+        ++uiCount;
+    } while (result->NextRow());
 
-            if (pTemp.uiType > CHAT_TYPE_ZONE_YELL)
-                sLog->outErrorDb("TSCR: Entry %i in table custom_texts has Type %u but this Chat Type does not exist.", iId, pTemp.uiType);
-
-            m_mTextDataMap[iId] = pTemp;
-            ++uiCount;
-        } while (Result->NextRow());
-
-        sLog->outString("");
-        sLog->outString(">> Loaded %u additional Custom Texts data.", uiCount);
-    }
-    else
-    {
-        sLog->outString("");
-        sLog->outString(">> Loaded 0 additional Custom Texts data. DB table custom_texts is empty.");
-    }
+    sLog->outString(">> Loaded %u additional Custom Texts data.", uiCount);
+    sLog->outString();
 }
 
 void SystemMgr::LoadScriptWaypoints()
 {
+    uint32 oldMSTime = getMSTime();
+
     // Drop Existing Waypoint list
     m_mPointMoveMap.clear();
 
     uint64 uiCreatureCount = 0;
 
     // Load Waypoints
-    QueryResult_AutoPtr Result = WorldDatabase.Query("SELECT COUNT(entry) FROM script_waypoint GROUP BY entry");
-    if (Result)
-        uiCreatureCount = Result->GetRowCount();
+	QueryResult_AutoPtr result = WorldDatabase.Query("SELECT COUNT(entry) FROM script_waypoint GROUP BY entry");
+    if (result)
+        uiCreatureCount = result->GetRowCount();
 
-    sLog->outString("TSCR: Loading Script Waypoints for %u creature(s)...", uiCreatureCount);
+    sLog->outString("TSCR: Loading Script Waypoints for " UI64FMTD " creature(s)...", uiCreatureCount);
 
-    Result = WorldDatabase.Query("SELECT entry, pointid, location_x, location_y, location_z, waittime FROM script_waypoint ORDER BY pointid");
+    result = WorldDatabase.Query("SELECT entry, pointid, location_x, location_y, location_z, waittime FROM script_waypoint ORDER BY pointid");
 
-    if (Result)
+    if (!result)
     {
-        uint32 uiNodeCount = 0;
+        sLog->outString(">> Loaded 0 Script Waypoints. DB table `script_waypoint` is empty.");
+        sLog->outString();
+        return;
+    }
 
-        do
+    uint32 count = 0;
+
+    do
+    {
+        Field* pFields = result->Fetch();
+        ScriptPointMove temp;
+
+        temp.uiCreatureEntry   = pFields[0].GetUInt32();
+        uint32 uiEntry          = temp.uiCreatureEntry;
+        temp.uiPointId         = pFields[1].GetUInt32();
+        temp.fX                = pFields[2].GetFloat();
+        temp.fY                = pFields[3].GetFloat();
+        temp.fZ                = pFields[4].GetFloat();
+        temp.uiWaitTime        = pFields[5].GetUInt32();
+
+        CreatureTemplate const* pCInfo = sObjectMgr->GetCreatureTemplate(temp.uiCreatureEntry);
+
+        if (!pCInfo)
         {
-            Field* pFields = Result->Fetch();
-            ScriptPointMove pTemp;
+            sLog->outErrorDb("TSCR: DB table script_waypoint has waypoint for non-existant creature entry %u", temp.uiCreatureEntry);
+            continue;
+        }
 
-            pTemp.uiCreatureEntry   = pFields[0].GetUInt32();
-            uint32 uiEntry          = pTemp.uiCreatureEntry;
-            pTemp.uiPointId         = pFields[1].GetUInt32();
-            pTemp.fX                = pFields[2].GetFloat();
-            pTemp.fY                = pFields[3].GetFloat();
-            pTemp.fZ                = pFields[4].GetFloat();
-            pTemp.uiWaitTime        = pFields[5].GetUInt32();
+        if (!pCInfo->ScriptID)
+            sLog->outErrorDb("TSCR: DB table script_waypoint has waypoint for creature entry %u, but creature does not have ScriptName defined and then useless.", temp.uiCreatureEntry);
 
-            CreatureTemplate const* pCInfo = GetCreatureTemplateStore(pTemp.uiCreatureEntry);
+        m_mPointMoveMap[uiEntry].push_back(temp);
+        ++count;
+    } while (result->NextRow());
 
-            if (!pCInfo)
-            {
-                sLog->outErrorDb("TSCR: DB table script_waypoint has waypoint for non-existant creature entry %u", pTemp.uiCreatureEntry);
-                continue;
-            }
-
-            if (!pCInfo->ScriptID)
-                sLog->outErrorDb("TSCR: DB table script_waypoint has waypoint for creature entry %u, but creature does not have ScriptName defined and then useless.", pTemp.uiCreatureEntry);
-
-            m_mPointMoveMap[uiEntry].push_back(pTemp);
-            ++uiNodeCount;
-        } while (Result->NextRow());
-
-        sLog->outString("");
-        sLog->outString(">> Loaded %u Script Waypoint nodes.", uiNodeCount);
-    }
-    else
-    {
-        sLog->outString("");
-        sLog->outString(">> Loaded 0 Script Waypoints. DB table script_waypoint is empty.");
-    }
+    sLog->outString(">> Loaded %u Script Waypoint nodes in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+    sLog->outString();
 }
 
