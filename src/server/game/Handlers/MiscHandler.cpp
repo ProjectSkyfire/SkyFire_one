@@ -824,7 +824,7 @@ void WorldSession::HandleAreaTriggerOpcode(WorldPacket& recv_data)
         }
     }
 
-    if (sScriptMgr->OnTrigger(GetPlayer(), atEntry))
+    if (sScriptMgr->OnAreaTrigger(GetPlayer(), atEntry))
         return;
 
     uint32 quest_id = sObjectMgr->GetQuestForAreaTrigger(Trigger_ID);
