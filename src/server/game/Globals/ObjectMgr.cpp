@@ -195,37 +195,37 @@ LanguageDesc const* GetLanguageDescByID(uint32 lang)
 
 bool SpellClickInfo::IsFitToRequirements(Unit const* clicker, Unit const* clickee) const
 {
-	Player const* playerClicker = clicker->ToPlayer();
-	if (!playerClicker)
-		return true;
+    Player const* playerClicker = clicker->ToPlayer();
+    if (!playerClicker)
+        return true;
 
-	Unit const* summoner = NULL;
-	// Check summoners for party
-	/*if (clickee->isSummon())
-		summoner = clickee->ToTempSummon()->GetSummoner();
-	if (!summoner)
-		summoner = clickee;*/
+    Unit const* summoner = NULL;
+    // Check summoners for party
+    /*if (clickee->isSummon())
+        summoner = clickee->ToTempSummon()->GetSummoner();
+    if (!summoner)
+        summoner = clickee;*/
 
-	// This only applies to players
-	switch (userType)
-	{
-	case SPELL_CLICK_USER_FRIEND:
-		if (!playerClicker->IsFriendlyTo(summoner))
-			return false;
-		break;
-	case SPELL_CLICK_USER_RAID:
-		if (!playerClicker->IsInRaidWith(summoner))
-			return false;
-		break;
-	case SPELL_CLICK_USER_PARTY:
-		if (!playerClicker->IsInPartyWith(summoner))
-			return false;
-		break;
-	default:
-		break;
-	}
+    // This only applies to players
+    switch (userType)
+    {
+    case SPELL_CLICK_USER_FRIEND:
+        if (!playerClicker->IsFriendlyTo(summoner))
+            return false;
+        break;
+    case SPELL_CLICK_USER_RAID:
+        if (!playerClicker->IsInRaidWith(summoner))
+            return false;
+        break;
+    case SPELL_CLICK_USER_PARTY:
+        if (!playerClicker->IsInPartyWith(summoner))
+            return false;
+        break;
+    default:
+        break;
+    }
 
-	return true;
+    return true;
 }
 
 ObjectMgr::ObjectMgr()
@@ -398,13 +398,13 @@ void ObjectMgr::RemoveArenaTeam(uint32 Id)
 
 void ObjectMgr::AddLocaleString(std::string const& s, LocaleConstant locale, StringVector& data)
 {
-	if (!s.empty())
-	{
-		if (data.size() <= size_t(locale))
-			data.resize(locale + 1);
+    if (!s.empty())
+    {
+        if (data.size() <= size_t(locale))
+            data.resize(locale + 1);
 
-		data[locale] = s;
-	}
+        data[locale] = s;
+    }
 }
 
 GameObjectTemplate const* ObjectMgr::GetGameObjectTemplate(uint32 entry)
@@ -6304,114 +6304,114 @@ void ObjectMgr::LoadGameObjectForQuests()
 
 bool ObjectMgr::LoadSkyFireStrings(char const* table, int32 min_value, int32 max_value)
 {
-	uint32 oldMSTime = getMSTime();
+    uint32 oldMSTime = getMSTime();
 
-	int32 start_value = min_value;
-	int32 end_value = max_value;
-	// some string can have negative indexes range
-	if (start_value < 0)
-	{
-		if (end_value >= start_value)
-		{
-			sLog->outErrorDb("Table '%s' attempt loaded with invalid range (%d - %d), strings not loaded.", table, min_value, max_value);
-			return false;
-		}
+    int32 start_value = min_value;
+    int32 end_value = max_value;
+    // some string can have negative indexes range
+    if (start_value < 0)
+    {
+        if (end_value >= start_value)
+        {
+            sLog->outErrorDb("Table '%s' attempt loaded with invalid range (%d - %d), strings not loaded.", table, min_value, max_value);
+            return false;
+        }
 
-		// real range (max+1, min+1) example: (-10, -1000) ->-999...-10+1
-		std::swap(start_value, end_value);
-		++start_value;
-		++end_value;
-	}
-	else
-	{
-		if (start_value >= end_value)
-		{
-			sLog->outErrorDb("Table '%s' attempt loaded with invalid range (%d - %d), strings not loaded.", table, min_value, max_value);
-			return false;
-		}
-	}
+        // real range (max+1, min+1) example: (-10, -1000) ->-999...-10+1
+        std::swap(start_value, end_value);
+        ++start_value;
+        ++end_value;
+    }
+    else
+    {
+        if (start_value >= end_value)
+        {
+            sLog->outErrorDb("Table '%s' attempt loaded with invalid range (%d - %d), strings not loaded.", table, min_value, max_value);
+            return false;
+        }
+    }
 
-	// cleanup affected map part for reloading case
-	for (SkyFireStringLocaleMap::iterator itr = mSkyFireStringLocaleMap.begin(); itr != mSkyFireStringLocaleMap.end();)
-	{
-		if (itr->first >= start_value && itr->first < end_value)
-			mSkyFireStringLocaleMap.erase(itr++);
-		else
-			++itr;
-	}
+    // cleanup affected map part for reloading case
+    for (SkyFireStringLocaleMap::iterator itr = mSkyFireStringLocaleMap.begin(); itr != mSkyFireStringLocaleMap.end();)
+    {
+        if (itr->first >= start_value && itr->first < end_value)
+            mSkyFireStringLocaleMap.erase(itr++);
+        else
+            ++itr;
+    }
 
-	QueryResult_AutoPtr result = WorldDatabase.PQuery("SELECT entry, content_default, content_loc1, content_loc2, content_loc3, content_loc4, content_loc5, content_loc6, content_loc7, content_loc8 FROM %s", table);
+    QueryResult_AutoPtr result = WorldDatabase.PQuery("SELECT entry, content_default, content_loc1, content_loc2, content_loc3, content_loc4, content_loc5, content_loc6, content_loc7, content_loc8 FROM %s", table);
 
-	if (!result)
-	{
-		if (min_value == MIN_SKYFIRE_STRING_ID)              // error only in case internal strings
-			sLog->outErrorDb(">> Loaded 0 SkyFire strings. DB table `%s` is empty. Cannot continue.", table);
-		else
-			sLog->outString(">> Loaded 0 string templates. DB table `%s` is empty.", table);
-		sLog->outString();
-		return false;
-	}
+    if (!result)
+    {
+        if (min_value == MIN_SKYFIRE_STRING_ID)              // error only in case internal strings
+            sLog->outErrorDb(">> Loaded 0 SkyFire strings. DB table `%s` is empty. Cannot continue.", table);
+        else
+            sLog->outString(">> Loaded 0 string templates. DB table `%s` is empty.", table);
+        sLog->outString();
+        return false;
+    }
 
-	uint32 count = 0;
+    uint32 count = 0;
 
-	do
-	{
-		Field *fields = result->Fetch();
+    do
+    {
+        Field *fields = result->Fetch();
 
-		int32 entry = fields[0].GetInt32();
+        int32 entry = fields[0].GetInt32();
 
-		if (entry == 0)
-		{
-			sLog->outErrorDb("Table `%s` contain reserved entry 0, ignored.", table);
-			continue;
-		}
-		else if (entry < start_value || entry >= end_value)
-		{
-			sLog->outErrorDb("Table `%s` contain entry %i out of allowed range (%d - %d), ignored.", table, entry, min_value, max_value);
-			continue;
-		}
+        if (entry == 0)
+        {
+            sLog->outErrorDb("Table `%s` contain reserved entry 0, ignored.", table);
+            continue;
+        }
+        else if (entry < start_value || entry >= end_value)
+        {
+            sLog->outErrorDb("Table `%s` contain entry %i out of allowed range (%d - %d), ignored.", table, entry, min_value, max_value);
+            continue;
+        }
 
-		SkyFireStringLocale& data = mSkyFireStringLocaleMap[entry];
+        SkyFireStringLocale& data = mSkyFireStringLocaleMap[entry];
 
-		if (!data.Content.empty())
-		{
-			sLog->outErrorDb("Table `%s` contain data for already loaded entry  %i (from another table?), ignored.", table, entry);
-			continue;
-		}
+        if (!data.Content.empty())
+        {
+            sLog->outErrorDb("Table `%s` contain data for already loaded entry  %i (from another table?), ignored.", table, entry);
+            continue;
+        }
 
-		data.Content.resize(1);
-		++count;
+        data.Content.resize(1);
+        ++count;
 
-		for (uint8 i = 0; i < TOTAL_LOCALES; ++i)
-			AddLocaleString(fields[i + 1].GetString(), LocaleConstant(i), data.Content);
-	} while (result->NextRow());
+        for (uint8 i = 0; i < TOTAL_LOCALES; ++i)
+            AddLocaleString(fields[i + 1].GetString(), LocaleConstant(i), data.Content);
+    } while (result->NextRow());
 
-	if (min_value == MIN_SKYFIRE_STRING_ID)
-		sLog->outString(">> Loaded %u SkyFire strings from table %s in %u ms", count, table, GetMSTimeDiffToNow(oldMSTime));
-	else
-		sLog->outString(">> Loaded %u string templates from %s in %u ms", count, table, GetMSTimeDiffToNow(oldMSTime));
+    if (min_value == MIN_SKYFIRE_STRING_ID)
+        sLog->outString(">> Loaded %u SkyFire strings from table %s in %u ms", count, table, GetMSTimeDiffToNow(oldMSTime));
+    else
+        sLog->outString(">> Loaded %u string templates from %s in %u ms", count, table, GetMSTimeDiffToNow(oldMSTime));
 
-	sLog->outString();
-	return true;
+    sLog->outString();
+    return true;
 }
 
 const char *ObjectMgr::GetSkyFireString(int32 entry, int locale_idx) const
 {
-	// locale_idx == -1 -> default, locale_idx >= 0 in to idx+1
-	// Content[0] always exist if exist SkyFireStringLocale
-	if (SkyFireStringLocale const *msl = GetSkyFireStringLocale(entry))
-	{
-		if (msl->Content.size() > locale_idx + 1 && !msl->Content[locale_idx + 1].empty())
-			return msl->Content[locale_idx + 1].c_str();
-		else
-			return msl->Content[0].c_str();
-	}
+    // locale_idx == -1 -> default, locale_idx >= 0 in to idx+1
+    // Content[0] always exist if exist SkyFireStringLocale
+    if (SkyFireStringLocale const *msl = GetSkyFireStringLocale(entry))
+    {
+        if (msl->Content.size() > locale_idx + 1 && !msl->Content[locale_idx + 1].empty())
+            return msl->Content[locale_idx + 1].c_str();
+        else
+            return msl->Content[0].c_str();
+    }
 
-	if (entry > 0)
-		sLog->outErrorDb("Entry %i not found in skyfire_string table.", entry);
-	else
-		sLog->outErrorDb("Skyfire string entry %i not found in DB.", entry);
-	return "<error>";
+    if (entry > 0)
+        sLog->outErrorDb("Entry %i not found in skyfire_string table.", entry);
+    else
+        sLog->outErrorDb("Skyfire string entry %i not found in DB.", entry);
+    return "<error>";
 }
 
 void ObjectMgr::LoadSpellDisabledEntrys()
@@ -7347,8 +7347,8 @@ void ObjectMgr::LoadScriptNames()
 {
     uint32 oldMSTime = getMSTime();
 
-	_scriptNamesStore.push_back("");
-	QueryResult_AutoPtr result = WorldDatabase.Query(
+    _scriptNamesStore.push_back("");
+    QueryResult_AutoPtr result = WorldDatabase.Query(
       "SELECT DISTINCT(ScriptName) FROM battleground_template WHERE ScriptName <> '' "
       "UNION "
       "SELECT DISTINCT(ScriptName) FROM creature_template WHERE ScriptName <> '' "
@@ -7378,7 +7378,7 @@ void ObjectMgr::LoadScriptNames()
 
     do
     {
-		_scriptNamesStore.push_back((*result)[0].GetString());
+        _scriptNamesStore.push_back((*result)[0].GetString());
         ++count;
     }
     while (result->NextRow());
@@ -7427,32 +7427,32 @@ void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
 
 void ObjectMgr::LoadDbScriptStrings()
 {
-	LoadSkyFireStrings("db_script_string", MIN_DB_SCRIPT_STRING_ID, MAX_DB_SCRIPT_STRING_ID);
+    LoadSkyFireStrings("db_script_string", MIN_DB_SCRIPT_STRING_ID, MAX_DB_SCRIPT_STRING_ID);
 
-	std::set<int32> ids;
+    std::set<int32> ids;
 
-	for (int32 i = MIN_DB_SCRIPT_STRING_ID; i < MAX_DB_SCRIPT_STRING_ID; ++i)
-		if (GetSkyFireStringLocale(i))
-			ids.insert(i);
+    for (int32 i = MIN_DB_SCRIPT_STRING_ID; i < MAX_DB_SCRIPT_STRING_ID; ++i)
+        if (GetSkyFireStringLocale(i))
+            ids.insert(i);
 
-	for (int type = SCRIPTS_FIRST; type < SCRIPTS_LAST; ++type)
-		CheckScripts(ScriptsType(type), ids);
+    for (int type = SCRIPTS_FIRST; type < SCRIPTS_LAST; ++type)
+        CheckScripts(ScriptsType(type), ids);
 
-	for (std::set<int32>::const_iterator itr = ids.begin(); itr != ids.end(); ++itr)
-		sLog->outErrorDb("Table `db_script_string` has unused string id  %u", *itr);
+    for (std::set<int32>::const_iterator itr = ids.begin(); itr != ids.end(); ++itr)
+        sLog->outErrorDb("Table `db_script_string` has unused string id  %u", *itr);
 }
 
 bool LoadSkyFireStrings(char const* table, int32 start_value, int32 end_value)
 {
-	// MAX_DB_SCRIPT_STRING_ID is max allowed negative value for scripts (scripts can use only more deep negative values
-	// start/end reversed for negative values
-	if (start_value > MAX_DB_SCRIPT_STRING_ID || end_value >= start_value)
-	{
-		sLog->outErrorDb("Table '%s' load attempted with range (%d - %d) reserved by SkyFire, strings not loaded.", table, start_value, end_value + 1);
-		return false;
-	}
+    // MAX_DB_SCRIPT_STRING_ID is max allowed negative value for scripts (scripts can use only more deep negative values
+    // start/end reversed for negative values
+    if (start_value > MAX_DB_SCRIPT_STRING_ID || end_value >= start_value)
+    {
+        sLog->outErrorDb("Table '%s' load attempted with range (%d - %d) reserved by SkyFire, strings not loaded.", table, start_value, end_value + 1);
+        return false;
+    }
 
-	return sObjectMgr->LoadSkyFireStrings(table, start_value, end_value);
+    return sObjectMgr->LoadSkyFireStrings(table, start_value, end_value);
 }
 
 GameObjectTemplate const *GetGameObjectInfo(uint32 id)

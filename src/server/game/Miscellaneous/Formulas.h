@@ -27,20 +27,20 @@
 
 namespace Skyfire
 {
-	namespace Honor
-	{
-		inline float hk_honor_at_level_f(uint8 level, float multiplier = 1.0f)
-		{
-			float honor = multiplier * level * 1.55f;
-			sScriptMgr->OnHonorCalculation(honor, level, multiplier);
-			return honor;
-		}
+    namespace Honor
+    {
+        inline float hk_honor_at_level_f(uint8 level, float multiplier = 1.0f)
+        {
+            float honor = multiplier * level * 1.55f;
+            sScriptMgr->OnHonorCalculation(honor, level, multiplier);
+            return honor;
+        }
 
-		inline uint32 hk_honor_at_level(uint8 level, float multiplier = 1.0f)
-		{
-			return uint32(ceil(hk_honor_at_level_f(level, multiplier)));
-		}
-	}
+        inline uint32 hk_honor_at_level(uint8 level, float multiplier = 1.0f)
+        {
+            return uint32(ceil(hk_honor_at_level_f(level, multiplier)));
+        }
+    }
     namespace XP
     {
         inline uint8 GetGrayLevel(uint8 pl_level)

@@ -475,8 +475,8 @@ class GameObjectScript : public ScriptObject, public UpdatableScript<GameObject>
         // Called when the game object is damaged (destructible buildings only).
         virtual void OnDamaged(GameObject* /*go*/, Player* /*player*/) { }
 
-		// Called when the game object loot state is changed.
-		virtual void OnLootStateChanged(GameObject* /*go*/, uint32 /*state*/, Unit* /*unit*/) { }
+        // Called when the game object loot state is changed.
+        virtual void OnLootStateChanged(GameObject* /*go*/, uint32 /*state*/, Unit* /*unit*/) { }
 
         // Called when the game object state is changed.
         virtual void OnGameObjectStateChanged(GameObject* /*go*/, uint32 /*state*/) { }
@@ -846,9 +846,9 @@ public: /* Initialization */
 
     public: /* SpellScriptLoader */
 
-		//void CreateSpellScripts(uint32 spellId, std::list<SpellScript*>& scriptVector);
-		//void CreateAuraScripts(uint32 spellId, std::list<AuraScript*>& scriptVector);
-		//void CreateSpellScriptLoaders(uint32 spellId, std::vector<std::pair<SpellScriptLoader*, std::multimap<uint32, uint32>::iterator> >& scriptVector);
+        //void CreateSpellScripts(uint32 spellId, std::list<SpellScript*>& scriptVector);
+        //void CreateAuraScripts(uint32 spellId, std::list<AuraScript*>& scriptVector);
+        //void CreateSpellScriptLoaders(uint32 spellId, std::vector<std::pair<SpellScriptLoader*, std::multimap<uint32, uint32>::iterator> >& scriptVector);
 
     public: /* ServerScript */
 
@@ -938,7 +938,7 @@ public: /* Initialization */
 
     public: /* BattlegroundScript */
 
-		Battleground* CreateBattleground(BattlegroundTypeId typeId);
+        Battleground* CreateBattleground(BattlegroundTypeId typeId);
 
     public: /* OutdoorPvPScript */
 
@@ -960,13 +960,13 @@ public: /* Initialization */
         void OnAuctionSuccessful(AuctionHouseObject* ah, AuctionEntry* entry);
         void OnAuctionExpire(AuctionHouseObject* ah, AuctionEntry* entry);
 
-	//public: /* ConditionScript */
+    //public: /* ConditionScript */
 
-		//bool OnConditionCheck(Condition* condition, ConditionSourceInfo& sourceInfo);
+        //bool OnConditionCheck(Condition* condition, ConditionSourceInfo& sourceInfo);
 
-	//public: /* VehicleScript */
+    //public: /* VehicleScript */
 
-	    //void OnInstall(Vehicle* veh);
+        //void OnInstall(Vehicle* veh);
         //void OnUninstall(Vehicle* veh);
         //void OnReset(Vehicle* veh);
         //void OnInstallAccessory(Vehicle* veh, Creature* accessory);
