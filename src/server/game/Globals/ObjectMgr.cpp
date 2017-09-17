@@ -2385,7 +2385,7 @@ void ObjectMgr::LoadPlayerInfo()
                 if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
                     sLog->outErrorDb("Wrong (> %u) level %u in player_levelstats table, ignoring.", STRONG_MAX_LEVEL, current_level);
                 else
-                    sLog->outDetail("Unused (> MaxPlayerLevel in Trinityd.conf) level %u in player_levelstats table, ignoring.", current_level);
+                    sLog->outDetail("Unused (> MaxPlayerLevel in worldserver.conf) level %u in player_levelstats table, ignoring.", current_level);
                 continue;
             }
 
@@ -6382,8 +6382,25 @@ bool ObjectMgr::LoadSkyFireStrings(char const* table, int32 min_value, int32 max
         data.Content.resize(1);
         ++count;
 
-        for (uint8 i = 0; i < TOTAL_LOCALES; ++i)
-            AddLocaleString(fields[i + 1].GetString(), LocaleConstant(i), data.Content);
+        // 0 -> default, idx in to idx+1
+        data.Content[0] = fields[1].GetCppString();
+
+        for (uint8 i = 1; i < TOTAL_LOCALES; ++i)
+        {
+            std::string str = fields[i + 1].GetCppString();
+            if (!str.empty())
+            {
+                int idx = GetOrNewIndexForLocale(LocaleConstant(i));
+                if (idx >= 0)
+                {
+                    // 0 -> default, idx in to idx+1
+                    if (data.Content.size() <= idx + 1)
+                        data.Content.resize(idx + 2);
+
+                    data.Content[idx + 1] = str;
+                }
+            }
+        }
     } while (result->NextRow());
 
     if (min_value == MIN_SKYFIRE_STRING_ID)
