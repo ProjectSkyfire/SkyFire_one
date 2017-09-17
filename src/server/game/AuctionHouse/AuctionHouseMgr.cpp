@@ -478,10 +478,10 @@ AuctionHouseEntry const* AuctionHouseMgr::GetAuctionHouseEntry(uint32 factionTem
 
 void AuctionHouseObject::AddAuction(AuctionEntry* auction)
 {
-	ASSERT(auction);
+    ASSERT(auction);
 
-	AuctionsMap[auction->Id] = auction;
-	sScriptMgr->OnAuctionAdd(this, auction);
+    AuctionsMap[auction->Id] = auction;
+    sScriptMgr->OnAuctionAdd(this, auction);
 }
 
 bool AuctionHouseObject::RemoveAuction(AuctionEntry *auction, uint32 item_template)

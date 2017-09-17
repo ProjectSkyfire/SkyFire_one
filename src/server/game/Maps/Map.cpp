@@ -146,10 +146,10 @@ void Map::LoadMap(int gx, int gy, bool reload)
     if (GridMaps[gx][gy])
     {
         sLog->outDetail("Unloading previously loaded map %u before reloading.", GetId());
-		sScriptMgr->OnUnloadGridMap(this, GridMaps[gx][gy], gx, gy);
+        sScriptMgr->OnUnloadGridMap(this, GridMaps[gx][gy], gx, gy);
 
-		delete (GridMaps[gx][gy]);
-		GridMaps[gx][gy] = NULL;
+        delete (GridMaps[gx][gy]);
+        GridMaps[gx][gy] = NULL;
     }
 
     // map file name
@@ -166,7 +166,7 @@ void Map::LoadMap(int gx, int gy, bool reload)
     }
     delete [] tmp;
 
-	sScriptMgr->OnLoadGridMap(this, GridMaps[gx][gy], gx, gy);
+    sScriptMgr->OnLoadGridMap(this, GridMaps[gx][gy], gx, gy);
 }
 
 void Map::LoadMapAndVMap(int gx, int gy)

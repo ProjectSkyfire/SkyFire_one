@@ -323,12 +323,12 @@ std::string GetScriptCommandName(ScriptCommands command);
 
 struct SpellClickInfo
 {
-	uint32 spellId;
-	uint8 castFlags;
-	SpellClickUserTypes userType;
+    uint32 spellId;
+    uint8 castFlags;
+    SpellClickUserTypes userType;
 
-	// helpers
-	bool IsFitToRequirements(Unit const* clicker, Unit const* clickee) const;
+    // helpers
+    bool IsFitToRequirements(Unit const* clicker, Unit const* clickee) const;
 };
 
 typedef std::multimap<uint32, SpellClickInfo> SpellClickInfoContainer;
@@ -555,7 +555,7 @@ class ObjectMgr
 
         typedef std::vector<std::string> ScriptNameMap;
 
-		typedef std::vector<std::string> ScriptNameContainer;
+        typedef std::vector<std::string> ScriptNameContainer;
 
         UNORDERED_MAP<uint32, uint32> TransportEventMap;
 
@@ -738,14 +738,14 @@ class ObjectMgr
 
         void LoadTransportEvents();
 
-		SkyFireStringLocale const* GetSkyFireStringLocale(int32 entry) const
-		{
-			SkyFireStringLocaleMap::const_iterator itr = mSkyFireStringLocaleMap.find(entry);
-			if (itr == mSkyFireStringLocaleMap.end()) return NULL;
-			return &itr->second;
-		}
-		bool LoadSkyFireStrings(char const* table, int32 min_value, int32 max_value);
-		bool LoadSkyFireStrings() { return LoadSkyFireStrings("skyfire_string", MIN_SKYFIRE_STRING_ID, MAX_SKYFIRE_STRING_ID); }
+        SkyFireStringLocale const* GetSkyFireStringLocale(int32 entry) const
+        {
+            SkyFireStringLocaleMap::const_iterator itr = mSkyFireStringLocaleMap.find(entry);
+            if (itr == mSkyFireStringLocaleMap.end()) return NULL;
+            return &itr->second;
+        }
+        bool LoadSkyFireStrings(char const* table, int32 min_value, int32 max_value);
+        bool LoadSkyFireStrings() { return LoadSkyFireStrings("skyfire_string", MIN_SKYFIRE_STRING_ID, MAX_SKYFIRE_STRING_ID); }
         void LoadDbScriptStrings();
         void LoadPetCreateSpells();
         void LoadCreatureLocales();
@@ -1018,9 +1018,9 @@ class ObjectMgr
         bool IsVendorItemValid(uint32 vendor_entry, uint32 item, uint32 maxcount, uint32 ptime, uint32 ExtendedCost, Player* pl = NULL, std::set<uint32>* skip_vendors = NULL, uint32 ORnpcflag = 0) const;
 
         void LoadScriptNames();
-		ScriptNameContainer &GetScriptNames() { return _scriptNamesStore; }
-		const char * GetScriptName(uint32 id) { return id < _scriptNamesStore.size() ? _scriptNamesStore[id].c_str() : ""; }
-		uint32 GetScriptId(const char *name);
+        ScriptNameContainer &GetScriptNames() { return _scriptNamesStore; }
+        const char * GetScriptName(uint32 id) { return id < _scriptNamesStore.size() ? _scriptNamesStore[id].c_str() : ""; }
+        uint32 GetScriptId(const char *name);
 
         GossipMenusMapBounds GetGossipMenusMapBounds(uint32 uiMenuId) const
         {
@@ -1032,12 +1032,12 @@ class ObjectMgr
             return GossipMenuItemsMapBounds(m_mGossipMenuItemsMap.lower_bound(uiMenuId), m_mGossipMenuItemsMap.upper_bound(uiMenuId));
         }
 
-		static void AddLocaleString(const std::string& s, LocaleConstant locale, StringVector& data);
-		static inline void GetLocaleString(const StringVector& data, int loc_idx, std::string& value)
-		{
-			if (data.size() > size_t(loc_idx) && !data[loc_idx].empty())
-				value = data[loc_idx];
-		}
+        static void AddLocaleString(const std::string& s, LocaleConstant locale, StringVector& data);
+        static inline void GetLocaleString(const StringVector& data, int loc_idx, std::string& value)
+        {
+            if (data.size() > size_t(loc_idx) && !data[loc_idx].empty())
+                value = data[loc_idx];
+        }
     protected:
         // first free id for selected id type
         uint32 m_auctionid;
@@ -1064,7 +1064,7 @@ class ObjectMgr
         typedef UNORDERED_MAP<uint32, std::string> ItemTextMap;
         typedef std::set<uint32> TavernAreaTriggerSet;
         typedef std::set<uint32> GameObjectForQuestSet;
-		typedef std::vector<std::string> ScriptNameContainer;
+        typedef std::vector<std::string> ScriptNameContainer;
 
         GameObjectTemplateContainer _gameObjectTemplateStore;
         GroupSet            mGroupSet;
@@ -1105,9 +1105,9 @@ class ObjectMgr
 
         GameTeleMap         m_GameTeleMap;
 
-		ScriptNameContainer       _scriptNamesStore;
+        ScriptNameContainer       _scriptNamesStore;
 
-		SpellClickInfoContainer   _spellClickInfoStore;
+        SpellClickInfoContainer   _spellClickInfoStore;
 
         typedef             std::vector<LocaleConstant> LocalForIndex;
         LocalForIndex        m_LocalForIndex;

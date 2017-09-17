@@ -293,7 +293,7 @@ class Item : public Object
 
         void BuildUpdate(UpdateDataMapType& );
 
-		uint32 GetScriptId() const { return GetProto()->ScriptId; }
+        uint32 GetScriptId() const { return GetProto()->ScriptId; }
     private:
         uint8 m_slot;
         Bag *m_container;

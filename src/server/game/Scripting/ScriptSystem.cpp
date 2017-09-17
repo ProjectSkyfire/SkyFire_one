@@ -33,7 +33,7 @@ void SystemMgr::LoadScriptTexts()
     sLog->outString("TSCR: Loading Script Texts additional data...");
     uint32 oldMSTime = getMSTime();
 
-	QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM script_texts");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM script_texts");
 
     if (!result)
     {
@@ -94,7 +94,7 @@ void SystemMgr::LoadScriptTextsCustom()
 
     sLog->outString("TSCR: Loading Custom Texts additional data...");
 
-	QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM custom_texts");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT entry, sound, type, language, emote FROM custom_texts");
 
     if (!result)
     {
@@ -158,7 +158,7 @@ void SystemMgr::LoadScriptWaypoints()
     uint64 uiCreatureCount = 0;
 
     // Load Waypoints
-	QueryResult_AutoPtr result = WorldDatabase.Query("SELECT COUNT(entry) FROM script_waypoint GROUP BY entry");
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT COUNT(entry) FROM script_waypoint GROUP BY entry");
     if (result)
         uiCreatureCount = result->GetRowCount();
 
