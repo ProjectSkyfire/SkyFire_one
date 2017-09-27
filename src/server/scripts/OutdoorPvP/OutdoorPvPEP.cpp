@@ -45,7 +45,6 @@ OPvPCapturePointEP_EWT::OPvPCapturePointEP_EWT(OutdoorPvP *pvp)
     
     AddObject(EP_EWT_FLAGS,
               EPTowerFlags[EP_EWT].entry,
-		      21,
               EPTowerFlags[EP_EWT].map,
               EPTowerFlags[EP_EWT].x,
               EPTowerFlags[EP_EWT].y,
@@ -222,7 +221,6 @@ OPvPCapturePointEP_NPT::OPvPCapturePointEP_NPT(OutdoorPvP *pvp)
     AddObject(
               EP_NPT_FLAGS,  
               EPTowerFlags[EP_NPT].entry,
-		      0,
               EPTowerFlags[EP_NPT].map,
               EPTowerFlags[EP_NPT].x,
               EPTowerFlags[EP_NPT].y,
@@ -372,7 +370,6 @@ void OPvPCapturePointEP_NPT::SummonGO(uint32 team)
         DelObject(EP_NPT_BUFF);
         AddObject(EP_NPT_BUFF,
                   EP_NPT_LordaeronShrine.entry,
-			      0,
                   EP_NPT_LordaeronShrine.map,
                   EP_NPT_LordaeronShrine.x,
                   EP_NPT_LordaeronShrine.y,
@@ -406,7 +403,6 @@ OPvPCapturePointEP_CGT::OPvPCapturePointEP_CGT(OutdoorPvP *pvp)
     
     AddObject(EP_CGT_FLAGS,
               EPTowerFlags[EP_CGT].entry,
-		      0,
               EPTowerFlags[EP_CGT].map,
               EPTowerFlags[EP_CGT].x,
               EPTowerFlags[EP_CGT].y,
@@ -573,7 +569,6 @@ OPvPCapturePointEP_PWT::OPvPCapturePointEP_PWT(OutdoorPvP *pvp)
     
     AddObject(EP_PWT_FLAGS,
               EPTowerFlags[EP_PWT].entry,
-		      0,
               EPTowerFlags[EP_PWT].map,
               EPTowerFlags[EP_PWT].x,
               EPTowerFlags[EP_PWT].y,
