@@ -55,16 +55,16 @@ enum ObjectiveStates
 // struct for go spawning
 struct go_type
 {
-	uint32 entry;
-	uint32 map;
-	float x;
-	float y;
-	float z;
-	float o;
-	float rot0;
-	float rot1;
-	float rot2;
-	float rot3;
+    uint32 entry;
+    uint32 map;
+    float x;
+    float y;
+    float z;
+    float o;
+    float rot0;
+    float rot1;
+    float rot2;
+    float rot3;
 };
 
 // struct for creature spawning
@@ -146,8 +146,8 @@ class OPvPCapturePoint
 
     protected:
 
-		bool AddObject(uint32 type, uint32 entry, uint32 map, float x, float y, float z, float o,
-			float rotation0, float rotation1, float rotation2, float rotation3);
+        bool AddObject(uint32 type, uint32 entry, uint32 map, float x, float y, float z, float o,
+            float rotation0, float rotation1, float rotation2, float rotation3);
         bool AddCreature(uint32 type, uint32 entry, uint32 teamval, uint32 map, float x, float y, float z, float o, uint32 spawntimedelay = 0);
 
         bool DelCreature(uint32 type);
