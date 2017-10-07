@@ -14550,7 +14550,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     uint16 newDrunkenValue = uint16(soberFactor*(GetUInt32Value(PLAYER_BYTES_3) & 0xFFFE));
     SetDrunkValue(newDrunkenValue);
 
-    m_cinematic = fields[19].GetUInt32();
+    m_cinematic = fields[18].GetUInt32();
     m_Played_time[PLAYED_TIME_TOTAL] = fields[19].GetUInt32();
     m_Played_time[PLAYED_TIME_LEVEL] = fields[20].GetUInt32();
 
@@ -14705,11 +14705,11 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     UpdateAllStats();
 
     // restore remembered power/health values (but not more max values)
-    uint32 savedHealth = fields[49].GetUInt32();
+    uint32 savedHealth = fields[48].GetUInt32();
     SetHealth(savedHealth > GetMaxHealth() ? GetMaxHealth() : savedHealth);
     for (uint8 i = 0; i < MAX_POWERS; ++i)
     {
-        uint32 savedPower = fields[50+i].GetUInt32();
+        uint32 savedPower = fields[49+i].GetUInt32();
         SetPower(Powers(i), savedPower > GetMaxPower(Powers(i)) ? GetMaxPower(Powers(i)) : savedPower);
     }
 
