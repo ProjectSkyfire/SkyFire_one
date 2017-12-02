@@ -1,15 +1,15 @@
 ![logo](https://abload.de/img/15_14_skyfire_logoqyj68.png)
 
 ## Introduction
-SkyFireONE(aka SFO) is a MMORPG Framework based mostly on C++. 
+SkyFireONE(aka SFO) is a MMORPG Framework based mostly on C++.     
 It is completely open source; community involvement is highly encouraged.
- 
-SFO was derived from multiple sources(MangOS, Trinity, OregonCore, etc)
+``` 
+SFO was derived from multiple sources(MangOS, Trinity, OregonCore, etc)     
 the Massive Network Game Object Servers, and is based on 
 the code of there projects with extensive changes over time 
 to optimize, improve and cleanup the codebase at the same 
 time as improving the ingame mechanics and functionality.
- 
+``` 
 If you wish to contribute ideas or code please visit 
 our site [here](https://www.projectskyfire.org/index.php) or make a Pull Request in this repo.
 
