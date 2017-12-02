@@ -1,7 +1,6 @@
 ![logo](https://abload.de/img/15_14_skyfire_logoqyj68.png)
 
 ## Introduction
-
 SkyFireONE(aka SFO) is a MMORPG Framework based mostly on C++. 
 It is completely open source; community involvement is highly encouraged.
  
@@ -31,27 +30,22 @@ our site [here](https://www.projectskyfire.org/index.php) or make a Pull Request
 + MS Visual Studio = 15 (2017) (Windows only)
 
 ## Copyright
-
 License: GPL 3.0
 
 Read file [COPYING](COPYING.md)
 
 ## Reporting issues
-
 Issue reporting currently is disabled via the [GitHub issue tracker](https://github.com/Bootz/SFO_Reworked) .
 this option for bug reports and feature requests, 
 will be enabled once project picks up.
 
 ## Submitting fixes
-
 Fixes are submitted as pull requests to the respective branches via GitHub.
 
 ## Authors & Contributors
-
 Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/THANKS.md)
 
 ## Links
-
 For further information on the Project SkyFireEMU, please visit our
 project website at Forum [Project SkyFire](http://www.projectskyfire.org)
 
