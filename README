@@ -1,10 +1,17 @@
 # ![logo](https://abload.de/img/15_14_skyfire_logoqyj68.png)
+<<<<<<< HEAD
+=======
 [![Build Status](https://travis-ci.org/Bootz/SFO_Reworked.svg?branch=development)](https://travis-ci.org/Bootz/SFO_Reworked)
+>>>>>>> aee64315d15582ff00ed0a3755b2c88277a07caa
 
 ## Introduction
 
 SkyFireONE(aka SFO) is a MMORPG Framework based mostly on C++. 
+<<<<<<< HEAD
+It is completely open source; community involvement is highly encouraged.
+=======
 It is completely open source, and soon to be community supported again.
+>>>>>>> aee64315d15582ff00ed0a3755b2c88277a07caa
  
 SFO was derived from multiple sources(MangOS, Trinity, OregonCore, etc)
 the Massive Network Game Object Servers, and is based on 
@@ -18,6 +25,12 @@ our site [here](https://www.projectskyfire.org/index.php) or make a Pull Request
 ## Supported Client Version
 [**TBC 2.4.3 Build 8606**](http://depfile.us/IU7MTzTYsMnG)
 
+<<<<<<< HEAD
+## Build Status
+# [![Build Status](https://travis-ci.org/Bootz/SFO_Reworked.svg?branch=development)](https://travis-ci.org/Bootz/SFO_Reworked)
+
+=======
+>>>>>>> aee64315d15582ff00ed0a3755b2c88277a07caa
 ## Requirements
 + Platform: Linux, Windows or Mac
 + Processor with SSE2 support
@@ -42,7 +55,11 @@ will be enabled once project picks up.
 
 ## Submitting fixes
 
+<<<<<<< HEAD
+Fixes are submitted as pull requests to the repective branches via GitHub.
+=======
 Fixes are submitted as pull requests via GitHub.
+>>>>>>> aee64315d15582ff00ed0a3755b2c88277a07caa
 
 ## Authors & Contributors
 
@@ -53,7 +70,11 @@ Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/
 For further information on the Project SkyFireEMU, please visit our
 project website at Forum [Project SkyFire](http://www.projectskyfire.org)
 
+<<<<<<< HEAD
+Database download [SF1DB Release v0.0.3](https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/)
+=======
 Database [SF1DB Release v0.0.3](https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/)
+>>>>>>> aee64315d15582ff00ed0a3755b2c88277a07caa
 
 For further information on the TrinityCore project, please visit the
 project website at Forum [TrinityCore](http://www.TrinityCore.org)
