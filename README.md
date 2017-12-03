@@ -2,7 +2,7 @@
 
 ## Introduction
 SkyFireONE(aka SFO) is a MMORPG Framework based mostly on C++.     
-It is completely open source; community involvement is highly encouraged.
+It is completely open source; current source is archived for now.
 ``` 
 SFO was derived from multiple sources(MangOS, Trinity, OregonCore, etc)     
 the Massive Network Game Object Servers, and is based on 
@@ -13,11 +13,8 @@ time as improving the ingame mechanics and functionality.
 If you wish to contribute ideas or code please visit 
 our site [here](https://www.projectskyfire.org/index.php) or make a Pull Request in this repo.
 
-## Build Status
-# [![Build Status](https://travis-ci.org/Bootz/SFO_Reworked.svg?branch=development)](https://travis-ci.org/Bootz/SFO_Reworked)
-
 ## Supported Client Version
-[**TBC 2.4.3 Build 8606**](http://depfile.us/IU7MTzTYsMnG)
+[**TBC 2.4.3 Build 8606**](https://www.projectskyfire.org/index.php)
 
 ## Requirements
 + Platform: Linux, Windows or Mac
@@ -35,7 +32,7 @@ License: GPL 3.0
 Read file [COPYING](COPYING.md)
 
 ## Reporting issues
-Issue reporting currently is disabled via the [GitHub issue tracker](https://github.com/Bootz/SFO_Reworked) .
+Issue reporting currently is disabled via the [GitHub issue tracker](https://github.com/SkyFireArchives/SkyFire_one) .
 this option for bug reports and feature requests, 
 will be enabled once project picks up.
 
@@ -49,7 +46,7 @@ Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/
 For further information on the Project SkyFireEMU, please visit our
 project website at Forum [Project SkyFire](http://www.projectskyfire.org)
 
-Database [SF1DB Release v0.0.3](https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/)
+Database DownLoad [SF1DB Release v0.0.3](https://www.projectskyfire.org/index.php?/files/file/28-skyfireone-db-release/)
 
 For further information on the TrinityCore project, please visit the
 project website at Forum [TrinityCore](http://www.TrinityCore.org)
