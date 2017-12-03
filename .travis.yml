@@ -14,10 +14,9 @@ language: cpp
 git:
   depth: 1
 
-branches:
-  only:
-    - master  
-    - development
+#branches:
+#  only:
+#    - master  
 
 compiler:
   - gcc
