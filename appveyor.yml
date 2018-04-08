@@ -1,0 +1,63 @@
+# Copyright (C) 2011-2018 Project SkyFire <http://www.projectskyfire.org/>
+#
+
+version: '2.0.{build}-{branch}'
+
+# Build worker image (VM template)
+image: 
+  - Visual Studio 2017
+
+skip_tags: true
+clone_depth: 1
+
+pull_requests:
+   do_not_increment_build_number: true  
+  
+services:
+  - mysql
+ 
+environment:
+  matrix: 
+  - SF_VERSION: TBC
+    VS_VER: Visual Studio 15 2017 Win64
+  #- SF_VERSION: Cata
+  #  VS_VER: Visual Studio 15 2017 Win64
+  #- SF_VERSION: Panda
+  #  VS_VER: Visual Studio 15 2017 Win64
+  #- SF_VERSION: Legion
+  #  VS_VER: Visual Studio 15 2017 Win64
+  
+# build Configuration, i.e. Debug, Release, etc.
+configuration:
+  - Debug
+  - Release
+
+# scripts that are called, before repo cloning  
+init:
+  - cmd: git config --global core.autocrlf input
+  - cmd: cmake --version
+  - cmd: msbuild /version  
+
+#scripts that run after cloning repository
+install:
+  - set PATH=%PATH%;C:\Program Files\MySQL\MySQL Server 5.6\bin
+  - set PATH=%PATH%;C:\Program Files (x86)\MySQL\MySQL Server 5.6\bin
+
+# scripts to run before build  
+before_build:
+  - cmd: echo %VS_VER%
+  - cmd: echo %Configuration%  
+
+# Build core.  
+build_script:
+  - cmd: mkdir build
+  - cmd: cd build
+  - cmd: cmake ../ -G "%VS_VER%" -DBUILD_WITH_WARNINGS=0 -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_TOOLS=0 -DBUILD_SCRIPTS=1 -DSF_VERSION=%SF_VERSION%
+  - cmd: msbuild /m SkyFireONE.sln
+
+# enable MSBuild parallel builds
+  - max_jobs: 2
+  - parallel: true
+  
+# MSBuild verbosity level (quiet|minimal|normal|detailed)
+  - verbosity: normal
