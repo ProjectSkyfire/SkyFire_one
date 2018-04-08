@@ -1,4 +1,4 @@
-// $Id: Select_Reactor_Base.cpp 91368 2010-08-16 13:03:34Z mhengstmengel $
+// $Id: Select_Reactor_Base.cpp 95574 2012-02-29 07:26:08Z johnnyw $
 
 #include "ace/Select_Reactor_Base.h"
 #include "ace/Reactor.h"
@@ -530,7 +530,8 @@ ACE_Select_Reactor_Handler_Repository::dump (void) const
 ACE_ALLOC_HOOK_DEFINE(ACE_Select_Reactor_Handler_Repository_Iterator)
 
 ACE_Select_Reactor_Notify::ACE_Select_Reactor_Notify (void)
-  : max_notify_iterations_ (-1)
+  : select_reactor_ (0)
+  , max_notify_iterations_ (-1)
 {
 }
 
@@ -599,8 +600,7 @@ ACE_Select_Reactor_Notify::open (ACE_Reactor_Impl *r,
 
   if (disable_notify_pipe == 0)
     {
-      this->select_reactor_ =
-        dynamic_cast<ACE_Select_Reactor_Impl *> (r);
+      this->select_reactor_ = dynamic_cast<ACE_Select_Reactor_Impl *> (r);
 
       if (select_reactor_ == 0)
         {
@@ -748,6 +748,7 @@ ACE_Select_Reactor_Notify::dispatch_notifications (int &number_of_active_handles
     return 0;
 }
 
+
 ACE_HANDLE
 ACE_Select_Reactor_Notify::notify_handle (void)
 {
@@ -755,6 +756,7 @@ ACE_Select_Reactor_Notify::notify_handle (void)
 
   return this->notification_pipe_.read_handle ();
 }
+
 
 int
 ACE_Select_Reactor_Notify::is_dispatchable (ACE_Notification_Buffer &buffer)
@@ -802,7 +804,7 @@ ACE_Select_Reactor_Notify::dispatch_notify (ACE_Notification_Buffer &buffer)
       return result;
     }
 
-  if (more_messages_queued)
+  if(more_messages_queued)
     {
       (void) ACE::send(this->notification_pipe_.write_handle(),
             (char *)&next, sizeof(ACE_Notification_Buffer));
@@ -904,6 +906,7 @@ ACE_Select_Reactor_Notify::read_notify_pipe (ACE_HANDLE handle,
             return -1;
         }
 
+
       return 1;
     }
 
@@ -913,6 +916,7 @@ ACE_Select_Reactor_Notify::read_notify_pipe (ACE_HANDLE handle,
 
   return 0;
 }
+
 
 int
 ACE_Select_Reactor_Notify::handle_input (ACE_HANDLE handle)
@@ -966,6 +970,7 @@ ACE_Select_Reactor_Impl::purge_pending_notifications (ACE_Event_Handler *eh,
   else
     return this->notify_handler_->purge_pending_notifications (eh, mask);
 }
+
 
 // Perform GET, CLR, SET, and ADD operations on the Handle_Sets.
 //
@@ -1113,6 +1118,7 @@ ACE_Select_Reactor_Impl::clear_dispatch_mask (ACE_HANDLE handle,
   // the dispatch set.
   this->state_changed_ = true;
 }
+
 
 int
 ACE_Select_Reactor_Impl::resumable_handler (void)

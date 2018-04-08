@@ -1,12 +1,14 @@
+
 //=============================================================================
 /**
  *  @file    Sched_Params.cpp
  *
- *  $Id: Sched_Params.cpp 91286 2010-08-05 09:04:31Z johnnyw $
+ *  $Id: Sched_Params.cpp 95761 2012-05-15 18:23:04Z johnnyw $
  *
  *  @author David Levine
  */
 //=============================================================================
+
 
 #include "ace/Sched_Params.h"
 
@@ -18,6 +20,8 @@
 #  include "ace/OS_NS_string.h"
 #  include /**/ <sys/priocntl.h>
 #endif /* ACE_HAS_PRIOCNTL && ACE_HAS_THREADS */
+
+
 
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 
@@ -80,9 +84,7 @@ ACE_Sched_Params::priority_min (const Policy policy,
         }
     }
 #elif defined(ACE_HAS_PTHREADS) && \
-      (!defined(ACE_LACKS_SETSCHED) || defined (ACE_TANDEM_T1248_PTHREADS) || \
-       defined (ACE_HAS_PTHREAD_SCHEDPARAM))
-
+      (!defined(ACE_LACKS_SETSCHED))
   switch (scope)
     {
     case ACE_SCOPE_THREAD:
@@ -188,7 +190,7 @@ ACE_Sched_Params::priority_max (const Policy policy,
         }
     }
 #elif defined(ACE_HAS_PTHREADS) && \
-      (!defined(ACE_LACKS_SETSCHED) || defined (ACE_TANDEM_T1248_PTHREADS) || \
+      (!defined(ACE_LACKS_SETSCHED) || \
        defined (ACE_HAS_PTHREAD_SCHEDPARAM))
 
   switch (scope)
@@ -270,7 +272,7 @@ ACE_Sched_Params::next_priority (const Policy policy,
         return priority;  // unknown priority:  should never get here
     }
 #elif defined(ACE_HAS_THREADS) && \
-      (!defined(ACE_LACKS_SETSCHED) || defined (ACE_TANDEM_T1248_PTHREADS) || \
+      (!defined(ACE_LACKS_SETSCHED) || \
        defined (ACE_HAS_PTHREAD_SCHEDPARAM))
   // including STHREADS, and PTHREADS
   int const max = priority_max (policy, scope);
@@ -314,7 +316,7 @@ ACE_Sched_Params::previous_priority (const Policy policy,
         return priority;  // unknown priority:  should never get here
     }
 #elif defined(ACE_HAS_THREADS) && \
-      (!defined(ACE_LACKS_SETSCHED) || defined (ACE_TANDEM_T1248_PTHREADS) || \
+      (!defined(ACE_LACKS_SETSCHED) || \
        defined (ACE_HAS_PTHREAD_SCHEDPARAM))
   // including STHREADS and PTHREADS
   int const min = priority_min (policy, scope);
