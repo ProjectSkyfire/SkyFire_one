@@ -23,8 +23,8 @@ Travis-CI
 [![Build Status](https://travis-ci.org/Bootz/SkyFireONE_NG.svg?branch=master)]()	         
    
 Appveyor       
-[![Build status](https://ci.appveyor.com/api/projects/status/6f7vyo0xbk7x11fi/branch/master?svg=true)]()	   
-     
+[![Build status](https://ci.appveyor.com/api/projects/status/8tqfrqm9r99m95mq?svg=true)](https://ci.appveyor.com/project/Bootz49186/skyfire-one)
+
 Dependency     
 [![Dependency Status](https://david-dm.org/boennemann/badges.svg)]()   
 
