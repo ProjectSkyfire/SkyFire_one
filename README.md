@@ -20,7 +20,7 @@ our site [here](https://www.projectskyfire.org/index.php) or make a Pull Request
 
 ## Build Status
 Travis-CI   
-[![Build Status](https://travis-ci.org/Bootz/SkyFireONE_NG.svg?branch=master)]()	         
+[![Build Status](https://travis-ci.org/ProjectSkyfire/SkyFire_one.svg?branch=master)](https://travis-ci.org/ProjectSkyfire/SkyFire_one)	         
    
 Appveyor       
 [![Build status](https://ci.appveyor.com/api/projects/status/8tqfrqm9r99m95mq?svg=true)](https://ci.appveyor.com/project/Bootz49186/skyfire-one)
