@@ -1,8 +1,9 @@
 # SkyFireONE - SFO
----
+    
 #![logo](https://abload.de/img/15_14_skyfire_logoqyj68.png)	
+---
 
-SkyFireONE(aka SFO) is a MMORPG Framework based mostly on C++.     
+__SkyFireONE(aka SFO)__ is a MMORPG Framework based mostly on C++.     
 It is completely open source; current source now community supported.
 ``` 
 SFO was derived from multiple sources(MangOS, Trinity, OregonCore,etc)     
@@ -19,6 +20,7 @@ our site [here](https://www.projectskyfire.org/index.php) or make a Pull Request
   - To submit non-blizzlike addition, post in patchform in correct area on forums.
 
 ## Build Status
+
 Travis-CI   
 [![Build Status](https://travis-ci.org/ProjectSkyfire/SkyFire_one.svg?branch=master)](https://travis-ci.org/ProjectSkyfire/SkyFire_one)	         
    
@@ -35,6 +37,7 @@ FTB
 [**TBC 2.4.3 Build 8606**](http://depfile.us/IU7MTzTYsMnG)   
       
 ## Requirements     
+
 ##### SkyFireONE uses a number of open source projects to work properly:      
      
  Platform: Linux, Windows or Mac     
@@ -51,10 +54,12 @@ FTB
   | [MS Visual Studio] 15 (2017) | Windows only |    
 
 ## Copyright   
+
 License: GPL 3.0   
 Read file [COPYING](COPYING.md)   
    
 ## Authors & Contributors   
+
 Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/THANKS.md)   
    
 #### For further informational links or communities.   
