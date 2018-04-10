@@ -96,7 +96,7 @@ bool ChatHandler::HandleServerInfoCommand(const char* /*args*/)
     std::string str = secsToTimeString(sWorld->GetUptime());
     uint32 updateTime = sWorld->GetUpdateTime();
 
-    PSendSysMessage(_FULLVERSION);
+    PSendSysMessage(" _FULLVERSION ");
     //if (m_session)
     //    full = _FULLVERSION(REVISION_DATE, REVISION_TIME, "|cffffffff|Hurl:" REVISION_ID "|h" REVISION_ID "|h|r");
     //else
