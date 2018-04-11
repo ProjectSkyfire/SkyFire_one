@@ -86,7 +86,7 @@ bool Database::Initialize(const char* infoString)
 
     InitDelayThread();
 
-    Tokens tokens = StrSplit(infoString, ";");
+    Tokens tokens(infoString, ';');
 
     Tokens::iterator iter;
 

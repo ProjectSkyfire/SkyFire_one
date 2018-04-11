@@ -1,10 +1,11 @@
 /*
- * Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -16,8 +17,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _TCSOAP_H
-#define _TCSOAP_H
+#ifndef _SFSOAP_H
+#define _SFSOAP_H
 
 #include "Common.h"
 #include "World.h"
@@ -31,10 +32,10 @@
 #include <ace/Semaphore.h>
 #include <ace/Task.h>
 
-class TCSoapRunnable: public ACE_Based::Runnable
+class SFSoapRunnable: public ACE_Based::Runnable
 {
     public:
-        TCSoapRunnable() { }
+        SFSoapRunnable() { }
         void run();
         void setListenArguments(std::string host, uint16 port)
         {
@@ -52,13 +53,9 @@ class SOAPCommand
 {
     public:
         SOAPCommand():
-            pendingCommands(0, USYNC_THREAD, "pendingCommands")
-        {
-        }
+            pendingCommands(0, USYNC_THREAD, "pendingCommands"), m_success(false) {}
 
-        ~SOAPCommand()
-        {
-        }
+        ~SOAPCommand() {}
 
         void appendToPrintBuffer(const char* msg)
         {

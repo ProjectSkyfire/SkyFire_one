@@ -164,15 +164,15 @@ void PlayerTaxi::InitTaxiNodesForLevel(uint32 race, uint32 level)
 
 void PlayerTaxi::LoadTaxiMask(const char* data)
 {
-    Tokens tokens = StrSplit(data, " ");
+    Tokens tokens(data, ' ');
 
-    int index;
+    uint8 index;
     Tokens::iterator iter;
     for (iter = tokens.begin(), index = 0;
         (index < TaxiMaskSize) && (iter != tokens.end()); ++iter, ++index)
     {
         // load and set bits only for existed taxi nodes
-        m_taximask[index] = sTaxiNodesMask[index] & uint32(atol((*iter).c_str()));
+        m_taximask[index] = sTaxiNodesMask[index] & uint32(atol(*iter));
     }
 }
 
@@ -194,13 +194,14 @@ bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values)
 {
     ClearTaxiDestinations();
 
-    Tokens tokens = StrSplit(values, " ");
+    Tokens tokens(values, ' ');
 
     for (Tokens::iterator iter = tokens.begin(); iter != tokens.end(); ++iter)
     {
-        uint32 node = uint32(atol(iter->c_str()));
+        uint32 node = uint32(atol(*iter));
         AddTaxiDestination(node);
     }
+
 
     if (m_TaxiDestinations.empty())
         return true;
@@ -1451,7 +1452,7 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
         *p_data << uint32(petFamily);
     }
 
-    Tokens data = StrSplit(fields[19].GetCppString(), " ");
+    Tokens data(fields[19].GetString(), ' ');
 
     for (uint8 slot = 0; slot < EQUIPMENT_SLOT_END; ++slot)
     {
@@ -14176,7 +14177,7 @@ bool Player::LoadValuesArrayFromDB(Tokens& data, uint64 guid)
 
     Field *fields = result->Fetch();
 
-    data = StrSplit(fields[0].GetCppString(), " ");
+    data(fields[0].GetCppString(), ' ');
 
     return true;
 }
@@ -14186,7 +14187,7 @@ uint32 Player::GetUInt32ValueFromArray(Tokens const& data, uint16 index)
     if (index >= data.size())
         return 0;
 
-    return (uint32)atoi(data[index].c_str());
+    return (uint32) atoi(data[index]);
 }
 
 float Player::GetFloatValueFromArray(Tokens const& data, uint16 index)
@@ -14198,9 +14199,8 @@ float Player::GetFloatValueFromArray(Tokens const& data, uint16 index)
     return result;
 }
 
-uint32 Player::GetUInt32ValueFromDB(uint16 index, uint64 guid)
+uint32 Player::GetUInt32ValueFromDB(Tokens& data, uint16 index, uint64 guid)
 {
-    Tokens data;
     if (!LoadValuesArrayFromDB(data, guid))
         return 0;
 
@@ -16481,46 +16481,46 @@ void Player::SaveDataFieldToDB()
 
     CharacterDatabase.Execute(ss.str().c_str());
 }
-
-bool Player::SaveValuesArrayInDB(Tokens const& tokens, uint64 guid)
+/*
+bool Player::SaveValuesArrayInDB(Tokens const& data, uint64 guid)
 {
     std::ostringstream ss2;
     ss2<<"UPDATE characters SET data='";
     int i = 0;
-    for (Tokens::const_iterator iter = tokens.begin(); iter != tokens.end(); ++iter, ++i)
+    for (Tokens::const_iterator iter = data.begin(); iter != data.end(); ++iter, ++i)
     {
-        ss2<<tokens[i]<<" ";
+        ss2<<data[i]<<" ";
     }
     ss2<<"' WHERE guid='"<< GUID_LOPART(guid) <<"'";
 
     return CharacterDatabase.Execute(ss2.str().c_str());
 }
 
-void Player::SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value)
+void Player::SetUInt32ValueInArray(Tokens& data, uint16 index, uint32 value)
 {
     char buf[11];
     snprintf(buf, 11, "%u", value);
 
-    if (index >= tokens.size())
+    if (index >= data.size())
         return;
 
-    tokens[index] = buf;
+    data[index] = buf;
 }
 
-void Player::SetUInt32ValueInDB(uint16 index, uint32 value, uint64 guid)
+void Player::SetUInt32ValueInDB(Tokens& data, uint16 index, uint32 value, uint64 guid)
 {
-    Tokens tokens;
-    if (!LoadValuesArrayFromDB(tokens, guid))
+    Tokens data;
+    if (!LoadValuesArrayFromDB(data, guid))
         return;
 
-    if (index >= tokens.size())
+    if (index >= data.size())
         return;
 
     char buf[11];
     snprintf(buf, 11, "%u", value);
-    tokens[index] = buf;
+    data[index] = buf;
 
-    SaveValuesArrayInDB(tokens, guid);
+    SaveValuesArrayInDB(data, guid);
 }
 
 void Player::SetFloatValueInDB(uint16 index, float value, uint64 guid)
@@ -16529,7 +16529,7 @@ void Player::SetFloatValueInDB(uint16 index, float value, uint64 guid)
     memcpy(&temp, &value, sizeof(value));
     Player::SetUInt32ValueInDB(index, temp, guid);
 }
-
+*/
 void Player::SendAttackSwingNotStanding()
 {
     WorldPacket data(SMSG_ATTACKSWING_NOTSTANDING, 0);

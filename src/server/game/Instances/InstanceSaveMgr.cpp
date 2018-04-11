@@ -214,11 +214,11 @@ bool InstanceSave::UnloadIfEmpty()
 
 void InstanceSaveManager::_DelHelper(DatabaseType &db, const char *fields, const char *table, const char *queryTail, ...)
 {
-    Tokens fieldTokens = StrSplit(fields, ", ");
+    Tokens fieldTokens(fields, ' ');
     ASSERT(fieldTokens.size() != 0);
 
     va_list ap;
-    char szQueryTail [MAX_QUERY_LEN];
+    char szQueryTail[MAX_QUERY_LEN];
     va_start(ap, queryTail);
     vsnprintf(szQueryTail, MAX_QUERY_LEN, queryTail, ap);
     va_end(ap);

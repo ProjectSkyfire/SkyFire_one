@@ -34,7 +34,7 @@
 #include "Log.h"
 #include "Master.h"
 #include "RARunnable.h"
-#include "TCSoap.h"
+#include "SFSoap.h"
 #include "Timer.h"
 #include "Util.h"
 #include "AuthSocket.h"
@@ -121,7 +121,7 @@ int Master::Run()
     BigNumber seed1;
     seed1.SetRand(16 * 8);
 
-    sLog->outString("%s (worldserver-daemon)", _FULLVERSION);
+    sLog->outString("%s (worldserver-daemon)", " _FULLVERSION ");
     sLog->outString("<Ctrl-C> to stop.\n");
 
     sLog->outString(" ");
@@ -245,8 +245,8 @@ int Master::Run()
 
     if (ConfigMgr::GetBoolDefault("SOAP.Enabled", false))
     {
-        TCSoapRunnable* runnable = new TCSoapRunnable();
-        runnable->setListenArguments(ConfigMgr::GetStringDefault("SOAP.IP", "127.0.0.1"), ConfigMgr::GetIntDefault("SOAP.Port", 7878));
+        SFSoapRunnable* runnable = new SFSoapRunnable();
+        runnable->setListenArguments(ConfigMgr::GetStringDefault("SOAP.IP", "127.0.0.1"), uint16(ConfigMgr::GetIntDefault("SOAP.Port", 7878)));
         soap_thread = new ACE_Based::Thread(runnable);
     }
 
@@ -273,7 +273,7 @@ int Master::Run()
     // set server online (allow connecting now)
     LoginDatabase.DirectPExecute("UPDATE realmlist SET color = color & ~%u, population = 0 WHERE id = '%u'", REALM_FLAG_INVALID, realmID);
 
-    sLog->outString("%s (worldserver-daemon) ready...", _FULLVERSION);
+    sLog->outString("%s (worldserver-daemon) ready...", " _FULLVERSION ");
     sWorldSocketMgr->Wait();
 
     if (soap_thread)
@@ -449,7 +449,7 @@ bool Master::_StartDB()
     clearOnlineAccounts();
 
     ///- Insert version info into DB
-    WorldDatabase.PExecute("UPDATE version SET core_version = '%s', core_revision = '%s'", _FULLVERSION, _HASH);        // One-time query
+    WorldDatabase.PExecute("UPDATE version SET core_version = '%s', core_revision = '%s'", " _FULLVERSION ", _HASH);        // One-time query
 
     sWorld->LoadDBVersion();
 
