@@ -1263,10 +1263,10 @@ class Player : public Unit, public GridObject<Player>
         void SaveInventoryAndGoldToDB();                    // fast save function for item/money cheating preventing
         void SaveGoldToDB();
         void SaveDataFieldToDB();
-        static bool SaveValuesArrayInDB(Tokens const& data, uint64 guid);
-        static void SetUInt32ValueInArray(Tokens& data, uint16 index, uint32 value);
-        static void SetFloatValueInArray(Tokens& data, uint16 index, float value);
-        static void SetUInt32ValueInDB(uint16 index, uint32 value, uint64 guid);
+        static bool SaveValuesArrayInDB(Tokens const& tokens, uint64 guid);
+        static void SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value);
+        static void SetFloatValueInArray(Tokens& tokens, uint16 index, float value);
+        static void SetUInt32ValueInDB(Tokens& tokens, uint16 index, uint32 value, uint64 guid);
         static void SetFloatValueInDB(uint16 index, float value, uint64 guid);
         static void SavePositionInDB(uint32 mapid, float x, float y, float z, float o, uint32 zone, uint64 guid);
 

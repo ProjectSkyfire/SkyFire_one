@@ -14177,7 +14177,7 @@ bool Player::LoadValuesArrayFromDB(Tokens& data, uint64 guid)
 
     Field *fields = result->Fetch();
 
-    data(fields[0].GetCppString(), ' ');
+    data(fields[0].GetString(), ' ');
 
     return true;
 }
@@ -16480,6 +16480,67 @@ void Player::SaveDataFieldToDB()
     ss<<"' WHERE guid='"<< GUID_LOPART(GetGUIDLow()) <<"'";
 
     CharacterDatabase.Execute(ss.str().c_str());
+}
+void Player::SaveDataFieldToDB()
+{
+    std::ostringstream ss;
+    ss << "UPDATE characters SET data='";
+
+    for (uint16 i = 0; i < m_valuesCount; i++)
+    {
+        ss << GetUInt32Value(i) << " ";
+    }
+    ss << "' WHERE guid='" << GUID_LOPART(GetGUIDLow()) << "'";
+
+    CharacterDatabase.Execute(ss.str().c_str());
+}
+
+bool Player::SaveValuesArrayInDB(Tokens const& tokens, uint64 guid)
+{
+    std::ostringstream ss2;
+    ss2 << "UPDATE characters SET data='";
+    int i = 0;
+    for (Tokens::const_iterator iter = tokens.begin(); iter != tokens.end(); ++iter, ++i)
+    {
+        ss2 << tokens[i] << " ";
+    }
+    ss2 << "' WHERE guid='" << GUID_LOPART(guid) << "'";
+
+    return CharacterDatabase.Execute(ss2.str().c_str());
+}
+
+void Player::SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value)
+{
+    char buf[11];
+    snprintf(buf, 11, "%u", value);
+
+    if (index >= tokens.size())
+        return;
+
+    tokens[index] = buf;
+}
+
+void Player::SetUInt32ValueInDB(Tokens& tokens, uint16 index, uint32 value, uint64 guid)
+{
+//Tokens tokens;
+if (!LoadValuesArrayFromDB(tokens, guid))
+return;
+
+if (index >= tokens.size())
+return;
+
+char buf[11];
+snprintf(buf, 11, "%u", value);
+tokens[index] = buf;
+
+SaveValuesArrayInDB(tokens, guid);
+}
+
+void Player::SetFloatValueInDB(uint16 index, float value, uint64 guid)
+{
+uint32 temp;
+memcpy(&temp, &value, sizeof(value));
+Player::SetUInt32ValueInDB(index, temp, guid);
 }
 
 void Player::SendAttackSwingNotStanding()
