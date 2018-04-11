@@ -16481,55 +16481,7 @@ void Player::SaveDataFieldToDB()
 
     CharacterDatabase.Execute(ss.str().c_str());
 }
-/*
-bool Player::SaveValuesArrayInDB(Tokens const& data, uint64 guid)
-{
-    std::ostringstream ss2;
-    ss2<<"UPDATE characters SET data='";
-    int i = 0;
-    for (Tokens::const_iterator iter = data.begin(); iter != data.end(); ++iter, ++i)
-    {
-        ss2<<data[i]<<" ";
-    }
-    ss2<<"' WHERE guid='"<< GUID_LOPART(guid) <<"'";
 
-    return CharacterDatabase.Execute(ss2.str().c_str());
-}
-
-void Player::SetUInt32ValueInArray(Tokens& data, uint16 index, uint32 value)
-{
-    char buf[11];
-    snprintf(buf, 11, "%u", value);
-
-    if (index >= data.size())
-        return;
-
-    data[index] = buf;
-}
-
-void Player::SetUInt32ValueInDB(Tokens& data, uint16 index, uint32 value, uint64 guid)
-{
-    Tokens data;
-    if (!LoadValuesArrayFromDB(data, guid))
-        return;
-
-    if (index >= data.size())
-        return;
-
-    char buf[11];
-    snprintf(buf, 11, "%u", value);
-    data[index] = buf;
-
-    SaveValuesArrayInDB(data, guid);
-}
-
-void Player::SetFloatValueInDB(uint16 index, float value, uint64 guid)
-{
-    uint32 temp;
-    memcpy(&temp, &value, sizeof(value));
-    Player::SetUInt32ValueInDB(index, temp, guid);
-}
-*/
 void Player::SendAttackSwingNotStanding()
 {
     WorldPacket data(SMSG_ATTACKSWING_NOTSTANDING, 0);

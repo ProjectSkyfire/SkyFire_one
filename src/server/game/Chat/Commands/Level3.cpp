@@ -3962,7 +3962,10 @@ bool ChatHandler::HandleWaterwalkCommand(const char *args)
         ChatHandler(player).PSendSysMessage(LANG_YOUR_WATERWALK_SET, args, GetName());
     return true;
 }
-
+//
+///- Fix me !!
+//
+/*
 bool ChatHandler::HandleLevelUpCommand(const char *args)
 {
     char* px = strtok((char*)args, " ");
@@ -4064,7 +4067,7 @@ bool ChatHandler::HandleLevelUpCommand(const char *args)
         PSendSysMessage(LANG_YOU_CHANGE_LVL, name.c_str(), newlevel);
     return true;
 }
-
+*/
 bool ChatHandler::HandleShowAreaCommand(const char *args)
 {
     if (!*args)
