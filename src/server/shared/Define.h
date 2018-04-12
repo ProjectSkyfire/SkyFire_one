@@ -1,12 +1,11 @@
 /*
- * Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2010-2013 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2013 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2011-2018 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2018 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2018 MaNGOS <https://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
+ * Free Software Foundation; either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
@@ -21,12 +20,12 @@
 #ifndef SKYFIRE_DEFINE_H
 #define SKYFIRE_DEFINE_H
 
-#include <sys/types.h>
+#include "CompilerDefs.h"
 
 #include <ace/Basic_Types.h>
 #include <ace/ACE_export.h>
-
-#include "CompilerDefs.h"
+#include <cstddef>
+#include <sys/types.h>
 
 #define SKYFIRE_LITTLEENDIAN 0
 #define SKYFIRE_BIGENDIAN    1
@@ -44,9 +43,13 @@
 #  ifndef DECLSPEC_NORETURN
 #    define DECLSPEC_NORETURN __declspec(noreturn)
 #  endif //DECLSPEC_NORETURN
+#  ifndef DECLSPEC_DEPRECATED
+#    define DECLSPEC_DEPRECATED __declspec(deprecated)
+#  endif //DECLSPEC_DEPRECATED
 #else //PLATFORM != PLATFORM_WINDOWS
 #  define SKYFIRE_PATH_MAX PATH_MAX
 #  define DECLSPEC_NORETURN
+#  define DECLSPEC_DEPRECATED
 #endif //PLATFORM
 
 #if !defined(COREDEBUG)
@@ -61,26 +64,47 @@
 #if COMPILER == COMPILER_GNU
 #  define ATTR_NORETURN __attribute__((noreturn))
 #  define ATTR_PRINTF(F, V) __attribute__ ((format (printf, F, V)))
+#  define ATTR_DEPRECATED __attribute__((deprecated))
 #else //COMPILER != COMPILER_GNU
 #  define ATTR_NORETURN
 #  define ATTR_PRINTF(F, V)
+#  define ATTR_DEPRECATED
 #endif //COMPILER == COMPILER_GNU
 
 typedef ACE_INT64 int64;
 typedef ACE_INT32 int32;
 typedef ACE_INT16 int16;
 typedef ACE_INT8 int8;
+#ifndef _UINT64 	// Fix for Mac OSX
 typedef ACE_UINT64 uint64;
+#define _UINT64
+#endif
+#ifndef _UINT32 	// Fix for Mac OSX
 typedef ACE_UINT32 uint32;
+#define _UINT32
+#endif
+#ifndef _UINT16 	// Fix for Mac OSX
 typedef ACE_UINT16 uint16;
+#define _UINT16
+#endif
+#ifndef _UINT8 		// Fix for Mac OSX
 typedef ACE_UINT8 uint8;
+#define _UINT8
+#endif
 
-#if COMPILER != COMPILER_MICROSOFT
-typedef uint16      WORD;
-typedef uint32      DWORD;
-#endif //COMPILER
-
-typedef uint64 OBJECT_HANDLE;
+enum DBCFormatRecord
+{
+    FT_NA           = 'x',           // not used or unknown, 4 byte size
+    FT_NA_BYTE      = 'X',           // not used or unknown, byte
+    FT_STRING       = 's',           // char*
+    FT_FLOAT        = 'f',           // float
+    FT_INT          = 'i',           // uint32
+    FT_BYTE         = 'b',           // uint8
+    FT_SORT         = 'd',           // sorted by this field, field is not included
+    FT_IND          = 'n',           // the same, but parsed to data
+    FT_LOGIC        = 'l',           // Logical (boolean)
+    FT_SQL_PRESENT  = 'p',           // Used in sql format to mark column present in sql dbc
+    FT_SQL_ABSENT   = 'a'            // Used in sql format to mark column absent in sql dbc
+};
 
 #endif //SKYFIRE_DEFINE_H
-
