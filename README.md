@@ -1,6 +1,6 @@
 # SkyFireONE - SFO
     
-#![logo](https://abload.de/img/15_14_skyfire_logoqyj68.png)	
+![logo](https://abload.de/img/15_14_skyfire_logoqyj68.png)	
 ---
 
 __SkyFireONE(aka SFO)__ is a MMORPG Framework based mostly on C++.     
@@ -26,10 +26,10 @@ Travis-CI
    
 Appveyor-CI       
 [![Build status](https://ci.appveyor.com/api/projects/status/8tqfrqm9r99m95mq?svg=true)](https://ci.appveyor.com/project/Bootz49186/skyfire-one)
-
-Insight.io
-[![Insight.io](https://insight.io/repoBadge/github.com/ProjectSkyfire/SkyFire_one)](https://insight.io/github.com/ProjectSkyfire/SkyFire_one)
-
+      
+Insight.io    
+[![Insight.io](https://insight.io/repoBadge/github.com/ProjectSkyfire/SkyFire_one)](https://insight.io/github.com/ProjectSkyfire/SkyFire_one)     
+     
 Dependency     
 [![Dependency Status](https://david-dm.org/boennemann/badges.svg)]()   
 
