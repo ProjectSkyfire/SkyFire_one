@@ -45,7 +45,7 @@ FTB
      
  Platform: Linux, Windows or Mac     
  Processor with SSE2 support        
- you will also need:    
+   you will also need:    
      
   | Required | Platform |    
   | :-----: | :------: |    
