@@ -9,7 +9,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-if (USE_COREPCH)
+if( USE_COREPCH )
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
@@ -25,27 +25,14 @@ file(GLOB_RECURSE sources_Threading Threading/*.cpp Threading/*.h)
 file(GLOB_RECURSE sources_Utilities Utilities/*.cpp Utilities/*.h)
 file(GLOB sources_localdir *.cpp *.h)
 
-source_group(CMake FILES CMakeLists.txt)
-source_group(Configuration FILES ${sources_Configuration})
-source_group(Cryptography FILES ${sources_Cryptography})
-source_group(Database FILES ${sources_Database})
-source_group(DataStores FILES ${sources_DataStores})
-source_group(Debugging FILES ${sources_Debugging})
-source_group(Dynamic FILES ${sources_Dynamic})
-source_group(Logging FILES ${sources_Logging})
-source_group(Packets FILES ${sources_Packets})
-source_group(Threading FILES ${sources_Threading})
-source_group(Utilities FILES ${sources_Utilities})
-source_group(localdir FILES ${sources_localdir})
-
 #
 # Build shared sourcelist
 #
 
-if (USE_COREPCH AND MSVC)
+if( USE_COREPCH AND MSVC )
   set(shared_STAT_SRCS
-    PrecompiledHeaders/SharedPCH.cpp
-    PrecompiledHeaders/SharedPCH.h
+    PrecompiledHeaders/sharedPCH.cpp
+    PrecompiledHeaders/sharedPCH.h
   )
 endif()
 
@@ -66,10 +53,11 @@ set(shared_STAT_SRCS
 
 include_directories(
   ${CMAKE_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/dep/zlib
   ${CMAKE_SOURCE_DIR}/dep/SFMT
-  #${CMAKE_SOURCE_DIR}/dep/recastlite/Detour
-  #${CMAKE_SOURCE_DIR}/dep/recastlite/Recast
   ${CMAKE_SOURCE_DIR}/dep/utf8cpp
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Detour  -- NYI
+#  ${CMAKE_SOURCE_DIR}/dep/recastlite/Recast  -- NYI
   ${CMAKE_SOURCE_DIR}/src/server
   ${CMAKE_SOURCE_DIR}/src/server/game/World
   ${CMAKE_SOURCE_DIR}/src/server/game/Addons
@@ -88,7 +76,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Packets
   ${CMAKE_CURRENT_SOURCE_DIR}/Threading
   ${CMAKE_CURRENT_SOURCE_DIR}/Utilities
-  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object/Updates
+  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object
   ${ACE_INCLUDE_DIR}
   ${MYSQL_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
@@ -101,10 +89,10 @@ target_link_libraries(shared
 )
 
 # Generate precompiled header
-if (USE_COREPCH)
-  if (CMAKE_COMPILER_IS_GNUCXX)
-    add_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH.h)
+if( USE_COREPCH )
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    add_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/sharedPCH.h)
   elseif(MSVC)
-    add_native_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/SharedPCH)
+    add_native_precompiled_header(shared ${CMAKE_CURRENT_SOURCE_DIR}/PrecompiledHeaders/sharedPCH)
   endif()
 endif()

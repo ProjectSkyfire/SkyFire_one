@@ -739,12 +739,14 @@ void Object::_LoadIntoDataField(const char* data, uint32 startOffset, uint32 cou
     if (!data)
         return;
 
-    Tokens tokens(data, ' ', count);
+    Tokens tokens (data, ' ');
 
     if (tokens.size() != count)
         return;
 
-    for (uint32 index = 0; index < count; ++index)
+    Tokens::iterator iter;
+    uint32 index;
+    for (iter = tokens.begin(), index = 0; index < count; ++iter, ++index)
     {
         m_uint32Values[startOffset + index] = atol(tokens[index]);
     }
@@ -1682,10 +1684,10 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
     switch (mask)
     {
         case SUMMON_MASK_SUMMON:
-            summon = new TempSummon(properties, summoner, false);
+            summon = new TempSummon(properties, summoner);
             break;
         case SUMMON_MASK_GUARDIAN:
-            summon = new Guardian(properties, summoner, false);
+            summon = new Guardian(properties, summoner);
             break;
         case SUMMON_MASK_PUPPET:
             summon = new Puppet(properties, summoner);
@@ -1694,7 +1696,7 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
             summon = new Totem(properties, summoner);
             break;
         case SUMMON_MASK_MINION:
-            summon = new Minion(properties, summoner, false);
+            summon = new Minion(properties, summoner);
             break;
         default:
             return NULL;

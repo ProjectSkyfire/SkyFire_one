@@ -286,10 +286,10 @@ bool WorldSession::Update(PacketFilter& updater)
                         LogUnprocessedTail(packet);
                     break;
                 case STATUS_NEVER:
-                    sLog->outDebug(LOG_FILTER_OPCODES, "SESSION: received not allowed opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "SESSION: received not allowed opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
                     break;
                 case STATUS_UNHANDLED:
-                    sLog->outDebug(LOG_FILTER_OPCODES, "SESSION: received not handled opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
+                    sLog->outDebug(LOG_FILTER_NETWORKIO, "SESSION: received not handled opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
                     break;
                 default:
                     sLog->outError("SESSION: received wrong-status-req opcode %s (0x%.4X)", LookupOpcodeName(packet->GetOpcode()), packet->GetOpcode());
@@ -308,7 +308,7 @@ bool WorldSession::Update(PacketFilter& updater)
 
         delete packet;
     }
-
+ 
     // Cleanup socket pointer if need
     if (m_Socket && m_Socket->IsClosed())
     {

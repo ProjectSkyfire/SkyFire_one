@@ -154,7 +154,7 @@ void PlayerTaxi::AppendTaximaskTo(ByteBuffer& data, bool all)
     }
 }
 
-bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values, uint32 team)
+bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values)
 {
     ClearTaxiDestinations();
 
@@ -183,7 +183,7 @@ bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values, uint3
     }
 
     // can't load taxi path without mount set (quest taxi path?)
-    if (!sObjectMgr->GetTaxiMountDisplayId(GetTaxiSource(), team, true))
+    if (!sObjectMgr->GetTaxiMountDisplayId(GetTaxiSource(), true))
         return false;
 
     return true;
@@ -550,7 +550,8 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
     SetUInt32Value(PLAYER_GUILDRANK, 0);
     SetUInt32Value(PLAYER_GUILD_TIMESTAMP, 0);
 
-    SetUInt64Value(PLAYER__FIELD_KNOWN_TITLES, 0);        // 0=disabled
+    for (int i = 0; i < KNOWN_TITLES_SIZE; ++i)
+        SetUInt64Value(PLAYER__FIELD_KNOWN_TITLES + i, 0);  // 0=disabled
     SetUInt32Value(PLAYER_CHOSEN_TITLE, 0);
 
     SetUInt32Value(PLAYER_FIELD_KILLS, 0);
@@ -1426,11 +1427,12 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
         *p_data << uint32(petFamily);
     }
 
-    Tokens tokens(fields[19].GetCppString(), ' ');
+    Tokens data(fields[19].GetString(), ' ');
+    
     for (uint8 slot = 0; slot < EQUIPMENT_SLOT_END; ++slot)
     {
         uint32 visualbase = PLAYER_VISIBLE_ITEM_1_0 + (slot * MAX_VISIBLE_ITEM_OFFSET);
-        uint32 item_id = GetUInt32ValueFromArray(tokens, visualbase);
+        uint32 item_id = GetUInt32ValueFromArray(data, visualbase);
         const ItemPrototype * proto = sObjectMgr->GetItemPrototype(item_id);
         if (!proto)
         {
@@ -1444,7 +1446,7 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
 
         for (uint8 enchantSlot = PERM_ENCHANTMENT_SLOT; enchantSlot <= TEMP_ENCHANTMENT_SLOT; ++enchantSlot)
         {
-            uint32 enchantId = GetUInt32ValueFromArray(tokens, visualbase+1+enchantSlot);
+            uint32 enchantId = GetUInt32ValueFromArray(data, visualbase+1+enchantSlot);
             if (!enchantId)
                 continue;
 
@@ -4117,7 +4119,7 @@ void Player::CreateCorpse()
     uint8 haircolor  = (uint8)(_pb >> 24);
     uint8 facialhair = (uint8)(_pb2);
 
-    _cfb1 = ((0x00) | (race << 8) | (GetByteValue(PLAYER_BYTES_3, 0) << 16) | (skin << 24));
+    _cfb1 = ((0x00) | (race << 8) | (getGender() << 16) | (skin << 24));
     _cfb2 = ((face) | (hairstyle << 8) | (haircolor << 16) | (facialhair << 24));
 
     corpse->SetUInt32Value(CORPSE_FIELD_BYTES_1, _cfb1);
@@ -5624,11 +5626,11 @@ void Player::CheckAreaExploreAndOutdoor()
         return;
     int offset = areaFlag / 32;
 
-    if (offset >= 128)
+    if (offset >= PLAYER_EXPLORED_ZONES_SIZE)
     {
-        sLog->outError("Wrong area flag %u in map data for (X: %f Y: %f) point to field PLAYER_EXPLORED_ZONES_1 + %u (%u must be < 64).", areaFlag, GetPositionX(), GetPositionY(), offset, offset);
+        sLog->outError("Wrong area flag %u in map data for (X: %f Y: %f) point to field PLAYER_EXPLORED_ZONES_1 + %u ( %u must be < %u ).", areaFlag, GetPositionX(), GetPositionY(), offset, offset, PLAYER_EXPLORED_ZONES_SIZE);
         return;
-    }
+    } 
 
     uint32 val = (uint32)(1 << (areaFlag % 32));
     uint32 currFields = GetUInt32Value(PLAYER_EXPLORED_ZONES_1 + offset);
@@ -12124,7 +12126,7 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId)
             pMenu->GetGossipMenu().AddGossipMenuItemData(itr->second.action_menu_id, itr->second.action_poi_id, itr->second.action_script_id);
         }
     }
-
+    
     if (canSeeQuests)
         PrepareQuestMenu(pSource->GetGUID());
 
@@ -14142,20 +14144,6 @@ bool Player::LoadPositionFromDB(uint32& mapid, float& x, float& y, float& z, flo
     return true;
 }
 
-bool Player::LoadValuesArrayFromDB(Tokens& data, uint64 guid)
-{
-    QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT data FROM characters WHERE guid='%u'", GUID_LOPART(guid));
-    
-    if (!result)
-        return false;
-
-    Field* fields = result->Fetch();
-
-    Tokens tokens(fields[0].GetString(), ' ');
-
-    return true;
-}
-
 uint32 Player::GetUInt32ValueFromArray(Tokens const& data, uint16 index)
 {
     if (index >= data.size())
@@ -14173,18 +14161,36 @@ float Player::GetFloatValueFromArray(Tokens const& data, uint16 index)
     return result;
 }
 
+void Player::_LoadIntoDataField(const char* data, uint32 startOffset, uint32 count)
+{
+    if (!data)
+     return;
+
+    Tokens tokens(data, ' ');
+
+    if (tokens.size() != count)
+    return;
+
+    Tokens::iterator iter;
+    uint32 index;
+    for (iter = tokens.begin(), index = 0; index < count; ++iter, ++index)
+    {
+        m_uint32Values[startOffset + index] = uint32(atol(*iter));
+    }
+}
+
 bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
 {
-    //                                                       0     1        2     3     4     5      6       7      8   9      10           11            12
-    //QueryResult *result = CharacterDatabase.PQuery("SELECT guid, account, data, name, race, class, gender, level, xp, money, playerBytes, playerBytes2, playerFlags, "
-    // 13          14          15          16   17           18        19         20         21         22          23           24                 25
+    //                                                       0       1        2     3     4     5        6     7     8     9            10           11
+    //QueryResult *result = CharacterDatabase.PQuery("SELECT guid, account, name, race, class, gender, level, xp, money, playerBytes, playerBytes2, playerFlags, "
+    //   12          13          14        15     16           17        18         19        20         21          22           23                 24
     //"position_x, position_y, position_z, map, orientation, taximask, cinematic, totaltime, leveltime, rest_bonus, logout_time, is_logout_resting, resettalents_cost, "
-    // 26                 27       28       29       30       31         32           33            34        35    36      37                 38         39
+    //   25                 26       27       28       29       30         31           32            33       34    35         36                37         38
     //"resettalents_time, trans_x, trans_y, trans_z, trans_o, transguid, extra_flags, stable_slots, at_login, zone, online, death_expire_time, taxi_path, dungeon_difficulty, "
-    // 40           41                42                43                    44          45          46              47           48               49              50
+    //   39           40                41                42                    43          44          45              46           47               48             49
     //"arenaPoints, totalHonorPoints, todayHonorPoints, yesterdayHonorPoints, totalKills, todayKills, yesterdayKills, chosenTitle, knownCurrencies, watchedFaction, drunk, "
-    // 51      52         53         54          55           56             57
-    //"health, powerMana, powerRage, powerFocus, powerEnergy, powerHapiness, instance_id FROM characters WHERE guid = '%u'", guid);
+    //   50      51         52         53          54           55             56           57               58           59      60
+    //"health, powerMana, powerRage, powerFocus, powerEnergy, powerHapiness, instance_id, exploredZones, equipmentCache, ammoId, knownTitles FROM characters WHERE guid = '%u'", guid);
     QueryResult_AutoPtr result = holder->GetResult(PLAYER_LOGIN_QUERY_LOADFROM);
 
     if (!result)
@@ -14216,17 +14222,10 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
         return false;
     }
 
-    if (!LoadValues(fields[2].GetString()))
-    {
-        sLog->outError("Player #%d has invalid data in data field. Not loaded.", GUID_LOPART(guid));
-        return false;
-    }
-
     // overwrite possible wrong/corrupted guid
     SetUInt64Value(OBJECT_FIELD_GUID, MAKE_NEW_GUID(guid, 0, HIGHGUID_PLAYER));
 
     // overwrite some data fields
-    //uint32 bytes0 = GetUInt32Value(UNIT_FIELD_BYTES_0) & 0xFF000000;
     uint32 bytes0 = 0;
     bytes0 |= fields[3].GetUInt8();                         // race
     bytes0 |= fields[4].GetUInt8() << 8;                    // class
@@ -14432,7 +14431,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
             for (int i = 0; i < 2; ++i)
                 m_taxi.AddTaxiDestination(m_bgData.taxiPath[i]);
         }
-        else if (!m_taxi.LoadTaxiDestinationsFromString(taxi_nodes, GetTeam()))
+        else if (!m_taxi.LoadTaxiDestinationsFromString(taxi_nodes))
         {
             // problems with taxi path loading
             TaxiNodesEntry const* nodeEntry = NULL;
@@ -14563,16 +14562,6 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
 
     m_resetTalentsCost = fields[24].GetUInt32();
     m_resetTalentsTime = time_t(fields[25].GetUInt64());
-
-        SetRestBonus(GetRestBonus()+ time_diff*((float)GetUInt32Value(PLAYER_NEXT_LEVEL_XP)/72000)*bubble);
-    }
-
-    m_cinematic = fields[19].GetUInt32();
-    m_Played_time[PLAYED_TIME_TOTAL]= fields[20].GetUInt32();
-    m_Played_time[PLAYED_TIME_LEVEL]= fields[21].GetUInt32();
-
-    m_resetTalentsCost = fields[25].GetUInt32();
-    m_resetTalentsTime = time_t(fields[26].GetUInt64());
 
     // reserve some flags
     uint32 old_safe_flags = GetUInt32Value(PLAYER_FLAGS) & (PLAYER_FLAGS_HIDE_CLOAK | PLAYER_FLAGS_HIDE_HELM);
@@ -15871,7 +15860,7 @@ void Player::SaveToDB()
 
     std::ostringstream ss;
     ss << "REPLACE INTO characters (guid,account,name,race,class,gender,level,xp,money,playerBytes,playerBytes2,playerFlags,"
-        "map, instance_id, dungeon_difficulty, position_x, position_y, position_z, orientation, data, "
+        "map, instance_id, dungeon_difficulty, position_x, position_y, position_z, orientation, "
         "taximask, online, cinematic, "
         "totaltime, leveltime, rest_bonus, logout_time, is_logout_resting, resettalents_cost, resettalents_time, "
         "trans_x, trans_y, trans_z, trans_o, transguid, extra_flags, stable_slots, at_login, zone, "
@@ -16462,34 +16451,6 @@ void Player::SavePositionInDB(uint32 mapid, float x, float y, float z, float o, 
     CharacterDatabase.Execute(ss.str().c_str());
 }
 
-void Player::SaveDataFieldToDB()
-{
-    std::ostringstream ss;
-    ss << "UPDATE characters SET data='";
-
-    for (uint16 i = 0; i < m_valuesCount; i++)
-    {
-        ss << GetUInt32Value(i) << " ";
-    }
-    ss<<"' WHERE guid='"<< GUID_LOPART(GetGUIDLow()) <<"'";
-
-    CharacterDatabase.Execute(ss.str().c_str());
-}
-/*
-bool Player::SaveValuesArrayInDB(Tokens const& tokens, uint64 guid)
-{
-    std::ostringstream ss2;
-    ss2 <<"UPDATE characters SET data='";
-    int i = 0;
-    for (Tokens::const_iterator iter = tokens.begin(); iter != tokens.end(); ++iter, ++i)
-    {
-        ss2 << tokens[i] << " ";
-    }
-    ss2<<"' WHERE guid='"<< GUID_LOPART(guid) <<"'";
-
-    return CharacterDatabase.Execute(ss2.str().c_str());
-}*/
-
 void Player::SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value)
 {
     char buf[11];
@@ -16500,29 +16461,6 @@ void Player::SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value)
 
     tokens[index] = buf;
 }
-/*
-void Player::SetUInt32ValueInDB(Tokens const& tokens, uint16 index, uint32 value, uint64 guid)
-{
-
-    if (!LoadValuesArrayFromDB(tokens, guid))
-        return;
-
-    if (index >= tokens.size())
-        return;
-
-    char buf[11];
-    snprintf(buf, 11, "%u", value);
-    tokens[index] = buf;
-
-    SaveValuesArrayInDB(tokens, guid);
-}
-
-void Player::SetFloatValueInDB(Tokens const& tokens, uint16 index, float value, uint64 guid)
-{
-    uint32 temp;
-    memcpy(&temp, &value, sizeof(value));
-    Player::SetUInt32ValueInDB(index, temp, guid);
-}*/
 
 void Player::SendAttackSwingNotStanding()
 {

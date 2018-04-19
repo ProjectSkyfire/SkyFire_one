@@ -183,7 +183,6 @@ ELSE(WIN32 AND NOT CYGWIN)
 
 ENDIF(WIN32 AND NOT CYGWIN)
 
-
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(OpenSSL DEFAULT_MSG
   OPENSSL_LIBRARIES 

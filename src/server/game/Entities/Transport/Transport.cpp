@@ -525,7 +525,7 @@ void Transport::Update(uint32 p_diff)
 		if (m_curr == m_WayPoints.begin())
 			sLog->outDebug(LOG_FILTER_TRANSPORTS, " ************ BEGIN ************** %s", m_name.c_str());
 
-        sLog->outDebug(LOG_FILTER_TRANSPORTS, "%s moved to %d %f %f %f %d", m_name.c_str(), m_curr->second.id, m_curr->second.x, m_curr->second.y, m_curr->second.z, m_curr->second.mapid);
+		sLog->outDebug(LOG_FILTER_TRANSPORTS, "%s moved to %d %f %f %f %d", this->m_name.c_str(), m_curr->second.id, m_curr->second.x, m_curr->second.y, m_curr->second.z, m_curr->second.mapid);
 
         //Transport Event System
         CheckForEvent(this->GetEntry(), m_curr->second.id);

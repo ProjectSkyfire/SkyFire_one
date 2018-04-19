@@ -1,5 +1,5 @@
-# Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
-# Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -11,9 +11,9 @@
 
 option(SERVERS          "Build worldserver and authserver"                            1)
 option(SCRIPTS          "Build core with scripts included"                            1)
-#option(EXAMPLES         "Build core with example scripts included"                    0)
 option(TOOLS            "Build map/vmap extraction/assembler tools"                   0)
 option(USE_SCRIPTPCH    "Use precompiled headers when compiling scripts"              1)
 option(USE_COREPCH      "Use precompiled headers when compiling servers"              1)
 option(WITH_WARNINGS    "Show all warnings during compile"                            0)
 option(WITH_COREDEBUG   "Include additional debug-code in core"                       0)
+option(WITHOUT_GIT      "Disable the GIT testing routines"                            0)

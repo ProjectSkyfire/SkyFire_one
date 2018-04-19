@@ -54,8 +54,9 @@ class OutdoorPvP;
 
 typedef std::deque<Mail*> PlayerMails;
 
-#define PLAYER_MAX_SKILLS       127
-#define PLAYER_MAX_DAILY_QUESTS 25
+#define PLAYER_MAX_SKILLS           127
+#define PLAYER_MAX_DAILY_QUESTS     25
+#define PLAYER_EXPLORED_ZONES_SIZE  128
 
 // Note: SPELLMOD_* values is aura types in fact
 enum SpellModType
@@ -427,8 +428,8 @@ enum CharacterFlags
 #define PLAYER_TITLE_HAND_OF_ADAL          UI64LIT(0x0000008000000000) // 39
 #define PLAYER_TITLE_VENGEFUL_GLADIATOR    UI64LIT(0x0000010000000000) // 40
 
-#define KNOWN_TITLES_SIZE   2
-#define MAX_TITLE_INDEX     (KNOWN_TITLES_SIZE*64)          // 2 uint64 fields
+#define KNOWN_TITLES_SIZE   3
+#define MAX_TITLE_INDEX     (KNOWN_TITLES_SIZE*64)          // 3 uint64 fields
 
 // used in PLAYER_FIELD_BYTES values
 enum PlayerFieldByteFlags
@@ -807,54 +808,56 @@ enum PlayerRestState
 
 class PlayerTaxi
 {
-    public:
-        PlayerTaxi();
-        ~PlayerTaxi() {}
-        // Nodes
-        void InitTaxiNodesForLevel(uint32 race, uint32 level);
-        void LoadTaxiMask(const char* data);
-        void SaveTaxiMask(const char* data);
+public:
+    PlayerTaxi();
+    ~PlayerTaxi() {}
+    // Nodes
+    void InitTaxiNodesForLevel(uint32 race, uint32 level);
+    void LoadTaxiMask(const char* data);
 
-        uint32 GetTaximask(uint8 index) const { return m_taximask[index]; }
-        bool IsTaximaskNodeKnown(uint32 nodeidx) const
+    bool IsTaximaskNodeKnown(uint32 nodeidx) const
+    {
+        uint8  field = uint8((nodeidx - 1) / 32);
+        uint32 submask = 1 << ((nodeidx - 1) % 32);
+        return (m_taximask[field] & submask) == submask;
+    }
+    bool SetTaximaskNode(uint32 nodeidx)
+    {
+        uint8  field = uint8((nodeidx - 1) / 32);
+        uint32 submask = 1 << ((nodeidx - 1) % 32);
+        if ((m_taximask[field] & submask) != submask)
         {
-            uint8  field   = uint8((nodeidx - 1) / 32);
-            uint32 submask = 1<<((nodeidx-1)%32);
-            return (m_taximask[field] & submask) == submask;
+            m_taximask[field] |= submask;
+            return true;
         }
-        bool SetTaximaskNode(uint32 nodeidx)
-        {
-            uint8  field   = uint8((nodeidx - 1) / 32);
-            uint32 submask = 1<<((nodeidx-1)%32);
-            if ((m_taximask[field] & submask) != submask)
-            {
-                m_taximask[field] |= submask;
-                return true;
-            }
-            else
-                return false;
-        }
-        void AppendTaximaskTo(ByteBuffer& data, bool all);
+        else
+            return false;
+    }
+    void AppendTaximaskTo(ByteBuffer& data, bool all);
 
-        // Destinations
-        bool LoadTaxiDestinationsFromString(const std::string& values, uint32 team);
-        std::string SaveTaxiDestinationsToString();
+    // Destinations
+    bool LoadTaxiDestinationsFromString(const std::string& values);
+    std::string SaveTaxiDestinationsToString();
 
-        void ClearTaxiDestinations() { m_TaxiDestinations.clear(); }
-        void AddTaxiDestination(uint32 dest) { m_TaxiDestinations.push_back(dest); }
-        uint32 GetTaxiSource() const { return m_TaxiDestinations.empty() ? 0 : m_TaxiDestinations.front(); }
-        uint32 GetTaxiDestination() const { return m_TaxiDestinations.size() < 2 ? 0 : m_TaxiDestinations[1]; }
-        uint32 GetCurrentTaxiPath() const;
-        uint32 NextTaxiDestination()
-        {
-            m_TaxiDestinations.pop_front();
-            return GetTaxiDestination();
-        }
-        bool empty() const { return m_TaxiDestinations.empty(); }
-    private:
-        TaxiMask m_taximask;
-        std::deque<uint32> m_TaxiDestinations;
+    void ClearTaxiDestinations() { m_TaxiDestinations.clear(); }
+    void AddTaxiDestination(uint32 dest) { m_TaxiDestinations.push_back(dest); }
+    uint32 GetTaxiSource() const { return m_TaxiDestinations.empty() ? 0 : m_TaxiDestinations.front(); }
+    uint32 GetTaxiDestination() const { return m_TaxiDestinations.size() < 2 ? 0 : m_TaxiDestinations[1]; }
+    uint32 GetCurrentTaxiPath() const;
+    uint32 NextTaxiDestination()
+    {
+        m_TaxiDestinations.pop_front();
+        return GetTaxiDestination();
+    }
+    bool empty() const { return m_TaxiDestinations.empty(); }
+
+    friend std::ostringstream& operator<< (std::ostringstream& ss, PlayerTaxi const& taxi);
+private:
+    TaxiMask m_taximask;
+    std::deque<uint32> m_TaxiDestinations;
 };
+
+std::ostringstream& operator<< (std::ostringstream& ss, PlayerTaxi const& taxi);
 
 class Player;
 
@@ -1283,11 +1286,8 @@ class Player : public Unit, public GridObject<Player>
 
         bool LoadFromDB(uint32 guid, SqlQueryHolder *holder);
         void Initialize(uint32 guid);
-        static bool   LoadValuesArrayFromDB(Tokens& data, uint64 guid);
         static uint32 GetUInt32ValueFromArray(Tokens const& data, uint16 index);
         static float  GetFloatValueFromArray(Tokens const& data, uint16 index);
-        static uint32 GetUInt32ValueFromDB(Tokens& data, uint16 index, uint64 guid);
-        static float  GetFloatValueFromDB(uint16 index, uint64 guid);
         static uint32 GetZoneIdFromDB(uint64 guid);
         static uint32 GetLevelFromDB(uint64 guid);
         static bool   LoadPositionFromDB(uint32& mapid, float& x, float& y, float& z, float& o, bool& in_flight, uint64 guid);
@@ -1299,12 +1299,10 @@ class Player : public Unit, public GridObject<Player>
         void SaveToDB();
         void SaveInventoryAndGoldToDB();                    // fast save function for item/money cheating preventing
         void SaveGoldToDB();
-        void SaveDataFieldToDB();
-        //static bool SaveValuesArrayInDB(Tokens const& data, uint64 guid);
+
         static void SetUInt32ValueInArray(Tokens& data, uint16 index, uint32 value);
         static void SetFloatValueInArray(Tokens& data, uint16 index, float value);
-        //static void SetUInt32ValueInDB(Tokens const& data, uint16 index, uint32 value, uint64 guid);
-        //static void SetFloatValueInDB(Tokens const& data, uint16 index, float value, uint64 guid);
+
         static void SavePositionInDB(uint32 mapid, float x, float y, float z, float o, uint32 zone, uint64 guid);
 
         static void DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmChars = true, bool deleteFinally = false);
@@ -2185,6 +2183,7 @@ class Player : public Unit, public GridObject<Player>
         void _LoadDeclinedNames(QueryResult_AutoPtr result);
         void _LoadArenaTeamInfo(QueryResult_AutoPtr result);
         void _LoadBGData(QueryResult_AutoPtr result);
+        void _LoadIntoDataField(const char* data, uint32 startOffset, uint32 count);
 
         /*********************************************************/
         /***                   SAVE SYSTEM                     ***/
