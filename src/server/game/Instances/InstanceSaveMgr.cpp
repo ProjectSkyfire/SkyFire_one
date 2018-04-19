@@ -212,7 +212,7 @@ bool InstanceSave::UnloadIfEmpty()
         return true;
 }
 
-void InstanceSaveManager::_DelHelper(DatabaseType &db, const char *fields, const char *table, const char *queryTail, ...)
+/*void InstanceSaveManager::_DelHelper(DatabaseType &db, const char *fields, const char *table, const char *queryTail, ...)
 {
     Tokens fieldTokens(fields, ' ');
     ASSERT(fieldTokens.size() != 0);
@@ -239,7 +239,7 @@ void InstanceSaveManager::_DelHelper(DatabaseType &db, const char *fields, const
             db.DirectPExecute("DELETE FROM %s WHERE %s", table, ss.str().c_str());
         } while (result->NextRow());
     }
-}
+}*/
 
 void InstanceSaveManager::CleanupInstances()
 {

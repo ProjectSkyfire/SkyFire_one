@@ -55,7 +55,7 @@ find_package(OpenSSL REQUIRED)
 find_package(Threads REQUIRED)
 find_package(MySQL REQUIRED)
 
-if (UNIX)
+if ( UNIX )
     find_package(Readline)
     find_package(ZLIB)
     find_package(BZip2)
