@@ -1,7 +1,7 @@
-
-build*/
-Win32*/
-x64*/
+﻿
+[Bb]uild*/
+win32*/
+win64*/
 .directory
 .mailmap
 *.orig
@@ -10,6 +10,7 @@ x64*/
 bin/**
 tmp/**
 tmp/**/*
+*.BAK
 *.tmp
 *~
 .hg/
@@ -23,3 +24,4 @@ CMakeLists.txt.user
 *.BACKUP.*
 *.BASE.*
 *.LOCAL.*
+*.log
