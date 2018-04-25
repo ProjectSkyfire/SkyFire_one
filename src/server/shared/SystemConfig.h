@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
+ * Copyright (C) 2011-2018 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2018 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2018 MaNGOS <https://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,13 +17,24 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Core configuration options
+
 #ifndef SKYFIRE_SYSTEMCONFIG_H
 #define SKYFIRE_SYSTEMCONFIG_H
 
 #include "Define.h"
 #include "revision.h"
 
-#define _PACKAGENAME "SkyFireONE"
+#define _PACKAGENAME "SkyFire 5.x.x"
+
+// Format is YYYYMMDDRR where RR is the change in the conf file
+// for that day.
+#ifndef SKYFIREWORLD_CONFIG_VERSION
+# define SKYFIREWORLD_CONFIG_VERSION 2017091000
+#endif
+#ifndef SKYFIREAUTH_CONFIG_VERSION
+# define SKYFIREAUTH_CONFIG_VERSION 2017021900
+#endif
 
 #if SKYFIRE_ENDIAN == SKYFIRE_BIGENDIAN
 # define _ENDIAN_STRING "big-endian"
@@ -32,16 +42,13 @@
 # define _ENDIAN_STRING "little-endian"
 #endif
 
-#define _CLIENT_BUILD_REVISION "2.4.3 - 8606"
-
 #if PLATFORM == PLATFORM_WINDOWS
 # ifdef _WIN64
-#  define _FULLVERSION _PACKAGENAME " rev. " VER_PRODUCTVERSION_STR " (Win64, "_BUILD_DIRECTIVE ")"
+#  define _FULLVERSION _PACKAGENAME " rev. " VER_PRODUCTVERSION_STR " (Win64, " _BUILD_DIRECTIVE ")"
 # else
 #  define _FULLVERSION _PACKAGENAME " rev. " VER_PRODUCTVERSION_STR " (Win32, " _BUILD_DIRECTIVE ")"
 # endif
 #else
 #  define _FULLVERSION _PACKAGENAME " rev. " VER_PRODUCTVERSION_STR " (Unix, " _BUILD_DIRECTIVE ")"
 #endif
-
 #endif

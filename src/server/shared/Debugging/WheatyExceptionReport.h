@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
+ * Copyright (C) 2011-2018 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2018 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2018 MaNGOS <https://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,11 +16,11 @@
  * You should have received a copy of the GNU General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-
+ 
 #ifndef _WHEATYEXCEPTIONREPORT_
 #define _WHEATYEXCEPTIONREPORT_
 
-#if PLATFORM == PLATFORM_WINDOWS
+#if PLATFORM == PLATFORM_WINDOWS && !defined(__MINGW32__)
 
 #include <dbghelp.h>
 
@@ -56,21 +55,21 @@ enum BasicType                                              // Stolen from CVCON
 
 const char* const rgBaseType[] =
 {
-    " <user defined> ",                                    // btNoType = 0,
-    " void ",                                              // btVoid = 1,
-    " char* ",                                             // btChar = 2,
-    " wchar_t* ",                                          // btWChar = 3,
+    " <user defined> ",                                     // btNoType = 0,
+    " void ",                                               // btVoid = 1,
+    " char* ",                                              // btChar = 2,
+    " wchar_t* ",                                           // btWChar = 3,
     " signed char ",
     " unsigned char ",
-    " int ",                                               // btInt = 6,
-    " unsigned int ",                                      // btUInt = 7,
-    " float ",                                             // btFloat = 8,
-    " <BCD> ",                                             // btBCD = 9,
-    " bool ",                                              // btBool = 10,
+    " int ",                                                // btInt = 6,
+    " unsigned int ",                                       // btUInt = 7,
+    " float ",                                              // btFloat = 8,
+    " <BCD> ",                                              // btBCD = 9,
+    " bool ",                                               // btBool = 10,
     " short ",
     " unsigned short ",
-    " long ",                                              // btLong = 13,
-    " unsigned long ",                                     // btULong = 14,
+    " long ",                                               // btLong = 13,
+    " unsigned long ",                                      // btULong = 14,
     " __int8 ",
     " __int16 ",
     " __int32 ",
@@ -81,12 +80,12 @@ const char* const rgBaseType[] =
     " unsigned __int32 ",
     " unsigned __int64 ",
     " unsigned __int128 ",
-    " <currency> ",                                        // btCurrency = 25,
-    " <date> ",                                            // btDate = 26,
-    " VARIANT ",                                           // btVariant = 27,
-    " <complex> ",                                         // btComplex = 28,
-    " <bit> ",                                             // btBit = 29,
-    " BSTR ",                                              // btBSTR = 30,
+    " <currency> ",                                         // btCurrency = 25,
+    " <date> ",                                             // btDate = 26,
+    " VARIANT ",                                            // btVariant = 27,
+    " <complex> ",                                          // btComplex = 28,
+    " <bit> ",                                              // btBit = 29,
+    " BSTR ",                                               // btBSTR = 30,
     " HRESULT "                                             // btHresult = 31
 };
 
@@ -120,7 +119,7 @@ class WheatyExceptionReport
 
         static bool FormatSymbolValue(PSYMBOL_INFO, STACKFRAME *, char * pszBuffer, unsigned cbBuffer);
 
-        static char * DumpTypeIndex(char *, DWORD64, DWORD, unsigned, DWORD_PTR, bool & , char*);
+        static char * DumpTypeIndex(char *, DWORD64, DWORD, unsigned, DWORD_PTR, bool &, char*);
 
         static char * FormatOutputValue(char * pszCurrBuffer, BasicType basicType, DWORD64 length, PVOID pAddress);
 

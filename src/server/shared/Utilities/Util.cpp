@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
- * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
+ * Copyright (C) 2011-2018 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2018 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2018 MaNGOS <https://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,31 +18,30 @@
  */
 
 #include "Util.h"
+#include "Common.h"
 #include "utf8.h"
 #include "SFMT.h"
-
+#include "Errors.h" // for ASSERT
 #include <ace/TSS_T.h>
-#include <ace/INET_Addr.h>
-#include <iostream>
 
 typedef ACE_TSS<SFMTRand> SFMTRandTSS;
 static SFMTRandTSS sfmtRand;
 
 int32 irand(int32 min, int32 max)
 {
-    assert(max >= min);
+    ASSERT(max >= min);
     return int32(sfmtRand->IRandom(min, max));
 }
 
 uint32 urand(uint32 min, uint32 max)
 {
-    assert(max >= min);
+    ASSERT(max >= min);
     return sfmtRand->URandom(min, max);
 }
 
 float frand(float min, float max)
 {
-    assert(max >= min);
+    ASSERT(max >= min);
     return float(sfmtRand->Random() * (max - min) + min);
 }
 
@@ -62,13 +60,13 @@ double rand_chance(void)
     return sfmtRand->Random() * 100.0;
 }
 
-Tokens::Tokens(const std::string &src, const char sep, uint32 vectorReserve)
+Tokenizer::Tokenizer(const std::string &src, const char sep, uint32 vectorReserve)
 {
     m_str = new char[src.length() + 1];
     memcpy(m_str, src.c_str(), src.length() + 1);
 
     if (vectorReserve)
-        reserve(vectorReserve);
+        m_storage.reserve(vectorReserve);
 
     char* posold = m_str;
     char* posnew = m_str;
@@ -77,17 +75,17 @@ Tokens::Tokens(const std::string &src, const char sep, uint32 vectorReserve)
     {
         if (*posnew == sep)
         {
-            push_back(posold);
+            m_storage.push_back(posold);
             posold = posnew + 1;
 
-            *posnew = 0x00;
+            *posnew = '\0';
         }
-        else if (*posnew == 0x00)
+        else if (*posnew == '\0')
         {
             // Hack like, but the old code accepted these kind of broken strings,
             // so changing it would break other things
             if (posold != posnew)
-                push_back(posold);
+                m_storage.push_back(posold);
 
             break;
         }
@@ -127,6 +125,7 @@ void stripLineInvisibleChars(std::string &str)
         str.erase(wpos, str.size());
     if (str.find("|TInterface")!=std::string::npos)
         str.clear();
+
 }
 
 std::string secsToTimeString(uint64 timeInSecs, bool shortText, bool hoursOnly)
@@ -161,8 +160,8 @@ int64 MoneyStringToMoney(const std::string& moneyString)
         std::count(moneyString.begin(), moneyString.end(), 'c') == 1))
         return 0; // Bad format
 
-    Tokens tokens(moneyString, ' ');
-    for (Tokens::const_iterator itr = tokens.begin(); itr != tokens.end(); ++itr)
+    Tokenizer tokens(moneyString, ' ');
+    for (Tokenizer::const_iterator itr = tokens.begin(); itr != tokens.end(); ++itr)
     {
         std::string tokenString(*itr);
         size_t gCount = std::count(tokenString.begin(), tokenString.end(), 'g');
@@ -217,7 +216,8 @@ uint32 TimeStringToSecs(const std::string& timestring)
 
 std::string TimeToTimestampStr(time_t t)
 {
-    tm* aTm = localtime(&t);
+    tm aTm;
+    ACE_OS::localtime_r(&t, &aTm);
     //       YYYY   year
     //       MM     month (2 digits 01-12)
     //       DD     day (2 digits 01-31)
@@ -225,7 +225,7 @@ std::string TimeToTimestampStr(time_t t)
     //       MM     minutes (2 digits 00-59)
     //       SS     seconds (2 digits 00-59)
     char buf[20];
-    snprintf(buf, 20, "%04d-%02d-%02d_%02d-%02d-%02d", aTm->tm_year+1900, aTm->tm_mon+1, aTm->tm_mday, aTm->tm_hour, aTm->tm_min, aTm->tm_sec);
+    snprintf(buf, 20, "%04d-%02d-%02d_%02d-%02d-%02d", aTm.tm_year+1900, aTm.tm_mon+1, aTm.tm_mday, aTm.tm_hour, aTm.tm_min, aTm.tm_sec);
     return std::string(buf);
 }
 
@@ -238,6 +238,21 @@ bool IsIPAddress(char const* ipaddress)
     // Let the big boys do it.
     // Drawback: all valid ip address formats are recognized e.g.: 12.23, 121234, 0xABCD)
     return inet_addr(ipaddress) != INADDR_NONE;
+}
+
+std::string GetAddressString(ACE_INET_Addr const& addr)
+{
+    char buf[ACE_MAX_FULLY_QUALIFIED_NAME_LEN + 16];
+    addr.addr_to_string(buf, ACE_MAX_FULLY_QUALIFIED_NAME_LEN + 16);
+    return buf;
+}
+
+bool IsIPAddrInNetwork(ACE_INET_Addr const& net, ACE_INET_Addr const& addr, ACE_INET_Addr const& subnetMask)
+{
+    uint32 mask = subnetMask.get_ip_address();
+    if ((net.get_ip_address() & mask) == (addr.get_ip_address() & mask))
+        return true;
+    return false;
 }
 
 /// create PID file
@@ -414,12 +429,12 @@ std::wstring GetMainPartOfName(std::wstring wname, uint32 declension)
     static wchar_t const j_End[]    = { wchar_t(1), wchar_t(0x0439), wchar_t(0x0000)};
 
     static wchar_t const* const dropEnds[6][8] = {
-        { &a_End[1], &o_End[1],   &ya_End[1],  &ie_End[1], &soft_End[1], &j_End[1],   NULL,       NULL },
-        { &a_End[1], &ya_End[1],  &yeru_End[1], &i_End[1],  NULL,         NULL,         NULL,       NULL },
-        { &ie_End[1], &u_End[1],   &yu_End[1],  &i_End[1],  NULL,         NULL,         NULL,       NULL },
-        { &u_End[1], &yu_End[1],  &o_End[1],   &ie_End[1], &soft_End[1], &ya_End[1],  &a_End[1], NULL },
+        { &a_End[1],  &o_End[1],    &ya_End[1],   &ie_End[1],  &soft_End[1], &j_End[1],    NULL,       NULL },
+        { &a_End[1],  &ya_End[1],   &yeru_End[1], &i_End[1],   NULL,         NULL,         NULL,       NULL },
+        { &ie_End[1], &u_End[1],    &yu_End[1],   &i_End[1],   NULL,         NULL,         NULL,       NULL },
+        { &u_End[1],  &yu_End[1],   &o_End[1],    &ie_End[1],  &soft_End[1], &ya_End[1],   &a_End[1],  NULL },
         { &oj_End[1], &io_j_End[1], &ie_j_End[1], &o_m_End[1], &io_m_End[1], &ie_m_End[1], &yu_End[1], NULL },
-        { &ie_End[1], &i_End[1],   NULL,         NULL,        NULL,         NULL,         NULL,       NULL }
+        { &ie_End[1], &i_End[1],    NULL,         NULL,        NULL,         NULL,         NULL,       NULL }
     };
 
     for (wchar_t const* const* itr = &dropEnds[declension][0]; *itr; ++itr)
@@ -507,32 +522,24 @@ void vutf8printf(FILE* out, const char *str, va_list* ap)
 #endif
 }
 
-void hexEncodeByteArray(uint8* bytes, uint32 arrayLen, std::string& result)
+std::string ByteArrayToHexStr(uint8 const* bytes, uint32 arrayLen, bool reverse /* = false */)
 {
-    std::ostringstream ss;
-    for (uint32 i=0; i<arrayLen; ++i)
-    {
-        for (uint8 j=0; j<2; ++j)
-        {
-            unsigned char nibble = 0x0F & (bytes[i]>>((1-j)*4));
-            char encodedNibble;
-            if (nibble < 0x0A)
-                encodedNibble = '0'+nibble;
-            else
-                encodedNibble = 'A'+nibble-0x0A;
-            ss << encodedNibble;
-        }
-    }
-    result = ss.str();
-}
+    int32 init = 0;
+    int32 end = arrayLen;
+    int8 op = 1;
 
-std::string ByteArrayToHexStr(uint8* bytes, uint32 length)
-{
+    if (reverse)
+    {
+        init = arrayLen - 1;
+        end = -1;
+        op = -1;
+    }
+
     std::ostringstream ss;
-    for (uint32 i = 0; i < length; ++i)
+    for (int32 i = init; i != end; i += op)
     {
         char buffer[4];
-        sprintf(buffer, "%02X ", bytes[i]);
+        sprintf(buffer, "%02X", bytes[i]);
         ss << buffer;
     }
 
