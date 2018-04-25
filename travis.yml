@@ -26,12 +26,13 @@ matrix:
 language: cpp
 
 git:
-  depth: 3
+  depth: 2
 
 branches:
   only:
     - master
-    - ScriptSystem
+ #  - ScriptSystem
+    - fixing_dont_use
 
 before_install:
   - sudo add-apt-repository ppa:george-edison55/cmake-3.x -y
@@ -53,7 +54,7 @@ script:
   - mkdir build
   - cd build
   - cmake ../ -DSCRIPTS=1 -DTOOLS=0
-  - make -j10
+  - make -j8 -v -k --max-load
 
 notifications:
   irc:
@@ -62,3 +63,11 @@ notifications:
     on_success: always
     on_failure: always
  
+ after_success:
+  - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
+after_failure:
+  - wget https://raw.githubusercontent.com/k3rn31p4nic/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
