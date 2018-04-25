@@ -281,13 +281,13 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
     if (!is_temporary_summoned)
     {
         // permanent controlled pets store state in DB
-        Tokens tokens(fields[16].GetString(), ' ');
+        Tokenizer tokens(fields[16].GetString(), ' ');
         
         if (tokens.size() != 20)
             return false;
 
         int index;
-        Tokens::iterator iter;
+        Tokenizer::const_iterator iter;
         for (iter = tokens.begin(), index = 0; index < 10; ++iter, ++index)
         {
             m_charmInfo->GetActionBarEntry(index)->Type = atol(tokens[index]);

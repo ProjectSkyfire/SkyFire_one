@@ -35,7 +35,7 @@
 #include "WorldSession.h"
 #include "Pet.h"
 #include "MapReference.h"
-#include "Util.h"                                           // for Tokens typedef
+#include "Util.h"                                           // for Tokenizer typedef
 #include "ReputationMgr.h"
 
 #include<string>
@@ -1286,8 +1286,8 @@ class Player : public Unit, public GridObject<Player>
 
         bool LoadFromDB(uint32 guid, SqlQueryHolder *holder);
         void Initialize(uint32 guid);
-        static uint32 GetUInt32ValueFromArray(Tokens const& data, uint16 index);
-        static float  GetFloatValueFromArray(Tokens const& data, uint16 index);
+        static uint32 GetUInt32ValueFromArray(Tokenizer const& data, uint16 index);
+        static float  GetFloatValueFromArray(Tokenizer const& data, uint16 index);
         static uint32 GetZoneIdFromDB(uint64 guid);
         static uint32 GetLevelFromDB(uint64 guid);
         static bool   LoadPositionFromDB(uint32& mapid, float& x, float& y, float& z, float& o, bool& in_flight, uint64 guid);
@@ -1300,8 +1300,8 @@ class Player : public Unit, public GridObject<Player>
         void SaveInventoryAndGoldToDB();                    // fast save function for item/money cheating preventing
         void SaveGoldToDB();
 
-        static void SetUInt32ValueInArray(Tokens& data, uint16 index, uint32 value);
-        static void SetFloatValueInArray(Tokens& data, uint16 index, float value);
+        static void SetUInt32ValueInArray(Tokenizer& data, uint16 index, uint32 value);
+        static void SetFloatValueInArray(Tokenizer& data, uint16 index, float value);
 
         static void SavePositionInDB(uint32 mapid, float x, float y, float z, float o, uint32 zone, uint64 guid);
 
@@ -2183,7 +2183,8 @@ class Player : public Unit, public GridObject<Player>
         void _LoadDeclinedNames(QueryResult_AutoPtr result);
         void _LoadArenaTeamInfo(QueryResult_AutoPtr result);
         void _LoadBGData(QueryResult_AutoPtr result);
-        void _LoadIntoDataField(const char* data, uint32 startOffset, uint32 count);
+        // Move to Object
+        void _LoadIntoDataField(std::string const& data, uint32 startOffset, uint32 count);
 
         /*********************************************************/
         /***                   SAVE SYSTEM                     ***/

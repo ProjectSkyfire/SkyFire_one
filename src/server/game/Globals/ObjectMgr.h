@@ -25,6 +25,7 @@
 #include "Object.h"
 #include "Bag.h"
 #include "Creature.h"
+#include "Common.h"
 #include "Player.h"
 #include "DynamicObject.h"
 #include "GameObject.h"

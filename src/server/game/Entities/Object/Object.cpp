@@ -719,12 +719,12 @@ bool Object::LoadValues(const char* data)
 {
     if (!m_uint32Values) _InitValues();
 
-    Tokens tokens(data, ' ');
+    Tokenizer tokens(data, ' ');
 
     if (tokens.size() != m_valuesCount)
         return false;
 
-    Tokens::iterator iter;
+    Tokenizer::const_iterator iter;
     int index;
     for (iter = tokens.begin(), index = 0; index < m_valuesCount; ++iter, ++index)
     {
@@ -739,12 +739,12 @@ void Object::_LoadIntoDataField(const char* data, uint32 startOffset, uint32 cou
     if (!data)
         return;
 
-    Tokens tokens (data, ' ');
+    Tokenizer tokens (data, ' ');
 
     if (tokens.size() != count)
         return;
 
-    Tokens::iterator iter;
+    Tokenizer::const_iterator iter;
     uint32 index;
     for (iter = tokens.begin(), index = 0; index < count; ++iter, ++index)
     {

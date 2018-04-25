@@ -63,7 +63,7 @@ Database::~Database()
     if (--db_count == 0)
         mysql_library_end();
 }
-
+///- god, this needs updated, ancient MySQLConnection
 bool Database::Initialize(const char* infoString)
 {
     // Enable logging of SQL commands (usually only GM commands)
@@ -87,9 +87,9 @@ bool Database::Initialize(const char* infoString)
 
     InitDelayThread();
 
-    Tokens tokens(infoString, ';');
+    Tokenizer tokens(infoString, ';');
 
-    Tokens::iterator iter;
+    Tokenizer::const_iterator iter;
 
     std::string host, port_or_socket, user, password, database;
     int port;

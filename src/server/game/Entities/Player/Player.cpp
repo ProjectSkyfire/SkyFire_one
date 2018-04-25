@@ -128,10 +128,10 @@ void PlayerTaxi::InitTaxiNodesForLevel(uint32 race, uint32 level)
 
 void PlayerTaxi::LoadTaxiMask(const char* data)
 {
-    Tokens tokens(data, ' ');
+    Tokenizer tokens(data, ' ');
 
     uint8 index;
-    Tokens::iterator iter;
+    Tokenizer::const_iterator iter;
     for (iter = tokens.begin(), index = 0;
         (index < TaxiMaskSize) && (iter != tokens.end()); ++iter, ++index)
     {
@@ -158,9 +158,9 @@ bool PlayerTaxi::LoadTaxiDestinationsFromString(const std::string& values)
 {
     ClearTaxiDestinations();
 
-    Tokens tokens(values, ' ');
+    Tokenizer tokens(values, ' ');
 
-    for (Tokens::iterator iter = tokens.begin(); iter != tokens.end(); ++iter)
+    for (Tokenizer::const_iterator iter = tokens.begin(); iter != tokens.end(); ++iter)
     {
         uint32 node = uint32(atol(*iter));
         AddTaxiDestination(node);
@@ -1427,11 +1427,12 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
         *p_data << uint32(petFamily);
     }
 
-    Tokens data(fields[19].GetString(), ' ');
+    Tokenizer data(fields [19].GetString(), ' ');          // data==equiptment
     
     for (uint8 slot = 0; slot < EQUIPMENT_SLOT_END; ++slot)
     {
-        uint32 visualbase = PLAYER_VISIBLE_ITEM_1_0 + (slot * MAX_VISIBLE_ITEM_OFFSET);
+        uint32 visualbase = slot * 2;
+                         //= PLAYER_VISIBLE_ITEM_1_0 + (slot * MAX_VISIBLE_ITEM_OFFSET);
         uint32 item_id = GetUInt32ValueFromArray(data, visualbase);
         const ItemPrototype * proto = sObjectMgr->GetItemPrototype(item_id);
         if (!proto)
@@ -14144,7 +14145,7 @@ bool Player::LoadPositionFromDB(uint32& mapid, float& x, float& y, float& z, flo
     return true;
 }
 
-uint32 Player::GetUInt32ValueFromArray(Tokens const& data, uint16 index)
+uint32 Player::GetUInt32ValueFromArray(Tokenizer const& data, uint16 index)
 {
     if (index >= data.size())
         return 0;
@@ -14152,7 +14153,7 @@ uint32 Player::GetUInt32ValueFromArray(Tokens const& data, uint16 index)
     return (uint32)atoi(data[index]);
 }
 
-float Player::GetFloatValueFromArray(Tokens const& data, uint16 index)
+float Player::GetFloatValueFromArray(Tokenizer const& data, uint16 index)
 {
     float result;
     uint32 temp = Player::GetUInt32ValueFromArray(data, index);
@@ -14161,21 +14162,22 @@ float Player::GetFloatValueFromArray(Tokens const& data, uint16 index)
     return result;
 }
 
-void Player::_LoadIntoDataField(const char* data, uint32 startOffset, uint32 count)
+void Player::_LoadIntoDataField(std::string const& data, uint32 startOffset, uint32 count)
 {
-    if (!data)
-     return;
+    if (data.empty())
+        return;
 
-    Tokens tokens(data, ' ');
+    Tokenizer tokens(data, ' ');
 
     if (tokens.size() != count)
     return;
 
-    Tokens::iterator iter;
+    Tokenizer::const_iterator itr;
     uint32 index;
-    for (iter = tokens.begin(), index = 0; index < count; ++iter, ++index)
+
+    for (uint32 index = 0; index < count; ++index)
     {
-        m_uint32Values[startOffset + index] = uint32(atol(*iter));
+        m_uint32Values [startOffset + index] = atol(tokens [index]);
     }
 }
 
@@ -16452,7 +16454,7 @@ void Player::SavePositionInDB(uint32 mapid, float x, float y, float z, float o, 
     CharacterDatabase.Execute(ss.str().c_str());
 }
 
-void Player::SetUInt32ValueInArray(Tokens& tokens, uint16 index, uint32 value)
+void Player::SetUInt32ValueInArray(Tokenizer& tokens, uint16 index, uint32 value)
 {
     char buf[11];
     snprintf(buf, 11, "%u", value);
