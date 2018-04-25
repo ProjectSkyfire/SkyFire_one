@@ -21,15 +21,18 @@ our site [here](https://www.projectskyfire.org/index.php) or make a Pull Request
 
 ## Build Status
 
+GA-Beacon (Testing)        
+[![Analytics](https://ga-beacon.appspot.com/UA-118167619-2/SkyFire_one/tree/master)](https://github.com/ProjectSkyfire/SkyFire_one)        
+
 Travis-CI   
 [![Build Status](https://travis-ci.org/ProjectSkyfire/SkyFire_one.svg?branch=master)](https://travis-ci.org/ProjectSkyfire/SkyFire_one)	         
-   
+
 Appveyor-CI       
 [![Build status](https://ci.appveyor.com/api/projects/status/8tqfrqm9r99m95mq?svg=true)](https://ci.appveyor.com/project/Bootz49186/skyfire-one)
       
 Insight.io    
 [![Insight.io](https://insight.io/repoBadge/github.com/ProjectSkyfire/SkyFire_one)](https://insight.io/github.com/ProjectSkyfire/SkyFire_one)     
-     
+
 Dependency     
 [![Dependency Status](https://david-dm.org/boennemann/badges.svg)]()   
 
