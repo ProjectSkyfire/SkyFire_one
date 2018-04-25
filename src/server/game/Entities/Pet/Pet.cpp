@@ -62,7 +62,7 @@ uint32 const LevelStartLoyalty[6] =
     17500,
 };
 
-Pet::Pet(Player* owner, PetType type) : Guardian(NULL, owner, true),
+Pet::Pet(Player *owner, PetType type) : Guardian(NULL, owner),
 m_petType(type), m_removed(false), m_happinessTimer(7500), m_duration(0),
 m_resetTalentsCost(0), m_resetTalentsTime(0),
 m_declinedname(NULL), m_owner(owner)
@@ -281,14 +281,14 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
     if (!is_temporary_summoned)
     {
         // permanent controlled pets store state in DB
-        Tokens statetokens(fields[16].GetString(), ' ');
-
-        if (statetokens.size() != 20)
+        Tokens tokens(fields[16].GetString(), ' ');
+        
+        if (tokens.size() != 20)
             return false;
 
         int index;
         Tokens::iterator iter;
-        for (iter = statetokens.begin(), index = 0; index < 10; ++iter, ++index)
+        for (iter = tokens.begin(), index = 0; index < 10; ++iter, ++index)
         {
             m_charmInfo->GetActionBarEntry(index)->Type = atol(tokens[index]);
             ++iter;
@@ -298,8 +298,7 @@ bool Pet::LoadPetFromDB(Player* owner, uint32 petentry, uint32 petnumber, bool c
         }
 
         //init teach spells
-        Tokens petspelltokens(fields[17].GetString(), ' ');
-        for (iter = petspelltokens.begin(), index = 0; index < 4; ++iter, ++index)
+        for (iter = tokens.begin(), index = 0; index < 4; ++iter, ++index)
         {
             uint32 tmp = atol(tokens[index]);
 
@@ -931,7 +930,7 @@ bool Pet::CreateBaseAtCreature(Creature* creature)
     return true;
 }
 
-bool Guardian::InitStatsForLevel(uint8 petlevel)
+bool Guardian::InitStatsForLevel(uint32 petlevel)
 {
     CreatureTemplate const* cinfo = GetCreatureTemplate();
     ASSERT(cinfo);
@@ -943,8 +942,7 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
     if (isPet() && m_owner->GetTypeId() == TYPEID_PLAYER)
     {
         if ((m_owner->getClass() == CLASS_WARLOCK)
-            || (m_owner->getClass() == CLASS_SHAMAN)        // Fire Elemental
-            || (m_owner->getClass() == CLASS_PRIEST))        // Shadowfiend
+            || (m_owner->getClass() == CLASS_SHAMAN))        // Fire Elemental
             petType = SUMMON_PET;
         else if (m_owner->getClass() == CLASS_HUNTER)
         {
@@ -1023,7 +1021,7 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
         SetCreateStat(STAT_SPIRIT, 27);
     }
 
-    SetBonusDamage(0);
+    m_bonusdamage = 0;
     switch (petType)
     {
         case SUMMON_PET:
@@ -1043,14 +1041,14 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
         }
         case HUNTER_PET:
         {
-            SetUInt32Value(UNIT_FIELD_PETNEXTLEVELEXP, uint32(sObjectMgr->GetXPForLevel(petlevel) / 4));
+            SetUInt32Value(UNIT_FIELD_PETNEXTLEVELEXP, uint32(sObjectMgr->GetXPForLevel(petlevel))/4);
+
             //these formula may not be correct; however, it is designed to be close to what it should be
             //this makes dps 0.5 of pets level
             SetBaseWeaponDamage(BASE_ATTACK, MINDAMAGE, float(petlevel - (petlevel / 4)));
-            //damage range is then petLevel / 2
+            //damage range is then petlevel / 2
             SetBaseWeaponDamage(BASE_ATTACK, MAXDAMAGE, float(petlevel + (petlevel / 4)));
             //damage is increased afterwards as strength and pet scaling modify attack power
-            SetModifierValue(UNIT_MOD_ARMOR, BASE_VALUE, float(m_owner->GetArmor()) * 0.7f);  //  Bonus Armor (70% of player armor)
             break;
         }
         default:
@@ -1238,7 +1236,7 @@ void Pet::_SaveSpellCooldowns()
 
     time_t curTime = time(NULL);
 
-    // remove outdated and save active
+    // remove oudated and save active
     for (CreatureSpellCooldowns::iterator itr = m_CreatureSpellCooldowns.begin();itr != m_CreatureSpellCooldowns.end();)
     {
         if (itr->second <= curTime)
@@ -1517,7 +1515,7 @@ bool Pet::addSpell(uint16 spell_id, uint16 active /*= ACT_DECIDE*/, PetSpellStat
 
 bool Pet::learnSpell(uint16 spell_id)
 {
-    // prevent duplicated entries in spell book
+    // prevent duplicated entires in spell book
     if (!addSpell(spell_id))
         return false;
 

@@ -330,7 +330,7 @@ void WardenWin::RequestData()
 
 void WardenWin::HandleData(ByteBuffer &buff)
 {
-    sLog->outDebug(LOG_FILTER_WARDEN, "Handle data");
+    sLog->outDebug(LOG_FILTER_NETWORKIO, "Handle data");
 
     m_WardenDataSent = false;
     m_WardenKickTimer = 0;

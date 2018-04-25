@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2010-2013 Project SkyFire <http://www.projectskyfire.org/>
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2013 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2011-2017 Project SkyFire <http://www.projectskyfire.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2010-2017 Oregon <http://www.oregoncore.com/>
+ * Copyright (C) 2005-2017 MaNGOS <https://www.getmangos.eu/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -44,15 +45,13 @@ class MapUpdater
         int deactivate(void);
 
         bool activated();
-
     private:
+        void update_finished();
 
         DelayExecutor m_executor;
-        ACE_Thread_Mutex m_mutex;
         ACE_Condition_Thread_Mutex m_condition;
-        size_t pending_requests;
-
-        void update_finished();
+        ACE_Thread_Mutex m_mutex;
+        size_t pedning_requests;
 };
-
 #endif //_MAP_UPDATER_H_INCLUDED
+

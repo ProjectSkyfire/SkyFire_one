@@ -1,5 +1,5 @@
-# Copyright (C) 2011-2013 Project SkyFire <http://www.projectskyfire.org/>
-# Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2011-2014 Project SkyFire <http://www.projectskyfire.org/>
+# Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -11,8 +11,7 @@
 
 # output generic information about the core and buildtype chosen
 message("")
-message("* SkyFireEMU rev. hash  : ${rev_hash}")
-message("* SkyFireEMU rev. date  : ${rev_date}")
+message("* SkyFireEMU revision   : ${rev_hash} ${rev_date} (${rev_branch} branch)")
 if( UNIX )
   message("* SkyFireEMU buildtype  : ${CMAKE_BUILD_TYPE}")
 endif()
@@ -42,13 +41,6 @@ else()
   message("* Build with scripts     : No")
   set(USE_SCRIPTPCH 0)
 endif()
-
-#if( EXAMPLES )
-#  message("* Build example scripts  : Yes")
-#  add_definitions(-EXAMPLES)
-#else()
-#  message("* Build example scripts  : No (default)")
-#endif()
 
 if( TOOLS )
   message("* Build map/vmap tools   : Yes")
@@ -81,4 +73,28 @@ else()
   message("* Use coreside debug     : No  (default)")
 endif()
 
+if ( WITHOUT_GIT )
+  message("* Use GIT revision hash  : No")
+  message("")
+  message(" *** WITHOUT_GIT - WARNING!")
+  message(" *** By choosing the WITHOUT_GIT option you have waived all rights for support,")
+  message(" *** and accept that or all requests for support or assistance sent to the core")
+  message(" *** developers will be rejected. This due to that we will be unable to detect")
+  message(" *** what revision of the codebase you are using in a proper way.")
+  message(" *** We remind you that you need to use the repository codebase and a supported")
+  message(" *** version of git for the revision-hash to work, and be allowede to ask for")
+  message(" *** support if needed.")
+else()
+  message("* Use GIT revision hash  : Yes")
+endif()
+
+if ( NOJEM )
+  message("")
+  message(" *** NOJEM - WARNING!")
+  message(" *** jemalloc linking has been disabled!")
+  message(" *** Please note that this is for DEBUGGING WITH VALGRIND only!")
+  message(" *** DO NOT DISABLE IT UNLESS YOU KNOW WHAT YOU'RE DOING!")
+endif()
+
 message("")
+

@@ -951,7 +951,7 @@ bool ChatHandler::HandleModifyRepCommand(const char * args)
     }
 
     target->GetReputationMgr().SetReputation(factionEntry, amount);
-    PSendSysMessage(LANG_COMMAND_MODIFY_REP, factionEntry->name[m_session->GetSessionDbcLocale()], factionId,
+    PSendSysMessage(LANG_COMMAND_MODIFY_REP, factionEntry->name[m_session->GetSessionDbcLocale()], factionId, 
         /*GetNameLink(target).c_str(),*/ target->GetReputationMgr().GetReputation(factionEntry));
     return true;
 }
@@ -2034,8 +2034,11 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
     uint32 security = 0;
     std::string last_login = GetSkyFireString(LANG_ERROR);
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.username, aa.gmlevel, a.last_ip, a.last_login FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE id = '%u'", accId);
-
+    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT a.username, aa.gmlevel, a.email, a.last_ip, a.last_login "
+                                                      "FROM account a "
+                                                      "LEFT JOIN account_access aa "
+                                                      "ON (a.id = aa.id) "
+                                                      "WHERE a.id = '%u'", accId);
     if (result)
     {
         Field* fields = result->Fetch();
@@ -2102,18 +2105,18 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
             SetSentErrorMessage(true);
             return false;
         }
-
-        FactionStateList const& targetFSL = target->GetReputationMgr().GetStateList();
+		
+		FactionStateList const& targetFSL = target->GetReputationMgr().GetStateList();
         for (FactionStateList::const_iterator itr = targetFSL.begin(); itr != targetFSL.end(); ++itr)
         {
-            FactionEntry const *factionEntry = sFactionStore.LookupEntry(itr->second.ID);
+			FactionEntry const *factionEntry = sFactionStore.LookupEntry(itr->second.ID);
             char const* factionName = factionEntry ? factionEntry->name[m_session->GetSessionDbcLocale()] : "#Not found#";
             ReputationRank rank = target->GetReputationMgr().GetRank(factionEntry);
             std::string rankName = GetSkyFireString(ReputationRankStrIndex[rank]);
             std::ostringstream ss;
             ss << itr->second.ID << ": |cffffffff|Hfaction:" << itr->second.ID << "|h[" << factionName << "]|h|r " << rankName << "|h|r ("
                << target->GetReputationMgr().GetReputation(factionEntry) << ")";
-
+               
             if (itr->second.Flags & FACTION_FLAG_VISIBLE)
                 ss << GetSkyFireString(LANG_FACTION_VISIBLE);
             if (itr->second.Flags & FACTION_FLAG_AT_WAR)
@@ -3620,7 +3623,7 @@ bool ChatHandler::HandleLookupPlayerIpCommand(const char* args)
 
     LoginDatabase.EscapeString (ip);
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT a.id, a.username, a.last_ip, aa.gmlevel, a.expansion FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE last_ip "_LIKE_" "_CONCAT3_("'%%'", "'%s'", "'%%'"), ip.c_str());
+    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE last_ip = '%s'", ip.c_str ());
 
     return LookupPlayerSearchCommand (result, limit);
 }
@@ -3655,7 +3658,7 @@ bool ChatHandler::HandleLookupPlayerEmailCommand(const char* args)
 
     LoginDatabase.EscapeString (email);
 
-    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT a.id, a.username, a.last_ip, aa.gmlevel, a.expansion FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE email "_LIKE_" "_CONCAT3_("'%%'", "'%s'", "'%%'"), email.c_str());
+    QueryResult_AutoPtr result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE email = '%s'", email.c_str ());
 
     return LookupPlayerSearchCommand (result, limit);
 }
@@ -3669,14 +3672,14 @@ bool ChatHandler::LookupPlayerSearchCommand(QueryResult_AutoPtr result, int32 li
         return false;
     }
 
-    int i = 0;
+    int i =0;
     do
     {
         Field* fields = result->Fetch();
         uint32 acc_id = fields[0].GetUInt32();
         std::string acc_name = fields[1].GetCppString();
 
-        QueryResult_AutoPtr chars = CharacterDatabase.PQuery("SELECT guid,name FROM characters WHERE account = '%u'", acc_id);
+        QueryResult_AutoPtr chars = CharacterDatabase.PQuery("SELECT guid, name FROM characters WHERE account = '%u'", acc_id);
         if (chars)
         {
             PSendSysMessage(LANG_LOOKUP_PLAYER_ACCOUNT, acc_name.c_str(), acc_id);

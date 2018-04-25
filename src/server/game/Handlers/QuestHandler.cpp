@@ -85,12 +85,12 @@ void WorldSession::HandleQuestgiverHelloOpcode(WorldPacket& recv_data)
     uint64 guid;
     recv_data >> guid;
 
-    sLog->outDebug(LOG_FILTER_UNITS, "WORLD: Received CMSG_QUESTGIVER_HELLO npc = %u", GUID_LOPART(guid));
+    sLog->outDebug (LOG_FILTER_NETWORKIO, "WORLD: Received CMSG_QUESTGIVER_HELLO npc = %u", GUID_LOPART(guid));
 
     Creature* creature = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_NONE);
     if (!creature)
     {
-        sLog->outDebug(LOG_FILTER_UNITS, "WORLD: HandleQuestgiverHelloOpcode - Unit (GUID: %u) not found or you can't interact with him.", GUID_LOPART(guid));
+        sLog->outDebug (LOG_FILTER_NETWORKIO, "WORLD: HandleQuestgiverHelloOpcode - Unit (GUID: %u) not found or you can't interact with him.", GUID_LOPART(guid));
         return;
     }
 

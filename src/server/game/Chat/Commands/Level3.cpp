@@ -806,8 +806,7 @@ bool ChatHandler::HandleAccountSetGmLevelCommand(const char *args)
     std::string targetAccountName;
     uint32 targetAccountId = 0;
     uint32 targetSecurity = 0;
-    int32 gm = 0;
-    uint32 gmRealmID = realmID;
+    uint32 gm = 0;
     char* arg1 = strtok((char*)args, " ");
     char* arg2 = strtok(NULL, " ");
     char* arg3 = strtok(NULL, " ");
@@ -4267,14 +4266,14 @@ bool ChatHandler::HandleSetValue(const char *args)
     if (isint32)
     {
         iValue = (uint32)atoi(py);
-        sLog->outDebug(LOG_FILTER_OPCODES, GetSkyFireString(LANG_SET_UINT), GUID_LOPART(guid), Opcode, iValue);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_SET_UINT), GUID_LOPART(guid), Opcode, iValue);
         target->SetUInt32Value(Opcode , iValue);
         PSendSysMessage(LANG_SET_UINT_FIELD, GUID_LOPART(guid), Opcode, iValue);
     }
     else
     {
         fValue = (float)atof(py);
-        sLog->outDebug(LOG_FILTER_OPCODES, GetSkyFireString(LANG_SET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_SET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
         target->SetFloatValue(Opcode , fValue);
         PSendSysMessage(LANG_SET_FLOAT_FIELD, GUID_LOPART(guid), Opcode, fValue);
     }
@@ -4318,13 +4317,13 @@ bool ChatHandler::HandleGetValue(const char *args)
     if (isint32)
     {
         iValue = target->GetUInt32Value(Opcode);
-        sLog->outDebug(LOG_FILTER_OPCODES, GetSkyFireString(LANG_GET_UINT), GUID_LOPART(guid), Opcode, iValue);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_GET_UINT), GUID_LOPART(guid), Opcode, iValue);
         PSendSysMessage(LANG_GET_UINT_FIELD, GUID_LOPART(guid), Opcode,    iValue);
     }
     else
     {
         fValue = target->GetFloatValue(Opcode);
-        sLog->outDebug(LOG_FILTER_OPCODES, GetSkyFireString(LANG_GET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
+        sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_GET_FLOAT), GUID_LOPART(guid), Opcode, fValue);
         PSendSysMessage(LANG_GET_FLOAT_FIELD, GUID_LOPART(guid), Opcode, fValue);
     }
 
@@ -4347,7 +4346,7 @@ bool ChatHandler::HandleSet32Bit(const char *args)
     if (Value > 32)                                         //uint32 = 32 bits
         return false;
 
-    sLog->outDebug(LOG_FILTER_OPCODES, GetSkyFireString(LANG_SET_32BIT), Opcode, Value);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_SET_32BIT), Opcode, Value);
 
     m_session->GetPlayer()->SetUInt32Value(Opcode , 2^Value);
 
@@ -4375,7 +4374,7 @@ bool ChatHandler::HandleMod32Value(const char *args)
         return false;
     }
 
-    sLog->outDebug(LOG_FILTER_OPCODES, GetSkyFireString(LANG_CHANGE_32BIT), Opcode, Value);
+    sLog->outDebug(LOG_FILTER_NETWORKIO, GetSkyFireString(LANG_CHANGE_32BIT), Opcode, Value);
 
     int CurrentValue = (int)m_session->GetPlayer()->GetUInt32Value(Opcode);
 
@@ -6333,7 +6332,7 @@ bool ChatHandler::HandleInstanceSaveDataCommand(const char * /*args*/)
 bool ChatHandler::HandleGMListFullCommand(const char* /*args*/)
 {
     // Get the accounts with GM Level >0
-    QueryResult_AutoPtr result = LoginDatabase.Query("SELECT a.username, aa.gmlevel FROM account a LEFT JOIN account_access aa ON (a.id = aa.id) WHERE gmlevel > 0");
+    QueryResult_AutoPtr result = LoginDatabase.Query("SELECT a.username, aa.gmlevel FROM account a, account_access aa WHERE a.id=aa.id AND aa.gmlevel > 0");
     if (result)
     {
         SendSysMessage(LANG_GMLIST);
