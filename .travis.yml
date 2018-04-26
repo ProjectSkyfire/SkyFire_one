@@ -30,8 +30,6 @@ git:
 
 branches:
   only:
-    - master
-    - ScriptSystem
     - fixing_dont_use
     
 before_install:
