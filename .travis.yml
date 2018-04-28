@@ -55,9 +55,12 @@ script:
   - make -j8 -v -k --max-load
 
 notifications:
+  webhooks: 
+    - "http://173.208.249.74/travis-ci.php"  
+  
   irc:
     channels:
       - "irc.rizon.net#project_skyfire"
     on_success: always
     on_failure: always
-    
+
