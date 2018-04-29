@@ -82,7 +82,8 @@ Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/
  - Add more Tests.   
    
 ---
-**Free Software, Hell Yeah!**   
+**✪ WE ARE A NON-PROFIT ORGANIZATION ✪ NEVER MADE WITH MONEY IN MIND... ✪**     
+**✪ IF YOU USE OUR PROJECTS, SHOW APPRECAITIONS WITH CONTRIBUTIONS ... 2PR IZ FREE ✪**   
                                    
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
