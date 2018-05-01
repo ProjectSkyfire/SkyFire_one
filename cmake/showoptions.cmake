@@ -11,9 +11,9 @@
 
 # output generic information about the core and buildtype chosen
 message("")
-message("* SkyFireEMU revision   : ${rev_hash} ${rev_date} (${rev_branch} branch)")
+message("* SkyFireONE revision   : ${rev_hash} ${rev_date} (${rev_branch} branch)")
 if( UNIX )
-  message("* SkyFireEMU buildtype  : ${CMAKE_BUILD_TYPE}")
+  message("* SkyFireONE buildtype  : ${CMAKE_BUILD_TYPE}")
 endif()
 message("")
 
