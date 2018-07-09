@@ -67,9 +67,17 @@ Read file [COPYING](COPYING.md)
 ## Authors & Contributors   
 
 Read file [THANKS](https://github.com/ProjectSkyfire/SkyFireEMU/tree/master/doc/THANKS.md)   
-   
-#### For further informational links or communities.   
-   
+
+---
+
+  ```css
+     scan 2 visit our forums from your mobile device.
+  ``` 
+  [![QRCode](http://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fwww.projectskyfire.org%2F%3F_fromLogin%3D1&amp;size=120x120)]()    
+
+---  
+#### For further informational links or communities.    
+
 * [Project SkyFire]: - Our home project board. [`Database DownLoad`] .   
 * [TrinityCore]:     - Another Emulation project board, one we are ascended from.   
 * [MaNGOS]:          - MaNGOS project was where all our source derived from (origins).   
